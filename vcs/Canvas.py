@@ -1252,7 +1252,6 @@ class Canvas(object):
             .. doctest:: canvas_taylordiagram
 
                 >>> a=vcs.init()
-
                 >>> a.show('taylordiagram') # Show all the existing taylordiagram graphics methods
                 *******************Taylordiagram Names List**********************
                 ...
@@ -2160,7 +2159,7 @@ class Canvas(object):
             ...
             *******************End Textorientation Names List**********************
             >>> vcs.createtext('qa_tta', 'qa', '7left_tto', '7left') # Create instance of 'std_tt' and '7left_to'
-            <vcs.textcombined.Tc object at ...
+            <vcs.textcombined.Tc object at ...>
             >>> tc=a.gettext('qa_tta', '7left_tto')
             >>> tc.string='Text1' # Show the string "Text1" on the VCS Canvas
             >>> tc.font=2 # Set the text size
