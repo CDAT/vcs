@@ -665,28 +665,33 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                     else:
                         sp_parent = 'default_'+obj_name+'_'
                         dict['sp_parent'] = "'%s'" % sp_parent
-                        dict['parent'] = dict['special_parent']
+                        dict['parent'] = dict['sp_parent']
                 example1 = """
-                    %(tc)s
-                    >>> ex=vcs.get%(name)s(%(sp_parent)s)  # instance of '%(parent)s' %(name)s %(type)s
-                    %(plot)s
+            %(tc)s
+            >>> ex=vcs.get%(name)s(%(sp_parent)s)  # instance of '%(parent)s' %(name)s %(type)s
+            %(plot)s
                     """
                 # set up dict['plot']
-                if type_dict[obj_name][obj_type]['callable']:
-                    dict['plot'] = """
-                        >>> a.%(name)s(ex) # plot using specified %(name)s object
-                        <%(rtype)s ...>
-                        """ % dict
+                if type_dict[obj_type][obj_name]['callable']:
+                    plot = """
+            >>> a.%(name)s(ex) # plot using specified %(name)s object
+            <%(rtype)s ...>
+            """
                 else:
-
+                    plot = """
+            >>> a.plot(ex) # plot using specified %(name)s object
+            <%(rtype)s ...>
+            """
+                dict['plot'] = plot % dict
                 dict['ex1'] = example1 % dict
-                if type_dict[obj_name][obj_type]['parent2']:
-                    dict['parent2'] = type_dict[obj_name][obj_type]['parent2']
+                if type_dict[obj_type][obj_name]['parent2']:
+                    dict['parent2'] = type_dict[obj_type][obj_name]['parent2']
+
                     example2 = """
-                        >>> ex2=vcs.get%(name)s('%(parent2)s')  # instance of '%(parent2)s' %(name)s %(type)s
-                        %(plot2)s
-                        """
-                dict['ex2'] = example2
+            >>> ex2=vcs.get%(name)s('%(parent2)s')  # instance of '%(parent2)s' %(name)s %(type)s
+            %(plot2)s
+            """
+                dict['ex2'] = example2 % dict
             elif method == 'create':
                 example2 ="""
                     >>> ex2=vcs.create%(name)s('example2','%(parent)s') # create 'example2' from '%(parent)s' template
@@ -722,7 +727,7 @@ get_methods_doc = """
         .. doctest:: manageElements_get
 
             >>> a=vcs.init()
-            >>> vcs.show('%(name)s') # Show all the existing %(name)s %(type)s
+            >>> vcs.show('%(name)s') # Show all the existing %(name)s %(type)ss
             *******************%(cap)s Names List**********************
             ...
             *******************End %(cap)s Names List**********************
@@ -731,146 +736,6 @@ get_methods_doc = """
     """
 get_docs = {}
 populate_docstrings(obj_details, get_docs, get_methods_doc, 'get')
-
-
-# For all cases with a 'default' parent object
-dict['parent'] = 'default'
-# Get for secondary methods
-dict['type'] = 'secondary method'
-#   default
-dict['ex2'] = ''
-dict['name'] = dict['call'] = 'fillarea'
-dict['cap'] = dict['name'].title()
-get_fillarea_doc = get_methods_doc % dict
-#   red
-dict['name'] = dict['call'] = 'line'
-dict['cap'] = dict['name'].title()
-dict['ex2'] ="""
-            >>> ex2=vcs.get%(call)s('red')  # instance of 'red' %(name)s %(type)s
-            >>> a.%(name)s(ex2) # Plot using specified %(call)s object
-            <vcs.displayplot.Dp ...>
-"""
-get_line_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'marker'
-dict['cap'] = dict['name'].title()
-get_marker_doc = get_methods_doc % dict
-#   other
-dict['name'] = dict['call'] = 'colormap'
-dict['cap'] = dict['name'].title()
-dict['ex2'] ="""
-            >>> ex2=vcs.get%(call)s('rainbow')  # instance of 'rainbow' %(name)s %(type)s
-            >>> a.%(name)s(ex2) # Plot using specified %(call)s object
-            <vcs.displayplot.Dp ...>
-"""
-get_colormap_doc = get_methods_doc % dict
-# Get for gms
-dict['type'] = 'graphics method'
-#   default
-dict['ex2'] = ''
-dict['name'] = dict['call'] = '3d_scalar'
-dict['cap'] = dict['name'].title()
-get_3d_scalar_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = '3d_dual_scalar'
-dict['cap'] = dict['name'].title()
-get_3d_dual_scalar_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = '3d_vector'
-dict['cap'] = dict['name'].title()
-get_3d_vector_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'vector'
-dict['cap'] = dict['name'].title()
-get_vector_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'taylordiagram'
-dict['cap'] = dict['name'].title()
-get_taylordiagram_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'scatter'
-dict['cap'] = dict['name'].title()
-get_scatter_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'yxvsx'
-dict['cap'] = dict['name'].title()
-get_yxvsx_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'xyvsy'
-dict['cap'] = dict['name'].title()
-get_xyvsy_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'xvsy'
-dict['cap'] = dict['name'].title()
-get_xvsy_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = '1d'
-dict['cap'] = dict['name'].title()
-get_1d_doc = get_methods_doc % dict
-#   polar
-dict['ex2'] ="""
-            >>> ex2=vcs.get%(call)s('polar')  # instance of 'polar' %(name)s %(type)s
-            >>> a.%(name)s(ex2) # Plot using specified %(call)s object
-            <vcs.displayplot.Dp ...>
-"""
-#   other
-
-
-
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_texttable_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'template'
-dict['cap'] = dict['name'].title()
-get_template_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'projection'
-dict['cap'] = dict['name'].title()
-get_projection_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'boxfill'
-dict['cap'] = dict['name'].title()
-get_boxfill_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_taylor_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_meshfill_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_isofill_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_isoline_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_1d_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_xyvsy_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_yxvsx_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_xvsy_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_vector_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_scatter_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_line_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_marker_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_textorientation_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_textcombined_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = dict['cap'] = '3d_scalar'
-get_3d_scalar_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = dict['cap'] = '3d_dual_scalar'
-get_3d_dual_scalar_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = dict['cap'] = '3d_vector'
-get_3d_vector_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_colormap_doc = get_methods_doc % dict
-dict.clear()
 
 create_methods_doc = """
     Create a new %(name)s %(type)s given the the name and the existing
