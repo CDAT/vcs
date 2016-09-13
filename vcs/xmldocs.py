@@ -452,6 +452,7 @@ obj_details={
             "parent": "default",
             "parent2": False,
             "rtype": "vcs.dv3d.Gf3Dscalar",
+            "slabs": 1,
             "title": False,
         },
         "3d_dual_scalar": {
@@ -459,6 +460,7 @@ obj_details={
             "parent": "default",
             "parent2": False,
             "rtype": "vcs.dv3d.Gf3DDualScalar",
+            "slabs": 2,
             "title": False,
         },
         "3d_vector":{
@@ -466,6 +468,7 @@ obj_details={
             "parent": "default",
             "parent2": False,
             "rtype": "vcs.dv3d.Gf3Dvector",
+            "slabs": 2,
             "title": False,
         },
         "vector": {
@@ -546,7 +549,7 @@ obj_details={
             "parent": "default",
             "parent2": "polar",
             "rtype": "vcs.template.P",
-            "slabs": False,
+            "slabs": 0,
             "title": True,
         },
         "projection": {
@@ -554,7 +557,7 @@ obj_details={
             "parent": "default",
             "parent2": "polar",
             "rtype": "vcs.projection.Proj",
-            "slabs": False,
+            "slabs": 0,
             "title": True,
         },
         "meshfill": {
@@ -572,7 +575,7 @@ obj_details={
             "parent": "default",
             "parent2": False,
             "rtype": "vcs.fillarea.Tf",
-            "slabs": False,
+            "slabs": 0,
             "title": True,
         },
         "line": {
@@ -580,7 +583,7 @@ obj_details={
             "parent": "default",
             "parent2": "red",
             "rtype": "vcs.line.Tl",
-            "slabs": False,
+            "slabs": 0,
             "title": True,
         },
         "marker": {
@@ -588,7 +591,7 @@ obj_details={
             "parent": "default",
             "parent2": "red",
             "rtype": "vcs.marker.Tm",
-            "slabs": False,
+            "slabs": 0,
             "title": True,
         },
         "colormap": {
@@ -596,7 +599,7 @@ obj_details={
             "parent": "default",
             "parent2": "rainbow",
             "rtype": "vcs.colormap.Cp",
-            "slabs": False,
+            "slabs": 0,
             "title": True,
         },
         "textcombined": {
@@ -604,7 +607,7 @@ obj_details={
             "parent": "special",
             "parent2": False,
             "rtype": "vcs.textcombined.Tc",
-            "slabs": False,
+            "slabs": 0,
             "title": True,
         },
         "texttable": {
@@ -612,7 +615,7 @@ obj_details={
             "parent": "default",
             "parent2": False,
             "rtype": "vcs.texttable.Tt",
-            "slabs": False,
+            "slabs": 0,
             "title": True,
         },
         "textorientation": {
@@ -620,16 +623,32 @@ obj_details={
             "parent": "default",
             "parent2": False,
             "rtype": "vcs.textorientation.To",
-            "slabs": False,
+            "slabs": 0,
             "title": True,
         },
-    },
+    }
 }
+
+def cleanup(string):
+    """
+    Removes extraneous empty lines from a string.
+
+    :param string: A string to strip of empty strings contained therein
+    :return: A string with all the empty strings stripped out
+    """
+    raw = string.split('\n')
+    for _ in raw:
+        if _ == '':
+            raw.remove(_)
+    clean = '\n'.join(raw)
+    return clean
 
 def populate_docstrings(type_dict, target_dict, docstring, method):
     """
     A function to generate docstrings from a dictionary.
     Structure of the function is pretty specific to type_dicts shaped like xmldoc.obj_details.
+    Indentation of the docstring snippets looks screwy because they need to maintain alignment
+    with the original docstring entries for Sphinx to pick them up correctly.
 
     :param type_dict: The dictionary to parse for values used to fill in the docstring
     :param target_dict: An empty dictionary to be populated with docstrings
@@ -657,57 +676,63 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                     dict['sp_name'] = 'dv3d'
                 elif obj_name in ['1d','scatter','textcombined','xyvsy']:
                     if obj_name == 'textcombined':
-                        dict['tc'] ="""
-                            >>> vcs.createtext('qa_tt', 'qa', 'left_tto', '7left') # Create 'qatt' and 'left_tto'
-                            <vcs.textcombined.Tc object at ...>
-                            """
+                        dict['tc'] = """>>> vcs.createtext('qa_tt', 'qa', 'left_tto', '7left') # Create 'qa_tt' and 'left_tto'
+            <vcs.textcombined.Tc object at ...>"""
                         dict['sp_parent'] = "'qa_tt', 'left_tto'"
                     else:
                         sp_parent = 'default_'+obj_name+'_'
                         dict['sp_parent'] = "'%s'" % sp_parent
                         dict['parent'] = dict['sp_parent']
-                example1 = """
-            %(tc)s
+                example1 = """%(tc)s
             >>> ex=vcs.get%(name)s(%(sp_parent)s)  # instance of '%(parent)s' %(name)s %(type)s
-            %(plot)s
-                    """
+            %(plot)s"""
                 # set up dict['plot']
+                numslabs = type_dict[obj_type][obj_name]['slabs']
+                dict['slabs'] = ''
+                dict['args'] = ''
+                if numslabs > 0:
+                    dict['slabs'] = """>>> import cdms2 # Need cdms2 to create a slab
+            >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+            >>> slab1 = f('u') # use the data file to create a cdms2 slab"""
+                    dict['args'] = ", slab1"
+                    if numslabs == 2:
+                        slab2 = """
+            >>> slab2 = f('v') # need 2 slabs, so get another"""
+                        dict['slabs'] = dict['slabs'] + slab2
+                        dict['args'] = dict['args'] + ", slab2"
                 if type_dict[obj_type][obj_name]['callable']:
-                    plot = """
-            >>> a.%(name)s(ex) # plot using specified %(name)s object
-            <%(rtype)s ...>
-            """
+                    # default values, replace as needed.
+                    plot = """%(slabs)s
+            >>> a.%(name)s(ex%(args)s) # plot using specified %(name)s object
+            <%(rtype)s ...>"""
                 else:
-                    plot = """
-            >>> a.plot(ex) # plot using specified %(name)s object
-            <%(rtype)s ...>
-            """
+                    plot = """%(slabs)s
+            >>> a.plot(ex%(args)s) # plot using specified %(name)s object
+            <%(rtype)s ...>"""
                 dict['plot'] = plot % dict
                 dict['ex1'] = example1 % dict
                 if type_dict[obj_type][obj_name]['parent2']:
                     dict['parent2'] = type_dict[obj_type][obj_name]['parent2']
-
                     example2 = """
             >>> ex2=vcs.get%(name)s('%(parent2)s')  # instance of '%(parent2)s' %(name)s %(type)s
             %(plot2)s
-            """
+                    """
+                # set up plot2
+                dict['plot2'] = ''
                 dict['ex2'] = example2 % dict
             elif method == 'create':
                 example2 ="""
-                    >>> ex2=vcs.create%(name)s('example2','%(parent)s') # create 'example2' from '%(parent)s' template
-                    >>> vcs.show('%(name)s') # should now contain the 'example2' %(name)s
-                    *******************%(cap)s Names List**********************
-                    ...
-                    *******************End %(cap)s Names List**********************
-                    """
+            >>> ex2=vcs.create%(name)s('example2','%(parent)s') # create 'example2' from '%(parent)s' template
+            >>> vcs.show('%(name)s') # should now contain the 'example2' %(name)s
+            *******************%(cap)s Names List**********************
+            ...
+            *******************End %(cap)s Names List**********************"""
                 dict['plot'] = """
-                    >>> a.%(name)s(ex) # Plot using specified %(name)s object
-                    <vcs.displayplot.Dp ...>
-                    """
+            >>> a.%(name)s(ex) # Plot using specified %(name)s object
+            <vcs.displayplot.Dp ...>"""
                 dict['plot2'] = """
-                    >>> a.plot(ex2) # Plot using specified %(name)s object
-                    <vcs.displayplot.Dp ...>
-                    """
+            >>> a.plot(ex2) # Plot using specified %(name)s object
+            <vcs.displayplot.Dp ...>"""
                 dict['ex2'] = example2
             target_dict[obj_name] = docstring % dict
 
@@ -730,10 +755,7 @@ get_methods_doc = """
             >>> vcs.show('%(name)s') # Show all the existing %(name)s %(type)ss
             *******************%(cap)s Names List**********************
             ...
-            *******************End %(cap)s Names List**********************
-            %(ex1)s
-            %(ex2)s
-    """
+            *******************End %(cap)s Names List**********************%(ex1)s%(ex2)s"""
 get_docs = {}
 populate_docstrings(obj_details, get_docs, get_methods_doc, 'get')
 
