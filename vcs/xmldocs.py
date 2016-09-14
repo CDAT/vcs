@@ -440,7 +440,7 @@ dict.clear()
 obj_details={
     "graphics method": {
         "taylordiagram": {
-            "callable": False,
+            "callable": True,
             "parent": "default",
             "parent2": False,
             "rtype": "vcs.taylor.Gtd",
@@ -549,7 +549,7 @@ obj_details={
             "parent": "default",
             "parent2": "polar",
             "rtype": "vcs.template.P",
-            "slabs": 0,
+            "slabs": 1,
             "title": True,
         },
         "projection": {
@@ -557,7 +557,7 @@ obj_details={
             "parent": "default",
             "parent2": "polar",
             "rtype": "vcs.projection.Proj",
-            "slabs": 0,
+            "slabs": 1,
             "title": True,
         },
         "meshfill": {
@@ -604,7 +604,7 @@ obj_details={
         },
         "textcombined": {
             "callable": True,
-            "parent": "special",
+            "parent": "qa_tt:::left_tto",
             "parent2": False,
             "rtype": "vcs.textcombined.Tc",
             "slabs": 0,
@@ -613,7 +613,7 @@ obj_details={
         "texttable": {
             "callable": False,
             "parent": "default",
-            "parent2": False,
+            "parent2": "bigger",
             "rtype": "vcs.texttable.Tt",
             "slabs": 0,
             "title": True,
@@ -621,7 +621,7 @@ obj_details={
         "textorientation": {
             "callable": False,
             "parent": "default",
-            "parent2": False,
+            "parent2": "bigger",
             "rtype": "vcs.textorientation.To",
             "slabs": 0,
             "title": True,
@@ -647,6 +647,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
     """
     A function to generate docstrings from a dictionary.
     Structure of the function is pretty specific to type_dicts shaped like xmldoc.obj_details.
+
     Indentation of the docstring snippets looks screwy because they need to maintain alignment
     with the original docstring entries for Sphinx to pick them up correctly.
 
@@ -662,36 +663,43 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
         example2 = ''
         dict['type'] = obj_type
         for obj_name in type_dict[obj_type].keys():
+            # default values. Change as necessary.
             dict['name'] = dict['sp_name'] = obj_name
             dict['parent'] = type_dict[obj_type][obj_name]['parent']
+            dict['parent2'] = ''
             dict['sp_parent'] = ''
             dict['tc'] = ''
+            dict['ex2'] = ''
             dict['rtype'] = type_dict[obj_type][obj_name]['rtype']
             if type_dict[obj_type][obj_name]['title']:
                 dict['cap'] = dict['name'].title()
             else:
                 dict['cap'] = dict['name']
             if method == 'get':
+                example1 = """%(tc)s
+            >>> ex=vcs.get%(name)s(%(sp_parent)s)  # instance of '%(parent)s' %(name)s %(type)s%(plot)s"""
                 if obj_name in ['3d_vector', '3d_scalar', '3d_dual_scalar']:
                     dict['sp_name'] = 'dv3d'
                 elif obj_name in ['1d','scatter','textcombined','xyvsy']:
                     if obj_name == 'textcombined':
-                        dict['tc'] = """>>> vcs.createtext('qa_tt', 'qa', 'left_tto', '7left') # Create 'qa_tt' and 'left_tto'
+                        dict['tc'] = """
+            >>> vcs.createtext('qa_tt', 'qa', 'left_tto', '7left') # Create 'qa_tt' and 'left_tto'
             <vcs.textcombined.Tc object at ...>"""
                         dict['sp_parent'] = "'qa_tt', 'left_tto'"
                     else:
                         sp_parent = 'default_'+obj_name+'_'
                         dict['sp_parent'] = "'%s'" % sp_parent
                         dict['parent'] = dict['sp_parent']
-                example1 = """%(tc)s
-            >>> ex=vcs.get%(name)s(%(sp_parent)s)  # instance of '%(parent)s' %(name)s %(type)s
-            %(plot)s"""
-                # set up dict['plot']
+
+                # set up dict['plot'] and dict['plot2']
+                plot = ''
+                plot2 = ''
                 numslabs = type_dict[obj_type][obj_name]['slabs']
                 dict['slabs'] = ''
                 dict['args'] = ''
                 if numslabs > 0:
-                    dict['slabs'] = """>>> import cdms2 # Need cdms2 to create a slab
+                    dict['slabs'] = """
+            >>> import cdms2 # Need cdms2 to create a slab
             >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
             >>> slab1 = f('u') # use the data file to create a cdms2 slab"""
                     dict['args'] = ", slab1"
@@ -700,26 +708,32 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             >>> slab2 = f('v') # need 2 slabs, so get another"""
                         dict['slabs'] = dict['slabs'] + slab2
                         dict['args'] = dict['args'] + ", slab2"
+                # for vcs objects that have a self-named function, i.e. fillarea()
                 if type_dict[obj_type][obj_name]['callable']:
-                    # default values, replace as needed.
                     plot = """%(slabs)s
             >>> a.%(name)s(ex%(args)s) # plot using specified %(name)s object
-            <%(rtype)s ...>"""
-                else:
+            <vcs.displayplot.Dp ...>"""
+                    # set up plot2
+                    plot2 = """
+            >>> a.%(name)s(ex2%(args)s) # plot using specified %(name)s object
+            <vcs.displayplot.Dp ...>"""
+                # for objects like template, where a call to plot() needs to be made
+                elif obj_name not in ['textorientation', 'texttable']:
                     plot = """%(slabs)s
             >>> a.plot(ex%(args)s) # plot using specified %(name)s object
-            <%(rtype)s ...>"""
+            <vcs.displayplot.Dp ...>"""
+                    plot2 = """
+            >>> a.plot(ex2%(args)s) # plot using specified %(name)s object
+            <vcs.displayplot.Dp ...>"""
                 dict['plot'] = plot % dict
                 dict['ex1'] = example1 % dict
                 if type_dict[obj_type][obj_name]['parent2']:
                     dict['parent2'] = type_dict[obj_type][obj_name]['parent2']
                     example2 = """
-            >>> ex2=vcs.get%(name)s('%(parent2)s')  # instance of '%(parent2)s' %(name)s %(type)s
-            %(plot2)s
+            >>> ex2=vcs.get%(name)s('%(parent2)s')  # instance of '%(parent2)s' %(name)s %(type)s%(plot2)s
                     """
-                # set up plot2
-                dict['plot2'] = ''
-                dict['ex2'] = example2 % dict
+                    dict['plot2'] = plot2 % dict
+                    dict['ex2'] = example2 % dict
             elif method == 'create':
                 example2 ="""
             >>> ex2=vcs.create%(name)s('example2','%(parent)s') # create 'example2' from '%(parent)s' template
