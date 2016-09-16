@@ -110,7 +110,7 @@ class Dp(object):
                  "_newelements",
                  ]
 
-    def _repr_png(self):
+    def _repr_png_(self):
         import tempfile
         tmp = tempfile.mktemp() + ".png"
         self._parent.png(tmp)
