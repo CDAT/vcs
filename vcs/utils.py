@@ -47,6 +47,7 @@ vcs_deprecated_colormap_names = {
     "white2yellow":         "white_to_yellow",
 }
 
+defaultColorsRange = range(256)
 
 def process_range_from_old_scr(code, g):
     irg = code.find("range")
@@ -667,7 +668,7 @@ def scriptrun(script):
         exec(compile(open(script).read(), script, 'exec'))
     else:
         if os.path.split(script)[-1] == "initial.attributes":
-            vcs._doValidation = True
+            vcs._doValidation = False
         loader = {"P": 'template',
                   "Gfb": 'boxfill',
                   "Gfi": 'isofill',
@@ -1156,6 +1157,8 @@ def getcolors(levs, colors=None, split=1, white="white"):
     represent <0 and >0 values.
     If the colors are split an interval goes from <0 to >0
     then this is assigned the "white" color
+    the default range of colors to use can be adjusted by setting:
+    vcs.utils.defaultColorsRange = newrange
 
     :Example:
 
@@ -1173,6 +1176,9 @@ def getcolors(levs, colors=None, split=1, white="white"):
         [0, 241, 128, 153, 179, 204, 230, 255]
         >>> vcs.getcolors (a,white=241,split=0)
         [0, 36, 73, 109, 146, 182, 219, 255]
+        >>> vcs.utils.defaultColorsRange = range(16,240)
+        >>> vcs.getcolors (a,white=241)
+        [16, 241, 128, 150, 172, 195, 217, 239]
 
 
     :param levs: levels defining the color ranges
@@ -1196,7 +1202,7 @@ def getcolors(levs, colors=None, split=1, white="white"):
     """
 
     if colors is None:
-        colors = range(256)
+        colors = defaultColorsRange
     if len(levs) == 1:
         return [colors[0]]
     if isinstance(levs[0], list) or isinstance(levs[0], tuple):
