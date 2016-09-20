@@ -563,7 +563,7 @@ obj_details={
         "meshfill": {
             "callable": True,
             "parent": "default",
-            "parent2": "polar",
+            "parent2": "a_polar_meshfill",
             "rtype": "vcs.meshfill.Gfm",
             "slabs": 1,
             "title": True,
@@ -595,7 +595,7 @@ obj_details={
             "title": True,
         },
         "colormap": {
-            "callable": True,
+            "callable": False,
             "parent": "default",
             "parent2": "rainbow",
             "rtype": "vcs.colormap.Cp",
@@ -736,18 +736,18 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                 if obj_name == "textcombined":
                     example1 = dict['tc'] + """
             >>> vcs.listelements('%(name)s') # should now contain the 'qa_tt:::left_tto' %(name)s
-            [...'qa_tt:::left_tto', ...]"""
+            [...'qa_tt:::left_tto'...]"""
                 else:
                     example1 = """
-            >>> ex=vcs.create%(name)s('example1') # Create %(name)s 'example1' that inherits from 'default'
-            >>> vcs.listelements('%(name)s') # should now contain the 'example1' %(name)s
-            [...'example1', ...]"""
+            >>> ex=vcs.create%(name)s('%(name)s_ex1') # Create %(name)s '%(name)s_ex1' that inherits from 'default'
+            >>> vcs.listelements('%(name)s') # should now contain the '%(name)s_ex1' %(name)s
+            [...'%(name)s_ex1'...]"""
                 dict['ex1'] = example1 % dict
                 if dict['parent2']:
                     example2 ="""
-            >>> ex2=vcs.create%(name)s('example2','%(parent2)s') # create 'example2' from '%(parent2)s' template
-            >>> vcs.listelements('%(name)s') # should now contain the 'example2' %(name)s
-            [...'example2', ...]"""
+            >>> ex2=vcs.create%(name)s('%(name)s_ex2','%(parent2)s') # create '%(name)s_ex2' from '%(parent2)s' template
+            >>> vcs.listelements('%(name)s') # should now contain the '%(name)s_ex2' %(name)s
+            [...'%(name)s_ex2'...]"""
                     dict['ex2'] = example2 % dict
             target_dict[obj_name] = docstring % dict
 

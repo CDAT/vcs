@@ -1800,8 +1800,9 @@ def removeobject(obj):
             >>> line=a.getline('red') # To Modify an existing line object
             >>> iso=a.createisoline('dean') # Create an instance of an isoline object
             >>> a.removeobject(line) # Removes line object from VCS list
+            'Removed line object red'
             >>> a.removeobject(iso) # Remove isoline object from VCS list
-
+            'Removed isoline object dean'
     :param obj: Any VCS primary or secondary object
     :type obj: VCS object
 
