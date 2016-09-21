@@ -49,6 +49,7 @@ vcs_deprecated_colormap_names = {
 
 defaultColorsRange = range(256)
 
+
 def process_range_from_old_scr(code, g):
     irg = code.find("range")
     if irg > -1:

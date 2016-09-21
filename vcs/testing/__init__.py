@@ -1,2 +1,2 @@
-import regression
-import common
+import regression  # noqa
+import common  # noqa
