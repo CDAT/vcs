@@ -356,6 +356,26 @@ class Gfb(object):
             """ % xmldocs.graphics_method_core  # noqa
 
     def rename(self, newname):
+        """
+        Renames the boxfill in the VCS name table.
+
+        .. note::
+
+            This function will not rename the 'default' boxfill.
+            If rename is called on the 'default' boxfill, newname is put into the VCS name table,
+            but the boxfill's name will not be changed, and will behave in all ways as a 'default' boxfill.
+
+        :Example:
+
+            .. doctest:: gfb_rename
+
+                >>> b=vcs.createboxfill()
+                >>> b.name
+                '...'
+                >>> b.rename('')
+        :param newname: The new name you want given to the boxfill
+        :type newname:
+        """
         if newname == "default":
             raise Exception(
                 "You cannot overwrite the default boxfill graphic method")
