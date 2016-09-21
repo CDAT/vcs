@@ -368,7 +368,8 @@ class Gfb(object):
             warnings.warn(
                 "You were trying to rename the 'deafult' boxfill method, it was merely copied not renamed")
         else:
-            del(vcs.elements["boxfill"][self.name])
+            vcs.elements["boxfill"].pop(self.name)
+            self._name = newname
         self = vcs.elements["boxfill"][newname]
         return
 
