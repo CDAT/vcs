@@ -1,4 +1,5 @@
 from .pipeline2d import Pipeline2D
+from .. import vcs2vtk
 import fillareautils
 
 import numpy
@@ -123,6 +124,12 @@ class IsofillPipeline(Pipeline2D):
             act = vtk.vtkActor()
             act.SetMapper(mapper)
 
+            if self._vtkGeoTransform is None:
+                # If using geofilter on wireframed does not get wrppaed not
+                # sure why so sticking to many mappers
+                act = vcs2vtk.doWrap(act, plotting_dataset_bounds,
+                                     self._dataWrapModulo)
+
             patact = None
             # TODO see comment in boxfill.
             if mapper is self._maskedDataMapper:
@@ -156,7 +163,7 @@ class IsofillPipeline(Pipeline2D):
                 wc=plotting_dataset_bounds, geoBounds=self._vtkDataSet.GetBounds(),
                 geo=self._vtkGeoTransform,
                 priority=self._template.data.priority,
-                create_renderer=(mapper is self._maskedDataMapper or dataset_renderer is None))
+                create_renderer=(dataset_renderer is None))
         for act in patternActors:
             self._context().fitToViewport(
                 act, vp,
