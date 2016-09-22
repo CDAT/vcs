@@ -33,11 +33,12 @@ def objecthelp(*arg):
 
     :Example:
 
-    ::
+        .. doctest:: vcshelp_objecthelp
 
-        import vcs
-        # where: object is the Python object
-        vcs.objecthelp(object)
+            >>> objects = [ vcs.get3d_scalar(), vcs.get1d(), vcs.getboxfill() ]
+            >>> for object in objects:
+            ...     vcs.objecthelp(object)
+
 
     :param arg: Instance of a VCS object to display the documentation for.
     :type arg: VCS object instance

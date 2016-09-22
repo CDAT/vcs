@@ -1,4 +1,3 @@
-import vcs
 plot_keywords_doc = """
     :param xaxis: Axis object to replace the slab -1 dim axis
     :param yaxis: Axis object to replace the slab -2 dim axis, only if slab has more than 1D
@@ -793,25 +792,6 @@ create_methods_doc = """
             *******************End %(cap)s Names List**********************%(ex1)s%(ex2)s"""
 create_docs = {}
 populate_docstrings(obj_details, create_docs, create_methods_doc, 'create')
-# Graphics method create methods
-#   no second example
-dict['type'] = 'graphics method'
-dict['ex2'] = ''
-dict['name'] = dict['call'] = 'taylordiagram'
-dict['cap'] = dict['name'].title()
-
-# No type create methods
-dict['type'] = ''
-dict['name'] = dict['call'] = 'template'
-dict['parent'] = 'quick'
-dict['ex2'] = """
-            >>> ex2=vcs.create%(name)s('example2','%(parent)s') # create 'example2' from '%(parent)s' template
-            >>> vcs.show('%(name)s') # should now contain the 'example2' %(name)s
-            *******************%(cap)s Names List**********************
-            ...
-            *******************End %(cap)s Names List**********************
-    """ % dict
-
 
 exts_attrs= """
             .. py:attribute:: ext_1 (str)

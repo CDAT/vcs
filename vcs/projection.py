@@ -379,7 +379,7 @@ class Proj(object):
             p.parameters= params
             iso=x.createisoline('new')
             iso.projection=p
-            #or
+            # or
             iso.projection='lambert'
 
     """

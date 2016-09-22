@@ -423,21 +423,14 @@ def show(*args):
 
     :Example:
 
-    ::
+        .. doctest:: utils_show
 
-        # Create a VCS Canvas instance, named 'a'
-        a=vcs.init()
-        # List boxfill items on Canvas 'a'
-        a.show('boxfill')
-        # List isofill items on Canvas 'a'
-        a.show('isofill')
-        # List line items on Canvas 'a'
-        a.show('line')
-        # List marker items on Canvas 'a'
-        a.show('marker')
-        # List text items on Canvas 'a'
-        a.show('text')
-
+            >>> a=vcs.init() # Create a VCS Canvas instance, named 'a'
+            >>> a.show('boxfill') # List boxfill objects on Canvas 'a'
+            >>> a.show('isofill') # List isofill objects on Canvas 'a'
+            >>> a.show('line') # List line objects on Canvas 'a'
+            >>> a.show('marker') # List marker objects on Canvas 'a'
+            >>> a.show('text') # List text objects on Canvas 'a'
     """
     if args == ():
         return vcs.listelements()
@@ -964,15 +957,15 @@ def minmax(*data):
 
     :Example:
 
-    ::
+        .. doctest:: utils_minmax
 
-        >>> s=range(7)
-        >>> vcs.minmax(s)
-        (0.0, 6.0)
-        >>> vcs.minmax([s,s])
-        (0.0, 6.0)
-        >>> vcs.minmax([[s,s*2],4.,[6.,7.,s]],[5.,-7.,8,(6.,1.)])
-        (-7.0, 8.0)
+            >>> s=range(7)
+            >>> vcs.minmax(s)
+            (0.0, 6.0)
+            >>> vcs.minmax([s,s])
+            (0.0, 6.0)
+            >>> vcs.minmax([[s,s*2],4.,[6.,7.,s]],[5.,-7.,8,(6.,1.)])
+            (-7.0, 8.0)
 
     :param data: A comma-separated list of lists/arrays/tuples
     :type data: list
@@ -1013,14 +1006,14 @@ def mkevenlevels(n1, n2, nlev=10):
 
     :Example:
 
-    ::
+        .. doctest:: utils_mkevenlevels
 
-        >>> vcs.mkevenlevels(0,100)
-        [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
-        >>> vcs.mkevenlevels(0,100,nlev=5)
-        [0.0, 20.0, 40.0, 60.0, 80.0, 100.0]
-        >>> vcs.mkevenlevels(100,0,nlev=5)
-        [100.0, 80.0, 60.0, 40.0, 20.0, 0.0]
+            >>> vcs.mkevenlevels(0,100)
+            [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
+            >>> vcs.mkevenlevels(0,100,nlev=5)
+            [0.0, 20.0, 40.0, 60.0, 80.0, 100.0]
+            >>> vcs.mkevenlevels(100,0,nlev=5)
+            [100.0, 80.0, 60.0, 40.0, 20.0, 0.0]
 
     :param n1: Beginning of range. Int or float.
     :type n1: int, float
@@ -1047,26 +1040,27 @@ def mkscale(n1, n2, nc=12, zero=1, ends=False):
     This function return a nice scale given a min and a max
 
     .. warning::
+
         Not all functionality for the 'zero' parameter has been implemented.
         zero=0 is intended to let the function decide what should be done with zeros,
         but it has yet to be defined. Do not use zero=0.
 
     :Examples:
 
-    ::
+        .. doctest:: utils_mkscale
 
-        >>> vcs.mkscale(0,100)
-        [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
-        >>> vcs.mkscale(0,100,nc=5)
-        [0.0, 20.0, 40.0, 60.0, 80.0, 100.0]
-        >>> vcs.mkscale(-10,100,nc=5)
-        [-25.0, 0.0, 25.0, 50.0, 75.0, 100.0]
-        >>> vcs.mkscale(-10,100,nc=5,zero=-1)
-        [-20.0, 20.0, 60.0, 100.0]
-        >>> vcs.mkscale(2,20)
-        [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
-        >>> vcs.mkscale(2,20,zero=2)
-        [0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
+            >>> vcs.mkscale(0,100)
+            [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
+            >>> vcs.mkscale(0,100,nc=5)
+            [0.0, 20.0, 40.0, 60.0, 80.0, 100.0]
+            >>> vcs.mkscale(-10,100,nc=5)
+            [-25.0, 0.0, 25.0, 50.0, 75.0, 100.0]
+            >>> vcs.mkscale(-10,100,nc=5,zero=-1)
+            [-20.0, 20.0, 60.0, 100.0]
+            >>> vcs.mkscale(2,20)
+            [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
+            >>> vcs.mkscale(2,20,zero=2)
+            [0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
 
     :param n1: Minimum number in range.
     :type n1: float
@@ -1186,18 +1180,18 @@ def mklabels(vals, output='dict'):
 
     :Examples:
 
-    ::
+        .. doctest:: utils_mklabels
 
-        >>> a=vcs.mkscale(2,20,zero=2)
-        >>> vcs.mklabels (a)
-        {20.0: '20', 18.0: '18', 16.0: '16', 14.0: '14', 12.0: '12',
-            10.0: '10', 8.0: '8', 6.0: '6', 4.0: '4', 2.0: '2', 0.0: '0'}
-        >>> vcs.mklabels ( [5,.005])
-        {0.0050000000000000001: '0.005', 5.0: '5.000'}
-        >>> vcs.mklabels ( [.00002,.00005])
-        {2.0000000000000002e-05: '2E-5', 5.0000000000000002e-05: '5E-5'}
-        >>> vcs.mklabels ( [.00002,.00005],output='list')
-        ['2E-5', '5E-5']
+            >>> a=vcs.mkscale(2,20,zero=2)
+            >>> vcs.mklabels (a)
+            {20.0: '20', 18.0: '18', 16.0: '16', 14.0: '14', 12.0: '12',
+                10.0: '10', 8.0: '8', 6.0: '6', 4.0: '4', 2.0: '2', 0.0: '0'}
+            >>> vcs.mklabels ( [5,.005])
+            {0.0050000000000000001: '0.005', 5.0: '5.000'}
+            >>> vcs.mklabels ( [.00002,.00005])
+            {2.0000000000000002e-05: '2E-5', 5.0000000000000002e-05: '5E-5'}
+            >>> vcs.mklabels ( [.00002,.00005],output='list')
+            ['2E-5', '5E-5']
 
     :param vals: List or tuple of float values
     :type vals: list, tuple
@@ -1321,24 +1315,20 @@ def getcolors(levs, colors=None, split=1, white="white"):
 
     :Example:
 
-    ::
+        .. doctest:: utils_getcolors
 
-        >>> a=[0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
-        >>> vcs.getcolors (a)
-        [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
-        >>> vcs.getcolors (a,colors=range(16,200))
-        [16, 36, 57, 77, 97, 118, 138, 158, 179, 199]
-        >>> vcs.getcolors(a,colors=[16,25,15,56,35,234,12,11,19,32,132,17])
-        [16, 25, 15, 35, 234, 12, 11, 32, 132, 17]
-        >>> a=[-6.0, -2.0, 2.0, 6.0, 10.0, 14.0, 18.0, 22.0, 26.0]
-        >>> vcs.getcolors (a,white=241)
-        [0, 241, 128, 153, 179, 204, 230, 255]
-        >>> vcs.getcolors (a,white=241,split=0)
-        [0, 36, 73, 109, 146, 182, 219, 255]
-        >>> vcs.utils.defaultColorsRange = range(16,240)
-        >>> vcs.getcolors (a,white=241)
-        [16, 241, 128, 150, 172, 195, 217, 239]
-
+            >>> a=[0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
+            >>> vcs.getcolors (a)
+            [16, 41, 66, 90, 115, 140, 165, 189, 214, 239]
+            >>> vcs.getcolors (a,colors=range(16,200))
+            [16, 36, 57, 77, 97, 118, 138, 158, 179, 199]
+            >>> vcs.getcolors(a,colors=[16,25,15,56,35,234,12,11,19,32,132,17])
+            [16, 25, 15, 35, 234, 12, 11, 32, 132, 17]
+            >>> a=[-6.0, -2.0, 2.0, 6.0, 10.0, 14.0, 18.0, 22.0, 26.0]
+            >>> vcs.getcolors (a,white=241)
+            [72, 241, 128, 150, 172, 195, 217, 239]
+            >>> vcs.getcolors (a,white=241,split=0)
+            [16, 48, 80, 112, 143, 175, 207, 239]
 
     :param levs: levels defining the color ranges
     :type levs: list, tuple
@@ -1475,18 +1465,17 @@ def generate_time_labels(d1, d2, units, calendar=cdtime.DefaultCalendar):
 
     :Example:
 
-    ::
+        .. doctest:: generate_time_labels
 
-        # Two ways to generate a dictionary of time labels
-        #   for the year 2000 in units of 'days since 1800' :
-        lbls = generate_time_labels(cdtime.reltime(0,'months since 2000'),
-                                    cdtime.reltime(12,'months since 2000'),
-                                    'days since 1800',)
-        lbls = generate_time_labels(cdtime.reltime(0,'months since 2000'),
-                                    cdtime.comptime(2001),
-                                    'days since 1800',)
-        # Generate a dictionary of time labels for the year 2000 in units of 'months since 2000'
-        lbls = generate_time_labels(0, 12, 'months since 2000', )
+            # Two ways to generate a dictionary of time labels
+            >>> lbls = generate_time_labels(cdtime.reltime(0,'months since 2000'),
+            ...     cdtime.reltime(12,'months since 2000'),
+            ...     'days since 1800',) # for the year 2000 in units of 'days since 1800'
+            >>> lbls = generate_time_labels(cdtime.reltime(0,'months since 2000'),
+            ...     cdtime.comptime(2001),
+            ...     'days since 1800',) # for the year 2000 in units of 'days since 1800'
+            >>> lbls = generate_time_labels(0, 12, 'months since 2000', ) # Generate a dictionary of time labels
+                                                                        # for year 2000, units of 'months since 2000'
 
 
     :param d1: The beginning of the time interval to be labelled. Expects a cdtime object.
@@ -1638,9 +1627,9 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                       datawc_y1, datawc_y2, x=None, y=None):
     """
     Sets the labels and ticks for a graphics method made in python
-    Usage setTicksandLabels(gm,datawc_x1,datawc_x2,
-                               datawc_y1,datawc_y2,x=None,y=None)
-    datawc are world coordinates
+
+    :Example:
+
 
     :param gm: A VCS graphics method to alter
     :type gm: VCS graphics method
@@ -1802,21 +1791,22 @@ def getcolormap(Cp_name_src='default'):
     no colormap name is given, then colormap 'default' will be used.
 
     .. note::
-        VCS does not allow the modification of `default' attribute sets.
-        However, a `default' attribute set that has been copied under a
+
+        VCS does not allow the modification of 'default' attribute sets.
+        However, a 'default' attribute set that has been copied under a
         different name can be modified. (See the createcolormap function.)
 
     :Example:
 
-    ::
+        .. doctest:: utils_getcolormap
 
-        a=vcs.init()
-        # Show all the existing colormap secondary methods
-        a.show('colormap')
-        # cp instance of 'default' colormap secondary method
-        cp=a.getcolormap()
-        # cp2 instance of existing 'quick' colormap secondary method
-        cp2=a.getcolormap('quick')
+            >>> a=vcs.init()
+            >>> a.show('colormap') # Show all the existing colormap secondary methods
+            *******************Colormap Names List**********************
+            ...
+            *******************End Colormap Names List**********************
+            >>> cp=a.getcolormap() # cp instance of 'default' colormap secondary method
+            >>> cp2=a.getcolormap('rainbow') # cp2 instance of existing 'rainbow' colormap secondary method
 
 
     :param Cp_name_src: String name of an existing colormap VCS object
@@ -1848,23 +1838,24 @@ def setcolorcell(obj, num, r, g, b, a=100):
     the active colormap, then return an error string.
 
     .. note::
+
         If the the visual display is 16-bit, 24-bit, or 32-bit TrueColor,
         then a redrawing
         of the VCS Canvas is made every time the color cell is changed.
 
     :Example:
 
-    ::
+        .. doctest:: utils_setcolorcell
 
-        vcs.setcolorcell("AMIP",11,0,0,0)
-        vcs.setcolorcell("AMIP",21,100,0,0)
-        vcs.setcolorcell("AMIP",31,0,100,0)
-        vcs.setcolorcell("AMIP",41,0,0,100)
-        vcs.setcolorcell("AMIP",51,100,100,100)
-        vcs.setcolorcell("AMIP",61,70,70,70)
+            >>> vcs.setcolorcell("AMIP",11,0,0,0)
+            >>> vcs.setcolorcell("AMIP",21,100,0,0)
+            >>> vcs.setcolorcell("AMIP",31,0,100,0)
+            >>> vcs.setcolorcell("AMIP",41,0,0,100)
+            >>> vcs.setcolorcell("AMIP",51,100,100,100)
+            >>> vcs.setcolorcell("AMIP",61,70,70,70)
 
-    :param obj: ???
-    :type obj: ???
+    :param obj: String name of a colormap, or a VCS object
+    :type obj: str or VCS object
 
     :param num: Integer specifying which color cell to change. Must be from 0-239.
     :type num: int
@@ -1880,9 +1871,6 @@ def setcolorcell(obj, num, r, g, b, a=100):
 
     :param a: Integer specifying the opacity value for the colorcell. Must be from 0-100.
     :type a: int
-
-    :return: ???
-    :rtype: ???
     """
 
     if isinstance(obj, str):
@@ -1901,13 +1889,12 @@ def match_color(color, colormap=None):
 
     :Example:
 
-    ::
+        .. doctest:: utils_match_color
 
-        a=vcs.init()
-        print vcs.match_color('salmon')
-        print vcs.match_color('red')
-        # closest color from blue
-        print vcs.match_color([0,0,100],'default')
+            >>> a=vcs.init()
+            >>> print vcs.match_color('salmon')
+            >>> print vcs.match_color('red')
+            >>> print vcs.match_color([0,0,100],'default') # closest color from blue
 
     :param color: Either a string name, or a rgb value between 0 and 100.
     :type color: str, int
@@ -1917,7 +1904,7 @@ def match_color(color, colormap=None):
 
     :returns: Integer value representing a matching rgb color
     :rtype: int
-"""
+    """
     # First gets the rgb values
     if isinstance(color, basestring):
         vals = genutil.colors.str2rgb(color)
@@ -2019,7 +2006,6 @@ def getworldcoordinates(gm, X, Y):
     """
     Given a graphics method and two axes
     figures out correct world coordinates.
-
 
     :param gm: A VCS graphics method object to get worldcoordinates for.
     :type gm: graphics method object
@@ -2123,12 +2109,10 @@ def rgba_color(color, colormap):
 
     :Example:
 
-    ::
+        .. doctest:: utils_rbga_color
 
-        # Get a copy of the default colormap
-        cp = vcs.getcolormap()
-        # Find the rgba equivalent for black
-        blk = vcs.rgba_color('black', cp)
+            >>> cp = vcs.getcolormap() # Get a copy of the default colormap
+            >>> blk = vcs.rgba_color('black', cp) # Find the rgba equivalent for black
 
     :param color: The color to get the rgba value for. Can be an integer from 0-255, or a string name of a color.
     :type color: int, str

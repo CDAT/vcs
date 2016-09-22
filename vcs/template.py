@@ -1332,15 +1332,11 @@ class P(object):
 
         :Example:
 
-        ::
+            .. doctest:: template_move
 
-
-            # Create template 'example1' which inherits from 'default' template
-            t = vcs.createtemplate('example1', 'default')
-            # Move everything right by 20%
-            t.move(0.2,'x')
-            # Move everything up by 20%
-            t.move(0.2,'y')
+                >>> t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+                >>> t.move(0.2,'x') # Move everything right by 20%
+                >>> t.move(0.2,'y') # Move everything up by 20%
 
         :param p: Float indicating the percentage by which the template should move. i.e. 0.2 = 20%.
         :type p: float
@@ -1363,12 +1359,10 @@ class P(object):
 
         :Example:
 
-        ::
+            .. doctest:: template_moveto
 
-            # Create template 'example1' which inherits from 'default' template
-            t = vcs.createtemplate('example1', 'default')
-            # Move everything so that data.x1= 0.2 and data.y1= 0.2
-            t.moveto(0.2, 0.2)
+                >>> t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+                >>> t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
 
         :param x: Float representing the new coordinate of the template's data.x1 attribute.
         :type x: float
@@ -1397,16 +1391,13 @@ class P(object):
 
         :Example:
 
-        ::
+            .. doctest:: template_scale
 
-            # Create template 'example1' which inherits from 'default' template
-            t = vcs.createtemplate('example1', 'default')
-            # Halves the template size
-            t.scale(0.5)
-            # Upsize everything to 20% more than the original size
-            t.scale(1.2)
-            # Double the x axis
-            t.scale(2,'x')
+
+                >>> t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+                >>> t.scale(0.5) # Halves the template size
+                >>> t.scale(1.2) # Upsize everything to 20% more than the original size
+                >>> t.scale(2,'x') # Double the x axis
 
         :param scale: Float representing the factor by which to scale the template.
         :type scale: float

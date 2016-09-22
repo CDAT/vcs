@@ -362,7 +362,7 @@ class Gfb(object):
         .. note::
 
             This function will not rename the 'default' boxfill.
-            If rename is called on the 'default' boxfill, newname is put into the VCS name table,
+            If rename is called on the 'default' boxfill, newname is associated with default in the VCS name table,
             but the boxfill's name will not be changed, and will behave in all ways as a 'default' boxfill.
 
         :Example:
@@ -372,7 +372,14 @@ class Gfb(object):
                 >>> b=vcs.createboxfill()
                 >>> b.name
                 '...'
-                >>> b.rename('')
+                >>> vcs.listelements('boxfill') # list will include the name show above
+                [...]
+                >>> b.rename('foo')
+                >>> b.name
+                'foo'
+                >>> vcs.listelements('boxfill') # list will include 'foo', but not the old name
+                [...'foo'...]
+
         :param newname: The new name you want given to the boxfill
         :type newname:
         """

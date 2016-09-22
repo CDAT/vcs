@@ -305,33 +305,27 @@ class Cp(object):
 
         :Example:
 
-::
+            .. doctest:: colormap_setcolorcell
 
-        #Create a vcs Canvas
-        a = vcs.init()
-        #Create a colormap
-        cmap = a.createcolormap('example', 'default')
-        #Set RGBA values
-        cmap.setcolorcell(1,255,255,255,1.0)
+                >>> a = vcs.init() # Create a vcs Canvas
+                >>> cmap = a.createcolormap('example', 'default') # Create a colormap
+                >>> cmap.setcolorcell(40,80,95,1.0) # Set RGBA values
 
-:param index: Integer from 0-255.
-:type index: int
+        :param index: Integer from 0-255.
+        :type index: int
 
-:param red: Integer from 0-255 representing the concentration of red in the colorcell.
-:type red: int
+        :param red: Integer from 0-255 representing the concentration of red in the colorcell.
+        :type red: int
 
-:param green: Integer from 0-255 representing the concentration of green in the colorcell.
-:type green: int
+        :param green: Integer from 0-255 representing the concentration of green in the colorcell.
+        :type green: int
 
-:param blue: Integer from 0-255 representing the concentration of blue in the colorcell.
-:type blue: int
+        :param blue: Integer from 0-255 representing the concentration of blue in the colorcell.
+        :type blue: int
 
-:param alpha: Float representing the percentage of opacity in the colorcell.
-:type alpha: float
-
-:returns:
-:rtype:
-"""
+        :param alpha: Float representing the percentage of opacity in the colorcell.
+        :type alpha: float
+        """
         self.index[index] = [red, green, blue, alpha]
 
     # get a colorcell RGB
@@ -341,20 +335,17 @@ class Cp(object):
 
         :Example:
 
-    ::
+            .. doctest:: colormap_getcolorcell
 
-        #Create a vcs Canvas
-        a = vcs.init()
-        #Create a colormap
-        cmap = a.createcolormap('example', 'default')
-        #Get RGBA values
-        cmap.getcolorcell(1)
+                >>> a=vcs.init() # Create a vcs Canvas
+                >>> cmap = a.createcolormap('example', 'default') # Create a colormap
+                >>> cmap.getcolorcell(1) # Get RGBA values
 
-:param index: Index of a cell in the colormap. Must be an integer from 0-255.
-:type index: int
+        :param index: Index of a cell in the colormap. Must be an integer from 0-255.
+        :type index: int
 
-:returns: A list containing the red, green, blue, and alpha values (in that order), of the colorcell at the given index.
-:rtype: list
+        :returns: A list containing the red, green, blue, and alpha values (in that order), of the colorcell at the given index.
+        :rtype: list
         """
         return self.index[index]
 
