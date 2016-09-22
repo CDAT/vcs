@@ -15,7 +15,7 @@
 import VCS_validation_functions
 import vcs
 import copy
-from xmldocs import projection_script
+from xmldocs import scriptdocs
 
 # used to decide if we show longitude labels for round projections or
 # latitude labels for elliptical projections
@@ -664,7 +664,7 @@ class Proj(object):
             f = open(script_filename, mode)
             vcs.utils.dumpToJson(self, f)
             f.close()
-    script.__doc__ = projection_script
+    script.__doc__ = scriptdocs['projection']
 
     __slots__ = [
         's_name',

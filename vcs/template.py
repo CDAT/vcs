@@ -38,7 +38,7 @@ import inspect
 import cdutil
 from projection import round_projections
 from projection import elliptical_projections
-from xmldocs import template_script
+from xmldocs import scriptdocs
 
 # Following for class properties
 
@@ -997,7 +997,7 @@ class P(object):
             f = open(script_filename, mode)
             vcs.utils.dumpToJson(self, f)
             f.close()
-    script.__doc__ = template_script
+    script.__doc__ = scriptdocs['template']
 
     # Adding the drawing functionnality to plot all these attributes on the
     # Canvas

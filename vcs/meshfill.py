@@ -911,7 +911,7 @@ class Gfm(object):
             vcs.utils.dumpToJson(self, f)
             f.close()
         return
-    script.__doc__ = xmldocs.meshfill_script
+    script.__doc__ = xmldocs.scriptdocs['meshfill']
 
 
 ##########################################################################

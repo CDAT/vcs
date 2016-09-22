@@ -427,7 +427,7 @@ class Cp(object):
             vcs.utils.dumpToJson(self, f)
             f.close()
 
-    script.__doc__ = xmldocs.colormap_script
+    script.__doc__ = xmldocs.scriptdocs['colormap']
 ##########################################################################
 #        END OF FILE                                                            #
 ##########################################################################

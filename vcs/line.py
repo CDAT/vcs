@@ -25,7 +25,7 @@
 import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import line_script
+from xmldocs import scriptdocs
 
 
 def process_src(nm, code):
@@ -477,4 +477,4 @@ class Tl(object):
             f = open(script_filename, mode)
             vcs.utils.dumpToJson(self, f)
             f.close()
-    script.__doc__ = line_script
+    script.__doc__ = scriptdocs['line']

@@ -880,7 +880,7 @@ class Gfi(object):
             f = open(script_filename, mode)
             vcs.utils.dumpToJson(self, f)
             f.close()
-    script.__doc__ = xmldocs.isofill_script
+    script.__doc__ = xmldocs.scriptdocs['isofill']
 
 
 #

@@ -247,6 +247,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
     :param docstring: The template docstring
     :param method: The method that the docstring is for
     """
+    dict={}
     for obj_type in type_dict.keys():
         # example entries should default to empty
         example1 = ''
@@ -343,7 +344,8 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                 if obj_name == "textcombined":
                     dict['call'] = obj_name
                     dict['name'] = 'text table and text orientation'
-
+                else:
+                    dict['call'] = dict['name']
             target_dict[obj_name] = docstring % dict
             dict.clear()
 
@@ -539,18 +541,9 @@ obj_details={
         },
     }
 }
-
-# Scriptdocs section
-
-# Use this dictionary for string replacements
-#   dict keys are 'type', 'name', and 'call'
-#       'type' : The type of VCS object it is (i.e. Graphics method, secondary method, etc.)
-#       'name' : The name of the VCS object (i.e. boxfill, isofill, etc.)
-#       'call' : The function call for the object. Mostly, this is == name.
-#                   Some rare cases, like textcombined, require adjustment of this value.
-dict = {}
-dict['name'] = dict['type'] = dict['call'] = 'REPLACE_ME'
-
+# dictionary to store all docstring dictionaries and their associated docstrings
+# this will be used to populate all the docstrings in the same for loop (should better utilize locality)
+docstrings = {}
 
 scriptdoc = """
     Saves out a copy of the %(name)s %(type)s in JSON, or Python format to a designated file.
@@ -582,187 +575,29 @@ scriptdoc = """
     :param mode: Either 'w' for replace, or 'a' for append. Defaults to 'a', if not specified.
     :type mode: str
     """
-scriptdocs = {}
-populate_docstrings(obj_details, scriptdocs, scriptdoc, 'script')
 
-# Graphics Method scriptdocs
-dict['type'] = 'graphics method'
-dict['name'] = dict['call'] = 'colormap'
-colormap_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'boxfill'
-boxfill_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'isoline'
-isoline_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'isofill'
-isofill_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'yxvsx'
-yxvsx_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'meshfill'
-meshfill_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'fillarea'
-fillarea_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'marker'
-marker_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'line'
-line_script = scriptdoc % dict
-
-dict['name'] = 'text table and text orientation'
-dict['call'] = 'textcombined'
-textcombined_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'textorientation'
-textorientation_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'texttable'
-texttable_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'vector'
-vector_script = scriptdoc % dict
-
-# Object scriptdocs
-dict['type'] = 'object'
-dict['name'] = dict['call'] = 'template'
-template_script = scriptdoc % dict
-
-# Secondary Method scriptdocs
-dict['type'] = 'secondary method'
-dict['name'] = dict['call'] = 'projection'
-projection_script = scriptdoc % dict
-dict.clear()
-
-# dict['parent'] is for rare cases where there is no 'default' object to inherit from.
-dict['parent'] = 'REPLACE_ME'
-dict['tc_example'] = dict['to'] = ''
 queries_is_doc= """
-    Check to see if this object is a VCS %(type)s %(name)s %(method_type)s.
+    Check to see if this object is a VCS %(name)s %(type)s.
 
     :Example:
 
         .. doctest:: queries_is
 
-            >>> a=vcs.init() # Make a VCS Canvas object to work with:
-            %(tc_example)s
+            >>> a=vcs.init() # Make a VCS Canvas object to work with:%(tc)s
             >>> a.show('%(name)s') # Show all available %(name)s
             *******************%(cap)s Names List**********************
             ...
             *******************End %(cap)s Names List**********************
-            >>> ex = a.get%(name)s('%(parent)s'%(to)s) # To  test an existing %(name)s object
+            >>> ex = a.get%(name)s(%(sp_parent)s) # To  test an existing %(name)s object
             >>> vcs.queries.is%(name)s(ex)
             1
 
     :param obj: A VCS object
     :type obj: VCS Object
 
-    :returns: An integer indicating whether the object is a %(name)s %(method_type)s (1), or not (0).
+    :returns: An integer indicating whether the object is a %(name)s %(type)s (1), or not (0).
     :rtype: int
     """
-is_docs = {}
-# queries.is[PRIMARY_OBJECT]
-dict['type'] = 'primary'
-dict['parent'] = 'default'
-dict['method_type'] = 'graphics method'
-
-dict['name'] = 'vector'
-dict['cap'] = dict['name'].title()
-isvector_doc = queries_is_doc % dict
-dict['name'] = 'taylordiagram'
-dict['cap'] = dict['name'].title()
-istaylordiagram_doc = queries_is_doc % dict
-dict['name'] = 'meshfill'
-dict['cap'] = dict['name'].title()
-ismeshfill_doc = queries_is_doc % dict
-dict['name'] = 'boxfill'
-dict['cap'] = dict['name'].title()
-isboxfill_doc= queries_is_doc % dict
-dict['name'] = 'isofill'
-dict['cap'] = dict['name'].title()
-isisofill_doc= queries_is_doc % dict
-dict['name'] = 'isoline'
-dict['cap'] = dict['name'].title()
-isisoline_doc= queries_is_doc % dict
-dict['name'] = dict['cap'] = '3d_scalar'
-is3d_scalar_doc= queries_is_doc % dict
-dict['name'] = dict['cap'] = '3d_dual_scalar'
-is3d_dual_scalar_doc= queries_is_doc % dict
-dict['name'] = dict['cap'] = '3d_vector'
-is3d_vector_doc= queries_is_doc % dict
-dict['name'] = 'xvsy'
-dict['cap'] = dict['name'].title()
-isxvsy_doc = queries_is_doc % dict
-dict['name'] = 'yxvsx'
-dict['cap'] = dict['name'].title()
-isyxvsx_doc = queries_is_doc % dict
-dict['name'] = dict['cap'] = '1d'
-is1d_doc = queries_is_doc % dict
-
-# special inheritance cases
-dict['name'] = 'scatter'
-dict['cap'] = dict['name'].title()
-dict['parent'] = 'default_scatter_'
-isscatter_doc = queries_is_doc % dict
-dict['name'] = 'xyvsy'
-dict['cap'] = dict['name'].title()
-dict['parent'] = 'default_xyvsy_'
-isxyvsy_doc = queries_is_doc % dict
-
-# queries.is[SECONDARY_OBJECT]
-dict['type'] = 'secondary'
-dict['parent'] = 'default'
-
-dict['name'] = 'line'
-dict['cap'] = dict['name'].title()
-isline_doc = queries_is_doc % dict
-dict['name'] = 'marker'
-dict['cap'] = dict['name'].title()
-ismarker_doc = queries_is_doc % dict
-dict['name'] = 'fillarea'
-dict['cap'] = dict['name'].title()
-isfillarea_doc = queries_is_doc % dict
-dict['name'] = 'texttable'
-dict['cap'] = dict['name'].title()
-istexttable_doc = queries_is_doc % dict
-dict['name'] = 'textorientation'
-dict['cap'] = dict['name'].title()
-istextorientation_doc = queries_is_doc % dict
-
-# queries.is[SPECIAL_CASES]
-dict['name'] = 'textcombined'
-dict['cap'] = dict['name'].title()
-dict['tc_example'] ="""
-            >>> vcs.createtext('example_tt', 'std', 'example_to', '7left')
-            <vcs.textcombined.Tc ...>
-    """
-dict['parent'] = 'example_tt'
-dict['to'] = ", 'example_to'"
-istextcombined_doc = queries_is_doc % dict
-dict['tc_example'] = dict['to'] = ''
-dict.clear()
-
-
-def cleanup(string):
-    """
-    Removes extraneous empty lines from a string.
-
-    :param string: A string to strip of empty strings contained therein
-    :return: A string with all the empty strings stripped out
-    """
-    raw = string.split('\n')
-    for _ in raw:
-        if _ == '':
-            raw.remove(_)
-    clean = '\n'.join(raw)
-    return clean
-
-
-
 
 get_methods_doc = """
     VCS contains a list of %(type)ss. This function will create a
@@ -782,8 +617,6 @@ get_methods_doc = """
             >>> a=vcs.init()
             >>> vcs.listelements('%(name)s') # Show all the existing %(name)s %(type)ss
             [...]%(ex1)s%(ex2)s"""
-get_docs = {}
-populate_docstrings(obj_details, get_docs, get_methods_doc, 'get')
 
 create_methods_doc = """
     Create a new %(sp_name)s %(type)s given the the name and the existing
@@ -804,8 +637,18 @@ create_methods_doc = """
             *******************%(cap)s Names List**********************
             ...
             *******************End %(cap)s Names List**********************%(ex1)s%(ex2)s"""
+
+scriptdocs = {}
+docstrings['script'] = [scriptdocs, scriptdoc]
+is_docs = {}
+docstrings['is'] = [is_docs, queries_is_doc]
+get_docs = {}
+docstrings['get'] = [get_docs, get_methods_doc]
 create_docs = {}
-populate_docstrings(obj_details, create_docs, create_methods_doc, 'create')
+docstrings['create'] = [create_docs, create_methods_doc]
+# populate all the docstrings
+for method in docstrings.keys():
+    populate_docstrings(obj_details, docstrings[method][0], docstrings[method][1], method)
 
 exts_attrs= """
             .. py:attribute:: ext_1 (str)

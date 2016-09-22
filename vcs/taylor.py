@@ -8,6 +8,7 @@ import VCS_validation_functions
 import MV2
 import copy
 import warnings
+from xmldocs import scriptdocs
 
 
 def process_src(name, code):
@@ -1165,6 +1166,7 @@ class Gtd(object):
             f = open(script_filename, mode)
             vcs.utils.dumpToJson(self, f)
             f.close()
+    script.__doc__ = scriptdocs['taylordiagram']
 
     def addMarker(self, status='on', line=None,
                   id='', id_size=None, id_color=None, id_font=None, symbol=None,

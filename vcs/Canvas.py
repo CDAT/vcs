@@ -1175,7 +1175,7 @@ class Canvas(object):
 
     def getboxfill(self, Gfb_name_src='default'):
         return vcs.getboxfill(Gfb_name_src)
-    getboxfill.__doc__ = vcs.manageElements.getboxfill
+    getboxfill.__doc__ = vcs.manageElements.getboxfill.__doc__
 
     def boxfill(self, *args, **parms):
         """
