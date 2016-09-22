@@ -1380,9 +1380,10 @@ class Gtd(object):
 
     def getArc(self, value, val1=0., val2=90., convert=True):
         """
-        Return coordinates to draw an arc from 0 to 90 degrees
+        Return coordinates to draw an arc from 0 to 90 degrees.
 
         .. note::
+
             val1 and val2 can be used to limit the arc (in degrees).
 
         :param value: The radius of the arc to be calculated.

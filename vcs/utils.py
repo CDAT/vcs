@@ -1823,6 +1823,29 @@ def getcolormap(Cp_name_src='default'):
 
 
 def getcolorcell(cell, obj=None):
+    """
+    Gets the colorcell of the provided object's colormap at the specified cell index.
+    If no object is provided, or if the provided object has no colormap, the default colormap is used.
+
+    :Example:
+
+        .. doctest:: utils_getcolorcell
+
+            >>> a=vcs.init()
+            >>> b=vcs.createboxfill()
+            >>> b.colormap='rainbow'
+            >>> a.getcolorcell(2,b)
+            [85, 85, 85, 100.0]
+
+    :param cell: An integer value indicating the index of the desired colorcell.
+    :type cell: int
+
+    :param obj: Optional parameter containing the object to extract a colormap from.
+    :type obj: Any VCS object capable of containing a colormap
+
+    :return: The RGBA values of the colormap at the specified cell index.
+    :rtype: list
+    """
     if obj is None:
         cmap = vcs.getcolormap()
     elif obj.colormap is None:
@@ -2010,11 +2033,11 @@ def getworldcoordinates(gm, X, Y):
     :param gm: A VCS graphics method object to get worldcoordinates for.
     :type gm: graphics method object
 
-    :param X: A cdms transient axs
-    :type X: cdms transient axis
+    :param X: A cdms2 transient axs
+    :type X: cdms2 transient axis
 
-    :param Y: A cdms transient axs
-    :type Y: cdms transient axis
+    :param Y: A cdms2 transient axs
+    :type Y: cdms2 transient axis
 
     :returns:
     :rtype:
@@ -2112,7 +2135,9 @@ def rgba_color(color, colormap):
         .. doctest:: utils_rbga_color
 
             >>> cp = vcs.getcolormap() # Get a copy of the default colormap
-            >>> blk = vcs.rgba_color('black', cp) # Find the rgba equivalent for black
+            >>> vcs.rgba_color('black', cp) # Find the rgba equivalent for black
+            [0.0, 0.0, 0.0, 100]
+
 
     :param color: The color to get the rgba value for. Can be an integer from 0-255, or a string name of a color.
     :type color: int, str

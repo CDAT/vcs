@@ -201,6 +201,7 @@ class Gv(object):
         * List all attributes:
 
             .. code-block:: python
+
                 # Will list all the vector attribute values
                 vc.list()
 
@@ -297,7 +298,7 @@ class Gv(object):
 
                 # Can be an integer or float
                 vc.reference=4
-"""
+    """
     __slots__ = [
         'name',
         'g_name',
@@ -809,29 +810,6 @@ class Gv(object):
     #                                                                           #
     ##########################################################################
     def script(self, script_filename=None, mode=None):
-        '''
- Function:     script                           # Calls _vcs.scriptGv
-
- Description of Function:
-       Saves out a vector graphics method in Python or VCS script form to
-       a designated file.
-
- Example of Use:
-    script(scriptfile_name, mode)
-              where: scriptfile_name is the output name of the script file.
-                     mode is either "w" for replace or "a" for append.
-
-              Note: If the the filename has a ".py" at the end, it will produce a
-                    Python script. If the filename has a ".scr" at the end, it will
-                    produce a VCS script. If neither extensions are give, then by
-                    default a Python script will be produced.
-
-    a=vcs.init()
-    vec=a.createboxfill('temp')
-    vec.script('filename.py')         # Append to a Python file "filename.py"
-    vec.script('filename.scr')        # Append to a VCS file "filename.scr"
-    vec.script('filename','w')
-'''
         if (script_filename is None):
             raise ValueError(
                 'Error - Must provide an output script file name.')

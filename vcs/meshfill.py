@@ -149,20 +149,18 @@ def process_src(nm, code):
 # class Gfm(graphics_method_core):
 class Gfm(object):
 
-    """
+    __doc__ = """
     The meshfill graphics method (Gfm) displays a two-dimensional data array
     by surrounding each data value by a colored grid mesh.
 
     This class is used to define a meshfill table entry used in VCS, or it
     can be used to change some or all of the attributes in an existing
-    meshfill table entry
-    .
+    meshfill table entry.
 
-    :Example:
+    .. describe:: Useful Functions:
 
-::
+        .. code_block:: python
 
-    # Useful Functions:
         # VCS Canvas Constructor
         a=vcs.init()
         # Show predefined meshfill graphics methods
@@ -174,102 +172,142 @@ class Gfm(object):
         # Updates the VCS Canvas at user's request
         a.update()
 
-    # To Create a new instance of meshfill use:
+    .. describe:: Create a new instance of meshfill:
+
+        .. code_block:: python
+
         # Copies content of 'quick' to 'new'
         mesh=a.createmeshfill('new','quick')
         # Copies content of 'default' to 'new'
         mesh=a.createmeshfill('new')
 
-    # To Modify an existing meshfill use:
+    .. describe:: Modify an existing meshfill:
+
+        .. code_block:: python
+
         mesh=a.getmeshfill('AMIP_psl')
 
-    # Overview of meshfill object attributes:
-        # Will list all the meshfill attribute values
-        mesh.list()
-        mesh.projection='linear'
-        lon30={-180:'180W',-150:'150W',0:'Eq'}
-        mesh.xticlabels1=lon30
-        mesh.xticlabels2=lon30
-        # Will set them both
-        mesh.xticlabels(lon30, lon30)
-        mesh.xmtics1=''
-        mesh.xmtics2=''
-        # Will set them both
-        mesh.xmtics(lon30, lon30)
-        mesh.yticlabels1=lat10
-        mesh.yticlabels2=lat10
-        # Will set them both
-        mesh.yticlabels(lat10, lat10)
-        mesh.ymtics1=''
-        mesh.ymtics2=''
-        # Will set them both
-        mesh.ymtics(lat10, lat10)
-        mesh.datawc_y1=-90.0
-        mesh.datawc_y2=90.0
-        mesh.datawc_x1=-180.0
-        mesh.datawc_x2=180.0
-        # Will set them all
-        mesh.datawc(-90, 90, -180, 180)
-        mesh.ext_1='n'
-        mesh.ext_2='y'
-        # Will set them both
-        mesh.exts('n', 'y' )
-        # Color index value range 0 to 255
-        mesh.missing=241
+    .. describe:: Overview of meshfill object attributes:
 
-        # There are two possibilities for setting meshfill levels:
-            1) Levels are all contiguous (Examples):
-                    mesh.levels=([0,20,25,30,35,40],)
-                    mesh.levels=([0,20,25,30,35,40,45,50])
-                    mesh.levels=[0,20,25,30,35,40]
-                    mesh.levels=(0.0,20.0,25.0,30.0,35.0,40.0,50.0)
-            2) Levels are not contiguous (Examples):
-                    mesh.levels=([0,20],[30,40],[50,60])
-                    mesh.levels=([0,20,25,30,35,40],[30,40],[50,60])
+        .. code_block:: python
 
-        # There are three possibilities for setting fillarea color indices:
-                mesh.fillareacolors=([22,33,44,55,66,77])
-                mesh.fillareacolors=(16,19,33,44)
-                mesh.fillareacolors=None
+        * List all the meshfill attribute values
 
-        # There are three possibilities for setting fillarea style:
-                mesh.fillareastyle = 'solid'
-                mesh.fillareastyle = 'hatch'
-                mesh.fillareastyle = 'pattern'
+            .. code_block:: python
 
-        # There are two ways to set fillarea hatch or pattern indices:
-                mesh.fillareaindices=([1,3,5,6,9,20])
-                mesh.fillareaindices=(7,1,4,9,6,15)
-                See using fillarea objects below!
+                mesh.list()
 
-    #Using the fillarea secondary object:
-        f=createfillarea('fill1')
-        # To Create a new instance of fillarea:
-            # Copies 'quick' to 'new'
-            fill=a.createfillarea('new','quick')
-            # Copies 'default' to 'new'
-            fill=a.createfillarea('new')
+        * Setting attributes:
 
-        # To Modify an existing fillarea use:
-            fill=a.getmfillarea('def37')
-            # Set index using fillarea
-            mesh.fillareaindices=(7,fill,4,9,fill,15)
-            # list fillarea attributes
-            fill.list()
-            # change style
-            fill.style='hatch'
-            # change color
-            fill.color='black'
-            # change style index
-            fill.index=3
+            * Setting general attributes:
+
+                .. code_block:: python
+
+                    mesh.projection='linear'
+                    lon30={-180:'180W',-150:'150W',0:'Eq'}
+                    mesh.xticlabels1=lon30
+                    mesh.xticlabels2=lon30
+                    # Will set them both
+                    mesh.xticlabels(lon30, lon30)
+                    mesh.xmtics1=''
+                    mesh.xmtics2=''
+                    # Will set them both
+                    mesh.xmtics(lon30, lon30)
+                    mesh.yticlabels1=lat10
+                    mesh.yticlabels2=lat10
+                    # Will set them both
+                    mesh.yticlabels(lat10, lat10)
+                    mesh.ymtics1=''
+                    mesh.ymtics2=''
+                    # Will set them both
+                    mesh.ymtics(lat10, lat10)
+                    mesh.datawc_y1=-90.0
+                    mesh.datawc_y2=90.0
+                    mesh.datawc_x1=-180.0
+                    mesh.datawc_x2=180.0
+                    # Will set them all
+                    mesh.datawc(-90, 90, -180, 180)
+                    mesh.ext_1='n'
+                    mesh.ext_2='y'
+                    # Will set them both
+                    mesh.exts('n', 'y' )
+                    # Color index value range 0 to 255
+                    mesh.missing=241
+
+            * There are two possibilities for setting meshfill levels:
+
+                1) Levels are all contiguous:
+
+                    .. code_block:: python
+
+                        mesh.levels=([0,20,25,30,35,40],)
+                        mesh.levels=([0,20,25,30,35,40,45,50])
+                        mesh.levels=[0,20,25,30,35,40]
+                        mesh.levels=(0.0,20.0,25.0,30.0,35.0,40.0,50.0)
+
+                2) Levels are not contiguous (Examples):
+
+                    .. code_block:: python
+
+                        mesh.levels=([0,20],[30,40],[50,60])
+                        mesh.levels=([0,20,25,30,35,40],[30,40],[50,60])
+
+            * There are three ways to set fillarea color indices:
+
+                .. code_block:: python
+
+                    mesh.fillareacolors=([22,33,44,55,66,77])
+                    mesh.fillareacolors=(16,19,33,44)
+                    mesh.fillareacolors=None
+
+            * There are three ways to set fillarea style:
+
+                .. code_block:: python
+
+                    mesh.fillareastyle = 'solid'
+                    mesh.fillareastyle = 'hatch'
+                    mesh.fillareastyle = 'pattern'
+
+            * There are two ways to set fillarea hatch or pattern indices:
+
+                .. code_block:: python
+
+                    mesh.fillareaindices=([1,3,5,6,9,20])
+                    mesh.fillareaindices=(7,1,4,9,6,15)
+
+    .. describe:: Using the fillarea secondary object:
+
+        * Create a new instance of fillarea:
+
+            .. code_block:: python
+
+                # Copies 'quick' to 'new'
+                fill=a.createfillarea('new','quick')
+                # Copies 'default' to 'new'
+                fill=a.createfillarea('new')
+
+        * Modify an existing fillarea:
+
+            .. code_block:: python
+
+                fill=a.getmfillarea('def37')
+                # Set index using fillarea
+                mesh.fillareaindices=(7,fill,4,9,fill,15)
+                # list fillarea attributes
+                fill.list()
+                # change style
+                fill.style='hatch'
+                # change color
+                fill.color=241
+                # change style index
+                fill.index=3
 
 
-%s
-%s
-mesh :: (str/int) (0) Draws the mesh
-wrap :: ([float,float]) ([0.,0.]) Modulo to wrap around on either axis (automatically sets to 360 for longiutde axes)
-"""
-    # % (xmldocs.graphics_method_core, xmldocs.meshfill_doc)
+    %s
+    %s
+    mesh :: (str/int) (0) Draws the mesh
+    wrap :: ([float,float]) ([0.,0.]) Modulo to wrap around on either axis (automatically sets to 360 for longitude axes)
+    """ % (xmldocs.graphics_method_core, xmldocs.meshfill_doc)
 
     ##########################################################################
     #                                                                        #

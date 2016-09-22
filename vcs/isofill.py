@@ -306,8 +306,8 @@ class Gfi(object):
     .. describe:: Attribute descriptions:
 
         %s
-        %s
-""" % (xmldocs.graphics_method_core, xmldocs.isofill_doc)
+        %s"""% (xmldocs.graphics_method_core, xmldocs.isofill_doc)
+
     colormap = VCS_validation_functions.colormap
     __slots__ = [
         '__doc__',

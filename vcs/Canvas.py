@@ -5696,8 +5696,8 @@ class Canvas(object):
         return self.backend.orientation(*args, **kargs)
 
     def getcolorcell(self, *args):
-        """%s""" % vcs.getcolorcell.__doc__
         return vcs.getcolorcell(args[0], self)
+    getcolorcell.__doc__ = vcs.utils.getcolorcell.__doc__
 
     def getcolormapname(self):
         """

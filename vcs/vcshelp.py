@@ -40,9 +40,10 @@ def objecthelp(*arg):
             ...     vcs.objecthelp(object)
 
 
-    :param arg: Instance of a VCS object to display the documentation for.
-    :type arg: VCS object instance
-"""
+    :param arg: Instance(s) of VCS object(s) to display the documentation for.
+                Multiple objects should be comma-delimited.
+    :type arg: VCS object, or list of vcs objects
+    """
     for x in arg:
         print getattr(x, "__doc__", "")
 
