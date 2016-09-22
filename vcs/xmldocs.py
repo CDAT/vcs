@@ -249,11 +249,10 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
     """
     dict={}
     for obj_type in type_dict.keys():
-        # example entries should default to empty
-        example1 = ''
-        example2 = ''
         for obj_name in type_dict[obj_type].keys():
             # default values. Change as necessary.
+            example1 = ''
+            example2 = ''
             dict['type'] = obj_type
             dict['name'] = dict['sp_name'] = obj_name
             dict['parent'] = type_dict[obj_type][obj_name]['parent']
@@ -271,9 +270,11 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             elif obj_name in ['1d','scatter','textcombined','xyvsy']:
                 if obj_name == 'textcombined':
                     dict['tc'] = """
-            >>> vcs.createtextcombined('qa_tt', 'qa', 'left_tto', '7left') # Create 'qa_tt' and 'left_tto'
+            >>> a.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
             <vcs.textcombined.Tc ...>"""
-                    dict['sp_parent'] = "'qa_tt', 'left_tto'"
+                    dict['sp_parent'] = "'EXAMPLE_tt', 'EXAMPLE_tto'"
+                elif obj_name == '1d':
+                    dict['sp_parent'] = "'default'"
                 else:
                     sp_parent = 'default_'+obj_name+'_'
                     dict['sp_parent'] = "'%s'" % sp_parent
@@ -308,7 +309,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             >>> a.%(name)s(ex2%(args)s) # plot using specified %(name)s object
             <vcs.displayplot.Dp ...>"""
                 # for objects like template, where a call to plot() needs to be made
-                elif obj_name not in ['textorientation', 'texttable']:
+                elif obj_name not in ['textorientation', 'texttable', 'colormap']:
                     plot = """%(slabs)s
             >>> a.plot(ex%(args)s) # plot using specified %(name)s object
             <vcs.displayplot.Dp ...>"""
@@ -517,7 +518,7 @@ obj_details={
         },
         "textcombined": {
             "callable": True,
-            "parent": "qa_tt:::left_tto",
+            "parent": "EXAMPLE_tt:::EXAMPLE_tto",
             "parent2": "",
             "rtype": "vcs.textcombined.Tc",
             "slabs": 0,

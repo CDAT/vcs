@@ -1040,7 +1040,6 @@ class Canvas(object):
             .. doctest:: canvas_scriptobject
 
                 >>> a=vcs.init()
-                >>> l=a.getline('red') # To Modify an existing line object
                 >>> i=a.createisoline('dean') # Create an instance of default isoline object
                 >>> a.scriptobject(i,'ex_isoline.py') # Save isoline object as a Python file 'isoline.py'
                 >>> a.scriptobject(i,'ex_isoline2') # Save isoline object as a JSON object 'isoline2.json'
@@ -2218,7 +2217,7 @@ class Canvas(object):
                 >>> t.y=[.5]
                 >>> t.string=['Hello World']
                 >>> a.gettextextent(t)
-                [[0.5, 0.578125, 0.5, 0.5177065767284992]]
+                [[...]]
 
         :param textobject: A VCS text object
         :type textobject: textcombined
@@ -5476,22 +5475,12 @@ class Canvas(object):
         """
         .. deprecated:: 2.0
 
-            The getplot function is deprecated
+            The getplot function is deprecated. Do not use it.
 
         This function will create a display plot object from an existing display
         plot object from an existing VCS plot. If no display plot name
         is given, then None is returned.
 
-        :Example:
-
-            .. doctest:: canvas_getplot
-
-                >>> a=vcs.init()
-                >>> a.show('template') # Show all the existing templates
-                *******************Template Names List**********************
-                ...
-                *******************End Template Names List**********************
-                >>> plot1=a.getplot() # plot1 instance of 'dpy_plot_1' display plot
 
         :param Dp_name_src: String name of an existing display plot object
         :type Dp_name_src: str

@@ -35,7 +35,7 @@ def objecthelp(*arg):
 
         .. doctest:: vcshelp_objecthelp
 
-            >>> objects = [ vcs.get3d_scalar(), vcs.get1d(), vcs.getboxfill() ]
+            >>> objects = [ vcs.get3d_scalar(), vcs.getcolormap(), vcs.getboxfill() ]
             >>> for object in objects:
             ...     vcs.objecthelp(object)
 
