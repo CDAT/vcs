@@ -25,8 +25,9 @@ class animate_obj_old(object):
     Animate the contents of the VCS Canvas. The animation can also be controlled from
     the animation GUI. (See VCDAT for more details.)
 
-    See the `animation GUI documenation`_
-    .. _animation GUI documenation: http://www-pcmdi.llnl.gov/software/vcs
+    See the `animation GUI documentation`_
+
+    .. _animation GUI documentation: http://www-pcmdi.llnl.gov/software/vcs
 
     :Example:
 

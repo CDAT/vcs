@@ -4483,7 +4483,7 @@ class Canvas(object):
 
             ffmpeg ALWAYS overwrites the output file
 
-        .. admonishment:: Audio configuration
+        .. admonition:: Audio configuration
 
             via the options arg you can add audio file to your movie (see ffmpeg help)
 

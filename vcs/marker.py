@@ -117,7 +117,7 @@ class Tm(object):
 
     .. describe:: Useful Functions:
 
-        .. code_block:: python
+        .. code-block:: python
 
             # VCS Canvas Constructor
             a=vcs.init()
@@ -129,7 +129,7 @@ class Tm(object):
 
     .. describe:: Create a new instance of marker:
 
-        .. code_block:: python
+        .. code-block:: python
 
             # Copies content of 'red' to 'new'
             mk=a.createmarker('new','red')
@@ -138,7 +138,7 @@ class Tm(object):
 
     .. describe:: Modify an existing marker:
 
-        .. code_block:: python
+        .. code-block:: python
 
             mk=a.getmarker('red')
 
@@ -146,7 +146,7 @@ class Tm(object):
 
         * List all the marker attribute values:
 
-            .. code_block:: python
+            .. code-block:: python
 
                 mk.list()
                 # Range from 1 to 256
@@ -155,7 +155,8 @@ class Tm(object):
                 mk.size=100
 
         * Specify the marker type:
-            .. code_block:: python
+
+            .. code-block:: python
 
                 # Same as mk.type=1
                 mk.type='dot'
@@ -194,7 +195,7 @@ class Tm(object):
 
         * Set the graphics priority on the canvas
 
-            .. code_block:: python
+            .. code-block:: python
 
                 mk.priority=1
                 # FloatType [0,1]x[0,1]
@@ -204,7 +205,7 @@ class Tm(object):
 
         * Example x and y coordinates:
 
-            .. code_block:: python
+            .. code-block:: python
 
                 # List of FloatTypes
                 mk.x=[[0,.1,.2], [.3,.4,.5]]

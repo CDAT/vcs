@@ -159,41 +159,39 @@ class Gfm(object):
 
     .. describe:: Useful Functions:
 
-        .. code_block:: python
+        .. code-block:: python
 
-        # VCS Canvas Constructor
-        a=vcs.init()
-        # Show predefined meshfill graphics methods
-        a.show('meshfill')
-        # Change the VCS color map
-        a.setcolormap("AMIP")
-        # Plot data 's' with meshfill 'b' and 'default' template
-        a.meshfill(s,b,'default')
-        # Updates the VCS Canvas at user's request
-        a.update()
+            # VCS Canvas Constructor
+            a=vcs.init()
+            # Show predefined meshfill graphics methods
+            a.show('meshfill')
+            # Change the VCS color map
+            a.setcolormap("AMIP")
+            # Plot data 's' with meshfill 'b' and 'default' template
+            a.meshfill(s,b,'default')
+            # Updates the VCS Canvas at user's request
+            a.update()
 
     .. describe:: Create a new instance of meshfill:
 
-        .. code_block:: python
+        .. code-block:: python
 
-        # Copies content of 'quick' to 'new'
-        mesh=a.createmeshfill('new','quick')
-        # Copies content of 'default' to 'new'
-        mesh=a.createmeshfill('new')
+            # Copies content of 'quick' to 'new'
+            mesh=a.createmeshfill('new','quick')
+            # Copies content of 'default' to 'new'
+            mesh=a.createmeshfill('new')
 
     .. describe:: Modify an existing meshfill:
 
-        .. code_block:: python
+        .. code-block:: python
 
-        mesh=a.getmeshfill('AMIP_psl')
+            mesh=a.getmeshfill('AMIP_psl')
 
     .. describe:: Overview of meshfill object attributes:
 
-        .. code_block:: python
-
         * List all the meshfill attribute values
 
-            .. code_block:: python
+            .. code-block:: python
 
                 mesh.list()
 
@@ -201,7 +199,7 @@ class Gfm(object):
 
             * Setting general attributes:
 
-                .. code_block:: python
+                .. code-block:: python
 
                     mesh.projection='linear'
                     lon30={-180:'180W',-150:'150W',0:'Eq'}
@@ -238,7 +236,7 @@ class Gfm(object):
 
                 1) Levels are all contiguous:
 
-                    .. code_block:: python
+                    .. code-block:: python
 
                         mesh.levels=([0,20,25,30,35,40],)
                         mesh.levels=([0,20,25,30,35,40,45,50])
@@ -247,14 +245,14 @@ class Gfm(object):
 
                 2) Levels are not contiguous (Examples):
 
-                    .. code_block:: python
+                    .. code-block:: python
 
                         mesh.levels=([0,20],[30,40],[50,60])
                         mesh.levels=([0,20,25,30,35,40],[30,40],[50,60])
 
             * There are three ways to set fillarea color indices:
 
-                .. code_block:: python
+                .. code-block:: python
 
                     mesh.fillareacolors=([22,33,44,55,66,77])
                     mesh.fillareacolors=(16,19,33,44)
@@ -262,7 +260,7 @@ class Gfm(object):
 
             * There are three ways to set fillarea style:
 
-                .. code_block:: python
+                .. code-block:: python
 
                     mesh.fillareastyle = 'solid'
                     mesh.fillareastyle = 'hatch'
@@ -270,7 +268,7 @@ class Gfm(object):
 
             * There are two ways to set fillarea hatch or pattern indices:
 
-                .. code_block:: python
+                .. code-block:: python
 
                     mesh.fillareaindices=([1,3,5,6,9,20])
                     mesh.fillareaindices=(7,1,4,9,6,15)
@@ -279,7 +277,7 @@ class Gfm(object):
 
         * Create a new instance of fillarea:
 
-            .. code_block:: python
+            .. code-block:: python
 
                 # Copies 'quick' to 'new'
                 fill=a.createfillarea('new','quick')
@@ -288,7 +286,7 @@ class Gfm(object):
 
         * Modify an existing fillarea:
 
-            .. code_block:: python
+            .. code-block:: python
 
                 fill=a.getmfillarea('def37')
                 # Set index using fillarea
