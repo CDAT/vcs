@@ -1007,7 +1007,7 @@ class VTKVCSBackend(object):
         if units[:7].lower() == "percent":
             xoff = width * xOffset / zoom / 200.
             yoff = height * yOffset / zoom / 200.
-        elif units[:5].lower() == "pixels":
+        elif units[:6].lower() == "pixels":
             xoff = xOffset / zoom
             yoff = yOffset / zoom
         else:
