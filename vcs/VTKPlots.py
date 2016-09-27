@@ -980,12 +980,14 @@ class VTKVCSBackend(object):
                 return self.cleanupData(data[op])
 
     def put_png_on_canvas(
-            self, filename, zoom=1, xOffset=0, yOffset=0, *args, **kargs):
+            self, filename, zoom=1, xOffset=0, yOffset=0,
+            units="percent", fitToHeight=True, *args, **kargs):
         return self.put_img_on_canvas(
-            filename, zoom, xOffset, yOffset, *args, **kargs)
+            filename, zoom, xOffset, yOffset, units, fitToHeight, *args, **kargs)
 
     def put_img_on_canvas(
-            self, filename, zoom=1, xOffset=0, yOffset=0, *args, **kargs):
+            self, filename, zoom=1, xOffset=0, yOffset=0,
+            units="percent", fitToHeight=True, *args, **kargs):
         self.hideGUI()
         readerFactory = vtk.vtkImageReader2Factory()
         reader = readerFactory.CreateImageReader2(filename)
@@ -1002,11 +1004,21 @@ class VTKVCSBackend(object):
         cam.ParallelProjectionOn()
         width = (ext[1] - ext[0]) * spc[0]
         height = (ext[3] - ext[2]) * spc[1]
-        xoff = width * xOffset / zoom / 200.
-        yoff = height * yOffset / zoom / 200.
+        if units[:7].lower() == "percent":
+            xoff = width * xOffset / zoom / 200.
+            yoff = height * yOffset / zoom / 200.
+        elif units[:5].lower() == "pixels":
+            xoff = xOffset / zoom
+            yoff = yOffset / zoom
+        else:
+            raise RuntimeError("vtk put image does not understand %s for offset units" % units)
         xc = origin[0] + .5 * (ext[0] + ext[1]) * spc[0]
         yc = origin[1] + .5 * (ext[2] + ext[3]) * spc[1]
-        yd = (ext[3] - ext[2]) * spc[1]
+        if fitToHeight:
+            yd = (ext[3] - ext[2]) * spc[1]
+        else:
+            sz = self.renWin.GetSize()
+            yd = sz[1]
         d = cam.GetDistance()
         cam.SetParallelScale(.5 * yd / zoom)
         cam.SetFocalPoint(xc + xoff, yc + yoff, 0.)
@@ -1165,7 +1177,7 @@ class VTKVCSBackend(object):
 
         sz = self.renWin.GetSize()
         if width is not None and height is not None:
-            if self.renWin.GetSize() != (width, height):
+            if sz != (width, height):
                 user_dims = (self.canvas.bgX, self.canvas.bgY, sz[0], sz[1])
                 # We need to set canvas.bgX and canvas.bgY before we do renWin.SetSize
                 # otherwise, canvas.bgX,canvas.bgY will win
