@@ -106,10 +106,10 @@ class Logo(object):
         :type y: float
 
         :param width: width in pixels we want the log to be
-        :type width: float
+        :type width: int
 
         :param height: height in pixels we want the log to be
-        :type height: float
+        :type height: int
         """
         if source is None:
             self.source = None
@@ -126,7 +126,6 @@ class Logo(object):
                 else:
                     self.source.height = height
                 self.source.halign = 'center'
-                self.source.path = 'right'
                 self.source.valign = 'half'
                 # Set the texttable
                 self.source.font = 2
