@@ -32,21 +32,21 @@ indent = 1
 sort_keys = True
 # Deprecated color map names mapping
 vcs_deprecated_colormap_names = {
-    "blue2darkred":         "bl_to_darkred",
-    "blue2darkorange":      "bl_to_drkorang",
-    "blue2grey":            "blue_to_grey",
-    "blue2green":           "blue_to_grn",
-    "blue2orange":          "blue_to_orange",
-    "blue2orange2red":      "blue_to_orgred",
-    "brown2blue":           "brown_to_blue",
-    "green2magenta":        "grn_to_magenta",
-    "lightblue2darkblue":   "ltbl_to_drkbl",
-    "rainbownogreen":       "rainbow_no_grn",
-    "white2blue":           "white_to_blue",
-    "white2green":          "white_to_green",
-    "white2magenta":        "white_to_magenta",
-    "white2red":            "white_to_red",
-    "white2yellow":         "white_to_yellow",
+    "blue2darkred": "bl_to_darkred",
+    "blue2darkorange": "bl_to_drkorang",
+    "blue2grey": "blue_to_grey",
+    "blue2green": "blue_to_grn",
+    "blue2orange": "blue_to_orange",
+    "blue2orange2red": "blue_to_orgred",
+    "brown2blue": "brown_to_blue",
+    "green2magenta": "grn_to_magenta",
+    "lightblue2darkblue": "ltbl_to_drkbl",
+    "rainbownogreen": "rainbow_no_grn",
+    "white2blue": "white_to_blue",
+    "white2green": "white_to_green",
+    "white2magenta": "white_to_magenta",
+    "white2red": "white_to_red",
+    "white2yellow": "white_to_yellow",
 }
 
 defaultColorsRange = range(256)
@@ -55,14 +55,13 @@ defaultColorsRange = range(256)
 def get_png_dims(fnm):
     """given the path to a png, return width, height"""
     try:
-        data = open(fnm,"rb").read()
+        data = open(fnm, "rb").read()
         w, h = struct.unpack('>LL', data[16:24])
         width = int(w)
         height = int(h)
-    except Exception,err:
-        print "ERRO GETTING DIMS:",err
+    except Exception:
         width = None
-        height= None
+        height = None
     return width, height
 
 
@@ -91,9 +90,7 @@ class Logo(object):
             >>> logo2.y = .2
 
             >>> logo1.plot(x)
-            <vcs.displayplot.Dp ...>
             >>> logo2.plot(x)
-            <vcs.displayplot.Dp ...>
     """
     def __init__(self,source=None,x=.93,y=.95,width=None,height=None):
         """
@@ -146,7 +143,6 @@ class Logo(object):
 
         :Example:
 
-
             .. doctest:: utils_Logo_plot
 
                 >>> import vcs
@@ -163,9 +159,7 @@ class Logo(object):
                 >>> logo2.y = .2
 
                 >>> logo1.plot(x)
-                <vcs.displayplot.Dp ...>
                 >>> logo2.plot(x)
-                <vcs.displayplot.Dp ...>
 
 
         :param canvas: Canvas onto which you desire plotting the logo
@@ -173,9 +167,6 @@ class Logo(object):
 
         :param bg: do we plot in background (offscreen) mode or not? True/False
         :type bg: bool
-
-        :returns: A VCS displayplot object
-        :rtype: vcs.displayplot.Dp
         """
         if isinstance(self.source, basestring):
             cnv_info = canvas.canvasinfo()
@@ -184,21 +175,28 @@ class Logo(object):
             elif self.height is not None:
                 scale = float(self.height) / self.source_height
             else:
-                xdist  = cnv_info["width"] - self.x*cnv_info["width"]
-                xscale = xdist / self.source_width*2. 
-                ydist  = cnv_info["height"] - self.y*cnv_info["height"]
-                yscale = ydist / self.source_height*2.
-                scale = min(xscale,yscale)
+                xdist = cnv_info["width"] - self.x * cnv_info["width"]
+                xscale = xdist / self.source_width * 2.
+                ydist = cnv_info["height"] - self.y * cnv_info["height"]
+                yscale = ydist / self.source_height * 2.
+                scale = min(xscale, yscale)
 
-            xoff = - (cnv_info["width"]/2. - self.source_width/2.*xscale)
-            yoff = - (cnv_info["height"]/2. - self.source_height/2.*yscale)
-            canvas.put_png_on_canvas(self.source,zoom=scale,xOffset=xoff,yOffset=yoff,units="pixels",fitToHeight=False)
+            xoff = - (cnv_info["width"] / 2. - self.source_width / 2. * xscale)
+            yoff = - (cnv_info["height"] / 2. -
+                      self.source_height / 2. * yscale)
+            canvas.put_png_on_canvas(
+                self.source,
+                zoom=scale,
+                xOffset=xoff,
+                yOffset=yoff,
+                units="pixels",
+                fitToHeight=False)
         elif vcs.queries.istext(self.source):
             self.source.x = [self.x]
             self.source.y = [self.y]
             if self.height is not None:
                 self.source.height = self.height
-            canvas.plot(self.source,bg=bg)
+            canvas.plot(self.source, bg=bg)
 
 
 def process_range_from_old_scr(code, g):
@@ -888,7 +886,8 @@ def loadTemplate(nm, vals):
 
 
 def loadVCSItem(typ, nm, json_dict={}):
-    if typ in vcs._protected_elements.keys() and nm in vcs._protected_elements[typ]:
+    if typ in vcs._protected_elements.keys(
+    ) and nm in vcs._protected_elements[typ]:
         # protected element do not overload
         return
     tp = typ
@@ -930,7 +929,8 @@ def loadVCSItem(typ, nm, json_dict={}):
             setattr(gm, a, v)
 
             if nm in vcs_deprecated_colormap_names:
-                cmd = "gm = vcs.create%s('%s')" % (typ, vcs_deprecated_colormap_names[nm])
+                cmd = "gm = vcs.create%s('%s')" % (
+                    typ, vcs_deprecated_colormap_names[nm])
                 exec(cmd)
                 setattr(gm, a, v)
 
@@ -1173,7 +1173,8 @@ def __split2contiguous(levels):
         if il != 0:
             lv2 = levels[il - 1]
             if lv2[1] != lv[0]:
-                raise VCSUtilsError("Error intervals are NOT contiguous from " + str(lv2[1]) + " to " + str(lv[0]))
+                raise VCSUtilsError(
+                    "Error intervals are NOT contiguous from " + str(lv2[1]) + " to " + str(lv[0]))
         tmplevs.append(lv[0])
     tmplevs.append(levels[-1][1])
     return tmplevs
@@ -1251,7 +1252,14 @@ def mklabels(vals, output='dict'):
         aa = numpy.ma.power(10., -idigleft)
         while abs(round(aa * vals[i]) - aa * vals[i]) > .000001:
             aa = aa * 10.
-        idig = numpy.ma.maximum(idig, numpy.ma.floor(numpy.ma.log10(aa * numpy.ma.power(10., idigleft))))
+        idig = numpy.ma.maximum(
+            idig,
+            numpy.ma.floor(
+                numpy.ma.log10(
+                    aa *
+                    numpy.ma.power(
+                        10.,
+                        idigleft))))
     idig = int(idig)
 
     # Now does the writing part
@@ -2002,7 +2010,7 @@ def creategraphicsmethod(gtype, gname='default', name=None):
 # datawc_ can be a float or a cdtime.reltime
 # TODO: Investigate why datawc is converted to a cdtime.reltime
 def getDataWcValue(v):
-    if (type(v) is type(cdtime.reltime(0, 'months since 1900'))):  # noqa
+    if (isinstance(v, type(cdtime.reltime(0, 'months since 1900')))):  # noqa
         return v.value
     else:
         return v
@@ -2180,7 +2188,12 @@ def download_sample_data_files(path=None):
     import hashlib
     if path is None:
         path = vcs.sample_data
-    samples = open(os.path.join(vcs.prefix, "share", "vcs", "sample_files.txt")).readlines()
+    samples = open(
+        os.path.join(
+            vcs.prefix,
+            "share",
+            "vcs",
+            "sample_files.txt")).readlines()
     for sample in samples:
         good_md5, name = sample.split()
         local_filename = os.path.join(path, name)
@@ -2198,7 +2211,10 @@ def download_sample_data_files(path=None):
                     attempts = 5
                     continue
             print "Downloading:", name, "in", local_filename
-            r = requests.get("http://uvcdat.llnl.gov/cdat/sample_data/" + name, stream=True)
+            r = requests.get(
+                "http://uvcdat.llnl.gov/cdat/sample_data/" +
+                name,
+                stream=True)
             with open(local_filename, 'wb') as f:
                 for chunk in r.iter_content(chunk_size=1024):
                     if chunk:  # filter local_filename keep-alive new chunks
