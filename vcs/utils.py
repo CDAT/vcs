@@ -67,47 +67,52 @@ def get_png_dims(fnm):
 
 
 class Logo(object):
-    """Creates a 'logo' object
-        This also to draw a logo either from a text string or an picture (png) file
-        picture will be shrink to fit within the canvas if it's too big to fit
-        :Example:
+    """
+    Creates a 'logo' object
 
-            ::
+    This also to draw a logo either from a text string or a picture (png) file.
+    Picture will be shrunk to fit within the canvas if it's too big to fit
 
-           import vcs
-           import os
-           import sys
-           x=vcs.init()
-           x.open()
-           logo1 = vcs.utils.Logo(os.path.join(sys.prefix,"share","vcs","uvcdat.png"))
-           logo1.x=.7
-           logo1.y=.8
+    :Example:
 
-           logo2 = vcs.utils.Logo("My Test Logo")
-           logo2.x = .2
-           logo2.y = .2
+        .. doctest:: utils_Logo
 
-           logo1.plot(x)
-           logo2.plot(x)
+            >>> import vcs
+            >>> import os
+            >>> import sys
+            >>> x=vcs.init()
+            >>> x.open()
+            >>> logo1 = vcs.utils.Logo(os.path.join(sys.prefix,"share","vcs","uvcdat.png"))
+            >>> logo1.x=.7
+            >>> logo1.y=.8
 
-        """
+            >>> logo2 = vcs.utils.Logo("My Test Logo")
+            >>> logo2.x = .2
+            >>> logo2.y = .2
+
+            >>> logo1.plot(x)
+            <vcs.displayplot.Dp ...>
+            >>> logo2.plot(x)
+            <vcs.displayplot.Dp ...>
+    """
     def __init__(self,source=None,x=.93,y=.95,width=None,height=None):
         """
         Initialize a new "logo" object to be plotted later on a canvas
-:param source: text string or path to png file representing the logo
-:type source: str
 
-:param x: x position of the logo's center in fraction of canvas (0<x<1)
-:type x: float
+        :param source: text string or path to png file representing the logo
+        :type source: str
 
-:param y: y position of the logo's center in fraction of canvas (0<y<1)
-:type y: float
+        :param x: x position of the logo's center in fraction of canvas (0<x<1)
+        :type x: float
 
-:param width: width in pixels we want the log to be
-:type width: float
+        :param y: y position of the logo's center in fraction of canvas (0<y<1)
+        :type y: float
 
-:param height: height in pixels we want the log to be
-:type height: float
+        :param width: width in pixels we want the log to be
+        :type width: float
+
+        :param height: height in pixels we want the log to be
+        :type height: float
         """
         if source is None:
             self.source = None
@@ -136,34 +141,42 @@ class Logo(object):
         self.height = height
 
     def plot(self,canvas,bg=True):
-        """plot the log onto a given Canvas
-           : Example:
+        """
+        Plot the log onto a given Canvas
 
-                ::
-
-           import vcs
-           import os
-           import sys
-           x=vcs.init()
-           x.open()
-           logo1 = vcs.utils.Logo(os.path.join(sys.prefix,"share/vcs/uvcdat.png"))
-           logo1.x=.7
-           logo1.y=.8
-
-           logo2 = vcs.utils.Logo("My Test Logo")
-           logo2.x = .2
-           logo2.y = .2
-
-           logo1.plot(x)
-           logo2.plot(x)
+        :Example:
 
 
-:param canvas: Canvas onto which you desire plotting the logo
-:type canvas: vcs.Canvas.Canvas
+            .. doctest:: utils_Logo_plot
 
-:param bg: do we plot in background (offscreen) mode or not? True/False
-:type bg: bool
-"""
+                >>> import vcs
+                >>> import os
+                >>> import sys
+                >>> x=vcs.init()
+                >>> x.open()
+                >>> logo1 = vcs.utils.Logo(os.path.join(sys.prefix,"share/vcs/uvcdat.png"))
+                >>> logo1.x=.7
+                >>> logo1.y=.8
+
+                >>> logo2 = vcs.utils.Logo("My Test Logo")
+                >>> logo2.x = .2
+                >>> logo2.y = .2
+
+                >>> logo1.plot(x)
+                <vcs.displayplot.Dp ...>
+                >>> logo2.plot(x)
+                <vcs.displayplot.Dp ...>
+
+
+        :param canvas: Canvas onto which you desire plotting the logo
+        :type canvas: vcs.Canvas.Canvas
+
+        :param bg: do we plot in background (offscreen) mode or not? True/False
+        :type bg: bool
+
+        :returns: A VCS displayplot object
+        :rtype: vcs.displayplot.Dp
+        """
         if isinstance(self.source, basestring):
             cnv_info = canvas.canvasinfo()
             if self.width is not None:
