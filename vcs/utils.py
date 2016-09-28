@@ -23,6 +23,8 @@ import tempfile
 import cdms2
 import genutil
 import vtk
+import struct
+
 
 from colors import rgb2str, str2rgb, matplotlib2vcs  # noqa
 
@@ -48,6 +50,142 @@ vcs_deprecated_colormap_names = {
 }
 
 defaultColorsRange = range(256)
+
+
+def get_png_dims(fnm):
+    """given the path to a png, return width, height"""
+    try:
+        data = open(fnm,"rb").read()
+        w, h = struct.unpack('>LL', data[16:24])
+        width = int(w)
+        height = int(h)
+    except Exception,err:
+        print "ERRO GETTING DIMS:",err
+        width = None
+        height= None
+    return width, height
+
+
+class Logo(object):
+    """Creates a 'logo' object
+        This also to draw a logo either from a text string or an picture (png) file
+        picture will be shrink to fit within the canvas if it's too big to fit
+        :Example:
+
+            ::
+
+           import vcs
+           import os
+           import sys
+           x=vcs.init()
+           x.open()
+           logo1 = vcs.utils.Logo(os.path.join(sys.prefix,"share","vcs","uvcdat.png"))
+           logo1.x=.7
+           logo1.y=.8
+
+           logo2 = vcs.utils.Logo("My Test Logo")
+           logo2.x = .2
+           logo2.y = .2
+
+           logo1.plot(x)
+           logo2.plot(x)
+
+        """
+    def __init__(self,source=None,x=.93,y=.95,width=None,height=None):
+        """
+        Initialize a new "logo" object to be plotted later on a canvas
+:param source: text string or path to png file representing the logo
+:type source: str
+
+:param x: x position of the logo's center in fraction of canvas (0<x<1)
+:type x: float
+
+:param y: y position of the logo's center in fraction of canvas (0<y<1)
+:type y: float
+
+:param width: width in pixels we want the log to be
+:type width: float
+
+:param height: height in pixels we want the log to be
+:type height: float
+        """
+        if source is None:
+            self.source = None
+        elif vcs.queries.istext(source):
+            self.source = source
+        elif isinstance(source, basestring):
+            self.source_width, self.source_height = get_png_dims(source)
+            if self.source_width is not None:
+                self.source = source
+            else:
+                self.source = vcs.createtext()
+                if height is None:
+                    self.source.height = 20
+                else:
+                    self.source.height = height
+                self.source.halign = 'center'
+                self.source.path = 'right'
+                self.source.valign = 'half'
+                # Set the texttable
+                self.source.font = 2
+                self.source.color = [5, 10, 67, 100.0]
+                self.source.string = source
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+    def plot(self,canvas,bg=True):
+        """plot the log onto a given Canvas
+           : Example:
+
+                ::
+
+           import vcs
+           import os
+           import sys
+           x=vcs.init()
+           x.open()
+           logo1 = vcs.utils.Logo(os.path.join(sys.prefix,"share/vcs/uvcdat.png"))
+           logo1.x=.7
+           logo1.y=.8
+
+           logo2 = vcs.utils.Logo("My Test Logo")
+           logo2.x = .2
+           logo2.y = .2
+
+           logo1.plot(x)
+           logo2.plot(x)
+
+
+:param canvas: Canvas onto which you desire plotting the logo
+:type canvas: vcs.Canvas.Canvas
+
+:param bg: do we plot in background (offscreen) mode or not? True/False
+:type bg: bool
+"""
+        if isinstance(self.source, basestring):
+            cnv_info = canvas.canvasinfo()
+            if self.width is not None:
+                scale = float(self.width) / self.source_width
+            elif self.height is not None:
+                scale = float(self.height) / self.source_height
+            else:
+                xdist  = cnv_info["width"] - self.x*cnv_info["width"]
+                xscale = xdist / self.source_width*2. 
+                ydist  = cnv_info["height"] - self.y*cnv_info["height"]
+                yscale = ydist / self.source_height*2.
+                scale = min(xscale,yscale)
+
+            xoff = - (cnv_info["width"]/2. - self.source_width/2.*xscale)
+            yoff = - (cnv_info["height"]/2. - self.source_height/2.*yscale)
+            canvas.put_png_on_canvas(self.source,zoom=scale,xOffset=xoff,yOffset=yoff,units="pixels",fitToHeight=False)
+        elif vcs.queries.istext(self.source):
+            self.source.x = [self.x]
+            self.source.y = [self.y]
+            if self.height is not None:
+                self.source.height = self.height
+            canvas.plot(self.source,bg=bg)
 
 
 def process_range_from_old_scr(code, g):
