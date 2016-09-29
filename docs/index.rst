@@ -50,7 +50,7 @@ Table of contents
 
    user-guide
    developer-guide
-   reference
+   quick-reference
 
 API index
 ---------
