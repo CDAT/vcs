@@ -55,5 +55,7 @@ Table of contents
 API index
 ---------
 
-* :ref:`genindex`
-* :ref:`modindex`VCS
+.. toctree::
+    :maxdepth: 3
+
+    API/vcs
