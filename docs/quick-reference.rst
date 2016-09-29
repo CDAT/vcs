@@ -1,4 +1,4 @@
-VCS Reference Guide
+VCS Quick Reference
 --------------------
 
 init

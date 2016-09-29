@@ -1,6 +1,6 @@
-===
-VCS
-===
+=====================
+VCS API Documentation
+=====================
 
 .. automodule:: vcs
     :members:
