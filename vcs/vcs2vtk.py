@@ -242,19 +242,30 @@ def setInfToValid(geoPoints, ghost):
             ghost.SetValue(i, vtk.vtkDataSetAttributes.HIDDENPOINT)
     return anyInfinity
 
-
 def removeHiddenPoints(grid):
     ghost = grid.GetPointGhostArray()
     if (not ghost):
         return
     pts = grid.GetPoints()
-    validScalar = 0
+    minScalar = sys.float_info.max
+    minVector = [0, 0, 0]
+    minVectorNorm = sys.float_info.max
     scalars = grid.GetPointData().GetScalars()
-    if (scalars):
+    vectors = grid.GetPointData().GetVectors()
+    if (scalars or vectors):
+        vector = [0, 0, 0]
         for i in range(pts.GetNumberOfPoints()):
             if (not (ghost.GetValue(i) & vtk.vtkDataSetAttributes.HIDDENPOINT)):
-                validScalar = scalars.GetValue(i)
-                break
+                if (scalars):
+                    scalar = scalars.GetValue(i)
+                    if (scalar < minScalar):
+                        minScalar = scalar
+                if (vectors):
+                    vectors.GetTypedTuple(i, vector)
+                    vectorNorm = numpy.linalg.norm(vector)
+                    if (vectorNorm < minVectorNorm):
+                        minVector = vector
+                        minVectorNorm = vectorNorm
     for i in range(pts.GetNumberOfPoints()):
         if (ghost.GetValue(i) & vtk.vtkDataSetAttributes.HIDDENPOINT):
             cells = vtk.vtkIdList()
@@ -265,7 +276,9 @@ def removeHiddenPoints(grid):
             # hidden points are not removed. This causes problems
             # because it changes the scalar range.
             if(scalars):
-                scalars.SetValue(i, validScalar)
+                scalars.SetValue(i, minScalar)
+            if(vectors):
+                vectors.SetTypedTuple(i, minVector)
     # ensure that GLOBALIDS are copied
     attributes = grid.GetCellData()
     attributes.SetActiveAttribute(-1, attributes.GLOBALIDS)
