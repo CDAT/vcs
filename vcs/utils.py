@@ -92,7 +92,7 @@ class Logo(object):
             >>> logo1.plot(x)
             >>> logo2.plot(x)
     """
-    def __init__(self,source=None,x=.93,y=.95,width=None,height=None):
+    def __init__(self, source=None, x=.93, y=.95, width=None, height=None):
         """
         Initialize a new "logo" object to be plotted later on a canvas
 
@@ -136,7 +136,7 @@ class Logo(object):
         self.width = width
         self.height = height
 
-    def plot(self,canvas,bg=True):
+    def plot(self, canvas, bg=True):
         """
         Plot the log onto a given Canvas
 
