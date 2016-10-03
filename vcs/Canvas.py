@@ -784,18 +784,16 @@ class Canvas(object):
 
     def objecthelp(self, *arg):
         """
-    Print out information on the VCS object. See example below on its use.
+        Print out information on the VCS object. See example below on its use.
 
-    :Example:
+        :Example:
 
-    ::
+            .. doctest:: canvas_objecthelp
 
-        a=vcs.init()
-        # Get a VCS line object
-        ln=a.getline('red')
-        # This will print out information on how to use ln
-        a.objecthelp(ln)
-    """
+                >>> a=vcs.init()
+                >>> ln=a.getline('red') # Get a VCS line object
+                >>> a.objecthelp(ln) # This will print out information on how to use ln
+        """
         for x in arg:
             print getattr(x, "__doc__", "")
 
@@ -932,18 +930,51 @@ class Canvas(object):
 
     # Functions to set/querie drawing of UV-CDAT logo
     def drawlogoon(self):
-        """Show UV-CDAT logo on the canvas"""
+        """
+        Show UV-CDAT logo on the canvas
+
+        :Example:
+
+            .. doctest:: canvas_drawlogoon
+
+                >>> a=vcs.init()
+                >>> a.drawlogoon()
+                >>> a.getdrawlogo()
+                True
+        """
         self.enableLogo = True
 
     def drawlogooff(self):
-        """Hide UV-CDAT logo on the canvas"""
+        """
+        Hide UV-CDAT logo on the canvas
+
+        :Example:
+
+            .. doctest:: canvas_drawlogooff
+
+                >>> a=vcs.init()
+                >>> a.drawlogooff()
+                >>> a.getdrawlogo()
+                False
+        """
         self.enableLogo = False
 
     def getdrawlogo(self):
         """
-        Returns value of draw logo
+        Returns value of draw logo. By default, draw logo is set to True.
 
-        :returns: Boolean value of system variable which indicates whether log will be drawn
+        :Example:
+
+            .. doctest:: canvas_getdrawlogo
+
+                >>> a=vcs.init()
+                >>> a.getdrawlogo()
+                True
+                >>> a.drawlogooff()
+                >>> a.getdrawlogo()
+                False
+
+        :returns: Boolean value of system variable which indicates whether logo will be drawn
         :rtype: bool
         """
         return self.enableLogo
@@ -953,80 +984,76 @@ class Canvas(object):
 
     def update(self, *args, **kargs):
         """
-    If a series of commands are given to VCS and the Canvas Mode is
-    set to manual, then use this function to update the plot(s)
-    manually.
+        If a series of commands are given to VCS and the Canvas Mode is
+        set to manual, then use this function to update the plot(s)
+        manually.
 
-    :Example:
+        :Example:
 
-    ::
+            .. doctest:: canvas_update
 
-        a=vcs.init()
-        a.plot(s,'default','boxfill','quick')
-        # Go to manual mode
-        a.mode = 0
-        box=x.getboxfill('quick')
-        box.color_1=100
-        box.xticlabels('lon30','lon30')
-        box.xticlabels('','')
-        box.datawc(1e20,1e20,1e20,1e20)
-        box.datawc(-45.0, 45.0, -90.0, 90.0)
-        # Update the changes manually
-        a.update()
-"""
+                >>> a=vcs.init()
+                >>> import cdms2 # We need cdms2 to create a slab
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+                >>> s = f('clt') # use the data file to create a slab
+                >>> a.plot(s,'default','boxfill','quick')
+                <vcs.displayplot.Dp ...>
+                >>> a.mode = 0 # Go to manual mode
+                >>> box=a.getboxfill('quick')
+                >>> box.color_1=100
+                >>> box.xticlabels('lon30','lon30')
+                >>> box.xticlabels('','')
+                >>> box.datawc(1e20,1e20,1e20,1e20)
+                >>> box.datawc(-45.0, 45.0, -90.0, 90.0)
+                >>> a.update() # Update the changes manually
+        """
 
         return self.backend.update(*args, **kargs)
 
     def scriptobject(self, obj, script_filename=None, mode=None):
         """
-    Save individual attributes sets (i.e., individual primary class
-    objects and/or secondary class objects). These attribute sets
-    are saved in the user's current directory in one of two formats:
-    Python script, or a Javascript Object.
+        Save individual attributes sets (i.e., individual primary class
+        objects and/or secondary class objects). These attribute sets
+        are saved in the user's current directory in one of two formats:
+        Python script, or a Javascript Object.
 
-    .. note::
-        If the the filename has a ".py" at the end, it will produce a
-        Python script. If the filename has a ".scr" at the end, it will
-        produce a VCS script. If neither extensions are given, then by
-        default a Javascript Object will be produced.
+        .. note::
 
-    .. attention::
-        VCS does not allow the modification of 'default' attribute sets,
-        it will not allow them to be saved as individual script files.
-        However, a 'default' attribute set that has been copied under a
-        different name can be saved as a script file.
+            If the the filename has a ".py" at the end, it will produce a
+            Python script. If the filename has a ".scr" at the end, it will
+            produce a VCS script. If neither extensions are given, then by
+            default a Javascript Object will be produced.
 
-    .. admonition:: VCS Scripts Deprecated
+        .. attention::
 
-        SCR scripts are no longer generated by this function
+            VCS does not allow the modification of 'default' attribute sets,
+            it will not allow them to be saved as individual script files.
+            However, a 'default' attribute set that has been copied under a
+            different name can be saved as a script file.
 
+        .. admonition:: VCS Scripts Deprecated
 
+            SCR scripts are no longer generated by this function
 
+        :Example:
 
-    :Example:
+            .. doctest:: canvas_scriptobject
 
-    ::
+                >>> a=vcs.init()
+                >>> l=a.getline('red') # To Modify an existing line object
+                >>> i=a.createisoline('dean') # Create an instance of default isoline object
+                >>> a.scriptobject(i,'ex_isoline.py') # Save isoline object as a Python file 'isoline.py'
+                >>> a.scriptobject(i,'ex_isoline2') # Save isoline object as a JSON object 'isoline2.json'
 
-        a=vcs.init()
-        # To Modify an existing line object
-        l=a.getline('red')
-        # Create an instance of default isoline object
-        i=a.createisoline('dean')
-        #...
-        # Save isoline object as a Python file 'isoline.py'
-        a.scriptobject(i,'ex_isoline.py')
-        # Save isoline object as a JSON object 'isoline2.json'
-        a.scriptobject(i,'ex_isoline2')
+        :param script_filename: Name of the output script file.
+        :type script_filename: str
 
-:param script_filename: Name of the output script file.
-:type script_filename: str
+        :param mode: Mode is either "w" for replace or "a" for append.
+        :type mode: str
 
-:param mode: Mode is either "w" for replace or "a" for append.
-:type mode: str
-
-:param obj: Any VCS primary class or secondary class object.
-:type obj: VCS object
-"""
+        :param obj: Any VCS primary class or secondary class object.
+        :type obj: VCS object
+        """
         if istemplate(obj):
             template.P.script(obj, script_filename, mode)
         elif isgraphicsmethod(obj):
@@ -1073,24 +1100,15 @@ class Canvas(object):
             print 'This is not a template, graphics method or secondary method object.'
 
     def removeobject(self, obj):
-        """
-        Removes a VCS object from the cache of available objects that can be referred to by name.
-
-        :param obj: The VCS object to be removed.
-        :type obj: a VCS object
-
-        :returns: A string stating the object was removed, its type, and its name
-        :rtype: str
-        """
-        __doc__ = vcs.removeobject.__doc__  # noqa
         return vcs.removeobject(obj)
+    removeobject.__doc__ = vcs.manageElements.removeobject.__doc__  # noqa
 
     def removeP(self, *args):
         return vcs.removeP(*args)
 
     def clean_auto_generated_objects(self, type=None):
         """
-        Cleans up all automaticaly generated VCS objects.
+        Cleans up all automatically generated VCS objects.
 
         This function will delete all references to objects that
         VCS created automatically in response to user actions but are
@@ -1152,74 +1170,63 @@ class Canvas(object):
     getprojection.__doc__ = vcs.manageElements.getprojection.__doc__
 
     def createboxfill(self, name=None, source='default'):
-        """
-        Create a Boxfill Graphics Method
-
-        :param name: The name of the created object
-        :type name: str
-
-        :param source: The object to inherit from
-        :type source: a boxfill, or a string name of a boxfill
-
-        :return: A boxfill graphics method
-        """
         return vcs.createboxfill(name, source)
     createboxfill.__doc__ = vcs.manageElements.createboxfill.__doc__
 
     def getboxfill(self, Gfb_name_src='default'):
-        """
-
-        :param Gfb_name_src:
-        :return:
-        """
         return vcs.getboxfill(Gfb_name_src)
     getboxfill.__doc__ = vcs.manageElements.getboxfill
 
     def boxfill(self, *args, **parms):
         """
-        Plot a boxfill.
-
         Generate a boxfill plot given the data, boxfill graphics method, and
         template. If no boxfill class object is given, then the 'default' boxfill
         graphics method is used. Similarly, if no template class object is given,
         then the 'default' template is used.
 
+
+
         :Example:
 
-        ::
+            .. doctest:: canvas_boxfill
 
-            a=vcs.init()
-            # Show all the existing boxfill graphics methods
-            a.show('boxfill')
-            # Create instance of 'quick'
-            box=a.getboxfill('quick')
-            # Plot array using specified box and default template
-            a.boxfill(array,box)
-            # Create an instance of template 'AMIP'
-            template=a.gettemplate('AMIP')
-            # Clear VCS canvas
-            a.clear()
-            # Plot array using specified box and template
-            a.boxfill(array,box,template)
-            # Plot array using specified box and template
-            a.boxfill(box,array,template)
-            # Plot array using specified box and template
-            a.boxfill(template,array,box)
-            # Plot array using specified box and template
-            a.boxfill(template,array,box)
-            # Use 'AMIP' template and 'quick' boxfill
-            a.boxfill(array,'AMIP','quick')
-            # Use 'AMIP' template and 'quick' boxfill
-            a.boxfill('AMIP',array,'quick')
-            # Use 'AMIP' template and 'quick' boxfill
-            a.boxfill('AMIP','quick',array)
+                >>> a=vcs.init()
+                >>> a.show('boxfill') # Show all the existing boxfill graphics methods
+                *******************Boxfill Names List**********************
+                ...
+                *******************End Boxfill Names List**********************
+                >>> box=a.getboxfill('quick') # Create instance of 'quick'
+                >>> array=[range(10) for _ in range(10)]
+                >>> a.boxfill(array, box) # Plot array using specified box and default template
+                <vcs.displayplot.Dp ...>
+                >>> template = a.gettemplate('quick') # get quick template
+                >>> a.clear() # Clear VCS canvas
+                >>> a.boxfill(array, box, template) # Plot array using specified box and template
+                <vcs.displayplot.Dp ...>
+                >>> a.boxfill(box, array, template) # Plot array using specified box and template
+                <vcs.displayplot.Dp ...>
+                >>> a.boxfill(template, array, box) # Plot array using specified box and template
+                <vcs.displayplot.Dp ...>
+                >>> a.boxfill(template, box, array) # Plot array using specified box and template
+                <vcs.displayplot.Dp ...>
+                >>> a.boxfill(array, 'hovmuller', 'quick') # Use 'hovmuller' template and 'quick' boxfill
+                <vcs.displayplot.Dp ...>
+                >>> a.boxfill('hovmuller', array, 'quick') # Use 'hovmuller' template and 'quick' boxfill
+                <vcs.displayplot.Dp ...>
+                >>> a.boxfill('hovmuller', 'quick', array) # Use 'hovmuller template and 'quick' boxfill
+                <vcs.displayplot.Dp ...>
 
-%s
-%s
-%s
-%s
-%s
-"""
+            .. note::
+
+                As shown above, the array, 'template', and 'box' parameters can be provided in any order.
+                The 'template' and 'box' parameters can either be VCS template and boxfill objects,
+                or string names of template and boxfill objects.
+        %s
+        %s
+        %s
+        %s
+        %s
+        """
         arglist = _determine_arg_list('boxfill', args)
         return self.__plot(arglist, parms)
     boxfill.__doc__ = boxfill.__doc__ % (
@@ -1242,20 +1249,26 @@ class Canvas(object):
 
         :Example:
 
-        ::
+            .. doctest:: canvas_taylordiagram
 
-    a=vcs.init()
-    # Show all the existing taylordiagram graphics methods
-    a.show('taylordiagram')
-    # Create instance of 'default'
-    td=a.gettaylordiagram()
-    # Plot array using specified iso and default template
-    a.taylordiagram(array,td)
-    # Clear VCS canvas
-    a.clear()
-    # Plot array using specified iso and template
-    a.taylordiagram(array,td,template)
-"""
+                >>> a=vcs.init()
+
+                >>> a.show('taylordiagram') # Show all the existing taylordiagram graphics methods
+                *******************Taylordiagram Names List**********************
+                ...
+                *******************End Taylordiagram Names List**********************
+                >>> td= a.gettaylordiagram() # Create instance of 'default'
+                >>> array=[range(1, 11) for _ in range(1, 11)]
+                >>> a.taylordiagram(array,td) # Plot array using specified iso and default template
+                <vcs.displayplot.Dp ...>
+                >>> a.clear() # Clear VCS canvas
+                >>> template=a.gettemplate('hovmuller')
+                >>> a.taylordiagram(array,td,template) # Plot array using specified iso and template
+                <vcs.displayplot.Dp ...>
+
+        :returns: A VCS displayplot object.
+        :rtype: vcs.displayplot.Dp
+        """
         arglist = _determine_arg_list('taylordiagram', args)
         return self.__plot(arglist, parms)
 
@@ -1269,44 +1282,47 @@ class Canvas(object):
 
     def meshfill(self, *args, **parms):  # noqa
         """
-    Generate a meshfill plot given the data, the mesh, a meshfill graphics method, and
-    a template. If no meshfill class object is given, then the 'default' meshfill
-    graphics method is used. Similarly, if no template class object is given,
-    then the 'default' template is used.
+        Generate a meshfill plot given the data, the mesh, a meshfill graphics method, and
+        a template. If no meshfill class object is given, then the 'default' meshfill
+        graphics method is used. Similarly, if no template class object is given,
+        then the 'default' template is used.
 
-    Format:
-    This function expects 1D data (any extra dimension will be used for animation)
-    In addition the mesh array must be of the same shape than data with 2 additional dimension
-    representing the vertices coordinates for the Y (0) and X (1) dimension
-    Let's say you want to plot a spatial assuming mesh containing 10,000 grid cell, then data must be shape (10000,)
-    or (n1,n2,n3,...,10000) if additional dimensions exist (ex time,level), these dimension would be used only
-    for animation and will be ignored in the rest of this example.
-    The shape of the mesh, assuming 4 vertices per grid cell, must be (1000,2,4), where the array [:,0,:]
-    represent the Y coordinates of the vertices (clockwise or counterclockwise) and the array [:,1:]
-    represents the X coordinates of the vertices (the same clockwise/counterclockwise than the Y coordinates)
-    In brief you'd have:
-    data.shape=(10000,)
-    mesh.shape=(10000,2,4)
+        Format:
+        This function expects 1D data (any extra dimension will be used for animation)
+        In addition the mesh array must be of the same shape than data with 2 additional dimension
+        representing the vertices coordinates for the Y (0) and X (1) dimension
+        Let's say you want to plot a spatial assuming mesh containing 10,000 grid cell, then data must be shape (10000,)
+        or (n1,n2,n3,...,10000) if additional dimensions exist (ex time,level), these dimension would be used only
+        for animation and will be ignored in the rest of this example.
+        The shape of the mesh, assuming 4 vertices per grid cell, must be (1000,2,4), where the array [:,0,:]
+        represent the Y coordinates of the vertices (clockwise or counterclockwise) and the array [:,1:]
+        represents the X coordinates of the vertices (the same clockwise/counterclockwise than the Y coordinates)
+        In brief you'd have:
+        data.shape=(10000,)
+        mesh.shape=(10000,2,4)
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_meshfill
 
-    a=vcs.init()
-    # Show all the existing meshfill graphics methods
-    a.show('meshfill')
-    # Create instance of 'default'
-    mesh=a.getmeshfill()
-    # Plot array using specified mesh and default template
-    a.meshfill(array,mesh)
-    # Clear VCS canvas
-    a.clear()
-    # Plot array using specified mesh mesh graphic method and template
-    a.meshfill(array,mesh,mesh_graphic_method,template)
+                >>> a=vcs.init()
+                >>> a.show('meshfill') # Show all the existing meshfill graphics methods
+                *******************Meshfill Names List**********************
+                ...
+                *******************End Meshfill Names List**********************
+                >>> import cdms2 # Need cdms2 to create a slab
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+                >>> slab = f('clt') # use the data file to create a cdms2 slab
+                >>> mesh=a.getmeshfill() # Create instance of 'default'
+                >>> a.meshfill(slab,mesh) # Plot array using specified mesh and default template
+                <vcs.displayplot.Dp ...>
+                >>> a.clear() # Clear VCS canvas
+                >>> a.meshfill(slab,mesh,'quick','a_polar_meshfill')  # Plot slab with polar mesh, quick template
+                <vcs.displayplot.Dp ...>
 
-:returns: ???
-:rtype: ???
-"""
+        :returns: A VCS displayplot object.
+        :rtype: vcs.displayplot.Dp
+        """
         arglist = _determine_arg_list('meshfill', args)
         return self.__plot(arglist, parms)
 
@@ -1350,8 +1366,6 @@ class Canvas(object):
         return self.__plot(arglist, parms)
 
     def createisofill(self, name=None, source='default'):
-        """
-        """
         return vcs.createisofill(name, source)
     createisofill.__doc__ = vcs.manageElements.createisofill.__doc__
 
@@ -1361,33 +1375,40 @@ class Canvas(object):
 
     def isofill(self, *args, **parms):
         """
-    Generate a isofill plot given the data, isofill graphics method, and
-    template. If no isofill class object is given, then the 'default' isofill
-    graphics method is used. Similarly, if no template class object is given,
-    then the 'default' template is used.
+        Generate a isofill plot given the data, isofill graphics method, and
+        template. If no isofill class object is given, then the 'default' isofill
+        graphics method is used. Similarly, if no template class object is given,
+        then the 'default' template is used.
 
-    :Example:
+        :Example:
 
-    ::
+            .. doctest:: canvas_isofill
 
-        a=vcs.init()
-         # Show all the existing isofill graphics methods
-        a.show('isofill')
-        # Create instance of 'quick'
-        iso=a.getisofill('quick')
-        # Plot array using specified iso and default template
-        a.isofill(array,iso)
-        # Clear VCS canvas
-        a.clear()
-        # Plot array using specified iso and template
-        a.isofill(array,iso,template)
+                >>> a=vcs.init()
+                >>> a.show('isofill') # Show all the existing isofill graphics methods
+                *******************Isofill Names List**********************
+                ...
+                *******************End Isofill Names List**********************
+                >>> iso=a.getisofill('quick') # Create instance of 'quick'
+                >>> import cdms2 # Need cdms2 to create a slab
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+                >>> slab = f('clt') # use the data file to create a cdms2 slab
+                >>> a.isofill(slab,iso) # Plot array using specified iso and default template
+                <vcs.displayplot.Dp ...>
+                >>> a.clear() # Clear VCS canvas
+                >>> template = a.gettemplate('hovmuller')
+                >>> a.isofill(slab,iso,template) # Plot array using specified iso and template
+                <vcs.displayplot.Dp ...>
 
-    %s
-    %s
-    %s
-    %s
-    %s
-"""
+        %s
+        %s
+        %s
+        %s
+        %s
+
+        :returns: A VCS displayplot object.
+        :rtype: vcs.displayplot.Dp
+        """
         arglist = _determine_arg_list('isofill', args)
         return self.__plot(arglist, parms)
     isofill.__doc__ = isofill.__doc__ % (
@@ -1403,33 +1424,38 @@ class Canvas(object):
 
     def isoline(self, *args, **parms):
         """
-    Generate a isoline plot given the data, isoline graphics method, and
-    template. If no isoline class object is given, then the 'default' isoline
-    graphics method is used. Similarly, if no template class object is given,
-    then the 'default' template is used.
+        Generate a isoline plot given the data, isoline graphics method, and
+        template. If no isoline class object is given, then the 'default' isoline
+        graphics method is used. Similarly, if no template class object is given,
+        then the 'default' template is used.
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_isoline
 
-    a=vcs.init()
-    # Show all the existing isoline graphics methods
-    a.show('isoline')
-    # Create instance of 'quick'
-    iso=a.getisoline('quick')
-    # Plot array using specified iso and default template
-    a.isoline(array,iso)
-    # Clear VCS canvas
-    a.clear()
-    # Plot array using specified iso and template
-    a.isoline(array,iso,template)
+                >>> a=vcs.init()
+                >>> a.show('isoline') # Show all the existing isoline graphics methods
+                *******************Isoline Names List**********************
+                ...
+                *******************End Isoline Names List**********************
+                >>> iso=a.getisoline('quick') # Create instance of 'quick'
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.isoline(array,iso) # Plot array using specified iso and default template
+                <vcs.displayplot.Dp ...>
+                >>> a.clear() # Clear VCS canvas
+                >>> template = a.gettemplate('hovmuller')
+                >>> a.isoline(array,iso,template)  # Plot array using specified iso and template
+                <vcs.displayplot.Dp ...>
 
-%s
-%s
-%s
-%s
-%s
-"""
+        %s
+        %s
+        %s
+        %s
+        %s
+
+        :returns: A VCS displayplot object.
+        :rtype: vcs.displayplot.Dp
+        """
         arglist = _determine_arg_list('isoline', args)
         return self.__plot(arglist, parms)
     isoline.__doc__ = isoline.__doc__ % (
@@ -1453,33 +1479,38 @@ class Canvas(object):
 
     def xyvsy(self, *args, **parms):
         """
-    Generate a Xyvsy plot given the data, Xyvsy graphics method, and
-    template. If no Xyvsy class object is given, then the 'default' Xyvsy
-    graphics method is used. Simerly, if no template class object is given,
-    then the 'default' template is used.
+        Generate a Xyvsy plot given the data, Xyvsy graphics method, and
+        template. If no Xyvsy class object is given, then the 'default' Xyvsy
+        graphics method is used. Similarly, if no template class object is given,
+        then the 'default' template is used.
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_xyvsy
 
-    a=vcs.init()
-    # Show all the existing Xyvsy graphics methods
-    a.show('xyvsy')
-    # Create instance of 'quick'
-    xyy=a.getxyvsy('quick')
-    # Plot array using specified xyy and default template
-    a.xyvsy(array,xyy)
-    # Clear VCS canvas
-    a.clear()
-    # Plot array using specified xyy and template
-    a.xyvsy(array,xyy,template)
+                >>> a=vcs.init()
+                >>> a.show('xyvsy') # Show all the existing Xyvsy graphics methods
+                *******************Xyvsy Names List**********************
+                ...
+                *******************End Xyvsy Names List**********************
+                >>> xyy=a.getxyvsy('default_xyvsy_') # Create instance of default xyvsy
+                >>> array=[range(1, 11) for _ in range(1, 11)]
+                >>> a.xyvsy(array,xyy) # Plot array using specified xyy and default template
+                <vcs.displayplot.Dp ...>
+                >>> a.clear() # Clear VCS canvas
+                >>> template=a.gettemplate('hovmuller')
+                >>> a.xyvsy(array,xyy,template) # Plot array using specified xyy and template
+                <vcs.displayplot.Dp ...>
 
-%s
-%s
-%s
-%s
-%s
-"""
+        %s
+        %s
+        %s
+        %s
+        %s
+
+        :returns: A VCS displayplot object.
+        :rtype: vcs.displayplot.Dp
+        """
         arglist = _determine_arg_list('xyvsy', args)
         return self.__plot(arglist, parms)
     xyvsy.__doc__ = xyvsy.__doc__ % (
@@ -1495,33 +1526,38 @@ class Canvas(object):
 
     def yxvsx(self, *args, **parms):
         """
-    Generate a Yxvsx plot given the data, Yxvsx graphics method, and
-    template. If no Yxvsx class object is given, then the 'default' Yxvsx
-    graphics method is used. Simerly, if no template class object is given,
-    then the 'default' template is used.
+        Generate a Yxvsx plot given the data, Yxvsx graphics method, and
+        template. If no Yxvsx class object is given, then the 'default' Yxvsx
+        graphics method is used. Simerly, if no template class object is given,
+        then the 'default' template is used.
 
-     :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_yxvsx
 
-    a=vcs.init()
-    # Show all the existing Yxvsx graphics methods
-    a.show('yxvsx')
-    # Create instance of 'quick'
-    yxx=a.getyxvsx('quick')
-    # Plot array using specified yxx and default template
-    a.yxvsx(array,yxx)
-    # Clear VCS canvas
-    a.clear()
-    # Plot array using specified yxx and template
-    a.yxvsx(array,yxx,template)
+                >>> a=vcs.init()
+                >>> a.show('yxvsx') # Show all the existing Yxvsx graphics methods
+                *******************Yxvsx Names List**********************
+                ...
+                *******************End Yxvsx Names List**********************
+                >>> yxx=a.getyxvsx('default_yxvsx_') # Create instance of default yxvsx
+                >>> array=[range(1, 11) for _ in range(1, 11)]
+                >>> a.yxvsx(array,yxx) # Plot array using specified yxx and default template
+                <vcs.displayplot.Dp ...>
+                >>> a.clear() # Clear VCS canvas
+                >>> template=a.gettemplate('hovmuller')
+                >>> a.yxvsx(array,yxx,template) # Plot array using specified yxx and template
+                <vcs.displayplot.Dp ...>
 
-%s
-%s
-%s
-%s
-%s
-"""
+        %s
+        %s
+        %s
+        %s
+        %s
+
+        :returns: A VCS displayplot object.
+        :rtype: vcs.displayplot.Dp
+        """
         arglist = _determine_arg_list('yxvsx', args)
         return self.__plot(arglist, parms)
     yxvsx.__doc__ = yxvsx.__doc__ % (
@@ -1537,33 +1573,41 @@ class Canvas(object):
 
     def xvsy(self, *args, **parms):
         """
-    Generate a XvsY plot given the data, XvsY graphics method, and
-    template. If no XvsY class object is given, then the 'default' XvsY
-    graphics method is used. Similarly, if no template class object is given,
-    then the 'default' template is used.
+        Generate a XvsY plot given the data, XvsY graphics method, and
+        template. If no XvsY class object is given, then the 'default' XvsY
+        graphics method is used. Similarly, if no template class object is given,
+        then the 'default' template is used.
 
-     :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_xvsy
 
-    a=vcs.init()
-    # Show all the existing XvsY graphics methods
-    a.show('xvsy')
-    # Create instance of 'quick'
-    xy=a.getxvsy('quick')
-    # Plot array using specified xy and default template
-    a.xvsy(array,xy)
-    # Clear VCS canvas
-    a.clear()
-    # Plot array using specified xy and template
-    a.xvsy(array,xy,template)
+                >>> a=vcs.init()
+                >>> a.show('xvsy') # Show all the existing XvsY graphics methods
+                *******************Xvsy Names List**********************
+                ...
+                *******************End Xvsy Names List**********************
+                >>> xy=a.getxvsy('default_xvsy_') # Create instance of default xvsy
+                >>> import cdms2 # Need cdms2 to create a slab
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+                >>> slab1 = f('u') # use the data file to create a cdms2 slab
+                >>> slab2 = f('v') # use the data file to create a cdms2 slab
+                >>> a.xvsy(slab1,slab2,xy) # Plot array using specified xy and default template
+                <vcs.displayplot.Dp ...>
+                >>> a.clear() # Clear VCS canvas
+                >>> template=a.gettemplate('hovmuller')
+                >>> a.xvsy(slab1,slab2,xy,template) # Plot array using specified xy and template
+                <vcs.displayplot.Dp ...>
 
-%s
-%s
-%s
-%s
-%s
-"""
+        %s
+        %s
+        %s
+        %s
+        %s
+
+        :returns: A VCS displayplot object.
+        :rtype: vcs.displayplot.Dp
+        """
         arglist = _determine_arg_list('xvsy', args)
         return self.__plot(arglist, parms)
     xvsy.__doc__ = xvsy.__doc__ % (plot_keywords_doc,
@@ -1582,27 +1626,34 @@ class Canvas(object):
 
     def vector(self, *args, **parms):
         """
-    Generate a vector plot given the data, vector graphics method, and
-    template. If no vector class object is given, then the 'default' vector
-    graphics method is used. Similarly, if no template class object is given,
-    then the 'default' template is used.
+        Generate a vector plot given the data, vector graphics method, and
+        template. If no vector class object is given, then the 'default' vector
+        graphics method is used. Similarly, if no template class object is given,
+        then the 'default' template is used.
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_vector
 
-    a=vcs.init()
-    # Show all the existing vector graphics methods
-    a.show('vector')
-    # Create instance of 'quick'
-    vec=a.getvector('quick')
-    # Plot array using specified vec and default template
-    a.vector(array,vec)
-    # Clear VCS canvas
-    a.clear()
-    # Plot array using specified vec and template
-    a.vector(array,vec,template)
-"""
+                >>> a=vcs.init()
+                >>> a.show('vector') # Show all the existing vector graphics methods
+                *******************Vector Names List**********************
+                ...
+                *******************End Vector Names List**********************
+                >>> import cdms2 # Need cdms2 to create a slab
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+                >>> slab1 = f('u') # use the data file to create a cdms2 slab
+                >>> slab2 = f('v') # vector needs 2 slabs, so get another
+                >>> a.vector(slab1, slab2) # plot vector using slab and default vector
+                <vcs.displayplot.Dp ...>
+                >>> a.clear() # Clear VCS canvas
+                >>> template=a.gettemplate('hovmuller')
+                >>> a.vector(slab1, slab2, template) # Plot array using default vector and specified template
+                <vcs.displayplot.Dp ...>
+
+        :returns: A VCS displayplot object.
+        :rtype: vcs.displayplot.Dp
+        """
         arglist = _determine_arg_list('vector', args)
         return self.__plot(arglist, parms)
 
@@ -1616,33 +1667,40 @@ class Canvas(object):
 
     def scatter(self, *args, **parms):
         """
-    Generate a scatter plot given the data, scatter graphics method, and
-    template. If no scatter class object is given, then the 'default' scatter
-    graphics method is used. Similarly, if no template class object is given,
-    then the 'default' template is used.
+        Generate a scatter plot given the data, scatter graphics method, and
+        template. If no scatter class object is given, then the 'default' scatter
+        graphics method is used. Similarly, if no template class object is given,
+        then the 'default' template is used.
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_scatter
 
-    a=vcs.init()
-    # Show all the existing scatter graphics methods
-    a.show('scatter')
-    # Create instance of 'quick'
-    sct=a.getscatter('quick')
-    # Plot array using specified sct and default template
-    a.scatter(array,sct)
-    # Clear VCS canvas
-    a.clear()
-    # Plot array using specified sct and template
-    a.scatter(array,sct,template)
+                >>> a=vcs.init()
+                >>> a.show('scatter') # Show all the existing scatter graphics methods
+                *******************Scatter Names List**********************
+                ...
+                *******************End Scatter Names List**********************
+                >>> import cdms2 # Need cdms2 to create a slab
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+                >>> slab1 = f('u') # use the data file to create a cdms2 slab
+                >>> slab2 = f('v') # need 2 slabs, so get another
+                >>> a.scatter(slab1, slab2) # Plot array using specified sct and default template
+                <vcs.displayplot.Dp ...>
+                >>> a.clear() # Clear VCS canvas
+                >>> template=a.gettemplate('hovmuller')
+                >>> a.scatter(slab1, slab2, template) # Plot array using specified sct and template
+                <vcs.displayplot.Dp ...>
 
-%s
-%s
-%s
-%s
-%s
-"""
+        %s
+        %s
+        %s
+        %s
+        %s
+
+        :returns: A VCS displayplot object.
+        :rtype: vcs.displayplot.Dp
+        """
 
         arglist = _determine_arg_list('scatter', args)
         return self.__plot(arglist, parms)
@@ -1667,32 +1725,30 @@ class Canvas(object):
 
     def line(self, *args, **parms):
         """
-    Plot a line segment on the Vcs Canvas. If no line class
-    object is given, then an error will be returned.
+        Plot a line segment on the Vcs Canvas. If no line class
+        object is given, then an error will be returned.
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_line
 
-    a=vcs.init()
-    # Show all the existing line objects
-    a.show('line')
-    # Create instance of 'red'
-    ln=a.getline('red')
-    # Set the line width
-    ln.width=4
-    # Set the line color
-    ln.color = 242
-    # Set the line type
-    ln.type = 4
-    # Set the x value points
-    ln.x=[[0.0,2.0,2.0,0.0,0.0], [0.5,1.5]]
-    # Set the y value points
-    ln.y=[[0.0,0.0,2.0,2.0,0.0], [1.0,1.0]]
-    # Plot using specified line object
-    a.line(ln)
+                >>> a=vcs.init()
+                >>> a.show('line')  # Show all the existing line objects
+                *******************Line Names List**********************
+                ...
+                *******************End Line Names List**********************
+                >>> ln=a.getline('red') # Create instance of 'red'
+                >>> ln.width=4 # Set the line width
+                >>> ln.color = 242 # Set the line color
+                >>> ln.type = 4 # Set the line type
+                >>> ln.x=[[0.0,2.0,2.0,0.0,0.0], [0.5,1.5]] # Set the x value points
+                >>> ln.y=[[0.0,0.0,2.0,2.0,0.0], [1.0,1.0]] # Set the y value points
+                >>> a.line(ln) # Plot using specified line object
+                <vcs.displayplot.Dp ...>
 
-"""
+        :returns: A VCS displayplot object.
+        :rtype: vcs.displayplot.Dp
+        """
         arglist = _determine_arg_list('line', args)
         return self.__plot(arglist, parms)
 
@@ -1701,59 +1757,61 @@ class Canvas(object):
                  worldcoordinate=[0.0, 1.0, 0.0, 1.0],
                  x=None, y=None, projection='default', bg=0):
         """
-    Generate and draw a line object on the VCS Canvas.
+        Generate and draw a line object on the VCS Canvas.
 
-     :Example:
+        :Example:
 
- ::
+            .. doctest:: canvas_drawline
 
-    a=vcs.init()
-    # Show all the existing line objects
-    a.show('line')
-    # Create instance of line object 'red'
-    ln=a.drawline(name='red', ltype='dash', width=2,
-                  color=242, priority=1, viewport=[0, 1.0, 0, 1.0],
-                  worldcoordinate=[0,100, 0,50],
-                  x=[0,20,40,60,80,100],
-                  y=[0,10,20,30,40,50] )
-    # Plot using specified line object
-    a.line(ln)
+                >>> a=vcs.init()
+                >>> a.show('line') # Show all the existing line objects
+                *******************Line Names List**********************
+                ...
+                *******************End Line Names List**********************
+                >>> ln=a.drawline(name='red', ltype='dash', width=2,
+                ...              color=242, priority=1, viewport=[0, 1.0, 0, 1.0],
+                ...              worldcoordinate=[0,100, 0,50],
+                ...              x=[0,20,40,60,80,100],
+                ...              y=[0,10,20,30,40,50] )
+                >>> a.line(ln) # Plot using specified line object
+                <vcs.displayplot.Dp ...>
 
+        :param name: Name of created object
+        :type name: str
 
-:param name: Name of created object
-:type name: str
+        :param ltype: One of "dash", "dash-dot", "solid", "dot", or "long-dash".
+        :type ltype: str
 
-:param ltype: One of "dash", "dash-dot", "solid", "dot", or "long-dash".
-:type ltype: str
+        :param width: Thickness of the line to be drawn
+        :type width: int
 
-:param width: Thickness of the line to be drawn
-:type width: int
+        :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
+                      or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+        :type color: str or int
 
-:param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-              or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-:type color: str or int
+        :param priority: The layer on which the line will be drawn.
+        :type priority: int
 
-:param priority: The layer on which the line will be drawn.
-:type priority: int
+        :param viewport: 4 floats between 0 and 1.
+                            These specify the area that the X/Y values are mapped to inside of the canvas
+        :type viewport: list of floats
 
-:param viewport: 4 floats between 0 and 1. These specify the area that the X/Y values are mapped to inside of the canvas
-:type viewport: list of floats
+        :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
+        :type worldcoordinate: list of floats
 
-:param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-:type worldcoordinate: list of floats
+        :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
+        :type x: list of floats
 
-:param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-:type x: list of floats
+        :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
+        :type y: list of floats
 
-:param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-:type y: list of floats
+        :param projection: Specify a geographic projection used to convert x/y
+                            from spherical coordinates into 2D coordinates.
+        :type projection: str or projection object
 
-:param projection: Specify a geographic projection used to convert x/y from spherical coordinates into 2D coordinates.
-:type projection: str or projection object
-
-:returns: A VCS line object
-:rtype: vcs.line.Tl
-"""
+        :returns: A VCS line object
+        :rtype: vcs.line.Tl
+        """
         if (name is None) or (not isinstance(name, str)):
             raise vcsError('Must provide string name for the line.')
         else:
@@ -1796,30 +1854,26 @@ class Canvas(object):
         Plot a marker segment on the Vcs Canvas. If no marker class
         object is given, then an error will be returned.
 
-         :Example:
+        :Example:
 
-    ::
+            .. doctest:: canvas_marker
 
-            a=vcs.init()
-            # Show all the existing marker objects
-            a.show('marker')
-            # Create instance of 'red'
-            mrk=a.getmarker('red')
-            # Set the marker size
-            mrk.size=4
-            # Set the marker color
-            mrk.color = 242
-            # Set the marker type
-            mrk.type = 4
-            # Set the x value points
-            mrk.x=[[0.0,2.0,2.0,0.0,0.0], [0.5,1.5]]
-            # Set the y value points
-            mrk.y=[[0.0,0.0,2.0,2.0,0.0], [1.0,1.0]]
-            # Plot using specified marker object
-            a.marker(mrk)
+                >>> a=vcs.init()
+                >>> a.show('marker') # Show all the existing marker objects
+                *******************Marker Names List**********************
+                ...
+                *******************End Marker Names List**********************
+                >>> mrk=a.getmarker('red') # Create instance of 'red'
+                >>> mrk.size=4 # Set the marker size
+                >>> mrk.color = 242 # Set the marker color
+                >>> mrk.type = 4 # Set the marker type
+                >>> mrk.x=[[0.0,2.0,2.0,0.0,0.0], [0.5,1.5]] # Set the x value points
+                >>> mrk.y=[[0.0,0.0,2.0,2.0,0.0], [1.0,1.0]] # Set the y value points
+                >>> a.marker(mrk) # Plot using specified marker object
+                <vcs.displayplot.Dp ...>
 
-:returns: a VCS displayplot object
-:rtype: vcs.displayplot.Dp
+        :returns: a VCS displayplot object
+        :rtype: vcs.displayplot.Dp
         """
         arglist = _determine_arg_list('marker', args)
         return self.__plot(arglist, parms)
@@ -1833,52 +1887,53 @@ class Canvas(object):
 
         :Example:
 
-        ::
+            .. doctest:: canvas_drawmarker
 
-    a=vcs.init()
-    # Show all the existing marker objects
-    a.show('marker')
-    # Create instance of marker object 'red'
-    mrk=a.drawmarker(name='red', mtype='dot', size=2,
-                  color=242, priority=1, viewport=[0, 1.0, 0, 1.0],
-                  worldcoordinate=[0,100, 0,50]
-                  x=[0,20,40,60,80,100],
-                  y=[0,10,20,30,40,50] )
-    # Plot using specified marker object
-    a.marker(mrk)
+                >>> a=vcs.init()
+                >>> a.show('marker')  # Show all the existing marker objects
+                *******************Marker Names List**********************
+                ...
+                *******************End Marker Names List**********************
+                >>> mrk=a.drawmarker(name='red', mtype='dot', size=2,
+                ...              color=242, priority=1, viewport=[0, 1.0, 0, 1.0],
+                ...              worldcoordinate=[0,100, 0,50],
+                ...              x=[0,20,40,60,80,100],
+                ...              y=[0,10,20,30,40,50] ) # Create instance of marker object 'red'
+                >>> a.marker(mrk) # Plot using specified marker object
+                <vcs.displayplot.Dp ...>
 
+        :param name: Name of created object
+        :type name: str
 
-:param name: Name of created object
-:type name: str
+        :param mtype: Marker type, i.e. 'dot', 'plus', 'star, etc.
+        :type mtype: str
 
-:param mtype: Marker type, i.e. 'dot', 'plus', 'star, etc.
-:type mtype: str
+        :param size: Size of the marker to draw
+        :type size: int
 
-:param size: Size of the marker to draw
-:type size: int
+        :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
+                      or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+        :type color: str or int
 
-:param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-              or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-:type color: str or int
+        :param priority: The layer on which the marker will be drawn.
+        :type priority: int
 
-:param priority: The layer on which the marker will be drawn.
-:type priority: int
+        :param viewport: 4 floats between 0 and 1.
+                        These specify the area that the X/Y values are mapped to inside of the canvas
+        :type viewport: list of floats
 
-:param viewport: 4 floats between 0 and 1. These specify the area that the X/Y values are mapped to inside of the canvas
-:type viewport: list of floats
+        :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
+        :type worldcoordinate: list of floats
 
-:param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-:type worldcoordinate: list of floats
+        :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
+        :type x: list of floats
 
-:param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-:type x: list of floats
+        :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
+        :type y: list of floats
 
-:param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-:type y: list of floats
-
-:returns: A drawmarker object
-:rtype: vcs.marker.Tm
-"""
+        :returns: A drawmarker object
+        :rtype: vcs.marker.Tm
+        """
         if (name is None) or (not isinstance(name, str)):
             raise vcsError('Must provide string name for the marker.')
         else:
@@ -1918,38 +1973,32 @@ class Canvas(object):
 
     def fillarea(self, *args, **parms):
         """
-    Generate a fillarea plot
+        Generate a fillarea plot
 
-    Plot a fillarea segment on the Vcs Canvas. If no fillarea class
-    object is given, then an error will be returned.
+        Plot a fillarea segment on the Vcs Canvas. If no fillarea class
+        object is given, then an error will be returned.
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_fillarea
 
-    a=vcs.init()
-    # Show all the existing fillarea objects
-    a.show('fillarea')
-    # Create instance of 'red'
-    fa=a.createfillarea('red')
-    # Set the fillarea style
-    fa.style=1
-    # Set the fillarea index
-    fa.index=4
-    # Set the fillarea color
-    fa.color = 242
-    # Set the fillarea type
-    fa.type = 4
-    # Set the x value points
-    fa.x=[[0.0,2.0,2.0,0.0,0.0], [0.5,1.5]]
-    # Set the y value points
-    fa.y=[[0.0,0.0,2.0,2.0,0.0], [1.0,1.0]]
-    # Plot using specified fillarea object
-    a.fillarea(fa)
+                    >>> a=vcs.init()
+                    >>> a.show('fillarea') # Show all the existing fillarea objects
+                    *******************Fillarea Names List**********************
+                    ...
+                    *******************End Fillarea Names List**********************
+                    >>> fa=a.createfillarea() # Create instance of default fillarea
+                    >>> fa.style=1 # Set the fillarea style
+                    >>> fa.index=4 # Set the fillarea index
+                    >>> fa.color = 242 # Set the fillarea color
+                    >>> fa.x=[0.25,0.75] # Set the x value points
+                    >>> fa.y=[0.2,0.5] # Set the y value points
+                    >>> a.fillarea(fa) # Plot using specified fillarea object
+                    <vcs.displayplot.Dp ...>
 
-:returns: A fillarea object
-:rtype: vcs.displayplot.Dp
-"""
+        :returns: A fillarea object
+        :rtype: vcs.displayplot.Dp
+        """
         arglist = _determine_arg_list('fillarea', args)
         return self.__plot(arglist, parms)
 
@@ -1961,58 +2010,61 @@ class Canvas(object):
         Generate and draw a fillarea object on the VCS Canvas.
 
         :Example:
-::
 
-    a=vcs.init()
-    # Show all the existing fillarea objects
-    a.show('fillarea')
-    # Create instance of fillarea object 'red'
-    fa=a.drawfillarea(name='red', style=1, color=242,
-                  priority=1, viewport=[0, 1.0, 0, 1.0],
-                  worldcoordinate=[0,100, 0,50]
-                  x=[0,20,40,60,80,100],
-                  y=[0,10,20,30,40,50], bg=0 )
-    # Plot using specified fillarea object
-    a.fillarea(fa)
+            .. doctest:: canvas_drawfillarea
 
+                >>> a=vcs.init()
+                >>> a.show('fillarea') # Show all the existing fillarea objects
+                *******************Fillarea Names List**********************
+                ...
+                *******************End Fillarea Names List**********************
+                >>> fa=a.drawfillarea(name='red', style=1, color=242,
+                ...              priority=1, viewport=[0, 1.0, 0, 1.0],
+                ...              worldcoordinate=[0,100, 0,50],
+                ...              x=[0,20,40,60,80,100],
+                ...              y=[0,10,20,30,40,50], bg=0 ) # Create instance of fillarea object 'red'
+                >>> a.fillarea(fa) # Plot using specified fillarea object
+                <vcs.displayplot.Dp ...>
 
-:param name: Name of created object
-:type name: str
+        :param name: Name of created object
+        :type name: str
 
-:param style: One of "hatch", "solid", or "pattern".
-:type style: str
+        :param style: One of "hatch", "solid", or "pattern".
+        :type style: str
 
-:param index: Specifies which `pattern <http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png>`_
-to fill the fillarea with. Accepts ints from 1-20.
+        :param index: Specifies which `pattern <http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png>`_
+        to fill the fillarea with. Accepts ints from 1-20.
 
-:type index: int
+        :type index: int
 
-:param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+        :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
+        or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
 
-:type color: str or int
+        :type color: str or int
 
-:param priority: The layer on which the fillarea will be drawn.
-:type priority: int
+        :param priority: The layer on which the fillarea will be drawn.
+        :type priority: int
 
-:param viewport: 4 floats between 0 and 1. These specify the area that the X/Y values are mapped to inside of the canvas
-:type viewport: list of floats
+        :param viewport: 4 floats between 0 and 1.
+                        These specify the area that the X/Y values are mapped to inside of the canvas
+        :type viewport: list of floats
 
-:param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-:type worldcoordinate: list of floats
+        :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
+        :type worldcoordinate: list of floats
 
-:param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-:type x: list of floats
+        :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
+        :type x: list of floats
 
-:param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-:type y: list of floats
+        :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
+        :type y: list of floats
 
-:param bg: Boolean value. True => object drawn in background (not shown on canvas). False => object shown on canvas.
-:type bg: bool
+        :param bg: Boolean value. True => object drawn in background (not shown on canvas).
+                    False => object shown on canvas.
+        :type bg: bool
 
-:returns: A fillarea object
-:rtype: vcs.fillarea.Tf
-"""
+        :returns: A fillarea object
+        :rtype: vcs.fillarea.Tf
+        """
         if (name is None) or (not isinstance(name, str)):
             raise vcsError('Must provide string name for the fillarea.')
         else:
@@ -2087,38 +2139,40 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
         """
         Plot a textcombined segment on the Vcs Canvas. If no textcombined class
         object is given, then an error will be returned.
-        *This function can also be called using the format **text(self, *args, **parms)** *
+
+        .. note::
+
+            The text() function is an alias for textcombined().
+            See example for usage.
 
         :Example:
 
-        ::
+        .. doctest:: canvas_textcombined
 
-        a=vcs.init()
-        # Show all the existing texttable objects
-        a.show('texttable')
-        # Show all the existing textorientation objects
-        a.show('textorientation')
-        # Create instance of 'std' and '7left'
-        tt=a.gettext('std','7left')
-        # Show the string "Text1" on the VCS Canvas
-        tt.string = 'Text1'
-        # Set the text size
-        tt.font=2
-        # Set the text color
-        tt.color = 242
-        # Set the text angle
-        tt.angle = 45
-        # Set the x value points
-        tt.x=[[0.0,2.0,2.0,0.0,0.0], [0.5,1.5]]
-        # Set the y value points
-        tt.y=[[0.0,0.0,2.0,2.0,0.0], [1.0,1.0]]
-        # Plot using specified text object
-        a.text(tt)
-        #Optionally you can pass a string, the coordinates, and any keyword
-        a.plot('Hi',.5,.5,color=241,angle=45)
+            >>> a=vcs.init()
+            >>> a.clean_auto_generated_objects()
+            >>> a.show('texttable') # Show all the existing texttable objects
+            *******************Texttable Names List**********************
+            ...
+            *******************End Texttable Names List**********************
+            >>> a.show('textorientation') # Show all the existing textorientation objects
+            *******************Textorientation Names List**********************
+            ...
+            *******************End Textorientation Names List**********************
+            >>> vcs.createtext('qa_tta', 'qa', '7left_tto', '7left') # Create instance of 'std_tt' and '7left_to'
+            <vcs.textcombined.Tc object at ...
+            >>> tc=a.gettext('qa_tta', '7left_tto')
+            >>> tc.string='Text1' # Show the string "Text1" on the VCS Canvas
+            >>> tc.font=2 # Set the text size
+            >>> tc.color=242 # Set the text color
+            >>> tc.angle=45 # Set the text angle
+            >>> tc.x=[0.5]
+            >>> tc.y=[0.5]
+            >>> a.textcombined(tc) # Plot using specified text object
+            <vcs.displayplot.Dp ...>
 
-:returns: ???
-:rtype: ???
+        :returns: A fillarea object
+        :rtype: vcs.displayplot.Dp
         """
         # First check if color is a string
         if 'color' in parms.keys():
@@ -2152,26 +2206,26 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
     text = textcombined
 
     def gettextextent(self, textobject):
-        """Returns the coordinate of the box surrounding a text object once printed
+        """
+        Returns the coordinate of the box surrounding a text object once printed
 
         :Example:
 
-        ::
+            .. doctest:: canvas_gettextextent
 
-        a=vcs.init()
-        t=a.createtext()
-        t.x=[.5]
-        t.y=[.5]
-        t.string=['Hello World']
-        extent = a.gettextextent(t)
-        print extent
+                >>> a=vcs.init()
+                >>> t=a.createtext()
+                >>> t.x=[.5]
+                >>> t.y=[.5]
+                >>> t.string=['Hello World']
+                >>> a.gettextextent(t)
+                [[0.5, 0.578125, 0.5, 0.5177065767284992]]
 
-:param textobject: A VCS text object
-:type textobject: textcombined
+        :param textobject: A VCS text object
+        :type textobject: textcombined
 
-:returns: ???
-:rtype: ???
-
+        :returns: list of floats containing the coordinates of the text object's bounding box.
+        :rtype: list
         """
         if not vcs.istext(textobject):
             raise vcsError('You must pass a text object')
@@ -2190,59 +2244,61 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
                          worldcoordinate=[0.0, 1.0, 0.0, 1.0],
                          x=None, y=None, bg=0):
         """
-    Generate and draw a textcombined object on the VCS Canvas.
+        Generate and draw a textcombined object on the VCS Canvas.
 
-     :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_drawtextcombined
 
-    a=vcs.init()
-    # Show all the existing texttable objects
-    a.show('texttable')
-    # Create instance of texttable object 'red'
-    tt=a.drawtexttable(Tt_name = 'red', To_name='7left', mtype='dash', size=2,
-                       color=242, priority=1, viewport=[0, 1.0, 0, 1.0],
-                       worldcoordinate=[0,100, 0,50]
-                       x=[0,20,40,60,80,100],
-                       y=[0,10,20,30,40,50] )
-    # Plot using specified texttable object
-    a.texttable(tt)
+                >>> a=vcs.init()
+                >>> a.show('texttable')  # Show all the existing texttable objects
+                *******************Texttable Names List**********************
+                ...
+                *******************End Texttable Names List**********************
+                >>> tc=a.drawtextcombined(Tt_name = 'std_example', To_name='7left_example', string='Hello example!', spacing=5,
+                ...                   color=242, priority=1, viewport=[0, 1.0, 0, 1.0],
+                ...                   worldcoordinate=[0,100, 0,50],
+                ...                   x=[0,20,40,60,80,100],
+                ...                   y=[0,10,20,30,40,50]) # Create instance of texttable object 'red'
+                >>> a.textcombined(tc) # Plot using specified texttable object
 
-:param name: Name of created object
-:type name: str
+        :param name: Name of created object
+        :type name: str
 
-:param style: One of "hatch", "solid", or "pattern".
-:type style: str
+        :param style: One of "hatch", "solid", or "pattern".
+        :type style: str
 
-:param index: Specifies which `pattern <http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png>`_
-              to fill the fillarea with. Accepts ints from 1-20.
-:type index: int
+        :param index: Specifies which `pattern <http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png>`_
+                      to fill the fillarea with. Accepts ints from 1-20.
+        :type index: int
 
-:param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-              or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-:type color: str or int
+        :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
+                      or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+        :type color: str or int
 
-:param priority: The layer on which the fillarea will be drawn.
-:type priority: int
+        :param priority: The layer on which the fillarea will be drawn.
+        :type priority: int
 
-:param viewport: 4 floats between 0 and 1. These specify the area that the X/Y values are mapped to inside of the canvas
-:type viewport: list of floats
+        :param viewport: 4 floats between 0 and 1.
+                        These specify the area that the X/Y values are mapped to inside of the canvas
+        :type viewport: list of floats
 
-:param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-:type worldcoordinate: list of floats
+        :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
+        :type worldcoordinate: list of floats
 
-:param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-:type x: list of floats
+        :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
+        :type x: list of floats
 
-:param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-:type y: list of floats
+        :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
+        :type y: list of floats
 
-:param bg: Boolean value. True => object drawn in background (not shown on canvas). False => object shown on canvas.
-:type bg: bool
+        :param bg: Boolean value. True => object drawn in background (not shown on canvas).
+                                    False => object shown on canvas.
+        :type bg: bool
 
-:returns: A texttable object
-:rtype:
-"""
+        :returns: A texttable object
+        :rtype: vcs.texttable.Tt
+        """
         if (Tt_name is None) or (not isinstance(Tt_name, str)):
             raise vcsError('Must provide string name for the texttable.')
         else:
@@ -2297,189 +2353,194 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def plot(self, *actual_args, **keyargs):
         """
-    Plot an array(s) of data given a template and graphics method. The VCS template is
-    used to define where the data and variable attributes will be displayed on the VCS
-    Canvas. The VCS graphics method is used to define how the array(s) will be shown
-    on the VCS Canvas.
+        Plot an array(s) of data given a template and graphics method. The VCS template is
+        used to define where the data and variable attributes will be displayed on the VCS
+        Canvas. The VCS graphics method is used to define how the array(s) will be shown
+        on the VCS Canvas.
 
-    .. describe:: Plot Usage:
+        .. describe:: Plot Usage:
 
-        .. code-block:: python
+            .. code-block:: python
 
-            plot(array1=None, array2=None, template_name=None,
-                graphics_method=None, graphics_name=None,
-                [key=value [, key=value [, ...]]])
+                plot(array1=None, array2=None, template_name=None,
+                    graphics_method=None, graphics_name=None,
+                    [key=value [, key=value [, ...]]])
 
-        .. note::
-             array1 and array2 are NumPy arrays.
+            .. note::
 
-    .. describe:: Plot attribute keywords:
+                 array1 and array2 are NumPy arrays.
 
-        .. note::
-            More specific attributes take precedence over general attributes. In particular,
-            specific attributes override variable object attributes, dimension attributes and
-            arrays override axis objects, which override grid objects, which override variable
-            objects.
+        .. describe:: Plot attribute keywords:
 
-            For example, if both 'file_comment' and 'variable' keywords are specified, the value of
-            'file_comment' is used instead of the file comment in the parent of variable. Similarly,
-            if both 'xaxis' and 'grid' keywords are specified, the value of 'xaxis' takes precedence
-            over the x-axis of grid.
+            .. note::
+                More specific attributes take precedence over general attributes. In particular,
+                specific attributes override variable object attributes, dimension attributes and
+                arrays override axis objects, which override grid objects, which override variable
+                objects.
 
-        *  ratio [default is none]
+                For example, if both 'file_comment' and 'variable' keywords are specified, the value of
+                'file_comment' is used instead of the file comment in the parent of variable. Similarly,
+                if both 'xaxis' and 'grid' keywords are specified, the value of 'xaxis' takes precedence
+                over the x-axis of grid.
 
-            * None: let the self.ratio attribute decide
-            *  0,'off': overwrite self.ratio and do nothing about the ratio
-            * 'auto': computes an automatic ratio
-            * '3',3: y dim will be 3 times bigger than x dim (restricted to original tempalte.data area
-            * Adding a 't' at the end of the ratio, makes the tickmarks and boxes move along.
+            *  ratio [default is none]
 
-        * Dimension attribute keys (dimension length=n):
+                * None: let the self.ratio attribute decide
+                *  0,'off': overwrite self.ratio and do nothing about the ratio
+                * 'auto': computes an automatic ratio
+                * '3',3: y dim will be 3 times bigger than x dim (restricted to original tempalte.data area
+                * Adding a 't' at the end of the ratio, makes the tickmarks and boxes move along.
 
-            * x or y Dimension values
+            * Dimension attribute keys (dimension length=n):
 
-                .. code-block:: python
+                * x or y Dimension values
 
-                    [x|y|z|t|w]array = NumPy array of length n
-                    [x|y|z|t|w]array = NumPy array of length n
+                    .. code-block:: python
 
-            * x or y Dimension boundaries
+                        [x|y|z|t|w]array = NumPy array of length n
+                        [x|y|z|t|w]array = NumPy array of length n
 
-                .. code-block:: python
+                * x or y Dimension boundaries
 
-                    [x|y]bounds = NumPy array of shape (n,2)
+                    .. code-block:: python
 
-        * CDMS object:
+                        [x|y]bounds = NumPy array of shape (n,2)
 
-            * x or y Axis
+            * CDMS object:
 
-                .. code-block:: python
+                * x or y Axis
 
-                    [x|y|z|t|w]axis = CDMS axis object
+                    .. code-block:: python
 
-            * Grid object (e.g. grid=var.getGrid())
+                        [x|y|z|t|w]axis = CDMS axis object
 
-                .. code-block:: python
+                * Grid object (e.g. grid=var.getGrid())
 
-                    grid = CDMS grid object
+                    .. code-block:: python
 
-            * Variable object
+                        grid = CDMS grid object
 
-                .. code-block:: python
+                * Variable object
 
-                    variable = CDMS variable object
+                    .. code-block:: python
 
-        * Other:
+                        variable = CDMS variable object
 
-            * Reverse the direction of the x or y axis:
+            * Other:
 
-                .. code-block:: python
+                * Reverse the direction of the x or y axis:
 
-                    [x|y]rev = 0|1
+                    .. code-block:: python
 
-                .. note::
-                    For example, xrev = 1 would reverse the
-                    direction of the x-axis
+                        [x|y]rev = 0|1
 
-            * Continental outlines:
+                    .. note::
 
-                .. code-block:: python
+                        For example, xrev = 1 would reverse the
+                        direction of the x-axis
 
-                    continents = 0,1,2,3,4,5,6,7,8,9,10,11
-                    # VCS line object to define continent appearance
-                    continents_line = vcs.getline("default")
+                * Continental outlines:
 
-                .. note::
-                    If continents >=1, plot continental outlines.
-                    By default: plot of xaxis is longitude, yaxis is latitude
-                    -OR- xname is 'longitude' and yname is 'latitude'
+                    .. code-block:: python
 
-                * List of continents-type values (integers from 0-11)
+                        continents = 0,1,2,3,4,5,6,7,8,9,10,11
+                        # VCS line object to define continent appearance
+                        continents_line = vcs.getline("default")
 
-                    * 0 signifies "No Continents"
-                    * 1 signifies "Fine Continents"
-                    * 2 signifies "Coarse Continents"
-                    * 3 signifies "United States"
-                    * 4 signifies "Political Borders"
-                    * 5 signifies "Rivers"
+                    .. note::
 
-                .. note::
-                    Values 6 through 11 signify the line type defined by
-                    the files data_continent_other7 through data_continent_other12.
+                        If continents >=1, plot continental outlines.
+                        By default: plot of xaxis is longitude, yaxis is latitude
+                        -OR- xname is 'longitude' and yname is 'latitude'
 
-            * To set whether the displayplot object generated by this plot is stored
+                    * List of continents-type values (integers from 0-11)
 
-                .. code-block:: python
+                        * 0 signifies "No Continents"
+                        * 1 signifies "Fine Continents"
+                        * 2 signifies "Coarse Continents"
+                        * 3 signifies "United States"
+                        * 4 signifies "Political Borders"
+                        * 5 signifies "Rivers"
 
-                    donotstoredisplay = True|False
+                    .. note::
+                        Values 6 through 11 signify the line type defined by
+                        the files data_continent_other7 through data_continent_other12.
 
-            * Whether to actually render the plot or not (useful for doing a bunch of plots in a row)
+                * To set whether the displayplot object generated by this plot is stored
 
-                .. code-block:: python
+                    .. code-block:: python
 
-                    render = True|False
+                        donotstoredisplay = True|False
 
-            * VCS Display plot name (used to prevent duplicate display plots)
+                * Whether to actually render the plot or not (useful for doing a bunch of plots in a row)
 
-                .. code-block:: python
+                    .. code-block:: python
 
-                    display_name = "__display_123"
+                        render = True|False
 
-            * Ratio of height/width for the plot; autot and auto will choose a "good" ratio for you.
+                * VCS Display plot name (used to prevent duplicate display plots)
 
-                .. code-block:: python
+                    .. code-block:: python
 
-                    ratio = 1.5|"autot"|"auto"
+                        display_name = "__display_123"
 
-            * Plot the actual grid or the dual grid
+                * Ratio of height/width for the plot; autot and auto will choose a "good" ratio for you.
 
-                .. code-block:: python
+                    .. code-block:: python
 
-                    plot_based_dual_grid = True | False
+                        ratio = 1.5|"autot"|"auto"
 
-                .. note::
-                    This is based on what is needed by the plot: isofill, isoline, vector need
-                    point attributes, boxfill and meshfill need cell attributes
-                    the default is True (if the parameter is not specified).
+                * Plot the actual grid or the dual grid
 
-            * Graphics Output in Background Mode:
+                    .. code-block:: python
 
-                .. code-block:: python
+                        plot_based_dual_grid = True | False
 
-                    # if ==1, create images in the background
-                    bg = 0|1
+                    .. note::
 
+                        This is based on what is needed by the plot: isofill, isoline, vector need
+                        point attributes, boxfill and meshfill need cell attributes
+                        the default is True (if the parameter is not specified).
 
-    :Example:
+                * Graphics Output in Background Mode:
 
-        ::
+                    .. code-block:: python
 
-    # x is an instance of the VCS class object (constructor)
-    x=vcs.init()
-    # this call will use default settings for template and boxfill
-    x.plot(array)
-    # this is specifying the template and graphics method
-    x.plot(array, 'AMIP', 'isofill','AMIP_psl')
-    # get a predefined the template 'AMIP'
-    t=x.gettemplate('AMIP')
-    # get a predefined the vector graphics method 'quick'
-    vec=x.getvector('quick')
-    # plot the data as a vector using the 'AMIP' template
-    x.plot(array1, array2, t, vec)
-    # clear the VCS Canvas of all plots
-    x.clear()
-    # create boxfill graphics method 'new'
-    box=x.createboxfill('new')
-    # plot array data using box 'new' and template 't'
-    x.plot(box,t,array)
+                        # if ==1, create images in the background
+                        bg = 0|1
 
-%s
-%s
-%s
-%s
-%s
-%s
-"""
+        :Example:
+
+            .. doctest:: canvas_plot
+
+                >>> a=vcs.init()
+                >>> import cdms2 # Need cdms2 to create a slab
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+                >>> slab1 = f('u') # use the data file to create a cdms2 slab
+                >>> slab2 = f('v') # need 2 slabs, so get another
+                >>> a.plot(slab1) # this call will use default settings for template and boxfill
+                <vcs.displayplot.Dp ...>
+                >>> a.plot(slab1, 'polar', 'isofill', 'polar') # this is specifying the template and graphics method
+                <vcs.displayplot.Dp ...>
+                >>> t=a.gettemplate('polar') # get the polar template
+                >>> vec=a.getvector() # get default vector
+                >>> a.plot(slab1, slab2, t, vec) # plot the data as a vector using the 'AMIP' template
+                <vcs.displayplot.Dp ...>
+                >>> a.clear() # clear the VCS Canvas of all plots
+                >>> box=a.getboxfill() # get default boxfill graphics method
+                >>> a.plot(box,t,slab2) # plot array data using box 'new' and template 't'
+                <vcs.displayplot.Dp ...>
+
+        %s
+        %s
+        %s
+        %s
+        %s
+        %s
+
+        :returns: A VCS display plot object
+        :rtype: vcs.displayplot.Dp
+        """
         self.__last_plot_actual_args = actual_args
         self.__last_plot_keyargs = keyargs
         passed_var = keyargs.get("variable", None)
@@ -3925,8 +3986,8 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
         """
         Export an image in CGM format.
 
-:param file: Filename to save
-:param mode: Ignored.
+        :param file: Filename to save
+        :param mode: Ignored.
         """
 
         if mode != 'w':
@@ -3941,14 +4002,15 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
         :Example:
 
-        ::
+            .. doctest:: canvas_clear
 
-    a=vcs.init()
-    a.plot(array,'default','isofill','quick')
-    #clear VCS displays from the page
-    a.clear()
+                >>> a=vcs.init()
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array,'default','isofill','quick')
+                <vcs.displayplot.Dp ...>
+                >>> a.clear() # clear VCS displays from the page
 
-"""
+        """
         if self.animate.created():
             self.animate.close()
         if self.configurator is not None:
@@ -3985,14 +4047,15 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
         :Example:
 
-        ::
+            .. doctest:: canvas_close
 
-    a=vcs.init()
-    a.plot(array,'default','isofill','quick')
-    #close the vcs canvas
-    a.close()
+                >>> a=vcs.init()
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array,'default','isofill','quick')
+                <vcs.displayplot.Dp ...>
+                >>> a.close() #close the vcs canvas
 
-"""
+        """
         if self.configurator:
             self.endconfigure()
         a = self.backend.close(*args, **kargs)
@@ -4002,17 +4065,19 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def destroy(self):
         """
-    Destroy the VCS Canvas. It will deallocate the VCS Canvas object.
+        Destroy the VCS Canvas. It will deallocate the VCS Canvas object.
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_destroy
 
-    a=vcs.init()
-    a.plot(array,'default','isofill','quick')
-    a.destory()
+                >>> a=vcs.init()
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array,'default','isofill','quick')
+                <vcs.displayplot.Dp ...>
+                >>> a.destroy()
 
-"""
+        """
         import gc
 
         del self
@@ -4020,7 +4085,7 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
         gc.collect()
 
     def change_display_graphic_method(self, display, type, name):
-        '''
+        """
         Changes the type and graphic method of a plot.
 
         :param display: Display to change.
@@ -4029,7 +4094,7 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
         :type display: str or vcs.displayplot.Dp
         :type name: str
         :type type: str
-        '''
+        """
 
         if isinstance(display, (str, unicode)):
             display = vcs.elements["display"][display]
@@ -4039,10 +4104,10 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def get_selected_display(self):
         """
-        .. deprecated:: ?.?
+        .. deprecated:: 2.0
 
-
-    """
+            This function is no longer supported.
+        """
         return self.canvas.get_selected_display(*())
 
     def plot_annotation(self, *args):
@@ -4050,32 +4115,34 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def flush(self, *args):
         """
-    The flush command executes all buffered X events in the queue.
+        The flush command executes all buffered X events in the queue.
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_flush
 
-    a=vcs.init()
-    a.plot(array,'default','isofill','quick')
-    a.flush()
-
-"""
+                >>> a=vcs.init()
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array,'default','isofill','quick')
+                <vcs.displayplot.Dp ...>
+                >>> a.flush()
+        """
         return self.backend.flush(*args)
 
     def geometry(self, *args):
         """
-    The geometry command is used to set the size and position of the VCS canvas.
+        The geometry command is used to set the size and position of the VCS canvas.
 
-     :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_geometry
 
-    a=vcs.init()
-    a.plot(array,'default','isofill','quick')
-    a.geometry(450,337)
-
-"""
+                >>> a=vcs.init()
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array,'default','isofill','quick')
+                <vcs.displayplot.Dp ...>
+                >>> a.geometry(450,337)
+        """
         if len(args) == 0:
             return self.backend.geometry()
 
@@ -4093,25 +4160,25 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
         Obtain the current attributes of the VCS Canvas window.
 
         :returns: Dictionary with keys: "mapstate" (whether the canvas is opened), "height", "width", "depth", "x", "y"
+        :rtype: dict
         """
         return self.backend.canvasinfo(*args, **kargs)
 
     def getcontinentstype(self, *args):
         """
-    Retrieve continents type from VCS; either an integer between 0 and 11 or the
-    path to a custom continentstype.
+        Retrieve continents type from VCS; either an integer between 0 and 11 or the
+        path to a custom continentstype.
 
-     :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_getcontinentstype
 
-     a=vcs.init()
-     # Get the continents type
-     cont_type = a.getcontinentstype()
+                >>> a=vcs.init()
+                >>> cont_type = a.getcontinentstype() # Get the continents type
 
-:returns: An int between 1 and 0, or the path to a custom continentstype
-:rtype: int or system filepath
-"""
+        :returns: An int between 1 and 0, or the path to a custom continentstype
+        :rtype: int or system filepath
+        """
         try:
             return self._continents
         except:
@@ -4119,31 +4186,30 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def pstogif(self, filename, *opt):
         """
-     In some cases, the user may want to save the plot out as a gif image. This
-     routine allows the user to convert a postscript file to a gif file.
+        In some cases, the user may want to save the plot out as a gif image. This
+        routine allows the user to convert a postscript file to a gif file.
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_pstogif
 
-     a=vcs.init()
-     a.plot(array)
-     # convert the postscript file to a gif file (l=landscape)
-     a.pstogif('filename.ps')
-     # convert the postscript file to a gif file (l=landscape)
-     a.pstogif('filename.ps','l')
-     # convert the postscript file to a gif file (p=portrait)
-     a.pstogif('filename.ps','p')
+                >>> a=vcs.init()
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array)
+                <vcs.displayplot.Dp ...>
+                >>> a.pstogif('filename.ps') # convert the postscript file to a gif file (l=landscape)
+                >>> a.pstogif('filename.ps','l') # convert the postscript file to a gif file (l=landscape)
+                >>> a.pstogif('filename.ps','p') # convert the postscript file to a gif file (p=portrait)
 
-:param filename: String name of the desired output file
-:type filename: str
+        :param filename: String name of the desired output file
+        :type filename: str
 
-:param opt: One of 'l' or 'p', indicating landscape or portrait mode, respectively.
-:type opt: str
+        :param opt: One of 'l' or 'p', indicating landscape or portrait mode, respectively.
+        :type opt: str
 
-:returns: ???
-:rtype: ???
- """
+        :returns: ???
+        :rtype: ???
+        """
         from os import popen
 
         # Generate the VCS postscript file
@@ -4174,18 +4240,22 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def grid(self, *args):
         """
-    Set the default plotting region for variables that have more dimension values
-    than the graphics method. This will also be used for animating plots over the
-    third and fourth dimensions.
+        Set the default plotting region for variables that have more dimension values
+        than the graphics method. This will also be used for animating plots over the
+        third and fourth dimensions.
 
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_grid
 
-    a=vcs.init()
-    a.grid(12,12,0,71,0,45)
-"""
+                >>> a=vcs.init()
+                >>> a.grid(12,12,0,71,0,45)
+
+        .. admonition:: Not Yet Implemented
+
+            :py:func`vcs.Canvas.grid`_ does not work.
+        """
 
         p = self.canvas.grid(*args)
 
@@ -4193,54 +4263,53 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def landscape(self, width=-99, height=-99, x=-99, y=-99, clear=0):
         """
-    Change the VCS Canvas orientation to Landscape.
+        Change the VCS Canvas orientation to Landscape.
 
-     .. note::
-        The (width, height) and (x, y) arguments work in pairs. That is, you must
-        set (width, height) or (x, y) together to see any change in the VCS Canvas.
+        .. note::
 
-        If the portrait method is called  with arguments before displaying a VCS Canvas,
-        then the arguments (width, height, x, y, and clear) will have no effect on the
-        canvas.
+            The (width, height) and (x, y) arguments work in pairs. That is, you must
+            set (width, height) or (x, y) together to see any change in the VCS Canvas.
 
-     .. warning::
-        If the visible plot on the VCS Canvas is not adjusted properly, then resize
-        the screen with the point. Some X servers are not handling the threads properly
-        to keep up with the demands of the X client.
+            If the portrait method is called  with arguments before displaying a VCS Canvas,
+            then the arguments (width, height, x, y, and clear) will have no effect on the
+            canvas.
 
-     :Example:
+        .. warning::
 
-        ::
+            If the visible plot on the VCS Canvas is not adjusted properly, then resize
+            the screen with the point. Some X servers are not handling the threads properly
+            to keep up with the demands of the X client.
 
-    a=vcs.init()
-    a.plot(array)
-    # Change the VCS Canvas orientation and set object flag to landscape
-    a.landscape()
-    # Change the VCS Canvas to landscape and clear the page
-    a.landscape(clear=1)
-    # Change to landscape and set the window size
-    a.landscape(width = 400, height = 337)
-    # Change to landscape and set the x and y screen position
-    a.landscape(x=100, y = 200)
-    # Change to landscape and give specifications
-    a.landscape(width = 400, height = 337, x=100, y = 200, clear=1)
+        :Example:
 
-:param width: Width of the canvas, in pixels
-:type width: int
+            .. doctest:: canvas_landscape
 
-:param height: Height of the canvas, in pixels
-:type height: int
+                >>> a=vcs.init()
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array)
+                <vcs.displayplot.Dp ...>
+                >>> a.landscape() # Change the VCS Canvas orientation and set object flag to landscape
+                >>> a.landscape(clear=1) # Change the VCS Canvas to landscape and clear the page
+                >>> a.landscape(width = 400, height = 337) # Change to landscape and set the window size
+                >>> a.landscape(x=100, y = 200) # Change to landscape and set the x and y screen position
+                >>> a.landscape(width = 400, height = 337, x=100, y = 200, clear=1) # landscape with more settings
 
-:param x: Unused
-:type x: int
+        :param width: Width of the canvas, in pixels
+        :type width: int
 
-:param y: Unused
-:type y: int
+        :param height: Height of the canvas, in pixels
+        :type height: int
 
-:param clear: Indicates the canvas should be cleared (1), or should not be cleared (0), when orientation is changed.
-:type clear: int
+        :param x: Unused
+        :type x: int
 
-"""
+        :param y: Unused
+        :type y: int
+
+        :param clear: Indicates the canvas should be cleared (1),
+                        or should not be cleared (0), when orientation is changed.
+        :type clear: int
+        """
         if (self.orientation() == 'landscape'):
             return
 
@@ -4281,17 +4350,17 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
          'scatter', 'taylordiagram', 'template', 'textcombined', 'textorientation', 'texttable',
          'vector', 'xvsy', 'xyvsy', 'yxvsx']
 
-         :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_listelements
 
-        a=vcs.init()
-        a.listelements()
+                >>> a=vcs.init()
+                >>> a.listelements()
+                ['1d', '3d_dual_scalar', '3d_scalar', ...]
 
-:returns: A list of string names of all VCS class objects
-:rtype: list
-
-"""
+        :returns: A list of string names of all VCS class objects
+        :rtype: list
+        """
         f = vcs.listelements
         L = sorted(f(*args))
 
@@ -4299,45 +4368,44 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def updateorientation(self, *args):
         """
-     .. deprecated:: ?.?
-        Use :func:`landscape` or :func:`portrait` instead.
-"""
+        .. deprecated:: 2.0
 
+            Use :func:`landscape` or :func:`portrait` instead.
+        """
         a = self.canvas.updateorientation(*args)
 
         return a
 
     def open(self, width=None, height=None, **kargs):
         """
-    Open VCS Canvas object. This routine really just manages the VCS canvas. It will
-    popup the VCS Canvas for viewing. It can be used to display the VCS Canvas.
+        Open VCS Canvas object. This routine really just manages the VCS canvas. It will
+        popup the VCS Canvas for viewing. It can be used to display the VCS Canvas.
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_open
 
-    a=vcs.init()
-    a.open()
-    a.open(800,600)
+                >>> a=vcs.init()
+                >>> a.open()
+                >>> a.open(800,600)
 
-:param width: Integer representing the desire width of the opened window in pixels
-:type width: int
+        :param width: Integer representing the desire width of the opened window in pixels
+        :type width: int
 
-:param height: Integer representing the desire height of the opened window in pixels
-:type height: int
-
-"""
+        :param height: Integer representing the desire height of the opened window in pixels
+        :type height: int
+        """
 
         a = self.backend.open(width, height, **kargs)
 
         return a
 
     def canvasid(self, *args):
-        '''
+        """
         Get the ID of this canvas.
 
         This ID number is found at the top of the VCS Canvas, as part of its title.
-        '''
+        """
         return self._canvas_id
 
     def portrait(self, width=-99, height=-99, x=-99, y=-99, clear=0):
@@ -4345,41 +4413,39 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
         Change the VCS Canvas orientation to Portrait.
 
         .. note::
+
             If the current orientation of the canvas is already portrait, nothing happens.
 
         :Example:
 
-        ::
+            .. doctest:: canvas_portrait
 
-    a=vcs.init()
-    a.plot(array)
-    # Change the VCS Canvas orientation and set object flag to portrait
-    a.portrait()
-    # Change the VCS Canvas to portrait and clear the page
-    a.portrait(clear=1)
-    # Change to portrait and set the window size
-    a.portrait(width = 337, height = 400)
-    # Change to portrait and set the x and y screen position
-    a.portrait(x=100, y = 200)
-    # Change to portrait and give specifications
-    a.portrait(width = 337, height = 400, x=100, y = 200, clear=1)
+                >>> a=vcs.init()
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array)
+                <vcs.displayplot.Dp ...>
+                >>> a.portrait()  # Change the VCS Canvas orientation and set object flag to portrait
+                >>> a.portrait(clear=1) # Change the VCS Canvas to portrait and clear the page
+                >>> a.portrait(width = 337, height = 400) # Change to portrait and set the window size
+                >>> a.portrait(x=100, y = 200) # Change to portrait and set the x and y screen position
+                >>> a.portrait(width = 337, height = 400, x=100, y = 200, clear=1) # portrait, with more specifications
 
-:param width: Width to set the canvas to (in pixels)
-:type width: int
+        :param width: Width to set the canvas to (in pixels)
+        :type width: int
 
-:param height: Height to set the canvas to (in pixels)
-:type height: int
+        :param height: Height to set the canvas to (in pixels)
+        :type height: int
 
-:param x: Unused.
-:type x: None
+        :param x: Unused.
+        :type x: None
 
-:param y: Unused.
-:type y: None
+        :param y: Unused.
+        :type y: None
 
-:param clear: 0: Do not clear the canvas when orientation is changed. 1: clear the canvas when orientation is changed.
-:type clear: int
-
-"""
+        :param clear: 0: Do not clear the canvas when orientation is changed.
+                      1: clear the canvas when orientation is changed.
+        :type clear: int
+        """
         if (self.orientation() == 'portrait'):
             return
 
@@ -4412,51 +4478,61 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def ffmpeg(self, movie, files, bitrate=1024, rate=None, options=None):
         """
-    MPEG output from a list of valid files.
-    Can output to more than just mpeg format.
+        MPEG output from a list of valid files.
+        Can output to more than just mpeg format.
 
-    .. note::
-        ffmpeg ALWAYS overwrites the output file
+        .. note::
 
-    :Example:
+            ffmpeg ALWAYS overwrites the output file
 
-        ::
+        .. admonishment:: Audio configuration
 
-    a=vcs.init()
-    #... code to generate png files ...
-    # here is a dummy example
-    files =[]
-    for i in range(10):
-      a.png('my_png__%i' % i)
-      files.append('my_png__%i.png' % i)
-    # generates mpeg from pattern
-    a.ffmpeg('mymovie.mpeg','my_png_%d.png')
-    # generates from list of files
-    a.ffmpeg('mymovie.mpeg',files)
-    # generates mpeg at 512kbit
-    a.ffmpeg('mymovie.mpeg','my_png_%d.png',bitrate=512)
-    # generates movie with 50 frame per second
-    a.ffmpeg('mymovie.mpeg','my_png_%d.png',rate=50)
-    # generates movie at 50 frame per sec and 1024k bitrate
-    a.ffmpeg('mymovie.mpeg','my_png_%d.png',options='-r 50 -b 1024k')
-    #   NOTE: via the options arg you can add audio file to your movie (see ffmpeg help)
+            via the options arg you can add audio file to your movie (see ffmpeg help)
 
-:param movie: Output video file name
-:type movie: str
+        :Example:
 
-:param files: String file name
-:type files: str, list, or tuple
+            .. doctest:: canvas_ffmpeg
 
-:param rate: Desired output framerate
-:type rate: str
+                >>> a=vcs.init()
+                >>> import cdms2
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc')
+                >>> v = f('v') # use the data file to create a cdms2 slab
+                >>> u = f('u') # use the data file to create a cdms2 slab
+                >>> png_files = [] # for saving file names to make the mpeg
+                >>> plots = [] # for saving plots for later reference
+                >>> for i in range(10): # create a number of pngs to use for an mpeg
+                ...     a.clear()
+                ...     if (i%2):
+                ...         plots.append(a.plot(u,v))
+                ...     else:
+                ...         plots.append(a.plot(v,u))
+                ...     a.png('my_png__%i' % i)
+                ...     png_files.append('my_png__%i.png' % i)
+                >>> a.ffmpeg('mymovie.mpeg',png_files) # generates from list of files
+                True
+                >>> a.ffmpeg('mymovie.mpeg',files="my_png__[0-9]*\.png") # generate from files with name matching regex
+                True
+                >>> a.ffmpeg('mymovie.mpeg',png_files,bitrate=512) # generates mpeg at 512kbit
+                True
+                >>> a.ffmpeg('mymovie.mpeg',png_files,rate=50) # generates movie with 50 frame per second
+                True
 
-:param options: Additional FFMPEG arguments
-:type options: str
+        :param movie: Output video file name
+        :type movie: str
 
-:returns: The output string generated by ffmpeg program
-:rtype: str
+        :param files: String file name
+        :type files: str, list, or tuple
 
-"""
+        :param rate: Desired output framerate
+        :type rate: str
+
+        :param options: Additional FFMPEG arguments
+        :type options: str
+
+        :returns: The output string generated by ffmpeg program
+        :rtype: str
+
+        """
         args = ["ffmpeg", "-y"]
 
         if rate is not None:
@@ -4539,10 +4615,11 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
         return self.backend.getantialiasing()
 
     def setantialiasing(self, antialiasing):
-        """ Set antialiasing rate.
+        """
+        Set antialiasing rate.
 
-:param antialiasing: Integer from 0-64, representing the antialising rate (0 means no antialiasing).
-:type antialiasing: int
+        :param antialiasing: Integer from 0-64, representing the antialising rate (0 means no antialiasing).
+        :type antialiasing: int
         """
         self.backend.setantialiasing(antialiasing)
 
@@ -4550,25 +4627,22 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
         """
         Sets dimensions for output in bg mode.
 
-         :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_setbgoutputdimensions
 
-            a=vcs.init()
-            # US Legal
-            a.setbgoutputdimensions(width=11.5, height= 8.5)
-            # A4
-            a.setbgoutputdimensions(width=21, height=29.7, units='cm')
+                >>> a=vcs.init()
+                >>> a.setbgoutputdimensions(width=11.5, height= 8.5) # US Legal
+                >>> a.setbgoutputdimensions(width=21, height=29.7, units='cm') # A4
 
-:param width: Float representing the desired width of the output, using the specified unit of measurement
-:type width: float
+        :param width: Float representing the desired width of the output, using the specified unit of measurement
+        :type width: float
 
-:param height: Float representing the desired height of the output, using the specified unit of measurement.
-:type height: float
+        :param height: Float representing the desired height of the output, using the specified unit of measurement.
+        :type height: float
 
-:param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Defaults to 'inches'.
-:type units: str
-
+        :param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Defaults to 'inches'.
+        :type units: str
         """
         if units not in [
                 'inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']:
@@ -4629,32 +4703,33 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
     def png(self, file, width=None, height=None,
             units=None, draw_white_background=True, **args):
         """
-    PNG output, dimensions set via setbgoutputdimensions
+        PNG output, dimensions set via setbgoutputdimensions
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_png
 
-    a=vcs.init()
-    a.plot(array)
-    # Overwrite a png file
-    a.png('example')
+                >>> a=vcs.init()
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array)
+                <vcs.displayplot.Dp ...>
+                >>> a.png('example') # Overwrite a png file
 
-:param file: Output image filename
-:type file: str
+        :param file: Output image filename
+        :type file: str
 
-:param width: Float representing the desired width of the output png, using the specified unit of measurement
-:type width: float
+        :param width: Float representing the desired width of the output png, using the specified unit of measurement
+        :type width: float
 
-:param height: Float representing the desired height of the output png, using the specified unit of measurement.
-:type height: float
+        :param height: Float representing the desired height of the output png, using the specified unit of measurement
+        :type height: float
 
-:param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Defaults to 'inches'.
-:type units: str
+        :param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Defaults to 'inches'.
+        :type units: str
 
-:param draw_white_background: Boolean value indicating whether or not the background should be white. Defaults to True.
-:type draw_white_background: bool
-"""
+        :param draw_white_background: Boolean value indicating if the background should be white. Defaults to True.
+        :type draw_white_background: bool
+        """
         base = os.path.dirname(file)
         if base != "" and not os.path.exists(base):
             raise vcsError("Output path: %s does not exist" % base)
@@ -4672,42 +4747,39 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
     def pdf(self, file, width=None, height=None, units='inches',
             textAsPaths=True):
         """
-    PDF output is another form of vector graphics.
+        PDF output is another form of vector graphics.
 
-    .. note::
-        The textAsPaths parameter preserves custom fonts, but text can no longer be edited in the file
+        .. note::
 
-    :Example:
+            The textAsPaths parameter preserves custom fonts, but text can no longer be edited in the file
 
-        ::
+        :Example:
 
-    a=vcs.init()
-    a.plot(array)
-    # Overwrite a postscript file
-    a.pdf('example')
-    # US Legal
-    a.pdf('example', width=11.5, height= 8.5)
-    # A4
-    a.pdf('example', width=21, height=29.7, units='cm')
+            .. doctest:: canvas_pdf
 
-:param file: Desired string name of the output file
-:type file: str
+                >>> a=vcs.init()
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array)
+                <vcs.displayplot.Dp ...>
+                >>> a.pdf('example') # Overwrite a postscript file
+                >>> a.pdf('example', width=11.5, height= 8.5) # US Legal
+                >>> a.pdf('example', width=21, height=29.7, units='cm') # A4
 
-:param width: Integer specifying the desired width of the output, measured in the chosen units
-:type width: int
+        :param file: Desired string name of the output file
+        :type file: str
 
-:param height: Integer specifying the desired height of the output, measured in the chosen units
-:type height: int
+        :param width: Integer specifying the desired width of the output, measured in the chosen units
+        :type width: int
 
-:param units: Must be one of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Default is 'inches'.
-:type units: str
+        :param height: Integer specifying the desired height of the output, measured in the chosen units
+        :type height: int
 
-:param textAsPaths: Specifies whether to render text objects as paths.
-:type textAsPaths: bool
+        :param units: Must be one of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Default is 'inches'.
+        :type units: str
 
-:returns: ???
-:rtype: ???
-"""
+        :param textAsPaths: Specifies whether to render text objects as paths.
+        :type textAsPaths: bool
+        """
         if units not in [
                 'inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']:
             raise Exception(
@@ -4723,42 +4795,39 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
     def svg(self, file, width=None, height=None, units='inches',
             textAsPaths=True):
         """
-    SVG output is another form of vector graphics.
+        SVG output is another form of vector graphics.
 
-    .. note::
-        The textAsPaths parameter preserves custom fonts, but text can no longer be edited in the file
+        .. note::
 
-    :Example:
+            The textAsPaths parameter preserves custom fonts, but text can no longer be edited in the file
 
-        ::
+        :Example:
 
-    a=vcs.init()
-    a.plot(array)
-    # Overwrite a postscript file
-    a.svg('example')
-    # US Legal
-    a.svg('example', width=11.5, height= 8.5)
-    # A4
-    a.svg('example', width=21, height=29.7, units='cm')
+            .. doctest:: canvas_svg
 
-:param file:
-:type file:
+                >>> a=vcs.init()
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array)
+                <vcs.displayplot.Dp ...>
+                >>> a.svg('example') # Overwrite a postscript file
+                >>> a.svg('example', width=11.5, height= 8.5) # US Legal
+                >>> a.svg('example', width=21, height=29.7, units='cm') # A4
 
-:param width: Float to set width of output SVG, in specified unit of measurement
-:type width: float
+        :param file:
+        :type file:
 
-:param height: Float to set height of output SVG, in specified unit of measurement
-:type height: float
+        :param width: Float to set width of output SVG, in specified unit of measurement
+        :type width: float
 
-:param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Deafults to 'inches'.
-:type units: str
+        :param height: Float to set height of output SVG, in specified unit of measurement
+        :type height: float
 
-:param textAsPaths: Specifies whether to render text objects as paths.
-:type textAsPaths: bool
+        :param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Deafults to 'inches'.
+        :type units: str
 
-:returns: ???
-:rtype: ???
-"""
+        :param textAsPaths: Specifies whether to render text objects as paths.
+        :type textAsPaths: bool
+        """
         if units not in [
                 'inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']:
             raise Exception(
@@ -4872,8 +4941,8 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
         """
         Returns a boolean value indicating whether the canvas is opened or not.
 
-:returns: A boolean value indicating whether the Canvas is opened (1), or closed (0)
-:rtype: bool
+        :returns: A boolean value indicating whether the Canvas is opened (1), or closed (0)
+        :rtype: bool
         """
 
         return self.backend.isopened()
@@ -4952,60 +5021,52 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def postscript(self, file, mode='r', orientation=None, width=None, height=None, units='inches', textAsPaths=True):
         """
-    Postscript output is another form of vector graphics. It is larger than its CGM output
-    counter part, because it is stored out in ASCII format.
+        Postscript output is another form of vector graphics. It is larger than its CGM output
+        counter part, because it is stored out in ASCII format.
 
-    There are two modes for saving a postscript file: `Append' (a) mode appends postscript
-    output to an existing postscript file; and `Replace' (r) mode overwrites an existing
-    postscript file with new postscript output. The default mode is to overwrite an existing
-    postscript file (i.e. mode (r)).
+        There are two modes for saving a postscript file: `Append' (a) mode appends postscript
+        output to an existing postscript file; and `Replace' (r) mode overwrites an existing
+        postscript file with new postscript output. The default mode is to overwrite an existing
+        postscript file (i.e. mode (r)).
 
-    .. note::
-        The textAsPaths parameter preserves custom fonts, but text can no longer be edited in the file
+        .. note::
 
-    :Example:
+            The textAsPaths parameter preserves custom fonts, but text can no longer be edited in the file
 
-        ::
+        :Example:
 
-    a=vcs.init()
-    a.plot(array)
-    # Overwrite a postscript file
-    a.postscript('example')
-    # Append postscript to an existing file
-    a.postscript('example', 'a')
-    # Overwrite an existing file
-    a.postscript('example', 'r')
-    # Append postscript to an existing file
-    a.postscript('example', mode='a')
-    # US Legal (default)
-    a.postscript('example', width=11.5, height= 8.5)
-    # A4
-    a.postscript('example', width=21, height=29.7, units='cm')
-    # US Legal output and control of margins (for printer friendly output), default units 'inches'
-    a.postscript('example', right_margin=.2,left_margin=.2,top_margin=.2,bottom_margin=.2)
+            .. doctest:: canvas_postscript
 
-:param file: String name of the desired output file
-:type file: str
+                >>> a=vcs.init()
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array)
+                <vcs.displayplot.Dp ...>
+                >>> a.postscript('example') # Overwrite a postscript file
+                >>> a.postscript('example', 'a') # Append postscript to an existing file
+                >>> a.postscript('example', 'r') # Overwrite an existing file
+                >>> a.postscript('example', mode='a') # Append postscript to an existing file
+                >>> a.postscript('example', width=11.5, height= 8.5) # US Legal (default)
+                >>> a.postscript('example', width=21, height=29.7, units='cm') # A4
 
-:param mode: The mode in which to open the file. One of 'r' or 'a'.
-:type mode: str
+        :param file: String name of the desired output file
+        :type file: str
 
-:param orientation: Deprecated.
-:type orientation: None
+        :param mode: The mode in which to open the file. One of 'r' or 'a'.
+        :type mode: str
 
-:param width: Desired width of the postscript output, in the specified unit of measurement
-:type width: int
+        :param orientation: Deprecated.
+        :type orientation: None
 
-:param height: Desired height of the postscript output, in the specified unit of measurement
-:type height: int
-:type units: str
+        :param width: Desired width of the postscript output, in the specified unit of measurement
+        :type width: int
 
-:param textAsPaths: Specifies whether to render text objects as paths.
-:type textAsPaths: bool
+        :param height: Desired height of the postscript output, in the specified unit of measurement
+        :type height: int
+        :type units: str
 
-:returns: ???
-:rtype: ???
-"""
+        :param textAsPaths: Specifies whether to render text objects as paths.
+        :type textAsPaths: bool
+        """
         if units not in [
                 'inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']:
             raise Exception(
@@ -5043,26 +5104,26 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def setcolormap(self, name):
         """
-
         It is necessary to change the colormap. This routine will change the VCS
         color map.
 
-        If the the visul display is 16-bit, 24-bit, or 32-bit TrueColor, then a redrawing
-        of the VCS Canvas is made evertime the colormap is changed.
+        If the the visual display is 16-bit, 24-bit, or 32-bit TrueColor, then a redrawing
+        of the VCS Canvas is made every time the colormap is changed.
 
         :Example:
 
-        ::
+            .. doctest:: canvas_setcolormap
 
-            a=vcs.init()
-            a.plot(array,'default','isofill','quick')
-            a.setcolormap("AMIP")
+                >>> a=vcs.init()
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array,'default','isofill','quick')
+                <vcs.displayplot.Dp ...>
+                >>> a.setcolormap("AMIP")
+                >>> a.plot(array,'default','isofill','quick')
+                <vcs.displayplot.Dp ...>
 
-        :param name: Name of the coormap to use
+        :param name: Name of the colormap to use
         :type name: str
-
-        :returns: ???
-        :rtype: ???
         """
         # Don't update the VCS segment if there is no Canvas. This condition
         # happens in the initalize function for VCDAT only. This will cause a
@@ -5078,32 +5139,34 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def setcolorcell(self, *args):
         """
-    Set a individual color cell in the active colormap. If default is
-    the active colormap, then return an error string.
+        Set a individual color cell in the active colormap. If default is
+        the active colormap, then return an error string.
 
-    If the the visul display is 16-bit, 24-bit, or 32-bit TrueColor, then a redrawing
-    of the VCS Canvas is made evertime the color cell is changed.
+        If the the visul display is 16-bit, 24-bit, or 32-bit TrueColor, then a redrawing
+        of the VCS Canvas is made evertime the color cell is changed.
 
-    Note, the user can only change color cells 0 through 239 and R,G,B
-    value must range from 0 to 100. Where 0 represents no color intensity
-    and 100 is the greatest color intensity.
+        Note, the user can only change color cells 0 through 239 and R,G,B
+        value must range from 0 to 100. Where 0 represents no color intensity
+        and 100 is the greatest color intensity.
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_setcolorcell
 
-    a=vcs.init()
-    a.plot(array,'default','isofill','quick')
-    a.setcolormap("AMIP")
-    a.setcolorcell(11,0,0,0)
-    a.setcolorcell(21,100,0,0)
-    a.setcolorcell(31,0,100,0)
-    a.setcolorcell(41,0,0,100)
-    a.setcolorcell(51,100,100,100)
-    a.setcolorcell(61,70,70,70)
-
-"""
-
+                >>> a=vcs.init()
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array,'default','isofill','quick')
+                <vcs.displayplot.Dp ...>
+                >>> a.setcolormap("AMIP")
+                >>> a.setcolorcell(11,0,0,0)
+                >>> a.setcolorcell(21,100,0,0)
+                >>> a.setcolorcell(31,0,100,0)
+                >>> a.setcolorcell(41,0,0,100)
+                >>> a.setcolorcell(51,100,100,100)
+                >>> a.setcolorcell(61,70,70,70)
+                >>> a.plot(array,'default','isofill','quick')
+                <vcs.displayplot.Dp ...>
+        """
         a = vcs.setcolorcell(self.colormap, *args)
         return a
 
@@ -5114,21 +5177,16 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
         :Example:
 
-        ::
+            .. doctest:: canvas_setcontinentsline
 
-        a = vcs.init()
-        line = vcs.createline()
-        line.width = 5
-        # Use custom continents line
-        a.setcontinentsline(line)
-        # Use default line
-        a.setcontinentsline("default")
+                >>> a = vcs.init()
+                >>> line = vcs.createline()
+                >>> line.width = 5
+                >>> a.setcontinentsline(line) # Use custom continents line
+                >>> a.setcontinentsline("default") # Use default line
 
-:param line: Line to use for drawing continents. Can be a string name of a line, or a VCS line object
-:type line: str or vcs.line.Tl
-
-:returns: ???
-:rtype: ???
+        :param line: Line to use for drawing continents. Can be a string name of a line, or a VCS line object
+        :type line: str or :py:class:`vcs.line.Tl`
         """
         linename = VCS_validation_functions.checkLine(self, "continentsline", line)
         line = vcs.getline(linename)
@@ -5142,12 +5200,12 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def setcontinentstype(self, value):
         """
-      One has the option of using continental maps that are predefined or that
-      are user-defined. Predefined continental maps are either internal to VCS
-      or are specified by external files. User-defined continental maps are
-      specified by additional external files that must be read as input.
+        One has the option of using continental maps that are predefined or that
+        are user-defined. Predefined continental maps are either internal to VCS
+        or are specified by external files. User-defined continental maps are
+        specified by additional external files that must be read as input.
 
-      The continents-type values are integers ranging from 0 to 11, where:
+        The continents-type values are integers ranging from 0 to 11, where:
           0 signifies "No Continents"
           1 signifies "Fine Continents"
           2 signifies "Coarse Continents"
@@ -5157,22 +5215,21 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
           6 uses a custom continent set
 
-      You can also pass a file by path.
+        You can also pass a file by path.
 
-      :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_setcontinentstype
 
-      a=vcs.init()
-      a.setcontinentstype(3)
-      a.plot(array,'default','isofill','quick')
+                >>> a=vcs.init()
+                >>> a.setcontinentstype(3)
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array,'default','isofill','quick')
+                <vcs.displayplot.Dp ...>
 
-:param value: Integer representing continent type, as specified in function description
-:type value: int
-
-:returns: ???
-:rtype: ???
-  """
+        :param value: Integer representing continent type, as specified in function description
+        :type value: int
+        """
         continent_path = VCS_validation_functions.checkContinents(self, value)
         self._continents = value
         if continent_path is not None and not os.path.exists(
@@ -5196,41 +5253,35 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
     def gif(self, filename='noname.gif', merge='r', orientation=None,
             geometry='1600x1200'):
         """
- Function: gif
+        In some cases, the user may want to save the plot out as a gif image. This
+        routine allows the user to save the VCS canvas output as a SUN gif file.
+        This file can be converted to other gif formats with the aid of xv and other
+        such imaging tools found freely on the web.
 
- Description of Function:
-    In some cases, the user may want to save the plot out as a gif image. This
-    routine allows the user to save the VCS canvas output as a SUN gif file.
-    This file can be converted to other gif formats with the aid of xv and other
-    such imaging tools found freely on the web.
+        By default, the page orientation is in Landscape mode (l). To translate the page
+        orientation to portrait mode (p), set the orientation = 'p'.
 
-    If no path/file name is given and no previously created gif file has been
-    designated, then file
+        The GIF command is used to create or append to a gif file. There are two modes
+        for saving a gif file: 'Append' mode (a) appends gif output to an existing gif
+        file; 'Replace' (r) mode overwrites an existing gif file with new gif output.
+        The default mode is to overwrite an existing gif file (i.e. mode (r)).
 
-        /$HOME/%s/default.gif
+        :Example:
 
-    will be used for storing gif images. However, if a previously created gif
-    file is designated, that file will be used for gif output.
+            .. doctest:: canvas_gif
 
-    By default, the page orientation is in Landscape mode (l). To translate the page
-    orientation to portrait mode (p), set the orientation = 'p'.
-
-    The GIF command is used to create or append to a gif file. There are two modes
-    for saving a gif file: `Append' mode (a) appends gif output to an existing gif
-    file; `Replace' (r) mode overwrites an existing gif file with new gif output.
-    The default mode is to overwrite an existing gif file (i.e. mode (r)).
-
- :Example:
-    a=vcs.init()
-    a.plot(array)
-    a.gif(filename='example.gif', merge='a', orientation='l', geometry='800x600')
-    a.gif('example')         # overwrite existing gif file (default is merge='r')
-    a.gif('example',merge='r')  # overwrite existing gif file
-    a.gif('example',merge='a')     # merge gif image into existing gif file
-    a.gif('example',orientation='l') # merge gif image into existing gif file with landscape orientation
-    a.gif('example',orientation='p') # merge gif image into existing gif file with portrait orientation
-    a.gif('example',geometry='600x500') # merge gif image into existing gif file and set the gif geometry
-""" % (self._dotdir)
+                >>> a=vcs.init()
+                >>> array = [range(1, 11) for _ in range(1, 11)]
+                >>> a.plot(array)
+                <vcs.displayplot.Dp ...>
+                >>> a.gif(filename='example.gif', merge='a', orientation='l', geometry='800x600')
+                >>> a.gif('example') # overwrite existing gif file (default is merge='r')
+                >>> a.gif('example',merge='r') # overwrite existing gif file
+                >>> a.gif('example',merge='a') # merge gif image into existing gif file
+                >>> a.gif('example',orientation='l') # merge gif image into existing gif file with landscape orientation
+                >>> a.gif('example',orientation='p') # merge gif image into existing gif file with portrait orientation
+                >>> a.gif('example',geometry='600x500') # merge gif image into existing gif file and set gif geometry
+        """
         if orientation is None:
             orientation = self.orientation()[0]
         g = geometry.split('x')
@@ -5255,47 +5306,37 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
         :Example:
 
-        ::
+            .. doctest:: canvas_eps
 
-        a=vcs.init()
-        a.plot(array)
-        # Overwrite a postscript file
-        a.postscript('example')
-        # Append postscript to an existing file
-        a.postscript('example', 'a')
-        # Overwrite an existing file
-        a.postscript('example', 'r')
-        # Append postscript to an existing file
-        a.postscript('example', mode='a')
-         # US Legal (default)
-        a.postscript('example', width=11.5, height= 8.5)
-        # A4
-        a.postscript('example', width=21, height=29.7, units='cm')
-        a.postscript('example', right_margin=.2,left_margin=.2,top_margin=.2,bottom_margin=.2)
-        # US Legal output and control of margins (for printer friendly output), default units 'inches'
+                >>> a=vcs.init()
+                >>> array = [range(10) for _ in range(10)]
+                >>> a.plot(array)
+                <vcs.displayplot.Dp ...>
+                >>> a.postscript('example') # Overwrite a postscript file
+                >>> a.postscript('example', 'a') # Append postscript to an existing file
+                >>> a.postscript('example', 'r') # Overwrite an existing file
+                >>> a.postscript('example', mode='a') # Append postscript to an existing file
+                >>> a.postscript('example', width=11.5, height= 8.5) # US Legal (default)
+                >>> a.postscript('example', width=21, height=29.7, units='cm') # A4
 
+        :param file: String name of the desired output file
+        :type file: str
 
-:param file: String name of the desired output file
-:type file: str
+        :param mode: The mode in which to open the file. One of 'r' or 'a'.
+        :type mode: str
 
-:param mode: The mode in which to open the file. One of 'r' or 'a'.
-:type mode: str
+        :param orientation: Deprecated.
+        :type orientation: None
 
-:param orientation: Deprecated.
-:type orientation: None
+        :param width: Width of the output image, in the unit of measurement specified
+        :type width: float
 
-:param width: Width of the output image, in the unit of measurement specified
-:type width: float
+        :param height: Height of the output image, in the unit of measurement specified
+        :type height: float
 
-:param height: Height of the output image, in the unit of measurement specified
-:type height: float
-
-:param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Defaults to 'inches'.
-:type units: str
-
-:returns: ???
-:rtype: ???
-"""
+        :param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Defaults to 'inches'.
+        :type units: str
+        """
         ext = file.split(".")[-1]
         if ext.lower() != 'eps':
             file = file + '.eps'
@@ -5324,15 +5365,14 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
         Checks if a graphic method is stored in a file
         if no file name is passed then looks into the initial.attributes file
 
-:param GM: The graphics method to search for
-:type GM: str
+        :param GM: The graphics method to search for
+        :type GM: str
 
-:param file: String name of the file to search
-:type file: str
+        :param file: String name of the file to search
+        :type file: str
 
-:returns: ???
-:rtype: ???
-
+        :returns: ???
+        :rtype: ???
         """
         nm = GM.name
         gm = GM.g_name
@@ -5351,34 +5391,29 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def saveinitialfile(self):
         """
- Function: saveinitialfile                      # Save initial.attribute file
+        At start-up, VCS reads a script file named initial.attributes that
+        defines the initial appearance of the VCS Interface. Although not
+        required to run VCS, this initial.attributes file contains many
+        predefined settings to aid the beginning user of VCS.
 
- Description of Function:
-    At start-up, VCS reads a script file named initial.attributes that
-    defines the initial appearance of the VCS Interface. Although not
-    required to run VCS, this initial.attributes file contains many
-    predefined settings to aid the beginning user of VCS. The path to
-    the file must be:
+        :Example:
 
-         /$HOME/%s/initial.attributes
+            .. doctest:: canvas_saveinitial
 
-    The contents of the initial.attributes file can be customized by
-    the user.
+                >>> a=vcs.init()
+                >>> a.saveinitialfile()
 
- :Example:
-    a=vcs.init()
-    ...
+        .. warning::
 
-    a.saveinitialfile()
+            This removes first ALL objects generated automatically
+            (i.e. whose name starts with '__') in order to preserve this, rename objects first
+            e.g:
 
- WARNING: This removes first ALL object generated automatically
- (i.e. whose name starts with '__') in order to preserve this, rename objects first
- e.g:
-    b=a.createboxfill()
-    b.name='MyBoxfill'
+            .. doctest:: canvas_saveinitial_warning
 
- # graphic method is now preserved
-""" % (self._dotdir)
+                >>> b=vcs.createboxfill()
+                >>> b.rename('MyBoxfill') # graphic method is now preserved
+        """
         self.clean_auto_generated_objects()
         return vcs.saveinitialfile()
 
@@ -5390,24 +5425,25 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def islandscape(self):
         """
-    Indicates if VCS's orientation is landscape.
+        Indicates if VCS's orientation is landscape.
 
-    Returns a 1 if orientation is landscape.
-    Otherwise, it will return a 0, indicating false (not in landscape mode).
+        Returns a 1 if orientation is landscape.
+        Otherwise, it will return a 0, indicating false (not in landscape mode).
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_islandscape
 
-    a=vcs.init()
-    # ...
-    if a.islandscape():
-        # Set VCS's orientation to portrait mode
-       a.portrait()
+                >>> a=vcs.init()
+                >>> array = [range(10) for _ in range(10)]
+                >>> a.plot(array)
+                <vcs.displayplot.Dp ...>
+                >>> if a.islandscape():
+                ...     a.portrait() # Set VCS's orientation to portrait mode
 
-:returns: Integer indicating VCS is in landscape mode (1), or not (0)
-:rtype: int
-"""
+        :returns: Integer indicating VCS is in landscape mode (1), or not (0)
+        :rtype: int
+        """
         if (self.orientation() == 'landscape'):
             return 1
         else:
@@ -5415,23 +5451,23 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def isportrait(self):
         """
-    Indicates if VCS's orientation is portrait.
+        Indicates if VCS's orientation is portrait.
 
 
-    :Example:
+        :Example:
 
-        ::
+            .. doctest:: canvas_isportrait
 
-    a=vcs.init()
-    #...
-    if a.isportrait():
-        # Set VCS's orientation to landscape mode
-        a.landscape()
+                >>> a=vcs.init()
+                >>> array = [range(10) for _ in range(10)]
+                >>> a.plot(array)
+                <vcs.displayplot.Dp ...>
+                >>> if a.isportrait():
+                ...     a.landscape() # Set VCS's orientation to landscape mode
 
-:returns: Returns a 1 if orientation is portrait, or 0 if not in portrait mode
-:rtype: bool
-
-"""
+        :returns: Returns a 1 if orientation is portrait, or 0 if not in portrait mode
+        :rtype: bool
+        """
         if (self.orientation() == 'portrait'):
             return 1
         else:
@@ -5439,32 +5475,34 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def getplot(self, Dp_name_src='default', template=None):
         """
-        .. deprecated:: 1.0
-            The geplot function is dperecated
+        .. deprecated:: 2.0
 
-    This function will create a display plot object from an existing display
-    plot object from an existing VCS plot. If no display plot name
-    is given, then None is returned.
+            The getplot function is deprecated
 
-     :Example:
+        This function will create a display plot object from an existing display
+        plot object from an existing VCS plot. If no display plot name
+        is given, then None is returned.
 
-        ::
+        :Example:
 
-    a=vcs.init()
-    # Show all the existing templates
-    a.show('template')
-    # plot1 instance of 'dpy_plot_1' display plot
-    plot1=a.getplot('dpy_plot_1')
+            .. doctest:: canvas_getplot
 
-:param Dp_name_src: String name of an existing display plot object
-:type Dp_name_src: str
+                >>> a=vcs.init()
+                >>> a.show('template') # Show all the existing templates
+                *******************Template Names List**********************
+                ...
+                *******************End Template Names List**********************
+                >>> plot1=a.getplot() # plot1 instance of 'dpy_plot_1' display plot
 
-:param template: ???
-:type template: ???
+        :param Dp_name_src: String name of an existing display plot object
+        :type Dp_name_src: str
 
-:returns: ???
-:rtype: ???
-"""
+        :param template: The displayplot template to inherit from
+        :type template:
+
+        :returns: A VCS displayplot object
+        :rtype: vcs.displayplot.Dp
+        """
         if not isinstance(Dp_name_src, str):
             raise ValueError('Error -  The argument must be a string.')
 
@@ -5475,8 +5513,6 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
         return display
 
     def createcolormap(self, Cp_name=None, Cp_name_src='default'):
-        """
-        """
         return vcs.createcolormap(Cp_name, Cp_name_src)
     createcolormap.__doc__ = vcs.manageElements.createcolormap.__doc__
 
@@ -5488,12 +5524,12 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
         """
         Add a font to VCS.
 
-    :param path: Path to the font file you wish to add (must be .ttf)
-    :type path: str
+        :param path: Path to the font file you wish to add (must be .ttf)
+        :type path: str
 
-    :param name: Name to use to represent the font.
-    :type name: str
-"""
+        :param name: Name to use to represent the font.
+        :type name: str
+        """
         if not os.path.exists(path):
             raise ValueError('Error -  The font path does not exists')
         if os.path.isdir(path):
@@ -5538,12 +5574,28 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
         """
         Get the font name/number associated with a font number/name
 
-:param font: The font name/number
-:type font: int or str
+        :Example:
 
-:returns: If font parameter was a string, will return the integer associated with that string.
-          If font parameter was an integer, will return the string associated with that integer.
-:rtype: int or str
+            .. doctest:: canvas_getfont
+
+                >>> a=vcs.init()
+                >>> font_names=[]
+                >>> for i in range(1,17):
+                ...     font_names.append(str(a.getfont(i))) # font_names is now filled with all font names
+                >>> font_names
+                ['default', ...]
+                >>> font_numbers = []
+                >>> for name in font_names:
+                ...     font_numbers.append(a.getfont(name)) # font_numbers is now filled with all font numbers
+                >>> font_numbers
+                [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+
+        :param font: The font name/number
+        :type font: int or str
+
+        :returns: If font parameter was a string, will return the integer associated with that string.
+                  If font parameter was an integer, will return the string associated with that integer.
+        :rtype: int or str
         """
         if isinstance(font, int):
             return self.getfontname(font)
@@ -5556,12 +5608,12 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
         """
         Switch the font numbers of two fonts.
 
-:param font1: The first font
-:type font1: int or str
+        :param font1: The first font
+        :type font1: int or str
 
-:param font2: The second font
-:type font2: int or str
-"""
+        :param font2: The second font
+        :type font2: int or str
+        """
         if isinstance(font1, str):
             index1 = self.getfont(font1)
         elif isinstance(font1, (int, float)):
@@ -5586,14 +5638,14 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
     def copyfontto(self, font1, font2):
         """
-        Copy `font1` into `font2`.
+        Copy 'font1' into 'font2'.
 
-:param font1: Name/number of font to copy
-:type font1: str or int
+        :param font1: Name/number of font to copy
+        :type font1: str or int
 
-:param font2: Name/number of destination
-:type font2: str or int
-"""
+        :param font2: Name/number of destination
+        :type font2: str or int
+        """
         if isinstance(font1, str):
             index1 = self.getfont(font1)
         elif isinstance(font1, (int, float)):
@@ -5618,8 +5670,8 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
         """
         Sets the passed/def show font as the default font for vcs
 
-:param font: Font name or index to use as default
-:type font: str or int
+        :param font: Font name or index to use as default
+        :type font: str or int
         """
         if isinstance(font, str):
             font = self.getfont(font)
@@ -5633,14 +5685,14 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
 
         :Example:
 
-        ::
+            .. doctest:: canvas_orientation
 
-        a = vcs.init()
-        # Show current orientation of the canvas
-        a.orientation()
+                >>> a=vcs.init()
+                >>> a.orientation() # Show current orientation of the canvas
+                'landscape'
 
-:returns: A string indicating the orientation of the canvas, i.e. 'landscape' or 'portrait'
-:rtype: str
+        :returns: A string indicating the orientation of the canvas, i.e. 'landscape' or 'portrait'
+        :rtype: str
         """
         return self.backend.orientation(*args, **kargs)
 
