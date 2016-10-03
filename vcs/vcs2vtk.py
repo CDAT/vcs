@@ -242,6 +242,7 @@ def setInfToValid(geoPoints, ghost):
             ghost.SetValue(i, vtk.vtkDataSetAttributes.HIDDENPOINT)
     return anyInfinity
 
+
 def removeHiddenPoints(grid):
     ghost = grid.GetPointGhostArray()
     if (not ghost):
