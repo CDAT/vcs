@@ -4585,12 +4585,44 @@ or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,
     # display ping
 
     def put_png_on_canvas(
-            self, filename, zoom=1, xOffset=0, yOffset=0, *args, **kargs):
+            self, filename, zoom=1, xOffset=0, yOffset=0,
+            units="percent", fitToHeight=True, *args, **kargs):
+        """
+        Display a PNG file on the canvas
+
+        :Example:
+
+            ::
+
+        a=vcs.init()
+        # Put a png on Canvas
+        a.put_on_png_on_canvas("path.png",zoom=1, xOffset=0, yOffset=0, units="percent", fitToHeight=True)
+
+:param file: Input image filename
+:type file: str
+
+:param zoom: scale factor
+:type zoom: int
+
+:param xOffset: Horizontal Offset
+:type xOffset: float
+
+:param yOffset: Vertical Offset
+:type yOffset: float
+
+:param units: Offsets units percent or pixels
+:type units" str
+
+:param fitToHeight: fits the picture (before scaling) to the canvas full height, if False then use png original size
+:type fitToHeight: bool
+        """
         self.backend.put_png_on_canvas(
             filename,
             zoom,
             xOffset,
             yOffset,
+            units,
+            fitToHeight,
             *args,
             **kargs)
 
