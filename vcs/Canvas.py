@@ -2255,7 +2255,8 @@ class Canvas(object):
                 *******************Texttable Names List**********************
                 ...
                 *******************End Texttable Names List**********************
-                >>> tc=a.drawtextcombined(Tt_name = 'std_example', To_name='7left_example', string='Hello example!', spacing=5,
+                >>> tc=a.drawtextcombined(Tt_name = 'std_example', To_name='7left_example',
+                ...                   string='Hello example!', spacing=5,
                 ...                   color=242, priority=1, viewport=[0, 1.0, 0, 1.0],
                 ...                   worldcoordinate=[0,100, 0,50],
                 ...                   x=[0,20,40,60,80,100],
@@ -4774,7 +4775,8 @@ class Canvas(object):
         :param height: Integer specifying the desired height of the output, measured in the chosen units
         :type height: int
 
-        :param units: Must be one of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Default is 'inches'.
+        :param units: Must be one of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots'].
+                      Default is 'inches'.
         :type units: str
 
         :param textAsPaths: Specifies whether to render text objects as paths.
