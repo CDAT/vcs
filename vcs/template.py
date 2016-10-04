@@ -1466,9 +1466,9 @@ class P(object):
                 pass
 
     def drawLinesAndMarkersLegend(self, canvas,
-        linecolors,linetypes,linewidths,
-        markercolors,markertypes,markersizes,
-        strings,bg=False,render=True):
+                                  linecolors, linetypes, linewidths,
+                                  markercolors, markertypes, markersizes,
+                                  strings, bg=False, render=True):
         """Draws a legend with line/marker/text inside a template legend box
     Auto adjust text size to make it fit inside the box
     Auto arrange the elements to fill the box nicely
@@ -1488,7 +1488,7 @@ class P(object):
 
     :param linecolors: list containing the colors of each line to draw
     :type linecolors: list of either colorInt, (r,g,b,opacity), or string color names
-    
+
     :param linetypes: list containing the type of each line to draw
     :type linetypes: list on int of line stype strings
 
@@ -1514,10 +1514,10 @@ class P(object):
     :type render: bool
     """
         return vcs.utils.drawLinesAndMarkersLegend(canvas,
-                self.legend,
-                linecolors,linetypes,linewidths,
-                markercolors,markertypes,markersizes,
-                strings,bg,render)
+                                                   self.legend,
+                                                   linecolors, linetypes, linewidths,
+                                                   markercolors, markertypes, markersizes,
+                                                   strings, bg, render)
 
     def drawAttributes(self, x, slab, gm, bg=False, **kargs):
         """Draws attribtes of slab onto a canvas
@@ -1622,7 +1622,7 @@ class P(object):
         x._worldcoordinate = [0, 1, 0, 1]
         # x.mode=0 # this should disable the replot but it doesn't work....
 
-        displays += self.drawAttributes(x,slab,gm,bg=bg,**kargs)
+        displays += self.drawAttributes(x, slab, gm, bg=bg, **kargs)
 
         kargs["donotstoredisplay"] = True
         if not isinstance(gm, vcs.taylor.Gtd):
