@@ -2245,7 +2245,7 @@ x.png("sample")
 :param canvas: a VCS canvas object onto which to draw the legend
 :type canvas: vcs.Canvas.Canvas
 
-:param templateLegend: a template legend object (template.legend), used to determine the coordinates of the box and the box line type
+:param templateLegend: a template legend object used to determine the coordinates of the box and the box line type
 :type legendTemplate: vcs.Plegend.Pls
 
 :param linecolors: list containing the colors of each line to draw
@@ -2357,6 +2357,5 @@ x.png("sample")
     text.string = ts
     text.x = txs
     text.y = tys
-    #text.viewport = [0,1,0,1]
     text.priority = templateLegend.priority
     canvas.plot(text, bg=bg, render=render)
