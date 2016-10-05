@@ -24,7 +24,7 @@
 import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import marker_script
+from xmldocs import scriptdocs
 
 
 def process_src(nm, code):
@@ -115,83 +115,102 @@ class Tm(object):
     existing marker table entry.
 
 
-    :Example:
+    .. describe:: Useful Functions:
 
-::
+        .. code-block:: python
 
-    # Useful Functions:
-        # VCS Canvas Constructor
-        a=vcs.init()
-        # Show predefined marker objects
-        a.show('marker')
-        # Updates the VCS Canvas at user's request
-        a.update()
-        a=vcs.init()
+            # VCS Canvas Constructor
+            a=vcs.init()
+            # Show predefined marker objects
+            a.show('marker')
+            # Updates the VCS Canvas at user's request
+            a.update()
+            a=vcs.init()
 
-    # To Create a new instance of marker use:
-        # Copies content of 'red' to 'new'
-        mk=a.createmarker('new','red')
-        # Copies content of 'default' to 'new'
-        mk=a.createmarker('new')
+    .. describe:: Create a new instance of marker:
 
-    # To Modify an existing marker use:
-        mk=a.getmarker('red')
+        .. code-block:: python
 
-    # Overview of marker attributes:
-        # Will list all the marker attribute values
-        mk.list()
-        # Range from 1 to 256
-        mk.color=100
-        # Range from 1 to 300
-        mk.size=100
+            # Copies content of 'red' to 'new'
+            mk=a.createmarker('new','red')
+            # Copies content of 'default' to 'new'
+            mk=a.createmarker('new')
 
-        # Specify the marker type:
-            # Same as mk.type=1
-            mk.type='dot'
-            # Same as mk.type=2
-            mk.type='plus'
-            # Same as mk.type=3
-            mk.type='star'
-            # Same as mk.type=4
-            mk.type='circle'
-            # Same as mk.type=5
-            mk.type='cross'
-            # Same as mk.type=6
-            mk.type='diamond'
-            # Same as mk.type=7
-            mk.type='triangle_up'
-            # Same as mk.type=8
-            mk.type='triangle_down'
-            # Same as mk.type=9
-            mk.type='triangle_left'
-            # Same as mk.type=10
-            mk.type='triangle_right'
-            # Same as mk.type=11
-            mk.type='square'
-            # Same as mk.type=12
-            mk.type='diamond_fill'
-            # Same as mk.type=13
-            mk.type='triangle_up_fill'
-            # Same as mk.type=14
-            mk.type='triangle_down_fill'
-            # Same as mk.type=15
-            mk.type='triangle_left_fill'
-            # Same as mk.type=16
-            mk.type='triangle_right_fill'
-            # Same as mk.type=17
-            mk.type='square_fill'
+    .. describe:: Modify an existing marker:
 
-        # Set the graphics priority on the canvas
-        mk.priority=1
-        # FloatType [0,1]x[0,1]
-        mk.viewport=[0, 1.0, 0,1.0]
-        # FloatType [#,#]x[#,#]
-        mk.worldcoordinate=[0,1.0,0,1.0]
+        .. code-block:: python
 
-        # List of FloatTypes
-        mk.x=[[0,.1,.2], [.3,.4,.5]]
-        # List of FloatTypes
-        mk.y=[[.5,.4,.3], [.2,.1,0]]
+            mk=a.getmarker('red')
+
+    .. describe:: Overview of marker attributes:
+
+        * List all the marker attribute values:
+
+            .. code-block:: python
+
+                mk.list()
+                # Range from 1 to 256
+                mk.color=100
+                # Range from 1 to 300
+                mk.size=100
+
+        * Specify the marker type:
+
+            .. code-block:: python
+
+                # Same as mk.type=1
+                mk.type='dot'
+                # Same as mk.type=2
+                mk.type='plus'
+                # Same as mk.type=3
+                mk.type='star'
+                # Same as mk.type=4
+                mk.type='circle'
+                # Same as mk.type=5
+                mk.type='cross'
+                # Same as mk.type=6
+                mk.type='diamond'
+                # Same as mk.type=7
+                mk.type='triangle_up'
+                # Same as mk.type=8
+                mk.type='triangle_down'
+                # Same as mk.type=9
+                mk.type='triangle_left'
+                # Same as mk.type=10
+                mk.type='triangle_right'
+                # Same as mk.type=11
+                mk.type='square'
+                # Same as mk.type=12
+                mk.type='diamond_fill'
+                # Same as mk.type=13
+                mk.type='triangle_up_fill'
+                # Same as mk.type=14
+                mk.type='triangle_down_fill'
+                # Same as mk.type=15
+                mk.type='triangle_left_fill'
+                # Same as mk.type=16
+                mk.type='triangle_right_fill'
+                # Same as mk.type=17
+                mk.type='square_fill'
+
+        * Set the graphics priority on the canvas
+
+            .. code-block:: python
+
+                mk.priority=1
+                # FloatType [0,1]x[0,1]
+                mk.viewport=[0, 1.0, 0,1.0]
+                # FloatType [#,#]x[#,#]
+                mk.worldcoordinate=[0,1.0,0,1.0]
+
+        * Example x and y coordinates:
+
+            .. code-block:: python
+
+                # List of FloatTypes
+                mk.x=[[0,.1,.2], [.3,.4,.5]]
+                # List of FloatTypes
+                mk.y=[[.5,.4,.3], [.2,.1,0]]
         """
     __slots__ = [
         's_name',
@@ -498,4 +517,4 @@ class Tm(object):
             f = open(script_filename, mode)
             vcs.utils.dumpToJson(self, f)
             f.close()
-    script.__doc__ = marker_script
+    script.__doc__ = scriptdocs['marker']

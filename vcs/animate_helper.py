@@ -22,21 +22,22 @@ def showerror(msg):
 class animate_obj_old(object):
 
     """
-  Function: animate
+    Animate the contents of the VCS Canvas. The animation can also be controlled from
+    the animation GUI. (See VCDAT for more details.)
 
-  Description of Function:
-     Animate the contents of the VCS Canvas. The animation can also be controlled from
-     the animation GUI. (See VCDAT for more details.)
+    See the `animation GUI documentation`_
 
-     See the animation GUI documenation located at URL:
-         http://www-pcmdi.llnl.gov/software/vcs
+    .. _animation GUI documentation: http://www-pcmdi.llnl.gov/software/vcs
 
-  Example of Use:
-     a=vcs.init()
-     a.plot(array,'default','isofill','quick')
-     a.animate()
+    :Example:
 
- """
+        .. doctest:: animate_helper_obj_old
+
+                >>> a=vcs.init()
+                >>> a.plot(array,'default','isofill','quick')
+                >>> a.animate()
+
+    """
 
     ##########################################################################
     # Initialize the animation flags						#

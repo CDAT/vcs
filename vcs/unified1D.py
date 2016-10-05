@@ -144,7 +144,7 @@ def process_src(nm, code, typ):
 
 class G1d(object):
 
-    """
+    __doc__ = """
     This graphics method displays a line plot from 1D data array (i.e. a
     plot of Y(x), where y represents the 1D coordinate values, and x can be either Y's axis or another 1D arrays).
     The example below
@@ -196,9 +196,9 @@ class G1d(object):
                     yxx.projection='linear'
 
                 .. note::
-                    YXvsX projection attribute can only be 'linear'
 
-    lon30={-180:'180W',-150:'150W',0:'Eq'}
+                    YXvsX projection attribute can only be 'linear'
+                    i.e. lon30={-180:'180W',-150:'150W',0:'Eq'}
 
             * To set axis attributes:
 
@@ -316,12 +316,11 @@ class G1d(object):
                     yxx.markersize=300
                     yxx.markersize=None
 
-%s
-%s
-%s
-%s
-"""
-    # % (xmldocs.graphics_method_core, xmldocs.xaxisconvert, xmldocs.linedoc, xmldocs.markerdoc)
+    %s
+    %s
+    %s
+    %s
+    """ % (xmldocs.graphics_method_core, xmldocs.xaxisconvert, xmldocs.linedoc, xmldocs.markerdoc)
     colormap = VCS_validation_functions.colormap
     __slots__ = [
         '__doc__',
@@ -941,7 +940,7 @@ class G1d(object):
             f = open(script_filename, mode)
             vcs.utils.dumpToJson(self, f)
             f.close()
-    script.__doc__ = xmldocs.yxvsx_script
+    script.__doc__ = xmldocs.scriptdocs['yxvsx']
 
 
 ###############################################################################

@@ -68,6 +68,7 @@ class Pyt(object):
     .. describe:: Modify an existing line:
 
         .. code-block:: python
+
             # Get a copy of 'red' line
             ln=a.getline('red')
 

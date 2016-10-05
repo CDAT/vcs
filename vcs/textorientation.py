@@ -24,7 +24,7 @@
 #
 import VCS_validation_functions
 import vcs
-from xmldocs import textorientation_script
+from xmldocs import scriptdocs
 
 
 def process_src(nm, code):
@@ -363,4 +363,4 @@ class To(object):
             f = open(script_filename, mode)
             vcs.utils.dumpToJson(self, f)
             f.close()
-    script.__doc__ = textorientation_script
+    script.__doc__ = scriptdocs['textorientation']

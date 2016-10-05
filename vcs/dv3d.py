@@ -12,7 +12,9 @@ from DV3D.ConfigurationFunctions import ConfigManager
 
 
 class Gfdv3d(object):
+    """
 
+    """
     __slots__ = [
         '__doc__',
         'name',

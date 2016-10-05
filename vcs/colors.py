@@ -2,9 +2,19 @@ from genutil.colors import rgb2str, str2rgb  # noqa
 
 
 def matplotlib2vcs(cmap, vcs_name=None):
-    """Convert a matplotlib colormap to a vcs colormap
+    """
+    Convert a matplotlib colormap to a vcs colormap
     Input can be either the actual matplotlib colormap or its name
     Optional second argument: vcs_name, name of the resulting vcs colormap
+
+    :param cmap: A matplotlib colormap or string name of a matplotlib colormap
+    :type cmap: str , matplotlib colormap
+
+    :param vcs_name: String to set the name of the generated VCS colormap
+    :type vcs_name: str
+
+    :returns: A VCS colormap object
+    :rtype: vcs.colormap.Cp
     """
     import vcs
     import matplotlib.cm

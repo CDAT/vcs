@@ -69,6 +69,7 @@ class Pxt(object):
     .. describe:: Modify an existing line:
 
         .. code-block:: python
+
             # Get a copy of 'red' line
             ln=a.getline('red')
 
@@ -100,7 +101,7 @@ class Pxt(object):
                 ln.type='dash-dot'
                 # Same as ln.type=4
                 ln.type='long-dash'
-"""
+    """
     __slots__ = [
         "line",
         "priority",

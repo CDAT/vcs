@@ -235,28 +235,331 @@ xyscaledoc = """
     """
 listdoc = """ Lists the current values of object attributes"""
 
-# Scriptdocs section
 
-# Use this dictionary for string replacements
-#   dict keys are 'type', 'name', and 'call'
-#       'type' : The type of VCS object it is (i.e. Graphics method, secondary method, etc.)
-#       'name' : The name of the VCS object (i.e. boxfill, isofill, etc.)
-#       'call' : The function call for the object. Mostly, this is == name.
-#                   Some rare cases, like textcombined, require adjustment of this value.
-dict = {}
-dict['name'] = dict['type'] = dict['call'] = 'REPLACE_ME'
+def populate_docstrings(type_dict, target_dict, docstring, method):
+    """
+    A function to generate docstrings from a dictionary.
+    Structure of the function is pretty specific to type_dicts shaped like xmldoc.obj_details.
 
+    Indentation of the docstring snippets looks screwy because they need to maintain alignment
+    with the original docstring entries for Sphinx to pick them up correctly.
+
+    :param type_dict: The dictionary to parse for values used to fill in the docstring
+    :param target_dict: An empty dictionary to be populated with docstrings
+    :param docstring: The template docstring
+    :param method: The method that the docstring is for
+    """
+    dict = {}
+    for obj_type in type_dict.keys():
+        for obj_name in type_dict[obj_type].keys():
+            # default values. Change as necessary.
+            example1 = ''
+            example2 = ''
+            dict['type'] = obj_type
+            dict['name'] = dict['sp_name'] = obj_name
+            dict['parent'] = type_dict[obj_type][obj_name]['parent']
+            dict['parent2'] = type_dict[obj_type][obj_name]['parent2']
+            dict['sp_parent'] = ''
+            dict['tc'] = ''
+            dict['ex2'] = ''
+            dict['rtype'] = type_dict[obj_type][obj_name]['rtype']
+            if type_dict[obj_type][obj_name]['title']:
+                dict['cap'] = dict['name'].title()
+            else:
+                dict['cap'] = dict['name']
+            if obj_name in ['3d_vector', '3d_scalar', '3d_dual_scalar']:
+                dict['sp_name'] = 'dv3d'
+            elif obj_name in ['1d', 'scatter', 'textcombined', 'xyvsy']:
+                if obj_name == 'textcombined':
+                    dict['tc'] = """
+            >>> a.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
+            <vcs.textcombined.Tc ...>"""
+                    dict['sp_parent'] = "'EXAMPLE_tt', 'EXAMPLE_tto'"
+                elif obj_name == '1d':
+                    dict['sp_parent'] = "'default'"
+                else:
+                    sp_parent = 'default_'+obj_name+'_'
+                    dict['sp_parent'] = "'%s'" % sp_parent
+                    dict['parent'] = dict['sp_parent']
+            if method == 'get':
+                example1 = """%(tc)s
+            >>> ex=vcs.get%(name)s(%(sp_parent)s)  # instance of '%(parent)s' %(name)s %(type)s%(plot)s"""
+                # set up dict['plot'] and dict['plot2']
+                plot = ''
+                plot2 = ''
+                numslabs = type_dict[obj_type][obj_name]['slabs']
+                dict['slabs'] = ''
+                dict['args'] = ''
+                if numslabs > 0:
+                    dict['slabs'] = """
+            >>> import cdms2 # Need cdms2 to create a slab
+            >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+            >>> slab1 = f('u') # use the data file to create a cdms2 slab"""
+                    dict['args'] = ", slab1"
+                    if numslabs == 2:
+                        slab2 = """
+            >>> slab2 = f('v') # need 2 slabs, so get another"""
+                        dict['slabs'] = dict['slabs'] + slab2
+                        dict['args'] = dict['args'] + ", slab2"
+                # for vcs objects that have a self-named function, i.e. fillarea()
+                if type_dict[obj_type][obj_name]['callable']:
+                    plot = """%(slabs)s
+            >>> a.%(name)s(ex%(args)s) # plot using specified %(name)s object
+            <vcs.displayplot.Dp ...>"""
+                    # set up plot2
+                    plot2 = """
+            >>> a.%(name)s(ex2%(args)s) # plot using specified %(name)s object
+            <vcs.displayplot.Dp ...>"""
+                # for objects like template, where a call to plot() needs to be made
+                elif obj_name not in ['textorientation', 'texttable', 'colormap']:
+                    plot = """%(slabs)s
+            >>> a.plot(ex%(args)s) # plot using specified %(name)s object
+            <vcs.displayplot.Dp ...>"""
+                    plot2 = """
+            >>> a.plot(ex2%(args)s) # plot using specified %(name)s object
+            <vcs.displayplot.Dp ...>"""
+                dict['plot'] = plot % dict
+                dict['ex1'] = example1 % dict
+                if dict['parent2']:
+                    example2 = """
+            >>> ex2=vcs.get%(name)s('%(parent2)s')  # instance of '%(parent2)s' %(name)s %(type)s%(plot2)s
+                    """
+                    dict['plot2'] = plot2 % dict
+                    dict['ex2'] = example2 % dict
+            elif method == 'create':
+                if obj_name == "textcombined":
+                    example1 = dict['tc'] + """
+            >>> vcs.listelements('%(name)s') # should now contain the 'qa_tt:::left_tto' %(name)s
+            [...'qa_tt:::left_tto'...]"""
+                else:
+                    example1 = """
+            >>> ex=vcs.create%(name)s('%(name)s_ex1') # Create %(name)s '%(name)s_ex1' that inherits from 'default'
+            >>> vcs.listelements('%(name)s') # should now contain the '%(name)s_ex1' %(name)s
+            [...'%(name)s_ex1'...]"""
+                dict['ex1'] = example1 % dict
+                if dict['parent2']:
+                    example2 = """
+            >>> ex2=vcs.create%(name)s('%(name)s_ex2','%(parent2)s') # create '%(name)s_ex2' from '%(parent2)s' template
+            >>> vcs.listelements('%(name)s') # should now contain the '%(name)s_ex2' %(name)s
+            [...'%(name)s_ex2'...]"""
+                    dict['ex2'] = example2 % dict
+            elif method == 'script':
+                if obj_name == "textcombined":
+                    dict['call'] = obj_name
+                    dict['name'] = 'text table and text orientation'
+                else:
+                    dict['call'] = dict['name']
+            target_dict[obj_name] = docstring % dict
+            dict.clear()
+
+# contains VCS object details used to build Example doctests and fill in docstrings
+obj_details = {
+    "graphics method": {
+        "taylordiagram": {
+            "callable": True,
+            "parent": "default",
+            "parent2": "",
+            "rtype": "vcs.taylor.Gtd",
+            "slabs": 1,
+            "title": True,
+        },
+        "3d_scalar": {
+            "callable": False,
+            "parent": "default",
+            "parent2": "",
+            "rtype": "vcs.dv3d.Gf3Dscalar",
+            "slabs": 1,
+            "title": False,
+        },
+        "3d_dual_scalar": {
+            "callable": False,
+            "parent": "default",
+            "parent2": "",
+            "rtype": "vcs.dv3d.Gf3DDualScalar",
+            "slabs": 2,
+            "title": False,
+        },
+        "3d_vector": {
+            "callable": False,
+            "parent": "default",
+            "parent2": "",
+            "rtype": "vcs.dv3d.Gf3Dvector",
+            "slabs": 2,
+            "title": False,
+        },
+        "vector": {
+            "callable": True,
+            "parent": "default",
+            "parent2": "",
+            "rtype": "vcs.vector.Gv",
+            "slabs": 2,
+            "title": True,
+
+        },
+        "scatter": {
+            "callable": True,
+            "parent": "default_scatter_",
+            "parent2": "",
+            "rtype": "vcs.unified1D.G1d",
+            "slabs": 2,
+            "title": True,
+        },
+        "yxvsx": {
+            "callable": True,
+            "parent": "default_yxvsx_",
+            "parent2": "",
+            "rtype": "vcs.unified1D.G1d",
+            "slabs": 1,
+            "title": True,
+        },
+        "xyvsy": {
+            "callable": True,
+            "parent": "default_xyvsy_",
+            "parent2": "",
+            "rtype": "vcs.unified1D.G1d",
+            "slabs": 1,
+            "title": True,
+        },
+        "xvsy": {
+            "callable": True,
+            "parent": "default_xvsy_",
+            "parent2": "",
+            "rtype": "vcs.unified1D.G1d",
+            "slabs": 2,
+            "title": True,
+        },
+        "1d": {
+            "callable": False,
+            "parent": "default",
+            "parent2": "",
+            "rtype": "vcs.unified1D.G1d",
+            "slabs": 1,
+            "title": False,
+        },
+        "boxfill": {
+            "callable": True,
+            "parent": "default",
+            "parent2": "polar",
+            "rtype": "vcs.boxfill.Gfb",
+            "slabs": 1,
+            "title": True,
+        },
+        "isofill": {
+            "callable": True,
+            "parent": "default",
+            "parent2": "polar",
+            "rtype": "vcs.isofill.Gfi",
+            "slabs": 1,
+            "title": True,
+        },
+        "isoline": {
+            "callable": True,
+            "parent": "default",
+            "parent2": "polar",
+            "rtype": "vcs.isoline.Gi",
+            "slabs": 1,
+            "title": True,
+        },
+        "template": {
+            "callable": False,
+            "parent": "default",
+            "parent2": "polar",
+            "rtype": "vcs.template.P",
+            "slabs": 1,
+            "title": True,
+        },
+        "projection": {
+            "callable": False,
+            "parent": "default",
+            "parent2": "polar",
+            "rtype": "vcs.projection.Proj",
+            "slabs": 1,
+            "title": True,
+        },
+        "meshfill": {
+            "callable": True,
+            "parent": "default",
+            "parent2": "a_polar_meshfill",
+            "rtype": "vcs.meshfill.Gfm",
+            "slabs": 1,
+            "title": True,
+        },
+    },
+    "secondary method": {
+        "fillarea": {
+            "callable": True,
+            "parent": "default",
+            "parent2": "",
+            "rtype": "vcs.fillarea.Tf",
+            "slabs": 0,
+            "title": True,
+        },
+        "line": {
+            "callable": True,
+            "parent": "default",
+            "parent2": "red",
+            "rtype": "vcs.line.Tl",
+            "slabs": 0,
+            "title": True,
+        },
+        "marker": {
+            "callable": True,
+            "parent": "default",
+            "parent2": "red",
+            "rtype": "vcs.marker.Tm",
+            "slabs": 0,
+            "title": True,
+        },
+        "colormap": {
+            "callable": False,
+            "parent": "default",
+            "parent2": "rainbow",
+            "rtype": "vcs.colormap.Cp",
+            "slabs": 0,
+            "title": True,
+        },
+        "textcombined": {
+            "callable": True,
+            "parent": "EXAMPLE_tt:::EXAMPLE_tto",
+            "parent2": "",
+            "rtype": "vcs.textcombined.Tc",
+            "slabs": 0,
+            "title": True,
+        },
+        "texttable": {
+            "callable": False,
+            "parent": "default",
+            "parent2": "bigger",
+            "rtype": "vcs.texttable.Tt",
+            "slabs": 0,
+            "title": True,
+        },
+        "textorientation": {
+            "callable": False,
+            "parent": "default",
+            "parent2": "bigger",
+            "rtype": "vcs.textorientation.To",
+            "slabs": 0,
+            "title": True,
+        },
+    }
+}
+# dictionary to store all docstring dictionaries and their associated docstrings
+# this will be used to populate all the docstrings in the same for loop (should better utilize locality)
+docstrings = {}
 
 scriptdoc = """
     Saves out a copy of the %(name)s %(type)s in JSON, or Python format to a designated file.
 
         .. note::
+
             If the the filename has a '.py' at the end, it will produce a
             Python script. If no extension is given, then by default a
             .json file containing a JSON serialization of the object's
             data will be produced.
 
         .. warning::
+
             VCS Scripts Deprecated.
             SCR script files are no longer generated by this function.
 
@@ -264,8 +567,8 @@ scriptdoc = """
 
         .. doctest:: script_examples
 
-            >>> a=vcs.init() # Make a Canvas object to work with:
-            >>> ex=a.get%(call)s() # Get default %(call)s
+            >>> a=vcs.init() # Make a Canvas object to work with%(tc)s
+            >>> ex=a.get%(call)s(%(sp_parent)s) # Get default %(call)s
             >>> ex.script('filename.py') # Append to a Python script named 'filename.py'
             >>> ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
 
@@ -274,64 +577,9 @@ scriptdoc = """
 
     :param mode: Either 'w' for replace, or 'a' for append. Defaults to 'a', if not specified.
     :type mode: str
-"""
+    """
 
 
-# Graphics Method scriptdocs
-dict['type'] = 'graphics method'
-dict['name'] = dict['call'] = 'colormap'
-colormap_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'boxfill'
-boxfill_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'isoline'
-isoline_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'isofill'
-isofill_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'yxvsx'
-yxvsx_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'meshfill'
-meshfill_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'fillarea'
-fillarea_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'marker'
-marker_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'line'
-line_script = scriptdoc % dict
-
-dict['name'] = 'text table and text orientation'
-dict['call'] = 'textcombined'
-textcombined_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'textorientation'
-textorientation_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'texttable'
-texttable_script = scriptdoc % dict
-
-dict['name'] = dict['call'] = 'vector'
-vector_script = scriptdoc % dict
-
-# Object scriptdocs
-dict['type'] = 'object'
-dict['name'] = dict['call'] = 'template'
-template_script = scriptdoc % dict
-
-# Secondary Method scriptdocs
-dict['type'] = 'secondary method'
-dict['name'] = dict['call'] = 'projection'
-projection_script = scriptdoc % dict
-
-# dict['parent'] is for rare cases where there is no 'default' object to inherit from.
-dict['parent'] = 'REPLACE_ME'
-dict['tc_example'] = dict['to'] = ''
 queries_is_doc = """
     Check to see if this object is a VCS %(type)s %(name)s %(method_type)s.
 
@@ -339,198 +587,72 @@ queries_is_doc = """
 
         .. doctest:: queries_is
 
-            >>> a=vcs.init() # Make a VCS Canvas object to work with:
-            %(tc_example)s
+            >>> a=vcs.init() # Make a VCS Canvas object to work with:%(tc)s
             >>> a.show('%(name)s') # Show all available %(name)s
             *******************%(cap)s Names List**********************
             ...
             *******************End %(cap)s Names List**********************
-            >>> ex = a.get%(name)s('%(parent)s'%(to)s) # To  test an existing %(name)s object
+            >>> ex = a.get%(name)s(%(sp_parent)s) # To  test an existing %(name)s object
             >>> vcs.queries.is%(name)s(ex)
             1
 
     :param obj: A VCS object
     :type obj: VCS Object
 
-    :returns: An integer indicating whether the object is a %(name)s %(method_type)s (1), or not (0).
+    :returns: An integer indicating whether the object is a %(name)s %(type)s (1), or not (0).
     :rtype: int
     """
-# queries.is[PRIMARY_OBJECT]
-dict['type'] = 'primary'
-dict['parent'] = 'default'
-dict['method_type'] = 'graphics method'
-
-dict['name'] = 'vector'
-dict['cap'] = dict['name'].title()
-isvector_doc = queries_is_doc % dict
-dict['name'] = 'taylordiagram'
-dict['cap'] = dict['name'].title()
-dict['cap'] = dict['name'].title()
-istaylordiagram_doc = queries_is_doc % dict
-dict['name'] = 'meshfill'
-dict['cap'] = dict['name'].title()
-ismeshfill_doc = queries_is_doc % dict
-dict['name'] = 'boxfill'
-dict['cap'] = dict['name'].title()
-isboxfill_doc = queries_is_doc % dict
-dict['name'] = 'isofill'
-dict['cap'] = dict['name'].title()
-isisofill_doc = queries_is_doc % dict
-dict['name'] = 'isoline'
-dict['cap'] = dict['name'].title()
-isisoline_doc = queries_is_doc % dict
-dict['name'] = dict['cap'] = '3d_scalar'
-is3d_scalar_doc = queries_is_doc % dict
-dict['name'] = dict['cap'] = '3d_dual_scalar'
-is3d_dual_scalar_doc = queries_is_doc % dict
-dict['name'] = dict['cap'] = '3d_vector'
-is3d_vector_doc = queries_is_doc % dict
-dict['name'] = 'xvsy'
-dict['cap'] = dict['name'].title()
-isxvsy_doc = queries_is_doc % dict
-dict['name'] = 'yxvsx'
-dict['cap'] = dict['name'].title()
-isyxvsx_doc = queries_is_doc % dict
-dict['name'] = dict['cap'] = '1d'
-is1d_doc = queries_is_doc % dict
-
-# special inheritance cases
-dict['name'] = 'scatter'
-dict['cap'] = dict['name'].title()
-dict['parent'] = 'default_scatter_'
-isscatter_doc = queries_is_doc % dict
-dict['name'] = 'xyvsy'
-dict['cap'] = dict['name'].title()
-dict['parent'] = 'default_xyvsy_'
-isxyvsy_doc = queries_is_doc % dict
-
-# queries.is[SECONDARY_OBJECT]
-dict['type'] = 'secondary'
-dict['parent'] = 'default'
-
-dict['name'] = 'line'
-dict['cap'] = dict['name'].title()
-isline_doc = queries_is_doc % dict
-dict['name'] = 'marker'
-dict['cap'] = dict['name'].title()
-ismarker_doc = queries_is_doc % dict
-dict['name'] = 'fillarea'
-dict['cap'] = dict['name'].title()
-isfillarea_doc = queries_is_doc % dict
-dict['name'] = 'texttable'
-dict['cap'] = dict['name'].title()
-istexttable_doc = queries_is_doc % dict
-dict['name'] = 'textorientation'
-dict['cap'] = dict['name'].title()
-istextorientation_doc = queries_is_doc % dict
-
-# queries.is[SPECIAL_CASES]
-dict['name'] = 'textcombined'
-dict['cap'] = dict['name'].title()
-dict['tc_example'] = """
-            >>> vcs.createtext('example_tt', 'std', 'example_to', '7left')
-            <vcs.textcombined.Tc ...>
-    """
-dict['parent'] = 'example_tt'
-dict['to'] = ", 'example_to'"
-istextcombined_doc = queries_is_doc % dict
-dict['tc_example'] = dict['to'] = ''
-
 
 get_methods_doc = """
-    VCS contains a list of secondary methods. This function will create a
-    %(name)s class object from an existing VCS %(name)s %(type)s. If
-    no %(name)s name is given, then %(name)s '%(parent)s' will be used.
+    VCS contains a list of %(type)ss. This function will create a
+    %(sp_name)s class object from an existing VCS %(sp_name)s %(type)s. If
+    no %(sp_name)s name is given, then %(sp_name)s '%(parent)s' will be used.
 
     .. note::
 
         VCS does not allow the modification of 'default' attribute sets.
         However, a 'default' attribute set that has been copied under a
-        different name can be modified. (See the :ref:`vcs.manageElements.createfillarea` function.)
+        different name can be modified. (See the :py:func:`vcs.manageElements.create%(name)s` function.)
 
     :Example:
 
-        .. doctest:: get_methods
+        .. doctest:: manageElements_get
 
             >>> a=vcs.init()
-            >>> vcs.show('%(name)s') # Show all the existing %(name)s %(type)s
+            >>> vcs.listelements('%(name)s') # Show all the existing %(name)s %(type)ss
+            [...]%(ex1)s%(ex2)s"""
+
+create_methods_doc = """
+    Create a new %(sp_name)s %(type)s given the the name and the existing
+    %(sp_name)s %(type)s to copy the attributes from. If no existing
+    %(sp_name)s %(type)s is given, then the default %(sp_name)s %(type)s will be used as the graphics method
+    to which the attributes will be copied from.
+
+    .. note::
+
+        If the name provided already exists, then an error will be returned. %(type)s
+        names must be unique.
+
+    :Example:
+
+        .. doctest:: manageElements_create
+
+            >>> vcs.show('%(name)s') # show all available %(name)s
             *******************%(cap)s Names List**********************
             ...
-            *******************End %(cap)s Names List**********************
-            >>> ex=vcs.get%(call)s()  # instance of '%(parent)s' %(name)s %(type)s
-            >>> a.%(name)s(ex) # Plot using specified %(call)s object
-            <vcs.displayplot.Dp ...>
-    """
-# Get for secondary methods with a 'default' available
-dict['parent'] = 'default'
-dict['type'] = 'secondary method'
+            *******************End %(cap)s Names List**********************%(ex1)s%(ex2)s"""
 
-dict['name'] = dict['call'] = 'fillarea'
-dict['cap'] = dict['name'].title()
-get_fillarea_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_texttable_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'template'
-dict['cap'] = dict['name'].title()
-get_template_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'projection'
-dict['cap'] = dict['name'].title()
-get_projection_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'boxfill'
-dict['cap'] = dict['name'].title()
-get_boxfill_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_taylor_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_meshfill_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_isofill_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_isoline_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_1d_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_xyvsy_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_yxvsx_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_xvsy_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_vector_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_scatter_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_line_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_marker_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_textorientation_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_textcombined_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = dict['cap'] = '3d_scalar'
-get_3d_scalar_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = dict['cap'] = '3d_dual_scalar'
-get_3d_dual_scalar_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = dict['cap'] = '3d_vector'
-get_3d_vector_doc = get_methods_doc % dict
-dict['name'] = dict['call'] = 'texttable'
-dict['cap'] = dict['name'].title()
-get_colormap_doc = get_methods_doc % dict
+scriptdocs = {}
+docstrings['script'] = [scriptdocs, scriptdoc]
+is_docs = {}
+docstrings['is'] = [is_docs, queries_is_doc]
+get_docs = {}
+docstrings['get'] = [get_docs, get_methods_doc]
+create_docs = {}
+docstrings['create'] = [create_docs, create_methods_doc]
+# populate all the docstrings
+for method in docstrings.keys():
+    populate_docstrings(obj_details, docstrings[method][0], docstrings[method][1], method)
 
 exts_attrs = """
             .. py:attribute:: ext_1 (str)

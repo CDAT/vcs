@@ -1040,7 +1040,6 @@ class Canvas(object):
             .. doctest:: canvas_scriptobject
 
                 >>> a=vcs.init()
-                >>> l=a.getline('red') # To Modify an existing line object
                 >>> i=a.createisoline('dean') # Create an instance of default isoline object
                 >>> a.scriptobject(i,'ex_isoline.py') # Save isoline object as a Python file 'isoline.py'
                 >>> a.scriptobject(i,'ex_isoline2') # Save isoline object as a JSON object 'isoline2.json'
@@ -1175,7 +1174,7 @@ class Canvas(object):
 
     def getboxfill(self, Gfb_name_src='default'):
         return vcs.getboxfill(Gfb_name_src)
-    getboxfill.__doc__ = vcs.manageElements.getboxfill
+    getboxfill.__doc__ = vcs.manageElements.getboxfill.__doc__
 
     def boxfill(self, *args, **parms):
         """
@@ -1252,7 +1251,6 @@ class Canvas(object):
             .. doctest:: canvas_taylordiagram
 
                 >>> a=vcs.init()
-
                 >>> a.show('taylordiagram') # Show all the existing taylordiagram graphics methods
                 *******************Taylordiagram Names List**********************
                 ...
@@ -2160,7 +2158,7 @@ class Canvas(object):
             ...
             *******************End Textorientation Names List**********************
             >>> vcs.createtext('qa_tta', 'qa', '7left_tto', '7left') # Create instance of 'std_tt' and '7left_to'
-            <vcs.textcombined.Tc object at ...
+            <vcs.textcombined.Tc object at ...>
             >>> tc=a.gettext('qa_tta', '7left_tto')
             >>> tc.string='Text1' # Show the string "Text1" on the VCS Canvas
             >>> tc.font=2 # Set the text size
@@ -2219,7 +2217,7 @@ class Canvas(object):
                 >>> t.y=[.5]
                 >>> t.string=['Hello World']
                 >>> a.gettextextent(t)
-                [[0.5, 0.578125, 0.5, 0.5177065767284992]]
+                [[...]]
 
         :param textobject: A VCS text object
         :type textobject: textcombined
@@ -4486,7 +4484,7 @@ class Canvas(object):
 
             ffmpeg ALWAYS overwrites the output file
 
-        .. admonishment:: Audio configuration
+        .. admonition:: Audio configuration
 
             via the options arg you can add audio file to your movie (see ffmpeg help)
 
@@ -5479,22 +5477,12 @@ class Canvas(object):
         """
         .. deprecated:: 2.0
 
-            The getplot function is deprecated
+            The getplot function is deprecated. Do not use it.
 
         This function will create a display plot object from an existing display
         plot object from an existing VCS plot. If no display plot name
         is given, then None is returned.
 
-        :Example:
-
-            .. doctest:: canvas_getplot
-
-                >>> a=vcs.init()
-                >>> a.show('template') # Show all the existing templates
-                *******************Template Names List**********************
-                ...
-                *******************End Template Names List**********************
-                >>> plot1=a.getplot() # plot1 instance of 'dpy_plot_1' display plot
 
         :param Dp_name_src: String name of an existing display plot object
         :type Dp_name_src: str
@@ -5699,8 +5687,8 @@ class Canvas(object):
         return self.backend.orientation(*args, **kargs)
 
     def getcolorcell(self, *args):
-        """%s""" % vcs.getcolorcell.__doc__
         return vcs.getcolorcell(args[0], self)
+    getcolorcell.__doc__ = vcs.utils.getcolorcell.__doc__
 
     def getcolormapname(self):
         """

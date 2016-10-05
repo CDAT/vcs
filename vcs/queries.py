@@ -55,7 +55,7 @@ def isgraphicsmethod(gobj):
         .. doctest:: queries_isgraphicsmethod
 
             >>> a=vcs.init()
-            >>> box=a.getboxfill('quick') # To Modify an existing boxfill
+            >>> box=a.getboxfill() # get default boxfill object
             >>> vcs.isgraphicsmethod(box)
             1
 
@@ -64,7 +64,7 @@ def isgraphicsmethod(gobj):
 
     :returns: Integer reperesenting whether gobj is one of the above graphics methods.
                 1 indicates true, 0 indicates false.
-    :rtype:
+    :rtype: int
     """
     import vcsaddons
     if (isinstance(gobj, boxfill.Gfb)):
@@ -103,7 +103,7 @@ def graphicsmethodlist():
 
             >>> a=vcs.init()
             >>> vcs.graphicsmethodlist() # Return graphics method list
-            ['boxfill', 'isofill', 'isoline', 'meshfill', 'scatter', 'vector', 'xvsy', 'xyvsy', 'yxvsx', ...]
+            [...]
 
     :returns: A list of available grapics methods (i.e., 'boxfill', 'isofill', 'isoline', 'meshfill', 'scatter',
             'vector', 'xvsy', 'xyvsy', 'yxvsx', 'taylordiagram', '1d', '3d_scalar', '3d_dual_scalar', '3d_vector').
@@ -124,15 +124,14 @@ def graphicsmethodtype(gobj):
         .. doctest:: queries_gmtype
 
             >>> a=vcs.init()
-            >>> box=a.getboxfill('quick') # Get an existing boxfill graphics method in VCS:
-            >>>
-            >>> iso=a.getisofill('quick') # Get an existing isofill graphics method in VCS
-            >>> ln=a.getline('red') # Get an existing line element in VCS
-            >>> print vcs.graphicsmethodtype(box)
-            boxfill
-            >>> print vcs.graphicsmethodtype(iso)
-            isofill
-            >>> print vcs.graphicsmethodtype(ln)
+            >>> box=a.getboxfill() # Get default boxfill graphics method
+            >>> iso=a.getisofill() # Get default isofill graphics method
+            >>> ln=a.getline() # Get default line element
+            >>> vcs.graphicsmethodtype(box)
+            'boxfill'
+            >>> vcs.graphicsmethodtype(iso)
+            'isofill'
+            >>> vcs.graphicsmethodtype(ln)
             Traceback (most recent call last):
             ...
             vcsError: The object passed is not a graphics method object.
@@ -179,12 +178,11 @@ def isplot(pobj):
         .. doctest:: queries_isplot
 
             >>> a=vcs.init()
-            >>> a.show('display') # Show all available displays
-            *******************Display Names List**********************
-            ...
-            *******************End Display Names List**********************
-            >>> ex = a.getplot('default') # To test an existing display object
-            >>> vcs.queries.isplot(ex)
+            >>> import cdms2 # need this to make a slab for a boxfill plot
+            >>> f = cdms2.open(vcs.sample_data + '/clt.nc') # open a variable file
+            >>> v = f('v') # create a slab from the variable file
+            >>> dsp_plot=(a.getboxfill(), v) # plot a boxfill. Should return vcs.displayplot.Dp.
+            >>> vcs.queries.isplot(dsp_plot)
             1
 
     :param obj: A VCS object
@@ -200,61 +198,19 @@ def isplot(pobj):
 
 
 def iscolormap(obj):
-    """
-    Check to see if this object is a VCS secondary colormap.
-
-    :Example:
-
-    .. doctest:: queries_iscolormap
-
-        >>> a=vcs.init()
-        >>> a.show('colormap') # Show all available colormap objects
-        *******************Colormap Names List**********************
-        ...
-        *******************End Colormap Names List**********************
-        >>> ex = a.getcolormap('default') # To test an existing colormap object
-        >>> vcs.iscolormap(ex)
-        1
-
-    :param obj: A VCS object
-    :type obj: VCS Object
-
-    :returns: An integer indicating whether the object is a colormap (1), or not (0).
-    :rtype: int
-    """
     if (isinstance(obj, vcs.colormap.Cp)):
         return 1
     else:
         return 0
+iscolormap.__doc__ = xmldocs.is_docs['colormap']
 
 
 def istemplate(gobj):
-    """
-    Check to see if this object is a template.
-
-    :Example:
-
-        .. doctest:: queries_istemplate
-
-            >>> a=vcs.init()
-            >>> a.show('template') # Show all available template
-            *******************Template Names List**********************
-            ...
-            *******************End Template Names List**********************
-            >>> ex = a.gettemplate('default') # To test an existing template object
-            >>> vcs.istemplate(ex)
-            1
-
-    :param obj: A VCS object
-    :type obj: VCS Object
-
-    :returns: An integer indicating whether the object is a template (1), or not (0)
-    :rtype: int
-    """
     if (isinstance(gobj, template.P)):
         return 1
     else:
         return 0
+istemplate.__doc__ = xmldocs.is_docs['template']
 
 
 def issecondaryobject(sobj):
@@ -284,9 +240,9 @@ def issecondaryobject(sobj):
 
             >>> a=vcs.init()
             >>> a.show('projection') # Show all available projections
-            *******************Line Names List**********************
+            *******************Projection Names List**********************
             ...
-            *******************End Line Names List**********************
+            *******************End Projection Names List**********************
             >>> ex = a.getprojection('default') # To test an existing line object
             >>> vcs.issecondaryobject(ex)
             1
@@ -320,32 +276,11 @@ def issecondaryobject(sobj):
 
 
 def isprojection(obj):
-    """
-    Check to see if this object is a VCS secondary projection graphics object.
-
-    :Example:
-
-        .. doctest:: queries_isprojection
-
-            >>> a=vcs.init()
-            >>> a.show('projection') # Show all available projection
-            *******************Projection Names List**********************
-            ...
-            *******************End Projection Names List**********************
-            >>> ex = a.getprojection('default') # To test an existing projection object
-            >>> vcs.isprojection(ex)
-            1
-
-    :param obj: A VCS object
-    :type obj: VCS Object
-
-    :returns: An integer indicating whether the object is a projection graphics object (1), or not (0).
-    :rtype: int
-    """
     if (isinstance(obj, projection.Proj)):
         return 1
     else:
         return 0
+isprojection.__doc__ = xmldocs.is_docs['projection']
 
 
 def istaylordiagram(obj):
@@ -353,7 +288,7 @@ def istaylordiagram(obj):
         return 1
     else:
         return 0
-istaylordiagram.__doc__ = xmldocs.istaylordiagram_doc
+istaylordiagram.__doc__ = xmldocs.is_docs['taylordiagram']
 
 
 def ismeshfill(obj):
@@ -361,7 +296,7 @@ def ismeshfill(obj):
         return 1
     else:
         return 0
-ismeshfill.__doc__ = xmldocs.ismeshfill_doc
+ismeshfill.__doc__ = xmldocs.is_docs['meshfill']
 
 
 def isboxfill(obj):
@@ -369,7 +304,7 @@ def isboxfill(obj):
         return 1
     else:
         return 0
-isboxfill.__doc__ = xmldocs.isboxfill_doc
+isboxfill.__doc__ = xmldocs.is_docs['boxfill']
 
 
 def is3d_scalar(obj):
@@ -377,7 +312,7 @@ def is3d_scalar(obj):
         return 1
     else:
         return 0
-is3d_scalar.__doc__ = xmldocs.is3d_scalar_doc
+is3d_scalar.__doc__ = xmldocs.is_docs['3d_scalar']
 
 
 def is3d_dual_scalar(obj):
@@ -385,7 +320,7 @@ def is3d_dual_scalar(obj):
         return 1
     else:
         return 0
-is3d_dual_scalar.__doc__ = xmldocs.is3d_dual_scalar_doc
+is3d_dual_scalar.__doc__ = xmldocs.is_docs['3d_dual_scalar']
 
 
 def is3d_vector(obj):
@@ -393,7 +328,7 @@ def is3d_vector(obj):
         return 1
     else:
         return 0
-is3d_vector.__doc__ = xmldocs.is3d_vector_doc
+is3d_vector.__doc__ = xmldocs.is_docs['3d_vector']
 
 
 def isisofill(obj):
@@ -401,7 +336,7 @@ def isisofill(obj):
         return 1
     else:
         return 0
-isisofill.__doc__ = xmldocs.isisofill_doc
+isisofill.__doc__ = xmldocs.is_docs['isofill']
 
 
 def isisoline(obj):
@@ -409,7 +344,7 @@ def isisoline(obj):
         return 1
     else:
         return 0
-isisoline.__doc__ = xmldocs.isisoline_doc
+isisoline.__doc__ = xmldocs.is_docs['isoline']
 
 
 def isscatter(obj):
@@ -417,7 +352,7 @@ def isscatter(obj):
         return 1
     else:
         return 0
-isscatter.__doc__ = xmldocs.isscatter_doc
+isscatter.__doc__ = xmldocs.is_docs['scatter']
 
 
 def isxyvsy(obj):
@@ -425,7 +360,7 @@ def isxyvsy(obj):
         return 1
     else:
         return 0
-isxyvsy.__doc__ = xmldocs.isxyvsy_doc
+isxyvsy.__doc__ = xmldocs.is_docs['xyvsy']
 
 
 def isyxvsx(obj):
@@ -433,7 +368,7 @@ def isyxvsx(obj):
         return 1
     else:
         return 0
-isyxvsx.__doc__ = xmldocs.isyxvsx_doc
+isyxvsx.__doc__ = xmldocs.is_docs['yxvsx']
 
 
 def isxvsy(obj):
@@ -441,7 +376,7 @@ def isxvsy(obj):
         return 1
     else:
         return 0
-isxvsy.__doc__ = xmldocs.isxvsy_doc
+isxvsy.__doc__ = xmldocs.is_docs['xvsy']
 
 
 def is1d(obj):
@@ -449,7 +384,7 @@ def is1d(obj):
         return 1
     else:
         return 0
-is1d.__doc__ = xmldocs.is1d_doc
+is1d.__doc__ = xmldocs.is_docs['1d']
 
 
 def isvector(obj):
@@ -457,7 +392,7 @@ def isvector(obj):
         return 1
     else:
         return 0
-isvector.__doc__ = xmldocs.isvector_doc
+isvector.__doc__ = xmldocs.is_docs['1d']
 
 
 def isline(obj):
@@ -465,7 +400,7 @@ def isline(obj):
         return 1
     else:
         return 0
-isline.__doc__ = xmldocs.isline_doc
+isline.__doc__ = xmldocs.is_docs['line']
 
 
 def ismarker(obj):
@@ -473,7 +408,7 @@ def ismarker(obj):
         return 1
     else:
         return 0
-ismarker.__doc__ = xmldocs.ismarker_doc
+ismarker.__doc__ = xmldocs.is_docs['marker']
 
 
 def isfillarea(obj):
@@ -481,7 +416,7 @@ def isfillarea(obj):
         return 1
     else:
         return 0
-isfillarea.__doc__ = xmldocs.isfillarea_doc
+isfillarea.__doc__ = xmldocs.is_docs['fillarea']
 
 
 def istexttable(obj):
@@ -489,7 +424,7 @@ def istexttable(obj):
         return 1
     else:
         return 0
-istexttable.__doc__ = xmldocs.istexttable_doc
+istexttable.__doc__ = xmldocs.is_docs['texttable']
 
 
 def istextorientation(obj):
@@ -497,7 +432,7 @@ def istextorientation(obj):
         return 1
     else:
         return 0
-istextorientation.__doc__ = xmldocs.istextorientation_doc
+istextorientation.__doc__ = xmldocs.is_docs['textorientation']
 
 
 def istextcombined(obj):
@@ -505,7 +440,7 @@ def istextcombined(obj):
         return 1
     else:
         return 0
-istextcombined.__doc__ = xmldocs.istextcombined_doc
+istextcombined.__doc__ = xmldocs.is_docs['textcombined']
 
 # Set an alias for the secondary text combined method in VCS.               #
 # This is much easier to type than 'textcombined'.                          #

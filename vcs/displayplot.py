@@ -50,15 +50,15 @@ class Dp(object):
 
     .. describe:: General display plot usage:
 
-            .. code-block:: python
+        .. code-block:: python
 
-                #Create a VCS Canvas object
-                a=vcs.init()
-                #To Create a new instance of plot:
-                # Create a plot object
-                p1=a.plot(s)
-                #To Modify an existing plot in use:
-                p1=a.getplot('dpy_plot_1')
+            #Create a VCS Canvas object
+            a=vcs.init()
+            #To Create a new instance of plot:
+            # Create a plot object
+            p1=a.plot(s)
+            #To Modify an existing plot in use:
+            p1=a.getplot('dpy_plot_1')
 
     .. describe:: Display plot object attributes:
 

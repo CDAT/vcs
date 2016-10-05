@@ -1,10 +1,10 @@
-import vcs
-from xmldocs import textcombined_script
-
-# Adapted for numpy/ma/cdms2 by convertcdms.py
 """
 # Text Combined (Tc) module
 """
+import vcs
+from xmldocs import scriptdocs
+# Adapted for numpy/ma/cdms2 by convertcdms.py
+
 ###############################################################################
 #                                                                             #
 # Module:       textcombined (Tc) module                                      #
@@ -540,7 +540,7 @@ class Tc(object):
             f = open(script_filename, 'a+')
             vcs.utils.dumpToJson(self.Tt, f)
             f.close()
-    script.__doc__ = textcombined_script
+    script.__doc__ = scriptdocs['textcombined']
 ##########################################################################
 #        END OF FILE                                                            #
 ##########################################################################
