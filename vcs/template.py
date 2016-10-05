@@ -1469,50 +1469,54 @@ class P(object):
                                   linecolors, linetypes, linewidths,
                                   markercolors, markertypes, markersizes,
                                   strings, bg=False, render=True):
-        """Draws a legend with line/marker/text inside a template legend box
-    Auto adjust text size to make it fit inside the box
-    Auto arrange the elements to fill the box nicely
-    :: Example ::
+        """
+        Draws a legend with line/marker/text inside a template legend box
+        Auto adjust text size to make it fit inside the box
+        Auto arrange the elements to fill the box nicely
 
-    import vcs
-    x = vcs.init()
-    t = vcs.createtemplate()
-    t.drawLinesAndMarkersLegend(x,
-          ["red","blue","green"], ["solid","dash","dot"],[1,4,8],
-          ["blue","green","red"], ["cross","square","dot"],[3,4,5],
-          ["sample A","type B","thing C"],True)
-    x.png("sample")
+        :Example:
 
-    :param canvas: a VCS canvas object onto which to draw the legend
-    :type canvas: vcs.Canvas.Canvas
+            .. doctest:: template_drawLinesAndMarkersLegend
 
-    :param linecolors: list containing the colors of each line to draw
-    :type linecolors: list of either colorInt, (r,g,b,opacity), or string color names
+                >>> import vcs
+                >>> x = vcs.init()
+                >>> t = vcs.createtemplate()
+                >>> t.drawLinesAndMarkersLegend(x,
+                ...     ["red","blue","green"], ["solid","dash","dot"],[1,4,8],
+                ...     ["blue","green","red"], ["cross","square","dot"],[3,4,5],
+                ...     ["sample A","type B","thing C"],True)
+                >>> x.png("sample")
 
-    :param linetypes: list containing the type of each line to draw
-    :type linetypes: list on int of line stype strings
+        :param canvas: a VCS canvas object onto which to draw the legend
+        :type canvas: vcs.Canvas.Canvas
 
-    :param linewidths: list containing each line width
-    :type linewidths: list of float
+        :param linecolors: list containing the colors of each line to draw
+        :type linecolors: list of either colorInt, (r,g,b,opacity), or string color names
 
-    :param markercolors: list of the markers colors to draw
-    :type markercolors: list of either colorInt, (r,g,b,opacity), or string color names
+        :param linetypes: list containing the type of each line to draw
+        :type linetypes: list on int of line stype strings
 
-    :param markertypes: list of the marker types to draw
-    :type markertypes: list of int or  string of marker names
+        :param linewidths: list containing each line width
+        :type linewidths: list of float
 
-    :param markersizes: list of the size of each marker to draw
-    :type markersizes: list of float
+        :param markercolors: list of the markers colors to draw
+        :type markercolors: list of either colorInt, (r,g,b,opacity), or string color names
 
-    :param strings: list of the string to draw next to each line/marker
-    :type strings: list of string
+        :param markertypes: list of the marker types to draw
+        :type markertypes: list of int or  string of marker names
 
-    :param bg: do we draw in background or foreground
-    :type bg: bool
+        :param markersizes: list of the size of each marker to draw
+        :type markersizes: list of float
 
-    :param render: do we render or not (so it less flashy)
-    :type render: bool
-    """
+        :param strings: list of the string to draw next to each line/marker
+        :type strings: list of string
+
+        :param bg: do we draw in background or foreground
+        :type bg: bool
+
+        :param render: do we render or not (so it less flashy)
+        :type render: bool
+        """
         return vcs.utils.drawLinesAndMarkersLegend(canvas,
                                                    self.legend,
                                                    linecolors, linetypes, linewidths,
