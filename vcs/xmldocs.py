@@ -178,10 +178,12 @@ extsdoc = """
 ticlabelsdoc = """
     Sets the %sticlabels1 and %sticlabels2 values on the object
 
-    :param %stl1: Sets the object's value for :py:attr:`%sticlabels1`. Must be  a str, or a dictionary object with float:str mappings.
+    :param %stl1: Sets the object's value for :py:attr:`%sticlabels1`.
+                  Must be  a str, or a dictionary object with float:str mappings.
     :type %stl1: {float:str} or str
 
-    :param %stl2: Sets the object's value for :py:attr:`%sticlabels2`. Must be a str, or a dictionary object with float:str mappings.
+    :param %stl2: Sets the object's value for :py:attr:`%sticlabels2`.
+                  Must be a str, or a dictionary object with float:str mappings.
     :type %stl2: {float:str} or str
            """
 xticlabelsdoc = ticlabelsdoc % (('x',) * 8)
@@ -330,7 +332,7 @@ projection_script = scriptdoc % dict
 # dict['parent'] is for rare cases where there is no 'default' object to inherit from.
 dict['parent'] = 'REPLACE_ME'
 dict['tc_example'] = dict['to'] = ''
-queries_is_doc= """
+queries_is_doc = """
     Check to see if this object is a VCS %(type)s %(name)s %(method_type)s.
 
     :Example:
@@ -370,19 +372,19 @@ dict['cap'] = dict['name'].title()
 ismeshfill_doc = queries_is_doc % dict
 dict['name'] = 'boxfill'
 dict['cap'] = dict['name'].title()
-isboxfill_doc= queries_is_doc % dict
+isboxfill_doc = queries_is_doc % dict
 dict['name'] = 'isofill'
 dict['cap'] = dict['name'].title()
-isisofill_doc= queries_is_doc % dict
+isisofill_doc = queries_is_doc % dict
 dict['name'] = 'isoline'
 dict['cap'] = dict['name'].title()
-isisoline_doc= queries_is_doc % dict
+isisoline_doc = queries_is_doc % dict
 dict['name'] = dict['cap'] = '3d_scalar'
-is3d_scalar_doc= queries_is_doc % dict
+is3d_scalar_doc = queries_is_doc % dict
 dict['name'] = dict['cap'] = '3d_dual_scalar'
-is3d_dual_scalar_doc= queries_is_doc % dict
+is3d_dual_scalar_doc = queries_is_doc % dict
 dict['name'] = dict['cap'] = '3d_vector'
-is3d_vector_doc= queries_is_doc % dict
+is3d_vector_doc = queries_is_doc % dict
 dict['name'] = 'xvsy'
 dict['cap'] = dict['name'].title()
 isxvsy_doc = queries_is_doc % dict
@@ -425,7 +427,7 @@ istextorientation_doc = queries_is_doc % dict
 # queries.is[SPECIAL_CASES]
 dict['name'] = 'textcombined'
 dict['cap'] = dict['name'].title()
-dict['tc_example'] ="""
+dict['tc_example'] = """
             >>> vcs.createtext('example_tt', 'std', 'example_to', '7left')
             <vcs.textcombined.Tc ...>
     """
@@ -530,7 +532,7 @@ dict['name'] = dict['call'] = 'texttable'
 dict['cap'] = dict['name'].title()
 get_colormap_doc = get_methods_doc % dict
 
-exts_attrs= """
+exts_attrs = """
             .. py:attribute:: ext_1 (str)
 
                 Draws an extension arrow on right side (values less than first range value)
@@ -592,7 +594,7 @@ meshfill_doc = """
     %s
     %s
     %s
-    """ % (levels_attr,fillarea_colors_attr, fillarea_attrs, legend_attr, exts_attrs, missing_attr)
+    """ % (levels_attr, fillarea_colors_attr, fillarea_attrs, legend_attr, exts_attrs, missing_attr)
 
 isofill_doc = meshfill_doc
 
