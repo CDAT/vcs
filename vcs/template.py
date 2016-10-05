@@ -1002,7 +1002,7 @@ class P(object):
     # Adding the drawing functionnality to plot all these attributes on the
     # Canvas
     def drawTicks(self, slab, gm, x, axis, number,
-                  vp, wc, bg=0, X=None, Y=None, **kargs):
+                  vp, wc, bg=False, X=None, Y=None, **kargs):
         """
         Draws the ticks for the axis x number number
         using the label passed by the graphic  method
@@ -1456,28 +1456,74 @@ class P(object):
             except:
                 pass
 
-    def plot(self, x, slab, gm, bg=0, min=None,
-             max=None, X=None, Y=None, **kargs):
+    def drawLinesAndMarkersLegend(self, canvas,
+                                  linecolors, linetypes, linewidths,
+                                  markercolors, markertypes, markersizes,
+                                  strings, bg=False, render=True):
         """
-        This plots the template stuff on the Canvas.
-        It needs a slab and a graphic method.
+        Draws a legend with line/marker/text inside a template legend box
+        Auto adjust text size to make it fit inside the box
+        Auto arrange the elements to fill the box nicely
 
-        :returns: A list containing all the displays used
-        :rtype: list
+        :Example:
+
+            .. doctest:: template_drawLinesAndMarkersLegend
+
+                >>> import vcs
+                >>> x = vcs.init()
+                >>> t = vcs.createtemplate()
+                >>> t.drawLinesAndMarkersLegend(x,
+                ...     ["red","blue","green"], ["solid","dash","dot"],[1,4,8],
+                ...     ["blue","green","red"], ["cross","square","dot"],[3,4,5],
+                ...     ["sample A","type B","thing C"],True)
+                >>> x.png("sample")
+
+        :param canvas: a VCS canvas object onto which to draw the legend
+        :type canvas: vcs.Canvas.Canvas
+
+        :param linecolors: list containing the colors of each line to draw
+        :type linecolors: list of either colorInt, (r,g,b,opacity), or string color names
+
+        :param linetypes: list containing the type of each line to draw
+        :type linetypes: list on int of line stype strings
+
+        :param linewidths: list containing each line width
+        :type linewidths: list of float
+
+        :param markercolors: list of the markers colors to draw
+        :type markercolors: list of either colorInt, (r,g,b,opacity), or string color names
+
+        :param markertypes: list of the marker types to draw
+        :type markertypes: list of int or  string of marker names
+
+        :param markersizes: list of the size of each marker to draw
+        :type markersizes: list of float
+
+        :param strings: list of the string to draw next to each line/marker
+        :type strings: list of string
+
+        :param bg: do we draw in background or foreground
+        :type bg: bool
+
+        :param render: do we render or not (so it less flashy)
+        :type render: bool
         """
+        return vcs.utils.drawLinesAndMarkersLegend(canvas,
+                                                   self.legend,
+                                                   linecolors, linetypes, linewidths,
+                                                   markercolors, markertypes, markersizes,
+                                                   strings, bg, render)
 
+    def drawAttributes(self, x, slab, gm, bg=False, **kargs):
+        """Draws attribtes of slab onto a canvas
+
+        :param x: vcs canvas onto which attributes will be drawn
+        :type x: vcs.Canvas.Canvas
+
+        :param slab: slab to get attributes from
+        :type slab: cdms2.tvariable.TransientVariable, numpy.ndarray
+        """
         displays = []
-        kargs["donotstoredisplay"] = True
-        kargs["render"] = False
-        # now remembers the viewport and worldcoordinates in order to reset
-        # them later
-        vp = x._viewport
-        wc = x._worldcoordinate
-        # m=x.mode
-        # and resets everything to [0,1]
-        x._viewport = [0, 1, 0, 1]
-        x._worldcoordinate = [0, 1, 0, 1]
-        # x.mode=0 # this should disable the replot but it doesn't work....
         # figures out the min and max and set them as atributes...
         smn, smx = vcs.minmax(slab)
 
@@ -1546,6 +1592,32 @@ class P(object):
                     del(vcs.elements["texttable"][sp[0]])
                     del(vcs.elements["textorientation"][sp[1]])
                     del(vcs.elements["textcombined"][tt.name])
+        return displays
+
+    def plot(self, x, slab, gm, bg=False, min=None,
+             max=None, X=None, Y=None, **kargs):
+        """
+        This plots the template stuff on the Canvas.
+        It needs a slab and a graphic method.
+
+        :returns: A list containing all the displays used
+        :rtype: list
+        """
+
+        displays = []
+        kargs["donotstoredisplay"] = True
+        kargs["render"] = False
+        # now remembers the viewport and worldcoordinates in order to reset
+        # them later
+        vp = x._viewport
+        wc = x._worldcoordinate
+        # m=x.mode
+        # and resets everything to [0,1]
+        x._viewport = [0, 1, 0, 1]
+        x._worldcoordinate = [0, 1, 0, 1]
+        # x.mode=0 # this should disable the replot but it doesn't work....
+
+        displays += self.drawAttributes(x, slab, gm, bg=bg, **kargs)
 
         kargs["donotstoredisplay"] = True
         if not isinstance(gm, vcs.taylor.Gtd):
@@ -1698,7 +1770,7 @@ class P(object):
         return displays
 
     def drawColorBar(self, colors, levels, legend=None, ext_1='n',
-                     ext_2='n', x=None, bg=0, priority=None,
+                     ext_2='n', x=None, bg=False, priority=None,
                      cmap=None, style=['solid'], index=[1],
                      opacity=[], **kargs):
         """

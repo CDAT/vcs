@@ -345,7 +345,7 @@ class Cp(object):
         :param index: Index of a cell in the colormap. Must be an integer from 0-255.
         :type index: int
 
-        :returns: A list containing the red, green, blue, and alpha values (in that order), of the colorcell at the given index.
+        :returns: A list containing the red, green, blue, and alpha values of the colorcell at the given index.
         :rtype: list
         """
         return self.index[index]

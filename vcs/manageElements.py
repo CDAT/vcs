@@ -81,6 +81,7 @@ def createtemplate(name=None, source='default'):
     return template.P(name, source)
 createtemplate.__doc__ = createtemplate.__doc__ % xmldocs.create_docs['template']
 
+
 def gettemplate(Pt_name_src='default'):
     """
     %s
@@ -250,6 +251,7 @@ def gettaylordiagram(Gtd_name_src='default'):
         return vcs.elements["taylordiagram"][Gtd_name_src]
 gettaylordiagram.__doc__ = gettaylordiagram.__doc__ % xmldocs.get_docs['taylordiagram']
 
+
 def createmeshfill(name=None, source='default'):
     """
     %s
@@ -266,6 +268,7 @@ def createmeshfill(name=None, source='default'):
     name, source = check_name_source(name, source, 'meshfill')
     return meshfill.Gfm(name, source)
 createmeshfill.__doc__ = createmeshfill.__doc__ % xmldocs.create_docs['meshfill']
+
 
 def getmeshfill(Gfm_name_src='default'):
     """
@@ -615,6 +618,7 @@ def createvector(name=None, source='default'):
     return vector.Gv(name, source)
 createvector.__doc__ = createvector.__doc__ % xmldocs.create_docs['vector']
 
+
 def getvector(Gv_name_src='default'):
     """
     %s
@@ -722,7 +726,7 @@ def createline(name=None, source='default', ltype=None,
     :param priority: The layer on which the line will be drawn.
     :type priority: int
 
-    :param viewport: 4 floats between 0 and 1. These specify the area that the X/Y values are mapped to inside of the canvas
+    :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
     :type viewport: list of floats
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
@@ -734,7 +738,7 @@ def createline(name=None, source='default', ltype=None,
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
     :type y: list of floats
 
-    :param projection: Specify a geographic projection used to convert x/y from spherical coordinates into 2D coordinates.
+    :param projection: Specify a geographic projection used to convert x/y from spherical coordinates to 2D coordinates.
     :type projection: str or projection object
 
     :returns: A VCS line secondary method object
@@ -764,6 +768,7 @@ def createline(name=None, source='default', ltype=None,
         ln.projection = projection
     return ln
 createline.__doc__ = createline.__doc__ % xmldocs.create_docs['line']
+
 
 def setLineAttributes(to, l):
     '''
@@ -808,7 +813,7 @@ def getline(name='default', ltype=None, width=None, color=None,
     :param priority: The layer on which the marker will be drawn.
     :type priority: int
 
-    :param viewport: 4 floats between 0 and 1. These specify the area that the X/Y values are mapped to inside of the canvas
+    :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
     :type viewport: list of floats
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
@@ -852,6 +857,7 @@ def getline(name='default', ltype=None, width=None, color=None,
     return ln
 getline.__doc__ = getline.__doc__ % xmldocs.get_docs['line']
 
+
 def createmarker(name=None, source='default', mtype=None,
                  size=None, color=None, priority=None,
                  viewport=None, worldcoordinate=None,
@@ -879,7 +885,7 @@ def createmarker(name=None, source='default', mtype=None,
     :param priority: The layer on which the marker will be drawn.
     :type priority: int
 
-    :param viewport: 4 floats between 0 and 1. These specify the area that the X/Y values are mapped to inside of the canvas
+    :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
     :type viewport: list of floats
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
@@ -918,6 +924,7 @@ def createmarker(name=None, source='default', mtype=None,
     return mrk
 createmarker.__doc__ = createmarker.__doc__ % xmldocs.create_docs['marker']
 
+
 def getmarker(name='default', mtype=None, size=None, color=None,
               priority=None, viewport=None,
               worldcoordinate=None,
@@ -944,7 +951,7 @@ def getmarker(name='default', mtype=None, size=None, color=None,
     :param priority: The layer on which the marker will be drawn.
     :type priority: int
 
-    :param viewport: 4 floats between 0 and 1. These specify the area that the X/Y values are mapped to inside of the canvas
+    :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
     :type viewport: list of floats
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
@@ -1016,7 +1023,7 @@ def createfillarea(name=None, source='default', style=None,
     :param priority: The layer on which the fillarea will be drawn.
     :type priority: int
 
-    :param viewport: 4 floats between 0 and 1. These specify the area that the X/Y values are mapped to inside of the canvas
+    :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
     :type viewport: list of floats
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
@@ -1054,6 +1061,7 @@ def createfillarea(name=None, source='default', style=None,
     return fa
 createfillarea.__doc__ = createfillarea.__doc__ % xmldocs.create_docs['fillarea']
 
+
 def getfillarea(name='default', style=None,
                 index=None, color=None,
                 priority=None, viewport=None,
@@ -1079,7 +1087,7 @@ def getfillarea(name='default', style=None,
     :param priority: The layer on which the texttable will be drawn.
     :type priority: int
 
-    :param viewport: 4 floats between 0 and 1. These specify the area that the X/Y values are mapped to inside of the canvas
+    :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
     :type viewport: list of floats
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
@@ -1149,7 +1157,7 @@ def createtexttable(name=None, source='default', font=None,
     :param priority: The layer on which the texttable will be drawn.
     :type priority: int
 
-    :param viewport: 4 floats between 0 and 1. These specify the area that the X/Y values are mapped to inside of the canvas
+    :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
     :type viewport: list of floats
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
@@ -1192,6 +1200,7 @@ def createtexttable(name=None, source='default', font=None,
         pass
 createtexttable.__doc__ = createtexttable.__doc__ % xmldocs.create_docs['texttable']
 
+
 def gettexttable(name='default', font=None,
                  spacing=None, expansion=None, color=None,
                  priority=None, viewport=None,
@@ -1216,8 +1225,7 @@ def gettexttable(name='default', font=None,
     :param priority: The layer on which the texttable will be drawn.
     :type priority: int
 
-    :param viewport: 4 floats between 0 and 1.
-                     These specify the area that the X/Y values are mapped to inside of the canvas
+    :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
     :type viewport: list of floats
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
@@ -1262,6 +1270,7 @@ def createtextorientation(name=None, source='default'):
     return textorientation.To(name, source)
 createtextorientation.__doc__ = createtextorientation.__doc__ % xmldocs.create_docs['textorientation']
 
+
 def gettextorientation(To_name_src='default'):
     """
     %s
@@ -1284,6 +1293,7 @@ def gettextorientation(To_name_src='default'):
     return vcs.elements["textorientation"][To_name_src]
 gettextorientation.__doc__ = gettextorientation.__doc__ % xmldocs.get_docs['textorientation']
 
+
 def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_source='default',
                        font=None, spacing=None, expansion=None, color=None,
                        priority=None, viewport=None, worldcoordinate=None, x=None, y=None,
@@ -1300,7 +1310,8 @@ def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_sourc
     :param To_name: Name of the textcombined's text orientation  (to be created)
     :type To_name: str
 
-    :param To_source: Name of the textorientation to inherit. Can be a textorientation, or a string name of a textorientation.
+    :param To_source: Name of the textorientation to inherit.
+            Can be a textorientation, or a string name of a textorientation.
     :type To_source: str or vcs.textorientation.To
 
     :param font: Which font to use (index or name).
@@ -1319,7 +1330,7 @@ def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_sourc
     :param priority: The layer on which the object will be drawn.
     :type priority: int
 
-    :param viewport: 4 floats between 0 and 1. These specify the area that the X/Y values are mapped to inside of the canvas
+    :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
     :type viewport: list of floats
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
@@ -1346,7 +1357,7 @@ def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_sourc
     :param valign: Vertical alignment of the text. One of ["top", "center", "botom"].
     :type valign: str
 
-    :param projection: Specify a geographic projection used to convert x/y from spherical coordinates into 2D coordinates.
+    :param projection: Specify a geographic projection used to convert x/y from spherical coordinates to 2D coordinates.
     :type projection: str or projection object
 
     :returns: A VCS text object
@@ -1429,7 +1440,7 @@ def gettextcombined(Tt_name_src='default', To_name_src=None, string=None, font=N
     :param priority: The layer on which the object will be drawn.
     :type priority: int
 
-    :param viewport: 4 floats between 0 and 1. These specify the area that the X/Y values are mapped to inside of the canvas
+    :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
     :type viewport: list of floats
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
@@ -1537,6 +1548,7 @@ def get3d_scalar(Gfdv3d_name_src='default'):
     return vcs.elements["3d_scalar"][Gfdv3d_name_src]
 get3d_scalar.__doc__ = get3d_scalar.__doc__ % xmldocs.get_docs['3d_scalar']
 
+
 def create3d_scalar(name=None, source='default'):
     """
     %s
@@ -1575,6 +1587,7 @@ def get3d_dual_scalar(Gfdv3d_name_src='default'):
     return vcs.elements["3d_dual_scalar"][Gfdv3d_name_src]
 get3d_dual_scalar.__doc__ = get3d_dual_scalar.__doc__ % xmldocs.get_docs['3d_dual_scalar']
 
+
 def create3d_dual_scalar(name=None, source='default'):
     """
     %s
@@ -1592,6 +1605,7 @@ def create3d_dual_scalar(name=None, source='default'):
     name, source = check_name_source(name, source, '3d_dual_scalar')
     return dv3d.Gf3DDualScalar(name, source)
 create3d_dual_scalar.__doc__ = create3d_dual_scalar.__doc__ % xmldocs.create_docs['3d_dual_scalar']
+
 
 def get3d_vector(Gfdv3d_name_src='default'):
     """
@@ -1613,6 +1627,7 @@ def get3d_vector(Gfdv3d_name_src='default'):
 
     return vcs.elements["3d_vector"][Gfdv3d_name_src]
 get3d_vector.__doc__ = get3d_vector.__doc__ % xmldocs.get_docs['3d_vector']
+
 
 def create3d_vector(name=None, source='default'):
     """
@@ -1656,6 +1671,7 @@ def createcolormap(Cp_name=None, Cp_name_src='default'):
     Cp_name, Cp_name_src = check_name_source(Cp_name, Cp_name_src, 'colormap')
     return colormap.Cp(Cp_name, Cp_name_src)
 createcolormap.__doc__ = createcolormap.__doc__ % xmldocs.create_docs['colormap']
+
 
 def getcolormap(Cp_name_src='default'):
     """

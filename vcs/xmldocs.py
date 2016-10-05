@@ -178,10 +178,12 @@ extsdoc = """
 ticlabelsdoc = """
     Sets the %sticlabels1 and %sticlabels2 values on the object
 
-    :param %stl1: Sets the object's value for :py:attr:`%sticlabels1`. Must be  a str, or a dictionary object with float:str mappings.
+    :param %stl1: Sets the object's value for :py:attr:`%sticlabels1`.
+                  Must be  a str, or a dictionary object with float:str mappings.
     :type %stl1: {float:str} or str
 
-    :param %stl2: Sets the object's value for :py:attr:`%sticlabels2`. Must be a str, or a dictionary object with float:str mappings.
+    :param %stl2: Sets the object's value for :py:attr:`%sticlabels2`.
+                  Must be a str, or a dictionary object with float:str mappings.
     :type %stl2: {float:str} or str
            """
 xticlabelsdoc = ticlabelsdoc % (('x',) * 8)
@@ -247,7 +249,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
     :param docstring: The template docstring
     :param method: The method that the docstring is for
     """
-    dict={}
+    dict = {}
     for obj_type in type_dict.keys():
         for obj_name in type_dict[obj_type].keys():
             # default values. Change as necessary.
@@ -267,7 +269,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                 dict['cap'] = dict['name']
             if obj_name in ['3d_vector', '3d_scalar', '3d_dual_scalar']:
                 dict['sp_name'] = 'dv3d'
-            elif obj_name in ['1d','scatter','textcombined','xyvsy']:
+            elif obj_name in ['1d', 'scatter', 'textcombined', 'xyvsy']:
                 if obj_name == 'textcombined':
                     dict['tc'] = """
             >>> a.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
@@ -336,7 +338,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             [...'%(name)s_ex1'...]"""
                 dict['ex1'] = example1 % dict
                 if dict['parent2']:
-                    example2 ="""
+                    example2 = """
             >>> ex2=vcs.create%(name)s('%(name)s_ex2','%(parent2)s') # create '%(name)s_ex2' from '%(parent2)s' template
             >>> vcs.listelements('%(name)s') # should now contain the '%(name)s_ex2' %(name)s
             [...'%(name)s_ex2'...]"""
@@ -351,7 +353,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             dict.clear()
 
 # contains VCS object details used to build Example doctests and fill in docstrings
-obj_details={
+obj_details = {
     "graphics method": {
         "taylordiagram": {
             "callable": True,
@@ -377,7 +379,7 @@ obj_details={
             "slabs": 2,
             "title": False,
         },
-        "3d_vector":{
+        "3d_vector": {
             "callable": False,
             "parent": "default",
             "parent2": "",
@@ -483,7 +485,7 @@ obj_details={
             "title": True,
         },
     },
-    "secondary method":{
+    "secondary method": {
         "fillarea": {
             "callable": True,
             "parent": "default",
@@ -577,8 +579,9 @@ scriptdoc = """
     :type mode: str
     """
 
-queries_is_doc= """
-    Check to see if this object is a VCS %(name)s %(type)s.
+
+queries_is_doc = """
+    Check to see if this object is a VCS %(type)s %(name)s %(method_type)s.
 
     :Example:
 
@@ -651,7 +654,7 @@ docstrings['create'] = [create_docs, create_methods_doc]
 for method in docstrings.keys():
     populate_docstrings(obj_details, docstrings[method][0], docstrings[method][1], method)
 
-exts_attrs= """
+exts_attrs = """
             .. py:attribute:: ext_1 (str)
 
                 Draws an extension arrow on right side (values less than first range value)
@@ -713,7 +716,7 @@ meshfill_doc = """
     %s
     %s
     %s
-    """ % (levels_attr,fillarea_colors_attr, fillarea_attrs, legend_attr, exts_attrs, missing_attr)
+    """ % (levels_attr, fillarea_colors_attr, fillarea_attrs, legend_attr, exts_attrs, missing_attr)
 
 isofill_doc = meshfill_doc
 
