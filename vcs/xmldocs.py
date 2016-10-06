@@ -581,7 +581,7 @@ scriptdoc = """
 
 
 queries_is_doc = """
-    Check to see if this object is a VCS %(type)s %(name)s %(method_type)s.
+    Check to see if this object is a VCS %(name)s %(type)s.
 
     :Example:
 
