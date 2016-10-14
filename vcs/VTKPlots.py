@@ -63,7 +63,7 @@ class VTKVCSBackend(object):
             'vtk_backend_grid',
             # vtkGeoTransform used for geographic transformation
             'vtk_backend_geo',
-            ]
+        ]
         self.numberOfPlotCalls = 0
         self.renderWindowSize = None
         self.clickRenderer = None
@@ -188,9 +188,9 @@ class VTKVCSBackend(object):
                             worldPicker.Pick(xy[0], xy[1], 0, surfaceRenderer)
                             worldPosition = list(worldPicker.GetPickPosition())
                             if (xScale > yScale):
-                                worldPosition[0] /= (xScale/yScale)
+                                worldPosition[0] /= (xScale / yScale)
                             else:
-                                worldPosition[1] /= (yScale/xScale)
+                                worldPosition[1] /= (yScale / xScale)
                             lonLat = worldPosition
                             if (attributes is None):
                                 # if point dataset, return the value for the closest point
