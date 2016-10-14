@@ -68,19 +68,17 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
                    fillareastyle, fillareaindex,
                    fillareacolors, fillareaopacity)
 
-    # Handle special case of legend
-    # Here there are no contours, so no point data
-    p = vtk.vtkPolyData()
-    p.DeepCopy(inputContours)
-    if inputContours.GetPointData().GetNumberOfArrays() == 0:
-        ctp = vtk.vtkCellDataToPointData()
-        ctp.SetInputData(inputContours)
-        ctp.Update()
-        p.DeepCopy(ctp.GetOutput())
     # Now that the polydata has been created,
     # clip it using the input contour
     implicitFn = vtk.vtkImplicitDataSet()
-    implicitFn.SetDataSet(p)
+    implicitFn.SetDataSet(inputContours)
+    # Handle special cases where the input contours contain no point scalars
+    # This happens in cases such as legend, boxfill plots, etc.
+    if not inputContours.GetPointData().GetScalars():
+        ctp = vtk.vtkCellDataToPointData()
+        ctp.SetInputData(inputContours)
+        ctp.Update()
+        implicitFn.SetDataSet(ctp.GetOutput())
     implicitFn.SetOutValue(-1e3)
     clipFilter = vtk.vtkClipPolyData()
     clipFilter.SetInputData(patternPolyData)
