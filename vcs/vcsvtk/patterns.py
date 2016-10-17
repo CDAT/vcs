@@ -21,7 +21,7 @@ class Pattern(object):
         yb = bounds[3] - bounds[2]
         xscale = xb / self.size[0]
         yscale = yb / self.size[1]
-        self.scale = (xscale + yscale) / 2.0
+        self.scale = min(xscale, yscale)
         self.glyph = vtk.vtkGlyphSource2D()
         self.glyph.SetGlyphTypeToSquare()
         self.glyph.SetScale(self.scale)

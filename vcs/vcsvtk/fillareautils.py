@@ -27,8 +27,8 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
     yBounds = bounds[3] - bounds[2]
 
     if xBounds <= 1 and yBounds <= 1 and size is not None:
-        xBounds *= size[0] / 2
-        yBounds *= size[1] / 2
+        xBounds *= size[0] / 3
+        yBounds *= size[1] / 3
 
     xres = int(xBounds / 2)
     yres = int(yBounds / 2)
