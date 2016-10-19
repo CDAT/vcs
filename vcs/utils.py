@@ -2373,7 +2373,7 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
         if scratched is not None and scratched[i] is not False:
             scratch = canvas.createline(source=ln.name)
             scratch.width = scratch.width[0]*2.
-            scratch.color = text.color[0]
+            scratch.color = [text.color]
             scratch.type = scratched[i]
             text.string = strings[i]
             ext = canvas.gettextextent(text)[0]
