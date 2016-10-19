@@ -2236,7 +2236,7 @@ def download_sample_data_files(path=None):
 def drawLinesAndMarkersLegend(canvas, templateLegend,
                               linecolors, linetypes, linewidths,
                               markercolors, markertypes, markersizes,
-                              strings, bg, render=True):
+                              strings, scratched=None, bg=False, render=True):
     """
     Draws a legend with line/marker/text inside a template legend box
     Auto adjust text size to make it fit inside the box
@@ -2252,7 +2252,7 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
             >>> vcs.utils.drawLinesAndMarkersLegend(x,t.legend,
             ...     ["red","blue","green"], ["solid","dash","dot"],[1,4,8],
             ...     ["blue","green","red"], ["cross","square","dot"],[3,4,5],
-            ...     ["sample A","type B","thing C"],True)
+            ...     ["sample A","type B","thing C"], None, True, True)
             >>> x.png("sample")
 
     :param canvas: a VCS canvas object onto which to draw the legend
@@ -2281,6 +2281,11 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
 
     :param strings: list of the string to draw next to each line/marker
     :type strings: list of string
+
+    :param scratched: None (off) or list. list contains False where no scratch is needed
+                      For scratched provide True or line type to use for scratch
+                      color will match that of text
+    :type scratched: None or list of bool
 
     :param bg: do we draw in background or foreground
     :type bg: bool
@@ -2311,7 +2316,7 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
             maxheight = max(maxheight, ext[3] - ext[2])
         leg_lines = maxwidth / 3.
         leg_spc = leg_lines / 3.
-        maxwidth += leg_lines + leg_spc
+        maxwidth = maxwidth + leg_lines + leg_spc
         maxx = int(dx / maxwidth)
         maxy = int(dy / maxheight)
         if maxx * maxy < nlines:
@@ -2365,9 +2370,21 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
         ln.y = [ys, ys]
         mrk.y = [ys]
         tys.append(ys)
+        if scratched is not None and scratched[i] is not False:
+            scratch = canvas.createline(source=ln.name)
+            scratch.width = scratch.width[0]*2.
+            scratch.color = text.color[0]
+            scratch.type = scratched[i]
+            text.string = strings[i]
+            ext = canvas.gettextextent(text)[0]
+            scratch.x = [txs[-1], txs[-1] + ext[1] - ext[0]]
+            scratch.priority = text.priority + 1
+            if scratch.priority != 1:
+                canvas.plot(scratch, bg=bg, render=render)
         canvas.plot(ln, bg=bg, render=render)
         canvas.plot(mrk, bg=bg, render=render)
     text.halign = "left"
+    text.valign = "half"
     text.string = ts
     text.x = txs
     text.y = tys
