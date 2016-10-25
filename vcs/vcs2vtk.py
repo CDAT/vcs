@@ -267,6 +267,8 @@ def removeHiddenPoints(grid):
                     if (vectorNorm < minVectorNorm):
                         minVector = vector
                         minVectorNorm = vectorNorm
+    hiddenScalars = False
+    hiddenVectors = False
     for i in range(pts.GetNumberOfPoints()):
         if (ghost.GetValue(i) & vtk.vtkDataSetAttributes.HIDDENPOINT):
             cells = vtk.vtkIdList()
@@ -277,9 +279,16 @@ def removeHiddenPoints(grid):
             # hidden points are not removed. This causes problems
             # because it changes the scalar range.
             if(scalars):
+                hiddenScalars = True
                 scalars.SetValue(i, minScalar)
             if(vectors):
+                hiddenVectors = True
                 vectors.SetTypedTuple(i, minVector)
+    # SetValue does not call modified - we'll have to call it after all calls.
+    if (hiddenScalars):
+        scalars.Modified()
+    if (hiddenVectors):
+        vectors.Modified()
     # ensure that GLOBALIDS are copied
     attributes = grid.GetCellData()
     attributes.SetActiveAttribute(-1, attributes.GLOBALIDS)

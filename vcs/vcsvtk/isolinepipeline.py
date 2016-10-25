@@ -257,7 +257,7 @@ class IsolinePipeline(Pipeline2D):
             # (we need one for each mapper because of cmaera flips)
             dataset_renderer, xScale, yScale = self._context().fitToViewport(
                 act, vp,
-                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSet.GetBounds(),
+                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
                 geo=self._vtkGeoTransform,
                 priority=self._template.data.priority,
                 create_renderer=(dataset_renderer is None))
@@ -283,7 +283,7 @@ class IsolinePipeline(Pipeline2D):
             # (we need one for each mapper because of cmaera flips)
             self._context().fitToViewport(
                 act, vp,
-                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSet.GetBounds(),
+                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
                 geo=self._vtkGeoTransform,
                 priority=self._template.data.priority,
                 create_renderer=True)
@@ -298,6 +298,7 @@ class IsolinePipeline(Pipeline2D):
         kwargs = {"vtk_backend_grid": self._vtkDataSet,
                   "dataset_bounds": self._vtkDataSetBounds,
                   "plotting_dataset_bounds": plotting_dataset_bounds,
+                  "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
                   "vtk_backend_geo": self._vtkGeoTransform}
         if ("ratio_autot_viewport" in self._resultDict):
             kwargs["ratio_autot_viewport"] = vp
@@ -313,6 +314,4 @@ class IsolinePipeline(Pipeline2D):
             continents_renderer, xScale, yScale = self._context().plotContinents(
                 plotting_dataset_bounds, projection,
                 self._dataWrapModulo,
-                vp, self._template.data.priority,
-                vtk_backend_grid=self._vtkDataSet,
-                dataset_bounds=self._vtkDataSetBounds)
+                vp, self._template.data.priority, **kwargs)
