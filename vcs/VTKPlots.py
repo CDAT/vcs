@@ -1202,6 +1202,8 @@ class VTKVCSBackend(object):
         self.renWin.Render()
 
         writer = vtk.vtkPNGWriter()
+        compression = args.get('compression', 5) # get compression from user 
+        writer.SetCompressionLevel(compression) # set compression level 
         writer.SetInputConnection(imgfiltr.GetOutputPort())
         writer.SetFileName(file)
         # add text chunks to the writer
