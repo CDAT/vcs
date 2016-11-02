@@ -108,6 +108,7 @@ class Dp(object):
                  "ratio",
                  "newelements",
                  "_newelements",
+                 "_widget",
                  ]
 
     def _repr_png_(self):
@@ -117,6 +118,30 @@ class Dp(object):
         f = open(tmp)
         st = f.read()
         f.close()
+        try:
+            import IPython.display
+            import cdat_notebook
+            if self.g_type == "boxfill":
+                box = vcs.getboxfill(self.g_name)
+                b_dict = vcs.utils.dumpToDict(box)[0]
+                if self._widget is not None:
+                    self._widget.close()
+                self._widget = cdat_notebook.GMWidget(value=b_dict)
+
+                def refresh(o):
+                    for k, v in self._widget.value.iteritems():
+                        try:
+                            setattr(box, k, v)
+                        except:
+                            pass
+                    self._parent.update()
+                    self._parent.backend.renWin.Render()
+                    IPython.display.clear_output(wait=True)
+                    IPython.display.display(self)
+                self._widget.observe(refresh, names="value")
+                IPython.display.display(self._widget)
+        except ImportError:
+            pass
         return st
 # TODO: html,json,jpeg,png,svg,latex
 
@@ -266,6 +291,7 @@ class Dp(object):
         self._name = Dp_name
         self.s_name = 'Dp'
         self._parent = parent
+        self._widget = None
         if self._name == "default":
             self._off = 0
             self._priority = 0
