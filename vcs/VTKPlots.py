@@ -59,6 +59,8 @@ class VTKVCSBackend(object):
             # the same as vcs.utils.getworldcoordinates for now. getworldcoordinates uses
             # gm.datawc_... or, if that is not set, it uses data axis margins (without bounds).
             'plotting_dataset_bounds',
+            # dataset bounds before masking
+            'vtk_dataset_bounds_no_mask',
             'renderer',
             'vtk_backend_grid',
             # vtkGeoTransform used for geographic transformation
@@ -596,8 +598,9 @@ class VTKVCSBackend(object):
             ren = kargs["renderer"]
 
         vtk_backend_grid = kargs.get("vtk_backend_grid", None)
+        vtk_dataset_bounds_no_mask = kargs.get("vtk_dataset_bounds_no_mask", None)
         vtk_backend_geo = kargs.get("vtk_backend_geo", None)
-        bounds = vtk_backend_grid.GetBounds() if vtk_backend_grid else None
+        bounds = vtk_dataset_bounds_no_mask if vtk_dataset_bounds_no_mask else None
 
         pipeline = vcsvtk.createPipeline(gm, self)
         if pipeline is not None:
@@ -802,11 +805,11 @@ class VTKVCSBackend(object):
 
         # Stippling
         vcs2vtk.stippleLine(line_prop, contLine.type[0])
-        vtk_backend_grid = kargs.get("vtk_backend_grid", None)
+        vtk_dataset_bounds_no_mask = kargs.get("vtk_dataset_bounds_no_mask", None)
         return self.fitToViewport(contActor,
                                   vp,
                                   wc=wc, geo=geo,
-                                  geoBounds=vtk_backend_grid.GetBounds(),
+                                  geoBounds=vtk_dataset_bounds_no_mask,
                                   priority=priority,
                                   create_renderer=True)
 

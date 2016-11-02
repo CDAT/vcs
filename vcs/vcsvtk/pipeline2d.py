@@ -40,6 +40,10 @@ class IPipeline2D(Pipeline):
             pipeline.
         - _vtkDataSetBounds: The bounds of _vtkDataSet, in lon/lat space, as
             tuple(float xMin, float xMax, float yMin, float yMax)
+        - _vtkDataSetBoundsNoMask : The bounds of _vtkDataSet in Cartesian space
+            before masking. These are used instead of the dataset bounds
+            because masking can change the dataset bounds which results in a dataset
+            that looks incomplete.
         - _vtkPolyDataFilter: A vtkAlgorithm that produces a polydata
             representation of the data.
         - _colorMap: The vcs colormap object used to color the scalar data.
@@ -296,6 +300,7 @@ class Pipeline2D(IPipeline2D):
         self._updateContourLevelsAndColors()
 
         # Generate a mapper to render masked data:
+        self._vtkDataSetBoundsNoMask = self._vtkDataSet.GetBounds()
         self._createMaskedDataMapper()
 
         # Create the polydata filter:
@@ -367,7 +372,7 @@ class Pipeline2D(IPipeline2D):
         plotting_dataset_bounds = self.getPlottingBounds()
         surface_renderer, xScale, yScale = self._context().fitToViewport(
             act, vp,
-            wc=plotting_dataset_bounds, geoBounds=self._vtkDataSet.GetBounds(),
+            wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
             geo=self._vtkGeoTransform,
             priority=self._template.data.priority,
             create_renderer=True)
