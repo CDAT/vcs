@@ -59,11 +59,13 @@ class VTKVCSBackend(object):
             # the same as vcs.utils.getworldcoordinates for now. getworldcoordinates uses
             # gm.datawc_... or, if that is not set, it uses data axis margins (without bounds).
             'plotting_dataset_bounds',
+            # dataset bounds before masking
+            'vtk_dataset_bounds_no_mask',
             'renderer',
             'vtk_backend_grid',
             # vtkGeoTransform used for geographic transformation
             'vtk_backend_geo',
-            ]
+        ]
         self.numberOfPlotCalls = 0
         self.renderWindowSize = None
         self.clickRenderer = None
@@ -188,9 +190,9 @@ class VTKVCSBackend(object):
                             worldPicker.Pick(xy[0], xy[1], 0, surfaceRenderer)
                             worldPosition = list(worldPicker.GetPickPosition())
                             if (xScale > yScale):
-                                worldPosition[0] /= (xScale/yScale)
+                                worldPosition[0] /= (xScale / yScale)
                             else:
-                                worldPosition[1] /= (yScale/xScale)
+                                worldPosition[1] /= (yScale / xScale)
                             lonLat = worldPosition
                             if (attributes is None):
                                 # if point dataset, return the value for the closest point
@@ -596,8 +598,9 @@ class VTKVCSBackend(object):
             ren = kargs["renderer"]
 
         vtk_backend_grid = kargs.get("vtk_backend_grid", None)
+        vtk_dataset_bounds_no_mask = kargs.get("vtk_dataset_bounds_no_mask", None)
         vtk_backend_geo = kargs.get("vtk_backend_geo", None)
-        bounds = vtk_backend_grid.GetBounds() if vtk_backend_grid else None
+        bounds = vtk_dataset_bounds_no_mask if vtk_dataset_bounds_no_mask else None
 
         pipeline = vcsvtk.createPipeline(gm, self)
         if pipeline is not None:
@@ -802,11 +805,11 @@ class VTKVCSBackend(object):
 
         # Stippling
         vcs2vtk.stippleLine(line_prop, contLine.type[0])
-        vtk_backend_grid = kargs.get("vtk_backend_grid", None)
+        vtk_dataset_bounds_no_mask = kargs.get("vtk_dataset_bounds_no_mask", None)
         return self.fitToViewport(contActor,
                                   vp,
                                   wc=wc, geo=geo,
-                                  geoBounds=vtk_backend_grid.GetBounds(),
+                                  geoBounds=vtk_dataset_bounds_no_mask,
                                   priority=priority,
                                   create_renderer=True)
 
@@ -980,12 +983,14 @@ class VTKVCSBackend(object):
                 return self.cleanupData(data[op])
 
     def put_png_on_canvas(
-            self, filename, zoom=1, xOffset=0, yOffset=0, *args, **kargs):
+            self, filename, zoom=1, xOffset=0, yOffset=0,
+            units="percent", fitToHeight=True, *args, **kargs):
         return self.put_img_on_canvas(
-            filename, zoom, xOffset, yOffset, *args, **kargs)
+            filename, zoom, xOffset, yOffset, units, fitToHeight, *args, **kargs)
 
     def put_img_on_canvas(
-            self, filename, zoom=1, xOffset=0, yOffset=0, *args, **kargs):
+            self, filename, zoom=1, xOffset=0, yOffset=0,
+            units="percent", fitToHeight=True, *args, **kargs):
         self.hideGUI()
         readerFactory = vtk.vtkImageReader2Factory()
         reader = readerFactory.CreateImageReader2(filename)
@@ -1002,11 +1007,21 @@ class VTKVCSBackend(object):
         cam.ParallelProjectionOn()
         width = (ext[1] - ext[0]) * spc[0]
         height = (ext[3] - ext[2]) * spc[1]
-        xoff = width * xOffset / zoom / 200.
-        yoff = height * yOffset / zoom / 200.
+        if units[:7].lower() == "percent":
+            xoff = width * xOffset / zoom / 200.
+            yoff = height * yOffset / zoom / 200.
+        elif units[:6].lower() == "pixels":
+            xoff = xOffset / zoom
+            yoff = yOffset / zoom
+        else:
+            raise RuntimeError("vtk put image does not understand %s for offset units" % units)
         xc = origin[0] + .5 * (ext[0] + ext[1]) * spc[0]
         yc = origin[1] + .5 * (ext[2] + ext[3]) * spc[1]
-        yd = (ext[3] - ext[2]) * spc[1]
+        if fitToHeight:
+            yd = (ext[3] - ext[2]) * spc[1]
+        else:
+            sz = self.renWin.GetSize()
+            yd = sz[1]
         d = cam.GetDistance()
         cam.SetParallelScale(.5 * yd / zoom)
         cam.SetFocalPoint(xc + xoff, yc + yoff, 0.)
@@ -1165,7 +1180,7 @@ class VTKVCSBackend(object):
 
         sz = self.renWin.GetSize()
         if width is not None and height is not None:
-            if self.renWin.GetSize() != (width, height):
+            if sz != (width, height):
                 user_dims = (self.canvas.bgX, self.canvas.bgY, sz[0], sz[1])
                 # We need to set canvas.bgX and canvas.bgY before we do renWin.SetSize
                 # otherwise, canvas.bgX,canvas.bgY will win
@@ -1190,6 +1205,8 @@ class VTKVCSBackend(object):
         self.renWin.Render()
 
         writer = vtk.vtkPNGWriter()
+        compression = args.get('compression', 5)  # get compression from user
+        writer.SetCompressionLevel(compression)  # set compression level
         writer.SetInputConnection(imgfiltr.GetOutputPort())
         writer.SetFileName(file)
         # add text chunks to the writer

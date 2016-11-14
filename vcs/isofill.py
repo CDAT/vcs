@@ -306,8 +306,8 @@ class Gfi(object):
     .. describe:: Attribute descriptions:
 
         %s
-        %s
-""" % (xmldocs.graphics_method_core, xmldocs.isofill_doc)
+        %s""" % (xmldocs.graphics_method_core, xmldocs.isofill_doc)
+
     colormap = VCS_validation_functions.colormap
     __slots__ = [
         '__doc__',
@@ -709,7 +709,7 @@ class Gfi(object):
     def xyscale(self, xat='', yat=''):
         self.xaxisconvert = xat
         self.yaxisconvert = yat
-    xyscale.__doc__ = xmldocs.xyscaledoc
+    xyscale.__doc__ = xmldocs.xyscaledoc % (('isofill',) * 2)
 
     def list(self):
         print "", "----------Isofill (Gfi) member (attribute) listings ----------"
@@ -880,7 +880,7 @@ class Gfi(object):
             f = open(script_filename, mode)
             vcs.utils.dumpToJson(self, f)
             f.close()
-    script.__doc__ = xmldocs.isofill_script
+    script.__doc__ = xmldocs.scriptdocs['isofill']
 
 
 #

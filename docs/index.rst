@@ -50,10 +50,12 @@ Table of contents
 
    user-guide
    developer-guide
-   reference
+   quick-reference
 
 API index
 ---------
 
-* :ref:`genindex`
-* :ref:`modindex`VCS
+.. toctree::
+    :maxdepth: 3
+
+    API/vcs

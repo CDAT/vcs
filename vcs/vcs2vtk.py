@@ -248,6 +248,27 @@ def removeHiddenPoints(grid):
     if (not ghost):
         return
     pts = grid.GetPoints()
+    minScalar = sys.float_info.max
+    minVector = [0, 0, 0]
+    minVectorNorm = sys.float_info.max
+    scalars = grid.GetPointData().GetScalars()
+    vectors = grid.GetPointData().GetVectors()
+    if (scalars or vectors):
+        vector = [0, 0, 0]
+        for i in range(pts.GetNumberOfPoints()):
+            if (not (ghost.GetValue(i) & vtk.vtkDataSetAttributes.HIDDENPOINT)):
+                if (scalars):
+                    scalar = scalars.GetValue(i)
+                    if (scalar < minScalar):
+                        minScalar = scalar
+                if (vectors):
+                    vectors.GetTypedTuple(i, vector)
+                    vectorNorm = numpy.linalg.norm(vector)
+                    if (vectorNorm < minVectorNorm):
+                        minVector = vector
+                        minVectorNorm = vectorNorm
+    hiddenScalars = False
+    hiddenVectors = False
     for i in range(pts.GetNumberOfPoints()):
         if (ghost.GetValue(i) & vtk.vtkDataSetAttributes.HIDDENPOINT):
             cells = vtk.vtkIdList()
@@ -255,18 +276,28 @@ def removeHiddenPoints(grid):
             grid.GetPointCells(i, cells)
             for j in range(cells.GetNumberOfIds()):
                 grid.DeleteCell(cells.GetId(j))
+            # hidden points are not removed. This causes problems
+            # because it changes the scalar range.
+            if(scalars):
+                hiddenScalars = True
+                scalars.SetValue(i, minScalar)
+            if(vectors):
+                hiddenVectors = True
+                vectors.SetTypedTuple(i, minVector)
+    # SetValue does not call modified - we'll have to call it after all calls.
+    if (hiddenScalars):
+        scalars.Modified()
+    if (hiddenVectors):
+        vectors.Modified()
+    # ensure that GLOBALIDS are copied
+    attributes = grid.GetCellData()
+    attributes.SetActiveAttribute(-1, attributes.GLOBALIDS)
     grid.RemoveDeletedCells()
-
-
-def removeHiddenCells(grid):
-    ghost = grid.GetCellGhostArray()
-    if (not ghost):
-        return
-    for i in range(grid.GetNumberOfCells()):
-        if (ghost.GetValue(i) & vtk.vtkDataSetAttributes.HIDDENCELL):
-            # cell hidden, remove it
-            grid.DeleteCell(i)
-    grid.RemoveDeletedCells()
+    # set GLOBALIDS attribute
+    attributes = grid.GetCellData()
+    globalIdsIndex = vtk.mutable(-1)
+    attributes.GetArray("GlobalIds", globalIdsIndex)
+    attributes.SetActiveAttribute(globalIdsIndex, attributes.GLOBALIDS)
 
 
 def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,

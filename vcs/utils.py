@@ -23,6 +23,8 @@ import tempfile
 import cdms2
 import genutil
 import vtk
+import struct
+
 
 from colors import rgb2str, str2rgb, matplotlib2vcs  # noqa
 
@@ -30,24 +32,172 @@ indent = 1
 sort_keys = True
 # Deprecated color map names mapping
 vcs_deprecated_colormap_names = {
-    "blue2darkred":         "bl_to_darkred",
-    "blue2darkorange":      "bl_to_drkorang",
-    "blue2grey":            "blue_to_grey",
-    "blue2green":           "blue_to_grn",
-    "blue2orange":          "blue_to_orange",
-    "blue2orange2red":      "blue_to_orgred",
-    "brown2blue":           "brown_to_blue",
-    "green2magenta":        "grn_to_magenta",
-    "lightblue2darkblue":   "ltbl_to_drkbl",
-    "rainbownogreen":       "rainbow_no_grn",
-    "white2blue":           "white_to_blue",
-    "white2green":          "white_to_green",
-    "white2magenta":        "white_to_magenta",
-    "white2red":            "white_to_red",
-    "white2yellow":         "white_to_yellow",
+    "blue2darkred": "bl_to_darkred",
+    "blue2darkorange": "bl_to_drkorang",
+    "blue2grey": "blue_to_grey",
+    "blue2green": "blue_to_grn",
+    "blue2orange": "blue_to_orange",
+    "blue2orange2red": "blue_to_orgred",
+    "brown2blue": "brown_to_blue",
+    "green2magenta": "grn_to_magenta",
+    "lightblue2darkblue": "ltbl_to_drkbl",
+    "rainbownogreen": "rainbow_no_grn",
+    "white2blue": "white_to_blue",
+    "white2green": "white_to_green",
+    "white2magenta": "white_to_magenta",
+    "white2red": "white_to_red",
+    "white2yellow": "white_to_yellow",
 }
 
 defaultColorsRange = range(256)
+
+
+def get_png_dims(fnm):
+    """given the path to a png, return width, height"""
+    try:
+        data = open(fnm, "rb").read()
+        w, h = struct.unpack('>LL', data[16:24])
+        width = int(w)
+        height = int(h)
+    except Exception:
+        width = None
+        height = None
+    return width, height
+
+
+class Logo(object):
+    """
+    Creates a 'logo' object
+
+    This also to draw a logo either from a text string or a picture (png) file.
+    Picture will be shrunk to fit within the canvas if it's too big to fit
+
+    :Example:
+
+        .. doctest:: utils_Logo
+
+            >>> import vcs
+            >>> import os
+            >>> import sys
+            >>> x=vcs.init()
+            >>> x.open()
+            >>> logo1 = vcs.utils.Logo(os.path.join(sys.prefix,"share","vcs","uvcdat.png"))
+            >>> logo1.x=.7
+            >>> logo1.y=.8
+
+            >>> logo2 = vcs.utils.Logo("My Test Logo")
+            >>> logo2.x = .2
+            >>> logo2.y = .2
+
+            >>> logo1.plot(x)
+            >>> logo2.plot(x)
+    """
+
+    def __init__(self, source=None, x=.93, y=.95, width=None, height=None):
+        """
+        Initialize a new "logo" object to be plotted later on a canvas
+
+        :param source: text string or path to png file representing the logo
+        :type source: str
+
+        :param x: x position of the logo's center in fraction of canvas (0<x<1)
+        :type x: float
+
+        :param y: y position of the logo's center in fraction of canvas (0<y<1)
+        :type y: float
+
+        :param width: width in pixels we want the log to be
+        :type width: int
+
+        :param height: height in pixels we want the log to be
+        :type height: int
+        """
+        if source is None:
+            self.source = None
+        elif vcs.queries.istext(source):
+            self.source = source
+        elif isinstance(source, basestring):
+            self.source_width, self.source_height = get_png_dims(source)
+            if self.source_width is not None:
+                self.source = source
+            else:
+                self.source = vcs.createtext()
+                if height is None:
+                    self.source.height = 20
+                else:
+                    self.source.height = height
+                self.source.halign = 'center'
+                self.source.valign = 'half'
+                # Set the texttable
+                self.source.font = 2
+                self.source.color = [5, 10, 67, 100.0]
+                self.source.string = source
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+    def plot(self, canvas, bg=True):
+        """
+        Plot the log onto a given Canvas
+
+        :Example:
+
+            .. doctest:: utils_Logo_plot
+
+                >>> import vcs
+                >>> import os
+                >>> import sys
+                >>> x=vcs.init()
+                >>> x.open()
+                >>> logo1 = vcs.utils.Logo(os.path.join(sys.prefix,"share/vcs/uvcdat.png"))
+                >>> logo1.x=.7
+                >>> logo1.y=.8
+
+                >>> logo2 = vcs.utils.Logo("My Test Logo")
+                >>> logo2.x = .2
+                >>> logo2.y = .2
+
+                >>> logo1.plot(x)
+                >>> logo2.plot(x)
+
+
+        :param canvas: Canvas onto which you desire plotting the logo
+        :type canvas: vcs.Canvas.Canvas
+
+        :param bg: do we plot in background (offscreen) mode or not? True/False
+        :type bg: bool
+        """
+        if isinstance(self.source, basestring):
+            cnv_info = canvas.canvasinfo()
+            if self.width is not None:
+                scale = float(self.width) / self.source_width
+            elif self.height is not None:
+                scale = float(self.height) / self.source_height
+            else:
+                xdist = cnv_info["width"] - self.x * cnv_info["width"]
+                xscale = xdist / self.source_width * 2.
+                ydist = cnv_info["height"] - self.y * cnv_info["height"]
+                yscale = ydist / self.source_height * 2.
+                scale = min(xscale, yscale)
+
+            xoff = - (cnv_info["width"] / 2. - self.source_width / 2. * xscale)
+            yoff = - (cnv_info["height"] / 2. -
+                      self.source_height / 2. * yscale)
+            canvas.put_png_on_canvas(
+                self.source,
+                zoom=scale,
+                xOffset=xoff,
+                yOffset=yoff,
+                units="pixels",
+                fitToHeight=False)
+        elif vcs.queries.istext(self.source):
+            self.source.x = [self.x]
+            self.source.y = [self.y]
+            if self.height is not None:
+                self.source.height = self.height
+            canvas.plot(self.source, bg=bg)
+
 
 def process_range_from_old_scr(code, g):
     irg = code.find("range")
@@ -274,21 +424,14 @@ def show(*args):
 
     :Example:
 
-    ::
+        .. doctest:: utils_show
 
-        # Create a VCS Canvas instance, named 'a'
-        a=vcs.init()
-        # List boxfill items on Canvas 'a'
-        a.show('boxfill')
-        # List isofill items on Canvas 'a'
-        a.show('isofill')
-        # List line items on Canvas 'a'
-        a.show('line')
-        # List marker items on Canvas 'a'
-        a.show('marker')
-        # List text items on Canvas 'a'
-        a.show('text')
-
+            >>> a=vcs.init() # Create a VCS Canvas instance, named 'a'
+            >>> a.show('boxfill') # List boxfill objects on Canvas 'a'
+            >>> a.show('isofill') # List isofill objects on Canvas 'a'
+            >>> a.show('line') # List line objects on Canvas 'a'
+            >>> a.show('marker') # List marker objects on Canvas 'a'
+            >>> a.show('text') # List text objects on Canvas 'a'
     """
     if args == ():
         return vcs.listelements()
@@ -736,7 +879,8 @@ def loadTemplate(nm, vals):
 
 
 def loadVCSItem(typ, nm, json_dict={}):
-    if typ in vcs._protected_elements.keys() and nm in vcs._protected_elements[typ]:
+    if typ in vcs._protected_elements.keys(
+    ) and nm in vcs._protected_elements[typ]:
         # protected element do not overload
         return
     tp = typ
@@ -778,7 +922,8 @@ def loadVCSItem(typ, nm, json_dict={}):
             setattr(gm, a, v)
 
             if nm in vcs_deprecated_colormap_names:
-                cmd = "gm = vcs.create%s('%s')" % (typ, vcs_deprecated_colormap_names[nm])
+                cmd = "gm = vcs.create%s('%s')" % (
+                    typ, vcs_deprecated_colormap_names[nm])
                 exec(cmd)
                 setattr(gm, a, v)
 
@@ -813,15 +958,15 @@ def minmax(*data):
 
     :Example:
 
-    ::
+        .. doctest:: utils_minmax
 
-        >>> s=range(7)
-        >>> vcs.minmax(s)
-        (0.0, 6.0)
-        >>> vcs.minmax([s,s])
-        (0.0, 6.0)
-        >>> vcs.minmax([[s,s*2],4.,[6.,7.,s]],[5.,-7.,8,(6.,1.)])
-        (-7.0, 8.0)
+            >>> s=range(7)
+            >>> vcs.minmax(s)
+            (0.0, 6.0)
+            >>> vcs.minmax([s,s])
+            (0.0, 6.0)
+            >>> vcs.minmax([[s,s*2],4.,[6.,7.,s]],[5.,-7.,8,(6.,1.)])
+            (-7.0, 8.0)
 
     :param data: A comma-separated list of lists/arrays/tuples
     :type data: list
@@ -862,14 +1007,14 @@ def mkevenlevels(n1, n2, nlev=10):
 
     :Example:
 
-    ::
+        .. doctest:: utils_mkevenlevels
 
-        >>> vcs.mkevenlevels(0,100)
-        [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
-        >>> vcs.mkevenlevels(0,100,nlev=5)
-        [0.0, 20.0, 40.0, 60.0, 80.0, 100.0]
-        >>> vcs.mkevenlevels(100,0,nlev=5)
-        [100.0, 80.0, 60.0, 40.0, 20.0, 0.0]
+            >>> vcs.mkevenlevels(0,100)
+            [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
+            >>> vcs.mkevenlevels(0,100,nlev=5)
+            [0.0, 20.0, 40.0, 60.0, 80.0, 100.0]
+            >>> vcs.mkevenlevels(100,0,nlev=5)
+            [100.0, 80.0, 60.0, 40.0, 20.0, 0.0]
 
     :param n1: Beginning of range. Int or float.
     :type n1: int, float
@@ -896,26 +1041,27 @@ def mkscale(n1, n2, nc=12, zero=1, ends=False):
     This function return a nice scale given a min and a max
 
     .. warning::
+
         Not all functionality for the 'zero' parameter has been implemented.
         zero=0 is intended to let the function decide what should be done with zeros,
         but it has yet to be defined. Do not use zero=0.
 
     :Examples:
 
-    ::
+        .. doctest:: utils_mkscale
 
-        >>> vcs.mkscale(0,100)
-        [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
-        >>> vcs.mkscale(0,100,nc=5)
-        [0.0, 20.0, 40.0, 60.0, 80.0, 100.0]
-        >>> vcs.mkscale(-10,100,nc=5)
-        [-25.0, 0.0, 25.0, 50.0, 75.0, 100.0]
-        >>> vcs.mkscale(-10,100,nc=5,zero=-1)
-        [-20.0, 20.0, 60.0, 100.0]
-        >>> vcs.mkscale(2,20)
-        [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
-        >>> vcs.mkscale(2,20,zero=2)
-        [0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
+            >>> vcs.mkscale(0,100)
+            [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
+            >>> vcs.mkscale(0,100,nc=5)
+            [0.0, 20.0, 40.0, 60.0, 80.0, 100.0]
+            >>> vcs.mkscale(-10,100,nc=5)
+            [-25.0, 0.0, 25.0, 50.0, 75.0, 100.0]
+            >>> vcs.mkscale(-10,100,nc=5,zero=-1)
+            [-20.0, 20.0, 60.0, 100.0]
+            >>> vcs.mkscale(2,20)
+            [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
+            >>> vcs.mkscale(2,20,zero=2)
+            [0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
 
     :param n1: Minimum number in range.
     :type n1: float
@@ -1021,7 +1167,8 @@ def __split2contiguous(levels):
         if il != 0:
             lv2 = levels[il - 1]
             if lv2[1] != lv[0]:
-                raise VCSUtilsError("Error intervals are NOT contiguous from " + str(lv2[1]) + " to " + str(lv[0]))
+                raise VCSUtilsError(
+                    "Error intervals are NOT contiguous from " + str(lv2[1]) + " to " + str(lv[0]))
         tmplevs.append(lv[0])
     tmplevs.append(levels[-1][1])
     return tmplevs
@@ -1034,18 +1181,18 @@ def mklabels(vals, output='dict'):
 
     :Examples:
 
-    ::
+        .. doctest:: utils_mklabels
 
-        >>> a=vcs.mkscale(2,20,zero=2)
-        >>> vcs.mklabels (a)
-        {20.0: '20', 18.0: '18', 16.0: '16', 14.0: '14', 12.0: '12',
-            10.0: '10', 8.0: '8', 6.0: '6', 4.0: '4', 2.0: '2', 0.0: '0'}
-        >>> vcs.mklabels ( [5,.005])
-        {0.0050000000000000001: '0.005', 5.0: '5.000'}
-        >>> vcs.mklabels ( [.00002,.00005])
-        {2.0000000000000002e-05: '2E-5', 5.0000000000000002e-05: '5E-5'}
-        >>> vcs.mklabels ( [.00002,.00005],output='list')
-        ['2E-5', '5E-5']
+            >>> a=vcs.mkscale(2,20,zero=2)
+            >>> vcs.mklabels (a)
+            {20.0: '20', 18.0: '18', 16.0: '16', 14.0: '14', 12.0: '12',
+                10.0: '10', 8.0: '8', 6.0: '6', 4.0: '4', 2.0: '2', 0.0: '0'}
+            >>> vcs.mklabels ( [5,.005])
+            {0.0050000000000000001: '0.005', 5.0: '5.000'}
+            >>> vcs.mklabels ( [.00002,.00005])
+            {2.0000000000000002e-05: '2E-5', 5.0000000000000002e-05: '5E-5'}
+            >>> vcs.mklabels ( [.00002,.00005],output='list')
+            ['2E-5', '5E-5']
 
     :param vals: List or tuple of float values
     :type vals: list, tuple
@@ -1099,7 +1246,14 @@ def mklabels(vals, output='dict'):
         aa = numpy.ma.power(10., -idigleft)
         while abs(round(aa * vals[i]) - aa * vals[i]) > .000001:
             aa = aa * 10.
-        idig = numpy.ma.maximum(idig, numpy.ma.floor(numpy.ma.log10(aa * numpy.ma.power(10., idigleft))))
+        idig = numpy.ma.maximum(
+            idig,
+            numpy.ma.floor(
+                numpy.ma.log10(
+                    aa *
+                    numpy.ma.power(
+                        10.,
+                        idigleft))))
     idig = int(idig)
 
     # Now does the writing part
@@ -1162,24 +1316,20 @@ def getcolors(levs, colors=None, split=1, white="white"):
 
     :Example:
 
-    ::
+        .. doctest:: utils_getcolors
 
-        >>> a=[0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
-        >>> vcs.getcolors (a)
-        [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
-        >>> vcs.getcolors (a,colors=range(16,200))
-        [16, 36, 57, 77, 97, 118, 138, 158, 179, 199]
-        >>> vcs.getcolors(a,colors=[16,25,15,56,35,234,12,11,19,32,132,17])
-        [16, 25, 15, 35, 234, 12, 11, 32, 132, 17]
-        >>> a=[-6.0, -2.0, 2.0, 6.0, 10.0, 14.0, 18.0, 22.0, 26.0]
-        >>> vcs.getcolors (a,white=241)
-        [0, 241, 128, 153, 179, 204, 230, 255]
-        >>> vcs.getcolors (a,white=241,split=0)
-        [0, 36, 73, 109, 146, 182, 219, 255]
-        >>> vcs.utils.defaultColorsRange = range(16,240)
-        >>> vcs.getcolors (a,white=241)
-        [16, 241, 128, 150, 172, 195, 217, 239]
-
+            >>> a=[0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
+            >>> vcs.getcolors (a)
+            [16, 41, 66, 90, 115, 140, 165, 189, 214, 239]
+            >>> vcs.getcolors (a,colors=range(16,200))
+            [16, 36, 57, 77, 97, 118, 138, 158, 179, 199]
+            >>> vcs.getcolors(a,colors=[16,25,15,56,35,234,12,11,19,32,132,17])
+            [16, 25, 15, 35, 234, 12, 11, 32, 132, 17]
+            >>> a=[-6.0, -2.0, 2.0, 6.0, 10.0, 14.0, 18.0, 22.0, 26.0]
+            >>> vcs.getcolors (a,white=241)
+            [72, 241, 128, 150, 172, 195, 217, 239]
+            >>> vcs.getcolors (a,white=241,split=0)
+            [16, 48, 80, 112, 143, 175, 207, 239]
 
     :param levs: levels defining the color ranges
     :type levs: list, tuple
@@ -1316,18 +1466,17 @@ def generate_time_labels(d1, d2, units, calendar=cdtime.DefaultCalendar):
 
     :Example:
 
-    ::
+        .. doctest:: generate_time_labels
 
-        # Two ways to generate a dictionary of time labels
-        #   for the year 2000 in units of 'days since 1800' :
-        lbls = generate_time_labels(cdtime.reltime(0,'months since 2000'),
-                                    cdtime.reltime(12,'months since 2000'),
-                                    'days since 1800',)
-        lbls = generate_time_labels(cdtime.reltime(0,'months since 2000'),
-                                    cdtime.comptime(2001),
-                                    'days since 1800',)
-        # Generate a dictionary of time labels for the year 2000 in units of 'months since 2000'
-        lbls = generate_time_labels(0, 12, 'months since 2000', )
+            # Two ways to generate a dictionary of time labels
+            >>> lbls = generate_time_labels(cdtime.reltime(0,'months since 2000'),
+            ...     cdtime.reltime(12,'months since 2000'),
+            ...     'days since 1800',) # for the year 2000 in units of 'days since 1800'
+            >>> lbls = generate_time_labels(cdtime.reltime(0,'months since 2000'),
+            ...     cdtime.comptime(2001),
+            ...     'days since 1800',) # for the year 2000 in units of 'days since 1800'
+            >>> lbls = generate_time_labels(0, 12, 'months since 2000', ) # Generate a dictionary of time labels
+                                                                        # for year 2000, units of 'months since 2000'
 
 
     :param d1: The beginning of the time interval to be labelled. Expects a cdtime object.
@@ -1479,9 +1628,9 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                       datawc_y1, datawc_y2, x=None, y=None):
     """
     Sets the labels and ticks for a graphics method made in python
-    Usage setTicksandLabels(gm,datawc_x1,datawc_x2,
-                               datawc_y1,datawc_y2,x=None,y=None)
-    datawc are world coordinates
+
+    :Example:
+
 
     :param gm: A VCS graphics method to alter
     :type gm: VCS graphics method
@@ -1643,21 +1792,22 @@ def getcolormap(Cp_name_src='default'):
     no colormap name is given, then colormap 'default' will be used.
 
     .. note::
-        VCS does not allow the modification of `default' attribute sets.
-        However, a `default' attribute set that has been copied under a
+
+        VCS does not allow the modification of 'default' attribute sets.
+        However, a 'default' attribute set that has been copied under a
         different name can be modified. (See the createcolormap function.)
 
     :Example:
 
-    ::
+        .. doctest:: utils_getcolormap
 
-        a=vcs.init()
-        # Show all the existing colormap secondary methods
-        a.show('colormap')
-        # cp instance of 'default' colormap secondary method
-        cp=a.getcolormap()
-        # cp2 instance of existing 'quick' colormap secondary method
-        cp2=a.getcolormap('quick')
+            >>> a=vcs.init()
+            >>> a.show('colormap') # Show all the existing colormap secondary methods
+            *******************Colormap Names List**********************
+            ...
+            *******************End Colormap Names List**********************
+            >>> cp=a.getcolormap() # cp instance of 'default' colormap secondary method
+            >>> cp2=a.getcolormap('rainbow') # cp2 instance of existing 'rainbow' colormap secondary method
 
 
     :param Cp_name_src: String name of an existing colormap VCS object
@@ -1674,6 +1824,29 @@ def getcolormap(Cp_name_src='default'):
 
 
 def getcolorcell(cell, obj=None):
+    """
+    Gets the colorcell of the provided object's colormap at the specified cell index.
+    If no object is provided, or if the provided object has no colormap, the default colormap is used.
+
+    :Example:
+
+        .. doctest:: utils_getcolorcell
+
+            >>> a=vcs.init()
+            >>> b=vcs.createboxfill()
+            >>> b.colormap='rainbow'
+            >>> a.getcolorcell(2,b)
+            [85, 85, 85, 100.0]
+
+    :param cell: An integer value indicating the index of the desired colorcell.
+    :type cell: int
+
+    :param obj: Optional parameter containing the object to extract a colormap from.
+    :type obj: Any VCS object capable of containing a colormap
+
+    :return: The RGBA values of the colormap at the specified cell index.
+    :rtype: list
+    """
     if obj is None:
         cmap = vcs.getcolormap()
     elif obj.colormap is None:
@@ -1689,23 +1862,24 @@ def setcolorcell(obj, num, r, g, b, a=100):
     the active colormap, then return an error string.
 
     .. note::
+
         If the the visual display is 16-bit, 24-bit, or 32-bit TrueColor,
         then a redrawing
         of the VCS Canvas is made every time the color cell is changed.
 
     :Example:
 
-    ::
+        .. doctest:: utils_setcolorcell
 
-        vcs.setcolorcell("AMIP",11,0,0,0)
-        vcs.setcolorcell("AMIP",21,100,0,0)
-        vcs.setcolorcell("AMIP",31,0,100,0)
-        vcs.setcolorcell("AMIP",41,0,0,100)
-        vcs.setcolorcell("AMIP",51,100,100,100)
-        vcs.setcolorcell("AMIP",61,70,70,70)
+            >>> vcs.setcolorcell("AMIP",11,0,0,0)
+            >>> vcs.setcolorcell("AMIP",21,100,0,0)
+            >>> vcs.setcolorcell("AMIP",31,0,100,0)
+            >>> vcs.setcolorcell("AMIP",41,0,0,100)
+            >>> vcs.setcolorcell("AMIP",51,100,100,100)
+            >>> vcs.setcolorcell("AMIP",61,70,70,70)
 
-    :param obj: ???
-    :type obj: ???
+    :param obj: String name of a colormap, or a VCS object
+    :type obj: str or VCS object
 
     :param num: Integer specifying which color cell to change. Must be from 0-239.
     :type num: int
@@ -1721,9 +1895,6 @@ def setcolorcell(obj, num, r, g, b, a=100):
 
     :param a: Integer specifying the opacity value for the colorcell. Must be from 0-100.
     :type a: int
-
-    :return: ???
-    :rtype: ???
     """
 
     if isinstance(obj, str):
@@ -1742,13 +1913,12 @@ def match_color(color, colormap=None):
 
     :Example:
 
-    ::
+        .. doctest:: utils_match_color
 
-        a=vcs.init()
-        print vcs.match_color('salmon')
-        print vcs.match_color('red')
-        # closest color from blue
-        print vcs.match_color([0,0,100],'default')
+            >>> a=vcs.init()
+            >>> print vcs.match_color('salmon')
+            >>> print vcs.match_color('red')
+            >>> print vcs.match_color([0,0,100],'default') # closest color from blue
 
     :param color: Either a string name, or a rgb value between 0 and 100.
     :type color: str, int
@@ -1758,7 +1928,7 @@ def match_color(color, colormap=None):
 
     :returns: Integer value representing a matching rgb color
     :rtype: int
-"""
+    """
     # First gets the rgb values
     if isinstance(color, basestring):
         vals = genutil.colors.str2rgb(color)
@@ -1850,7 +2020,7 @@ def creategraphicsmethod(gtype, gname='default', name=None):
 # datawc_ can be a float or a cdtime.reltime
 # TODO: Investigate why datawc is converted to a cdtime.reltime
 def getDataWcValue(v):
-    if (type(v) is type(cdtime.reltime(0, 'months since 1900'))):  # noqa
+    if (isinstance(v, type(cdtime.reltime(0, 'months since 1900')))):  # noqa
         return v.value
     else:
         return v
@@ -1861,15 +2031,14 @@ def getworldcoordinates(gm, X, Y):
     Given a graphics method and two axes
     figures out correct world coordinates.
 
-
     :param gm: A VCS graphics method object to get worldcoordinates for.
     :type gm: graphics method object
 
-    :param X: A cdms transient axs
-    :type X: cdms transient axis
+    :param X: A cdms2 transient axs
+    :type X: cdms2 transient axis
 
-    :param Y: A cdms transient axs
-    :type Y: cdms transient axis
+    :param Y: A cdms2 transient axs
+    :type Y: cdms2 transient axis
 
     :returns:
     :rtype:
@@ -1964,12 +2133,12 @@ def rgba_color(color, colormap):
 
     :Example:
 
-    ::
+        .. doctest:: utils_rbga_color
 
-        # Get a copy of the default colormap
-        cp = vcs.getcolormap()
-        # Find the rgba equivalent for black
-        blk = vcs.rgba_color('black', cp)
+            >>> cp = vcs.getcolormap() # Get a copy of the default colormap
+            >>> vcs.rgba_color('black', cp) # Find the rgba equivalent for black
+            [0.0, 0.0, 0.0, 100]
+
 
     :param color: The color to get the rgba value for. Can be an integer from 0-255, or a string name of a color.
     :type color: int, str
@@ -2025,7 +2194,12 @@ def download_sample_data_files(path=None):
     import hashlib
     if path is None:
         path = vcs.sample_data
-    samples = open(os.path.join(vcs.prefix, "share", "vcs", "sample_files.txt")).readlines()
+    samples = open(
+        os.path.join(
+            vcs.prefix,
+            "share",
+            "vcs",
+            "sample_files.txt")).readlines()
     for sample in samples:
         good_md5, name = sample.split()
         local_filename = os.path.join(path, name)
@@ -2043,7 +2217,10 @@ def download_sample_data_files(path=None):
                     attempts = 5
                     continue
             print "Downloading:", name, "in", local_filename
-            r = requests.get("http://uvcdat.llnl.gov/cdat/sample_data/" + name, stream=True)
+            r = requests.get(
+                "http://uvcdat.llnl.gov/cdat/sample_data/" +
+                name,
+                stream=True)
             with open(local_filename, 'wb') as f:
                 for chunk in r.iter_content(chunk_size=1024):
                     if chunk:  # filter local_filename keep-alive new chunks
@@ -2054,3 +2231,162 @@ def download_sample_data_files(path=None):
                 attempts = 5
             else:
                 attempts += 1
+
+
+def drawLinesAndMarkersLegend(canvas, templateLegend,
+                              linecolors, linetypes, linewidths,
+                              markercolors, markertypes, markersizes,
+                              strings, scratched=None, bg=False, render=True):
+    """
+    Draws a legend with line/marker/text inside a template legend box
+    Auto adjust text size to make it fit inside the box
+    Auto arrange the elements to fill the box nicely
+
+    :Example:
+
+        .. doctest:: utils_drawLinesAndMarkersLegend
+
+            >>> import vcs
+            >>> x = vcs.init()
+            >>> t = vcs.createtemplate()
+            >>> vcs.utils.drawLinesAndMarkersLegend(x,t.legend,
+            ...     ["red","blue","green"], ["solid","dash","dot"],[1,4,8],
+            ...     ["blue","green","red"], ["cross","square","dot"],[3,4,5],
+            ...     ["sample A","type B","thing C"], None, True, True)
+            >>> x.png("sample")
+
+    :param canvas: a VCS canvas object onto which to draw the legend
+    :type canvas: vcs.Canvas.Canvas
+
+    :param templateLegend: a template legend object used to determine the coordinates of the box and the box line type
+    :type legendTemplate: vcs.Plegend.Pls
+
+    :param linecolors: list containing the colors of each line to draw
+    :type linecolors: list of either colorInt, (r,g,b,opacity), or string color names
+
+    :param linetypes: list containing the type of each line to draw
+    :type linetypes: list on int of line stype strings
+
+    :param linewidths: list containing each line width
+    :type linewidths: list of float
+
+    :param markercolors: list of the markers colors to draw
+    :type markercolors: list of either colorInt, (r,g,b,opacity), or string color names
+
+    :param markertypes: list of the marker types to draw
+    :type markertypes: list of int or  string of marker names
+
+    :param markersizes: list of the size of each marker to draw
+    :type markersizes: list of float
+
+    :param strings: list of the string to draw next to each line/marker
+    :type strings: list of string
+
+    :param scratched: None (off) or list. list contains False where no scratch is needed
+                      For scratched provide True or line type to use for scratch
+                      color will match that of text
+    :type scratched: None or list of bool
+
+    :param bg: do we draw in background or foreground
+    :type bg: bool
+
+    :param render: do we render or not (so it less flashy)
+    :type render: bool
+    """
+
+    nlines = len(linecolors)
+    # Now figures out the widest string and tallest
+    text = vcs.createtext(To_source=templateLegend.textorientation,
+                          Tt_source=templateLegend.texttable)
+    text.x = .5
+    text.y = .5
+    maxx = 0  # Max number of elts on X direction
+    maxy = 0  # Max number of elts on Y direction
+    dx = abs(templateLegend.x2 - templateLegend.x1)
+    dy = abs(templateLegend.y2 - templateLegend.y1)
+
+    # Loop until we can fit all elts into the box
+    while maxx * maxy < nlines:
+        maxwidth = 0
+        maxheight = 0
+        for i in range(nlines):
+            text.string = strings[i]
+            ext = canvas.gettextextent(text)[0]
+            maxwidth = max(maxwidth, ext[1] - ext[0])
+            maxheight = max(maxheight, ext[3] - ext[2])
+        leg_lines = maxwidth / 3.
+        leg_spc = leg_lines / 3.
+        maxwidth = maxwidth + leg_lines + leg_spc
+        maxx = int(dx / maxwidth)
+        maxy = int(dy / maxheight)
+        if maxx * maxy < nlines:
+            # Does not fit less shrink the text a bit
+            text.height -= 1
+        if text.height == 0:
+            # Oh well it cannot fit...
+            # We settle for the smallest size
+            text.height = 1
+            break
+
+    nH = min(maxx, len(strings))  # How many elts on horizontal direction
+    nV = numpy.ceil(nlines / float(nH))  # How many elts vertically
+    spcX = (dx - maxwidth * nH) / (nH + 1)
+    spcY = (dy - maxheight * nV) / (nV + 1)
+    txs = []
+    tys = []
+    ts = []
+    x1 = min(templateLegend.x1, templateLegend.x2)
+    y1 = max(templateLegend.y1, templateLegend.y2)
+    # Box around legend area
+    ln = canvas.createline(source=templateLegend.line)
+    ln.x = [templateLegend.x1, templateLegend.x2, templateLegend.x2, templateLegend.x1, templateLegend.x1]
+    ln.y = [templateLegend.y1, templateLegend.y1, templateLegend.y2, templateLegend.y2, templateLegend.y1]
+    canvas.plot(ln, bg=bg, render=render)
+
+    # Create the objects
+    for i in range(len(strings)):
+        col = int(i % nH)
+        row = int(i / nH)
+        # TODO check if previous line was identical
+        # so that we create less objet/renderers
+        ln = canvas.createline()
+        ln.color = [linecolors[i], ]
+        ln.type = linetypes[i]
+        ln.width = linewidths[i]
+        ln.priority = templateLegend.priority
+        # TODO check if previous marker was identical
+        # so that we create less objet/renderers
+        mrk = canvas.createmarker()
+        mrk.color = [markercolors[i]]
+        mrk.type = markertypes[i]
+        mrk.size = markersizes[i]
+        mrk.priority = templateLegend.priority
+        xs = x1 + spcX + col * (maxwidth + spcX)
+        ln.x = [xs, xs + leg_lines]
+        mrk.x = [xs + leg_lines / 2.]
+        txs.append(xs + leg_lines + leg_spc)
+        ts.append(strings[i])
+        ys = y1 - row * (maxheight + spcY) - spcY - maxheight / 2.
+        ln.y = [ys, ys]
+        mrk.y = [ys]
+        tys.append(ys)
+        if scratched is not None and scratched[i] is not False:
+            scratch = canvas.createline(source=ln.name)
+            scratch.width = scratch.width[0]*2.
+            scratch.color = [text.color]
+            scratch.type = scratched[i]
+            text.string = strings[i]
+            ext = canvas.gettextextent(text)[0]
+            scratch.x = [txs[-1], txs[-1] + ext[1] - ext[0]]
+            scratch.priority = text.priority + 1
+            if scratch.priority != 1:
+                canvas.plot(scratch, bg=bg, render=render)
+        canvas.plot(ln, bg=bg, render=render)
+        canvas.plot(mrk, bg=bg, render=render)
+    text.halign = "left"
+    text.valign = "half"
+    text.string = ts
+    text.x = txs
+    text.y = tys
+    text.priority = templateLegend.priority
+    canvas.plot(text, bg=bg, render=render)

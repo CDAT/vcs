@@ -63,6 +63,7 @@ import install_vcs  # noqa
 import os  # noqa
 from manageElements import *  # noqa
 import collections  # noqa
+import testing  # noqa
 
 _colorMap = "viridis"
 
@@ -252,7 +253,7 @@ canvaslist = []
 
 def init(mode=1, pause_time=0, call_from_gui=0, size=None,
          backend="vtk", geometry=None, bg=None):
-    '''
+    """
     Initialize and construct a VCS Canvas object.
 
     :Example:
@@ -277,17 +278,17 @@ def init(mode=1, pause_time=0, call_from_gui=0, size=None,
 
         bg_canvas = vcs.init(bg=True)
 
-:param size: Aspect ratio for canvas (width / height)
-:param backend: Which VCS backend to use
-:param geometry: Size (in pixels) you want the canvas to be.
-:param bg: Initialize a canvas to render in "background" mode (without displaying a window)
-:type size: float or case-insensitive str
-:type backend: str, `vtk.vtkRenderWindow`
-:type geometry: dict or tuple
-:type bg: bool
-:return: an initialized canvas
-:rtype: vcs.Canvas.Canvas
-'''
+    :param size: Aspect ratio for canvas (width / height)
+    :param backend: Which VCS backend to use
+    :param geometry: Size (in pixels) you want the canvas to be.
+    :param bg: Initialize a canvas to render in "background" mode (without displaying a window)
+    :type size: float or case-insensitive str
+    :type backend: str, `vtk.vtkRenderWindow`
+    :type geometry: dict or tuple
+    :type bg: bool
+    :return: an initialized canvas
+    :rtype: vcs.Canvas.Canvas
+    """
     canvas = Canvas.Canvas(
         mode=mode,
         pause_time=pause_time,

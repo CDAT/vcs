@@ -25,7 +25,7 @@
 import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import fillarea_script
+from xmldocs import scriptdocs
 
 
 def getmember(self, name):
@@ -448,9 +448,6 @@ class Tf(object):
     #
     #
     def script(self, script_filename=None, mode=None):
-        """
-        Documentation moved to xmldocs.py
-        """
         if (script_filename is None):
             raise ValueError(
                 'Error - Must provide an output script file name.')
@@ -524,7 +521,7 @@ class Tf(object):
             f = open(script_filename, mode)
             vcs.utils.dumpToJson(self, f)
             f.close()
-    script.__doc__ = fillarea_script
+    script.__doc__ = scriptdocs['fillarea']
 
 
 #

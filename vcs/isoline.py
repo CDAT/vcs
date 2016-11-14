@@ -1,6 +1,6 @@
-#
+"""
 # Isoline (Gi) module
-#
+"""
 ##########################################################################
 #                                                                               #
 # Module:       isoline (Gi) module                                             #
@@ -1008,7 +1008,7 @@ class Gi(object):
     def xyscale(self, xat='', yat=''):
         self.xaxisconvert = xat
         self.yaxisconvert = yat
-    xyscale.__doc__ = xmldocs.xyscaledoc
+    xyscale.__doc__ = xmldocs.xyscaledoc % (('isoline',) * 2)
 
     def list(self):
         if (self.name == '__removed_from_VCS__'):
@@ -1187,7 +1187,7 @@ class Gi(object):
             f = open(script_filename, mode)
             vcs.utils.dumpToJson(self, f)
             f.close()
-    script.__doc__ = xmldocs.isoline_script
+    script.__doc__ = xmldocs.scriptdocs['isoline']
 
 ##########################################################################
 #        END OF FILE								#
