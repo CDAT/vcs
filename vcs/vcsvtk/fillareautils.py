@@ -65,40 +65,31 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
 
     # Create the pattern
     create_pattern(patternPolyData, xres, yres,
-                   fillareastyle, fillareaindex,
-                   fillareacolors, fillareaopacity)
+                   fillareastyle, fillareaindex)
 
-    # Now that the polydata has been created,
-    # clip it using the input contour
-    implicitFn = vtk.vtkImplicitDataSet()
-    implicitFn.SetDataSet(inputContours)
-    # Handle special cases where the input contours contain no point scalars
-    # This happens in cases such as legend, boxfill plots, etc.
-    if not inputContours.GetPointData().GetScalars():
-        ctp = vtk.vtkCellDataToPointData()
-        ctp.SetInputData(inputContours)
-        ctp.Update()
-        implicitFn.SetDataSet(ctp.GetOutput())
-    implicitFn.SetOutValue(-1e3)
-    clipFilter = vtk.vtkClipPolyData()
-    clipFilter.SetInputData(patternPolyData)
-    clipFilter.SetClipFunction(implicitFn)
+    # Create pipeline to create a clipped polydata from the pattern plane.
+    cutter = vtk.vtkCookieCutter()
+    cutter.SetInputData(patternPolyData)
+    cutter.SetLoopsData(inputContours)
+    cutter.Update()
+
+    # Now map the colors as cell scalars.
+    # We are doing this here because the vtkCookieCutter does not preserve
+    # cell scalars
+    map_colors(cutter.GetOutput(), fillareastyle,
+               fillareacolors, fillareaopacity)
 
     mapper = vtk.vtkPolyDataMapper()
-    mapper.SetInputConnection(clipFilter.GetOutputPort())
+    mapper.SetInputConnection(cutter.GetOutputPort())
     actor = vtk.vtkActor()
     actor.SetMapper(mapper)
     return actor
 
 
-def create_pattern(patternPolyData, xres, yres,
-                   fillareastyle=None, fillareaindex=None,
-                   fillareacolors=None, fillareaopacity=None):
+def map_colors(clippedPolyData, fillareastyle=None,
+               fillareacolors=None, fillareaopacity=None):
     if fillareastyle == 'solid':
-        return None
-
-    if fillareaindex is None:
-        fillareaindex = 1
+        return
 
     if fillareacolors is None:
         fillareacolors = [0, 0, 0]
@@ -106,8 +97,28 @@ def create_pattern(patternPolyData, xres, yres,
     if fillareaopacity is None:
         fillareaopacity = 100
 
+    color = [0, 0, 0]
+    if fillareastyle == "hatch":
+        color = [int(c / 100. * 255) for c in fillareacolors[:3]]
+    opacity = int(fillareaopacity / 100. * 255)
+    color.append(opacity)
+    colors = vtk.vtkUnsignedCharArray()
+    colors.SetNumberOfComponents(4)
+    colors.SetName("Colors")
+    clippedPolyData.GetCellData().SetScalars(colors)
+    for i in range(clippedPolyData.GetNumberOfCells()):
+        colors.InsertNextTypedTuple(color)
+
+
+def create_pattern(patternPolyData, xres, yres,
+                   fillareastyle=None, fillareaindex=None):
+    if fillareastyle == 'solid':
+        return None
+
+    if fillareaindex is None:
+        fillareaindex = 1
+
     # Create a pattern source image of the given size
     pattern = pattern_list[fillareaindex](patternPolyData, xres, yres,
-                                          fillareacolors, fillareastyle,
-                                          fillareaopacity)
+                                          fillareastyle)
     return pattern.render()

@@ -2,12 +2,10 @@ import vtk
 
 
 class Pattern(object):
-    def __init__(self, patternPolyData, xres, yres, colors, style, opacity):
+    def __init__(self, patternPolyData, xres, yres, style):
         self.patternPolyData = patternPolyData
         self.size = [xres, yres]
         self.style = style
-        self.colors = colors
-        self.opacity = opacity
         self.glyph = None
 
     def render(self):
@@ -38,35 +36,10 @@ class Pattern(object):
         self.glyph2D.Update()
         self.patternPolyData.DeepCopy(self.glyph2D.GetOutput())
 
-        self.map_colors()
-
     def paint(self):
         raise NotImplementedError(
             "paint() not implemented for %s" % str(
                 type(self)))
-
-    def color_tuple(self):
-        """
-        Returns a 4 component color tuple (RGBA)
-        """
-        if self.style != "hatch":
-            color = [0, 0, 0]
-        else:
-            color = [int(c / 100. * 255) for c in self.colors[:3]]
-        if self.style in ["hatch", "pattern"]:
-            opacity = int(self.opacity / 100. * 255)
-        else:
-            opacity = 255
-        color.append(opacity)
-        return color
-
-    def map_colors(self):
-        colors = vtk.vtkUnsignedCharArray()
-        colors.SetNumberOfComponents(4)
-        colors.SetName("Colors")
-        self.patternPolyData.GetCellData().SetScalars(colors)
-        for i in range(self.patternPolyData.GetNumberOfCells()):
-            colors.InsertNextTypedTuple(self.color_tuple())
 
 
 class Triangle(Pattern):
