@@ -2252,7 +2252,7 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
             >>> vcs.utils.drawLinesAndMarkersLegend(x,t.legend,
             ...     ["red","blue","green"], ["solid","dash","dot"],[1,4,8],
             ...     ["blue","green","red"], ["cross","square","dot"],[3,4,5],
-            ...     ["sample A","type B","thing C"], None, True, True)
+            ...     ["sample A","type B","thing C"], bg=True)
             >>> x.png("sample")
 
     :param canvas: a VCS canvas object onto which to draw the legend

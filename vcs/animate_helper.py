@@ -28,15 +28,6 @@ class animate_obj_old(object):
     See the `animation GUI documentation`_
 
     .. _animation GUI documentation: http://www-pcmdi.llnl.gov/software/vcs
-
-    :Example:
-
-        .. doctest:: animate_helper_obj_old
-
-                >>> a=vcs.init()
-                >>> a.plot(array,'default','isofill','quick')
-                >>> a.animate()
-
     """
 
     ##########################################################################

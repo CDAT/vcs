@@ -4103,9 +4103,10 @@ class Canvas(object):
 
     def get_selected_display(self):
         """
-        .. deprecated:: 2.0
+        :Not Implemented Yet:
 
-            This function is no longer supported.
+            This function does not currently work.
+            It will be implemented in the future.
         """
         return self.canvas.get_selected_display(*())
 
@@ -4243,14 +4244,6 @@ class Canvas(object):
         than the graphics method. This will also be used for animating plots over the
         third and fourth dimensions.
 
-
-        :Example:
-
-            .. doctest:: canvas_grid
-
-                >>> a=vcs.init()
-                >>> a.grid(12,12,0,71,0,45)
-
         .. admonition:: Not Yet Implemented
 
             :py:func`vcs.Canvas.grid`_ does not work.
@@ -4367,7 +4360,10 @@ class Canvas(object):
 
     def updateorientation(self, *args):
         """
-        .. deprecated:: 2.0
+        :Not Implemented Yet:
+
+            This function does not currently work.
+            It will be implemented in the future.
 
             Use :func:`landscape` or :func:`portrait` instead.
         """
@@ -5469,9 +5465,10 @@ class Canvas(object):
 
     def getplot(self, Dp_name_src='default', template=None):
         """
-        .. deprecated:: 2.0
+        :Not Implemented Yet:
 
-            The getplot function is deprecated. Do not use it.
+            This function does not currently work.
+            It will be implemented in the future.
 
         This function will create a display plot object from an existing display
         plot object from an existing VCS plot. If no display plot name

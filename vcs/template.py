@@ -1,6 +1,7 @@
-# Adapted for numpy/ma/cdms2 by convertcdms.py
 """
+# Adapted for numpy/ma/cdms2 by convertcdms.py
 # Template (P) module
+
 """
 ###############################################################################
 #                                                                             #
@@ -1250,6 +1251,7 @@ class P(object):
         sub-attribute with the specified name.
 
         .. note::
+
             Respect how far from original position you are
             i.e. you move to x1,x2 from old_x1, old_x2
             if your current x1 value is not == to old_x1_value,
@@ -1257,10 +1259,10 @@ class P(object):
 
         Example:
 
-            Create template 'example1' which inherits from 'default' template
-            t = vcs.createtemplate('example1', 'default')
-            Set x1 value to 0.15 and x2 value to 0.5
-            t.reset('x',0.15,0.5,t.data.x1,t.data.x2)
+            .. doctest:: template_reset
+
+                >>> t = vcs.createtemplate('example1', 'default') # template 'example1' inherits from 'default'
+                >>> t.reset('x',0.15,0.5,t.data.x1,t.data.x2) # Set x1 value to 0.15 and x2 value to 0.5
 
         :param sub_name: String indicating the name of the sub-attribute to be reset.
                          For example, sub-name='x' would cause the x1 ans x2 attributes to be set.
