@@ -5054,9 +5054,6 @@ class Canvas(object):
         :param mode: The mode in which to open the file. One of 'r' or 'a'.
         :type mode: str
 
-        :param orientation: Deprecated.
-        :type orientation: None
-
         :param width: Desired width of the postscript output, in the specified unit of measurement
         :type width: int
 
@@ -5324,9 +5321,6 @@ class Canvas(object):
 
         :param mode: The mode in which to open the file. One of 'r' or 'a'.
         :type mode: str
-
-        :param orientation: Deprecated.
-        :type orientation: None
 
         :param width: Width of the output image, in the unit of measurement specified
         :type width: float
