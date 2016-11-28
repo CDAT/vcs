@@ -1147,9 +1147,6 @@ def createtexttable(name=None, source='default', font=None,
     :param font: Which font to use (index or name).
     :type font: int or string
 
-    :param expansion: DEPRECATED
-    :type expansion: DEPRECATED
-
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
     :type color: str or int
@@ -1171,6 +1168,10 @@ def createtexttable(name=None, source='default', font=None,
 
     :returns: A texttable graphics method object
     :rtype: vcs.texttable.Tt
+
+    .. note::
+
+        The expansion parameter is no longer used
     """
 
     name, source = check_name_source(name, source, 'texttable')
@@ -1212,11 +1213,8 @@ def gettexttable(name='default', font=None,
     :param name: String name of an existing VCS texttable object
     :type name: str
 
-    :param font: ???
-    :type font: ???
-
-    :param expansion: ???
-    :type expansion: ???
+    :param font: Which font to use (index or name).
+    :type font: int or str
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
@@ -1239,6 +1237,10 @@ def gettexttable(name='default', font=None,
 
     :returns: A texttable graphics method object
     :rtype: vcs.texttable.Tt
+
+    .. note::
+
+        The expansion parameter is no longer used
     """
 
     # Check to make sure the argument passed in is a STRING
@@ -1317,12 +1319,6 @@ def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_sourc
     :param font: Which font to use (index or name).
     :type font: int or str
 
-    :param spacing: DEPRECATED
-    :type spacing: DEPRECATED
-
-    :param expansion: DEPRECATED
-    :type expansion: DEPRECATED
-
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
     :type color: str or int
@@ -1348,9 +1344,6 @@ def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_sourc
     :param angle: Angle of the text, in degrees
     :type angle: int
 
-    :param path: DEPRECATED
-    :type path: DEPRECATED
-
     :param halign: Horizontal alignment of the text. One of ["left", "center", "right"].
     :type halign: str
 
@@ -1362,6 +1355,10 @@ def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_sourc
 
     :returns: A VCS text object
     :rtype: vcs.textcombined.Tc
+
+    .. note::
+
+        The spacing, path, and expansion parameters are no longer used
     """
     # Check if to is defined
     if To_name is None:
@@ -1427,12 +1424,6 @@ def gettextcombined(Tt_name_src='default', To_name_src=None, string=None, font=N
     :param font: Which font to use (index or name)
     :type font: int or str
 
-    :param spacing: DEPRECATED
-    :type spacing: DEPRECATED
-
-    :param expansion: DEPRECATED
-    :type expansion: DEPRECATED
-
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
     :type color: str or int
@@ -1458,9 +1449,6 @@ def gettextcombined(Tt_name_src='default', To_name_src=None, string=None, font=N
     :param angle: Angle of the rendered text, in degrees
     :type angle: list of int
 
-    :param path: DEPRECATED
-    :type path: DEPRECATED
-
     :param halign: Horizontal alignment of the text. One of ["left", "center", "right"]
     :type halign: str
 
@@ -1469,6 +1457,10 @@ def gettextcombined(Tt_name_src='default', To_name_src=None, string=None, font=N
 
     :returns: A textcombined object
     :rtype: vcs.textcombined.Tc
+
+    .. note::
+
+    The spacing, path, and expansion parameters are no longer used
     """
 
     # Check to make sure the arguments passed in are a STRINGS
@@ -1813,10 +1805,7 @@ def removeobject(obj):
         .. doctest:: manageElements_removeobject
 
             >>> a=vcs.init()
-            >>> line=a.getline('red') # To Modify an existing line object
             >>> iso=a.createisoline('dean') # Create an instance of an isoline object
-            >>> a.removeobject(line) # Removes line object from VCS list
-            'Removed line object red'
             >>> a.removeobject(iso) # Remove isoline object from VCS list
             'Removed isoline object dean'
     :param obj: Any VCS primary or secondary object

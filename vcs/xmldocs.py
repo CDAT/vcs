@@ -634,13 +634,32 @@ create_methods_doc = """
         names must be unique.
 
     :Example:
+    
+        .. testsetup:: manageElements_create
+            
+            elements={}
+            for key in vcs.elements.keys():
+                if type(vcs.elements[key]) == dict:
+                    elements[key]=dict(vcs.elements[key])
+                else:
+                    elements[key] = vcs.elements[key]
 
         .. doctest:: manageElements_create
 
             >>> vcs.show('%(name)s') # show all available %(name)s
             *******************%(cap)s Names List**********************
             ...
-            *******************End %(cap)s Names List**********************%(ex1)s%(ex2)s"""
+            *******************End %(cap)s Names List**********************%(ex1)s%(ex2)s
+            
+        .. testcleanup:: manageElements_create
+            
+            for key in vcs.elements.keys():
+                for el in vcs.elements[key].keys():
+                    try:
+                        elements[key][el]
+                    except:
+                        vcs.removeobject(vcs.elements[key][el])
+                        """
 
 scriptdocs = {}
 docstrings['script'] = [scriptdocs, scriptdoc]

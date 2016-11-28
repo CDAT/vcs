@@ -1,6 +1,10 @@
 """
 Canvas
-    The object onto which all plots are drawn.
+------
+
+    Canvas objects are the 'visualization' component of VCS. Canvases allow the user to take data and plot it on a
+    visible window. This gives users an easy way to preview how changes to data representation in VCS will change the
+    visualization of that data.
 
     Usually created using :py:func:`vcs.init`, this object provides easy access
     to the functionality of the entire VCS module.
@@ -4103,7 +4107,7 @@ class Canvas(object):
 
     def get_selected_display(self):
         """
-        :Not Implemented Yet:
+        .. admonition:: Not Yet Implemented
 
             This function does not currently work.
             It will be implemented in the future.
@@ -4197,7 +4201,7 @@ class Canvas(object):
                 >>> array = [range(1, 11) for _ in range(1, 11)]
                 >>> a.plot(array)
                 <vcs.displayplot.Dp ...>
-                >>> a.pstogif('filename.ps') # convert the postscript file to a gif file (l=landscape)
+                >>> a.pstogif('filename.ps') # convert the postscript file to a gif file
                 >>> a.pstogif('filename.ps','l') # convert the postscript file to a gif file (l=landscape)
                 >>> a.pstogif('filename.ps','p') # convert the postscript file to a gif file (p=portrait)
 
@@ -4360,7 +4364,7 @@ class Canvas(object):
 
     def updateorientation(self, *args):
         """
-        :Not Implemented Yet:
+        .. admonition:: Not Yet Implemented
 
             This function does not currently work.
             It will be implemented in the future.
@@ -5259,6 +5263,11 @@ class Canvas(object):
         file; 'Replace' (r) mode overwrites an existing gif file with new gif output.
         The default mode is to overwrite an existing gif file (i.e. mode (r)).
 
+        .. admonition:: Not Yet Implemented
+
+            This function does not currently work.
+            It will be implemented in the future.
+
         :Example:
 
             .. doctest:: canvas_gif
@@ -5388,10 +5397,10 @@ class Canvas(object):
 
         :Example:
 
-            .. doctest:: canvas_saveinitial
+                .. code-block:: python
 
-                >>> a=vcs.init()
-                >>> a.saveinitialfile()
+                    a=vcs.init()
+                    a.saveinitialfile()
 
         .. warning::
 
@@ -5465,7 +5474,7 @@ class Canvas(object):
 
     def getplot(self, Dp_name_src='default', template=None):
         """
-        :Not Implemented Yet:
+        .. admonition:: Not Yet Implemented
 
             This function does not currently work.
             It will be implemented in the future.
