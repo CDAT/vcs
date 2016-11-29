@@ -1096,7 +1096,7 @@ class Gfb(object):
             fp.write("%s.legend = %s\n" % (unique_name, self.legend))
             fp.write("%s.ext_1 = '%s'\n" % (unique_name, self.ext_1))
             fp.write("%s.ext_2 = '%s'\n" % (unique_name, self.ext_2))
-            fp.write("%s.missing = %g\n" % (unique_name, self.missing))
+            fp.write("%s.missing = %s\n" % (unique_name, repr(self.missing)))
             fp.write(
                 "%s.datawc_calendar = %g\n" %
                 (unique_name, self.datawc_calendar))

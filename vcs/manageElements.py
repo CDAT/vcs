@@ -865,7 +865,6 @@ def createmarker(name=None, source='default', mtype=None,
     """
     %s
 
-
     :param name: Name of created object
     :type name: str
 

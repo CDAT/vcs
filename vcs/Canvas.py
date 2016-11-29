@@ -1294,7 +1294,7 @@ class Canvas(object):
         In addition the mesh array must be of the same shape than data with 2 additional dimension
         representing the vertices coordinates for the Y (0) and X (1) dimension
         Let's say you want to plot a spatial assuming mesh containing 10,000 grid cell, then data must be shape (10000,)
-        or (n1,n2,n3,...,10000) if additional dimensions exist (ex time,level), these dimension would be used only
+        or (n1,n2,n3,...,10000) if additional dimensions exist (ex time,level), these dimensions would be used only
         for animation and will be ignored in the rest of this example.
         The shape of the mesh, assuming 4 vertices per grid cell, must be (1000,2,4), where the array [:,0,:]
         represent the Y coordinates of the vertices (clockwise or counterclockwise) and the array [:,1:]

@@ -92,7 +92,7 @@ for file in files:
     try:
         os.remove(file)
     except:
-        log.append("COULD NOT delete file: " + file + "%s") % '\\n'
+        log.append("COULD NOT delete file: " + file + "\\n")
 for key in vcs.elements.keys():
     for _ in vcs.elements[key].keys():
         if not elts[key].has_key(_) and (key,_) != ('line','red'):

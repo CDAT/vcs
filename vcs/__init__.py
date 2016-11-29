@@ -258,25 +258,18 @@ def init(mode=1, pause_time=0, call_from_gui=0, size=None,
 
     :Example:
 
-    ::
+    .. doctest:: vcs_init
 
-        import vcs
-
-        # Portrait orientation of 1 width per 2 height
-        portrait = vcs.init(size=.5)
-        # also accepts "usletter"
-        letter = vcs.init(size="letter")
-        a4 = vcs.init(size="a4")
-
-        import vtk
-        # Useful for embedding VCS inside another application
-        my_win = vtk.vtkRenderWindow()
-        embedded = vcs.init(backend=my_win)
-
-        dict_init = vcs.init(geometry={"width": 1200, "height": 600})
-        tuple_init = vcs.init(geometry=(1200, 600))
-
-        bg_canvas = vcs.init(bg=True)
+        >>> import vcs
+        >>> portrait = vcs.init(size=.5) # Portrait orientation of 1 width per 2 height
+        >>> letter = vcs.init(size="letter") # also accepts "usletter"
+        >>> a4 = vcs.init(size="a4")
+        >>> import vtk
+        >>> my_win = vtk.vtkRenderWindow() # Useful for embedding VCS inside another application
+        >>> embedded = vcs.init(backend=my_win)
+        >>> dict_init = vcs.init(geometry={"width": 1200, "height": 600})
+        >>> tuple_init = vcs.init(geometry=(1200, 600))
+        >>> bg_canvas = vcs.init(bg=True)
 
     :param size: Aspect ratio for canvas (width / height)
     :param backend: Which VCS backend to use

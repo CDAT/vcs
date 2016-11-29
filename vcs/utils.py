@@ -428,10 +428,25 @@ def show(*args):
 
             >>> a=vcs.init() # Create a VCS Canvas instance, named 'a'
             >>> a.show('boxfill') # List boxfill objects on Canvas 'a'
+            *******************Boxfill Names List**********************
+            ...
+            *******************End Boxfill Names List**********************
             >>> a.show('isofill') # List isofill objects on Canvas 'a'
+            *******************Isofill Names List**********************
+            ...
+            *******************End Isofill Names List**********************
             >>> a.show('line') # List line objects on Canvas 'a'
+            *******************Line Names List**********************
+            ...
+            *******************End Line Names List**********************
             >>> a.show('marker') # List marker objects on Canvas 'a'
-            >>> a.show('text') # List text objects on Canvas 'a'
+            *******************Marker Names List**********************
+            ...
+            *******************End Marker Names List**********************
+            >>> a.show('textcombined') # List text objects on Canvas 'a'
+            *******************Textcombined Names List**********************
+            ...
+            *******************End Textcombined Names List**********************
     """
     if args == ():
         return vcs.listelements()
@@ -1320,16 +1335,16 @@ def getcolors(levs, colors=None, split=1, white="white"):
 
             >>> a=[0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
             >>> vcs.getcolors (a)
-            [16, 41, 66, 90, 115, 140, 165, 189, 214, 239]
+            [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
             >>> vcs.getcolors (a,colors=range(16,200))
             [16, 36, 57, 77, 97, 118, 138, 158, 179, 199]
             >>> vcs.getcolors(a,colors=[16,25,15,56,35,234,12,11,19,32,132,17])
             [16, 25, 15, 35, 234, 12, 11, 32, 132, 17]
             >>> a=[-6.0, -2.0, 2.0, 6.0, 10.0, 14.0, 18.0, 22.0, 26.0]
             >>> vcs.getcolors (a,white=241)
-            [72, 241, 128, 150, 172, 195, 217, 239]
+            [0, 241, 128, 153, 179, 204, 230, 255]
             >>> vcs.getcolors (a,white=241,split=0)
-            [16, 48, 80, 112, 143, 175, 207, 239]
+            [0, 36, 73, 109, 146, 182, 219, 255]
 
     :param levs: levels defining the color ranges
     :type levs: list, tuple
@@ -1466,17 +1481,17 @@ def generate_time_labels(d1, d2, units, calendar=cdtime.DefaultCalendar):
 
     :Example:
 
-        .. doctest:: generate_time_labels
+        .. doctest:: utils_generate_time_labels
 
             # Two ways to generate a dictionary of time labels
-            >>> lbls = generate_time_labels(cdtime.reltime(0,'months since 2000'),
+            >>> import cdtime
+            >>> lbls = vcs.generate_time_labels(cdtime.reltime(0,'months since 2000'),
             ...     cdtime.reltime(12,'months since 2000'),
-            ...     'days since 1800',) # for the year 2000 in units of 'days since 1800'
-            >>> lbls = generate_time_labels(cdtime.reltime(0,'months since 2000'),
+            ...     'days since 1800') # for the year 2000 in units of 'days since 1800'
+            >>> lbls = vcs.generate_time_labels(cdtime.reltime(0,'months since 2000'),
             ...     cdtime.comptime(2001),
-            ...     'days since 1800',) # for the year 2000 in units of 'days since 1800'
-            >>> lbls = generate_time_labels(0, 12, 'months since 2000', ) # Generate a dictionary of time labels
-                                                                        # for year 2000, units of 'months since 2000'
+            ...     'days since 1800') # for the year 2000 in units of 'days since 1800'
+            >>> lbls = vcs.generate_time_labels(0, 12, 'months since 2000') # time labels for year 2000
 
 
     :param d1: The beginning of the time interval to be labelled. Expects a cdtime object.

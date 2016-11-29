@@ -272,7 +272,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             elif obj_name in ['1d', 'scatter', 'textcombined', 'xyvsy']:
                 if obj_name == 'textcombined':
                     dict['tc'] = """
-            >>> a.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
+            >>> vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
             <vcs.textcombined.Tc ...>"""
                     dict['sp_parent'] = "'EXAMPLE_tt', 'EXAMPLE_tto'"
                 elif obj_name == '1d':
