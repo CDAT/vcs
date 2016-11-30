@@ -853,7 +853,7 @@ class Gfi(object):
                 "%s.yaxisconvert = '%s'\n" %
                 (unique_name, self.yaxisconvert))
             # Unique attribute for isofill
-            fp.write("%s.missing = %g\n" % (unique_name, self.missing))
+            fp.write("%s.missing = %s\n" % (unique_name, repr(self.missing)))
             fp.write("%s.ext_1 = '%s'\n" % (unique_name, self.ext_1))
             fp.write("%s.ext_2 = '%s'\n" % (unique_name, self.ext_2))
             fp.write(

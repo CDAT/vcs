@@ -500,7 +500,7 @@ class Tc(object):
             fp.write("%s.font = %g\n" % (unique_name, self.font))
             fp.write("%s.spacing = %g\n" % (unique_name, self.spacing))
             fp.write("%s.expansion = %g\n" % (unique_name, self.expansion))
-            fp.write("%s.color = %g\n\n" % (unique_name, self.color))
+            fp.write("%s.color = %s\n\n" % (unique_name, repr(self.color)))
             fp.write(
                 "%s.fillincolor = %g\n\n" %
                 (unique_name, self.fillincolor))

@@ -555,8 +555,8 @@ class Tt(object):
             fp.write("%s.font = %g\n" % (unique_name, self.font))
             fp.write("%s.spacing = %g\n" % (unique_name, self.spacing))
             fp.write("%s.expansion = %g\n" % (unique_name, self.expansion))
-            fp.write("%s.color = %g\n\n" % (unique_name, self.color))
-            fp.write("%s.backgroundcolor = %g\n\n" % (unique_name, self.backgroundcolor))
+            fp.write("%s.color = %s\n\n" % (unique_name, repr(self.color)))
+            fp.write("%s.backgroundcolor = %s\n\n" % (unique_name, repr(self.backgroundcolor)))
             fp.write("%s.backgroundopacity = %g\n\n" % (unique_name, self.backgroundopacity))
             fp.write(
                 "%s.fillincolor = %g\n\n" %

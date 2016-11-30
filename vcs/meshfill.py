@@ -897,7 +897,7 @@ class Gfm(object):
             fp.write("%s.legend = '%s'\n" % (unique_name, self.legend))
             fp.write("%s.mesh = '%s'\n" % (unique_name, self.mesh))
             fp.write("%s.wrap = '%s'\n" % (unique_name, self.wrap))
-            fp.write("%s.missing = %g\n\n" % (unique_name, self.missing))
+            fp.write("%s.missing = %s\n\n" % (unique_name, repr(self.missing)))
             fp.write(
                 "%s.colormap = '%s'\n\n" %
                 (unique_name, repr(
