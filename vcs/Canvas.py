@@ -2246,44 +2246,47 @@ class Canvas(object):
                          worldcoordinate=[0.0, 1.0, 0.0, 1.0],
                          x=None, y=None, bg=0):
         """
-        Generate and draw a textcombined object on the VCS Canvas.
+        Draw a textcombined object on the VCS Canvas.
 
         :Example:
 
             .. doctest:: canvas_drawtextcombined
 
                 >>> a=vcs.init()
-                >>> a.show('texttable')  # Show all the existing texttable objects
+                >>> a.show('texttable') # Show all the existing texttable objects
                 *******************Texttable Names List**********************
                 ...
                 *******************End Texttable Names List**********************
-                >>> tc=a.drawtextcombined(Tt_name = 'std_example', To_name='7left_example',
+                >>> vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+                >>> tc=a.drawtextcombined(Tt_name = 'EXAMPLE_tt', To_name='EXAMPLE_tto',
                 ...                   string='Hello example!', spacing=5,
                 ...                   color=242, priority=1, viewport=[0, 1.0, 0, 1.0],
                 ...                   worldcoordinate=[0,100, 0,50],
                 ...                   x=[0,20,40,60,80,100],
-                ...                   y=[0,10,20,30,40,50]) # Create instance of texttable object 'red'
-                >>> a.textcombined(tc) # Plot using specified texttable object
+                ...                   y=[0,10,20,30,40,50]) # plot textcombined object on canvas
 
-        :param name: Name of created object
-        :type name: str
+        :param Tt_name: String name of a texttable object
+        :type Tt_name: str
+
+        :param To_name: String name of a textorientation object
+        :type To_name: str
 
         :param style: One of "hatch", "solid", or "pattern".
         :type style: str
 
         :param index: Specifies which `pattern <http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png>`_
-                      to fill the fillarea with. Accepts ints from 1-20.
+            to fill the fillarea with. Accepts ints from 1-20.
         :type index: int
 
         :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-                      or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+            or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
         :type color: str or int
 
         :param priority: The layer on which the fillarea will be drawn.
         :type priority: int
 
         :param viewport: 4 floats between 0 and 1.
-                        These specify the area that the X/Y values are mapped to inside of the canvas
+            These specify the area that the X/Y values are mapped to inside of the canvas
         :type viewport: list of floats
 
         :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
@@ -2296,7 +2299,7 @@ class Canvas(object):
         :type y: list of floats
 
         :param bg: Boolean value. True => object drawn in background (not shown on canvas).
-                                    False => object shown on canvas.
+            False => object shown on canvas.
         :type bg: bool
 
         :returns: A texttable object
@@ -2376,6 +2379,7 @@ class Canvas(object):
         .. describe:: Plot attribute keywords:
 
             .. note::
+
                 More specific attributes take precedence over general attributes. In particular,
                 specific attributes override variable object attributes, dimension attributes and
                 arrays override axis objects, which override grid objects, which override variable
@@ -4498,18 +4502,15 @@ class Canvas(object):
                 >>> v = f('v') # use the data file to create a cdms2 slab
                 >>> u = f('u') # use the data file to create a cdms2 slab
                 >>> png_files = [] # for saving file names to make the mpeg
-                >>> plots = [] # for saving plots for later reference
                 >>> for i in range(10): # create a number of pngs to use for an mpeg
                 ...     a.clear()
                 ...     if (i%2):
-                ...         plots.append(a.plot(u,v))
+                ...         a.plot(u,v)
                 ...     else:
-                ...         plots.append(a.plot(v,u))
+                ...         a.plot(v,u)
                 ...     a.png('my_png__%i' % i)
                 ...     png_files.append('my_png__%i.png' % i)
                 >>> a.ffmpeg('mymovie.mpeg',png_files) # generates from list of files
-                True
-                >>> a.ffmpeg('mymovie.mpeg',files="my_png__[0-9]*\.png") # generate from files with name matching regex
                 True
                 >>> a.ffmpeg('mymovie.mpeg',png_files,bitrate=512) # generates mpeg at 512kbit
                 True
@@ -5267,22 +5268,6 @@ class Canvas(object):
 
             This function does not currently work.
             It will be implemented in the future.
-
-        :Example:
-
-            .. doctest:: canvas_gif
-
-                >>> a=vcs.init()
-                >>> array = [range(1, 11) for _ in range(1, 11)]
-                >>> a.plot(array)
-                <vcs.displayplot.Dp ...>
-                >>> a.gif(filename='example.gif', merge='a', orientation='l', geometry='800x600')
-                >>> a.gif('example') # overwrite existing gif file (default is merge='r')
-                >>> a.gif('example',merge='r') # overwrite existing gif file
-                >>> a.gif('example',merge='a') # merge gif image into existing gif file
-                >>> a.gif('example',orientation='l') # merge gif image into existing gif file with landscape orientation
-                >>> a.gif('example',orientation='p') # merge gif image into existing gif file with portrait orientation
-                >>> a.gif('example',geometry='600x500') # merge gif image into existing gif file and set gif geometry
         """
         if orientation is None:
             orientation = self.orientation()[0]

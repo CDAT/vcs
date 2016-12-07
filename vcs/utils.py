@@ -1199,13 +1199,12 @@ def mklabels(vals, output='dict'):
         .. doctest:: utils_mklabels
 
             >>> a=vcs.mkscale(2,20,zero=2)
-            >>> vcs.mklabels (a)
-            {20.0: '20', 18.0: '18', 16.0: '16', 14.0: '14', 12.0: '12',
-                10.0: '10', 8.0: '8', 6.0: '6', 4.0: '4', 2.0: '2', 0.0: '0'}
+            >>> vcs.mklabels(a)
+            {0.0: '0', 2.0: '2', 4.0: '4', 6.0: '6', 8.0: '8', 10.0: '10', 12.0: '12', 14.0: '14', ...}
             >>> vcs.mklabels ( [5,.005])
-            {0.0050000000000000001: '0.005', 5.0: '5.000'}
+            {0.005: '0.005', 5.0: '5.000'}
             >>> vcs.mklabels ( [.00002,.00005])
-            {2.0000000000000002e-05: '2E-5', 5.0000000000000002e-05: '5E-5'}
+            {2e-05: '2E-5', 5e-05: '5E-5'}
             >>> vcs.mklabels ( [.00002,.00005],output='list')
             ['2E-5', '5E-5']
 
@@ -1851,7 +1850,7 @@ def getcolorcell(cell, obj=None):
             >>> b=vcs.createboxfill()
             >>> b.colormap='rainbow'
             >>> a.getcolorcell(2,b)
-            [85, 85, 85, 100.0]
+            [26, 1, 34, 100]
 
     :param cell: An integer value indicating the index of the desired colorcell.
     :type cell: int
@@ -1931,9 +1930,12 @@ def match_color(color, colormap=None):
         .. doctest:: utils_match_color
 
             >>> a=vcs.init()
-            >>> print vcs.match_color('salmon')
-            >>> print vcs.match_color('red')
+            >>> print vcs.match_color('salmon', 'magma')
+            192
+            >>> print vcs.match_color('red', 'rainbow')
+            242
             >>> print vcs.match_color([0,0,100],'default') # closest color from blue
+            52
 
     :param color: Either a string name, or a rgb value between 0 and 100.
     :type color: str, int
@@ -1955,7 +1957,7 @@ def match_color(color, colormap=None):
 
     # Now gets the colormap to look in
     if colormap is None:
-        colormap = vcs.getcolormapname()
+        colormap = 'default'
     cmap = vcs.getcolormap(colormap)
 
     # Now tries determines the min rms diff

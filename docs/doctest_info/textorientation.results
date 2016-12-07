@@ -1,0 +1,45 @@
+Trying:
+    a=vcs.init() # Make a Canvas object to work with
+Expecting nothing
+ok
+Trying:
+    ex=a.gettextorientation() # Get default textorientation
+Expecting nothing
+ok
+Trying:
+    ex.script('filename.py') # Append to a Python script named 'filename.py'
+Expecting nothing
+ok
+Trying:
+    ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
+Expecting nothing
+ok
+23 items had no tests:
+    vcs.textorientation
+    vcs.textorientation.To
+    vcs.textorientation.To.__init__
+    vcs.textorientation.To._getangle
+    vcs.textorientation.To._gethalign
+    vcs.textorientation.To._getheight
+    vcs.textorientation.To._getname
+    vcs.textorientation.To._getpath
+    vcs.textorientation.To._getvalign
+    vcs.textorientation.To._setangle
+    vcs.textorientation.To._sethalign
+    vcs.textorientation.To._setheight
+    vcs.textorientation.To._setname
+    vcs.textorientation.To._setpath
+    vcs.textorientation.To._setvalign
+    vcs.textorientation.To.angle
+    vcs.textorientation.To.halign
+    vcs.textorientation.To.height
+    vcs.textorientation.To.list
+    vcs.textorientation.To.name
+    vcs.textorientation.To.path
+    vcs.textorientation.To.valign
+    vcs.textorientation.process_src
+1 items passed all tests:
+   4 tests in vcs.textorientation.To.script
+4 tests in 24 items.
+4 passed and 0 failed.
+Test passed.

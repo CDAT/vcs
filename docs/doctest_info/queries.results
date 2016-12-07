@@ -1,0 +1,608 @@
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.graphicsmethodlist() # Return graphics method list
+Expecting:
+    [...]
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    box=a.getboxfill() # Get default boxfill graphics method
+Expecting nothing
+ok
+Trying:
+    iso=a.getisofill() # Get default isofill graphics method
+Expecting nothing
+ok
+Trying:
+    ln=a.getline() # Get default line element
+Expecting nothing
+ok
+Trying:
+    vcs.graphicsmethodtype(box)
+Expecting:
+    'boxfill'
+ok
+Trying:
+    vcs.graphicsmethodtype(iso)
+Expecting:
+    'isofill'
+ok
+Trying:
+    vcs.graphicsmethodtype(ln)
+Expecting:
+    Traceback (most recent call last):
+    ...
+    vcsError: The object passed is not a graphics method object.
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('1d') # Show all available 1d
+Expecting:
+    *******************1d Names List**********************
+    ...
+    *******************End 1d Names List**********************
+ok
+Trying:
+    ex = a.get1d('default') # To  test an existing 1d object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.is1d(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('3d_dual_scalar') # Show all available 3d_dual_scalar
+Expecting:
+    *******************3d_dual_scalar Names List**********************
+    ...
+    *******************End 3d_dual_scalar Names List**********************
+ok
+Trying:
+    ex = a.get3d_dual_scalar() # To  test an existing 3d_dual_scalar object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.is3d_dual_scalar(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('3d_scalar') # Show all available 3d_scalar
+Expecting:
+    *******************3d_scalar Names List**********************
+    ...
+    *******************End 3d_scalar Names List**********************
+ok
+Trying:
+    ex = a.get3d_scalar() # To  test an existing 3d_scalar object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.is3d_scalar(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('3d_vector') # Show all available 3d_vector
+Expecting:
+    *******************3d_vector Names List**********************
+    ...
+    *******************End 3d_vector Names List**********************
+ok
+Trying:
+    ex = a.get3d_vector() # To  test an existing 3d_vector object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.is3d_vector(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('boxfill') # Show all available boxfill
+Expecting:
+    *******************Boxfill Names List**********************
+    ...
+    *******************End Boxfill Names List**********************
+ok
+Trying:
+    ex = a.getboxfill() # To  test an existing boxfill object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.isboxfill(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('colormap') # Show all available colormap
+Expecting:
+    *******************Colormap Names List**********************
+    ...
+    *******************End Colormap Names List**********************
+ok
+Trying:
+    ex = a.getcolormap() # To  test an existing colormap object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.iscolormap(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('fillarea') # Show all available fillarea
+Expecting:
+    *******************Fillarea Names List**********************
+    ...
+    *******************End Fillarea Names List**********************
+ok
+Trying:
+    ex = a.getfillarea() # To  test an existing fillarea object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.isfillarea(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    box=a.getboxfill() # get default boxfill object
+Expecting nothing
+ok
+Trying:
+    vcs.isgraphicsmethod(box)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('isofill') # Show all available isofill
+Expecting:
+    *******************Isofill Names List**********************
+    ...
+    *******************End Isofill Names List**********************
+ok
+Trying:
+    ex = a.getisofill() # To  test an existing isofill object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.isisofill(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('isoline') # Show all available isoline
+Expecting:
+    *******************Isoline Names List**********************
+    ...
+    *******************End Isoline Names List**********************
+ok
+Trying:
+    ex = a.getisoline() # To  test an existing isoline object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.isisoline(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('line') # Show all available line
+Expecting:
+    *******************Line Names List**********************
+    ...
+    *******************End Line Names List**********************
+ok
+Trying:
+    ex = a.getline() # To  test an existing line object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.isline(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('marker') # Show all available marker
+Expecting:
+    *******************Marker Names List**********************
+    ...
+    *******************End Marker Names List**********************
+ok
+Trying:
+    ex = a.getmarker() # To  test an existing marker object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.ismarker(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('meshfill') # Show all available meshfill
+Expecting:
+    *******************Meshfill Names List**********************
+    ...
+    *******************End Meshfill Names List**********************
+ok
+Trying:
+    ex = a.getmeshfill() # To  test an existing meshfill object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.ismeshfill(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    import cdms2 # need this to make a slab for a boxfill plot
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data + '/clt.nc') # open a variable file
+Expecting nothing
+ok
+Trying:
+    v = f('v') # create a slab from the variable file
+Expecting nothing
+ok
+Trying:
+    dsp_plot=(a.getboxfill(), v) # plot a boxfill. Should return vcs.displayplot.Dp.
+Expecting nothing
+ok
+Trying:
+    vcs.queries.isplot(dsp_plot)
+Expecting:
+    1
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/queries.py", line 185, in vcs.queries.isplot
+Failed example:
+    vcs.queries.isplot(dsp_plot)
+Expected:
+    1
+Got:
+    0
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('projection') # Show all available projection
+Expecting:
+    *******************Projection Names List**********************
+    ...
+    *******************End Projection Names List**********************
+ok
+Trying:
+    ex = a.getprojection() # To  test an existing projection object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.isprojection(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('scatter') # Show all available scatter
+Expecting:
+    *******************Scatter Names List**********************
+    ...
+    *******************End Scatter Names List**********************
+ok
+Trying:
+    ex = a.getscatter('default_scatter_') # To  test an existing scatter object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.isscatter(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('projection') # Show all available projections
+Expecting:
+    *******************Projection Names List**********************
+    ...
+    *******************End Projection Names List**********************
+ok
+Trying:
+    ex = a.getprojection('default') # To test an existing line object
+Expecting nothing
+ok
+Trying:
+    vcs.issecondaryobject(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('taylordiagram') # Show all available taylordiagram
+Expecting:
+    *******************Taylordiagram Names List**********************
+    ...
+    *******************End Taylordiagram Names List**********************
+ok
+Trying:
+    ex = a.gettaylordiagram() # To  test an existing taylordiagram object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.istaylordiagram(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('template') # Show all available template
+Expecting:
+    *******************Template Names List**********************
+    ...
+    *******************End Template Names List**********************
+ok
+Trying:
+    ex = a.gettemplate() # To  test an existing template object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.istemplate(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
+Expecting:
+    <vcs.textcombined.Tc ...>
+ok
+Trying:
+    a.show('textcombined') # Show all available textcombined
+Expecting:
+    *******************Textcombined Names List**********************
+    ...
+    *******************End Textcombined Names List**********************
+ok
+Trying:
+    ex = a.gettextcombined('EXAMPLE_tt', 'EXAMPLE_tto') # To  test an existing textcombined object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.istextcombined(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('textorientation') # Show all available textorientation
+Expecting:
+    *******************Textorientation Names List**********************
+    ...
+    *******************End Textorientation Names List**********************
+ok
+Trying:
+    ex = a.gettextorientation() # To  test an existing textorientation object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.istextorientation(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('texttable') # Show all available texttable
+Expecting:
+    *******************Texttable Names List**********************
+    ...
+    *******************End Texttable Names List**********************
+ok
+Trying:
+    ex = a.gettexttable() # To  test an existing texttable object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.istexttable(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('1d') # Show all available 1d
+Expecting:
+    *******************1d Names List**********************
+    ...
+    *******************End 1d Names List**********************
+ok
+Trying:
+    ex = a.get1d('default') # To  test an existing 1d object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.is1d(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('xvsy') # Show all available xvsy
+Expecting:
+    *******************Xvsy Names List**********************
+    ...
+    *******************End Xvsy Names List**********************
+ok
+Trying:
+    ex = a.getxvsy() # To  test an existing xvsy object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.isxvsy(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('xyvsy') # Show all available xyvsy
+Expecting:
+    *******************Xyvsy Names List**********************
+    ...
+    *******************End Xyvsy Names List**********************
+ok
+Trying:
+    ex = a.getxyvsy('default_xyvsy_') # To  test an existing xyvsy object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.isxyvsy(ex)
+Expecting:
+    1
+ok
+Trying:
+    a=vcs.init() # Make a VCS Canvas object to work with:
+Expecting nothing
+ok
+Trying:
+    a.show('yxvsx') # Show all available yxvsx
+Expecting:
+    *******************Yxvsx Names List**********************
+    ...
+    *******************End Yxvsx Names List**********************
+ok
+Trying:
+    ex = a.getyxvsx() # To  test an existing yxvsx object
+Expecting nothing
+ok
+Trying:
+    vcs.queries.isyxvsx(ex)
+Expecting:
+    1
+ok
+1 items had no tests:
+    vcs.queries
+27 items passed all tests:
+   2 tests in vcs.queries.graphicsmethodlist
+   7 tests in vcs.queries.graphicsmethodtype
+   4 tests in vcs.queries.is1d
+   4 tests in vcs.queries.is3d_dual_scalar
+   4 tests in vcs.queries.is3d_scalar
+   4 tests in vcs.queries.is3d_vector
+   4 tests in vcs.queries.isboxfill
+   4 tests in vcs.queries.iscolormap
+   4 tests in vcs.queries.isfillarea
+   3 tests in vcs.queries.isgraphicsmethod
+   4 tests in vcs.queries.isisofill
+   4 tests in vcs.queries.isisoline
+   4 tests in vcs.queries.isline
+   4 tests in vcs.queries.ismarker
+   4 tests in vcs.queries.ismeshfill
+   4 tests in vcs.queries.isprojection
+   4 tests in vcs.queries.isscatter
+   4 tests in vcs.queries.issecondaryobject
+   4 tests in vcs.queries.istaylordiagram
+   4 tests in vcs.queries.istemplate
+   5 tests in vcs.queries.istextcombined
+   4 tests in vcs.queries.istextorientation
+   4 tests in vcs.queries.istexttable
+   4 tests in vcs.queries.isvector
+   4 tests in vcs.queries.isxvsy
+   4 tests in vcs.queries.isxyvsy
+   4 tests in vcs.queries.isyxvsx
+**********************************************************************
+1 items had failures:
+   1 of   6 in vcs.queries.isplot
+115 tests in 29 items.
+114 passed and 1 failed.
+***Test Failed*** 1 failures.

@@ -1,0 +1,58 @@
+Trying:
+    a=vcs.init() # Make a Canvas object to work with
+Expecting nothing
+ok
+Trying:
+    ex=a.getline() # Get default line
+Expecting nothing
+ok
+Trying:
+    ex.script('filename.py') # Append to a Python script named 'filename.py'
+Expecting nothing
+ok
+Trying:
+    ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
+Expecting nothing
+ok
+36 items had no tests:
+    vcs.line
+    vcs.line.Tl
+    vcs.line.Tl.__init__
+    vcs.line.Tl._getfillareacolors
+    vcs.line.Tl._getname
+    vcs.line.Tl._getpriority
+    vcs.line.Tl._getprojection
+    vcs.line.Tl._gettype
+    vcs.line.Tl._getvp
+    vcs.line.Tl._getwc
+    vcs.line.Tl._getwidth
+    vcs.line.Tl._getx
+    vcs.line.Tl._gety
+    vcs.line.Tl._setfillareacolors
+    vcs.line.Tl._setname
+    vcs.line.Tl._setpriority
+    vcs.line.Tl._setprojection
+    vcs.line.Tl._settype
+    vcs.line.Tl._setvp
+    vcs.line.Tl._setwc
+    vcs.line.Tl._setwidth
+    vcs.line.Tl._setx
+    vcs.line.Tl._sety
+    vcs.line.Tl.color
+    vcs.line.Tl.colormap
+    vcs.line.Tl.list
+    vcs.line.Tl.name
+    vcs.line.Tl.priority
+    vcs.line.Tl.projection
+    vcs.line.Tl.type
+    vcs.line.Tl.viewport
+    vcs.line.Tl.width
+    vcs.line.Tl.worldcoordinate
+    vcs.line.Tl.x
+    vcs.line.Tl.y
+    vcs.line.process_src
+1 items passed all tests:
+   4 tests in vcs.line.Tl.script
+4 tests in 37 items.
+4 passed and 0 failed.
+Test passed.

@@ -771,10 +771,30 @@ createline.__doc__ = createline.__doc__ % xmldocs.create_docs['line']
 
 
 def setLineAttributes(to, l):
-    '''
-    Set attributes linecolor, linewidth and linetype from line l.
-    l can be a line name defined in vcs.elements or a line object
-    '''
+    """
+    Set attributes linecolor, linewidth and linetype from line l on object to.
+
+
+    :Example:
+
+        .. doctest:: manageElements_setLineAttributes
+
+            >>> vcs.show('line')
+            *******************Line Names List**********************
+            ...
+            *******************End Line Names List**********************
+            >>> new_isoline=vcs.createisoline('new_iso')
+            >>> vcs.setLineAttributes(new_isoline, 'continents')
+
+    :param to:
+    :type to:
+
+    :param l: l can be a line name defined in vcs.elements or a line object.
+    :type l:
+
+    :type: line or str
+    :return:
+    """
     import queries
     line = None
     if (queries.isline(l)):
@@ -785,9 +805,14 @@ def setLineAttributes(to, l):
         raise ValueError("Expecting a line object or a " +
                          "line name defined in vcs.elements, got type " +
                          type(l).__name__)
-    to.linecolor = line.color[0]
-    to.linewidth = line.width[0]
-    to.linetype = line.type[0]
+    if queries.isisoline(to):
+        to.linecolors = line.color
+        to.linewidths = line.width
+        to.linetypes = line.type
+    else:
+        to.linecolor = line.color[0]
+        to.linewidth = line.width[0]
+        to.linetype = line.type[0]
 
 
 def getline(name='default', ltype=None, width=None, color=None,
@@ -1807,6 +1832,7 @@ def removeobject(obj):
             >>> iso=a.createisoline('dean') # Create an instance of an isoline object
             >>> a.removeobject(iso) # Remove isoline object from VCS list
             'Removed isoline object dean'
+
     :param obj: Any VCS primary or secondary object
     :type obj: VCS object
 

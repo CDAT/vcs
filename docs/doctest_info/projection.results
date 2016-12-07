@@ -1,0 +1,134 @@
+Trying:
+    a=vcs.init() # Make a Canvas object to work with
+Expecting nothing
+ok
+Trying:
+    ex=a.getprojection() # Get default projection
+Expecting nothing
+ok
+Trying:
+    ex.script('filename.py') # Append to a Python script named 'filename.py'
+Expecting nothing
+ok
+Trying:
+    ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
+Expecting nothing
+ok
+112 items had no tests:
+    vcs.projection
+    vcs.projection.Proj
+    vcs.projection.Proj.__init__
+    vcs.projection.Proj._getangle
+    vcs.projection.Proj._getazimuthalangle
+    vcs.projection.Proj._getazimuthallongitude
+    vcs.projection.Proj._getcenterlatitude
+    vcs.projection.Proj._getcenterlongitude
+    vcs.projection.Proj._getcentralmeridian
+    vcs.projection.Proj._getfactor
+    vcs.projection.Proj._getfalseeasting
+    vcs.projection.Proj._getfalsenorthing
+    vcs.projection.Proj._getheight
+    vcs.projection.Proj._getlandsatcompensationratio
+    vcs.projection.Proj._getlatitude1
+    vcs.projection.Proj._getlatitude2
+    vcs.projection.Proj._getlongitude1
+    vcs.projection.Proj._getlongitude2
+    vcs.projection.Proj._getname
+    vcs.projection.Proj._getorbitinclination
+    vcs.projection.Proj._getorbitlongitude
+    vcs.projection.Proj._getoriginlatitude
+    vcs.projection.Proj._getparameters
+    vcs.projection.Proj._getpath
+    vcs.projection.Proj._getpathflag
+    vcs.projection.Proj._getsatellite
+    vcs.projection.Proj._getsatelliterevolutionperiod
+    vcs.projection.Proj._getshapem
+    vcs.projection.Proj._getshapen
+    vcs.projection.Proj._getsmajor
+    vcs.projection.Proj._getsminor
+    vcs.projection.Proj._getsphere
+    vcs.projection.Proj._getstandardparallel
+    vcs.projection.Proj._getstandardparallel1
+    vcs.projection.Proj._getstandardparallel2
+    vcs.projection.Proj._getsubtype
+    vcs.projection.Proj._gettruescale
+    vcs.projection.Proj._gettype
+    vcs.projection.Proj._setangle
+    vcs.projection.Proj._setazimuthalangle
+    vcs.projection.Proj._setazimuthallongitude
+    vcs.projection.Proj._setcenterlatitude
+    vcs.projection.Proj._setcenterlongitude
+    vcs.projection.Proj._setcentralmeridian
+    vcs.projection.Proj._setfactor
+    vcs.projection.Proj._setfalseeasting
+    vcs.projection.Proj._setfalsenorthing
+    vcs.projection.Proj._setheight
+    vcs.projection.Proj._setlandsatcompensationratio
+    vcs.projection.Proj._setlatitude1
+    vcs.projection.Proj._setlatitude2
+    vcs.projection.Proj._setlongitude1
+    vcs.projection.Proj._setlongitude2
+    vcs.projection.Proj._setname
+    vcs.projection.Proj._setorbitinclination
+    vcs.projection.Proj._setorbitlongitude
+    vcs.projection.Proj._setoriginlatitude
+    vcs.projection.Proj._setparameters
+    vcs.projection.Proj._setpath
+    vcs.projection.Proj._setpathflag
+    vcs.projection.Proj._setsatellite
+    vcs.projection.Proj._setsatelliterevolutionperiod
+    vcs.projection.Proj._setshapem
+    vcs.projection.Proj._setshapen
+    vcs.projection.Proj._setsmajor
+    vcs.projection.Proj._setsminor
+    vcs.projection.Proj._setsphere
+    vcs.projection.Proj._setstandardparallel
+    vcs.projection.Proj._setstandardparallel1
+    vcs.projection.Proj._setstandardparallel2
+    vcs.projection.Proj._setsubtype
+    vcs.projection.Proj._settruescale
+    vcs.projection.Proj._settype
+    vcs.projection.Proj.angle
+    vcs.projection.Proj.attributes
+    vcs.projection.Proj.azimuthalangle
+    vcs.projection.Proj.azimuthallongitude
+    vcs.projection.Proj.centerlatitude
+    vcs.projection.Proj.centerlongitude
+    vcs.projection.Proj.centralmeridian
+    vcs.projection.Proj.checkPP
+    vcs.projection.Proj.factor
+    vcs.projection.Proj.falseeasting
+    vcs.projection.Proj.falsenorthing
+    vcs.projection.Proj.height
+    vcs.projection.Proj.landsatcompensationratio
+    vcs.projection.Proj.latitude1
+    vcs.projection.Proj.latitude2
+    vcs.projection.Proj.list
+    vcs.projection.Proj.longitude1
+    vcs.projection.Proj.longitude2
+    vcs.projection.Proj.name
+    vcs.projection.Proj.orbitinclination
+    vcs.projection.Proj.orbitlongitude
+    vcs.projection.Proj.originlatitude
+    vcs.projection.Proj.parameters
+    vcs.projection.Proj.path
+    vcs.projection.Proj.pathflag
+    vcs.projection.Proj.satellite
+    vcs.projection.Proj.satelliterevolutionperiod
+    vcs.projection.Proj.shapem
+    vcs.projection.Proj.shapen
+    vcs.projection.Proj.smajor
+    vcs.projection.Proj.sminor
+    vcs.projection.Proj.sphere
+    vcs.projection.Proj.standardparallel
+    vcs.projection.Proj.standardparallel1
+    vcs.projection.Proj.standardparallel2
+    vcs.projection.Proj.subtype
+    vcs.projection.Proj.truescale
+    vcs.projection.Proj.type
+    vcs.projection.process_src
+1 items passed all tests:
+   4 tests in vcs.projection.Proj.script
+4 tests in 113 items.
+4 passed and 0 failed.
+Test passed.

@@ -1,0 +1,3115 @@
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('boxfill') # Show all the existing boxfill graphics methods
+Expecting:
+    *******************Boxfill Names List**********************
+    ...
+    *******************End Boxfill Names List**********************
+ok
+Trying:
+    box=a.getboxfill('quick') # Create instance of 'quick'
+Expecting nothing
+ok
+Trying:
+    array=[range(10) for _ in range(10)]
+Expecting nothing
+ok
+Trying:
+    a.boxfill(array, box) # Plot array using specified box and default template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    template = a.gettemplate('quick') # get quick template
+Expecting nothing
+ok
+Trying:
+    a.clear() # Clear VCS canvas
+Expecting nothing
+ok
+Trying:
+    a.boxfill(array, box, template) # Plot array using specified box and template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.boxfill(box, array, template) # Plot array using specified box and template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.boxfill(template, array, box) # Plot array using specified box and template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.boxfill(template, box, array) # Plot array using specified box and template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.boxfill(array, 'hovmuller', 'quick') # Use 'hovmuller' template and 'quick' boxfill
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.boxfill('hovmuller', array, 'quick') # Use 'hovmuller' template and 'quick' boxfill
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.boxfill('hovmuller', 'quick', array) # Use 'hovmuller template and 'quick' boxfill
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array,'default','isofill','quick')
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.clear() # clear VCS displays from the page
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array,'default','isofill','quick')
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.close() #close the vcs canvas
+Expecting nothing
+ok
+Trying:
+    vcs.show('3d_dual_scalar') # show all available 3d_dual_scalar
+Expecting:
+    *******************3d_dual_scalar Names List**********************
+    ...
+    *******************End 3d_dual_scalar Names List**********************
+ok
+Trying:
+    ex=vcs.create3d_dual_scalar('3d_dual_scalar_ex1') # Create 3d_dual_scalar '3d_dual_scalar_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('3d_dual_scalar') # should now contain the '3d_dual_scalar_ex1' 3d_dual_scalar
+Expecting:
+    [...'3d_dual_scalar_ex1'...]
+ok
+Trying:
+    vcs.show('3d_scalar') # show all available 3d_scalar
+Expecting:
+    *******************3d_scalar Names List**********************
+    ...
+    *******************End 3d_scalar Names List**********************
+ok
+Trying:
+    ex=vcs.create3d_scalar('3d_scalar_ex1') # Create 3d_scalar '3d_scalar_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('3d_scalar') # should now contain the '3d_scalar_ex1' 3d_scalar
+Expecting:
+    [...'3d_scalar_ex1'...]
+ok
+Trying:
+    vcs.show('3d_vector') # show all available 3d_vector
+Expecting:
+    *******************3d_vector Names List**********************
+    ...
+    *******************End 3d_vector Names List**********************
+ok
+Trying:
+    ex=vcs.create3d_vector('3d_vector_ex1') # Create 3d_vector '3d_vector_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('3d_vector') # should now contain the '3d_vector_ex1' 3d_vector
+Expecting:
+    [...'3d_vector_ex1'...]
+ok
+Trying:
+    vcs.show('boxfill') # show all available boxfill
+Expecting:
+    *******************Boxfill Names List**********************
+    ...
+    *******************End Boxfill Names List**********************
+ok
+Trying:
+    ex=vcs.createboxfill('boxfill_ex1') # Create boxfill 'boxfill_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('boxfill') # should now contain the 'boxfill_ex1' boxfill
+Expecting:
+    [...'boxfill_ex1'...]
+ok
+Trying:
+    ex2=vcs.createboxfill('boxfill_ex2','polar') # create 'boxfill_ex2' from 'polar' template
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('boxfill') # should now contain the 'boxfill_ex2' boxfill
+Expecting:
+    [...'boxfill_ex2'...]
+ok
+Trying:
+    vcs.show('colormap') # show all available colormap
+Expecting:
+    *******************Colormap Names List**********************
+    ...
+    *******************End Colormap Names List**********************
+ok
+Trying:
+    ex=vcs.createcolormap('colormap_ex1') # Create colormap 'colormap_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('colormap') # should now contain the 'colormap_ex1' colormap
+Expecting:
+    [...'colormap_ex1'...]
+ok
+Trying:
+    ex2=vcs.createcolormap('colormap_ex2','rainbow') # create 'colormap_ex2' from 'rainbow' template
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('colormap') # should now contain the 'colormap_ex2' colormap
+Expecting:
+    [...'colormap_ex2'...]
+ok
+Trying:
+    vcs.show('fillarea') # show all available fillarea
+Expecting:
+    *******************Fillarea Names List**********************
+    ...
+    *******************End Fillarea Names List**********************
+ok
+Trying:
+    ex=vcs.createfillarea('fillarea_ex1') # Create fillarea 'fillarea_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('fillarea') # should now contain the 'fillarea_ex1' fillarea
+Expecting:
+    [...'fillarea_ex1'...]
+ok
+Trying:
+    vcs.show('isofill') # show all available isofill
+Expecting:
+    *******************Isofill Names List**********************
+    ...
+    *******************End Isofill Names List**********************
+ok
+Trying:
+    ex=vcs.createisofill('isofill_ex1') # Create isofill 'isofill_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('isofill') # should now contain the 'isofill_ex1' isofill
+Expecting:
+    [...'isofill_ex1'...]
+ok
+Trying:
+    ex2=vcs.createisofill('isofill_ex2','polar') # create 'isofill_ex2' from 'polar' template
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('isofill') # should now contain the 'isofill_ex2' isofill
+Expecting:
+    [...'isofill_ex2'...]
+ok
+Trying:
+    vcs.show('isoline') # show all available isoline
+Expecting:
+    *******************Isoline Names List**********************
+    ...
+    *******************End Isoline Names List**********************
+ok
+Trying:
+    ex=vcs.createisoline('isoline_ex1') # Create isoline 'isoline_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('isoline') # should now contain the 'isoline_ex1' isoline
+Expecting:
+    [...'isoline_ex1'...]
+ok
+Trying:
+    ex2=vcs.createisoline('isoline_ex2','polar') # create 'isoline_ex2' from 'polar' template
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('isoline') # should now contain the 'isoline_ex2' isoline
+Expecting:
+    [...'isoline_ex2'...]
+ok
+Trying:
+    vcs.show('line') # show all available line
+Expecting:
+    *******************Line Names List**********************
+    ...
+    *******************End Line Names List**********************
+ok
+Trying:
+    ex=vcs.createline('line_ex1') # Create line 'line_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('line') # should now contain the 'line_ex1' line
+Expecting:
+    [...'line_ex1'...]
+ok
+Trying:
+    ex2=vcs.createline('line_ex2','red') # create 'line_ex2' from 'red' template
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('line') # should now contain the 'line_ex2' line
+Expecting:
+    [...'line_ex2'...]
+ok
+Trying:
+    vcs.show('marker') # show all available marker
+Expecting:
+    *******************Marker Names List**********************
+    ...
+    *******************End Marker Names List**********************
+ok
+Trying:
+    ex=vcs.createmarker('marker_ex1') # Create marker 'marker_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('marker') # should now contain the 'marker_ex1' marker
+Expecting:
+    [...'marker_ex1'...]
+ok
+Trying:
+    ex2=vcs.createmarker('marker_ex2','red') # create 'marker_ex2' from 'red' template
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('marker') # should now contain the 'marker_ex2' marker
+Expecting:
+    [...'marker_ex2'...]
+ok
+Trying:
+    vcs.show('meshfill') # show all available meshfill
+Expecting:
+    *******************Meshfill Names List**********************
+    ...
+    *******************End Meshfill Names List**********************
+ok
+Trying:
+    ex=vcs.createmeshfill('meshfill_ex1') # Create meshfill 'meshfill_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('meshfill') # should now contain the 'meshfill_ex1' meshfill
+Expecting:
+    [...'meshfill_ex1'...]
+ok
+Trying:
+    ex2=vcs.createmeshfill('meshfill_ex2','a_polar_meshfill') # create 'meshfill_ex2' from 'a_polar_meshfill' template
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('meshfill') # should now contain the 'meshfill_ex2' meshfill
+Expecting:
+    [...'meshfill_ex2'...]
+ok
+Trying:
+    vcs.show('projection') # show all available projection
+Expecting:
+    *******************Projection Names List**********************
+    ...
+    *******************End Projection Names List**********************
+ok
+Trying:
+    ex=vcs.createprojection('projection_ex1') # Create projection 'projection_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('projection') # should now contain the 'projection_ex1' projection
+Expecting:
+    [...'projection_ex1'...]
+ok
+Trying:
+    ex2=vcs.createprojection('projection_ex2','polar') # create 'projection_ex2' from 'polar' template
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1207, in vcs.Canvas.Canvas.createprojection
+Failed example:
+    ex2=vcs.createprojection('projection_ex2','polar') # create 'projection_ex2' from 'polar' template
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.Canvas.Canvas.createprojection[3]>", line 1, in <module>
+        ex2=vcs.createprojection('projection_ex2','polar') # create 'projection_ex2' from 'polar' template
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 120, in createprojection
+        return projection.Proj(name, source)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/projection.py", line 434, in __init__
+        self.type = src.type
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/projection.py", line 987, in _settype
+        value = VCS_validation_functions.checkProjType(self, 'type', value)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/VCS_validation_functions.py", line 1440, in checkProjType
+        checkedRaise(self, value, Exception, err)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/VCS_validation_functions.py", line 59, in checkedRaise
+        raise ex(err)
+    Exception: type can either be ('linear', 'utm', 'state plane', 'albers equal area', 'lambert', 'mercator', 'polar', 'polyconic', 'equid conic a', 'transverse mercator', 'stereographic', 'lambert azimuthal', 'azimuthal', 'gnomonic', 'orthographic', 'gen. vert. near per', 'sinusoidal', 'equirectangular', 'miller', 'van der grinten', 'hotin', 'robinson', 'space oblique', 'alaska', 'interrupted goode', 'mollweide', 'interrupted mollweide', 'hammer', 'wagner iv', 'wagner vii', 'oblated') or (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30)
+Trying:
+    vcs.listelements('projection') # should now contain the 'projection_ex2' projection
+Expecting:
+    [...'projection_ex2'...]
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1208, in vcs.Canvas.Canvas.createprojection
+Failed example:
+    vcs.listelements('projection') # should now contain the 'projection_ex2' projection
+Expected:
+    [...'projection_ex2'...]
+Got:
+    ['default', 'lambert', 'linear', 'mercator', 'mollweide', 'orthographic', 'polar', 'polyconic', 'projection_ex1', 'robinson']
+Trying:
+    vcs.show('scatter') # show all available scatter
+Expecting:
+    *******************Scatter Names List**********************
+    ...
+    *******************End Scatter Names List**********************
+ok
+Trying:
+    ex=vcs.createscatter('scatter_ex1') # Create scatter 'scatter_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('scatter') # should now contain the 'scatter_ex1' scatter
+Expecting:
+    [...'scatter_ex1'...]
+ok
+Trying:
+    vcs.show('taylordiagram') # show all available taylordiagram
+Expecting:
+    *******************Taylordiagram Names List**********************
+    ...
+    *******************End Taylordiagram Names List**********************
+ok
+Trying:
+    ex=vcs.createtaylordiagram('taylordiagram_ex1') # Create taylordiagram 'taylordiagram_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('taylordiagram') # should now contain the 'taylordiagram_ex1' taylordiagram
+Expecting:
+    [...'taylordiagram_ex1'...]
+ok
+Trying:
+    vcs.show('template') # show all available template
+Expecting:
+    *******************Template Names List**********************
+    ...
+    *******************End Template Names List**********************
+ok
+Trying:
+    ex=vcs.createtemplate('template_ex1') # Create template 'template_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('template') # should now contain the 'template_ex1' template
+Expecting:
+    [...'template_ex1'...]
+ok
+Trying:
+    ex2=vcs.createtemplate('template_ex2','polar') # create 'template_ex2' from 'polar' template
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('template') # should now contain the 'template_ex2' template
+Expecting:
+    [...'template_ex2'...]
+ok
+Trying:
+    vcs.show('textcombined') # show all available textcombined
+Expecting:
+    *******************Textcombined Names List**********************
+    ...
+    *******************End Textcombined Names List**********************
+ok
+Trying:
+    vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
+Expecting:
+    <vcs.textcombined.Tc ...>
+ok
+Trying:
+    vcs.listelements('textcombined') # should now contain the 'EXAMPLE_tt:::EXAMPLE_tto' textcombined
+Expecting:
+    [...'EXAMPLE_tt:::EXAMPLE_tto'...]
+ok
+Trying:
+    vcs.show('textorientation') # show all available textorientation
+Expecting:
+    *******************Textorientation Names List**********************
+    ...
+    *******************End Textorientation Names List**********************
+ok
+Trying:
+    ex=vcs.createtextorientation('textorientation_ex1') # Create textorientation 'textorientation_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('textorientation') # should now contain the 'textorientation_ex1' textorientation
+Expecting:
+    [...'textorientation_ex1'...]
+ok
+Trying:
+    ex2=vcs.createtextorientation('textorientation_ex2','bigger') # create 'textorientation_ex2' from 'bigger' template
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('textorientation') # should now contain the 'textorientation_ex2' textorientation
+Expecting:
+    [...'textorientation_ex2'...]
+ok
+Trying:
+    vcs.show('texttable') # show all available texttable
+Expecting:
+    *******************Texttable Names List**********************
+    ...
+    *******************End Texttable Names List**********************
+ok
+Trying:
+    ex=vcs.createtexttable('texttable_ex1') # Create texttable 'texttable_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('texttable') # should now contain the 'texttable_ex1' texttable
+Expecting:
+    [...'texttable_ex1'...]
+ok
+Trying:
+    ex2=vcs.createtexttable('texttable_ex2','bigger') # create 'texttable_ex2' from 'bigger' template
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('texttable') # should now contain the 'texttable_ex2' texttable
+Expecting:
+    [...'texttable_ex2'...]
+ok
+Trying:
+    vcs.show('vector') # show all available vector
+Expecting:
+    *******************Vector Names List**********************
+    ...
+    *******************End Vector Names List**********************
+ok
+Trying:
+    ex=vcs.createvector('vector_ex1') # Create vector 'vector_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('vector') # should now contain the 'vector_ex1' vector
+Expecting:
+    [...'vector_ex1'...]
+ok
+Trying:
+    vcs.show('xvsy') # show all available xvsy
+Expecting:
+    *******************Xvsy Names List**********************
+    ...
+    *******************End Xvsy Names List**********************
+ok
+Trying:
+    ex=vcs.createxvsy('xvsy_ex1') # Create xvsy 'xvsy_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('xvsy') # should now contain the 'xvsy_ex1' xvsy
+Expecting:
+    [...'xvsy_ex1'...]
+ok
+Trying:
+    vcs.show('xyvsy') # show all available xyvsy
+Expecting:
+    *******************Xyvsy Names List**********************
+    ...
+    *******************End Xyvsy Names List**********************
+ok
+Trying:
+    ex=vcs.createxyvsy('xyvsy_ex1') # Create xyvsy 'xyvsy_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('xyvsy') # should now contain the 'xyvsy_ex1' xyvsy
+Expecting:
+    [...'xyvsy_ex1'...]
+ok
+Trying:
+    vcs.show('yxvsx') # show all available yxvsx
+Expecting:
+    *******************Yxvsx Names List**********************
+    ...
+    *******************End Yxvsx Names List**********************
+ok
+Trying:
+    ex=vcs.createyxvsx('yxvsx_ex1') # Create yxvsx 'yxvsx_ex1' that inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('yxvsx') # should now contain the 'yxvsx_ex1' yxvsx
+Expecting:
+    [...'yxvsx_ex1'...]
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array,'default','isofill','quick')
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.destroy()
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('fillarea') # Show all the existing fillarea objects
+Expecting:
+    *******************Fillarea Names List**********************
+    ...
+    *******************End Fillarea Names List**********************
+ok
+Trying:
+    fa=a.drawfillarea(name='red', style=1, color=242,
+                 priority=1, viewport=[0, 1.0, 0, 1.0],
+                 worldcoordinate=[0,100, 0,50],
+                 x=[0,20,40,60,80,100],
+                 y=[0,10,20,30,40,50], bg=0 ) # Create instance of fillarea object 'red'
+Expecting nothing
+ok
+Trying:
+    a.fillarea(fa) # Plot using specified fillarea object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('line') # Show all the existing line objects
+Expecting:
+    *******************Line Names List**********************
+    ...
+    *******************End Line Names List**********************
+ok
+Trying:
+    ln=a.drawline(name='red', ltype='dash', width=2,
+                 color=242, priority=1, viewport=[0, 1.0, 0, 1.0],
+                 worldcoordinate=[0,100, 0,50],
+                 x=[0,20,40,60,80,100],
+                 y=[0,10,20,30,40,50] )
+Expecting nothing
+ok
+Trying:
+    a.line(ln) # Plot using specified line object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.drawlogooff()
+Expecting nothing
+ok
+Trying:
+    a.getdrawlogo()
+Expecting:
+    False
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.drawlogoon()
+Expecting nothing
+ok
+Trying:
+    a.getdrawlogo()
+Expecting:
+    True
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('marker')  # Show all the existing marker objects
+Expecting:
+    *******************Marker Names List**********************
+    ...
+    *******************End Marker Names List**********************
+ok
+Trying:
+    mrk=a.drawmarker(name='red', mtype='dot', size=2,
+                 color=242, priority=1, viewport=[0, 1.0, 0, 1.0],
+                 worldcoordinate=[0,100, 0,50],
+                 x=[0,20,40,60,80,100],
+                 y=[0,10,20,30,40,50] ) # Create instance of marker object 'red'
+Expecting nothing
+ok
+Trying:
+    a.marker(mrk) # Plot using specified marker object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('texttable') # Show all the existing texttable objects
+Expecting:
+    *******************Texttable Names List**********************
+    ...
+    *******************End Texttable Names List**********************
+ok
+Trying:
+    vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2260, in vcs.Canvas.Canvas.drawtext
+Failed example:
+    vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.Canvas.Canvas.drawtext[2]>", line 1, in <module>
+        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1365, in createtextcombined
+        Tt_name, Tt_source = check_name_source(Tt_name, Tt_source, 'texttable')
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 57, in check_name_source
+        raise vcsError("Error %s object named %s already exists" % (typ, name))
+    vcsError: Error texttable object named EXAMPLE_tt already exists
+Trying:
+    tc=a.drawtextcombined(Tt_name = 'EXAMPLE_tt', To_name='EXAMPLE_tto',
+                      string='Hello example!', spacing=5,
+                      color=242, priority=1, viewport=[0, 1.0, 0, 1.0],
+                      worldcoordinate=[0,100, 0,50],
+                      x=[0,20,40,60,80,100],
+                      y=[0,10,20,30,40,50]) # plot textcombined object on canvas
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(10) for _ in range(10)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array)
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.postscript('example') # Overwrite a postscript file
+Expecting nothing
+ok
+Trying:
+    a.postscript('example', 'a') # Append postscript to an existing file
+Expecting nothing
+ok
+Trying:
+    a.postscript('example', 'r') # Overwrite an existing file
+Expecting nothing
+ok
+Trying:
+    a.postscript('example', mode='a') # Append postscript to an existing file
+Expecting nothing
+ok
+Trying:
+    a.postscript('example', width=11.5, height= 8.5) # US Legal (default)
+Expecting nothing
+ok
+Trying:
+    a.postscript('example', width=21, height=29.7, units='cm') # A4
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    import cdms2
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc')
+Expecting nothing
+ok
+Trying:
+    v = f('v') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    u = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    png_files = [] # for saving file names to make the mpeg
+Expecting nothing
+ok
+Trying:
+    for i in range(10): # create a number of pngs to use for an mpeg
+        a.clear()
+        if (i%2):
+            a.plot(u,v)
+        else:
+            a.plot(v,u)
+        a.png('my_png__%i' % i)
+        png_files.append('my_png__%i.png' % i)
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 4505, in vcs.Canvas.Canvas.ffmpeg
+Failed example:
+    for i in range(10): # create a number of pngs to use for an mpeg
+        a.clear()
+        if (i%2):
+            a.plot(u,v)
+        else:
+            a.plot(v,u)
+        a.png('my_png__%i' % i)
+        png_files.append('my_png__%i.png' % i)
+Expected nothing
+Got:
+    <vcs.displayplot.Dp object at 0x11a961d70>
+    <vcs.displayplot.Dp object at 0x11a974050>
+    <vcs.displayplot.Dp object at 0x10efe4168>
+    <vcs.displayplot.Dp object at 0x11868c398>
+    <vcs.displayplot.Dp object at 0x11a959050>
+    <vcs.displayplot.Dp object at 0x11a9717f8>
+    <vcs.displayplot.Dp object at 0x11a9745c8>
+    <vcs.displayplot.Dp object at 0x11a95d398>
+    <vcs.displayplot.Dp object at 0x1186ac398>
+    <vcs.displayplot.Dp object at 0x11a980168>
+Trying:
+    a.ffmpeg('mymovie.mpeg',png_files) # generates from list of files
+Expecting:
+    True
+ok
+Trying:
+    a.ffmpeg('mymovie.mpeg',files="my_png__[0-9]*\.png") # generate from files with name matching regex
+Expecting:
+    True
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 4515, in vcs.Canvas.Canvas.ffmpeg
+Failed example:
+    a.ffmpeg('mymovie.mpeg',files="my_png__[0-9]*\.png") # generate from files with name matching regex
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.Canvas.Canvas.ffmpeg[8]>", line 1, in <module>
+        a.ffmpeg('mymovie.mpeg',files="my_png__[0-9]*\.png") # generate from files with name matching regex
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 4594, in ffmpeg
+        if test_file is not False:
+    UnboundLocalError: local variable 'test_file' referenced before assignment
+Trying:
+    a.ffmpeg('mymovie.mpeg',png_files,bitrate=512) # generates mpeg at 512kbit
+Expecting:
+    True
+ok
+Trying:
+    a.ffmpeg('mymovie.mpeg',png_files,rate=50) # generates movie with 50 frame per second
+Expecting:
+    True
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('fillarea') # Show all the existing fillarea objects
+Expecting:
+    *******************Fillarea Names List**********************
+    ...
+    *******************End Fillarea Names List**********************
+ok
+Trying:
+    fa=a.createfillarea() # Create instance of default fillarea
+Expecting nothing
+ok
+Trying:
+    fa.style=1 # Set the fillarea style
+Expecting nothing
+ok
+Trying:
+    fa.index=4 # Set the fillarea index
+Expecting nothing
+ok
+Trying:
+    fa.color = 242 # Set the fillarea color
+Expecting nothing
+ok
+Trying:
+    fa.x=[0.25,0.75] # Set the x value points
+Expecting nothing
+ok
+Trying:
+    fa.y=[0.2,0.5] # Set the y value points
+Expecting nothing
+ok
+Trying:
+    a.fillarea(fa) # Plot using specified fillarea object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array,'default','isofill','quick')
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.flush()
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array,'default','isofill','quick')
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.geometry(450,337)
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('3d_dual_scalar') # Show all the existing 3d_dual_scalar graphics methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.get3d_dual_scalar()  # instance of 'default' 3d_dual_scalar graphics method
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    slab2 = f('v') # need 2 slabs, so get another
+Expecting nothing
+ok
+Trying:
+    a.plot(ex, slab1, slab2) # plot using specified 3d_dual_scalar object
+Expecting:
+    <vcs.displayplot.Dp ...>
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1403, in vcs.Canvas.Canvas.get3d_dual_scalar
+Failed example:
+    a.plot(ex, slab1, slab2) # plot using specified 3d_dual_scalar object
+Expected:
+    <vcs.displayplot.Dp ...>
+Got:
+    initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
+    <vcs.displayplot.Dp object at 0x12eacf398>
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('3d_scalar') # Show all the existing 3d_scalar graphics methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.get3d_scalar()  # instance of 'default' 3d_scalar graphics method
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    a.plot(ex, slab1) # plot using specified 3d_scalar object
+Expecting:
+    <vcs.displayplot.Dp ...>
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1402, in vcs.Canvas.Canvas.get3d_scalar
+Failed example:
+    a.plot(ex, slab1) # plot using specified 3d_scalar object
+Expected:
+    <vcs.displayplot.Dp ...>
+Got:
+    initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
+    <vcs.displayplot.Dp object at 0x12bd52d70>
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('3d_vector') # Show all the existing 3d_vector graphics methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.get3d_vector()  # instance of 'default' 3d_vector graphics method
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    slab2 = f('v') # need 2 slabs, so get another
+Expecting nothing
+ok
+Trying:
+    a.plot(ex, slab1, slab2) # plot using specified 3d_vector object
+Expecting:
+    <vcs.displayplot.Dp ...>
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1403, in vcs.Canvas.Canvas.get3d_vector
+Failed example:
+    a.plot(ex, slab1, slab2) # plot using specified 3d_vector object
+Expected:
+    <vcs.displayplot.Dp ...>
+Got:
+    Sample rate: 6 
+    Sample rate: 6 
+    initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
+    <vcs.displayplot.Dp object at 0x126de9168>
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('boxfill') # Show all the existing boxfill graphics methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getboxfill()  # instance of 'default' boxfill graphics method
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    a.boxfill(ex, slab1) # plot using specified boxfill object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    ex2=vcs.getboxfill('polar')  # instance of 'polar' boxfill graphics method
+Expecting nothing
+ok
+Trying:
+    a.boxfill(ex2, slab1) # plot using specified boxfill object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    b=vcs.createboxfill()
+Expecting nothing
+ok
+Trying:
+    b.colormap='rainbow'
+Expecting nothing
+ok
+Trying:
+    a.getcolorcell(2,b)
+Expecting:
+    [26, 1, 34, 100]
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('colormap') # Show all the existing colormap secondary methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getcolormap()  # instance of 'default' colormap secondary method
+Expecting nothing
+ok
+Trying:
+    ex2=vcs.getcolormap('rainbow')  # instance of 'rainbow' colormap secondary method
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    cont_type = a.getcontinentstype() # Get the continents type
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.getdrawlogo()
+Expecting:
+    True
+ok
+Trying:
+    a.drawlogooff()
+Expecting nothing
+ok
+Trying:
+    a.getdrawlogo()
+Expecting:
+    False
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('fillarea') # Show all the existing fillarea secondary methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getfillarea()  # instance of 'default' fillarea secondary method
+Expecting nothing
+ok
+Trying:
+    a.fillarea(ex) # plot using specified fillarea object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    font_names=[]
+Expecting nothing
+ok
+Trying:
+    for i in range(1,17):
+        font_names.append(str(a.getfont(i))) # font_names is now filled with all font names
+Expecting nothing
+ok
+Trying:
+    font_names
+Expecting:
+    ['default', ...]
+ok
+Trying:
+    font_numbers = []
+Expecting nothing
+ok
+Trying:
+    for name in font_names:
+        font_numbers.append(a.getfont(name)) # font_numbers is now filled with all font numbers
+Expecting nothing
+ok
+Trying:
+    font_numbers
+Expecting:
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('isofill') # Show all the existing isofill graphics methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getisofill()  # instance of 'default' isofill graphics method
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    a.isofill(ex, slab1) # plot using specified isofill object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    ex2=vcs.getisofill('polar')  # instance of 'polar' isofill graphics method
+Expecting nothing
+ok
+Trying:
+    a.isofill(ex2, slab1) # plot using specified isofill object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('isoline') # Show all the existing isoline graphics methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getisoline()  # instance of 'default' isoline graphics method
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    a.isoline(ex, slab1) # plot using specified isoline object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    ex2=vcs.getisoline('polar')  # instance of 'polar' isoline graphics method
+Expecting nothing
+ok
+Trying:
+    a.isoline(ex2, slab1) # plot using specified isoline object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('line') # Show all the existing line secondary methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getline()  # instance of 'default' line secondary method
+Expecting nothing
+ok
+Trying:
+    a.line(ex) # plot using specified line object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    ex2=vcs.getline('red')  # instance of 'red' line secondary method
+Expecting nothing
+ok
+Trying:
+    a.line(ex2) # plot using specified line object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('marker') # Show all the existing marker secondary methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getmarker()  # instance of 'default' marker secondary method
+Expecting nothing
+ok
+Trying:
+    a.marker(ex) # plot using specified marker object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    ex2=vcs.getmarker('red')  # instance of 'red' marker secondary method
+Expecting nothing
+ok
+Trying:
+    a.marker(ex2) # plot using specified marker object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('meshfill') # Show all the existing meshfill graphics methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getmeshfill()  # instance of 'default' meshfill graphics method
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    a.meshfill(ex, slab1) # plot using specified meshfill object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    ex2=vcs.getmeshfill('a_polar_meshfill')  # instance of 'a_polar_meshfill' meshfill graphics method
+Expecting nothing
+ok
+Trying:
+    a.meshfill(ex2, slab1) # plot using specified meshfill object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('projection') # Show all the existing projection graphics methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getprojection()  # instance of 'default' projection graphics method
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    a.plot(ex, slab1) # plot using specified projection object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    ex2=vcs.getprojection('polar')  # instance of 'polar' projection graphics method
+Expecting nothing
+ok
+Trying:
+    a.plot(ex2, slab1) # plot using specified projection object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('scatter') # Show all the existing scatter graphics methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getscatter('default_scatter_')  # instance of ''default_scatter_'' scatter graphics method
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    slab2 = f('v') # need 2 slabs, so get another
+Expecting nothing
+ok
+Trying:
+    a.scatter(ex, slab1, slab2) # plot using specified scatter object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('taylordiagram') # Show all the existing taylordiagram graphics methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.gettaylordiagram()  # instance of 'default' taylordiagram graphics method
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
+Expecting:
+    <vcs.displayplot.Dp ...>
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1270, in vcs.Canvas.Canvas.gettaylordiagram
+Failed example:
+    a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.Canvas.Canvas.gettaylordiagram[6]>", line 1, in <module>
+        a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1275, in taylordiagram
+        return self.__plot(arglist, parms)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3634, in __plot
+        t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1965, in plot
+        self.draw(canvas, data)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1205, in draw
+        d0 = float(data[i][0])
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/numpy/ma/core.py", line 4182, in __float__
+        raise TypeError("Only length-1 arrays can be converted "
+    TypeError: Only length-1 arrays can be converted to Python scalars
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('template') # Show all the existing template graphics methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.gettemplate()  # instance of 'default' template graphics method
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    a.plot(ex, slab1) # plot using specified template object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    ex2=vcs.gettemplate('polar')  # instance of 'polar' template graphics method
+Expecting nothing
+ok
+Trying:
+    a.plot(ex2, slab1) # plot using specified template object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('textcombined') # Show all the existing textcombined secondary methods
+Expecting:
+    [...]
+ok
+Trying:
+    vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
+Expecting:
+    <vcs.textcombined.Tc ...>
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2160, in vcs.Canvas.Canvas.gettextcombined
+Failed example:
+    vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.Canvas.Canvas.gettextcombined[2]>", line 1, in <module>
+        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1365, in createtextcombined
+        Tt_name, Tt_source = check_name_source(Tt_name, Tt_source, 'texttable')
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 57, in check_name_source
+        raise vcsError("Error %s object named %s already exists" % (typ, name))
+    vcsError: Error texttable object named EXAMPLE_tt already exists
+Trying:
+    ex=vcs.gettextcombined('EXAMPLE_tt', 'EXAMPLE_tto')  # instance of 'EXAMPLE_tt:::EXAMPLE_tto' textcombined secondary method
+Expecting nothing
+ok
+Trying:
+    a.textcombined(ex) # plot using specified textcombined object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    t=a.createtext()
+Expecting nothing
+ok
+Trying:
+    t.x=[.5]
+Expecting nothing
+ok
+Trying:
+    t.y=[.5]
+Expecting nothing
+ok
+Trying:
+    t.string=['Hello World']
+Expecting nothing
+ok
+Trying:
+    a.gettextextent(t)
+Expecting:
+    [[...]]
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('textorientation') # Show all the existing textorientation secondary methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.gettextorientation()  # instance of 'default' textorientation secondary method
+Expecting nothing
+ok
+Trying:
+    ex2=vcs.gettextorientation('bigger')  # instance of 'bigger' textorientation secondary method
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('texttable') # Show all the existing texttable secondary methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.gettexttable()  # instance of 'default' texttable secondary method
+Expecting nothing
+ok
+Trying:
+    ex2=vcs.gettexttable('bigger')  # instance of 'bigger' texttable secondary method
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('vector') # Show all the existing vector graphics methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getvector()  # instance of 'default' vector graphics method
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    slab2 = f('v') # need 2 slabs, so get another
+Expecting nothing
+ok
+Trying:
+    a.vector(ex, slab1, slab2) # plot using specified vector object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('xvsy') # Show all the existing xvsy graphics methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getxvsy()  # instance of 'default_xvsy_' xvsy graphics method
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    slab2 = f('v') # need 2 slabs, so get another
+Expecting nothing
+ok
+Trying:
+    a.xvsy(ex, slab1, slab2) # plot using specified xvsy object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('xyvsy') # Show all the existing xyvsy graphics methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getxyvsy('default_xyvsy_')  # instance of ''default_xyvsy_'' xyvsy graphics method
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    a.xyvsy(ex, slab1) # plot using specified xyvsy object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('yxvsx') # Show all the existing yxvsx graphics methods
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getyxvsx()  # instance of 'default_yxvsx_' yxvsx graphics method
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    a.yxvsx(ex, slab1) # plot using specified yxvsx object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(10) for _ in range(10)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array)
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    if a.islandscape():
+        a.portrait() # Set VCS's orientation to portrait mode
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('isofill') # Show all the existing isofill graphics methods
+Expecting:
+    *******************Isofill Names List**********************
+    ...
+    *******************End Isofill Names List**********************
+ok
+Trying:
+    iso=a.getisofill('quick') # Create instance of 'quick'
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab = f('clt') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    a.isofill(slab,iso) # Plot array using specified iso and default template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.clear() # Clear VCS canvas
+Expecting nothing
+ok
+Trying:
+    template = a.gettemplate('hovmuller')
+Expecting nothing
+ok
+Trying:
+    a.isofill(slab,iso,template) # Plot array using specified iso and template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('isoline') # Show all the existing isoline graphics methods
+Expecting:
+    *******************Isoline Names List**********************
+    ...
+    *******************End Isoline Names List**********************
+ok
+Trying:
+    iso=a.getisoline('quick') # Create instance of 'quick'
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.isoline(array,iso) # Plot array using specified iso and default template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.clear() # Clear VCS canvas
+Expecting nothing
+ok
+Trying:
+    template = a.gettemplate('hovmuller')
+Expecting nothing
+ok
+Trying:
+    a.isoline(array,iso,template)  # Plot array using specified iso and template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(10) for _ in range(10)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array)
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    if a.isportrait():
+        a.landscape() # Set VCS's orientation to landscape mode
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array)
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.landscape() # Change the VCS Canvas orientation and set object flag to landscape
+Expecting nothing
+ok
+Trying:
+    a.landscape(clear=1) # Change the VCS Canvas to landscape and clear the page
+Expecting nothing
+ok
+Trying:
+    a.landscape(width = 400, height = 337) # Change to landscape and set the window size
+Expecting nothing
+ok
+Trying:
+    a.landscape(x=100, y = 200) # Change to landscape and set the x and y screen position
+Expecting nothing
+ok
+Trying:
+    a.landscape(width = 400, height = 337, x=100, y = 200, clear=1) # landscape with more settings
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('line')  # Show all the existing line objects
+Expecting:
+    *******************Line Names List**********************
+    ...
+    *******************End Line Names List**********************
+ok
+Trying:
+    ln=a.getline('red') # Create instance of 'red'
+Expecting nothing
+ok
+Trying:
+    ln.width=4 # Set the line width
+Expecting nothing
+ok
+Trying:
+    ln.color = 242 # Set the line color
+Expecting nothing
+ok
+Trying:
+    ln.type = 4 # Set the line type
+Expecting nothing
+ok
+Trying:
+    ln.x=[[0.0,2.0,2.0,0.0,0.0], [0.5,1.5]] # Set the x value points
+Expecting nothing
+ok
+Trying:
+    ln.y=[[0.0,0.0,2.0,2.0,0.0], [1.0,1.0]] # Set the y value points
+Expecting nothing
+ok
+Trying:
+    a.line(ln) # Plot using specified line object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.listelements()
+Expecting:
+    ['1d', '3d_dual_scalar', '3d_scalar', ...]
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('marker') # Show all the existing marker objects
+Expecting:
+    *******************Marker Names List**********************
+    ...
+    *******************End Marker Names List**********************
+ok
+Trying:
+    mrk=a.getmarker('red') # Create instance of 'red'
+Expecting nothing
+ok
+Trying:
+    mrk.size=4 # Set the marker size
+Expecting nothing
+ok
+Trying:
+    mrk.color = 242 # Set the marker color
+Expecting nothing
+ok
+Trying:
+    mrk.type = 4 # Set the marker type
+Expecting nothing
+ok
+Trying:
+    mrk.x=[[0.0,2.0,2.0,0.0,0.0], [0.5,1.5]] # Set the x value points
+Expecting nothing
+ok
+Trying:
+    mrk.y=[[0.0,0.0,2.0,2.0,0.0], [1.0,1.0]] # Set the y value points
+Expecting nothing
+ok
+Trying:
+    a.marker(mrk) # Plot using specified marker object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('meshfill') # Show all the existing meshfill graphics methods
+Expecting:
+    *******************Meshfill Names List**********************
+    ...
+    *******************End Meshfill Names List**********************
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab = f('clt') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    mesh=a.getmeshfill() # Create instance of 'default'
+Expecting nothing
+ok
+Trying:
+    a.meshfill(slab,mesh) # Plot array using specified mesh and default template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.clear() # Clear VCS canvas
+Expecting nothing
+ok
+Trying:
+    a.meshfill(slab,mesh,'quick','a_polar_meshfill')  # Plot slab with polar mesh, quick template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    ln=a.getline('red') # Get a VCS line object
+Expecting nothing
+ok
+Trying:
+    a.objecthelp(ln) # This will print out information on how to use ln
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 799, in vcs.Canvas.Canvas.objecthelp
+Failed example:
+    a.objecthelp(ln) # This will print out information on how to use ln
+Expected nothing
+Got:
+    <BLANKLINE>
+        The Line object allows the manipulation of line type, width, color index,
+        view port, world coordinates, and (x,y) points.
+    <BLANKLINE>
+        This class is used to define an line table entry used in VCS, or it
+        can be used to change some or all of the line attributes in an
+        existing line table entry.
+    <BLANKLINE>
+        .. describe:: Useful Functions:
+    <BLANKLINE>
+            .. code-block:: python
+    <BLANKLINE>
+                # VCS Canvas Constructor
+                a=vcs.init()
+                # Show predefined line objects
+                a.show('line')
+                # Will list all the line attribute values
+                ln.list()
+                # Updates the VCS Canvas at user's request
+                a.update()
+    <BLANKLINE>
+        .. describe:: Create a new instance of line:
+    <BLANKLINE>
+            .. code-block:: python
+    <BLANKLINE>
+                # Copies content of 'red' to 'new'
+                ln=a.createline('new','red')
+                # Copies content of 'default' to 'new'
+                ln=a.createline('new')
+    <BLANKLINE>
+        .. describe:: Modify an existing line:
+    <BLANKLINE>
+            * Get a line object 'ln' to manipulate:
+    <BLANKLINE>
+                .. code-block:: python
+    <BLANKLINE>
+                    ln=a.getline('red')
+    <BLANKLINE>
+            * Set line color:
+    <BLANKLINE>
+                .. code-block:: python
+    <BLANKLINE>
+                    # Range from 1 to 256
+                    ln.color=100
+    <BLANKLINE>
+            * Set line width:
+    <BLANKLINE>
+                .. code-block:: python
+    <BLANKLINE>
+                    # Range from 1 to 300
+                    ln.width=100
+    <BLANKLINE>
+            * Specify the line type:
+    <BLANKLINE>
+                .. code-block:: python
+    <BLANKLINE>
+                    # Same as ln.type=0
+                     ln.type='solid'
+                     # Same as ln.type=1
+                     ln.type='dash'
+                     # Same as ln.type=2
+                     ln.type='dot'
+                     # Same as ln.type=3
+                     ln.type='dash-dot'
+                     # Same as ln.type=4
+                     ln.type='long-dash'
+    <BLANKLINE>
+            * Set the graphics priority on the canvas:
+    <BLANKLINE>
+                .. code-block:: python
+    <BLANKLINE>
+                    ln.priority=1
+                    # FloatType [0,1]x[0,1]
+                    ln.viewport=[0, 1.0, 0,1.0]
+                    # FloatType [#,#]x[#,#]
+                    ln.worldcoordinate=[0,1.0,0,1.0]
+    <BLANKLINE>
+            * Set line x and y values:
+    <BLANKLINE>
+                .. code-block:: python
+    <BLANKLINE>
+                    # List of FloatTypes
+                    ln.x=[[0,.1,.2], [.3,.4,.5]]
+                    # List of FloatTypes
+                    ln.y=[[.5,.4,.3], [.2,.1,0]]
+    <BLANKLINE>
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.open()
+Expecting nothing
+ok
+Trying:
+    a.open(800,600)
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.orientation() # Show current orientation of the canvas
+Expecting:
+    'landscape'
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array)
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.pdf('example') # Overwrite a postscript file
+Expecting nothing
+ok
+Trying:
+    a.pdf('example', width=11.5, height= 8.5) # US Legal
+Expecting nothing
+ok
+Trying:
+    a.pdf('example', width=21, height=29.7, units='cm') # A4
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    slab2 = f('v') # need 2 slabs, so get another
+Expecting nothing
+ok
+Trying:
+    a.plot(slab1) # this call will use default settings for template and boxfill
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.plot(slab1, 'polar', 'isofill', 'polar') # this is specifying the template and graphics method
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    t=a.gettemplate('polar') # get the polar template
+Expecting nothing
+ok
+Trying:
+    vec=a.getvector() # get default vector
+Expecting nothing
+ok
+Trying:
+    a.plot(slab1, slab2, t, vec) # plot the data as a vector using the 'AMIP' template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.clear() # clear the VCS Canvas of all plots
+Expecting nothing
+ok
+Trying:
+    box=a.getboxfill() # get default boxfill graphics method
+Expecting nothing
+ok
+Trying:
+    a.plot(box,t,slab2) # plot array data using box 'new' and template 't'
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array)
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.png('example') # Overwrite a png file
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array)
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.portrait()  # Change the VCS Canvas orientation and set object flag to portrait
+Expecting nothing
+ok
+Trying:
+    a.portrait(clear=1) # Change the VCS Canvas to portrait and clear the page
+Expecting nothing
+ok
+Trying:
+    a.portrait(width = 337, height = 400) # Change to portrait and set the window size
+Expecting nothing
+ok
+Trying:
+    a.portrait(x=100, y = 200) # Change to portrait and set the x and y screen position
+Expecting nothing
+ok
+Trying:
+    a.portrait(width = 337, height = 400, x=100, y = 200, clear=1) # portrait, with more specifications
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array)
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.postscript('example') # Overwrite a postscript file
+Expecting nothing
+ok
+Trying:
+    a.postscript('example', 'a') # Append postscript to an existing file
+Expecting nothing
+ok
+Trying:
+    a.postscript('example', 'r') # Overwrite an existing file
+Expecting nothing
+ok
+Trying:
+    a.postscript('example', mode='a') # Append postscript to an existing file
+Expecting nothing
+ok
+Trying:
+    a.postscript('example', width=11.5, height= 8.5) # US Legal (default)
+Expecting nothing
+ok
+Trying:
+    a.postscript('example', width=21, height=29.7, units='cm') # A4
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array)
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.pstogif('filename.ps') # convert the postscript file to a gif file
+Expecting nothing
+ok
+Trying:
+    a.pstogif('filename.ps','l') # convert the postscript file to a gif file (l=landscape)
+Expecting nothing
+ok
+Trying:
+    a.pstogif('filename.ps','p') # convert the postscript file to a gif file (p=portrait)
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    iso=a.createisoline('dean') # Create an instance of an isoline object
+Expecting nothing
+ok
+Trying:
+    a.removeobject(iso) # Remove isoline object from VCS list
+Expecting:
+    'Removed isoline object dean'
+ok
+Trying:
+    b=vcs.createboxfill()
+Expecting nothing
+ok
+Trying:
+    b.rename('MyBoxfill') # graphic method is now preserved
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('scatter') # Show all the existing scatter graphics methods
+Expecting:
+    *******************Scatter Names List**********************
+    ...
+    *******************End Scatter Names List**********************
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    slab2 = f('v') # need 2 slabs, so get another
+Expecting nothing
+ok
+Trying:
+    a.scatter(slab1, slab2) # Plot array using specified sct and default template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.clear() # Clear VCS canvas
+Expecting nothing
+ok
+Trying:
+    template=a.gettemplate('hovmuller')
+Expecting nothing
+ok
+Trying:
+    a.scatter(slab1, slab2, template) # Plot array using specified sct and template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    i=a.createisoline('dean') # Create an instance of default isoline object
+Expecting nothing
+ok
+Trying:
+    a.scriptobject(i,'ex_isoline.py') # Save isoline object as a Python file 'isoline.py'
+Expecting nothing
+ok
+Trying:
+    a.scriptobject(i,'ex_isoline2') # Save isoline object as a JSON object 'isoline2.json'
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.setbgoutputdimensions(width=11.5, height= 8.5) # US Legal
+Expecting nothing
+ok
+Trying:
+    a.setbgoutputdimensions(width=21, height=29.7, units='cm') # A4
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array,'default','isofill','quick')
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.setcolormap("AMIP")
+Expecting nothing
+ok
+Trying:
+    a.setcolorcell(11,0,0,0)
+Expecting nothing
+ok
+Trying:
+    a.setcolorcell(21,100,0,0)
+Expecting nothing
+ok
+Trying:
+    a.setcolorcell(31,0,100,0)
+Expecting nothing
+ok
+Trying:
+    a.setcolorcell(41,0,0,100)
+Expecting nothing
+ok
+Trying:
+    a.setcolorcell(51,100,100,100)
+Expecting nothing
+ok
+Trying:
+    a.setcolorcell(61,70,70,70)
+Expecting nothing
+ok
+Trying:
+    a.plot(array,'default','isofill','quick')
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array,'default','isofill','quick')
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.setcolormap("AMIP")
+Expecting nothing
+ok
+Trying:
+    a.plot(array,'default','isofill','quick')
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a = vcs.init()
+Expecting nothing
+ok
+Trying:
+    line = vcs.createline()
+Expecting nothing
+ok
+Trying:
+    line.width = 5
+Expecting nothing
+ok
+Trying:
+    a.setcontinentsline(line) # Use custom continents line
+Expecting nothing
+ok
+Trying:
+    a.setcontinentsline("default") # Use default line
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.setcontinentstype(3)
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array,'default','isofill','quick')
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    array = [range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.plot(array)
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.svg('example') # Overwrite a postscript file
+Expecting nothing
+ok
+Trying:
+    a.svg('example', width=11.5, height= 8.5) # US Legal
+Expecting nothing
+ok
+Trying:
+    a.svg('example', width=21, height=29.7, units='cm') # A4
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('taylordiagram') # Show all the existing taylordiagram graphics methods
+Expecting:
+    *******************Taylordiagram Names List**********************
+    ...
+    *******************End Taylordiagram Names List**********************
+ok
+Trying:
+    td= a.gettaylordiagram() # Create instance of 'default'
+Expecting nothing
+ok
+Trying:
+    array=[range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.taylordiagram(array,td) # Plot array using specified iso and default template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.clear() # Clear VCS canvas
+Expecting nothing
+ok
+Trying:
+    template=a.gettemplate('hovmuller')
+Expecting nothing
+ok
+Trying:
+    a.taylordiagram(array,td,template) # Plot array using specified iso and template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.clean_auto_generated_objects()
+Expecting nothing
+ok
+Trying:
+    a.show('texttable') # Show all the existing texttable objects
+Expecting:
+    *******************Texttable Names List**********************
+    ...
+    *******************End Texttable Names List**********************
+ok
+Trying:
+    a.show('textorientation') # Show all the existing textorientation objects
+Expecting:
+    *******************Textorientation Names List**********************
+    ...
+    *******************End Textorientation Names List**********************
+ok
+Trying:
+    vcs.createtext('qa_tta', 'qa', '7left_tto', '7left') # Create instance of 'std_tt' and '7left_to'
+Expecting:
+    <vcs.textcombined.Tc object at ...>
+ok
+Trying:
+    tc=a.gettext('qa_tta', '7left_tto')
+Expecting nothing
+ok
+Trying:
+    tc.string='Text1' # Show the string "Text1" on the VCS Canvas
+Expecting nothing
+ok
+Trying:
+    tc.font=2 # Set the text size
+Expecting nothing
+ok
+Trying:
+    tc.color=242 # Set the text color
+Expecting nothing
+ok
+Trying:
+    tc.angle=45 # Set the text angle
+Expecting nothing
+ok
+Trying:
+    tc.x=[0.5]
+Expecting nothing
+ok
+Trying:
+    tc.y=[0.5]
+Expecting nothing
+ok
+Trying:
+    a.textcombined(tc) # Plot using specified text object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    import cdms2 # We need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    s = f('clt') # use the data file to create a slab
+Expecting nothing
+ok
+Trying:
+    a.plot(s,'default','boxfill','quick')
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.mode = 0 # Go to manual mode
+Expecting nothing
+ok
+Trying:
+    box=a.getboxfill('quick')
+Expecting nothing
+ok
+Trying:
+    box.color_1=100
+Expecting nothing
+ok
+Trying:
+    box.xticlabels('lon30','lon30')
+Expecting nothing
+ok
+Trying:
+    box.xticlabels('','')
+Expecting nothing
+ok
+Trying:
+    box.datawc(1e20,1e20,1e20,1e20)
+Expecting nothing
+ok
+Trying:
+    box.datawc(-45.0, 45.0, -90.0, 90.0)
+Expecting nothing
+ok
+Trying:
+    a.update() # Update the changes manually
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('vector') # Show all the existing vector graphics methods
+Expecting:
+    *******************Vector Names List**********************
+    ...
+    *******************End Vector Names List**********************
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    slab2 = f('v') # vector needs 2 slabs, so get another
+Expecting nothing
+ok
+Trying:
+    a.vector(slab1, slab2) # plot vector using slab and default vector
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.clear() # Clear VCS canvas
+Expecting nothing
+ok
+Trying:
+    template=a.gettemplate('hovmuller')
+Expecting nothing
+ok
+Trying:
+    a.vector(slab1, slab2, template) # Plot array using default vector and specified template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('xvsy') # Show all the existing XvsY graphics methods
+Expecting:
+    *******************Xvsy Names List**********************
+    ...
+    *******************End Xvsy Names List**********************
+ok
+Trying:
+    xy=a.getxvsy('default_xvsy_') # Create instance of default xvsy
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    slab2 = f('v') # use the data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    a.xvsy(slab1,slab2,xy) # Plot array using specified xy and default template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.clear() # Clear VCS canvas
+Expecting nothing
+ok
+Trying:
+    template=a.gettemplate('hovmuller')
+Expecting nothing
+ok
+Trying:
+    a.xvsy(slab1,slab2,xy,template) # Plot array using specified xy and template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('xyvsy') # Show all the existing Xyvsy graphics methods
+Expecting:
+    *******************Xyvsy Names List**********************
+    ...
+    *******************End Xyvsy Names List**********************
+ok
+Trying:
+    xyy=a.getxyvsy('default_xyvsy_') # Create instance of default xyvsy
+Expecting nothing
+ok
+Trying:
+    array=[range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.xyvsy(array,xyy) # Plot array using specified xyy and default template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.clear() # Clear VCS canvas
+Expecting nothing
+ok
+Trying:
+    template=a.gettemplate('hovmuller')
+Expecting nothing
+ok
+Trying:
+    a.xyvsy(array,xyy,template) # Plot array using specified xyy and template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('yxvsx') # Show all the existing Yxvsx graphics methods
+Expecting:
+    *******************Yxvsx Names List**********************
+    ...
+    *******************End Yxvsx Names List**********************
+ok
+Trying:
+    yxx=a.getyxvsx('default_yxvsx_') # Create instance of default yxvsx
+Expecting nothing
+ok
+Trying:
+    array=[range(1, 11) for _ in range(1, 11)]
+Expecting nothing
+ok
+Trying:
+    a.yxvsx(array,yxx) # Plot array using specified yxx and default template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.clear() # Clear VCS canvas
+Expecting nothing
+ok
+Trying:
+    template=a.gettemplate('hovmuller')
+Expecting nothing
+ok
+Trying:
+    a.yxvsx(array,yxx,template) # Plot array using specified yxx and template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+106 items had no tests:
+    vcs.Canvas
+    vcs.Canvas.Canvas
+    vcs.Canvas.Canvas._Canvas__new_elts
+    vcs.Canvas.Canvas._Canvas__plot
+    vcs.Canvas.Canvas.__init__
+    vcs.Canvas.Canvas._compute_margins
+    vcs.Canvas.Canvas._compute_width_height
+    vcs.Canvas.Canvas._continentspath
+    vcs.Canvas.Canvas._datawc_tv
+    vcs.Canvas.Canvas._get_user_actions
+    vcs.Canvas.Canvas._get_user_actions_names
+    vcs.Canvas.Canvas._getanimate
+    vcs.Canvas.Canvas._getanimate_info
+    vcs.Canvas.Canvas._getcanvas
+    vcs.Canvas.Canvas._getisplottinggridded
+    vcs.Canvas.Canvas._getmode
+    vcs.Canvas.Canvas._getpausetime
+    vcs.Canvas.Canvas._getvarglist
+    vcs.Canvas.Canvas._getviewport
+    vcs.Canvas.Canvas._getwinfo_id
+    vcs.Canvas.Canvas._getworldcoordinate
+    vcs.Canvas.Canvas._reconstruct_tv
+    vcs.Canvas.Canvas._scriptrun
+    vcs.Canvas.Canvas._set_user_actions
+    vcs.Canvas.Canvas._set_user_actions_names
+    vcs.Canvas.Canvas._setanimate
+    vcs.Canvas.Canvas._setanimate_info
+    vcs.Canvas.Canvas._setcanvas
+    vcs.Canvas.Canvas._setisplottinggridded
+    vcs.Canvas.Canvas._setmode
+    vcs.Canvas.Canvas._setpausetime
+    vcs.Canvas.Canvas._setvarglist
+    vcs.Canvas.Canvas._setviewport
+    vcs.Canvas.Canvas._setwinfo_id
+    vcs.Canvas.Canvas._setworldcoordinate
+    vcs.Canvas.Canvas.addfont
+    vcs.Canvas.Canvas.animate
+    vcs.Canvas.Canvas.animate_info
+    vcs.Canvas.Canvas.canvas
+    vcs.Canvas.Canvas.canvasid
+    vcs.Canvas.Canvas.canvasinfo
+    vcs.Canvas.Canvas.cgm
+    vcs.Canvas.Canvas.change_display_graphic_method
+    vcs.Canvas.Canvas.check_name_source
+    vcs.Canvas.Canvas.clean_auto_generated_objects
+    vcs.Canvas.Canvas.configure
+    vcs.Canvas.Canvas.copyfontto
+    vcs.Canvas.Canvas.create1d
+    vcs.Canvas.Canvas.dual_scalar3d
+    vcs.Canvas.Canvas.dummy_user_action
+    vcs.Canvas.Canvas.endconfigure
+    vcs.Canvas.Canvas.get1d
+    vcs.Canvas.Canvas.get_selected_display
+    vcs.Canvas.Canvas.getantialiasing
+    vcs.Canvas.Canvas.getcolormapname
+    vcs.Canvas.Canvas.getcontinentsline
+    vcs.Canvas.Canvas.getfontname
+    vcs.Canvas.Canvas.getfontnumber
+    vcs.Canvas.Canvas.getplot
+    vcs.Canvas.Canvas.gif
+    vcs.Canvas.Canvas.grid
+    vcs.Canvas.Canvas.gs
+    vcs.Canvas.Canvas.initLogoDrawing
+    vcs.Canvas.Canvas.interact
+    vcs.Canvas.Canvas.isinfile
+    vcs.Canvas.Canvas.isopened
+    vcs.Canvas.Canvas.isplottinggridded
+    vcs.Canvas.Canvas.match_color
+    vcs.Canvas.Canvas.mode
+    vcs.Canvas.Canvas.onClosing
+    vcs.Canvas.Canvas.pause_time
+    vcs.Canvas.Canvas.plot_annotation
+    vcs.Canvas.Canvas.plot_filledcontinents
+    vcs.Canvas.Canvas.processParameterChange
+    vcs.Canvas.Canvas.put_png_on_canvas
+    vcs.Canvas.Canvas.raisecanvas
+    vcs.Canvas.Canvas.removeP
+    vcs.Canvas.Canvas.remove_display_name
+    vcs.Canvas.Canvas.return_display_names
+    vcs.Canvas.Canvas.savecontinentstype
+    vcs.Canvas.Canvas.scalar3d
+    vcs.Canvas.Canvas.scriptrun
+    vcs.Canvas.Canvas.setAnimationStepper
+    vcs.Canvas.Canvas.setantialiasing
+    vcs.Canvas.Canvas.setdefaultfont
+    vcs.Canvas.Canvas.show
+    vcs.Canvas.Canvas.start
+    vcs.Canvas.Canvas.switchfonts
+    vcs.Canvas.Canvas.updateorientation
+    vcs.Canvas.Canvas.user_actions
+    vcs.Canvas.Canvas.user_actions_names
+    vcs.Canvas.Canvas.varglist
+    vcs.Canvas.Canvas.vector3d
+    vcs.Canvas.Canvas.viewport
+    vcs.Canvas.Canvas.winfo_id
+    vcs.Canvas.Canvas.worldcoordinate
+    vcs.Canvas.SIGNAL
+    vcs.Canvas.SIGNAL.__call__
+    vcs.Canvas.SIGNAL.__init__
+    vcs.Canvas.SIGNAL.clear
+    vcs.Canvas.SIGNAL.connect
+    vcs.Canvas.SIGNAL.disconnect
+    vcs.Canvas._determine_arg_list
+    vcs.Canvas._process_keyword
+    vcs.Canvas.change_date_time
+    vcs.Canvas.dictionarytovcslist
+90 items passed all tests:
+  14 tests in vcs.Canvas.Canvas.boxfill
+   4 tests in vcs.Canvas.Canvas.clear
+   4 tests in vcs.Canvas.Canvas.close
+   3 tests in vcs.Canvas.Canvas.create3d_dual_scalar
+   3 tests in vcs.Canvas.Canvas.create3d_scalar
+   3 tests in vcs.Canvas.Canvas.create3d_vector
+   5 tests in vcs.Canvas.Canvas.createboxfill
+   5 tests in vcs.Canvas.Canvas.createcolormap
+   3 tests in vcs.Canvas.Canvas.createfillarea
+   5 tests in vcs.Canvas.Canvas.createisofill
+   5 tests in vcs.Canvas.Canvas.createisoline
+   5 tests in vcs.Canvas.Canvas.createline
+   5 tests in vcs.Canvas.Canvas.createmarker
+   5 tests in vcs.Canvas.Canvas.createmeshfill
+   3 tests in vcs.Canvas.Canvas.createscatter
+   3 tests in vcs.Canvas.Canvas.createtaylordiagram
+   5 tests in vcs.Canvas.Canvas.createtemplate
+   3 tests in vcs.Canvas.Canvas.createtext
+   5 tests in vcs.Canvas.Canvas.createtextorientation
+   5 tests in vcs.Canvas.Canvas.createtexttable
+   3 tests in vcs.Canvas.Canvas.createvector
+   3 tests in vcs.Canvas.Canvas.createxvsy
+   3 tests in vcs.Canvas.Canvas.createxyvsy
+   3 tests in vcs.Canvas.Canvas.createyxvsx
+   4 tests in vcs.Canvas.Canvas.destroy
+   4 tests in vcs.Canvas.Canvas.drawfillarea
+   4 tests in vcs.Canvas.Canvas.drawline
+   3 tests in vcs.Canvas.Canvas.drawlogooff
+   3 tests in vcs.Canvas.Canvas.drawlogoon
+   4 tests in vcs.Canvas.Canvas.drawmarker
+   9 tests in vcs.Canvas.Canvas.eps
+   9 tests in vcs.Canvas.Canvas.fillarea
+   4 tests in vcs.Canvas.Canvas.flush
+   4 tests in vcs.Canvas.Canvas.geometry
+   9 tests in vcs.Canvas.Canvas.getboxfill
+   4 tests in vcs.Canvas.Canvas.getcolorcell
+   4 tests in vcs.Canvas.Canvas.getcolormap
+   2 tests in vcs.Canvas.Canvas.getcontinentstype
+   4 tests in vcs.Canvas.Canvas.getdrawlogo
+   4 tests in vcs.Canvas.Canvas.getfillarea
+   7 tests in vcs.Canvas.Canvas.getfont
+   9 tests in vcs.Canvas.Canvas.getisofill
+   9 tests in vcs.Canvas.Canvas.getisoline
+   6 tests in vcs.Canvas.Canvas.getline
+   6 tests in vcs.Canvas.Canvas.getmarker
+   9 tests in vcs.Canvas.Canvas.getmeshfill
+   9 tests in vcs.Canvas.Canvas.getprojection
+   8 tests in vcs.Canvas.Canvas.getscatter
+   9 tests in vcs.Canvas.Canvas.gettemplate
+   6 tests in vcs.Canvas.Canvas.gettextextent
+   4 tests in vcs.Canvas.Canvas.gettextorientation
+   4 tests in vcs.Canvas.Canvas.gettexttable
+   8 tests in vcs.Canvas.Canvas.getvector
+   8 tests in vcs.Canvas.Canvas.getxvsy
+   7 tests in vcs.Canvas.Canvas.getxyvsy
+   7 tests in vcs.Canvas.Canvas.getyxvsx
+   4 tests in vcs.Canvas.Canvas.islandscape
+  10 tests in vcs.Canvas.Canvas.isofill
+   8 tests in vcs.Canvas.Canvas.isoline
+   4 tests in vcs.Canvas.Canvas.isportrait
+   8 tests in vcs.Canvas.Canvas.landscape
+   9 tests in vcs.Canvas.Canvas.line
+   2 tests in vcs.Canvas.Canvas.listelements
+   9 tests in vcs.Canvas.Canvas.marker
+   9 tests in vcs.Canvas.Canvas.meshfill
+   3 tests in vcs.Canvas.Canvas.open
+   2 tests in vcs.Canvas.Canvas.orientation
+   6 tests in vcs.Canvas.Canvas.pdf
+  13 tests in vcs.Canvas.Canvas.plot
+   4 tests in vcs.Canvas.Canvas.png
+   8 tests in vcs.Canvas.Canvas.portrait
+   9 tests in vcs.Canvas.Canvas.postscript
+   6 tests in vcs.Canvas.Canvas.pstogif
+   3 tests in vcs.Canvas.Canvas.removeobject
+   2 tests in vcs.Canvas.Canvas.saveinitialfile
+  10 tests in vcs.Canvas.Canvas.scatter
+   4 tests in vcs.Canvas.Canvas.scriptobject
+   3 tests in vcs.Canvas.Canvas.setbgoutputdimensions
+  11 tests in vcs.Canvas.Canvas.setcolorcell
+   5 tests in vcs.Canvas.Canvas.setcolormap
+   5 tests in vcs.Canvas.Canvas.setcontinentsline
+   4 tests in vcs.Canvas.Canvas.setcontinentstype
+   6 tests in vcs.Canvas.Canvas.svg
+   8 tests in vcs.Canvas.Canvas.taylordiagram
+  13 tests in vcs.Canvas.Canvas.text
+  13 tests in vcs.Canvas.Canvas.update
+  10 tests in vcs.Canvas.Canvas.vector
+  11 tests in vcs.Canvas.Canvas.xvsy
+   8 tests in vcs.Canvas.Canvas.xyvsy
+   8 tests in vcs.Canvas.Canvas.yxvsx
+**********************************************************************
+9 items had failures:
+   2 of   5 in vcs.Canvas.Canvas.createprojection
+   1 of   4 in vcs.Canvas.Canvas.drawtext
+   2 of  11 in vcs.Canvas.Canvas.ffmpeg
+   1 of   8 in vcs.Canvas.Canvas.get3d_dual_scalar
+   1 of   7 in vcs.Canvas.Canvas.get3d_scalar
+   1 of   8 in vcs.Canvas.Canvas.get3d_vector
+   1 of   7 in vcs.Canvas.Canvas.gettaylordiagram
+   1 of   5 in vcs.Canvas.Canvas.gettextcombined
+   1 of   3 in vcs.Canvas.Canvas.objecthelp
+592 tests in 205 items.
+581 passed and 11 failed.
+***Test Failed*** 11 failures.

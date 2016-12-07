@@ -1,0 +1,278 @@
+Trying:
+    import vcs
+Expecting nothing
+ok
+Trying:
+    x = vcs.init()
+Expecting nothing
+ok
+Trying:
+    t = vcs.createtemplate()
+Expecting nothing
+ok
+Trying:
+    t.drawLinesAndMarkersLegend(x,
+        ["red","blue","green"], ["solid","dash","dot"],[1,4,8],
+        ["blue","green","red"], ["cross","square","dot"],[3,4,5],
+        ["sample A","type B","thing C"],True)
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1477, in vcs.template.P.drawLinesAndMarkersLegend
+Failed example:
+    t.drawLinesAndMarkersLegend(x,
+        ["red","blue","green"], ["solid","dash","dot"],[1,4,8],
+        ["blue","green","red"], ["cross","square","dot"],[3,4,5],
+        ["sample A","type B","thing C"],True)
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.template.P.drawLinesAndMarkersLegend[3]>", line 4, in <module>
+        ["sample A","type B","thing C"],True)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1522, in drawLinesAndMarkersLegend
+        strings, scratched, bg, render)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/utils.py", line 2390, in drawLinesAndMarkersLegend
+        if scratched is not None and scratched[i] is not False:
+    TypeError: 'bool' object has no attribute '__getitem__'
+Trying:
+    x.png("sample")
+Expecting nothing
+ok
+Trying:
+    t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+Expecting nothing
+ok
+Trying:
+    t.move(0.2,'x') # Move everything right by 20%
+Expecting nothing
+ok
+Trying:
+    t.move(0.2,'y') # Move everything up by 20%
+Expecting nothing
+ok
+Trying:
+    t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1366, in vcs.template.P.moveto
+Failed example:
+    t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.template.P.moveto[0]>", line 1, in <module>
+        t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 79, in createtemplate
+        name, source = check_name_source(name, source, 'template')
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 57, in check_name_source
+        raise vcsError("Error %s object named %s already exists" % (typ, name))
+    vcsError: Error template object named example1 already exists
+Trying:
+    t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1367, in vcs.template.P.moveto
+Failed example:
+    t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.template.P.moveto[1]>", line 1, in <module>
+        t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
+    NameError: name 't' is not defined
+Trying:
+    t = vcs.createtemplate('example1', 'default') # template 'example1' inherits from 'default'
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1264, in vcs.template.P.reset
+Failed example:
+    t = vcs.createtemplate('example1', 'default') # template 'example1' inherits from 'default'
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.template.P.reset[0]>", line 1, in <module>
+        t = vcs.createtemplate('example1', 'default') # template 'example1' inherits from 'default'
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 79, in createtemplate
+        name, source = check_name_source(name, source, 'template')
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 57, in check_name_source
+        raise vcsError("Error %s object named %s already exists" % (typ, name))
+    vcsError: Error template object named example1 already exists
+Trying:
+    t.reset('x',0.15,0.5,t.data.x1,t.data.x2) # Set x1 value to 0.15 and x2 value to 0.5
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1265, in vcs.template.P.reset
+Failed example:
+    t.reset('x',0.15,0.5,t.data.x1,t.data.x2) # Set x1 value to 0.15 and x2 value to 0.5
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.template.P.reset[1]>", line 1, in <module>
+        t.reset('x',0.15,0.5,t.data.x1,t.data.x2) # Set x1 value to 0.15 and x2 value to 0.5
+    NameError: name 't' is not defined
+Trying:
+    t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1399, in vcs.template.P.scale
+Failed example:
+    t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.template.P.scale[0]>", line 1, in <module>
+        t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 79, in createtemplate
+        name, source = check_name_source(name, source, 'template')
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 57, in check_name_source
+        raise vcsError("Error %s object named %s already exists" % (typ, name))
+    vcsError: Error template object named example1 already exists
+Trying:
+    t.scale(0.5) # Halves the template size
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1400, in vcs.template.P.scale
+Failed example:
+    t.scale(0.5) # Halves the template size
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.template.P.scale[1]>", line 1, in <module>
+        t.scale(0.5) # Halves the template size
+    NameError: name 't' is not defined
+Trying:
+    t.scale(1.2) # Upsize everything to 20% more than the original size
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1401, in vcs.template.P.scale
+Failed example:
+    t.scale(1.2) # Upsize everything to 20% more than the original size
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.template.P.scale[2]>", line 1, in <module>
+        t.scale(1.2) # Upsize everything to 20% more than the original size
+    NameError: name 't' is not defined
+Trying:
+    t.scale(2,'x') # Double the x axis
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1402, in vcs.template.P.scale
+Failed example:
+    t.scale(2,'x') # Double the x axis
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.template.P.scale[3]>", line 1, in <module>
+        t.scale(2,'x') # Double the x axis
+    NameError: name 't' is not defined
+Trying:
+    a=vcs.init() # Make a Canvas object to work with
+Expecting nothing
+ok
+Trying:
+    ex=a.gettemplate() # Get default template
+Expecting nothing
+ok
+Trying:
+    ex.script('filename.py') # Append to a Python script named 'filename.py'
+Expecting nothing
+ok
+Trying:
+    ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
+Expecting nothing
+ok
+73 items had no tests:
+    vcs.template
+    vcs.template.P
+    vcs.template.P.__init__
+    vcs.template.P._getName
+    vcs.template.P._getOrientation
+    vcs.template.P._setOrientation
+    vcs.template.P.blank
+    vcs.template.P.box1
+    vcs.template.P.box2
+    vcs.template.P.box3
+    vcs.template.P.box4
+    vcs.template.P.comment1
+    vcs.template.P.comment2
+    vcs.template.P.comment3
+    vcs.template.P.comment4
+    vcs.template.P.crdate
+    vcs.template.P.crtime
+    vcs.template.P.data
+    vcs.template.P.dataname
+    vcs.template.P.drawAttributes
+    vcs.template.P.drawColorBar
+    vcs.template.P.drawTicks
+    vcs.template.P.file
+    vcs.template.P.function
+    vcs.template.P.legend
+    vcs.template.P.line1
+    vcs.template.P.line2
+    vcs.template.P.line3
+    vcs.template.P.line4
+    vcs.template.P.list
+    vcs.template.P.logicalmask
+    vcs.template.P.max
+    vcs.template.P.mean
+    vcs.template.P.min
+    vcs.template.P.name
+    vcs.template.P.orientation
+    vcs.template.P.plot
+    vcs.template.P.ratio
+    vcs.template.P.ratio_linear_projection
+    vcs.template.P.scalefont
+    vcs.template.P.source
+    vcs.template.P.title
+    vcs.template.P.tname
+    vcs.template.P.transformation
+    vcs.template.P.tunits
+    vcs.template.P.tvalue
+    vcs.template.P.units
+    vcs.template.P.xlabel1
+    vcs.template.P.xlabel2
+    vcs.template.P.xmintic1
+    vcs.template.P.xmintic2
+    vcs.template.P.xname
+    vcs.template.P.xtic1
+    vcs.template.P.xtic2
+    vcs.template.P.xunits
+    vcs.template.P.xvalue
+    vcs.template.P.ylabel1
+    vcs.template.P.ylabel2
+    vcs.template.P.ymintic1
+    vcs.template.P.ymintic2
+    vcs.template.P.yname
+    vcs.template.P.ytic1
+    vcs.template.P.ytic2
+    vcs.template.P.yunits
+    vcs.template.P.yvalue
+    vcs.template.P.zname
+    vcs.template.P.zunits
+    vcs.template.P.zvalue
+    vcs.template._getgen
+    vcs.template._setgen
+    vcs.template.epsilon_gte
+    vcs.template.epsilon_lte
+    vcs.template.process_src
+2 items passed all tests:
+   3 tests in vcs.template.P.move
+   4 tests in vcs.template.P.script
+**********************************************************************
+4 items had failures:
+   1 of   5 in vcs.template.P.drawLinesAndMarkersLegend
+   2 of   2 in vcs.template.P.moveto
+   2 of   2 in vcs.template.P.reset
+   4 of   4 in vcs.template.P.scale
+20 tests in 79 items.
+11 passed and 9 failed.
+***Test Failed*** 9 failures.

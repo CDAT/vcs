@@ -1,0 +1,138 @@
+Trying:
+    a=vcs.init() # Make a Canvas object to work with
+Expecting nothing
+ok
+Trying:
+    ex=a.getmeshfill() # Get default meshfill
+Expecting nothing
+ok
+Trying:
+    ex.script('filename.py') # Append to a Python script named 'filename.py'
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/meshfill.py", line 802, in vcs.meshfill.Gfm.script
+Failed example:
+    ex.script('filename.py') # Append to a Python script named 'filename.py'
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.meshfill.Gfm.script[2]>", line 1, in <module>
+        ex.script('filename.py') # Append to a Python script named 'filename.py'
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/meshfill.py", line 900, in script
+        fp.write("%s.missing = %g\n\n" % (unique_name, self.missing))
+    TypeError: float argument required, not tuple
+Trying:
+    ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    ex=a.createmeshfill('xyscale_ex') # create a boxfill to work with
+Expecting nothing
+ok
+Trying:
+    ex.xyscale(xat='linear', yat='linear') # set xaxisconvert and yaxisconvert to 'linear'
+Expecting nothing
+ok
+89 items had no tests:
+    vcs.meshfill
+    vcs.meshfill.Gfm
+    vcs.meshfill.Gfm.__init__
+    vcs.meshfill.Gfm._getcalendar
+    vcs.meshfill.Gfm._getdatawc_x1
+    vcs.meshfill.Gfm._getdatawc_x2
+    vcs.meshfill.Gfm._getdatawc_y1
+    vcs.meshfill.Gfm._getdatawc_y2
+    vcs.meshfill.Gfm._getfillareaindices
+    vcs.meshfill.Gfm._getfillareastyle
+    vcs.meshfill.Gfm._getmesh
+    vcs.meshfill.Gfm._getmissing
+    vcs.meshfill.Gfm._getname
+    vcs.meshfill.Gfm._getprojection
+    vcs.meshfill.Gfm._gettimeunits
+    vcs.meshfill.Gfm._getwrap
+    vcs.meshfill.Gfm._getxaxisconvert
+    vcs.meshfill.Gfm._getxmtics1
+    vcs.meshfill.Gfm._getxmtics2
+    vcs.meshfill.Gfm._getxticlabels1
+    vcs.meshfill.Gfm._getxticlabels2
+    vcs.meshfill.Gfm._getyaxisconvert
+    vcs.meshfill.Gfm._getymtics1
+    vcs.meshfill.Gfm._getymtics2
+    vcs.meshfill.Gfm._getyticlabels1
+    vcs.meshfill.Gfm._getyticlabels2
+    vcs.meshfill.Gfm._setcalendar
+    vcs.meshfill.Gfm._setdatawc_x1
+    vcs.meshfill.Gfm._setdatawc_x2
+    vcs.meshfill.Gfm._setdatawc_y1
+    vcs.meshfill.Gfm._setdatawc_y2
+    vcs.meshfill.Gfm._setfillareaindices
+    vcs.meshfill.Gfm._setfillareastyle
+    vcs.meshfill.Gfm._setmesh
+    vcs.meshfill.Gfm._setmissing
+    vcs.meshfill.Gfm._setname
+    vcs.meshfill.Gfm._setprojection
+    vcs.meshfill.Gfm._settimeunits
+    vcs.meshfill.Gfm._setwrap
+    vcs.meshfill.Gfm._setxaxisconvert
+    vcs.meshfill.Gfm._setxmtics1
+    vcs.meshfill.Gfm._setxmtics2
+    vcs.meshfill.Gfm._setxticlabels1
+    vcs.meshfill.Gfm._setxticlabels2
+    vcs.meshfill.Gfm._setyaxisconvert
+    vcs.meshfill.Gfm._setymtics1
+    vcs.meshfill.Gfm._setymtics2
+    vcs.meshfill.Gfm._setyticlabels1
+    vcs.meshfill.Gfm._setyticlabels2
+    vcs.meshfill.Gfm.colormap
+    vcs.meshfill.Gfm.colors
+    vcs.meshfill.Gfm.datawc
+    vcs.meshfill.Gfm.datawc_calendar
+    vcs.meshfill.Gfm.datawc_timeunits
+    vcs.meshfill.Gfm.datawc_x1
+    vcs.meshfill.Gfm.datawc_x2
+    vcs.meshfill.Gfm.datawc_y1
+    vcs.meshfill.Gfm.datawc_y2
+    vcs.meshfill.Gfm.ext_1
+    vcs.meshfill.Gfm.ext_2
+    vcs.meshfill.Gfm.exts
+    vcs.meshfill.Gfm.fillareacolors
+    vcs.meshfill.Gfm.fillareaindices
+    vcs.meshfill.Gfm.fillareaopacity
+    vcs.meshfill.Gfm.fillareastyle
+    vcs.meshfill.Gfm.legend
+    vcs.meshfill.Gfm.levels
+    vcs.meshfill.Gfm.list
+    vcs.meshfill.Gfm.mesh
+    vcs.meshfill.Gfm.missing
+    vcs.meshfill.Gfm.name
+    vcs.meshfill.Gfm.projection
+    vcs.meshfill.Gfm.wrap
+    vcs.meshfill.Gfm.xaxisconvert
+    vcs.meshfill.Gfm.xmtics
+    vcs.meshfill.Gfm.xmtics1
+    vcs.meshfill.Gfm.xmtics2
+    vcs.meshfill.Gfm.xticlabels
+    vcs.meshfill.Gfm.xticlabels1
+    vcs.meshfill.Gfm.xticlabels2
+    vcs.meshfill.Gfm.yaxisconvert
+    vcs.meshfill.Gfm.ymtics
+    vcs.meshfill.Gfm.ymtics1
+    vcs.meshfill.Gfm.ymtics2
+    vcs.meshfill.Gfm.yticlabels
+    vcs.meshfill.Gfm.yticlabels1
+    vcs.meshfill.Gfm.yticlabels2
+    vcs.meshfill.load
+    vcs.meshfill.process_src
+1 items passed all tests:
+   3 tests in vcs.meshfill.Gfm.xyscale
+**********************************************************************
+1 items had failures:
+   1 of   4 in vcs.meshfill.Gfm.script
+7 tests in 91 items.
+6 passed and 1 failed.
+***Test Failed*** 1 failures.
