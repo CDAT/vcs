@@ -4790,7 +4790,7 @@ class Canvas(object):
 
         if not file.split('.')[-1].lower() in ['pdf']:
             file += '.pdf'
-        return self.backend.pdf(file, W, H, textAsPaths)
+        return self.backend.pdf(file, width=W, height=H, units=units, textAsPaths=textAsPaths)
 
     def svg(self, file, width=None, height=None, units='inches',
             textAsPaths=True):
@@ -4838,7 +4838,7 @@ class Canvas(object):
 
         if not file.split('.')[-1].lower() in ['svg']:
             file += '.svg'
-        return self.backend.svg(file, W, H, textAsPaths)
+        return self.backend.svg(file, width=W, height=H, units=units, textAsPaths=textAsPaths)
 
     def _compute_margins(
             self, W, H, top_margin, bottom_margin, right_margin, left_margin, dpi):
