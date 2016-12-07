@@ -8,5 +8,4 @@ MODULES=("Canvas" "Pboxeslines" "Pdata" "Pformat" "Plegend" "Ptext" "Pxlabels"
 "vtk_ui")
 
 
-for module in "${MODULES[@]}"; do python doctest_vcs.py "$module" -v -r > "$module.report"; done;
-for module in "${MODULES[@]}"; do python doctest_vcs.py "$module" -v -r --LO; done;
+for module in "${MODULES[@]}"; do python doctest_vcs.py -v -r --LO "$module"; done;

@@ -289,16 +289,6 @@ Expected:
 Got:
     {5.0: '5.000', 0.005: '0.005'}
 Trying:
-    vcs.mklabels ( [.00002,.00005])
-Expecting:
-    {2e-05: '2E-5', 5e-05: '5E-5'}
-ok
-Trying:
-    vcs.mklabels ( [.00002,.00005],output='list')
-Expecting:
-    ['2E-5', '5E-5']
-ok
-Trying:
     vcs.mkscale(0,100)
 Expecting:
     [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]

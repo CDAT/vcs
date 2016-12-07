@@ -1,43 +1,48 @@
-import vcs, sys, doctest, argparse, importlib, re
-
-# TODO: add cleanup function
-# TODO: add args for only running cleanup, only logging missing doctests
-#   *.png, filename.*, ex_*, example.*
+import doctest, argparse, importlib, re
 
 
 def log_stats(module_name, verbose):
     # open .results file to read, and .md file to log
-    results = open(module_name+".results", "r+")
-    log = open(module_name+'.md', 'w+')
-    missing_header = re.compile("^[0-9]+ items had no tests:$")
-    # missing tests will be followed by either passed all tests or "tests in items" entry
-    passing_header = re.compile("^[0-9]+ items passed all tests:$")
-    tests_in_items = re.compile("^[0-9]+ tests in [0-9]+ items\.$")
-    trying = re.compile("^Trying:$")
-    expecting_something = re.compile("^Expecting:$")
-    expecting_nothing = re.compile("^Expecting nothing$")
-    err_header = re.compile('File "')
-    err_indicator = re.compile('\*\*\*\*')
-    line = results.readline()
-    if verbose:
-        err_endpoint = [trying]
-        missing_endpoints = [passing_header, tests_in_items]
+    try:
+        results = open(module_name+".report", "r+")
+    except:
+        raise SystemError("File not found: " + module_name + ".results")
     else:
-        err_endpoint = [err_indicator]
-    while line != '':
-        if re.match(err_header, line):
-            where = line.split()[-1]
-            log.write(where+"\n")
-            for i in range(len(where)):
-                log.write("-")
-            log.write("\n")
-            log.write("```python\n")
-            consume_entry(results, log, err_endpoint, "")
-            log.write("```\n\n")
-        if re.match(missing_header, line):
-            log.write("\nMissing Docstrings\n------------------\n")
-            consume_entry(results, log, missing_endpoints, "- [ ] ")
+        log = open(module_name+'.md', 'w+')
+        missing_header = re.compile("^[0-9]+ items had no tests:$")
+        # missing tests will be followed by either passed all tests or "tests in items" entry
+        passing_header = re.compile("^[0-9]+ items passed all tests:$")
+        tests_in_items = re.compile("^[0-9]+ tests in [0-9]+ items\.$")
+        no_tests = re.compile("^[0-9]+ items had no tests:$")
+        trying = re.compile("^Trying:$")
+        err_header = re.compile('File "')
+        err_indicator = re.compile('\*\*\*\*')
         line = results.readline()
+        if verbose:
+            err_endpoints = [trying, no_tests]
+            missing_endpoints = [passing_header, tests_in_items]
+        else:
+            err_endpoints = [err_indicator,]
+        while line != '':
+            if re.match(err_header, line):
+                where = line.split()[-1]
+                log.write(where+"\n")
+                for i in range(len(where)):
+                    log.write("-")
+                log.write("\n")
+                log.write("```python\n")
+                consume_entry(results, log, err_endpoints, "")
+                log.write("```\n\n")
+            if re.match(missing_header, line):
+                header="Missing Doctests"
+                log.write(header+"\n")
+                map(lambda x: log.write('-'), range(len(header)))
+                log.write("\n")
+                consume_entry(results, log, missing_endpoints, ":x:")
+            line = results.readline()
+        log.close()
+        results.close()
+    print ("Done logging "+module_name+".md")
 
 
 # note: will only consume the first full error
@@ -50,6 +55,22 @@ def consume_entry(readfile, writefile, endpoints, prepend):
         for endpoint in endpoints:
             if re.match(endpoint, line):
                 more = False
+
+
+def cleanup():
+    import glob, os
+    gb = glob.glob
+    patterns = ["example.*", "*.json", "*.svg", "ex_*", "my*", "filename.*"]
+    files = []
+    for pattern in patterns:
+        fnames = gb(pattern)
+        for name in fnames:
+            files.append(name)
+    for file in files:
+        try:
+            os.remove(file)
+        except:
+            pass
 
 
 # Make parser and add options
@@ -68,16 +89,18 @@ parser.add_argument('-a', '--all', action="store_true", default=False,
 args = parser.parse_args()
 
 if not args.LO:
+    import vcs
     if args.log and not args.report:
-        args.report=True
+        args.report = True
     options=doctest.ELLIPSIS
     if not args.all:
         options=options|doctest.REPORT_ONLY_FIRST_FAILURE
     # Import module and run doctests
     m = importlib.import_module(args.package + '.' + args.module)
     doctest.testmod(m, optionflags=options, report=args.report, verbose=args.verbose)
-
-if args.log or args.LO:
+    cleanup()
+    if args.log:
+        log_stats(args.module, args.verbose)
+else:
     log_stats(args.module, args.verbose)
 exit()
-

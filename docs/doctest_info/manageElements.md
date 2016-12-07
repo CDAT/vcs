@@ -21,16 +21,7 @@ Exception raised:
         raise ex(err)
     Exception: type can either be ('linear', 'utm', 'state plane', 'albers equal area', 'lambert', 'mercator', 'polar', 'polyconic', 'equid conic a', 'transverse mercator', 'stereographic', 'lambert azimuthal', 'azimuthal', 'gnomonic', 'orthographic', 'gen. vert. near per', 'sinusoidal', 'equirectangular', 'miller', 'van der grinten', 'hotin', 'robinson', 'space oblique', 'alaska', 'interrupted goode', 'mollweide', 'interrupted mollweide', 'hammer', 'wagner iv', 'wagner vii', 'oblated') or (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30)
 ```
-vcs.manageElements.createprojection
------------------------------------
-```python
-Failed example:
-    vcs.listelements('projection') # should now contain the 'projection_ex2' projection
-Expected:
-    [...'projection_ex2'...]
-Got:
-    ['default', 'lambert', 'linear', 'mercator', 'mollweide', 'orthographic', 'polar', 'polyconic', 'projection_ex1', 'robinson']
-```
+
 vcs.manageElements.createtext
 -----------------------------
 ```python
@@ -44,6 +35,7 @@ Got:
     *******************Textcombined Names List**********************
     *******************End Textcombined Names List**********************
 ```
+
 vcs.manageElements.get3d_dual_scalar
 ------------------------------------
 ```python
@@ -53,8 +45,9 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1215c1050>
+    <vcs.displayplot.Dp object at 0x123a846e0>
 ```
+
 vcs.manageElements.get3d_scalar
 -------------------------------
 ```python
@@ -64,8 +57,9 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1182a8a28>
+    <vcs.displayplot.Dp object at 0x1186ff7f8>
 ```
+
 vcs.manageElements.get3d_vector
 -------------------------------
 ```python
@@ -77,8 +71,9 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11806c280>
+    <vcs.displayplot.Dp object at 0x123a49a28>
 ```
+
 vcs.manageElements.gettaylordiagram
 -----------------------------------
 ```python
@@ -102,6 +97,7 @@ Exception raised:
         raise TypeError("Only length-1 arrays can be converted "
     TypeError: Only length-1 arrays can be converted to Python scalars
 ```
+
 vcs.manageElements.gettextcombined
 ----------------------------------
 ```python
@@ -113,38 +109,37 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.manageElements.gettextcombined[2]>", line 1, in <module>
         vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1365, in createtextcombined
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1390, in createtextcombined
         Tt_name, Tt_source = check_name_source(Tt_name, Tt_source, 'texttable')
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 57, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
     vcsError: Error texttable object named EXAMPLE_tt already exists
 ```
 
-Missing Docstrings
-------------------
-- [ ]     vcs.manageElements
-- [ ]     vcs.manageElements.check_name_source
-- [ ]     vcs.manageElements.create1d
-- [ ]     vcs.manageElements.get1d
-- [ ]     vcs.manageElements.removeCp
-- [ ]     vcs.manageElements.removeG
-- [ ]     vcs.manageElements.removeG1d
-- [ ]     vcs.manageElements.removeGSp
-- [ ]     vcs.manageElements.removeGXY
-- [ ]     vcs.manageElements.removeGXy
-- [ ]     vcs.manageElements.removeGYx
-- [ ]     vcs.manageElements.removeGfb
-- [ ]     vcs.manageElements.removeGfi
-- [ ]     vcs.manageElements.removeGfm
-- [ ]     vcs.manageElements.removeGi
-- [ ]     vcs.manageElements.removeGtd
-- [ ]     vcs.manageElements.removeGv
-- [ ]     vcs.manageElements.removeP
-- [ ]     vcs.manageElements.removeProj
-- [ ]     vcs.manageElements.removeTc
-- [ ]     vcs.manageElements.removeTf
-- [ ]     vcs.manageElements.removeTl
-- [ ]     vcs.manageElements.removeTm
-- [ ]     vcs.manageElements.removeTo
-- [ ]     vcs.manageElements.removeTt
-- [ ]     vcs.manageElements.setLineAttributes
+Missing Doctests
+----------------
+:x:    vcs.manageElements
+:x:    vcs.manageElements.check_name_source
+:x:    vcs.manageElements.create1d
+:x:    vcs.manageElements.get1d
+:x:    vcs.manageElements.removeCp
+:x:    vcs.manageElements.removeG
+:x:    vcs.manageElements.removeG1d
+:x:    vcs.manageElements.removeGSp
+:x:    vcs.manageElements.removeGXY
+:x:    vcs.manageElements.removeGXy
+:x:    vcs.manageElements.removeGYx
+:x:    vcs.manageElements.removeGfb
+:x:    vcs.manageElements.removeGfi
+:x:    vcs.manageElements.removeGfm
+:x:    vcs.manageElements.removeGi
+:x:    vcs.manageElements.removeGtd
+:x:    vcs.manageElements.removeGv
+:x:    vcs.manageElements.removeP
+:x:    vcs.manageElements.removeProj
+:x:    vcs.manageElements.removeTc
+:x:    vcs.manageElements.removeTf
+:x:    vcs.manageElements.removeTl
+:x:    vcs.manageElements.removeTm
+:x:    vcs.manageElements.removeTo
+:x:    vcs.manageElements.removeTt

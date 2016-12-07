@@ -16,10 +16,6 @@ Failed example:
 Expected nothing
 Got:
     DEPRECATED: Use linetype or setLineAttributes instead.
-Trying:
-    ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
-Expecting nothing
-ok
 98 items had no tests:
     vcs.vector
     vcs.vector.Gv

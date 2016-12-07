@@ -35,10 +35,6 @@ Exception raised:
         if scratched is not None and scratched[i] is not False:
     TypeError: 'bool' object has no attribute '__getitem__'
 Trying:
-    x.png("sample")
-Expecting nothing
-ok
-Trying:
     t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
 Expecting nothing
 ok
@@ -69,20 +65,6 @@ Exception raised:
         raise vcsError("Error %s object named %s already exists" % (typ, name))
     vcsError: Error template object named example1 already exists
 Trying:
-    t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1367, in vcs.template.P.moveto
-Failed example:
-    t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.template.P.moveto[1]>", line 1, in <module>
-        t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
-    NameError: name 't' is not defined
-Trying:
     t = vcs.createtemplate('example1', 'default') # template 'example1' inherits from 'default'
 Expecting nothing
 **********************************************************************
@@ -101,20 +83,6 @@ Exception raised:
         raise vcsError("Error %s object named %s already exists" % (typ, name))
     vcsError: Error template object named example1 already exists
 Trying:
-    t.reset('x',0.15,0.5,t.data.x1,t.data.x2) # Set x1 value to 0.15 and x2 value to 0.5
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1265, in vcs.template.P.reset
-Failed example:
-    t.reset('x',0.15,0.5,t.data.x1,t.data.x2) # Set x1 value to 0.15 and x2 value to 0.5
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.template.P.reset[1]>", line 1, in <module>
-        t.reset('x',0.15,0.5,t.data.x1,t.data.x2) # Set x1 value to 0.15 and x2 value to 0.5
-    NameError: name 't' is not defined
-Trying:
     t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
 Expecting nothing
 **********************************************************************
@@ -132,48 +100,6 @@ Exception raised:
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 57, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
     vcsError: Error template object named example1 already exists
-Trying:
-    t.scale(0.5) # Halves the template size
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1400, in vcs.template.P.scale
-Failed example:
-    t.scale(0.5) # Halves the template size
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.template.P.scale[1]>", line 1, in <module>
-        t.scale(0.5) # Halves the template size
-    NameError: name 't' is not defined
-Trying:
-    t.scale(1.2) # Upsize everything to 20% more than the original size
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1401, in vcs.template.P.scale
-Failed example:
-    t.scale(1.2) # Upsize everything to 20% more than the original size
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.template.P.scale[2]>", line 1, in <module>
-        t.scale(1.2) # Upsize everything to 20% more than the original size
-    NameError: name 't' is not defined
-Trying:
-    t.scale(2,'x') # Double the x axis
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1402, in vcs.template.P.scale
-Failed example:
-    t.scale(2,'x') # Double the x axis
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.template.P.scale[3]>", line 1, in <module>
-        t.scale(2,'x') # Double the x axis
-    NameError: name 't' is not defined
 Trying:
     a=vcs.init() # Make a Canvas object to work with
 Expecting nothing

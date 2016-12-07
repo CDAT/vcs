@@ -22,10 +22,6 @@ Exception raised:
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/texttable.py", line 558, in script
         fp.write("%s.color = %g\n\n" % (unique_name, self.color))
     TypeError: float argument required, not tuple
-Trying:
-    ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
-Expecting nothing
-ok
 51 items had no tests:
     vcs.texttable
     vcs.texttable.Tt
