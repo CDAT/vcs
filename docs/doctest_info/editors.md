@@ -1,3 +1,4 @@
 Missing Doctests
 ----------------
-:x:    vcs.editors
+:x:```    vcs.editors```
+

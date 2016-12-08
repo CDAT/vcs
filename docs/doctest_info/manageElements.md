@@ -118,28 +118,53 @@ Exception raised:
 
 Missing Doctests
 ----------------
-:x:    vcs.manageElements
-:x:    vcs.manageElements.check_name_source
-:x:    vcs.manageElements.create1d
-:x:    vcs.manageElements.get1d
-:x:    vcs.manageElements.removeCp
-:x:    vcs.manageElements.removeG
-:x:    vcs.manageElements.removeG1d
-:x:    vcs.manageElements.removeGSp
-:x:    vcs.manageElements.removeGXY
-:x:    vcs.manageElements.removeGXy
-:x:    vcs.manageElements.removeGYx
-:x:    vcs.manageElements.removeGfb
-:x:    vcs.manageElements.removeGfi
-:x:    vcs.manageElements.removeGfm
-:x:    vcs.manageElements.removeGi
-:x:    vcs.manageElements.removeGtd
-:x:    vcs.manageElements.removeGv
-:x:    vcs.manageElements.removeP
-:x:    vcs.manageElements.removeProj
-:x:    vcs.manageElements.removeTc
-:x:    vcs.manageElements.removeTf
-:x:    vcs.manageElements.removeTl
-:x:    vcs.manageElements.removeTm
-:x:    vcs.manageElements.removeTo
-:x:    vcs.manageElements.removeTt
+:x:```    vcs.manageElements```
+
+:x:```    vcs.manageElements.check_name_source```
+
+:x:```    vcs.manageElements.create1d```
+
+:x:```    vcs.manageElements.get1d```
+
+:x:```    vcs.manageElements.removeCp```
+
+:x:```    vcs.manageElements.removeG```
+
+:x:```    vcs.manageElements.removeG1d```
+
+:x:```    vcs.manageElements.removeGSp```
+
+:x:```    vcs.manageElements.removeGXY```
+
+:x:```    vcs.manageElements.removeGXy```
+
+:x:```    vcs.manageElements.removeGYx```
+
+:x:```    vcs.manageElements.removeGfb```
+
+:x:```    vcs.manageElements.removeGfi```
+
+:x:```    vcs.manageElements.removeGfm```
+
+:x:```    vcs.manageElements.removeGi```
+
+:x:```    vcs.manageElements.removeGtd```
+
+:x:```    vcs.manageElements.removeGv```
+
+:x:```    vcs.manageElements.removeP```
+
+:x:```    vcs.manageElements.removeProj```
+
+:x:```    vcs.manageElements.removeTc```
+
+:x:```    vcs.manageElements.removeTf```
+
+:x:```    vcs.manageElements.removeTl```
+
+:x:```    vcs.manageElements.removeTm```
+
+:x:```    vcs.manageElements.removeTo```
+
+:x:```    vcs.manageElements.removeTt```
+

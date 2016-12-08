@@ -20,7 +20,7 @@ def log_stats(module_name, verbose):
         line = results.readline()
         if verbose:
             err_endpoints = [trying, no_tests]
-            missing_endpoints = [passing_header, tests_in_items]
+            missing_endpoints = [passing_header, tests_in_items, err_indicator]
         else:
             err_endpoints = [err_indicator,]
         while line != '':
@@ -31,14 +31,14 @@ def log_stats(module_name, verbose):
                     log.write("-")
                 log.write("\n")
                 log.write("```python\n")
-                consume_entry(results, log, err_endpoints, "")
+                consume_entry(results, log, err_endpoints, "", "")
                 log.write("```\n\n")
             if re.match(missing_header, line):
                 header="Missing Doctests"
                 log.write(header+"\n")
                 map(lambda x: log.write('-'), range(len(header)))
                 log.write("\n")
-                consume_entry(results, log, missing_endpoints, ":x:")
+                consume_entry(results, log, missing_endpoints, ":x:```", "```\n")
             line = results.readline()
         log.close()
         results.close()
@@ -46,11 +46,16 @@ def log_stats(module_name, verbose):
 
 
 # note: will only consume the first full error
-def consume_entry(readfile, writefile, endpoints, prepend):
+def consume_entry(readfile, writefile, endpoints, prepend, append):
     more = True
     line = readfile.readline()
     while more and line != '':
-        writefile.write(prepend + line)
+        if append != "":
+            index = line.find("\n")
+            new_line = prepend + line[:index] + append + line[index:]
+            writefile.write(new_line)
+        else:
+            writefile.write(prepend + line + append)
         line = readfile.readline()
         for endpoint in endpoints:
             if re.match(endpoint, line):

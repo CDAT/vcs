@@ -11,4 +11,5 @@ Got:
 
 Missing Doctests
 ----------------
-:x:    vcs.queries
+:x:```    vcs.queries```
+

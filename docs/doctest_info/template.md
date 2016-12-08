@@ -75,76 +75,149 @@ Exception raised:
 
 Missing Doctests
 ----------------
-:x:    vcs.template
-:x:    vcs.template.P
-:x:    vcs.template.P.__init__
-:x:    vcs.template.P._getName
-:x:    vcs.template.P._getOrientation
-:x:    vcs.template.P._setOrientation
-:x:    vcs.template.P.blank
-:x:    vcs.template.P.box1
-:x:    vcs.template.P.box2
-:x:    vcs.template.P.box3
-:x:    vcs.template.P.box4
-:x:    vcs.template.P.comment1
-:x:    vcs.template.P.comment2
-:x:    vcs.template.P.comment3
-:x:    vcs.template.P.comment4
-:x:    vcs.template.P.crdate
-:x:    vcs.template.P.crtime
-:x:    vcs.template.P.data
-:x:    vcs.template.P.dataname
-:x:    vcs.template.P.drawAttributes
-:x:    vcs.template.P.drawColorBar
-:x:    vcs.template.P.drawTicks
-:x:    vcs.template.P.file
-:x:    vcs.template.P.function
-:x:    vcs.template.P.legend
-:x:    vcs.template.P.line1
-:x:    vcs.template.P.line2
-:x:    vcs.template.P.line3
-:x:    vcs.template.P.line4
-:x:    vcs.template.P.list
-:x:    vcs.template.P.logicalmask
-:x:    vcs.template.P.max
-:x:    vcs.template.P.mean
-:x:    vcs.template.P.min
-:x:    vcs.template.P.name
-:x:    vcs.template.P.orientation
-:x:    vcs.template.P.plot
-:x:    vcs.template.P.ratio
-:x:    vcs.template.P.ratio_linear_projection
-:x:    vcs.template.P.scalefont
-:x:    vcs.template.P.source
-:x:    vcs.template.P.title
-:x:    vcs.template.P.tname
-:x:    vcs.template.P.transformation
-:x:    vcs.template.P.tunits
-:x:    vcs.template.P.tvalue
-:x:    vcs.template.P.units
-:x:    vcs.template.P.xlabel1
-:x:    vcs.template.P.xlabel2
-:x:    vcs.template.P.xmintic1
-:x:    vcs.template.P.xmintic2
-:x:    vcs.template.P.xname
-:x:    vcs.template.P.xtic1
-:x:    vcs.template.P.xtic2
-:x:    vcs.template.P.xunits
-:x:    vcs.template.P.xvalue
-:x:    vcs.template.P.ylabel1
-:x:    vcs.template.P.ylabel2
-:x:    vcs.template.P.ymintic1
-:x:    vcs.template.P.ymintic2
-:x:    vcs.template.P.yname
-:x:    vcs.template.P.ytic1
-:x:    vcs.template.P.ytic2
-:x:    vcs.template.P.yunits
-:x:    vcs.template.P.yvalue
-:x:    vcs.template.P.zname
-:x:    vcs.template.P.zunits
-:x:    vcs.template.P.zvalue
-:x:    vcs.template._getgen
-:x:    vcs.template._setgen
-:x:    vcs.template.epsilon_gte
-:x:    vcs.template.epsilon_lte
-:x:    vcs.template.process_src
+:x:```    vcs.template```
+
+:x:```    vcs.template.P```
+
+:x:```    vcs.template.P.__init__```
+
+:x:```    vcs.template.P._getName```
+
+:x:```    vcs.template.P._getOrientation```
+
+:x:```    vcs.template.P._setOrientation```
+
+:x:```    vcs.template.P.blank```
+
+:x:```    vcs.template.P.box1```
+
+:x:```    vcs.template.P.box2```
+
+:x:```    vcs.template.P.box3```
+
+:x:```    vcs.template.P.box4```
+
+:x:```    vcs.template.P.comment1```
+
+:x:```    vcs.template.P.comment2```
+
+:x:```    vcs.template.P.comment3```
+
+:x:```    vcs.template.P.comment4```
+
+:x:```    vcs.template.P.crdate```
+
+:x:```    vcs.template.P.crtime```
+
+:x:```    vcs.template.P.data```
+
+:x:```    vcs.template.P.dataname```
+
+:x:```    vcs.template.P.drawAttributes```
+
+:x:```    vcs.template.P.drawColorBar```
+
+:x:```    vcs.template.P.drawTicks```
+
+:x:```    vcs.template.P.file```
+
+:x:```    vcs.template.P.function```
+
+:x:```    vcs.template.P.legend```
+
+:x:```    vcs.template.P.line1```
+
+:x:```    vcs.template.P.line2```
+
+:x:```    vcs.template.P.line3```
+
+:x:```    vcs.template.P.line4```
+
+:x:```    vcs.template.P.list```
+
+:x:```    vcs.template.P.logicalmask```
+
+:x:```    vcs.template.P.max```
+
+:x:```    vcs.template.P.mean```
+
+:x:```    vcs.template.P.min```
+
+:x:```    vcs.template.P.name```
+
+:x:```    vcs.template.P.orientation```
+
+:x:```    vcs.template.P.plot```
+
+:x:```    vcs.template.P.ratio```
+
+:x:```    vcs.template.P.ratio_linear_projection```
+
+:x:```    vcs.template.P.scalefont```
+
+:x:```    vcs.template.P.source```
+
+:x:```    vcs.template.P.title```
+
+:x:```    vcs.template.P.tname```
+
+:x:```    vcs.template.P.transformation```
+
+:x:```    vcs.template.P.tunits```
+
+:x:```    vcs.template.P.tvalue```
+
+:x:```    vcs.template.P.units```
+
+:x:```    vcs.template.P.xlabel1```
+
+:x:```    vcs.template.P.xlabel2```
+
+:x:```    vcs.template.P.xmintic1```
+
+:x:```    vcs.template.P.xmintic2```
+
+:x:```    vcs.template.P.xname```
+
+:x:```    vcs.template.P.xtic1```
+
+:x:```    vcs.template.P.xtic2```
+
+:x:```    vcs.template.P.xunits```
+
+:x:```    vcs.template.P.xvalue```
+
+:x:```    vcs.template.P.ylabel1```
+
+:x:```    vcs.template.P.ylabel2```
+
+:x:```    vcs.template.P.ymintic1```
+
+:x:```    vcs.template.P.ymintic2```
+
+:x:```    vcs.template.P.yname```
+
+:x:```    vcs.template.P.ytic1```
+
+:x:```    vcs.template.P.ytic2```
+
+:x:```    vcs.template.P.yunits```
+
+:x:```    vcs.template.P.yvalue```
+
+:x:```    vcs.template.P.zname```
+
+:x:```    vcs.template.P.zunits```
+
+:x:```    vcs.template.P.zvalue```
+
+:x:```    vcs.template._getgen```
+
+:x:```    vcs.template._setgen```
+
+:x:```    vcs.template.epsilon_gte```
+
+:x:```    vcs.template.epsilon_lte```
+
+:x:```    vcs.template.process_src```
+

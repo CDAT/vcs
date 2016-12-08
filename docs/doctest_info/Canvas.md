@@ -243,109 +243,215 @@ Got:
 
 Missing Doctests
 ----------------
-:x:    vcs.Canvas
-:x:    vcs.Canvas.Canvas
-:x:    vcs.Canvas.Canvas._Canvas__new_elts
-:x:    vcs.Canvas.Canvas._Canvas__plot
-:x:    vcs.Canvas.Canvas.__init__
-:x:    vcs.Canvas.Canvas._compute_margins
-:x:    vcs.Canvas.Canvas._compute_width_height
-:x:    vcs.Canvas.Canvas._continentspath
-:x:    vcs.Canvas.Canvas._datawc_tv
-:x:    vcs.Canvas.Canvas._get_user_actions
-:x:    vcs.Canvas.Canvas._get_user_actions_names
-:x:    vcs.Canvas.Canvas._getanimate
-:x:    vcs.Canvas.Canvas._getanimate_info
-:x:    vcs.Canvas.Canvas._getcanvas
-:x:    vcs.Canvas.Canvas._getisplottinggridded
-:x:    vcs.Canvas.Canvas._getmode
-:x:    vcs.Canvas.Canvas._getpausetime
-:x:    vcs.Canvas.Canvas._getvarglist
-:x:    vcs.Canvas.Canvas._getviewport
-:x:    vcs.Canvas.Canvas._getwinfo_id
-:x:    vcs.Canvas.Canvas._getworldcoordinate
-:x:    vcs.Canvas.Canvas._reconstruct_tv
-:x:    vcs.Canvas.Canvas._scriptrun
-:x:    vcs.Canvas.Canvas._set_user_actions
-:x:    vcs.Canvas.Canvas._set_user_actions_names
-:x:    vcs.Canvas.Canvas._setanimate
-:x:    vcs.Canvas.Canvas._setanimate_info
-:x:    vcs.Canvas.Canvas._setcanvas
-:x:    vcs.Canvas.Canvas._setisplottinggridded
-:x:    vcs.Canvas.Canvas._setmode
-:x:    vcs.Canvas.Canvas._setpausetime
-:x:    vcs.Canvas.Canvas._setvarglist
-:x:    vcs.Canvas.Canvas._setviewport
-:x:    vcs.Canvas.Canvas._setwinfo_id
-:x:    vcs.Canvas.Canvas._setworldcoordinate
-:x:    vcs.Canvas.Canvas.addfont
-:x:    vcs.Canvas.Canvas.animate
-:x:    vcs.Canvas.Canvas.animate_info
-:x:    vcs.Canvas.Canvas.canvas
-:x:    vcs.Canvas.Canvas.canvasid
-:x:    vcs.Canvas.Canvas.canvasinfo
-:x:    vcs.Canvas.Canvas.cgm
-:x:    vcs.Canvas.Canvas.change_display_graphic_method
-:x:    vcs.Canvas.Canvas.check_name_source
-:x:    vcs.Canvas.Canvas.clean_auto_generated_objects
-:x:    vcs.Canvas.Canvas.configure
-:x:    vcs.Canvas.Canvas.copyfontto
-:x:    vcs.Canvas.Canvas.create1d
-:x:    vcs.Canvas.Canvas.dual_scalar3d
-:x:    vcs.Canvas.Canvas.dummy_user_action
-:x:    vcs.Canvas.Canvas.endconfigure
-:x:    vcs.Canvas.Canvas.get1d
-:x:    vcs.Canvas.Canvas.get_selected_display
-:x:    vcs.Canvas.Canvas.getantialiasing
-:x:    vcs.Canvas.Canvas.getcolormapname
-:x:    vcs.Canvas.Canvas.getcontinentsline
-:x:    vcs.Canvas.Canvas.getfontname
-:x:    vcs.Canvas.Canvas.getfontnumber
-:x:    vcs.Canvas.Canvas.getplot
-:x:    vcs.Canvas.Canvas.gif
-:x:    vcs.Canvas.Canvas.grid
-:x:    vcs.Canvas.Canvas.gs
-:x:    vcs.Canvas.Canvas.initLogoDrawing
-:x:    vcs.Canvas.Canvas.interact
-:x:    vcs.Canvas.Canvas.isinfile
-:x:    vcs.Canvas.Canvas.isopened
-:x:    vcs.Canvas.Canvas.isplottinggridded
-:x:    vcs.Canvas.Canvas.match_color
-:x:    vcs.Canvas.Canvas.mode
-:x:    vcs.Canvas.Canvas.onClosing
-:x:    vcs.Canvas.Canvas.pause_time
-:x:    vcs.Canvas.Canvas.plot_annotation
-:x:    vcs.Canvas.Canvas.plot_filledcontinents
-:x:    vcs.Canvas.Canvas.processParameterChange
-:x:    vcs.Canvas.Canvas.put_png_on_canvas
-:x:    vcs.Canvas.Canvas.raisecanvas
-:x:    vcs.Canvas.Canvas.removeP
-:x:    vcs.Canvas.Canvas.remove_display_name
-:x:    vcs.Canvas.Canvas.return_display_names
-:x:    vcs.Canvas.Canvas.savecontinentstype
-:x:    vcs.Canvas.Canvas.scalar3d
-:x:    vcs.Canvas.Canvas.scriptrun
-:x:    vcs.Canvas.Canvas.setAnimationStepper
-:x:    vcs.Canvas.Canvas.setantialiasing
-:x:    vcs.Canvas.Canvas.setdefaultfont
-:x:    vcs.Canvas.Canvas.show
-:x:    vcs.Canvas.Canvas.start
-:x:    vcs.Canvas.Canvas.switchfonts
-:x:    vcs.Canvas.Canvas.updateorientation
-:x:    vcs.Canvas.Canvas.user_actions
-:x:    vcs.Canvas.Canvas.user_actions_names
-:x:    vcs.Canvas.Canvas.varglist
-:x:    vcs.Canvas.Canvas.vector3d
-:x:    vcs.Canvas.Canvas.viewport
-:x:    vcs.Canvas.Canvas.winfo_id
-:x:    vcs.Canvas.Canvas.worldcoordinate
-:x:    vcs.Canvas.SIGNAL
-:x:    vcs.Canvas.SIGNAL.__call__
-:x:    vcs.Canvas.SIGNAL.__init__
-:x:    vcs.Canvas.SIGNAL.clear
-:x:    vcs.Canvas.SIGNAL.connect
-:x:    vcs.Canvas.SIGNAL.disconnect
-:x:    vcs.Canvas._determine_arg_list
-:x:    vcs.Canvas._process_keyword
-:x:    vcs.Canvas.change_date_time
-:x:    vcs.Canvas.dictionarytovcslist
+:x:```    vcs.Canvas```
+
+:x:```    vcs.Canvas.Canvas```
+
+:x:```    vcs.Canvas.Canvas._Canvas__new_elts```
+
+:x:```    vcs.Canvas.Canvas._Canvas__plot```
+
+:x:```    vcs.Canvas.Canvas.__init__```
+
+:x:```    vcs.Canvas.Canvas._compute_margins```
+
+:x:```    vcs.Canvas.Canvas._compute_width_height```
+
+:x:```    vcs.Canvas.Canvas._continentspath```
+
+:x:```    vcs.Canvas.Canvas._datawc_tv```
+
+:x:```    vcs.Canvas.Canvas._get_user_actions```
+
+:x:```    vcs.Canvas.Canvas._get_user_actions_names```
+
+:x:```    vcs.Canvas.Canvas._getanimate```
+
+:x:```    vcs.Canvas.Canvas._getanimate_info```
+
+:x:```    vcs.Canvas.Canvas._getcanvas```
+
+:x:```    vcs.Canvas.Canvas._getisplottinggridded```
+
+:x:```    vcs.Canvas.Canvas._getmode```
+
+:x:```    vcs.Canvas.Canvas._getpausetime```
+
+:x:```    vcs.Canvas.Canvas._getvarglist```
+
+:x:```    vcs.Canvas.Canvas._getviewport```
+
+:x:```    vcs.Canvas.Canvas._getwinfo_id```
+
+:x:```    vcs.Canvas.Canvas._getworldcoordinate```
+
+:x:```    vcs.Canvas.Canvas._reconstruct_tv```
+
+:x:```    vcs.Canvas.Canvas._scriptrun```
+
+:x:```    vcs.Canvas.Canvas._set_user_actions```
+
+:x:```    vcs.Canvas.Canvas._set_user_actions_names```
+
+:x:```    vcs.Canvas.Canvas._setanimate```
+
+:x:```    vcs.Canvas.Canvas._setanimate_info```
+
+:x:```    vcs.Canvas.Canvas._setcanvas```
+
+:x:```    vcs.Canvas.Canvas._setisplottinggridded```
+
+:x:```    vcs.Canvas.Canvas._setmode```
+
+:x:```    vcs.Canvas.Canvas._setpausetime```
+
+:x:```    vcs.Canvas.Canvas._setvarglist```
+
+:x:```    vcs.Canvas.Canvas._setviewport```
+
+:x:```    vcs.Canvas.Canvas._setwinfo_id```
+
+:x:```    vcs.Canvas.Canvas._setworldcoordinate```
+
+:x:```    vcs.Canvas.Canvas.addfont```
+
+:x:```    vcs.Canvas.Canvas.animate```
+
+:x:```    vcs.Canvas.Canvas.animate_info```
+
+:x:```    vcs.Canvas.Canvas.canvas```
+
+:x:```    vcs.Canvas.Canvas.canvasid```
+
+:x:```    vcs.Canvas.Canvas.canvasinfo```
+
+:x:```    vcs.Canvas.Canvas.cgm```
+
+:x:```    vcs.Canvas.Canvas.change_display_graphic_method```
+
+:x:```    vcs.Canvas.Canvas.check_name_source```
+
+:x:```    vcs.Canvas.Canvas.clean_auto_generated_objects```
+
+:x:```    vcs.Canvas.Canvas.configure```
+
+:x:```    vcs.Canvas.Canvas.copyfontto```
+
+:x:```    vcs.Canvas.Canvas.create1d```
+
+:x:```    vcs.Canvas.Canvas.dual_scalar3d```
+
+:x:```    vcs.Canvas.Canvas.dummy_user_action```
+
+:x:```    vcs.Canvas.Canvas.endconfigure```
+
+:x:```    vcs.Canvas.Canvas.get1d```
+
+:x:```    vcs.Canvas.Canvas.get_selected_display```
+
+:x:```    vcs.Canvas.Canvas.getantialiasing```
+
+:x:```    vcs.Canvas.Canvas.getcolormapname```
+
+:x:```    vcs.Canvas.Canvas.getcontinentsline```
+
+:x:```    vcs.Canvas.Canvas.getfontname```
+
+:x:```    vcs.Canvas.Canvas.getfontnumber```
+
+:x:```    vcs.Canvas.Canvas.getplot```
+
+:x:```    vcs.Canvas.Canvas.gif```
+
+:x:```    vcs.Canvas.Canvas.grid```
+
+:x:```    vcs.Canvas.Canvas.gs```
+
+:x:```    vcs.Canvas.Canvas.initLogoDrawing```
+
+:x:```    vcs.Canvas.Canvas.interact```
+
+:x:```    vcs.Canvas.Canvas.isinfile```
+
+:x:```    vcs.Canvas.Canvas.isopened```
+
+:x:```    vcs.Canvas.Canvas.isplottinggridded```
+
+:x:```    vcs.Canvas.Canvas.match_color```
+
+:x:```    vcs.Canvas.Canvas.mode```
+
+:x:```    vcs.Canvas.Canvas.onClosing```
+
+:x:```    vcs.Canvas.Canvas.pause_time```
+
+:x:```    vcs.Canvas.Canvas.plot_annotation```
+
+:x:```    vcs.Canvas.Canvas.plot_filledcontinents```
+
+:x:```    vcs.Canvas.Canvas.processParameterChange```
+
+:x:```    vcs.Canvas.Canvas.put_png_on_canvas```
+
+:x:```    vcs.Canvas.Canvas.raisecanvas```
+
+:x:```    vcs.Canvas.Canvas.removeP```
+
+:x:```    vcs.Canvas.Canvas.remove_display_name```
+
+:x:```    vcs.Canvas.Canvas.return_display_names```
+
+:x:```    vcs.Canvas.Canvas.savecontinentstype```
+
+:x:```    vcs.Canvas.Canvas.scalar3d```
+
+:x:```    vcs.Canvas.Canvas.scriptrun```
+
+:x:```    vcs.Canvas.Canvas.setAnimationStepper```
+
+:x:```    vcs.Canvas.Canvas.setantialiasing```
+
+:x:```    vcs.Canvas.Canvas.setdefaultfont```
+
+:x:```    vcs.Canvas.Canvas.show```
+
+:x:```    vcs.Canvas.Canvas.start```
+
+:x:```    vcs.Canvas.Canvas.switchfonts```
+
+:x:```    vcs.Canvas.Canvas.updateorientation```
+
+:x:```    vcs.Canvas.Canvas.user_actions```
+
+:x:```    vcs.Canvas.Canvas.user_actions_names```
+
+:x:```    vcs.Canvas.Canvas.varglist```
+
+:x:```    vcs.Canvas.Canvas.vector3d```
+
+:x:```    vcs.Canvas.Canvas.viewport```
+
+:x:```    vcs.Canvas.Canvas.winfo_id```
+
+:x:```    vcs.Canvas.Canvas.worldcoordinate```
+
+:x:```    vcs.Canvas.SIGNAL```
+
+:x:```    vcs.Canvas.SIGNAL.__call__```
+
+:x:```    vcs.Canvas.SIGNAL.__init__```
+
+:x:```    vcs.Canvas.SIGNAL.clear```
+
+:x:```    vcs.Canvas.SIGNAL.connect```
+
+:x:```    vcs.Canvas.SIGNAL.disconnect```
+
+:x:```    vcs.Canvas._determine_arg_list```
+
+:x:```    vcs.Canvas._process_keyword```
+
+:x:```    vcs.Canvas.change_date_time```
+
+:x:```    vcs.Canvas.dictionarytovcslist```
+
