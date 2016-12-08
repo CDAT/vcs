@@ -938,11 +938,13 @@ class Gtd(object):
     def drawSkill(self, canvas, values, function=None):
         """
         Draw a skill score. Default skill score provided in :py:func:`defaultSkillFunction`
-        from Karl taylor, see `PCMDI report series 55`_ for more information on `Taylor diagrams`_ and `skill`_s.
+        from Karl taylor, see `PCMDI report series 55`_ for more information on
+        `Taylor diagrams`_ and `skill`_ .
 
-        .. _PCMDI report series 55 : http://www-pcmdi.llnl.gov/publications/pdf/55.pdf
+        .. _`PCMDI report series 55` : http://www-pcmdi.llnl.gov/publications/pdf/55.pdf
 
         .. note::
+
             The function parameter must be provided for drawSkill to work.
             The :py:func:`defaultSkillFunction` provided in this module can be used to provide a default skill score.
             Be aware that, as stated in `PCMDI report series 55`_ section 5, it is not possible to define
@@ -953,7 +955,7 @@ class Gtd(object):
         :type canvas: vcs.Canvas.Canvas
 
         :param values: A list/tuple used to specify the :py:attr:`levels <vcs.isoline.Gi.level>`
-                        of an :py:class:`isoline <vcs.isoline.Gi>` object.
+            of an :py:class:`isoline <vcs.isoline.Gi>` object.
         :type values: list/tuple
 
         :param function: A function for determining the skill score of a model.

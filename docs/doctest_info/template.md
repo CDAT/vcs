@@ -37,6 +37,20 @@ Exception raised:
     vcsError: Error template object named example1 already exists
 ```
 
+vcs.template.P.moveto
+---------------------
+```python
+Failed example:
+    t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.template.P.moveto[1]>", line 1, in <module>
+        t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
+    NameError: name 't' is not defined
+```
+
 vcs.template.P.reset
 --------------------
 ```python
@@ -55,6 +69,20 @@ Exception raised:
     vcsError: Error template object named example1 already exists
 ```
 
+vcs.template.P.reset
+--------------------
+```python
+Failed example:
+    t.reset('x',0.15,0.5,t.data.x1,t.data.x2) # Set x1 value to 0.15 and x2 value to 0.5
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.template.P.reset[1]>", line 1, in <module>
+        t.reset('x',0.15,0.5,t.data.x1,t.data.x2) # Set x1 value to 0.15 and x2 value to 0.5
+    NameError: name 't' is not defined
+```
+
 vcs.template.P.scale
 --------------------
 ```python
@@ -71,6 +99,48 @@ Exception raised:
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 57, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
     vcsError: Error template object named example1 already exists
+```
+
+vcs.template.P.scale
+--------------------
+```python
+Failed example:
+    t.scale(0.5) # Halves the template size
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.template.P.scale[1]>", line 1, in <module>
+        t.scale(0.5) # Halves the template size
+    NameError: name 't' is not defined
+```
+
+vcs.template.P.scale
+--------------------
+```python
+Failed example:
+    t.scale(1.2) # Upsize everything to 20% more than the original size
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.template.P.scale[2]>", line 1, in <module>
+        t.scale(1.2) # Upsize everything to 20% more than the original size
+    NameError: name 't' is not defined
+```
+
+vcs.template.P.scale
+--------------------
+```python
+Failed example:
+    t.scale(2,'x') # Double the x axis
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.template.P.scale[3]>", line 1, in <module>
+        t.scale(2,'x') # Double the x axis
+    NameError: name 't' is not defined
 ```
 
 Missing Doctests
@@ -148,10 +218,6 @@ Missing Doctests
 :x:```    vcs.template.P.orientation```
 
 :x:```    vcs.template.P.plot```
-
-:x:```    vcs.template.P.ratio```
-
-:x:```    vcs.template.P.ratio_linear_projection```
 
 :x:```    vcs.template.P.scalefont```
 

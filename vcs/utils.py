@@ -984,7 +984,7 @@ def minmax(*data):
             (-7.0, 8.0)
 
     :param data: A comma-separated list of lists/arrays/tuples
-    :type data: list
+    :type data: :py:class:`list`
 
     :returns: A tuple in the form (min, max)
     :rtype: tuple
@@ -1088,14 +1088,14 @@ def mkscale(n1, n2, nc=12, zero=1, ends=False):
     :type nc: int
 
     :param zero: Integer flag to indicate how zero should be handled. Flags are as follows
-                   -1: zero MUST NOT be a contour
-                    0: let the function decide # NOT IMPLEMENTED
-                    1: zero CAN be a contour  (default)
-                    2: zero MUST be a contour
+        -1: zero MUST NOT be a contour
+        0: let the function decide # NOT IMPLEMENTED
+        1: zero CAN be a contour  (default)
+        2: zero MUST be a contour
     :type zero: int
 
     :param end: Boolean value indicating whether n1 and n2 should be part of the returned labels.
-                Defaults to False.
+        Defaults to False.
     :type end: bool
 
     :returns: List of floats split into nc intervals
@@ -1209,7 +1209,7 @@ def mklabels(vals, output='dict'):
             ['2E-5', '5E-5']
 
     :param vals: List or tuple of float values
-    :type vals: list, tuple
+    :type vals: :py:class:`list`, tuple
 
     :param output: Specifies the desired output type. One of ['dict', 'list'].
     :type output: str
@@ -1346,10 +1346,10 @@ def getcolors(levs, colors=None, split=1, white="white"):
             [0, 36, 73, 109, 146, 182, 219, 255]
 
     :param levs: levels defining the color ranges
-    :type levs: list, tuple
+    :type levs: :py:class:`list`, tuple
 
     :param colors: A list/tuple of the of colors you wish to use
-    :type colors: list
+    :type colors: :py:class:`list`
 
     :param split: Integer flag to split colors between two equal domains.
                     0 : no split
@@ -1859,7 +1859,7 @@ def getcolorcell(cell, obj=None):
     :type obj: Any VCS object capable of containing a colormap
 
     :return: The RGBA values of the colormap at the specified cell index.
-    :rtype: list
+    :rtype: :py:class:`list`
     """
     if obj is None:
         cmap = vcs.getcolormap()
@@ -2164,7 +2164,7 @@ def rgba_color(color, colormap):
     :type colormap: vcs.colormap.Cp
 
     :returns: List of 4 floats; the R, G, B, and A values associated with the given color.
-    :rtype: list
+    :rtype: :py:class:`list`
     """
     try:
         # Is it a colormap index?
@@ -2275,36 +2275,46 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
     :param canvas: a VCS canvas object onto which to draw the legend
     :type canvas: vcs.Canvas.Canvas
 
-    :param templateLegend: a template legend object used to determine the coordinates of the box and the box line type
+    :param templateLegend: a template legend object used to determine the
+        coordinates of the box and the box line type
     :type legendTemplate: vcs.Plegend.Pls
 
-    :param linecolors: list containing the colors of each line to draw
-    :type linecolors: list of either colorInt, (r,g,b,opacity), or string color names
+    :param linecolors: list containing the colors of each line to draw.
+         Colors must be specified as either integers, (r,g,b,opacity),
+         or string color names.
+    :type linecolors: :py:class:`list`
 
-    :param linetypes: list containing the type of each line to draw
-    :type linetypes: list on int of line stype strings
+    :param linetypes: list containing the type of each line to draw.
+         values must be int or line type strings
+    :type linetypes: :py:class:`list`
 
-    :param linewidths: list containing each line width
-    :type linewidths: list of float
+    :param linewidths: list containing each line width.
+        line widths must be of type float.
+    :type linewidths: :py:class:`list`
 
-    :param markercolors: list of the markers colors to draw
-    :type markercolors: list of either colorInt, (r,g,b,opacity), or string color names
+    :param markercolors: list of the markers colors to draw.
+        Colors must be specified as either integers, (r,g,b,opacity),
+        or string color names.
+    :type markercolors: :py:class:`list`
 
-    :param markertypes: list of the marker types to draw
-    :type markertypes: list of int or  string of marker names
+    :param markertypes: list of the marker types to draw.
+         Marker type must be int or string of marker type names.
+    :type markertypes: :py:class:`list`
 
-    :param markersizes: list of the size of each marker to draw
-    :type markersizes: list of float
+    :param markersizes: list of the size of each marker to draw.
+        marker size must be of type float.
+    :type markersizes: :py:class:`list`
 
     :param strings: list of the string to draw next to each line/marker
-    :type strings: list of string
+    :type strings: :py:class:`list`
 
-    :param scratched: None (off) or list. list contains False where no scratch is needed
-                      For scratched provide True or line type to use for scratch
-                      color will match that of text
-    :type scratched: None or list of bool
+    :param scratched: None (off) or list. list contains False where no scratch is
+        needed. For scratched, provide True or line type to use for scratch.
+        Color will match that of text.
+    :type scratched: None or :py:class`list`
 
-    :param bg: do we draw in background or foreground
+    :param bg: Boolean value indicating to draw in background (True),
+        Or foreground (False).
     :type bg: bool
 
     :param render: do we render or not (so it less flashy)

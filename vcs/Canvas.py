@@ -1788,28 +1788,30 @@ class Canvas(object):
         :type width: int
 
         :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-                      or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+            or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
         :type color: str or int
 
         :param priority: The layer on which the line will be drawn.
         :type priority: int
 
         :param viewport: 4 floats between 0 and 1.
-                            These specify the area that the X/Y values are mapped to inside of the canvas
-        :type viewport: list of floats
+            These specify the area that the X/Y values are mapped to inside of the canvas
+        :type viewport: :py:class:`list`
 
         :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-        :type worldcoordinate: list of floats
+        :type worldcoordinate: :py:class:`list`
 
-        :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-        :type x: list of floats
+        :param x: List of lists of x coordinates.
+            Values must be floats between worldcoordinate[0] and worldcoordinate[1].
+        :type x: :py:class:`list`
 
-        :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-        :type y: list of floats
+        :param y: List of lists of y coordinates.
+            Values must be floats between worldcoordinate[2] and worldcoordinate[3].
+        :type y: :py:class:`list`
 
         :param projection: Specify a geographic projection used to convert x/y
-                            from spherical coordinates into 2D coordinates.
-        :type projection: str or projection object
+            from spherical coordinates into 2D coordinates.
+        :type projection: :py:class:`str` or :py:class:`vcs.projection.Proj`
 
         :returns: A VCS line object
         :rtype: vcs.line.Tl
@@ -1914,24 +1916,26 @@ class Canvas(object):
         :type size: int
 
         :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-                      or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+            or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
         :type color: str or int
 
         :param priority: The layer on which the marker will be drawn.
         :type priority: int
 
         :param viewport: 4 floats between 0 and 1.
-                        These specify the area that the X/Y values are mapped to inside of the canvas
-        :type viewport: list of floats
+            These specify the area that the X/Y values are mapped to inside of the canvas
+        :type viewport: :py:class:`list`
 
         :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-        :type worldcoordinate: list of floats
+        :type worldcoordinate: :py:class:`list`
 
-        :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-        :type x: list of floats
+        :param x: List of lists of x coordinates.
+            Values must be floats between worldcoordinate[0] and worldcoordinate[1].
+        :type x: :py:class:`list`
 
-        :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-        :type y: list of floats
+        :param y: List of lists of y coordinates.
+            Values must be floats between worldcoordinate[2] and worldcoordinate[3].
+        :type y: :py:class:`list`
 
         :returns: A drawmarker object
         :rtype: vcs.marker.Tm
@@ -2035,12 +2039,12 @@ class Canvas(object):
         :type style: str
 
         :param index: Specifies which `pattern <http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png>`_
-        to fill the fillarea with. Accepts ints from 1-20.
+            to fill the fillarea with. Accepts ints from 1-20.
 
         :type index: int
 
         :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-        or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+            or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
 
         :type color: str or int
 
@@ -2048,20 +2052,22 @@ class Canvas(object):
         :type priority: int
 
         :param viewport: 4 floats between 0 and 1.
-                        These specify the area that the X/Y values are mapped to inside of the canvas
-        :type viewport: list of floats
+            These specify the area that the X/Y values are mapped to inside of the canvas
+        :type viewport: :py:class:`list`
 
         :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-        :type worldcoordinate: list of floats
+        :type worldcoordinate: :py:class:`list`
 
-        :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-        :type x: list of floats
+        :param x: List of lists of x coordinates.
+            Values must be floats between worldcoordinate[0] and worldcoordinate[1].
+        :type x: :py:class:`list`
 
-        :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-        :type y: list of floats
+        :param y: List of lists of y coordinates.
+            Values must be floats between worldcoordinate[2] and worldcoordinate[3].
+        :type y: :py:class:`list`
 
         :param bg: Boolean value. True => object drawn in background (not shown on canvas).
-                    False => object shown on canvas.
+            False => object shown on canvas.
         :type bg: bool
 
         :returns: A fillarea object
@@ -2224,7 +2230,7 @@ class Canvas(object):
                 [[...]]
 
         :param textobject: A VCS text object
-        :type textobject: textcombined
+        :type textobject: vcs.textcombined.Tc
 
         :returns: list of floats containing the coordinates of the text object's bounding box.
         :rtype: list
@@ -2287,16 +2293,18 @@ class Canvas(object):
 
         :param viewport: 4 floats between 0 and 1.
             These specify the area that the X/Y values are mapped to inside of the canvas
-        :type viewport: list of floats
+        :type viewport: :py:class:`list`
 
         :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-        :type worldcoordinate: list of floats
+        :type worldcoordinate: :py:class:`list`
 
-        :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-        :type x: list of floats
+        :param x: List of lists of x coordinates.
+            Values must be floats between worldcoordinate[0] and worldcoordinate[1].
+        :type x: :py:class:`list`
 
-        :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-        :type y: list of floats
+        :param y: List of lists of y coordinates.
+            Values must be floats between worldcoordinate[2] and worldcoordinate[3].
+        :type y: :py:class:`list`
 
         :param bg: Boolean value. True => object drawn in background (not shown on canvas).
             False => object shown on canvas.
@@ -4342,13 +4350,9 @@ class Canvas(object):
 
     def listelements(self, *args):
         """
-        Returns a Python list of all the VCS class objects.
+        Returns a Python list of all VCS object names, or a list of names
+        of objects of the given type.
 
-        The list that will be returned:
-        ['1d', '3d_dual_scalar', '3d_scalar', '3d_vector', 'boxfill', 'colormap', 'display', 'fillarea',
-         'font', 'fontNumber', 'isofill', 'isoline', 'line', 'list', 'marker', 'meshfill', 'projection',
-         'scatter', 'taylordiagram', 'template', 'textcombined', 'textorientation', 'texttable',
-         'vector', 'xvsy', 'xyvsy', 'yxvsx']
 
         :Example:
 
@@ -4358,7 +4362,11 @@ class Canvas(object):
                 >>> a.listelements()
                 ['1d', '3d_dual_scalar', '3d_scalar', ...]
 
-        :returns: A list of string names of all VCS class objects
+        :param args: A string containing the name of a VCS object type, or None
+        :type args: str or None
+
+        :returns: If args is None, returns a list of string names of all VCS class objects.
+            If args is a string name of a VCS object
         :rtype: list
         """
         f = vcs.listelements
@@ -4368,12 +4376,18 @@ class Canvas(object):
 
     def updateorientation(self, *args):
         """
+        Takes a string 'portrait' or 'landscape' and updates a Canvas object's
+        orientation accordingly.
+
         .. admonition:: Not Yet Implemented
 
             This function does not currently work.
             It will be implemented in the future.
 
             Use :func:`landscape` or :func:`portrait` instead.
+
+        :param args: String with value 'landscape' or 'portrait'
+        :type args: str
         """
         a = self.canvas.updateorientation(*args)
 
@@ -4381,8 +4395,8 @@ class Canvas(object):
 
     def open(self, width=None, height=None, **kargs):
         """
-        Open VCS Canvas object. This routine really just manages the VCS canvas. It will
-        popup the VCS Canvas for viewing. It can be used to display the VCS Canvas.
+        Open VCS Canvas object. This routine really just manages the VCS canvas.
+        It can be used to display the VCS Canvas.
 
         :Example:
 
@@ -4392,10 +4406,10 @@ class Canvas(object):
                 >>> a.open()
                 >>> a.open(800,600)
 
-        :param width: Integer representing the desire width of the opened window in pixels
+        :param width: Integer representing the desired width of the opened window in pixels
         :type width: int
 
-        :param height: Integer representing the desire height of the opened window in pixels
+        :param height: Integer representing the desired height of the opened window in pixels
         :type height: int
         """
 
@@ -4406,8 +4420,8 @@ class Canvas(object):
     def canvasid(self, *args):
         """
         Get the ID of this canvas.
-
         This ID number is found at the top of the VCS Canvas, as part of its title.
+
         """
         return self._canvas_id
 
@@ -4641,7 +4655,8 @@ class Canvas(object):
         :param height: Float representing the desired height of the output, using the specified unit of measurement.
         :type height: float
 
-        :param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Defaults to 'inches'.
+        :param units: The units of measurement to use for output.
+            One of ['inches', 'in', 'cm', 'mm', 'pixel', 'dot', 'dots'].
         :type units: str
         """
         if units not in [
@@ -4666,29 +4681,35 @@ class Canvas(object):
 
         :Example:
 
-            ::
+            .. doctest:: manageElements_put_png_on_canvas
 
-        a=vcs.init()
-        # Put a png on Canvas
-        a.put_on_png_on_canvas("path.png",zoom=1, xOffset=0, yOffset=0, units="percent", fitToHeight=True)
+                >>> a=vcs.init()
+                >>> array=[range(10) for i in range(10)]
+                >>> a.plot(array)
+                <vcs.displayplot.Dp ...>
+                >>> a.png("bars.png") # make a png named 'bars.png'
+                >>> a.clear() # clear the bars off the screen
+                >>> a.put_on_png_on_canvas("bars.png") # put 'bars.png' on Canvas
 
-:param file: Input image filename
-:type file: str
+        :param file: Input image filename
+        :type file: str
 
-:param zoom: scale factor
-:type zoom: int
+        :param zoom: scale factor
+        :type zoom: int
 
-:param xOffset: Horizontal Offset
-:type xOffset: float
+        :param xOffset: Horizontal Offset
+        :type xOffset: float
 
-:param yOffset: Vertical Offset
-:type yOffset: float
+        :param yOffset: Vertical Offset
+        :type yOffset: float
 
-:param units: Offsets units percent or pixels
-:type units" str
+        :param units: Specifies the units used for x and y Offsets.
+            One of ['percent','pixels'].
+        :type units: str
 
-:param fitToHeight: fits the picture (before scaling) to the canvas full height, if False then use png original size
-:type fitToHeight: bool
+        :param fitToHeight: If True, fits the picture (before scaling) to the canvas full height,
+            if False then use png original size.
+        :type fitToHeight: bool
         """
         self.backend.put_png_on_canvas(
             filename,
@@ -4718,13 +4739,16 @@ class Canvas(object):
         :param file: Output image filename
         :type file: str
 
-        :param width: Float representing the desired width of the output png, using the specified unit of measurement
+        :param width: Float representing the desired width of the output png,
+            using the specified unit of measurement
         :type width: float
 
-        :param height: Float representing the desired height of the output png, using the specified unit of measurement
+        :param height: Float representing the desired height of the output png,
+            using the specified unit of measurement
         :type height: float
 
-        :param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Defaults to 'inches'.
+        :param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots'].
+            Defaults to 'inches'.
         :type units: str
 
         :param draw_white_background: Boolean value indicating if the background should be white. Defaults to True.
@@ -5025,14 +5049,15 @@ class Canvas(object):
         Postscript output is another form of vector graphics. It is larger than its CGM output
         counter part, because it is stored out in ASCII format.
 
-        There are two modes for saving a postscript file: `Append' (a) mode appends postscript
-        output to an existing postscript file; and `Replace' (r) mode overwrites an existing
+        There are two modes for saving a postscript file: 'Append' (a) mode appends postscript
+        output to an existing postscript file; and 'Replace' (r) mode overwrites an existing
         postscript file with new postscript output. The default mode is to overwrite an existing
-        postscript file (i.e. mode (r)).
+        postscript file.
 
         .. note::
 
-            The textAsPaths parameter preserves custom fonts, but text can no longer be edited in the file
+            The textAsPaths parameter preserves custom fonts, but text can no
+            longer be edited in the file
 
         :Example:
 
@@ -5049,17 +5074,24 @@ class Canvas(object):
                 >>> a.postscript('example', width=11.5, height= 8.5) # US Legal (default)
                 >>> a.postscript('example', width=21, height=29.7, units='cm') # A4
 
-        :param file: String name of the desired output file
+        :param file: String name of the desired output file.
         :type file: str
 
         :param mode: The mode in which to open the file. One of 'r' or 'a'.
+            When mode is 'r', file will be opened in replace mode.
+            When mode is 'a', file will be opened in append mode.
         :type mode: str
 
-        :param width: Desired width of the postscript output, in the specified unit of measurement
+        :param width: Desired width of the postscript output,
+            in the specified unit of measurement.
         :type width: int
 
-        :param height: Desired height of the postscript output, in the specified unit of measurement
+        :param height: Desired height of the postscript output,
+            in the specified unit of measurement.
         :type height: int
+
+        :param units: The units of measurement to use for output.
+            One of ['inches', 'in', 'cm', 'mm', 'pixel', 'dot', 'dots'].
         :type units: str
 
         :param textAsPaths: Specifies whether to render text objects as paths.
@@ -5318,7 +5350,8 @@ class Canvas(object):
         :param height: Height of the output image, in the unit of measurement specified
         :type height: float
 
-        :param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Defaults to 'inches'.
+        :param units: The units of measurement to use for output.
+            One of ['inches', 'in', 'cm', 'mm', 'pixel', 'dot', 'dots'].
         :type units: str
         """
         ext = file.split(".")[-1]
@@ -5342,7 +5375,7 @@ class Canvas(object):
 
     def show(self, *args):
         return vcs.show(*args)
-    show.__doc__ = vcs.__doc__
+    show.__doc__ = vcs.utils.show.__doc__
 
     def isinfile(self, GM, file=None):
         """
@@ -5352,11 +5385,11 @@ class Canvas(object):
         :param GM: The graphics method to search for
         :type GM: str
 
-        :param file: String name of the file to search
+        :param file: String name of the file to search.
+            If None, VCS will search initial.attributes.
         :type file: str
 
-        :returns: ???
-        :rtype: ???
+        :returns: 1 if the graphic method is stored in the file, nothing if it is not.
         """
         nm = GM.name
         gm = GM.g_name
@@ -5382,10 +5415,10 @@ class Canvas(object):
 
         :Example:
 
-                .. code-block:: python
+            .. code-block:: python
 
-                    a=vcs.init()
-                    a.saveinitialfile()
+                a=vcs.init()
+                a.saveinitialfile()
 
         .. warning::
 
@@ -5679,7 +5712,7 @@ class Canvas(object):
         """
         Returns the name of the colormap this canvas is set to use by default.
 
-        To set that colormap, use :ref:`setcolormap`_.
+        To set that colormap, use :py:func:`setcolormap`.
         """
         if self.colormap is None:
             return vcs._colorMap

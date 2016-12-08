@@ -304,53 +304,71 @@ class Gfb(object):
 
         * Attribute descriptions:
 
+            * Universally considered attributes:
 
-            .. py:attribute:: boxfill_type (str)
+                .. py:attribute:: boxfill_type (str)
 
-                Type of boxfill legend. One of 'linear', 'log10', or 'custom'. See examples above for usage.
+                    Type of boxfill legend. One of 'linear', 'log10', or 'custom'.
+                    See examples above for usage.
+                    Relevant attributes per type noted in attribute descriptions.
 
-            .. py:attribute:: level_1 (float)
+                .. py:attribute:: missing (int)
 
-                Used in conjunction with boxfill_type linear/log10. Sets the value of the legend's first level
+                    Color to use for missing value or values not in defined ranges.
 
-            .. py:attribute:: level_2 (float)
+            * boxfill_type 'linear'/'log10' relevant attributes:
 
-                Used in conjunction with boxfill_type linear/log10, sets the value of the legend's end level
+                .. py:attribute:: level_1 (float)
 
-            .. py:attribute:: color_1 (float)
+                    Used in conjunction with boxfill_type linear/log10.
+                    Sets the value of the legend's first level
 
-                Used in conjunction with boxfill_type linear/log10, sets the legend's color range first value
+                .. py:attribute:: level_2 (float)
 
-            .. py:attribute:: color_2 (float)
+                    Used in conjunction with boxfill_type linear/log10,
+                    sets the value of the legend's end level.
 
-                Used in conjunction with boxfill_type linear/log10, sets the legend's color range lasst value
+                .. py:attribute:: color_1 (float)
 
-            .. py:attribute:: levels (list of floats)
+                    Used in conjunction with boxfill_type linear/log10,
+                    sets the legend's color range first value.
 
-                Used in conjunction for boxfill_type custom, sets the levels range to use, can be
-                either a list of contiguous levels, or list of tuples indicating first
-                and last value of the range.
+                .. py:attribute:: color_2 (float)
 
-            .. py:attribte:: fillareacolors (list)
+                    Used in conjunction with boxfill_type linear/log10.
+                    Sets the legend's color range lasst value.
 
-                Used in conjunction for boxfill_type custom colors to use for each level
+                .. py:attribute:: legend ({float:str})
 
-            .. py:attribute:: legend ({float:str})
+                    Used in conjunction with boxfill_type linear/log10.
+                    replaces the legend values in the dictionary keys with their
+                    associated string.
 
-                Used in conjunction with boxfill_type linear/log10, replaces the
-                legend values in the dictionary keys with their associated string.
+                .. py:attribute:: ext_1 (str)
 
-            .. py:attribute:: ext_1 (str)
+                    Draws an extension arrow on right side of a boxfill
+                    (values less than first range value)
 
-                Draws an extension arrow on right side (values less than first range value)
+                .. py:attribute:: ext_2 (str)
 
-            .. py:attribute:: ext_2 (str)
+                    Draws an extension arrow on left side of a boxfill
+                    (values greater than last range value)
 
-                Draws an extension arrow on left side (values greater than last range value)
+            * boxfill_type 'custom' relevant attributes:
 
-            .. py:attribute:: missing (int)
+                .. py:attribute:: levels (list of floats)
 
-                Color to use for missing value or values not in defined ranges.
+                    Used in conjunction with boxfill_type custom.
+                    Sets the levels range to use.
+                    Can be either a list of contiguous levels, or list of tuples
+                    indicating first and last value of the range.
+
+                .. py:attribute:: fillareacolors (list)
+
+                    Used in conjunction with boxfill_type custom.
+                    Specifies colors to use for each level.
+
+            * More boxfill attributes:
 
             %s
             """ % xmldocs.graphics_method_core  # noqa

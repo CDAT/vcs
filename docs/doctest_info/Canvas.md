@@ -1,27 +1,3 @@
-vcs.Canvas.Canvas.createprojection
-----------------------------------
-```python
-Failed example:
-    ex2=vcs.createprojection('projection_ex2','polar') # create 'projection_ex2' from 'polar' template
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.Canvas.Canvas.createprojection[3]>", line 1, in <module>
-        ex2=vcs.createprojection('projection_ex2','polar') # create 'projection_ex2' from 'polar' template
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 120, in createprojection
-        return projection.Proj(name, source)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/projection.py", line 434, in __init__
-        self.type = src.type
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/projection.py", line 987, in _settype
-        value = VCS_validation_functions.checkProjType(self, 'type', value)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/VCS_validation_functions.py", line 1440, in checkProjType
-        checkedRaise(self, value, Exception, err)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/VCS_validation_functions.py", line 59, in checkedRaise
-        raise ex(err)
-    Exception: type can either be ('linear', 'utm', 'state plane', 'albers equal area', 'lambert', 'mercator', 'polar', 'polyconic', 'equid conic a', 'transverse mercator', 'stereographic', 'lambert azimuthal', 'azimuthal', 'gnomonic', 'orthographic', 'gen. vert. near per', 'sinusoidal', 'equirectangular', 'miller', 'van der grinten', 'hotin', 'robinson', 'space oblique', 'alaska', 'interrupted goode', 'mollweide', 'interrupted mollweide', 'hammer', 'wagner iv', 'wagner vii', 'oblated') or (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30)
-```
-
 vcs.Canvas.Canvas.drawtext
 --------------------------
 ```python
@@ -33,7 +9,7 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.Canvas.Canvas.drawtext[2]>", line 1, in <module>
         vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1390, in createtextcombined
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1435, in createtextcombined
         Tt_name, Tt_source = check_name_source(Tt_name, Tt_source, 'texttable')
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 57, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
@@ -54,16 +30,16 @@ Failed example:
         png_files.append('my_png__%i.png' % i)
 Expected nothing
 Got:
-    <vcs.displayplot.Dp object at 0x1186bca28>
-    <vcs.displayplot.Dp object at 0x1186db7f8>
-    <vcs.displayplot.Dp object at 0x11833b910>
-    <vcs.displayplot.Dp object at 0x1186286e0>
-    <vcs.displayplot.Dp object at 0x11861fa28>
-    <vcs.displayplot.Dp object at 0x11835e910>
-    <vcs.displayplot.Dp object at 0x130ab1398>
-    <vcs.displayplot.Dp object at 0x118600168>
-    <vcs.displayplot.Dp object at 0x1186d4050>
-    <vcs.displayplot.Dp object at 0x11868ba28>
+    <vcs.displayplot.Dp object at 0x11861bc58>
+    <vcs.displayplot.Dp object at 0x11859b910>
+    <vcs.displayplot.Dp object at 0x1182bd910>
+    <vcs.displayplot.Dp object at 0x1185bc4b0>
+    <vcs.displayplot.Dp object at 0x117faec58>
+    <vcs.displayplot.Dp object at 0x11859ba28>
+    <vcs.displayplot.Dp object at 0x117f97e88>
+    <vcs.displayplot.Dp object at 0x118661398>
+    <vcs.displayplot.Dp object at 0x118636a28>
+    <vcs.displayplot.Dp object at 0x1182eb910>
 ```
 
 vcs.Canvas.Canvas.get3d_dual_scalar
@@ -75,7 +51,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x130ab6280>
+    <vcs.displayplot.Dp object at 0x117f55050>
 ```
 
 vcs.Canvas.Canvas.get3d_scalar
@@ -87,7 +63,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x118d305c8>
+    <vcs.displayplot.Dp object at 0x14ed5ea28>
 ```
 
 vcs.Canvas.Canvas.get3d_vector
@@ -101,7 +77,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x118d9dd70>
+    <vcs.displayplot.Dp object at 0x14ed944b0>
 ```
 
 vcs.Canvas.Canvas.gettaylordiagram
@@ -119,9 +95,9 @@ Exception raised:
         return self.__plot(arglist, parms)
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3634, in __plot
         t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1965, in plot
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1967, in plot
         self.draw(canvas, data)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1205, in draw
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1207, in draw
         d0 = float(data[i][0])
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/numpy/ma/core.py", line 4182, in __float__
         raise TypeError("Only length-1 arrays can be converted "
@@ -139,7 +115,7 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.Canvas.Canvas.gettextcombined[2]>", line 1, in <module>
         vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1390, in createtextcombined
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1435, in createtextcombined
         Tt_name, Tt_source = check_name_source(Tt_name, Tt_source, 'texttable')
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 57, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
@@ -241,6 +217,20 @@ Got:
     <BLANKLINE>
 ```
 
+vcs.Canvas.Canvas.put_png_on_canvas
+-----------------------------------
+```python
+Failed example:
+    a.put_on_png_on_canvas("bars.png") # put 'bars.png' on Canvas
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.Canvas.Canvas.put_png_on_canvas[5]>", line 1, in <module>
+        a.put_on_png_on_canvas("bars.png") # put 'bars.png' on Canvas
+    AttributeError: 'Canvas' object has no attribute 'put_on_png_on_canvas'
+```
+
 Missing Doctests
 ----------------
 :x:```    vcs.Canvas```
@@ -337,8 +327,6 @@ Missing Doctests
 
 :x:```    vcs.Canvas.Canvas.copyfontto```
 
-:x:```    vcs.Canvas.Canvas.create1d```
-
 :x:```    vcs.Canvas.Canvas.dual_scalar3d```
 
 :x:```    vcs.Canvas.Canvas.dummy_user_action```
@@ -391,8 +379,6 @@ Missing Doctests
 
 :x:```    vcs.Canvas.Canvas.processParameterChange```
 
-:x:```    vcs.Canvas.Canvas.put_png_on_canvas```
-
 :x:```    vcs.Canvas.Canvas.raisecanvas```
 
 :x:```    vcs.Canvas.Canvas.removeP```
@@ -412,8 +398,6 @@ Missing Doctests
 :x:```    vcs.Canvas.Canvas.setantialiasing```
 
 :x:```    vcs.Canvas.Canvas.setdefaultfont```
-
-:x:```    vcs.Canvas.Canvas.show```
 
 :x:```    vcs.Canvas.Canvas.start```
 

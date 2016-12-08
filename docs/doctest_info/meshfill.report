@@ -23,6 +23,10 @@ Exception raised:
         fp.write("%s.missing = %g\n\n" % (unique_name, self.missing))
     TypeError: float argument required, not tuple
 Trying:
+    ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
+Expecting nothing
+ok
+Trying:
     a=vcs.init()
 Expecting nothing
 ok
