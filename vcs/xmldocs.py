@@ -274,8 +274,10 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             elif obj_name in ['1d', 'scatter', 'textcombined', 'xyvsy']:
                 if obj_name == 'textcombined':
                     dict['tc'] = """
-            >>> vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
-            <vcs.textcombined.Tc ...>"""
+            >>> try: # try to create a new textcombined, in case none exist
+            ...     vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+            ... except:
+            ...     pass"""
                     dict['sp_parent'] = "'EXAMPLE_tt', 'EXAMPLE_tto'"
                 elif obj_name == '1d':
                     dict['sp_parent'] = "'default'"
@@ -310,7 +312,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             >>> slab2 = f('v') # need 2 slabs, so get another"""
                         dict['slabs'] = dict['slabs'] + slab2
                         dict['args'] = dict['args'] + ", slab2"
-                # for vcs objects that have a self-named function, i.e. fillarea()
+                # for vcs objects that have a self-named plotting function, i.e. fillarea()
                 if type_dict[obj_type][obj_name]['callable']:
                     plot = """%(slabs)s
             >>> a.%(name)s(ex%(args)s) # plot using specified %(name)s object
@@ -338,18 +340,18 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             elif method == 'create':
                 if obj_name == "textcombined":
                     example1 = dict['tc'] + """
-            >>> vcs.listelements('%(name)s') # should now contain the 'EXAMPLE_tt:::EXAMPLE_tto' %(name)s
+            >>> vcs.listelements('%(name)s') # should now contain 'EXAMPLE_tt:::EXAMPLE_tto'
             [...'EXAMPLE_tt:::EXAMPLE_tto'...]"""
                 else:
                     example1 = """
-            >>> ex=vcs.create%(name)s('%(name)s_ex1') # Create %(name)s '%(name)s_ex1' that inherits from 'default'
-            >>> vcs.listelements('%(name)s') # should now contain the '%(name)s_ex1' %(name)s
+            >>> ex=vcs.create%(name)s('%(name)s_ex1') # Create '%(name)s_ex1'; inherits 'default'
+            >>> vcs.listelements('%(name)s') # should now contain '%(name)s_ex1'
             [...'%(name)s_ex1'...]"""
                 dict['ex1'] = example1 % dict
                 if dict['parent2']:
                     example2 = """
-            >>> ex2=vcs.create%(name)s('%(name)s_ex2','%(parent2)s') # create '%(name)s_ex2' from '%(parent2)s' template
-            >>> vcs.listelements('%(name)s') # should now contain the '%(name)s_ex2' %(name)s
+            >>> ex2=vcs.create%(name)s('%(name)s_ex2','%(parent2)s') # create '%(name)s_ex2'; inherits '%(parent2)s'
+            >>> vcs.listelements('%(name)s') # should now contain '%(name)s_ex2'
             [...'%(name)s_ex2'...]"""
                     dict['ex2'] = example2 % dict
             elif method == 'script':

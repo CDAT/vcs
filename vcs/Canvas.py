@@ -984,6 +984,18 @@ class Canvas(object):
         return self.enableLogo
 
     def initLogoDrawing(self):
+        """
+        Initializes logo drawing for the canvas.
+
+        :Example:
+
+            .. doctest:: canvas_initLogoDrawing
+
+                >>> a=vcs.init()
+                >>> a.initLogoDrawing() # will draw logo when plot is called
+                >>> array=[range(10) for _ in range(10)]
+                >>> a.plot(array) # should have logo in lower right corner
+        """
         self.drawLogo = self.enableLogo
 
     def update(self, *args, **kargs):
@@ -1049,10 +1061,10 @@ class Canvas(object):
                 >>> a.scriptobject(i,'ex_isoline2') # Save isoline object as a JSON object 'isoline2.json'
 
         :param script_filename: Name of the output script file.
-        :type script_filename: str
+        :type script_filename: :py:class:`str`
 
         :param mode: Mode is either "w" for replace or "a" for append.
-        :type mode: str
+        :type mode: :py:class:`str`
 
         :param obj: Any VCS primary class or secondary class object.
         :type obj: VCS object
@@ -1118,6 +1130,23 @@ class Canvas(object):
         no longer in use. This shouldn't be necessary most of the time,
         but if you're running into performance/memory issues, calling it
         periodically may help.
+
+        :Example:
+
+            .. doctest:: canvas_clean_auto_generated_objects
+
+                >>> a=vcs.init()
+                >>> boxes=vcs.listelements('boxfill') # initial boxfill names
+                >>> array=[range(10) for _ in range(10)]
+                >>> a.plot(array)
+                >>> new_boxes=a.listelements('boxfill') # has new names
+                >>> boxes == new_boxes # should not be the same
+                False
+                >>> a.clean_auto_generated_objects()
+                >>> new_boxes=a.listelements('boxfill') # back to initial state
+                >>> boxes == new_boxes
+                True
+
 
         :param type: Type of objects to remove. By default, will remove everything.
         :type type: None, str, list/tuple (of str)
@@ -1469,7 +1498,7 @@ class Canvas(object):
 
     def get1d(self, name):
         return vcs.get1d(name)
-    create1d.__doc__ = vcs.manageElements.create1d.__doc__
+    create1d.__doc__ = vcs.manageElements.get1d.__doc__
 
     def createxyvsy(self, name=None, source='default'):
         return vcs.createxyvsy(name, source)
@@ -1779,20 +1808,20 @@ class Canvas(object):
                 <vcs.displayplot.Dp ...>
 
         :param name: Name of created object
-        :type name: str
+        :type name: :py:class:`str`
 
         :param ltype: One of "dash", "dash-dot", "solid", "dot", or "long-dash".
-        :type ltype: str
+        :type ltype: :py:class:`str`
 
         :param width: Thickness of the line to be drawn
-        :type width: int
+        :type width: :py:class:`int`
 
         :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
             or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-        :type color: str or int
+        :type color: :py:class:`str` or :py:class:`int`
 
         :param priority: The layer on which the line will be drawn.
-        :type priority: int
+        :type priority: :py:class:`int`
 
         :param viewport: 4 floats between 0 and 1.
             These specify the area that the X/Y values are mapped to inside of the canvas
@@ -1907,20 +1936,20 @@ class Canvas(object):
                 <vcs.displayplot.Dp ...>
 
         :param name: Name of created object
-        :type name: str
+        :type name: :py:class:`str`
 
         :param mtype: Marker type, i.e. 'dot', 'plus', 'star, etc.
-        :type mtype: str
+        :type mtype: :py:class:`str`
 
         :param size: Size of the marker to draw
-        :type size: int
+        :type size: :py:class:`int`
 
         :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
             or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-        :type color: str or int
+        :type color: :py:class:`str` or :py:class:`int`
 
         :param priority: The layer on which the marker will be drawn.
-        :type priority: int
+        :type priority: :py:class:`int`
 
         :param viewport: 4 floats between 0 and 1.
             These specify the area that the X/Y values are mapped to inside of the canvas
@@ -2033,23 +2062,23 @@ class Canvas(object):
                 <vcs.displayplot.Dp ...>
 
         :param name: Name of created object
-        :type name: str
+        :type name: :py:class:`str`
 
         :param style: One of "hatch", "solid", or "pattern".
-        :type style: str
+        :type style: :py:class:`str`
 
         :param index: Specifies which `pattern <http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png>`_
             to fill the fillarea with. Accepts ints from 1-20.
 
-        :type index: int
+        :type index: :py:class:`int`
 
         :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
             or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
 
-        :type color: str or int
+        :type color: :py:class:`str` or :py:class:`int`
 
         :param priority: The layer on which the fillarea will be drawn.
-        :type priority: int
+        :type priority: :py:class:`int`
 
         :param viewport: 4 floats between 0 and 1.
             These specify the area that the X/Y values are mapped to inside of the canvas
@@ -2263,33 +2292,25 @@ class Canvas(object):
                 *******************Texttable Names List**********************
                 ...
                 *******************End Texttable Names List**********************
-                >>> vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
-                >>> tc=a.drawtextcombined(Tt_name = 'EXAMPLE_tt', To_name='EXAMPLE_tto',
-                ...                   string='Hello example!', spacing=5,
-                ...                   color=242, priority=1, viewport=[0, 1.0, 0, 1.0],
-                ...                   worldcoordinate=[0,100, 0,50],
-                ...                   x=[0,20,40,60,80,100],
-                ...                   y=[0,10,20,30,40,50]) # plot textcombined object on canvas
+                >>> vcs.createtextcombined('draw_tt', 'qa', 'draw_tto', '7left')
+                >>> tc=a.drawtextcombined(Tt_name = 'draw_tt', To_name='draw_tto')
 
         :param Tt_name: String name of a texttable object
-        :type Tt_name: str
+        :type Tt_name: :py:class:`str`
 
         :param To_name: String name of a textorientation object
-        :type To_name: str
-
-        :param style: One of "hatch", "solid", or "pattern".
-        :type style: str
+        :type To_name: :py:class:`str`
 
         :param index: Specifies which `pattern <http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png>`_
             to fill the fillarea with. Accepts ints from 1-20.
-        :type index: int
+        :type index: :py:class:`int`
 
         :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
             or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-        :type color: str or int
+        :type color: :py:class:`str` or :py:class:`int`
 
         :param priority: The layer on which the fillarea will be drawn.
-        :type priority: int
+        :type priority: :py:class:`int`
 
         :param viewport: 4 floats between 0 and 1.
             These specify the area that the X/Y values are mapped to inside of the canvas
@@ -3990,7 +4011,7 @@ class Canvas(object):
         Removes a plotted item from the canvas.
 
         :param args: Any number of display names to remove.
-        :type args: str list
+        :type args: list of :py:class:`str`
         """
         for a in args:
             if a in self.display_names:
@@ -4000,6 +4021,15 @@ class Canvas(object):
     def cgm(self, file, mode='w'):
         """
         Export an image in CGM format.
+
+        :Example:
+
+            .. doctest:: canvas_cgm
+
+                >>> a=vcs.init()
+                >>> array=[range(10) for _ in range(10)]
+                >>> a.plot(array)
+                >>> a.cgm('bars.cgm')
 
         :param file: Filename to save
         :param mode: Ignored.
@@ -4103,12 +4133,26 @@ class Canvas(object):
         """
         Changes the type and graphic method of a plot.
 
+        :Example:
+
+            doctest:: canvas_change_display_graphic_method
+
+                >>> a=vcs.init()
+                >>> cdgm=a.change_display_graphic_method # alias long name
+                >>> array=[range(10) for _ in range(10)]
+                >>> disp=a.plot(array)
+                >>> a.show('boxfill') # list boxfill names
+                *******************Boxfill Names List**********************
+                ...
+                *******************End Boxfill Names List**********************
+                >>> cdgm(disp, 'boxfill', 'polar') # change graphics method
+
         :param display: Display to change.
         :param type: New graphics method type.
         :param name: Name of new graphics method.
-        :type display: str or vcs.displayplot.Dp
-        :type name: str
-        :type type: str
+        :type display: :py:class:`str` or vcs.displayplot.Dp
+        :type name: :py:class:`str`
+        :type type: :py:class:`str`
         """
 
         if isinstance(display, (str, unicode)):
@@ -4175,7 +4219,25 @@ class Canvas(object):
         """
         Obtain the current attributes of the VCS Canvas window.
 
-        :returns: Dictionary with keys: "mapstate" (whether the canvas is opened), "height", "width", "depth", "x", "y"
+        :Example:
+
+            .. doctest:: canvas_canvasinfo
+
+                >>> a=vcs.init()
+                >>> ci=a.canvasinfo()
+                >>> keys=a.canvasinfo().keys()
+                >>> keys.sort()
+                >>> for key in keys:
+                ...     print key, str(ci[key])
+                depth ...
+                height ...
+                mapstate ...
+                width ...
+                x ...
+                y ...
+
+        :returns: Dictionary with keys: "mapstate" (whether the canvas is opened),
+            "height", "width", "depth", "x", "y"
         :rtype: dict
         """
         return self.backend.canvasinfo(*args, **kargs)
@@ -4193,7 +4255,7 @@ class Canvas(object):
                 >>> cont_type = a.getcontinentstype() # Get the continents type
 
         :returns: An int between 1 and 0, or the path to a custom continentstype
-        :rtype: int or system filepath
+        :rtype: :py:class:`int` or system filepath
         """
         try:
             return self._continents
@@ -4218,10 +4280,10 @@ class Canvas(object):
                 >>> a.pstogif('filename.ps','p') # convert the postscript file to a gif file (p=portrait)
 
         :param filename: String name of the desired output file
-        :type filename: str
+        :type filename: :py:class:`str`
 
         :param opt: One of 'l' or 'p', indicating landscape or portrait mode, respectively.
-        :type opt: str
+        :type opt: :py:class:`str`
 
         :returns: ???
         :rtype: ???
@@ -4303,20 +4365,20 @@ class Canvas(object):
                 >>> a.landscape(width = 400, height = 337, x=100, y = 200, clear=1) # landscape with more settings
 
         :param width: Width of the canvas, in pixels
-        :type width: int
+        :type width: :py:class:`int`
 
         :param height: Height of the canvas, in pixels
-        :type height: int
+        :type height: :py:class:`int`
 
         :param x: Unused
-        :type x: int
+        :type x: :py:class:`int`
 
         :param y: Unused
-        :type y: int
+        :type y: :py:class:`int`
 
         :param clear: Indicates the canvas should be cleared (1),
                         or should not be cleared (0), when orientation is changed.
-        :type clear: int
+        :type clear: :py:class:`int`
         """
         if (self.orientation() == 'landscape'):
             return
@@ -4363,7 +4425,7 @@ class Canvas(object):
                 ['1d', '3d_dual_scalar', '3d_scalar', ...]
 
         :param args: A string containing the name of a VCS object type, or None
-        :type args: str or None
+        :type args: :py:class:`str` or None
 
         :returns: If args is None, returns a list of string names of all VCS class objects.
             If args is a string name of a VCS object
@@ -4387,7 +4449,7 @@ class Canvas(object):
             Use :func:`landscape` or :func:`portrait` instead.
 
         :param args: String with value 'landscape' or 'portrait'
-        :type args: str
+        :type args: :py:class:`str`
         """
         a = self.canvas.updateorientation(*args)
 
@@ -4407,10 +4469,10 @@ class Canvas(object):
                 >>> a.open(800,600)
 
         :param width: Integer representing the desired width of the opened window in pixels
-        :type width: int
+        :type width: :py:class:`int`
 
         :param height: Integer representing the desired height of the opened window in pixels
-        :type height: int
+        :type height: :py:class:`int`
         """
 
         a = self.backend.open(width, height, **kargs)
@@ -4422,6 +4484,16 @@ class Canvas(object):
         Get the ID of this canvas.
         This ID number is found at the top of the VCS Canvas, as part of its title.
 
+        :Example:
+
+            .. doctest:: canvas_canvasid
+
+                >>> a=vcs.init()
+                >>> a.canvasid()
+                ...
+
+        :returns: The ID of the canvas on which canvasid() is called.
+        :rtype: int
         """
         return self._canvas_id
 
@@ -4448,10 +4520,10 @@ class Canvas(object):
                 >>> a.portrait(width = 337, height = 400, x=100, y = 200, clear=1) # portrait, with more specifications
 
         :param width: Width to set the canvas to (in pixels)
-        :type width: int
+        :type width: :py:class:`int`
 
         :param height: Height to set the canvas to (in pixels)
-        :type height: int
+        :type height: :py:class:`int`
 
         :param x: Unused.
         :type x: None
@@ -4461,7 +4533,7 @@ class Canvas(object):
 
         :param clear: 0: Do not clear the canvas when orientation is changed.
                       1: clear the canvas when orientation is changed.
-        :type clear: int
+        :type clear: :py:class:`int`
         """
         if (self.orientation() == 'portrait'):
             return
@@ -4532,19 +4604,19 @@ class Canvas(object):
                 True
 
         :param movie: Output video file name
-        :type movie: str
+        :type movie: :py:class:`str`
 
         :param files: String file name
-        :type files: str, list, or tuple
+        :type files: :py:class:`str`, :py:class:`list`, or :py:class:`tuple`
 
         :param rate: Desired output framerate
-        :type rate: str
+        :type rate: :py:class:`str`
 
         :param options: Additional FFMPEG arguments
-        :type options: str
+        :type options: :py:class:`str`
 
         :returns: The output string generated by ffmpeg program
-        :rtype: str
+        :rtype: :py:class:`str`
 
         """
         args = ["ffmpeg", "-y"]
@@ -4626,14 +4698,39 @@ class Canvas(object):
         return result == 0
 
     def getantialiasing(self):
+        """
+        Returns the current antialiasing rate for the canvas.
+
+        :Example:
+
+            .. doctest:: canvas_getantialiasing
+
+                >>> a=vcs.init()
+                >>> a.setantialiasing(0) # turn off antialiasing
+                >>> a.getantialiasing() # will return current antialiasing rate
+                0
+
+        :return: antialiasing rate for the canvas
+        :rtype: int
+        """
         return self.backend.getantialiasing()
 
     def setantialiasing(self, antialiasing):
         """
-        Set antialiasing rate.
+        Sets the antialiasing rate for the canvas.
 
-        :param antialiasing: Integer from 0-64, representing the antialising rate (0 means no antialiasing).
-        :type antialiasing: int
+        :Example:
+
+            .. doctest:: canvas_setantialiasing
+
+                >>> a=vcs.init()
+                >>> a.setantialiasing(20)
+                >>> a.getantialiasing()
+                20
+
+        :param antialiasing: Integer from 0-64, representing the antialising
+            rate (0 means no antialiasing).
+        :type antialiasing: :py:class:`int`
         """
         self.backend.setantialiasing(antialiasing)
 
@@ -4657,7 +4754,7 @@ class Canvas(object):
 
         :param units: The units of measurement to use for output.
             One of ['inches', 'in', 'cm', 'mm', 'pixel', 'dot', 'dots'].
-        :type units: str
+        :type units: :py:class:`str`
         """
         if units not in [
                 'inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']:
@@ -4688,14 +4785,14 @@ class Canvas(object):
                 >>> a.plot(array)
                 <vcs.displayplot.Dp ...>
                 >>> a.png("bars.png") # make a png named 'bars.png'
-                >>> a.clear() # clear the bars off the screen
-                >>> a.put_on_png_on_canvas("bars.png") # put 'bars.png' on Canvas
+                >>> a.clear() # clear the bars off the canvas
+                >>> a.put_png_on_canvas("bars.png") # put 'bars.png' on canvas
 
         :param file: Input image filename
-        :type file: str
+        :type file: :py:class:`str`
 
         :param zoom: scale factor
-        :type zoom: int
+        :type zoom: :py:class:`int`
 
         :param xOffset: Horizontal Offset
         :type xOffset: float
@@ -4705,7 +4802,7 @@ class Canvas(object):
 
         :param units: Specifies the units used for x and y Offsets.
             One of ['percent','pixels'].
-        :type units: str
+        :type units: :py:class:`str`
 
         :param fitToHeight: If True, fits the picture (before scaling) to the canvas full height,
             if False then use png original size.
@@ -4737,7 +4834,7 @@ class Canvas(object):
                 >>> a.png('example') # Overwrite a png file
 
         :param file: Output image filename
-        :type file: str
+        :type file: :py:class:`str`
 
         :param width: Float representing the desired width of the output png,
             using the specified unit of measurement
@@ -4749,7 +4846,7 @@ class Canvas(object):
 
         :param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots'].
             Defaults to 'inches'.
-        :type units: str
+        :type units: :py:class:`str`
 
         :param draw_white_background: Boolean value indicating if the background should be white. Defaults to True.
         :type draw_white_background: bool
@@ -4790,17 +4887,17 @@ class Canvas(object):
                 >>> a.pdf('example', width=21, height=29.7, units='cm') # A4
 
         :param file: Desired string name of the output file
-        :type file: str
+        :type file: :py:class:`str`
 
         :param width: Integer specifying the desired width of the output, measured in the chosen units
-        :type width: int
+        :type width: :py:class:`int`
 
         :param height: Integer specifying the desired height of the output, measured in the chosen units
-        :type height: int
+        :type height: :py:class:`int`
 
         :param units: Must be one of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots'].
                       Default is 'inches'.
-        :type units: str
+        :type units: :py:class:`str`
 
         :param textAsPaths: Specifies whether to render text objects as paths.
         :type textAsPaths: bool
@@ -4848,7 +4945,7 @@ class Canvas(object):
         :type height: float
 
         :param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Deafults to 'inches'.
-        :type units: str
+        :type units: :py:class:`str`
 
         :param textAsPaths: Specifies whether to render text objects as paths.
         :type textAsPaths: bool
@@ -4966,6 +5063,18 @@ class Canvas(object):
         """
         Returns a boolean value indicating whether the canvas is opened or not.
 
+        :Example:
+
+            .. doctest:: convas_isopened
+
+                >>> a=vcs.init()
+                >>> a.isopened() # canvas defaults to being closed
+                False
+                >>> array=[range(10) for _ in range(10)]
+                >>> a.plot(array)
+                >>> a.isopened() # plotting opened the canvas
+                True
+
         :returns: A boolean value indicating whether the Canvas is opened (1), or closed (0)
         :rtype: bool
         """
@@ -5075,24 +5184,24 @@ class Canvas(object):
                 >>> a.postscript('example', width=21, height=29.7, units='cm') # A4
 
         :param file: String name of the desired output file.
-        :type file: str
+        :type file: :py:class:`str`
 
         :param mode: The mode in which to open the file. One of 'r' or 'a'.
             When mode is 'r', file will be opened in replace mode.
             When mode is 'a', file will be opened in append mode.
-        :type mode: str
+        :type mode: :py:class:`str`
 
         :param width: Desired width of the postscript output,
             in the specified unit of measurement.
-        :type width: int
+        :type width: :py:class:`int`
 
         :param height: Desired height of the postscript output,
             in the specified unit of measurement.
-        :type height: int
+        :type height: :py:class:`int`
 
         :param units: The units of measurement to use for output.
             One of ['inches', 'in', 'cm', 'mm', 'pixel', 'dot', 'dots'].
-        :type units: str
+        :type units: :py:class:`str`
 
         :param textAsPaths: Specifies whether to render text objects as paths.
         :type textAsPaths: bool
@@ -5153,7 +5262,7 @@ class Canvas(object):
                 <vcs.displayplot.Dp ...>
 
         :param name: Name of the colormap to use
-        :type name: str
+        :type name: :py:class:`str`
         """
         # Don't update the VCS segment if there is no Canvas. This condition
         # happens in the initalize function for VCDAT only. This will cause a
@@ -5216,13 +5325,29 @@ class Canvas(object):
                 >>> a.setcontinentsline("default") # Use default line
 
         :param line: Line to use for drawing continents. Can be a string name of a line, or a VCS line object
-        :type line: str or :py:class:`vcs.line.Tl`
+        :type line: :py:class:`str` or :py:class:`vcs.line.Tl`
         """
         linename = VCS_validation_functions.checkLine(self, "continentsline", line)
         line = vcs.getline(linename)
         self._continents_line = line
 
     def getcontinentsline(self):
+        """
+        Returns the continents line associated with the canvas.
+
+        :Example:
+
+            .. doctest:: canvas_getcontinentsline
+
+                >>> a=vcs.init()
+                >>> cl=a.getcontinentsline() # should be the default
+                >>> cl.name
+                'default'
+
+        :return: The line object associated with the canvas's continents_line
+            property
+        :rtype: vcs.line.Tl
+        """
         if self._continents_line is None:
             return vcs.getline("default")
         else:
@@ -5236,14 +5361,20 @@ class Canvas(object):
         specified by additional external files that must be read as input.
 
         The continents-type values are integers ranging from 0 to 11, where:
-          0 signifies "No Continents"
-          1 signifies "Fine Continents"
-          2 signifies "Coarse Continents"
-          3 signifies "United States" (with "Fine Continents")
-          4 signifies "Political Borders" (with "Fine Continents")
-          5 signifies "Rivers" (with "Fine Continents")
 
-          6 uses a custom continent set
+            * 0 signifies "No Continents"
+
+            * 1 signifies "Fine Continents"
+
+            * 2 signifies "Coarse Continents"
+
+            * 3 signifies "United States" (with "Fine Continents")
+
+            * 4 signifies "Political Borders" (with "Fine Continents")
+
+            * 5 signifies "Rivers" (with "Fine Continents")
+
+            * 6 uses a custom continent set
 
         You can also pass a file by path.
 
@@ -5258,7 +5389,7 @@ class Canvas(object):
                 <vcs.displayplot.Dp ...>
 
         :param value: Integer representing continent type, as specified in function description
-        :type value: int
+        :type value: :py:class:`int`
         """
         continent_path = VCS_validation_functions.checkContinents(self, value)
         self._continents = value
@@ -5339,10 +5470,10 @@ class Canvas(object):
                 >>> a.postscript('example', width=21, height=29.7, units='cm') # A4
 
         :param file: String name of the desired output file
-        :type file: str
+        :type file: :py:class:`str`
 
         :param mode: The mode in which to open the file. One of 'r' or 'a'.
-        :type mode: str
+        :type mode: :py:class:`str`
 
         :param width: Width of the output image, in the unit of measurement specified
         :type width: float
@@ -5352,7 +5483,7 @@ class Canvas(object):
 
         :param units: The units of measurement to use for output.
             One of ['inches', 'in', 'cm', 'mm', 'pixel', 'dot', 'dots'].
-        :type units: str
+        :type units: :py:class:`str`
         """
         ext = file.split(".")[-1]
         if ext.lower() != 'eps':
@@ -5382,18 +5513,28 @@ class Canvas(object):
         Checks if a graphic method is stored in a file
         if no file name is passed then looks into the initial.attributes file
 
+        :Example:
+
+            .. doctest:: canvas_isinfile
+
+                >>> a=vcs.init()
+                >>> box=a.getboxfill()
+                >>> a.scriptobject(box, 'deft_box.py')
+                >>> a.isinfile(box, 'deft_box.py')
+                1
+
         :param GM: The graphics method to search for
-        :type GM: str
+        :type GM: :py:class:`str`
 
         :param file: String name of the file to search.
             If None, VCS will search initial.attributes.
-        :type file: str
+        :type file: :py:class:`str`
 
         :returns: 1 if the graphic method is stored in the file, nothing if it is not.
         """
         nm = GM.name
         gm = GM.g_name
-        key = gm + '_' + nm + '('
+        key = key = gm + '_' + nm + '('
         if file is None:
             file = os.path.join(
                 os.path.expanduser("~"),
@@ -5422,9 +5563,9 @@ class Canvas(object):
 
         .. warning::
 
-            This removes first ALL objects generated automatically
-            (i.e. whose name starts with '__') in order to preserve this, rename objects first
-            e.g:
+            This removes first ALL objects generated automatically (i.e. whose
+            name starts with '__'). To preserve these, rename objects first
+            e.g.:
 
             .. doctest:: canvas_saveinitial_warning
 
@@ -5459,7 +5600,7 @@ class Canvas(object):
                 ...     a.portrait() # Set VCS's orientation to portrait mode
 
         :returns: Integer indicating VCS is in landscape mode (1), or not (0)
-        :rtype: int
+        :rtype: :py:class:`int`
         """
         if (self.orientation() == 'landscape'):
             return 1
@@ -5503,7 +5644,7 @@ class Canvas(object):
 
 
         :param Dp_name_src: String name of an existing display plot object
-        :type Dp_name_src: str
+        :type Dp_name_src: :py:class:`str`
 
         :param template: The displayplot template to inherit from
         :type template:
@@ -5533,10 +5674,10 @@ class Canvas(object):
         Add a font to VCS.
 
         :param path: Path to the font file you wish to add (must be .ttf)
-        :type path: str
+        :type path: :py:class:`str`
 
         :param name: Name to use to represent the font.
-        :type name: str
+        :type name: :py:class:`str`
         """
         if not os.path.exists(path):
             raise ValueError('Error -  The font path does not exists')
@@ -5599,11 +5740,11 @@ class Canvas(object):
                 [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
         :param font: The font name/number
-        :type font: int or str
+        :type font: :py:class:`int` or :py:class:`str`
 
         :returns: If font parameter was a string, will return the integer associated with that string.
                   If font parameter was an integer, will return the string associated with that integer.
-        :rtype: int or str
+        :rtype: :py:class:`int` or str
         """
         if isinstance(font, int):
             return self.getfontname(font)
@@ -5617,10 +5758,10 @@ class Canvas(object):
         Switch the font numbers of two fonts.
 
         :param font1: The first font
-        :type font1: int or str
+        :type font1: :py:class:`int` or str
 
         :param font2: The second font
-        :type font2: int or str
+        :type font2: :py:class:`int` or str
         """
         if isinstance(font1, str):
             index1 = self.getfont(font1)
@@ -5648,11 +5789,20 @@ class Canvas(object):
         """
         Copy 'font1' into 'font2'.
 
+        :Example:
+
+            .. doctest:: canvas_copyfontto
+
+                >>> a=vcs.init()
+                >>> a.listelements('font') # show all font names
+                [...]
+                >>> a.copyfontto('Russian', 'Times')
+
         :param font1: Name/number of font to copy
-        :type font1: str or int
+        :type font1: :py:class:`str` or int
 
         :param font2: Name/number of destination
-        :type font2: str or int
+        :type font2: :py:class:`str` or :py:class:`int`
         """
         if isinstance(font1, str):
             index1 = self.getfont(font1)
@@ -5678,8 +5828,17 @@ class Canvas(object):
         """
         Sets the passed/def show font as the default font for vcs
 
+        :Example:
+
+            .. doctest:: canvas_setdefaultfont
+
+                >>> a=vcs.init()
+                >>> a.listelements('font') # show all font names
+                [...]
+                >>> a.setdefaultfont('Times')
+
         :param font: Font name or index to use as default
-        :type font: str or int
+        :type font: :py:class:`str` or :py:class:`int`
         """
         if isinstance(font, str):
             font = self.getfont(font)
@@ -5700,7 +5859,7 @@ class Canvas(object):
                 'landscape'
 
         :returns: A string indicating the orientation of the canvas, i.e. 'landscape' or 'portrait'
-        :rtype: str
+        :rtype: :py:class:`str`
         """
         return self.backend.orientation(*args, **kargs)
 
@@ -5712,6 +5871,19 @@ class Canvas(object):
         """
         Returns the name of the colormap this canvas is set to use by default.
 
+        :Example:
+
+            .. doctest:: canvas_getcolormapname
+
+                >>> a=vcs.init()
+                >>> a.show('colormap')
+                *******************Colormap Names List**********************
+                ...
+                *******************End Colormap Names List**********************
+                >>> a.setcolormap('rainbow') # set canvas's default colormap
+                >>> a.getcolormapname()
+                'rainbow'
+
         To set that colormap, use :py:func:`setcolormap`.
         """
         if self.colormap is None:
@@ -5719,6 +5891,31 @@ class Canvas(object):
         return self.colormap
 
     def dummy_user_action(self, *args, **kargs):
+        """
+        Given args and kargs, prints the arguments and keyword arguments
+        associated with those parameters.
+
+        Use this function to test what args and kargs are, if you're unsure.
+
+        :Example:
+
+            .. doctest:: canvas_dummy_user_action
+
+                >>> a=vcs.init()
+                >>> dua=a.dummy_user_action # alias long name
+                >>> dua("falafel", 37, the_answer=42, barbara="streisand")
+                Arguments: ('falafel', 37)
+                Keywords: {'the_answer': 42, 'barbara': 'streisand'}
+
+
+        :param args: Any number of arguments, without a keyword specifier.
+        :type args: any
+
+        :param kargs: Any number of keyword arguments, associated with any
+            number of data (i.e. kwd1="a string", kwd2=42).
+        :type kargs: any
+
+        """
         print 'Arguments:', args
         print 'Keywords:', kargs
         return None
