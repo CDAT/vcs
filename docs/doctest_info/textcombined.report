@@ -3,10 +3,21 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
-Expecting:
-    <vcs.textcombined.Tc ...>
-ok
+    try: # try to create a new textcombined, in case none exist
+        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+    except:
+        pass
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/textcombined.py", line 471, in vcs.textcombined.Tc.script
+Failed example:
+    try: # try to create a new textcombined, in case none exist
+        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+    except:
+        pass
+Expected nothing
+Got:
+    <vcs.textcombined.Tc object at 0x118041230>
 Trying:
     ex=a.gettextcombined('EXAMPLE_tt', 'EXAMPLE_tto') # Get default textcombined
 Expecting nothing
@@ -15,7 +26,7 @@ Trying:
     ex.script('filename.py') # Append to a Python script named 'filename.py'
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/textcombined.py", line 474, in vcs.textcombined.Tc.script
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/textcombined.py", line 476, in vcs.textcombined.Tc.script
 Failed example:
     ex.script('filename.py') # Append to a Python script named 'filename.py'
 Exception raised:
@@ -98,7 +109,7 @@ ok
     vcs.textcombined.Tc.y
 **********************************************************************
 1 items had failures:
-   1 of   5 in vcs.textcombined.Tc.script
+   2 of   5 in vcs.textcombined.Tc.script
 5 tests in 65 items.
-4 passed and 1 failed.
-***Test Failed*** 1 failures.
+3 passed and 2 failed.
+***Test Failed*** 2 failures.

@@ -430,10 +430,21 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
-Expecting:
-    <vcs.textcombined.Tc ...>
-ok
+    try: # try to create a new textcombined, in case none exist
+        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+    except:
+        pass
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/queries.py", line ?, in vcs.queries.istextcombined
+Failed example:
+    try: # try to create a new textcombined, in case none exist
+        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+    except:
+        pass
+Expected nothing
+Got:
+    <vcs.textcombined.Tc object at 0x117fc1230>
 Trying:
     a.show('textcombined') # Show all available textcombined
 Expecting:
@@ -572,7 +583,7 @@ Expecting:
 ok
 1 items had no tests:
     vcs.queries
-27 items passed all tests:
+26 items passed all tests:
    2 tests in vcs.queries.graphicsmethodlist
    7 tests in vcs.queries.graphicsmethodtype
    4 tests in vcs.queries.is1d
@@ -593,7 +604,6 @@ ok
    4 tests in vcs.queries.issecondaryobject
    4 tests in vcs.queries.istaylordiagram
    4 tests in vcs.queries.istemplate
-   5 tests in vcs.queries.istextcombined
    4 tests in vcs.queries.istextorientation
    4 tests in vcs.queries.istexttable
    4 tests in vcs.queries.isvector
@@ -601,8 +611,9 @@ ok
    4 tests in vcs.queries.isxyvsy
    4 tests in vcs.queries.isyxvsx
 **********************************************************************
-1 items had failures:
+2 items had failures:
    1 of   6 in vcs.queries.isplot
+   1 of   5 in vcs.queries.istextcombined
 115 tests in 29 items.
-114 passed and 1 failed.
-***Test Failed*** 1 failures.
+113 passed and 2 failed.
+***Test Failed*** 2 failures.

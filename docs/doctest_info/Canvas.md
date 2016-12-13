@@ -1,45 +1,91 @@
-vcs.Canvas.Canvas.drawtext
+vcs.Canvas.Canvas.canvasid
 --------------------------
 ```python
 Failed example:
-    vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+    a.canvasid()
+Expected nothing
+Got:
+    2
+```
+
+vcs.Canvas.Canvas.check_name_source
+-----------------------------------
+```python
+Failed example:
+    cns('polar','quick','boxfill') # is 'polar' boxfill taken?
 Exception raised:
     Traceback (most recent call last):
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
         compileflags, 1) in test.globs
-      File "<doctest vcs.Canvas.Canvas.drawtext[2]>", line 1, in <module>
-        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1435, in createtextcombined
-        Tt_name, Tt_source = check_name_source(Tt_name, Tt_source, 'texttable')
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 57, in check_name_source
+      File "<doctest vcs.Canvas.Canvas.check_name_source[2]>", line 1, in <module>
+        cns('polar','quick','boxfill') # is 'polar' boxfill taken?
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 93, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
-    vcsError: Error texttable object named EXAMPLE_tt already exists
+    vcsError: Error boxfill object named polar already exists
 ```
 
-vcs.Canvas.Canvas.ffmpeg
-------------------------
+vcs.Canvas.Canvas.clean_auto_generated_objects
+----------------------------------------------
 ```python
 Failed example:
-    for i in range(10): # create a number of pngs to use for an mpeg
-        a.clear()
-        if (i%2):
-            a.plot(u,v)
-        else:
-            a.plot(v,u)
-        a.png('my_png__%i' % i)
-        png_files.append('my_png__%i.png' % i)
+    a.plot(array)
 Expected nothing
 Got:
-    <vcs.displayplot.Dp object at 0x11861bc58>
-    <vcs.displayplot.Dp object at 0x11859b910>
-    <vcs.displayplot.Dp object at 0x1182bd910>
-    <vcs.displayplot.Dp object at 0x1185bc4b0>
-    <vcs.displayplot.Dp object at 0x117faec58>
-    <vcs.displayplot.Dp object at 0x11859ba28>
-    <vcs.displayplot.Dp object at 0x117f97e88>
-    <vcs.displayplot.Dp object at 0x118661398>
-    <vcs.displayplot.Dp object at 0x118636a28>
-    <vcs.displayplot.Dp object at 0x1182eb910>
+    <vcs.displayplot.Dp object at 0x118580d70>
+```
+
+vcs.Canvas.Canvas.clean_auto_generated_objects
+----------------------------------------------
+```python
+Failed example:
+    boxes == new_boxes
+Expected:
+    True
+Got:
+    False
+```
+
+vcs.Canvas.Canvas.createtext
+----------------------------
+```python
+Failed example:
+    try: # try to create a new textcombined, in case none exist
+        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+    except:
+        pass
+Expected nothing
+Got:
+    <vcs.textcombined.Tc object at 0x118041b90>
+```
+
+vcs.Canvas.Canvas.drawtext
+--------------------------
+```python
+Failed example:
+    vcs.createtextcombined('draw_tt', 'qa', 'draw_tto', '7left')
+Expected nothing
+Got:
+    <vcs.textcombined.Tc object at 0x1185be9b0>
+```
+
+vcs.Canvas.Canvas.drawtext
+--------------------------
+```python
+Failed example:
+    tc=a.drawtextcombined(Tt_name = 'draw_tt', To_name='draw_tto')
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.Canvas.Canvas.drawtext[3]>", line 1, in <module>
+        tc=a.drawtextcombined(Tt_name = 'draw_tt', To_name='draw_tto')
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2353, in drawtextcombined
+        t.string = string
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/textcombined.py", line 286, in _setstring
+        self.Tt.string = value
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/texttable.py", line 307, in _setstring
+        raise ValueError('Must be a string or a list of strings.')
+    ValueError: Must be a string or a list of strings.
 ```
 
 vcs.Canvas.Canvas.get3d_dual_scalar
@@ -51,7 +97,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x117f55050>
+    <vcs.displayplot.Dp object at 0x11838f050>
 ```
 
 vcs.Canvas.Canvas.get3d_scalar
@@ -63,7 +109,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x14ed5ea28>
+    <vcs.displayplot.Dp object at 0x151797168>
 ```
 
 vcs.Canvas.Canvas.get3d_vector
@@ -77,158 +123,83 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x14ed944b0>
+    <vcs.displayplot.Dp object at 0x1517b3910>
 ```
 
 vcs.Canvas.Canvas.gettaylordiagram
 ----------------------------------
 ```python
 Failed example:
-    a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
+    a.taylordiagram(ex) # plot using specified taylordiagram object
 Exception raised:
     Traceback (most recent call last):
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
         compileflags, 1) in test.globs
       File "<doctest vcs.Canvas.Canvas.gettaylordiagram[6]>", line 1, in <module>
-        a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1275, in taylordiagram
-        return self.__plot(arglist, parms)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3634, in __plot
-        t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1967, in plot
-        self.draw(canvas, data)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1207, in draw
-        d0 = float(data[i][0])
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/numpy/ma/core.py", line 4182, in __float__
-        raise TypeError("Only length-1 arrays can be converted "
-    TypeError: Only length-1 arrays can be converted to Python scalars
+        a.taylordiagram(ex) # plot using specified taylordiagram object
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1306, in taylordiagram
+        arglist = _determine_arg_list('taylordiagram', args)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 272, in _determine_arg_list
+        arglist[igraphics_method])
+    vcsError: Graphics method taylordiagram requires 1 slab.
 ```
 
-vcs.Canvas.Canvas.gettextcombined
+vcs.Canvas.Canvas.initLogoDrawing
 ---------------------------------
 ```python
 Failed example:
-    vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.Canvas.Canvas.gettextcombined[2]>", line 1, in <module>
-        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1435, in createtextcombined
-        Tt_name, Tt_source = check_name_source(Tt_name, Tt_source, 'texttable')
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 57, in check_name_source
-        raise vcsError("Error %s object named %s already exists" % (typ, name))
-    vcsError: Error texttable object named EXAMPLE_tt already exists
-```
-
-vcs.Canvas.Canvas.objecthelp
-----------------------------
-```python
-Failed example:
-    a.objecthelp(ln) # This will print out information on how to use ln
+    a.plot(array) # should have logo in lower right corner
 Expected nothing
 Got:
-    <BLANKLINE>
-        The Line object allows the manipulation of line type, width, color index,
-        view port, world coordinates, and (x,y) points.
-    <BLANKLINE>
-        This class is used to define an line table entry used in VCS, or it
-        can be used to change some or all of the line attributes in an
-        existing line table entry.
-    <BLANKLINE>
-        .. describe:: Useful Functions:
-    <BLANKLINE>
-            .. code-block:: python
-    <BLANKLINE>
-                # VCS Canvas Constructor
-                a=vcs.init()
-                # Show predefined line objects
-                a.show('line')
-                # Will list all the line attribute values
-                ln.list()
-                # Updates the VCS Canvas at user's request
-                a.update()
-    <BLANKLINE>
-        .. describe:: Create a new instance of line:
-    <BLANKLINE>
-            .. code-block:: python
-    <BLANKLINE>
-                # Copies content of 'red' to 'new'
-                ln=a.createline('new','red')
-                # Copies content of 'default' to 'new'
-                ln=a.createline('new')
-    <BLANKLINE>
-        .. describe:: Modify an existing line:
-    <BLANKLINE>
-            * Get a line object 'ln' to manipulate:
-    <BLANKLINE>
-                .. code-block:: python
-    <BLANKLINE>
-                    ln=a.getline('red')
-    <BLANKLINE>
-            * Set line color:
-    <BLANKLINE>
-                .. code-block:: python
-    <BLANKLINE>
-                    # Range from 1 to 256
-                    ln.color=100
-    <BLANKLINE>
-            * Set line width:
-    <BLANKLINE>
-                .. code-block:: python
-    <BLANKLINE>
-                    # Range from 1 to 300
-                    ln.width=100
-    <BLANKLINE>
-            * Specify the line type:
-    <BLANKLINE>
-                .. code-block:: python
-    <BLANKLINE>
-                    # Same as ln.type=0
-                     ln.type='solid'
-                     # Same as ln.type=1
-                     ln.type='dash'
-                     # Same as ln.type=2
-                     ln.type='dot'
-                     # Same as ln.type=3
-                     ln.type='dash-dot'
-                     # Same as ln.type=4
-                     ln.type='long-dash'
-    <BLANKLINE>
-            * Set the graphics priority on the canvas:
-    <BLANKLINE>
-                .. code-block:: python
-    <BLANKLINE>
-                    ln.priority=1
-                    # FloatType [0,1]x[0,1]
-                    ln.viewport=[0, 1.0, 0,1.0]
-                    # FloatType [#,#]x[#,#]
-                    ln.worldcoordinate=[0,1.0,0,1.0]
-    <BLANKLINE>
-            * Set line x and y values:
-    <BLANKLINE>
-                .. code-block:: python
-    <BLANKLINE>
-                    # List of FloatTypes
-                    ln.x=[[0,.1,.2], [.3,.4,.5]]
-                    # List of FloatTypes
-                    ln.y=[[.5,.4,.3], [.2,.1,0]]
-    <BLANKLINE>
+    <vcs.displayplot.Dp object at 0x157a49280>
 ```
 
-vcs.Canvas.Canvas.put_png_on_canvas
------------------------------------
+vcs.Canvas.Canvas.isinfile
+--------------------------
 ```python
 Failed example:
-    a.put_on_png_on_canvas("bars.png") # put 'bars.png' on Canvas
+    a.isinfile(box, 'deft_box.py')
+Expected:
+    1
+Got nothing
+```
+
+vcs.Canvas.Canvas.isopened
+--------------------------
+```python
+Failed example:
+    a.plot(array)
+Expected nothing
+Got:
+    <vcs.displayplot.Dp object at 0x15fc41c58>
+```
+
+vcs.Canvas.Canvas.return_display_names
+--------------------------------------
+```python
+Failed example:
+    a.plot(array)
+Expected nothing
+Got:
+    <vcs.displayplot.Dp object at 0x189fdca28>
+```
+
+vcs.Canvas.Canvas.setdefaultfont
+--------------------------------
+```python
+Failed example:
+    a.setdefaultfont('Times')
 Exception raised:
     Traceback (most recent call last):
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
         compileflags, 1) in test.globs
-      File "<doctest vcs.Canvas.Canvas.put_png_on_canvas[5]>", line 1, in <module>
-        a.put_on_png_on_canvas("bars.png") # put 'bars.png' on Canvas
-    AttributeError: 'Canvas' object has no attribute 'put_on_png_on_canvas'
+      File "<doctest vcs.Canvas.Canvas.setdefaultfont[2]>", line 1, in <module>
+        a.setdefaultfont('Times')
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5910, in setdefaultfont
+        return self.copyfontto(font, 1)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5890, in copyfontto
+        return self.canvas.copyfontto(*(index1, index2))
+    AttributeError: 'module' object has no attribute 'copyfontto'
 ```
 
 Missing Doctests
@@ -311,17 +282,7 @@ Missing Doctests
 
 :x:```    vcs.Canvas.Canvas.canvas```
 
-:x:```    vcs.Canvas.Canvas.canvasid```
-
-:x:```    vcs.Canvas.Canvas.canvasinfo```
-
 :x:```    vcs.Canvas.Canvas.cgm```
-
-:x:```    vcs.Canvas.Canvas.change_display_graphic_method```
-
-:x:```    vcs.Canvas.Canvas.check_name_source```
-
-:x:```    vcs.Canvas.Canvas.clean_auto_generated_objects```
 
 :x:```    vcs.Canvas.Canvas.configure```
 
@@ -329,19 +290,11 @@ Missing Doctests
 
 :x:```    vcs.Canvas.Canvas.dual_scalar3d```
 
-:x:```    vcs.Canvas.Canvas.dummy_user_action```
-
 :x:```    vcs.Canvas.Canvas.endconfigure```
 
 :x:```    vcs.Canvas.Canvas.get1d```
 
 :x:```    vcs.Canvas.Canvas.get_selected_display```
-
-:x:```    vcs.Canvas.Canvas.getantialiasing```
-
-:x:```    vcs.Canvas.Canvas.getcolormapname```
-
-:x:```    vcs.Canvas.Canvas.getcontinentsline```
 
 :x:```    vcs.Canvas.Canvas.getfontname```
 
@@ -355,17 +308,9 @@ Missing Doctests
 
 :x:```    vcs.Canvas.Canvas.gs```
 
-:x:```    vcs.Canvas.Canvas.initLogoDrawing```
-
 :x:```    vcs.Canvas.Canvas.interact```
 
-:x:```    vcs.Canvas.Canvas.isinfile```
-
-:x:```    vcs.Canvas.Canvas.isopened```
-
 :x:```    vcs.Canvas.Canvas.isplottinggridded```
-
-:x:```    vcs.Canvas.Canvas.match_color```
 
 :x:```    vcs.Canvas.Canvas.mode```
 
@@ -379,13 +324,7 @@ Missing Doctests
 
 :x:```    vcs.Canvas.Canvas.processParameterChange```
 
-:x:```    vcs.Canvas.Canvas.raisecanvas```
-
 :x:```    vcs.Canvas.Canvas.removeP```
-
-:x:```    vcs.Canvas.Canvas.remove_display_name```
-
-:x:```    vcs.Canvas.Canvas.return_display_names```
 
 :x:```    vcs.Canvas.Canvas.savecontinentstype```
 
@@ -395,13 +334,7 @@ Missing Doctests
 
 :x:```    vcs.Canvas.Canvas.setAnimationStepper```
 
-:x:```    vcs.Canvas.Canvas.setantialiasing```
-
-:x:```    vcs.Canvas.Canvas.setdefaultfont```
-
 :x:```    vcs.Canvas.Canvas.start```
-
-:x:```    vcs.Canvas.Canvas.switchfonts```
 
 :x:```    vcs.Canvas.Canvas.updateorientation```
 

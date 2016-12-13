@@ -797,6 +797,9 @@ class Canvas(object):
                 >>> a=vcs.init()
                 >>> ln=a.getline('red') # Get a VCS line object
                 >>> a.objecthelp(ln) # This will print out information on how to use ln
+                <BLANKLINE>
+                ... The Line object ...
+
         """
         for x in arg:
             print getattr(x, "__doc__", "")
@@ -2272,6 +2275,7 @@ class Canvas(object):
 
     def match_color(self, color, colormap=None):  # noqa
         return vcs.match_color(color, colormap)
+    match_color.__doc__ = vcs.utils.match_color.__doc__
 
     def drawtextcombined(self, Tt_name=None, To_name=None, string=None,
                          font=1, spacing=2, expansion=100, color=241,
@@ -4004,11 +4008,46 @@ class Canvas(object):
         self.backend.setAnimationStepper(stepper)
 
     def return_display_names(self, *args):
+        """
+        Show the list of display names associated with all active plots
+        on the canvas.
+
+        :Example:
+
+            .. doctest:: canvas_return_display_name
+
+                >>> a=vcs.init()
+                >>> a.return_display_names() # new canvas should have none
+                []
+                >>> array=[range(10) for _ in range(10)]
+                >>> a.plot(array)
+                >>> a.return_display_names() # has display name for new plot
+                [...]
+
+        :return: A list of the display names of images currently plotted
+            on the canvas.
+        :rtype: :py:class:`list`
+        """
         return self.display_names
 
     def remove_display_name(self, *args):
         """
         Removes a plotted item from the canvas.
+
+        :Example:
+
+            .. doctest:: canvas_remove_display_name
+
+                >>> a=vcs.init()
+                >>> a.return_display_names() # new canvas should have none
+                []
+                >>> array=[range(10) for _ in range(10)]
+                >>> plot=a.plot(array) # store plot for reference to plot name
+                >>> a.return_display_names() # has display name for new plot
+                [...]
+                >>> a.remove_display_name(plot.name)
+                >>> a.return_display_names() # should be empty again
+                []
 
         :param args: Any number of display names to remove.
         :type args: list of :py:class:`str`
@@ -4020,16 +4059,13 @@ class Canvas(object):
 
     def cgm(self, file, mode='w'):
         """
+        .. deprecated::
+
+            Exporting images to CGM format is no longer supported.
+            To generate an image from the canvas, see
+            :py:func:`vcs.Canvas.Canvas.png` or :py:func:`vcs.Canvas.Canvas.svg`
+
         Export an image in CGM format.
-
-        :Example:
-
-            .. doctest:: canvas_cgm
-
-                >>> a=vcs.init()
-                >>> array=[range(10) for _ in range(10)]
-                >>> a.plot(array)
-                >>> a.cgm('bars.cgm')
 
         :param file: Filename to save
         :param mode: Ignored.
@@ -4324,7 +4360,8 @@ class Canvas(object):
 
         .. admonition:: Not Yet Implemented
 
-            :py:func`vcs.Canvas.grid`_ does not work.
+            This function does not currently work.
+            It will be implemented in the future.
         """
 
         p = self.canvas.grid(*args)
@@ -4596,6 +4633,16 @@ class Canvas(object):
                 ...         a.plot(v,u)
                 ...     a.png('my_png__%i' % i)
                 ...     png_files.append('my_png__%i.png' % i)
+                <vcs.displayplot.Dp object at 0x...>
+                <vcs.displayplot.Dp object at 0x...>
+                <vcs.displayplot.Dp object at 0x...>
+                <vcs.displayplot.Dp object at 0x...>
+                <vcs.displayplot.Dp object at 0x...>
+                <vcs.displayplot.Dp object at 0x...>
+                <vcs.displayplot.Dp object at 0x...>
+                <vcs.displayplot.Dp object at 0x...>
+                <vcs.displayplot.Dp object at 0x...>
+                <vcs.displayplot.Dp object at 0x...>
                 >>> a.ffmpeg('mymovie.mpeg',png_files) # generates from list of files
                 True
                 >>> a.ffmpeg('mymovie.mpeg',png_files,bitrate=512) # generates mpeg at 512kbit
@@ -5578,6 +5625,15 @@ class Canvas(object):
     def raisecanvas(self, *args):
         """
         Raise the VCS Canvas to the top of all open windows.
+
+        :Example:
+
+            .. doctest:: canvas_raisecanvas
+
+                >>> a=vcs.init()
+                >>> a.open()
+                >>> a.raisecanvas() # canvas should now be at the top
+
         """
         return self.backend.raisecanvas(*args)
 
@@ -5757,6 +5813,19 @@ class Canvas(object):
         """
         Switch the font numbers of two fonts.
 
+        :Example:
+
+            .. doctest:: canvas_switchfonts
+
+                >>> a=vcs.init()
+                >>> maths1 = a.getfontnumber('Maths1') # store font number
+                >>> maths2 = a.getfontnumber('Maths2') # store font number
+                >>> a.switchfonts('Maths1','Maths2') # switch font numbers
+                >>> new_maths1 = a.getfontnumber('Maths1')
+                >>> new_maths2 = a.getfontnumber('Maths2')
+                >>> maths1 == new_maths2 and maths2 == new_maths1 # check
+                True
+
         :param font1: The first font
         :type font1: :py:class:`int` or str
 
@@ -5787,16 +5856,12 @@ class Canvas(object):
 
     def copyfontto(self, font1, font2):
         """
+        .. admonition:: Not Yet Implemented
+
+            This function does not currently work.
+            It will be added in the future.
+
         Copy 'font1' into 'font2'.
-
-        :Example:
-
-            .. doctest:: canvas_copyfontto
-
-                >>> a=vcs.init()
-                >>> a.listelements('font') # show all font names
-                [...]
-                >>> a.copyfontto('Russian', 'Times')
 
         :param font1: Name/number of font to copy
         :type font1: :py:class:`str` or int

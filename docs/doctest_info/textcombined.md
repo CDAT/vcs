@@ -2,6 +2,19 @@ vcs.textcombined.Tc.script
 --------------------------
 ```python
 Failed example:
+    try: # try to create a new textcombined, in case none exist
+        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+    except:
+        pass
+Expected nothing
+Got:
+    <vcs.textcombined.Tc object at 0x118041230>
+```
+
+vcs.textcombined.Tc.script
+--------------------------
+```python
+Failed example:
     ex.script('filename.py') # Append to a Python script named 'filename.py'
 Exception raised:
     Traceback (most recent call last):

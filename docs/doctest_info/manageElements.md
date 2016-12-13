@@ -1,3 +1,19 @@
+vcs.manageElements.check_name_source
+------------------------------------
+```python
+Failed example:
+    cns('polar','quick','boxfill') # is 'polar' boxfill taken?
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.manageElements.check_name_source[2]>", line 1, in <module>
+        cns('polar','quick','boxfill') # is 'polar' boxfill taken?
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 93, in check_name_source
+        raise vcsError("Error %s object named %s already exists" % (typ, name))
+    vcsError: Error boxfill object named polar already exists
+```
+
 vcs.manageElements.createtext
 -----------------------------
 ```python
@@ -12,6 +28,19 @@ Got:
     *******************End Textcombined Names List**********************
 ```
 
+vcs.manageElements.createtext
+-----------------------------
+```python
+Failed example:
+    try: # try to create a new textcombined, in case none exist
+        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+    except:
+        pass
+Expected nothing
+Got:
+    <vcs.textcombined.Tc object at 0x118041230>
+```
+
 vcs.manageElements.get3d_dual_scalar
 ------------------------------------
 ```python
@@ -21,7 +50,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x123d5a910>
+    <vcs.displayplot.Dp object at 0x122e4e168>
 ```
 
 vcs.manageElements.get3d_scalar
@@ -33,7 +62,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1184beb40>
+    <vcs.displayplot.Dp object at 0x1187476e0>
 ```
 
 vcs.manageElements.get3d_vector
@@ -47,7 +76,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11818e398>
+    <vcs.displayplot.Dp object at 0x11806e7f8>
 ```
 
 vcs.manageElements.gettaylordiagram
@@ -61,7 +90,7 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.manageElements.gettaylordiagram[6]>", line 1, in <module>
         a.taylordiagram(ex) # plot using specified taylordiagram object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1274, in taylordiagram
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1306, in taylordiagram
         arglist = _determine_arg_list('taylordiagram', args)
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 272, in _determine_arg_list
         arglist[igraphics_method])
@@ -71,8 +100,6 @@ Exception raised:
 Missing Doctests
 ----------------
 :x:```    vcs.manageElements```
-
-:x:```    vcs.manageElements.check_name_source```
 
 :x:```    vcs.manageElements.removeCp```
 
@@ -84,5 +111,35 @@ Missing Doctests
 
 :x:```    vcs.manageElements.removeGXY```
 
-:x:```    vcs.manage```
-E
+:x:```    vcs.manageElements.removeGXy```
+
+:x:```    vcs.manageElements.removeGYx```
+
+:x:```    vcs.manageElements.removeGfb```
+
+:x:```    vcs.manageElements.removeGfi```
+
+:x:```    vcs.manageElements.removeGfm```
+
+:x:```    vcs.manageElements.removeGi```
+
+:x:```    vcs.manageElements.removeGtd```
+
+:x:```    vcs.manageElements.removeGv```
+
+:x:```    vcs.manageElements.removeP```
+
+:x:```    vcs.manageElements.removeProj```
+
+:x:```    vcs.manageElements.removeTc```
+
+:x:```    vcs.manageElements.removeTf```
+
+:x:```    vcs.manageElements.removeTl```
+
+:x:```    vcs.manageElements.removeTm```
+
+:x:```    vcs.manageElements.removeTo```
+
+:x:```    vcs.manageElements.removeTt```
+

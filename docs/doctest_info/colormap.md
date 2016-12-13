@@ -9,11 +9,11 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.colormap.Cp.setcolorcell[1]>", line 1, in <module>
         cmap = a.createcolormap('example', 'default') # Create a colormap
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5516, in createcolormap
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5721, in createcolormap
         return vcs.createcolormap(Cp_name, Cp_name_src)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1732, in createcolormap
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1785, in createcolormap
         Cp_name, Cp_name_src = check_name_source(Cp_name, Cp_name_src, 'colormap')
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 57, in check_name_source
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 93, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
     vcsError: Error colormap object named example already exists
 ```
