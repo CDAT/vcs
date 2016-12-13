@@ -1124,7 +1124,10 @@ class VTKVCSBackend(object):
             gl.Write3DPropsAsRasterImageOn()
 
         gl.SetInput(self.renWin)
-        gl.SetCompress(0)  # Do not compress
+        if (output_type == "pdf"):
+            gl.SetCompress(1)
+        else:
+            gl.SetCompress(0)
         gl.SetFilePrefix(".".join(file.split(".")[:-1]))
 
         if textAsPaths:
