@@ -201,7 +201,7 @@ class Tc(object):
                 tc.valign='base'
                 # Same as tcvalign=4
                 tc.valign='bottom'
-"""
+    """
 
     __slots__ = [
         's_name',

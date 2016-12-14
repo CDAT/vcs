@@ -29,7 +29,6 @@ import dv3d
 def check_name_source(name, source, typ):
     """Make sure it is a unique name for this type or generates a name for user.
 
-
     :Example:
 
         .. doctest:: manageElements_check_name_source
@@ -39,9 +38,7 @@ def check_name_source(name, source, typ):
             *******************Boxfill Names List**********************
             ...
             *******************End Boxfill Names List**********************
-            >>> cns('polar','quick','boxfill') # is 'polar' boxfill taken?
-            vcsError: Error boxfill object named polar already exists
-            >>> cns('NEW', 'quick', 'boxfill') # 'NEW' should be available...
+            >>> cns('NEW', 'quick', 'boxfill') # name 'NEW' should be available
             ('NEW', 'quick')
             >>> cns(None, 'default', 'boxfill') # generate unique boxfill name
             ('__boxfill_...', 'default')

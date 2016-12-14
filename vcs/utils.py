@@ -1198,25 +1198,43 @@ def mklabels(vals, output='dict'):
 
         .. doctest:: utils_mklabels
 
-            >>> a=vcs.mkscale(2,20,zero=2)
-            >>> vcs.mklabels(a)
-            {0.0: '0', 2.0: '2', 4.0: '4', 6.0: '6', 8.0: '8', 10.0: '10', 12.0: '12', 14.0: '14', ...}
-            >>> vcs.mklabels ( [5,.005])
-            {0.005: '0.005', 5.0: '5.000'}
-            >>> vcs.mklabels ( [.00002,.00005])
-            {2e-05: '2E-5', 5e-05: '5E-5'}
-            >>> vcs.mklabels ( [.00002,.00005],output='list')
+            >>> scale=vcs.mkscale(2,20,zero=2)
+            >>> labels=vcs.mklabels(scale)
+            >>> keys=labels.keys()
+            >>> keys.sort()
+            >>> for key in keys:
+            ...     print key, ':', labels[key]
+            0.0 : 0
+            2.0 : 2
+            4.0 : 4
+            6.0 : 6
+            8.0 : 8
+            10.0 : 10
+            12.0 : 12
+            14.0 : 14
+            16.0 : 16
+            18.0 : 18
+            20.0 : 20
+            >>> labels=vcs.mklabels([.00002,.00003,.00005])
+            >>> keys=labels.keys()
+            >>> keys.sort()
+            >>> for key in keys:
+            ...     print key, ':', labels[key]
+            2e-05 : 2E-5
+            3e-05 : 3E-5
+            5e-05 : 5E-5
+            >>> vcs.mklabels ([.00002,.00005],output='list')
             ['2E-5', '5E-5']
 
     :param vals: List or tuple of float values
-    :type vals: :py:class:`list`, tuple
+    :type vals: :py:class:`list`, :py:class:`tuple`
 
     :param output: Specifies the desired output type. One of ['dict', 'list'].
-    :type output: str
+    :type output: :py:class:`str`
 
     :returns: Dictionary or list of labels for the given values.
-    :rtype: dict, list
-        """
+    :rtype: :py:class:`dict` or :py:class:`list`
+    """
     import numpy.ma
     if isinstance(vals[0], list) or isinstance(vals[0], tuple):
         vals = __split2contiguous(vals)
@@ -1996,12 +2014,38 @@ def getgraphicsmethod(type, name):
 
 
 def creategraphicsmethod(gtype, gname='default', name=None):
+    """
+    Creates a graphics method of the type given by gtype.
+
+    :Example:
+
+        .. doctest:: utils_creategraphicsmethod
+
+            >>> cgm=vcs.creategraphicsmethod # alias long name
+            >>> cgm('Gfb') # boxfill inherits default; name generated
+            >>> cgm('boxfill','polar') # boxfill inherits polar; name generated
+            >>> cgm('Gfi',name='my_gfi') # isofill inherits default; user-named
+
+    :param gtype: String name of the type of graphics method object to create.
+    :type gtype: :py:obj:`str`
+
+    :param gname: String name of the specific graphics method for the new
+        graphics method to inherit.
+    :type gname: :py:obj:`str`
+
+    :param name: String name for the new object.
+        If None, a unique name will be generated.
+    :type name: :py:obj`str` or :py:obj:`None`
+
+    :return: A graphics method object
+
+    """
     import vcsaddons
     if gtype in ['isoline', 'Gi']:
         func = vcs.createisoline
     elif gtype in ['isofill', 'Gfi']:
         func = vcs.createisofill
-    elif gtype in ['boxfill', 'default']:
+    elif gtype in ['boxfill', 'Gfb']:
         func = vcs.createboxfill
     elif gtype in ['meshfill', 'Gfm']:
         func = vcs.createmeshfill
@@ -2207,6 +2251,22 @@ def png_read_metadata(path):
 
 
 def download_sample_data_files(path=None):
+    """
+    Downloads sample data to be used with VCS.
+
+    :Example:
+
+        .. doctest:: utils_download_sample_data
+
+            >>> import os # use this to check if sample data already exists
+            >>> if not os.path.isdir(vcs.sample_data):
+            ...     vcs.download_sample_data_files()
+
+    :param path: String of a valid filepath.
+        If None, sample data will be downloaded into the
+        vcs.sample_data directory.
+    :type path: :py:obj:`str` or :py:obj:`None`
+    """
     import requests
     import hashlib
     if path is None:

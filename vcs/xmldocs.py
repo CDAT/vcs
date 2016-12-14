@@ -241,7 +241,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
     A function to generate docstrings from a dictionary.
     Structure of the function is pretty specific to type_dicts shaped like xmldoc.obj_details.
 
-    Indentation of the docstring snippets looks screwy because they need to maintain alignment
+    Indentation of the docstring snippets is screwy because they need to maintain alignment
     with the original docstring entries for Sphinx to pick them up correctly.
 
     :param type_dict: The dictionary to parse for values used to fill in the docstring
@@ -285,6 +285,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                     sp_parent = 'default_'+obj_name+'_'
                     dict['sp_parent'] = "'%s'" % sp_parent
                     dict['parent'] = dict['sp_parent']
+        # section for manageElements 'get' methods
             if method == 'get':
                 example1 = """%(tc)s
             >>> ex=vcs.get%(name)s(%(sp_parent)s)  # instance of '%(parent)s' %(name)s %(type)s%(plot)s"""
@@ -312,7 +313,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             >>> slab2 = f('v') # need 2 slabs, so get another"""
                         dict['slabs'] = dict['slabs'] + slab2
                         dict['args'] = dict['args'] + ", slab2"
-                # for vcs objects that have a self-named plotting function, i.e. fillarea()
+            # for vcs objects that have a self-named plotting function, i.e. fillarea()
                 if type_dict[obj_type][obj_name]['callable']:
                     plot = """%(slabs)s
             >>> a.%(name)s(ex%(args)s) # plot using specified %(name)s object
@@ -321,7 +322,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                     plot2 = """
             >>> a.%(name)s(ex2%(args)s) # plot using specified %(name)s object
             <vcs.displayplot.Dp ...>"""
-                # for objects like template, where a call to plot() needs to be made
+            # for objects like template, where a call to plot() needs to be made
                 elif obj_name not in ['textorientation', 'texttable', 'colormap']:
                     plot = """%(slabs)s
             >>> a.plot(ex%(args)s) # plot using specified %(name)s object
@@ -337,7 +338,9 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                     """
                     dict['plot2'] = plot2 % dict
                     dict['ex2'] = example2 % dict
+        # section for manageElements 'create' methods
             elif method == 'create':
+                # if obj_name is tc, dict['tc'] should be populated by code that creates a tc at this point
                 if obj_name == "textcombined":
                     example1 = dict['tc'] + """
             >>> vcs.listelements('%(name)s') # should now contain 'EXAMPLE_tt:::EXAMPLE_tto'
@@ -364,6 +367,16 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             dict.clear()
 
 # contains VCS object details used to build Example doctests and fill in docstrings
+#   Keys:
+#       "callable"(bool): specifies whether the object has a self-named plotting function, i.e. fillarea()
+#       "parent"(str): specifies the name of the object to be used in inheritance for a first example.
+#           Usually 'default', but it can change based on situation.
+#       "parent2"(str): specifies a name for object inheritance in a second example. If there is no reliable second
+#           object, (i.e. vcs only has a 'default' object pre-made), use an empty string.
+#       "rtype"(VCS object type): the type of the object to be returned. This is only used for manageElements 'get' and
+#           'create' docstrings.
+#       "slabs"(int): used to specify how many slabs are needed to plot an object of the given type. 0 for none.
+#       "title"(bool): specifies whether to TitleCase the object's name for the output on vcs.show()
 obj_details = {
     "graphics method": {
         "taylordiagram": {

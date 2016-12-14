@@ -998,6 +998,8 @@ class Canvas(object):
                 >>> a.initLogoDrawing() # will draw logo when plot is called
                 >>> array=[range(10) for _ in range(10)]
                 >>> a.plot(array) # should have logo in lower right corner
+                <vcs.displayplot.Dp object at 0x...>
+
         """
         self.drawLogo = self.enableLogo
 
@@ -1139,15 +1141,18 @@ class Canvas(object):
             .. doctest:: canvas_clean_auto_generated_objects
 
                 >>> a=vcs.init()
+                >>> clean=a.clean_auto_generated_objects # alias long name
+                >>> clean() # clean possible old objects from vcs
                 >>> boxes=vcs.listelements('boxfill') # initial boxfill names
                 >>> array=[range(10) for _ in range(10)]
                 >>> a.plot(array)
+                <vcs.displayplot.Dp object at 0x...>
                 >>> new_boxes=a.listelements('boxfill') # has new names
                 >>> boxes == new_boxes # should not be the same
                 False
-                >>> a.clean_auto_generated_objects()
+                >>> clean()
                 >>> new_boxes=a.listelements('boxfill') # back to initial state
-                >>> boxes == new_boxes
+                >>> boxes == new_boxes # should have the same contents
                 True
 
 
@@ -2292,12 +2297,15 @@ class Canvas(object):
             .. doctest:: canvas_drawtextcombined
 
                 >>> a=vcs.init()
+                >>> drawtc=a.drawtextcombined # alias long function name
                 >>> a.show('texttable') # Show all the existing texttable objects
                 *******************Texttable Names List**********************
                 ...
                 *******************End Texttable Names List**********************
-                >>> vcs.createtextcombined('draw_tt', 'qa', 'draw_tto', '7left')
-                >>> tc=a.drawtextcombined(Tt_name = 'draw_tt', To_name='draw_tto')
+                >>> vcs.createtextcombined('draw_tt','qa', 'draw_tto', '7left')
+                >>> msg=["Hello", "drawtextcombined!"]
+                >>> tc=drawtc(Tt_name='draw_tt',To_name='draw_tto',string=msg)
+                <vcs.textcombined.Tc object at 0x...>
 
         :param Tt_name: String name of a texttable object
         :type Tt_name: :py:class:`str`
@@ -2331,8 +2339,9 @@ class Canvas(object):
             Values must be floats between worldcoordinate[2] and worldcoordinate[3].
         :type y: :py:class:`list`
 
-        :param bg: Boolean value. True => object drawn in background (not shown on canvas).
-            False => object shown on canvas.
+        :param bg: Boolean value indicating whether to draw in the background.
+            If True, object is drawn in background (not shown on canvas).
+            If False, object is drawn on canvas.
         :type bg: bool
 
         :returns: A texttable object
@@ -4519,15 +4528,15 @@ class Canvas(object):
     def canvasid(self, *args):
         """
         Get the ID of this canvas.
-        This ID number is found at the top of the VCS Canvas, as part of its title.
+        This ID number is found at the top of the VCS Canvas,
+        as part of its title.
 
         :Example:
 
             .. doctest:: canvas_canvasid
 
                 >>> a=vcs.init()
-                >>> a.canvasid()
-                ...
+                >>> cid = a.canvasid() # store the canvas id
 
         :returns: The ID of the canvas on which canvasid() is called.
         :rtype: int
@@ -5119,6 +5128,7 @@ class Canvas(object):
                 False
                 >>> array=[range(10) for _ in range(10)]
                 >>> a.plot(array)
+                <vcs.displayplot.Dp object at 0x...>
                 >>> a.isopened() # plotting opened the canvas
                 True
 
@@ -5891,16 +5901,12 @@ class Canvas(object):
 
     def setdefaultfont(self, font):
         """
+        .. admonition:: Not Yet Implemented
+
+            This function does not currently work.
+            It will be implemented in the future.
+
         Sets the passed/def show font as the default font for vcs
-
-        :Example:
-
-            .. doctest:: canvas_setdefaultfont
-
-                >>> a=vcs.init()
-                >>> a.listelements('font') # show all font names
-                [...]
-                >>> a.setdefaultfont('Times')
 
         :param font: Font name or index to use as default
         :type font: :py:class:`str` or :py:class:`int`
