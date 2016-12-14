@@ -1,3 +1,17 @@
+"""
+Utils contains functions and objects that provide VCS with useful utilities.
+
+.. _list: https://docs.python.org/2/library/functions.html#list
+.. _tuple: https://docs.python.org/2/library/functions.html#tuple
+.. _dict: https://docs.python.org/2/library/stdtypes.html#mapping-types-dict
+.. _None: https://docs.python.org/2/library/constants.html?highlight=none#None
+.. _str: https://docs.python.org/2/library/functions.html?highlight=str#str
+.. _bool: https://docs.python.org/2/library/functions.html?highlight=bool#bool
+.. _float: https://docs.python.org/2/library/functions.html?highlight=float#float
+.. _int: https://docs.python.org/2/library/functions.html?highlight=float#int
+.. _long: https://docs.python.org/2/library/functions.html?highlight=float#long
+.. _file: https://docs.python.org/2/library/functions.html?highlight=open#file
+"""
 # Adapted for numpy/ma/cdms2 by convertcdms.py
 import numpy
 import cdtime
@@ -53,7 +67,28 @@ defaultColorsRange = range(256)
 
 
 def get_png_dims(fnm):
-    """given the path to a png, return width, height"""
+    """
+    Given the path to a png, return width, height of the png.
+
+    :Example:
+
+        .. doctest:: utils_get_png_dims
+
+            >>> a=vcs.init()
+            >>> box=vcs.getboxfill('polar')
+            >>> array=[range(10) for _ in range(10)]
+            >>> a.plot(box,array) # plot something on canvas
+            <vcs.displayplot.Dp ...>
+            >>> a.png('box.png') # make a png
+            >>> vcs.get_png_dims('box.png') # get (width, height) of 'box.png'
+            (1536, 1186)
+
+    :param fnm: String specifying the path to a .png file
+    :type fnm: `str`_
+
+    :return: A tuple containing (width, height) of the given png.
+    :rtype: `tuple`_
+    """
     try:
         data = open(fnm, "rb").read()
         w, h = struct.unpack('>LL', data[16:24])
@@ -98,19 +133,19 @@ class Logo(object):
         Initialize a new "logo" object to be plotted later on a canvas
 
         :param source: text string or path to png file representing the logo
-        :type source: str
+        :type source: `str`_
 
         :param x: x position of the logo's center in fraction of canvas (0<x<1)
-        :type x: float
+        :type x: `float`_
 
         :param y: y position of the logo's center in fraction of canvas (0<y<1)
-        :type y: float
+        :type y: `float`_
 
         :param width: width in pixels we want the log to be
-        :type width: int
+        :type width: `int`_
 
         :param height: height in pixels we want the log to be
-        :type height: int
+        :type height: `int`_
         """
         if source is None:
             self.source = None
@@ -139,15 +174,13 @@ class Logo(object):
 
     def plot(self, canvas, bg=True):
         """
-        Plot the log onto a given Canvas
+        Plot the logo onto a given Canvas
 
         :Example:
 
             .. doctest:: utils_Logo_plot
 
-                >>> import vcs
-                >>> import os
-                >>> import sys
+                >>> import os, sys
                 >>> x=vcs.init()
                 >>> x.open()
                 >>> logo1 = vcs.utils.Logo(os.path.join(sys.prefix,"share/vcs/uvcdat.png"))
@@ -166,7 +199,7 @@ class Logo(object):
         :type canvas: vcs.Canvas.Canvas
 
         :param bg: do we plot in background (offscreen) mode or not? True/False
-        :type bg: bool
+        :type bg: `bool`_
         """
         if isinstance(self.source, basestring):
             cnv_info = canvas.canvasinfo()
@@ -235,6 +268,38 @@ def process_range_from_old_scr(code, g):
 
 
 def dumpToDict(obj, skipped=[], must=[]):
+    """
+    Takes a VCS object and serializes its properties and their associated values
+    in a Python `dict`_ .
+
+    :Example:
+
+        .. doctest:: utils_dumpToDict
+
+            >>> b=vcs.getboxfill()
+            >>> t=vcs.gettemplate()
+            >>> bd=vcs.dumpToDict(b) # serializes all properties
+            >>> td=vcs.dumpToDict(t, skipped=['legend']) # skip legend property
+            >>> 'legend' in td[0].keys() # 'legend' should not be in dictionary
+            False
+
+    :param obj: An instance of a VCS object to serialize
+    :type obj: A VCS object
+
+    :param skipped: A list of strings, associated with property names to skip.
+    :type skipped: `list`_
+
+    :param must: A list of strings, associated with property names which must
+        be captured in the serialization.
+    :type must: `list`_
+
+    :return: A tuple containing:
+        * a dictionary with mappings of the object's property names
+            to the values associated with those property names.
+        * a dictionary with mappings of more complex properties' names
+            to sets containing any associated property values.
+    :rtype: `tuple`_
+    """
     dic = {}
     associated = {"texttable": set(),
                   "textorientation": set(),
@@ -268,8 +333,51 @@ def dumpToDict(obj, skipped=[], must=[]):
     return dic, associated
 
 
-def dumpToJson(obj, fileout, skipped=[
-               "info", "member"], must=[], indent=indent, sort_keys=sort_keys):
+def dumpToJson(obj, fileout, skipped=["info", "member"], must=[], indent=indent, sort_keys=sort_keys):
+    """
+    Uses :py:func:`vcs.utils.dumpToDict` and `json.dumps`_ to construct a JSON
+    representation of a VCS object's property values.
+
+    :Example:
+
+        .. doctest:: utils_dumpToJson
+
+            >>> box=vcs.getboxfill()
+            >>> vcs.dumpToJson(box, 'box.json') # output properties to file
+            >>> vcs.dumpToJson(box,None) # returns JSON string
+            '{...}'
+
+    :param obj: An instance of a VCS object to serialize
+    :type obj: A VCS object
+
+    :param fileout: A file or a string name of a file into which the JSON
+        will be written.
+    :type fileout: `str`_ or `file`_
+
+    :param skipped: A list of strings, associated with property names to skip.
+    :type skipped: `list`_
+
+    :param must: A list of strings, associated with property names which must
+    be captured in the serialization.
+    :type must: `list`_
+
+    :param indent: An integer representing whether to pretty-print the JSON.
+        If indent is a non-negative integer, JSON will be printed with proper
+        indentation levels.
+        If indent is None, 0, or negative, JSON will be printed in its most
+        compact form.
+    :type indent: `int`_ or `None`_
+
+    :param sort_keys: Boolean value indicating whether output should be sorted
+        by key (True), or not (False)
+    :type sort_keys: `bool`_
+
+    :return: The VCS object's properties serialized into a JSON formatted `str`_ .
+        OR None, if fileout was specified.
+    :rtype: `str`_ or `None`_
+
+    .. _json.dumps: https://docs.python.org/2/library/json.html?highlight=dumps#json.dumps
+    """
     dic, associated = dumpToDict(obj, skipped, must)
     if fileout is not None:
         if isinstance(fileout, str):
@@ -326,8 +434,17 @@ def getfontname(number):
     """
     Retrieve a font name for a given font index.
 
+    :Example:
+
+        .. doctest:: utils_getfontname
+
+            >>> vcs.getfontname(1)
+            'default'
+            >>> vcs.getfontname(4)
+            'Helvetica'
+
     :param number: Index of the font to get the name of.
-    :type number: int
+    :type number: `int`_
     """
     if number not in vcs.elements["fontNumber"]:
         raise Exception("Error font number not existing %i" % number)
@@ -338,8 +455,17 @@ def getfontnumber(name):
     """
     Retrieve a font index for a given font name.
 
+    :Example:
+
+        .. doctest:: utils_getfontnumber
+
+            >>> vcs.getfontnumber('default')
+            1
+            >>> vcs.getfontnumber('Helvetica')
+            4
+
     :param name: Name of the font to get the index of.
-    :type name: str
+    :type name: `str`_
     """
     for i in vcs.elements["fontNumber"]:
         if vcs.elements["fontNumber"][i] == name:
@@ -394,6 +520,30 @@ def process_src_element(code):
 
 
 def listelements(typ=None):
+    """
+    List the elements of a given VCS object type.
+
+    :Example:
+
+        .. doctest:: utils_listelements
+
+            >>> vcs.listelements() # list all vcs object types
+            ['1d', '3d_dual_scalar', '3d_scalar', '3d_vector', 'boxfill', ...]
+            >>> vcs.listelements('1d')
+            [...]
+            >>> vcs.listelements('boxfill')
+            [...]
+
+    :param typ: String specifying the type of VCS object to list.
+        If None, list will contain VCS object type names.
+    :type typ: `str`_
+
+    :return: If typ is None, returns a list of VCS object type names.
+        If typ is a VCS object type, returns a list of the object of that type
+        currently present in VCS.
+    :rtype: `list`_
+    """
+
     if typ is None:
         return sorted(vcs.elements.keys())
     if typ in ("xvsy", "yxvsx", "scatter", "xyvsy"):
@@ -426,27 +576,31 @@ def show(*args):
 
         .. doctest:: utils_show
 
-            >>> a=vcs.init() # Create a VCS Canvas instance, named 'a'
-            >>> a.show('boxfill') # List boxfill objects on Canvas 'a'
+            >>> vcs.show() # show all vcs object types
+            ['1d', '3d_dual_scalar', '3d_scalar', '3d_vector', 'boxfill', ...]
+            >>> vcs.show('boxfill') # List boxfill objects 
             *******************Boxfill Names List**********************
             ...
             *******************End Boxfill Names List**********************
-            >>> a.show('isofill') # List isofill objects on Canvas 'a'
-            *******************Isofill Names List**********************
+            >>> vcs.show('3d_vector') # List 3d_vector objects 
+            *******************3d_vector Names List**********************
             ...
-            *******************End Isofill Names List**********************
-            >>> a.show('line') # List line objects on Canvas 'a'
-            *******************Line Names List**********************
+            *******************End 3d_vector Names List**********************
+            >>> vcs.show('3d_scalar') # List 3d_scalar objects 
+            *******************3d_scalar Names List**********************
             ...
-            *******************End Line Names List**********************
-            >>> a.show('marker') # List marker objects on Canvas 'a'
-            *******************Marker Names List**********************
+            *******************End 3d_scalar Names List**********************
+            >>> vcs.show('3d_dual_scalar') # List 3d_dual_scalar objects 
+            *******************3d_dual_scalar Names List**********************
             ...
-            *******************End Marker Names List**********************
-            >>> a.show('textcombined') # List text objects on Canvas 'a'
-            *******************Textcombined Names List**********************
+            *******************End 3d_dual_scalar Names List**********************
+            >>> vcs.show('1d') # List 1d objects
+            *******************1d Names List**********************
             ...
-            *******************End Textcombined Names List**********************
+            *******************End 1d Names List**********************
+
+    :param args: String name of a type of object to show, or None
+    :type args: `str`_ or `None`_
     """
     if args == ():
         return vcs.listelements()
@@ -984,7 +1138,7 @@ def minmax(*data):
             (-7.0, 8.0)
 
     :param data: A comma-separated list of lists/arrays/tuples
-    :type data: :py:class:`list`
+    :type data: `list`_
 
     :returns: A tuple in the form (min, max)
     :rtype: tuple
@@ -1038,7 +1192,7 @@ def mkevenlevels(n1, n2, nlev=10):
     :type n2: int, float
 
     :param nlev: Number of levels by which to split the given range.
-    :type nlev: int
+    :type nlev: `int`_
 
     :returns: List of floats, splitting range evenly between n1 and n2
     :rtype: list
@@ -1227,13 +1381,13 @@ def mklabels(vals, output='dict'):
             ['2E-5', '5E-5']
 
     :param vals: List or tuple of float values
-    :type vals: :py:class:`list`, :py:class:`tuple`
+    :type vals: `list`_, :py:class:`tuple`
 
     :param output: Specifies the desired output type. One of ['dict', 'list'].
     :type output: :py:class:`str`
 
     :returns: Dictionary or list of labels for the given values.
-    :rtype: :py:class:`dict` or :py:class:`list`
+    :rtype: :py:class:`dict` or `list`_
     """
     import numpy.ma
     if isinstance(vals[0], list) or isinstance(vals[0], tuple):
@@ -1364,23 +1518,23 @@ def getcolors(levs, colors=None, split=1, white="white"):
             [0, 36, 73, 109, 146, 182, 219, 255]
 
     :param levs: levels defining the color ranges
-    :type levs: :py:class:`list`, tuple
+    :type levs: `list`_ or `tuple`_
 
     :param colors: A list/tuple of the of colors you wish to use
-    :type colors: :py:class:`list`
+    :type colors: `list`_ or `tuple`_
 
     :param split: Integer flag to split colors between two equal domains.
-                    0 : no split
-                    1 : split if the levels go from <0 to >0
-                    2 : split even if all the values are positive or negative
-    :type split: int
+        0 : no split
+        1 : split if the levels go from <0 to >0
+        2 : split even if all the values are positive or negative
+    :type split: `int`_
 
     :param white: If split is on and an interval goes from <0 to >0 this color
                   will be used within this interval.
-    :type white: int, string, tuple
+    :type white: `int`_ or `string`_ or `tuple`_
 
     :returns: List of colors
-    :rtype: list
+    :rtype: `list`_
     """
 
     if colors is None:
@@ -1519,10 +1673,10 @@ def generate_time_labels(d1, d2, units, calendar=cdtime.DefaultCalendar):
     :param d2: The end of the time interval to be labelled. Expects a cdtime object.
                 Can also take int, long, or float,
                 which will be used to create a cdtime object with the given units parameter.
-    :type d2: cdtime object, int, long, float
+    :type d2: cdtime object or `int`_ or `long`_ or `float`_
 
     :param units: String with the format '[time_unit] since [date]'.
-    :type units: str
+    :type units: `str`_
 
     :param calendar: A cdtime calendar,
     :type calendar:
@@ -1661,9 +1815,6 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     """
     Sets the labels and ticks for a graphics method made in python
 
-    :Example:
-
-
     :param gm: A VCS graphics method to alter
     :type gm: VCS graphics method
 
@@ -1671,22 +1822,22 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     :type copy_gm: VCS graphics method
 
     :param datawc_x1: Float value to set the graphics method's datawc_x1 property to.
-    :type datawc_x1: float
+    :type datawc_x1: `float`_
 
     :param datawc_x2: Float value to set the graphics method's datawc_x2 property to.
-    :type datawc_x2: float
+    :type datawc_x2: `float`_
 
     :param datawc_y1: Float value to set the graphics method's datawc_y1 property to.
-    :type datawc_y1: float
+    :type datawc_y1: `float`_
 
     :param datawc_y2: Float value to set the graphics method's datawc_y2 property to.
-    :type datawc_y2: float
+    :type datawc_y2: `float`_
 
     :param x: If provided, must be the string 'longitude'
-    :type x: str
+    :type x: `str`_
 
     :param y: If provided, must be the string 'latitude'
-    :type y: str
+    :type y: `str`_
 
     :returns: A VCS graphics method object
     :rtype: A VCS graphics method object
@@ -1843,7 +1994,7 @@ def getcolormap(Cp_name_src='default'):
 
 
     :param Cp_name_src: String name of an existing colormap VCS object
-    :type Cp_name_src: str
+    :type Cp_name_src: `str`_
 
     :returns: A pre-existing VCS colormap object
     :rtype: vcs.colormap.Cp
@@ -1871,13 +2022,13 @@ def getcolorcell(cell, obj=None):
             [26, 1, 34, 100]
 
     :param cell: An integer value indicating the index of the desired colorcell.
-    :type cell: int
+    :type cell: `int`_
 
     :param obj: Optional parameter containing the object to extract a colormap from.
     :type obj: Any VCS object capable of containing a colormap
 
     :return: The RGBA values of the colormap at the specified cell index.
-    :rtype: :py:class:`list`
+    :rtype: `list`_
     """
     if obj is None:
         cmap = vcs.getcolormap()
@@ -1911,22 +2062,22 @@ def setcolorcell(obj, num, r, g, b, a=100):
             >>> vcs.setcolorcell("AMIP",61,70,70,70)
 
     :param obj: String name of a colormap, or a VCS object
-    :type obj: str or VCS object
+    :type obj: `str`_ or VCS object
 
     :param num: Integer specifying which color cell to change. Must be from 0-239.
-    :type num: int
+    :type num: `int`_
 
     :param r: Integer specifying the red value for the colorcell
-    :type r: int
+    :type r: `int`_
 
     :param g: Integer specifying the green value for the colorcell
-    :type g: int
+    :type g: `int`_
 
     :param b: Integer specifying the blue value for the colorcell
-    :type b: int
+    :type b: `int`_
 
     :param a: Integer specifying the opacity value for the colorcell. Must be from 0-100.
-    :type a: int
+    :type a: `int`_
     """
 
     if isinstance(obj, str):
@@ -1956,7 +2107,7 @@ def match_color(color, colormap=None):
             52
 
     :param color: Either a string name, or a rgb value between 0 and 100.
-    :type color: str, int
+    :type color: `str`_ or `int`_
 
     :param colormap: A VCS colormap object. If not specified, the default colormap is used.
     :type colormap: vcs.colormap.Cp
@@ -1994,11 +2145,70 @@ def match_color(color, colormap=None):
 
 
 def monotonic(x):
+    """
+    Uses `numpy.diff <https://docs.scipy.org/doc/numpy-1.10.1/reference/generated/numpy.diff.html>`_
+    to determine whether the data given by x is monotonic in nature.
+
+    :Example:
+
+        .. doctest:: utils_monotonic
+
+            >>> import numpy, cdms2, os
+            >>> from random import randint
+            >>> array=numpy.array([range(10) for _ in range(10)])
+            >>> mask=[] # we will use this to create a random mask
+            >>> for _ in range(10):
+            ...     mask.append([randint(0,1) for _ in range(10)])
+            >>> ma=numpy.ma.MaskedArray(array, mask)
+            >>> if not os.path.exists(vcs.sample_data):
+            ...     vcs.download_sample_data_files() # get some data for cdms2
+            >>> f=cdms2.open(vcs.sample_data + '/clt.nc')
+            >>> v=f('v') # get variable 'v' from clt.nc
+            >>> vcs.monotonic(array) # monotonicity of 2D numpy array
+            True
+            >>> vcs.monotonic(ma) # monotonicity of simple masked array
+            True
+            >>> vcs.monotonic(v) # monotonicity of cdms2 variable
+            False
+
+    :param x: The variable to test for monotonicity.
+        Can be any variable with an array-like structure.
+        Typical examples are numpy arrays, numpy masked arrays,
+        and cdms2 variables (examples for each shown above).
+    :type x: numpy.array or numpy.ma.MaskedArray or cdms2 variable
+
+    :return: A boolean value indicating whether the given data is monotonic.
+    :rtype: `bool`_
+    """
     dx = numpy.diff(x)
     return numpy.all(dx <= 0) or numpy.all(dx >= 0)
 
 
 def getgraphicsmethod(type, name):
+    """
+    Retrieves an existing graphics method, given by type and name.
+
+    :Example:
+
+        .. doctest:: utils_getgraphicsmethod
+
+            >>> vcs.show('boxfill') # list available boxfills
+            *******************Boxfill Names List**********************
+            ...
+            *******************End Boxfill Names List**********************
+            >>> vcs.getgraphicsmethod('boxfill','polar') # get polar boxfill
+            <vcs.boxfill.Gfb ...>
+
+    :param type: String name of a VCS graphics method type
+    :type type: `str`_
+
+    :param name: String name of a VCS graphics method of the given type.
+    :type name: `str`_
+
+    :return: A graphics method of the given type and name.
+        If such a graphics method doesn't exist, None will be returned.
+    :rtype: VCS graphics method or `None`_
+    """
     import vcsaddons
     if type == "default":
         type = "boxfill"
@@ -2022,20 +2232,23 @@ def creategraphicsmethod(gtype, gname='default', name=None):
         .. doctest:: utils_creategraphicsmethod
 
             >>> cgm=vcs.creategraphicsmethod # alias long name
-            >>> cgm('Gfb') # boxfill inherits default; name generated
+            >>> cgm('Gfm') # meshfill inherits default; name generated
+            <vcs.meshfill.Gfm ...>
             >>> cgm('boxfill','polar') # boxfill inherits polar; name generated
+            <vcs.boxfill.Gfb ...>
             >>> cgm('Gfi',name='my_gfi') # isofill inherits default; user-named
+            <vcs.isofill.Gfi ...>
 
     :param gtype: String name of the type of graphics method object to create.
-    :type gtype: :py:obj:`str`
+    :type gtype: `str`_
 
     :param gname: String name of the specific graphics method for the new
         graphics method to inherit.
-    :type gname: :py:obj:`str`
+    :type gname: `str`_
 
     :param name: String name for the new object.
         If None, a unique name will be generated.
-    :type name: :py:obj`str` or :py:obj:`None`
+    :type name: `str`_ or `None`_
 
     :return: A graphics method object
 
@@ -2089,20 +2302,35 @@ def getDataWcValue(v):
 
 def getworldcoordinates(gm, X, Y):
     """
-    Given a graphics method and two axes
-    figures out correct world coordinates.
+    Given a graphics method and two axes, calculates correct world coordinates.
+
+    :Example:
+
+        .. doctest:: utils_getworldcoordinates
+
+            >>> import cdms2, os
+            >>> if not os.path.exists(vcs.sample_data):
+            ...     vcs.download_sample_data_files() # get some data for cdms2
+            >>> f=cdms2.open(vcs.sample_data + '/clt.nc')
+            >>> v=f('v') # read variable v from clt.nc
+            >>> xax=v.getAxis(3) # X axis
+            >>> yax=v.getAxis(2) # Y axis
+            >>> box=vcs.getboxfill()
+            >>> vcs.getworldcoordinates(box, xax, yax)
+            [-180.0, 180.0, -88.288399, 88.288399]
 
     :param gm: A VCS graphics method object to get worldcoordinates for.
     :type gm: graphics method object
 
     :param X: A cdms2 transient axs
-    :type X: cdms2 transient axis
+    :type X: cdms2.axis.TransientAxis
 
     :param Y: A cdms2 transient axs
-    :type Y: cdms2 transient axis
+    :type Y: cdms2.axis.TransientAxis
 
-    :returns:
-    :rtype:
+    :returns: A list of the worldcoordinates associated with the given graphics
+        method and axes
+    :rtype: `list`_
     """
     # compute the spanning in x and y, and adjust for the viewport
     wc = [0, 1, 0, 1]
@@ -2202,13 +2430,13 @@ def rgba_color(color, colormap):
 
 
     :param color: The color to get the rgba value for. Can be an integer from 0-255, or a string name of a color.
-    :type color: int, str
+    :type color: `int`_ or `str`_
 
     :param colormap: A VCS colormap
     :type colormap: vcs.colormap.Cp
 
     :returns: List of 4 floats; the R, G, B, and A values associated with the given color.
-    :rtype: :py:class:`list`
+    :rtype: `list`_
     """
     try:
         # Is it a colormap index?
@@ -2253,6 +2481,8 @@ def png_read_metadata(path):
 def download_sample_data_files(path=None):
     """
     Downloads sample data to be used with VCS.
+    Default download directory is vcs.sample_data, but if __path__ is provided
+    then data will be downloaded to that path.
 
     :Example:
 
@@ -2265,7 +2495,7 @@ def download_sample_data_files(path=None):
     :param path: String of a valid filepath.
         If None, sample data will be downloaded into the
         vcs.sample_data directory.
-    :type path: :py:obj:`str` or :py:obj:`None`
+    :type path: `str`_ or `None`_
     """
     import requests
     import hashlib
@@ -2342,43 +2572,43 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
     :param linecolors: list containing the colors of each line to draw.
          Colors must be specified as either integers, (r,g,b,opacity),
          or string color names.
-    :type linecolors: :py:class:`list`
+    :type linecolors: `list`_
 
     :param linetypes: list containing the type of each line to draw.
          values must be int or line type strings
-    :type linetypes: :py:class:`list`
+    :type linetypes: `list`_
 
     :param linewidths: list containing each line width.
         line widths must be of type float.
-    :type linewidths: :py:class:`list`
+    :type linewidths: `list`_
 
     :param markercolors: list of the markers colors to draw.
         Colors must be specified as either integers, (r,g,b,opacity),
         or string color names.
-    :type markercolors: :py:class:`list`
+    :type markercolors: `list`_
 
     :param markertypes: list of the marker types to draw.
          Marker type must be int or string of marker type names.
-    :type markertypes: :py:class:`list`
+    :type markertypes: `list`_
 
     :param markersizes: list of the size of each marker to draw.
         marker size must be of type float.
-    :type markersizes: :py:class:`list`
+    :type markersizes: `list`_
 
     :param strings: list of the string to draw next to each line/marker
-    :type strings: :py:class:`list`
+    :type strings: `list`_
 
     :param scratched: None (off) or list. list contains False where no scratch is
         needed. For scratched, provide True or line type to use for scratch.
         Color will match that of text.
-    :type scratched: None or :py:class`list`
+    :type scratched: `None`_ or `list`_
 
     :param bg: Boolean value indicating to draw in background (True),
         Or foreground (False).
-    :type bg: bool
+    :type bg: `bool`_
 
     :param render: do we render or not (so it less flashy)
-    :type render: bool
+    :type render: `bool`_
     """
 
     nlines = len(linecolors)

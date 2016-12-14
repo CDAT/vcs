@@ -1,14 +1,3 @@
-vcs.utils.mklabels
-------------------
-```python
-Failed example:
-    vcs.mklabels ( [5,.005])
-Expected:
-    {0.005: '0.005', 5.0: '5.000'}
-Got:
-    {5.0: '5.000', 0.005: '0.005'}
-```
-
 Missing Doctests
 ----------------
 :x:```    vcs.utils```
@@ -25,35 +14,13 @@ Missing Doctests
 
 :x:```    vcs.utils._scriptrun```
 
-:x:```    vcs.utils.creategraphicsmethod```
-
-:x:```    vcs.utils.download_sample_data_files```
-
-:x:```    vcs.utils.dumpToDict```
-
-:x:```    vcs.utils.dumpToJson```
-
 :x:```    vcs.utils.getDataWcValue```
 
-:x:```    vcs.utils.get_png_dims```
-
 :x:```    vcs.utils.getdotdirectory```
-
-:x:```    vcs.utils.getfontname```
-
-:x:```    vcs.utils.getfontnumber```
-
-:x:```    vcs.utils.getgraphicsmethod```
-
-:x:```    vcs.utils.getworldcoordinates```
-
-:x:```    vcs.utils.listelements```
 
 :x:```    vcs.utils.loadTemplate```
 
 :x:```    vcs.utils.loadVCSItem```
-
-:x:```    vcs.utils.monotonic```
 
 :x:```    vcs.utils.png_read_metadata```
 

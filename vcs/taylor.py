@@ -959,7 +959,7 @@ class Gtd(object):
         :type values: list/tuple
 
         :param function: A function for determining the skill score of a model.
-        :type function:
+        :type function: function
         """
         if function is None:
             return

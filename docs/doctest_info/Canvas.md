@@ -1,48 +1,12 @@
-vcs.Canvas.Canvas.canvasid
---------------------------
-```python
-Failed example:
-    a.canvasid()
-Expected nothing
-Got:
-    2
-```
-
-vcs.Canvas.Canvas.check_name_source
------------------------------------
-```python
-Failed example:
-    cns('polar','quick','boxfill') # is 'polar' boxfill taken?
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.Canvas.Canvas.check_name_source[2]>", line 1, in <module>
-        cns('polar','quick','boxfill') # is 'polar' boxfill taken?
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 93, in check_name_source
-        raise vcsError("Error %s object named %s already exists" % (typ, name))
-    vcsError: Error boxfill object named polar already exists
-```
-
 vcs.Canvas.Canvas.clean_auto_generated_objects
 ----------------------------------------------
 ```python
 Failed example:
-    a.plot(array)
-Expected nothing
-Got:
-    <vcs.displayplot.Dp object at 0x118580d70>
-```
-
-vcs.Canvas.Canvas.clean_auto_generated_objects
-----------------------------------------------
-```python
-Failed example:
-    boxes == new_boxes
+    boxes == new_boxes # should not be the same
 Expected:
-    True
-Got:
     False
+Got:
+    True
 ```
 
 vcs.Canvas.Canvas.createtext
@@ -55,37 +19,17 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x118041b90>
+    <vcs.textcombined.Tc object at 0x11868c230>
 ```
 
 vcs.Canvas.Canvas.drawtext
 --------------------------
 ```python
 Failed example:
-    vcs.createtextcombined('draw_tt', 'qa', 'draw_tto', '7left')
-Expected nothing
-Got:
-    <vcs.textcombined.Tc object at 0x1185be9b0>
-```
-
-vcs.Canvas.Canvas.drawtext
---------------------------
-```python
-Failed example:
-    tc=a.drawtextcombined(Tt_name = 'draw_tt', To_name='draw_tto')
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.Canvas.Canvas.drawtext[3]>", line 1, in <module>
-        tc=a.drawtextcombined(Tt_name = 'draw_tt', To_name='draw_tto')
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2353, in drawtextcombined
-        t.string = string
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/textcombined.py", line 286, in _setstring
-        self.Tt.string = value
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/texttable.py", line 307, in _setstring
-        raise ValueError('Must be a string or a list of strings.')
-    ValueError: Must be a string or a list of strings.
+    tc=drawtc(Tt_name='draw_tt',To_name='draw_tto',string=msg)
+Expected:
+    <vcs.textcombined.Tc object at 0x...>
+Got nothing
 ```
 
 vcs.Canvas.Canvas.get3d_dual_scalar
@@ -97,7 +41,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11838f050>
+    <vcs.displayplot.Dp object at 0x11873b398>
 ```
 
 vcs.Canvas.Canvas.get3d_scalar
@@ -109,7 +53,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x151797168>
+    <vcs.displayplot.Dp object at 0x14ee81910>
 ```
 
 vcs.Canvas.Canvas.get3d_vector
@@ -123,35 +67,31 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1517b3910>
+    <vcs.displayplot.Dp object at 0x14ee33280>
 ```
 
 vcs.Canvas.Canvas.gettaylordiagram
 ----------------------------------
 ```python
 Failed example:
-    a.taylordiagram(ex) # plot using specified taylordiagram object
+    a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
 Exception raised:
     Traceback (most recent call last):
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
         compileflags, 1) in test.globs
       File "<doctest vcs.Canvas.Canvas.gettaylordiagram[6]>", line 1, in <module>
-        a.taylordiagram(ex) # plot using specified taylordiagram object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1306, in taylordiagram
-        arglist = _determine_arg_list('taylordiagram', args)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 272, in _determine_arg_list
-        arglist[igraphics_method])
-    vcsError: Graphics method taylordiagram requires 1 slab.
-```
-
-vcs.Canvas.Canvas.initLogoDrawing
----------------------------------
-```python
-Failed example:
-    a.plot(array) # should have logo in lower right corner
-Expected nothing
-Got:
-    <vcs.displayplot.Dp object at 0x157a49280>
+        a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1320, in taylordiagram
+        return self.__plot(arglist, parms)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3701, in __plot
+        t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1967, in plot
+        self.draw(canvas, data)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1207, in draw
+        d0 = float(data[i][0])
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/numpy/ma/core.py", line 4182, in __float__
+        raise TypeError("Only length-1 arrays can be converted "
+    TypeError: Only length-1 arrays can be converted to Python scalars
 ```
 
 vcs.Canvas.Canvas.isinfile
@@ -164,42 +104,15 @@ Expected:
 Got nothing
 ```
 
-vcs.Canvas.Canvas.isopened
---------------------------
+vcs.Canvas.Canvas.show
+----------------------
 ```python
 Failed example:
-    a.plot(array)
-Expected nothing
+    vcs.show() # show all vcs object types
+Expected:
+    ['1d','3d_dual_scalar','3d_scalar','3d_vector','boxfill', ...]
 Got:
-    <vcs.displayplot.Dp object at 0x15fc41c58>
-```
-
-vcs.Canvas.Canvas.return_display_names
---------------------------------------
-```python
-Failed example:
-    a.plot(array)
-Expected nothing
-Got:
-    <vcs.displayplot.Dp object at 0x189fdca28>
-```
-
-vcs.Canvas.Canvas.setdefaultfont
---------------------------------
-```python
-Failed example:
-    a.setdefaultfont('Times')
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.Canvas.Canvas.setdefaultfont[2]>", line 1, in <module>
-        a.setdefaultfont('Times')
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5910, in setdefaultfont
-        return self.copyfontto(font, 1)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5890, in copyfontto
-        return self.canvas.copyfontto(*(index1, index2))
-    AttributeError: 'module' object has no attribute 'copyfontto'
+    ['1d', '3d_dual_scalar', '3d_scalar', '3d_vector', 'boxfill', 'colormap', 'display', 'fillarea', 'font', 'fontNumber', 'isofill', 'isoline', 'line', 'list', 'marker', 'meshfill', 'projection', 'scatter', 'taylordiagram', 'template', 'textcombined', 'textorientation', 'texttable', 'vector', 'xvsy', 'xyvsy', 'yxvsx']
 ```
 
 Missing Doctests
@@ -296,10 +209,6 @@ Missing Doctests
 
 :x:```    vcs.Canvas.Canvas.get_selected_display```
 
-:x:```    vcs.Canvas.Canvas.getfontname```
-
-:x:```    vcs.Canvas.Canvas.getfontnumber```
-
 :x:```    vcs.Canvas.Canvas.getplot```
 
 :x:```    vcs.Canvas.Canvas.gif```
@@ -333,6 +242,8 @@ Missing Doctests
 :x:```    vcs.Canvas.Canvas.scriptrun```
 
 :x:```    vcs.Canvas.Canvas.setAnimationStepper```
+
+:x:```    vcs.Canvas.Canvas.setdefaultfont```
 
 :x:```    vcs.Canvas.Canvas.start```
 

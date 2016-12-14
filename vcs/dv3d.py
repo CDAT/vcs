@@ -13,7 +13,9 @@ from DV3D.ConfigurationFunctions import ConfigManager
 
 class Gfdv3d(object):
     """
-
+    Gfdv3d is class from which Gf3Dvector, Gf3Dscalar, and Gf3DDualScalar
+    inherit. It sets up properties and functions common to all of the 3d
+    graphics method objects.
     """
     __slots__ = [
         '__doc__',
@@ -232,14 +234,18 @@ class Gfdv3d(object):
 
 
 class Gf3Dvector(Gfdv3d):
-
+    """
+    Gf3Dvector
+    """
     def __init__(self, Gfdv3d_name, Gfdv3d_name_src='default'):
         self.g_name = '3d_vector'
         Gfdv3d.__init__(self, Gfdv3d_name, Gfdv3d_name_src=Gfdv3d_name_src)
 
 
 class Gf3Dscalar(Gfdv3d):
-
+    """
+    Gf3Dscalar
+    """
     def __init__(self, Gfdv3d_name, Gfdv3d_name_src='default'):
         self.g_name = '3d_scalar'
         Gfdv3d.__init__(self, Gfdv3d_name, Gfdv3d_name_src=Gfdv3d_name_src)
@@ -247,7 +253,9 @@ class Gf3Dscalar(Gfdv3d):
 
 
 class Gf3DDualScalar(Gfdv3d):
-
+    """
+    Gf3DDualScalar
+    """
     def __init__(self, Gfdv3d_name, Gfdv3d_name_src='default'):
         self.g_name = '3d_dual_scalar'
         Gfdv3d.__init__(self, Gfdv3d_name, Gfdv3d_name_src=Gfdv3d_name_src)

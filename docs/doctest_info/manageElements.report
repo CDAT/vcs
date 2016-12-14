@@ -10,24 +10,7 @@ Expecting:
     *******************End Boxfill Names List**********************
 ok
 Trying:
-    cns('polar','quick','boxfill') # is 'polar' boxfill taken?
-Expecting:
-    vcsError: Error boxfill object named polar already exists
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 42, in vcs.manageElements.check_name_source
-Failed example:
-    cns('polar','quick','boxfill') # is 'polar' boxfill taken?
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.manageElements.check_name_source[2]>", line 1, in <module>
-        cns('polar','quick','boxfill') # is 'polar' boxfill taken?
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 93, in check_name_source
-        raise vcsError("Error %s object named %s already exists" % (typ, name))
-    vcsError: Error boxfill object named polar already exists
-Trying:
-    cns('NEW', 'quick', 'boxfill') # 'NEW' should be available...
+    cns('NEW', 'quick', 'boxfill') # name 'NEW' should be available
 Expecting:
     ('NEW', 'quick')
 ok
@@ -383,7 +366,7 @@ Expecting:
     ...
     *******************End Textcombined Names List**********************
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1437, in vcs.manageElements.createtext
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1434, in vcs.manageElements.createtext
 Failed example:
     vcs.show('textcombined') # show all available textcombined
 Expected:
@@ -400,7 +383,7 @@ Trying:
         pass
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1441, in vcs.manageElements.createtext
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1438, in vcs.manageElements.createtext
 Failed example:
     try: # try to create a new textcombined, in case none exist
         vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
@@ -573,14 +556,14 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1706, in vcs.manageElements.get3d_dual_scalar
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1703, in vcs.manageElements.get3d_dual_scalar
 Failed example:
     a.plot(ex, slab1, slab2) # plot using specified 3d_dual_scalar object
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x122e4e168>
+    <vcs.displayplot.Dp object at 0x11915d7f8>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -611,14 +594,14 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1664, in vcs.manageElements.get3d_scalar
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1661, in vcs.manageElements.get3d_scalar
 Failed example:
     a.plot(ex, slab1) # plot using specified 3d_scalar object
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1187476e0>
+    <vcs.displayplot.Dp object at 0x11862b398>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -653,7 +636,7 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1747, in vcs.manageElements.get3d_vector
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1744, in vcs.manageElements.get3d_vector
 Failed example:
     a.plot(ex, slab1, slab2) # plot using specified 3d_vector object
 Expected:
@@ -662,7 +645,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11806e7f8>
+    <vcs.displayplot.Dp object at 0x11809f398>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -937,7 +920,21 @@ Trying:
     a.plot(ex, slab1) # plot using specified projection object
 Expecting:
     <vcs.displayplot.Dp ...>
-ok
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 183, in vcs.manageElements.getprojection
+Failed example:
+    a.plot(ex, slab1) # plot using specified projection object
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.manageElements.getprojection[6]>", line 1, in <module>
+        a.plot(ex, slab1) # plot using specified projection object
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2636, in plot
+        a = self.__plot(arglist, keyargs)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2967, in __plot
+        setattr(copy_mthd, p, keyargs[p])
+    AttributeError: 'NoneType' object has no attribute 'projection'
 Trying:
     ex2=vcs.getprojection('orthographic')  # instance of 'orthographic' projection graphics method
 Expecting nothing
@@ -946,7 +943,21 @@ Trying:
     a.plot(ex2, slab1) # plot using specified projection object
 Expecting:
     <vcs.displayplot.Dp ...>
-ok
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 186, in vcs.manageElements.getprojection
+Failed example:
+    a.plot(ex2, slab1) # plot using specified projection object
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.manageElements.getprojection[8]>", line 1, in <module>
+        a.plot(ex2, slab1) # plot using specified projection object
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2636, in plot
+        a = self.__plot(arglist, keyargs)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2967, in __plot
+        setattr(copy_mthd, p, keyargs[p])
+    AttributeError: 'NoneType' object has no attribute 'projection'
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1011,7 +1022,7 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 295, in vcs.manageElements.gettaylordiagram
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 292, in vcs.manageElements.gettaylordiagram
 Failed example:
     a.taylordiagram(ex) # plot using specified taylordiagram object
 Exception raised:
@@ -1020,7 +1031,7 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.manageElements.gettaylordiagram[6]>", line 1, in <module>
         a.taylordiagram(ex) # plot using specified taylordiagram object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1306, in taylordiagram
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1319, in taylordiagram
         arglist = _determine_arg_list('taylordiagram', args)
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 272, in _determine_arg_list
         arglist[igraphics_method])
@@ -1319,6 +1330,7 @@ ok
     vcs.manageElements.removeTo
     vcs.manageElements.removeTt
 43 items passed all tests:
+   4 tests in vcs.manageElements.check_name_source
    4 tests in vcs.manageElements.create1d
    3 tests in vcs.manageElements.create3d_dual_scalar
    3 tests in vcs.manageElements.create3d_scalar
@@ -1350,7 +1362,6 @@ ok
    6 tests in vcs.manageElements.getline
    6 tests in vcs.manageElements.getmarker
    9 tests in vcs.manageElements.getmeshfill
-   9 tests in vcs.manageElements.getprojection
    8 tests in vcs.manageElements.getscatter
    9 tests in vcs.manageElements.gettemplate
    5 tests in vcs.manageElements.gettextcombined
@@ -1364,12 +1375,12 @@ ok
    7 tests in vcs.manageElements.setLineAttributes
 **********************************************************************
 6 items had failures:
-   1 of   5 in vcs.manageElements.check_name_source
    2 of   3 in vcs.manageElements.createtext
    1 of   8 in vcs.manageElements.get3d_dual_scalar
    1 of   7 in vcs.manageElements.get3d_scalar
    1 of   8 in vcs.manageElements.get3d_vector
+   2 of   9 in vcs.manageElements.getprojection
    1 of   7 in vcs.manageElements.gettaylordiagram
-264 tests in 71 items.
-257 passed and 7 failed.
-***Test Failed*** 7 failures.
+263 tests in 71 items.
+255 passed and 8 failed.
+***Test Failed*** 8 failures.

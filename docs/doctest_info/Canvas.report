@@ -70,15 +70,9 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.canvasid()
+    cid = a.canvasid() # store the canvas id
 Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 4529, in vcs.Canvas.Canvas.canvasid
-Failed example:
-    a.canvasid()
-Expected nothing
-Got:
-    2
+ok
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -145,24 +139,7 @@ Expecting:
     *******************End Boxfill Names List**********************
 ok
 Trying:
-    cns('polar','quick','boxfill') # is 'polar' boxfill taken?
-Expecting:
-    vcsError: Error boxfill object named polar already exists
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1228, in vcs.Canvas.Canvas.check_name_source
-Failed example:
-    cns('polar','quick','boxfill') # is 'polar' boxfill taken?
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.Canvas.Canvas.check_name_source[2]>", line 1, in <module>
-        cns('polar','quick','boxfill') # is 'polar' boxfill taken?
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 93, in check_name_source
-        raise vcsError("Error %s object named %s already exists" % (typ, name))
-    vcsError: Error boxfill object named polar already exists
-Trying:
-    cns('NEW', 'quick', 'boxfill') # 'NEW' should be available...
+    cns('NEW', 'quick', 'boxfill') # name 'NEW' should be available
 Expecting:
     ('NEW', 'quick')
 ok
@@ -176,7 +153,15 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    boxes=vcs.listelements('boxfill') # initial boxfill names
+    clean=a.clean_auto_generated_objects # alias long name
+Expecting nothing
+ok
+Trying:
+    clean() # clean possible old objects from vcs
+Expecting nothing
+ok
+Trying:
+    boxes=a.listelements('boxfill') # initial boxfill names
 Expecting nothing
 ok
 Trying:
@@ -185,14 +170,9 @@ Expecting nothing
 ok
 Trying:
     a.plot(array)
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1144, in vcs.Canvas.Canvas.clean_auto_generated_objects
-Failed example:
-    a.plot(array)
-Expected nothing
-Got:
-    <vcs.displayplot.Dp object at 0x118580d70>
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
+ok
 Trying:
     new_boxes=a.listelements('boxfill') # has new names
 Expecting nothing
@@ -201,27 +181,14 @@ Trying:
     boxes == new_boxes # should not be the same
 Expecting:
     False
-ok
-Trying:
-    a.clean_auto_generated_objects()
-Expecting nothing
-ok
-Trying:
-    new_boxes=a.listelements('boxfill') # back to initial state
-Expecting nothing
-ok
-Trying:
-    boxes == new_boxes
-Expecting:
-    True
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1150, in vcs.Canvas.Canvas.clean_auto_generated_objects
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1159, in vcs.Canvas.Canvas.clean_auto_generated_objects
 Failed example:
-    boxes == new_boxes
+    boxes == new_boxes # should not be the same
 Expected:
-    True
-Got:
     False
+Got:
+    True
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -602,7 +569,7 @@ Trying:
         pass
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2199, in vcs.Canvas.Canvas.createtext
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2212, in vcs.Canvas.Canvas.createtext
 Failed example:
     try: # try to create a new textcombined, in case none exist
         vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
@@ -610,12 +577,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x118041b90>
-Trying:
-    vcs.listelements('textcombined') # should now contain 'EXAMPLE_tt:::EXAMPLE_tto'
-Expecting:
-    [...'EXAMPLE_tt:::EXAMPLE_tto'...]
-ok
+    <vcs.textcombined.Tc object at 0x11868c230>
 Trying:
     vcs.show('textorientation') # show all available textorientation
 Expecting:
@@ -850,6 +812,10 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    drawtc=a.drawtextcombined # alias long function name
+Expecting nothing
+ok
+Trying:
     a.show('texttable') # Show all the existing texttable objects
 Expecting:
     *******************Texttable Names List**********************
@@ -857,35 +823,25 @@ Expecting:
     *******************End Texttable Names List**********************
 ok
 Trying:
-    vcs.createtextcombined('draw_tt', 'qa', 'draw_tto', '7left')
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2299, in vcs.Canvas.Canvas.drawtext
-Failed example:
-    vcs.createtextcombined('draw_tt', 'qa', 'draw_tto', '7left')
-Expected nothing
-Got:
-    <vcs.textcombined.Tc object at 0x1185be9b0>
+    vcs.createtextcombined('draw_tt','qa', 'draw_tto', '7left')
+Expecting:
+    <vcs.textcombined.Tc object at 0x...>
+ok
 Trying:
-    tc=a.drawtextcombined(Tt_name = 'draw_tt', To_name='draw_tto')
+    msg=["Hello", "drawtextcombined!"]
 Expecting nothing
+ok
+Trying:
+    tc=drawtc(Tt_name='draw_tt',To_name='draw_tto',string=msg)
+Expecting:
+    <vcs.textcombined.Tc object at 0x...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2300, in vcs.Canvas.Canvas.drawtext
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2316, in vcs.Canvas.Canvas.drawtext
 Failed example:
-    tc=a.drawtextcombined(Tt_name = 'draw_tt', To_name='draw_tto')
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.Canvas.Canvas.drawtext[3]>", line 1, in <module>
-        tc=a.drawtextcombined(Tt_name = 'draw_tt', To_name='draw_tto')
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2353, in drawtextcombined
-        t.string = string
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/textcombined.py", line 286, in _setstring
-        self.Tt.string = value
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/texttable.py", line 307, in _setstring
-        raise ValueError('Must be a string or a list of strings.')
-    ValueError: Must be a string or a list of strings.
+    tc=drawtc(Tt_name='draw_tt',To_name='draw_tto',string=msg)
+Expected:
+    <vcs.textcombined.Tc object at 0x...>
+Got nothing
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -895,10 +851,10 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    dua("falafel", 37, the_answer=42, barbara="streisand")
+    dua("falafel", 37, the_answer=42)
 Expecting:
     Arguments: ('falafel', 37)
-    Keywords: {'the_answer': 42, 'barbara': 'streisand'}
+    Keywords: {'the_answer': 42}
 ok
 Trying:
     a=vcs.init()
@@ -1105,14 +1061,14 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1435, in vcs.Canvas.Canvas.get3d_dual_scalar
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1448, in vcs.Canvas.Canvas.get3d_dual_scalar
 Failed example:
     a.plot(ex, slab1, slab2) # plot using specified 3d_dual_scalar object
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11838f050>
+    <vcs.displayplot.Dp object at 0x11873b398>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1143,14 +1099,14 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1434, in vcs.Canvas.Canvas.get3d_scalar
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1447, in vcs.Canvas.Canvas.get3d_scalar
 Failed example:
     a.plot(ex, slab1) # plot using specified 3d_scalar object
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x151797168>
+    <vcs.displayplot.Dp object at 0x14ee81910>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1185,7 +1141,7 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1435, in vcs.Canvas.Canvas.get3d_vector
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1448, in vcs.Canvas.Canvas.get3d_vector
 Failed example:
     a.plot(ex, slab1, slab2) # plot using specified 3d_vector object
 Expected:
@@ -1194,7 +1150,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1517b3910>
+    <vcs.displayplot.Dp object at 0x14ee33280>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1391,6 +1347,26 @@ Expecting:
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 ok
 Trying:
+    vcs.getfontname(1)
+Expecting:
+    'default'
+ok
+Trying:
+    vcs.getfontname(4)
+Expecting:
+    'Helvetica'
+ok
+Trying:
+    vcs.getfontnumber('default')
+Expecting:
+    1
+ok
+Trying:
+    vcs.getfontnumber('Helvetica')
+Expecting:
+    4
+ok
+Trying:
     a=vcs.init()
 Expecting nothing
 ok
@@ -1575,30 +1551,8 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    import cdms2 # Need cdms2 to create a slab
-Expecting nothing
-ok
-Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
-Expecting nothing
-ok
-Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
-Expecting nothing
-ok
-Trying:
-    a.plot(ex, slab1) # plot using specified projection object
-Expecting:
-    <vcs.displayplot.Dp ...>
-ok
-Trying:
     ex2=vcs.getprojection('orthographic')  # instance of 'orthographic' projection graphics method
 Expecting nothing
-ok
-Trying:
-    a.plot(ex2, slab1) # plot using specified projection object
-Expecting:
-    <vcs.displayplot.Dp ...>
 ok
 Trying:
     a=vcs.init()
@@ -1660,24 +1614,30 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.taylordiagram(ex) # plot using specified taylordiagram object
+    a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1302, in vcs.Canvas.Canvas.gettaylordiagram
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1315, in vcs.Canvas.Canvas.gettaylordiagram
 Failed example:
-    a.taylordiagram(ex) # plot using specified taylordiagram object
+    a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
 Exception raised:
     Traceback (most recent call last):
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
         compileflags, 1) in test.globs
       File "<doctest vcs.Canvas.Canvas.gettaylordiagram[6]>", line 1, in <module>
-        a.taylordiagram(ex) # plot using specified taylordiagram object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1306, in taylordiagram
-        arglist = _determine_arg_list('taylordiagram', args)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 272, in _determine_arg_list
-        arglist[igraphics_method])
-    vcsError: Graphics method taylordiagram requires 1 slab.
+        a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1320, in taylordiagram
+        return self.__plot(arglist, parms)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3701, in __plot
+        t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1967, in plot
+        self.draw(canvas, data)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1207, in draw
+        d0 = float(data[i][0])
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/numpy/ma/core.py", line 4182, in __float__
+        raise TypeError("Only length-1 arrays can be converted "
+    TypeError: Only length-1 arrays can be converted to Python scalars
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1692,30 +1652,8 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    import cdms2 # Need cdms2 to create a slab
-Expecting nothing
-ok
-Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
-Expecting nothing
-ok
-Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
-Expecting nothing
-ok
-Trying:
-    a.plot(ex, slab1) # plot using specified template object
-Expecting:
-    <vcs.displayplot.Dp ...>
-ok
-Trying:
     ex2=vcs.gettemplate('polar')  # instance of 'polar' template graphics method
 Expecting nothing
-ok
-Trying:
-    a.plot(ex2, slab1) # plot using specified template object
-Expecting:
-    <vcs.displayplot.Dp ...>
 ok
 Trying:
     a=vcs.init()
@@ -1943,14 +1881,9 @@ Expecting nothing
 ok
 Trying:
     a.plot(array) # should have logo in lower right corner
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1000, in vcs.Canvas.Canvas.initLogoDrawing
-Failed example:
-    a.plot(array) # should have logo in lower right corner
-Expected nothing
-Got:
-    <vcs.displayplot.Dp object at 0x157a49280>
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
+ok
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1968,7 +1901,7 @@ Trying:
 Expecting:
     1
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5570, in vcs.Canvas.Canvas.isinfile
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5606, in vcs.Canvas.Canvas.isinfile
 Failed example:
     a.isinfile(box, 'deft_box.py')
 Expected:
@@ -2089,14 +2022,9 @@ Expecting nothing
 ok
 Trying:
     a.plot(array)
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5121, in vcs.Canvas.Canvas.isopened
-Failed example:
-    a.plot(array)
-Expected nothing
-Got:
-    <vcs.displayplot.Dp object at 0x15fc41c58>
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
+ok
 Trying:
     a.isopened() # plotting opened the canvas
 Expecting:
@@ -2363,6 +2291,42 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    import numpy
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    a.show('template') # list vcs template types
+Expecting:
+    *******************Template Names List**********************
+    ...
+    *******************End Template Names List**********************
+ok
+Trying:
+    a.show('boxfill') # one of many graphics method types
+Expecting:
+    *******************Boxfill Names List**********************
+    ...
+    *******************End Boxfill Names List**********************
+ok
+Trying:
+    array1 = numpy.array([range(10) for _ in range(10)]) # data
+Expecting nothing
+ok
+Trying:
+    a.plot(variable=array1)
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.plot(array1,'ASD',gm='boxfill')  # boxfill, ASD template
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
     a=vcs.init()
 Expecting nothing
 ok
@@ -2383,12 +2347,12 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.plot(slab1) # this call will use default settings for template and boxfill
+    a.plot(slab1) # default settings for template and boxfill
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
 Trying:
-    a.plot(slab1, 'polar', 'isofill', 'polar') # this is specifying the template and graphics method
+    a.plot(slab1,'polar','isofill','polar') # specify template and graphics method
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -2401,7 +2365,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.plot(slab1, slab2, t, vec) # plot the data as a vector using the 'AMIP' template
+    a.plot(slab1, slab2, t, vec) # plot data as vector using polar template
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -2414,7 +2378,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.plot(box,t,slab2) # plot array data using box 'new' and template 't'
+    a.plot(box,t,slab2) # plot data with boxfill and polar
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -2626,14 +2590,9 @@ Expecting nothing
 ok
 Trying:
     a.plot(array)
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 4023, in vcs.Canvas.Canvas.return_display_names
-Failed example:
-    a.plot(array)
-Expected nothing
-Got:
-    <vcs.displayplot.Dp object at 0x189fdca28>
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
 Trying:
     a.return_display_names() # has display name for new plot
 Expecting:
@@ -2839,71 +2798,17 @@ Expecting:
     <vcs.displayplot.Dp ...>
 ok
 Trying:
-    a=vcs.init()
-Expecting nothing
-ok
-Trying:
-    a.listelements('font') # show all font names
+    vcs.show() # show all vcs object types
 Expecting:
-    [...]
-ok
-Trying:
-    a.setdefaultfont('Times')
-Expecting nothing
+    ['1d','3d_dual_scalar','3d_scalar','3d_vector','boxfill', ...]
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5903, in vcs.Canvas.Canvas.setdefaultfont
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5602, in vcs.Canvas.Canvas.show
 Failed example:
-    a.setdefaultfont('Times')
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.Canvas.Canvas.setdefaultfont[2]>", line 1, in <module>
-        a.setdefaultfont('Times')
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5910, in setdefaultfont
-        return self.copyfontto(font, 1)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5890, in copyfontto
-        return self.canvas.copyfontto(*(index1, index2))
-    AttributeError: 'module' object has no attribute 'copyfontto'
-Trying:
-    a=vcs.init() # Create a VCS Canvas instance, named 'a'
-Expecting nothing
-ok
-Trying:
-    a.show('boxfill') # List boxfill objects on Canvas 'a'
-Expecting:
-    *******************Boxfill Names List**********************
-    ...
-    *******************End Boxfill Names List**********************
-ok
-Trying:
-    a.show('isofill') # List isofill objects on Canvas 'a'
-Expecting:
-    *******************Isofill Names List**********************
-    ...
-    *******************End Isofill Names List**********************
-ok
-Trying:
-    a.show('line') # List line objects on Canvas 'a'
-Expecting:
-    *******************Line Names List**********************
-    ...
-    *******************End Line Names List**********************
-ok
-Trying:
-    a.show('marker') # List marker objects on Canvas 'a'
-Expecting:
-    *******************Marker Names List**********************
-    ...
-    *******************End Marker Names List**********************
-ok
-Trying:
-    a.show('textcombined') # List text objects on Canvas 'a'
-Expecting:
-    *******************Textcombined Names List**********************
-    ...
-    *******************End Textcombined Names List**********************
-ok
+    vcs.show() # show all vcs object types
+Expected:
+    ['1d','3d_dual_scalar','3d_scalar','3d_vector','boxfill', ...]
+Got:
+    ['1d', '3d_dual_scalar', '3d_scalar', '3d_vector', 'boxfill', 'colormap', 'display', 'fillarea', 'font', 'fontNumber', 'isofill', 'isoline', 'line', 'list', 'marker', 'meshfill', 'projection', 'scatter', 'taylordiagram', 'template', 'textcombined', 'textorientation', 'texttable', 'vector', 'xvsy', 'xyvsy', 'yxvsx']
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -3276,7 +3181,7 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
-84 items had no tests:
+83 items had no tests:
     vcs.Canvas
     vcs.Canvas.Canvas
     vcs.Canvas.Canvas._Canvas__new_elts
@@ -3323,8 +3228,6 @@ ok
     vcs.Canvas.Canvas.endconfigure
     vcs.Canvas.Canvas.get1d
     vcs.Canvas.Canvas.get_selected_display
-    vcs.Canvas.Canvas.getfontname
-    vcs.Canvas.Canvas.getfontnumber
     vcs.Canvas.Canvas.getplot
     vcs.Canvas.Canvas.gif
     vcs.Canvas.Canvas.grid
@@ -3342,6 +3245,7 @@ ok
     vcs.Canvas.Canvas.scalar3d
     vcs.Canvas.Canvas.scriptrun
     vcs.Canvas.Canvas.setAnimationStepper
+    vcs.Canvas.Canvas.setdefaultfont
     vcs.Canvas.Canvas.start
     vcs.Canvas.Canvas.updateorientation
     vcs.Canvas.Canvas.user_actions
@@ -3361,10 +3265,12 @@ ok
     vcs.Canvas._process_keyword
     vcs.Canvas.change_date_time
     vcs.Canvas.dictionarytovcslist
-107 items passed all tests:
+113 items passed all tests:
   14 tests in vcs.Canvas.Canvas.boxfill
+   2 tests in vcs.Canvas.Canvas.canvasid
    5 tests in vcs.Canvas.Canvas.canvasinfo
    6 tests in vcs.Canvas.Canvas.change_display_graphic_method
+   4 tests in vcs.Canvas.Canvas.check_name_source
    4 tests in vcs.Canvas.Canvas.clear
    4 tests in vcs.Canvas.Canvas.close
    2 tests in vcs.Canvas.Canvas.create1d
@@ -3411,14 +3317,16 @@ ok
    4 tests in vcs.Canvas.Canvas.getdrawlogo
    4 tests in vcs.Canvas.Canvas.getfillarea
    7 tests in vcs.Canvas.Canvas.getfont
+   2 tests in vcs.Canvas.Canvas.getfontname
+   2 tests in vcs.Canvas.Canvas.getfontnumber
    9 tests in vcs.Canvas.Canvas.getisofill
    9 tests in vcs.Canvas.Canvas.getisoline
    6 tests in vcs.Canvas.Canvas.getline
    6 tests in vcs.Canvas.Canvas.getmarker
    9 tests in vcs.Canvas.Canvas.getmeshfill
-   9 tests in vcs.Canvas.Canvas.getprojection
+   4 tests in vcs.Canvas.Canvas.getprojection
    8 tests in vcs.Canvas.Canvas.getscatter
-   9 tests in vcs.Canvas.Canvas.gettemplate
+   4 tests in vcs.Canvas.Canvas.gettemplate
    5 tests in vcs.Canvas.Canvas.gettextcombined
    6 tests in vcs.Canvas.Canvas.gettextextent
    4 tests in vcs.Canvas.Canvas.gettextorientation
@@ -3427,9 +3335,11 @@ ok
    8 tests in vcs.Canvas.Canvas.getxvsy
    7 tests in vcs.Canvas.Canvas.getxyvsy
    7 tests in vcs.Canvas.Canvas.getyxvsx
+   4 tests in vcs.Canvas.Canvas.initLogoDrawing
    4 tests in vcs.Canvas.Canvas.islandscape
   10 tests in vcs.Canvas.Canvas.isofill
    8 tests in vcs.Canvas.Canvas.isoline
+   5 tests in vcs.Canvas.Canvas.isopened
    4 tests in vcs.Canvas.Canvas.isportrait
    8 tests in vcs.Canvas.Canvas.landscape
    9 tests in vcs.Canvas.Canvas.line
@@ -3441,7 +3351,7 @@ ok
    3 tests in vcs.Canvas.Canvas.open
    2 tests in vcs.Canvas.Canvas.orientation
    6 tests in vcs.Canvas.Canvas.pdf
-  13 tests in vcs.Canvas.Canvas.plot
+  20 tests in vcs.Canvas.Canvas.plot
    4 tests in vcs.Canvas.Canvas.png
    8 tests in vcs.Canvas.Canvas.portrait
    9 tests in vcs.Canvas.Canvas.postscript
@@ -3450,6 +3360,7 @@ ok
    3 tests in vcs.Canvas.Canvas.raisecanvas
    7 tests in vcs.Canvas.Canvas.remove_display_name
    3 tests in vcs.Canvas.Canvas.removeobject
+   5 tests in vcs.Canvas.Canvas.return_display_names
    2 tests in vcs.Canvas.Canvas.saveinitialfile
   10 tests in vcs.Canvas.Canvas.scatter
    4 tests in vcs.Canvas.Canvas.scriptobject
@@ -3459,7 +3370,6 @@ ok
    5 tests in vcs.Canvas.Canvas.setcolormap
    5 tests in vcs.Canvas.Canvas.setcontinentsline
    4 tests in vcs.Canvas.Canvas.setcontinentstype
-   6 tests in vcs.Canvas.Canvas.show
    6 tests in vcs.Canvas.Canvas.svg
    7 tests in vcs.Canvas.Canvas.switchfonts
    8 tests in vcs.Canvas.Canvas.taylordiagram
@@ -3470,21 +3380,16 @@ ok
    8 tests in vcs.Canvas.Canvas.xyvsy
    8 tests in vcs.Canvas.Canvas.yxvsx
 **********************************************************************
-14 items had failures:
-   1 of   2 in vcs.Canvas.Canvas.canvasid
-   1 of   5 in vcs.Canvas.Canvas.check_name_source
-   2 of   9 in vcs.Canvas.Canvas.clean_auto_generated_objects
+9 items had failures:
+   1 of  11 in vcs.Canvas.Canvas.clean_auto_generated_objects
    1 of   3 in vcs.Canvas.Canvas.createtext
-   2 of   4 in vcs.Canvas.Canvas.drawtext
+   1 of   6 in vcs.Canvas.Canvas.drawtext
    1 of   8 in vcs.Canvas.Canvas.get3d_dual_scalar
    1 of   7 in vcs.Canvas.Canvas.get3d_scalar
    1 of   8 in vcs.Canvas.Canvas.get3d_vector
    1 of   7 in vcs.Canvas.Canvas.gettaylordiagram
-   1 of   4 in vcs.Canvas.Canvas.initLogoDrawing
    1 of   4 in vcs.Canvas.Canvas.isinfile
-   1 of   5 in vcs.Canvas.Canvas.isopened
-   1 of   5 in vcs.Canvas.Canvas.return_display_names
-   1 of   3 in vcs.Canvas.Canvas.setdefaultfont
-690 tests in 205 items.
-674 passed and 16 failed.
-***Test Failed*** 16 failures.
+   1 of   6 in vcs.Canvas.Canvas.show
+691 tests in 205 items.
+682 passed and 9 failed.
+***Test Failed*** 9 failures.

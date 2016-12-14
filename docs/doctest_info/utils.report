@@ -51,15 +51,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    import vcs
-Expecting nothing
-ok
-Trying:
-    import os
-Expecting nothing
-ok
-Trying:
-    import sys
+    import os, sys
 Expecting nothing
 ok
 Trying:
@@ -103,6 +95,34 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    cgm=vcs.creategraphicsmethod # alias long name
+Expecting nothing
+ok
+Trying:
+    cgm('Gfm') # meshfill inherits default; name generated
+Expecting:
+    <vcs.meshfill.Gfm ...>
+ok
+Trying:
+    cgm('boxfill','polar') # boxfill inherits polar; name generated
+Expecting:
+    <vcs.boxfill.Gfb ...>
+ok
+Trying:
+    cgm('Gfi',name='my_gfi') # isofill inherits default; user-named
+Expecting:
+    <vcs.isofill.Gfi ...>
+ok
+Trying:
+    import os # use this to check if sample data already exists
+Expecting nothing
+ok
+Trying:
+    if not os.path.isdir(vcs.sample_data):
+        vcs.download_sample_data_files()
+Expecting nothing
+ok
+Trying:
     import vcs
 Expecting nothing
 ok
@@ -126,6 +146,40 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    b=vcs.getboxfill()
+Expecting nothing
+ok
+Trying:
+    t=vcs.gettemplate()
+Expecting nothing
+ok
+Trying:
+    bd=vcs.dumpToDict(b) # serializes all properties
+Expecting nothing
+ok
+Trying:
+    td=vcs.dumpToDict(t, skipped=['legend']) # skip legend property
+Expecting nothing
+ok
+Trying:
+    'legend' in td[0].keys() # 'legend' should not be in dictionary
+Expecting:
+    False
+ok
+Trying:
+    box=vcs.getboxfill()
+Expecting nothing
+ok
+Trying:
+    vcs.dumpToJson(box, 'box.json') # output properties to file
+Expecting nothing
+ok
+Trying:
+    vcs.dumpToJson(box,None) # returns JSON string
+Expecting:
+    '{...}'
+ok
+Trying:
     import cdtime
 Expecting nothing
 ok
@@ -144,6 +198,32 @@ ok
 Trying:
     lbls = vcs.generate_time_labels(0, 12, 'months since 2000') # time labels for year 2000
 Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    box=vcs.getboxfill('polar')
+Expecting nothing
+ok
+Trying:
+    array=[range(10) for _ in range(10)]
+Expecting nothing
+ok
+Trying:
+    a.plot(box,array) # plot something on canvas
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a.png('box.png') # make a png
+Expecting nothing
+ok
+Trying:
+    vcs.get_png_dims('box.png') # get (width, height) of 'box.png'
+Expecting:
+    (1536, 1186)
 ok
 Trying:
     a=vcs.init()
@@ -215,6 +295,87 @@ Expecting:
     [0, 36, 73, 109, 146, 182, 219, 255]
 ok
 Trying:
+    vcs.getfontname(1)
+Expecting:
+    'default'
+ok
+Trying:
+    vcs.getfontname(4)
+Expecting:
+    'Helvetica'
+ok
+Trying:
+    vcs.getfontnumber('default')
+Expecting:
+    1
+ok
+Trying:
+    vcs.getfontnumber('Helvetica')
+Expecting:
+    4
+ok
+Trying:
+    vcs.show('boxfill') # list available boxfills
+Expecting:
+    *******************Boxfill Names List**********************
+    ...
+    *******************End Boxfill Names List**********************
+ok
+Trying:
+    vcs.getgraphicsmethod('boxfill','polar') # get polar boxfill
+Expecting:
+    <vcs.boxfill.Gfb ...>
+ok
+Trying:
+    import cdms2, os
+Expecting nothing
+ok
+Trying:
+    if not os.path.exists(vcs.sample_data):
+        vcs.download_sample_data_files() # get some data for cdms2
+Expecting nothing
+ok
+Trying:
+    f=cdms2.open(vcs.sample_data + '/clt.nc')
+Expecting nothing
+ok
+Trying:
+    v=f('v') # read variable v from clt.nc
+Expecting nothing
+ok
+Trying:
+    xax=v.getAxis(3) # X axis
+Expecting nothing
+ok
+Trying:
+    yax=v.getAxis(2) # Y axis
+Expecting nothing
+ok
+Trying:
+    box=vcs.getboxfill()
+Expecting nothing
+ok
+Trying:
+    vcs.getworldcoordinates(box, xax, yax)
+Expecting:
+    [-180.0, 180.0, -88.288399, 88.288399]
+ok
+Trying:
+    vcs.listelements() # list all vcs object types
+Expecting:
+    ['1d', '3d_dual_scalar', '3d_scalar', '3d_vector', 'boxfill', ...]
+ok
+Trying:
+    vcs.listelements('1d')
+Expecting:
+    [...]
+ok
+Trying:
+    vcs.listelements('boxfill')
+Expecting:
+    [...]
+ok
+Trying:
     a=vcs.init()
 Expecting nothing
 ok
@@ -268,33 +429,59 @@ Expecting:
     [100.0, 80.0, 60.0, 40.0, 20.0, 0.0]
 ok
 Trying:
-    a=vcs.mkscale(2,20,zero=2)
+    scale=vcs.mkscale(2,20,zero=2)
 Expecting nothing
 ok
 Trying:
-    vcs.mklabels(a)
-Expecting:
-    {0.0: '0', 2.0: '2', 4.0: '4', 6.0: '6', 8.0: '8', 10.0: '10', 12.0: '12', 14.0: '14', ...}
+    labels=vcs.mklabels(scale)
+Expecting nothing
 ok
 Trying:
-    vcs.mklabels ( [5,.005])
-Expecting:
-    {0.005: '0.005', 5.0: '5.000'}
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/utils.py", line 1204, in vcs.utils.mklabels
-Failed example:
-    vcs.mklabels ( [5,.005])
-Expected:
-    {0.005: '0.005', 5.0: '5.000'}
-Got:
-    {5.0: '5.000', 0.005: '0.005'}
-Trying:
-    vcs.mklabels ( [.00002,.00005])
-Expecting:
-    {2e-05: '2E-5', 5e-05: '5E-5'}
+    keys=labels.keys()
+Expecting nothing
 ok
 Trying:
-    vcs.mklabels ( [.00002,.00005],output='list')
+    keys.sort()
+Expecting nothing
+ok
+Trying:
+    for key in keys:
+        print key, ':', labels[key]
+Expecting:
+    0.0 : 0
+    2.0 : 2
+    4.0 : 4
+    6.0 : 6
+    8.0 : 8
+    10.0 : 10
+    12.0 : 12
+    14.0 : 14
+    16.0 : 16
+    18.0 : 18
+    20.0 : 20
+ok
+Trying:
+    labels=vcs.mklabels([.00002,.00003,.00005])
+Expecting nothing
+ok
+Trying:
+    keys=labels.keys()
+Expecting nothing
+ok
+Trying:
+    keys.sort()
+Expecting nothing
+ok
+Trying:
+    for key in keys:
+        print key, ':', labels[key]
+Expecting:
+    2e-05 : 2E-5
+    3e-05 : 3E-5
+    5e-05 : 5E-5
+ok
+Trying:
+    vcs.mklabels ([.00002,.00005],output='list')
 Expecting:
     ['2E-5', '5E-5']
 ok
@@ -327,6 +514,59 @@ Trying:
     vcs.mkscale(2,20,zero=2)
 Expecting:
     [0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
+ok
+Trying:
+    import numpy, cdms2, os
+Expecting nothing
+ok
+Trying:
+    from random import randint
+Expecting nothing
+ok
+Trying:
+    array=numpy.array([range(10) for _ in range(10)])
+Expecting nothing
+ok
+Trying:
+    mask=[] # we will use this to create a random mask
+Expecting nothing
+ok
+Trying:
+    for _ in range(10):
+        mask.append([randint(0,1) for _ in range(10)])
+Expecting nothing
+ok
+Trying:
+    ma=numpy.ma.MaskedArray(array, mask)
+Expecting nothing
+ok
+Trying:
+    if not os.path.exists(vcs.sample_data):
+        vcs.download_sample_data_files() # get some data for cdms2
+Expecting nothing
+ok
+Trying:
+    f=cdms2.open(vcs.sample_data + '/clt.nc')
+Expecting nothing
+ok
+Trying:
+    v=f('v') # get variable 'v' from clt.nc
+Expecting nothing
+ok
+Trying:
+    vcs.monotonic(array) # monotonicity of 2D numpy array
+Expecting:
+    True
+ok
+Trying:
+    vcs.monotonic(ma) # monotonicity of simple masked array
+Expecting:
+    True
+ok
+Trying:
+    vcs.monotonic(v) # monotonicity of cdms2 variable
+Expecting:
+    False
 ok
 Trying:
     cp = vcs.getcolormap() # Get a copy of the default colormap
@@ -362,45 +602,46 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a=vcs.init() # Create a VCS Canvas instance, named 'a'
-Expecting nothing
+    vcs.show() # show all vcs object types
+Expecting:
+    ['1d', '3d_dual_scalar', '3d_scalar', '3d_vector', 'boxfill', ...]
 ok
 Trying:
-    a.show('boxfill') # List boxfill objects on Canvas 'a'
+    vcs.show('boxfill') # List boxfill objects 
 Expecting:
     *******************Boxfill Names List**********************
     ...
     *******************End Boxfill Names List**********************
 ok
 Trying:
-    a.show('isofill') # List isofill objects on Canvas 'a'
+    vcs.show('3d_vector') # List 3d_vector objects 
 Expecting:
-    *******************Isofill Names List**********************
+    *******************3d_vector Names List**********************
     ...
-    *******************End Isofill Names List**********************
+    *******************End 3d_vector Names List**********************
 ok
 Trying:
-    a.show('line') # List line objects on Canvas 'a'
+    vcs.show('3d_scalar') # List 3d_scalar objects 
 Expecting:
-    *******************Line Names List**********************
+    *******************3d_scalar Names List**********************
     ...
-    *******************End Line Names List**********************
+    *******************End 3d_scalar Names List**********************
 ok
 Trying:
-    a.show('marker') # List marker objects on Canvas 'a'
+    vcs.show('3d_dual_scalar') # List 3d_dual_scalar objects 
 Expecting:
-    *******************Marker Names List**********************
+    *******************3d_dual_scalar Names List**********************
     ...
-    *******************End Marker Names List**********************
+    *******************End 3d_dual_scalar Names List**********************
 ok
 Trying:
-    a.show('textcombined') # List text objects on Canvas 'a'
+    vcs.show('1d') # List 1d objects
 Expecting:
-    *******************Textcombined Names List**********************
+    *******************1d Names List**********************
     ...
-    *******************End Textcombined Names List**********************
+    *******************End 1d Names List**********************
 ok
-31 items had no tests:
+20 items had no tests:
     vcs.utils
     vcs.utils.Logo.__init__
     vcs.utils.VCSUtilsError
@@ -408,21 +649,10 @@ ok
     vcs.utils.VCSUtilsError.__str__
     vcs.utils.__split2contiguous
     vcs.utils._scriptrun
-    vcs.utils.creategraphicsmethod
-    vcs.utils.download_sample_data_files
-    vcs.utils.dumpToDict
-    vcs.utils.dumpToJson
     vcs.utils.getDataWcValue
-    vcs.utils.get_png_dims
     vcs.utils.getdotdirectory
-    vcs.utils.getfontname
-    vcs.utils.getfontnumber
-    vcs.utils.getgraphicsmethod
-    vcs.utils.getworldcoordinates
-    vcs.utils.listelements
     vcs.utils.loadTemplate
     vcs.utils.loadVCSItem
-    vcs.utils.monotonic
     vcs.utils.png_read_metadata
     vcs.utils.prettifyAxisLabels
     vcs.utils.process_range_from_old_scr
@@ -432,24 +662,33 @@ ok
     vcs.utils.scriptrun
     vcs.utils.scriptrun_scr
     vcs.utils.setTicksandLabels
-14 items passed all tests:
+26 items passed all tests:
   13 tests in vcs.utils.Logo
-  13 tests in vcs.utils.Logo.plot
+  11 tests in vcs.utils.Logo.plot
+   4 tests in vcs.utils.creategraphicsmethod
+   2 tests in vcs.utils.download_sample_data_files
    5 tests in vcs.utils.drawLinesAndMarkersLegend
+   5 tests in vcs.utils.dumpToDict
+   3 tests in vcs.utils.dumpToJson
    4 tests in vcs.utils.generate_time_labels
+   6 tests in vcs.utils.get_png_dims
    4 tests in vcs.utils.getcolorcell
    4 tests in vcs.utils.getcolormap
    7 tests in vcs.utils.getcolors
+   2 tests in vcs.utils.getfontname
+   2 tests in vcs.utils.getfontnumber
+   2 tests in vcs.utils.getgraphicsmethod
+   8 tests in vcs.utils.getworldcoordinates
+   3 tests in vcs.utils.listelements
    4 tests in vcs.utils.match_color
    4 tests in vcs.utils.minmax
    3 tests in vcs.utils.mkevenlevels
+  10 tests in vcs.utils.mklabels
    6 tests in vcs.utils.mkscale
+  12 tests in vcs.utils.monotonic
    2 tests in vcs.utils.rgba_color
    6 tests in vcs.utils.setcolorcell
    6 tests in vcs.utils.show
-**********************************************************************
-1 items had failures:
-   1 of   5 in vcs.utils.mklabels
-86 tests in 46 items.
-85 passed and 1 failed.
-***Test Failed*** 1 failures.
+138 tests in 46 items.
+138 passed and 0 failed.
+Test passed.

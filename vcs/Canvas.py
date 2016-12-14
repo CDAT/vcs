@@ -293,10 +293,11 @@ def _process_keyword(obj, target, source, keyargs, default=None):
 
 class Canvas(object):
     """
-    The object onto which all plots are drawn.
-
     Usually created using :py:func:`vcs.init`, this object provides easy access
-    to the functionality of the entire VCS module.
+    to the functionality of the entire VCS module:
+
+    See :py:func:`vcs.Canvas.Canvas.plot` for more information on the type of
+    data that can be plotted on a Canvas object.
     """
     __slots__ = [
         '_mode',
@@ -479,6 +480,13 @@ class Canvas(object):
         self.interact(*args, **kargs)
 
     def interact(self, *args, **kargs):
+        """
+        Puts the canvas into interactive mode.
+
+        :param args:
+        :param kargs:
+        :return:
+        """
         self.configure()
         self.backend.interact(*args, **kargs)
 
@@ -1143,7 +1151,7 @@ class Canvas(object):
                 >>> a=vcs.init()
                 >>> clean=a.clean_auto_generated_objects # alias long name
                 >>> clean() # clean possible old objects from vcs
-                >>> boxes=vcs.listelements('boxfill') # initial boxfill names
+                >>> boxes=a.listelements('boxfill') # initial boxfill names
                 >>> array=[range(10) for _ in range(10)]
                 >>> a.plot(array)
                 <vcs.displayplot.Dp object at 0x...>
@@ -2303,6 +2311,7 @@ class Canvas(object):
                 ...
                 *******************End Texttable Names List**********************
                 >>> vcs.createtextcombined('draw_tt','qa', 'draw_tto', '7left')
+                <vcs.textcombined.Tc object at 0x...>
                 >>> msg=["Hello", "drawtextcombined!"]
                 >>> tc=drawtc(Tt_name='draw_tt',To_name='draw_tto',string=msg)
                 <vcs.textcombined.Tc object at 0x...>
@@ -2401,44 +2410,59 @@ class Canvas(object):
 
     def plot(self, *actual_args, **keyargs):
         """
-        Plot an array(s) of data given a template and graphics method. The VCS template is
-        used to define where the data and variable attributes will be displayed on the VCS
-        Canvas. The VCS graphics method is used to define how the array(s) will be shown
-        on the VCS Canvas.
+        Plot an array(s) of data given a template and graphics method.
+
+        The VCS template is used to define where the data and variable
+        attributes will  be displayed on the VCS Canvas.
+
+        The VCS graphics method is used to define how the array(s) will be
+        shown on the VCS Canvas.
 
         .. describe:: Plot Usage:
 
-            .. code-block:: python
+            .. doctest:: canvas_plot_usage
 
-                plot(array1=None, array2=None, template_name=None,
-                    graphics_method=None, graphics_name=None,
-                    [key=value [, key=value [, ...]]])
-
-            .. note::
-
-                 array1 and array2 are NumPy arrays.
+                >>> import numpy
+                >>> a=vcs.init()
+                >>> a.show('template') # list vcs template types
+                *******************Template Names List**********************
+                ...
+                *******************End Template Names List**********************
+                >>> a.show('boxfill') # one of many graphics method types
+                *******************Boxfill Names List**********************
+                ...
+                *******************End Boxfill Names List**********************
+                >>> array1 = numpy.array([range(10) for _ in range(10)]) # data
+                >>> a.plot(variable=array1)
+                <vcs.displayplot.Dp ...>
+                >>> a.plot(array1,'ASD',gm='boxfill')  # boxfill, ASD template
+                <vcs.displayplot.Dp ...>
 
         .. describe:: Plot attribute keywords:
 
-            .. note::
+            .. note:: Attribute Precedence
 
-                More specific attributes take precedence over general attributes. In particular,
-                specific attributes override variable object attributes, dimension attributes and
-                arrays override axis objects, which override grid objects, which override variable
+                Specific attributes take precedence over general attributes.
+                In particular, specific attributes override variable object
+                attributes, dimension attributes and arrays override axis
+                objects, which override grid objects, which override variable
                 objects.
 
-                For example, if both 'file_comment' and 'variable' keywords are specified, the value of
-                'file_comment' is used instead of the file comment in the parent of variable. Similarly,
-                if both 'xaxis' and 'grid' keywords are specified, the value of 'xaxis' takes precedence
-                over the x-axis of grid.
+                For example, if both 'file_comment' and 'variable' keywords are
+                specified, the value of 'file_comment' is used instead of the
+                file comment in the parent of variable. Similarly, if both
+                'xaxis' and 'grid' keywords are specified, the value of 'xaxis'
+                takes precedence over the x-axis of grid.
 
-            *  ratio [default is none]
+            *  ratio [default is None]
 
                 * None: let the self.ratio attribute decide
-                *  0,'off': overwrite self.ratio and do nothing about the ratio
+                *  0, 'off': overwrite self.ratio and do nothing about the ratio
                 * 'auto': computes an automatic ratio
-                * '3',3: y dim will be 3 times bigger than x dim (restricted to original tempalte.data area
-                * Adding a 't' at the end of the ratio, makes the tickmarks and boxes move along.
+                * '3', 3: y dim will be 3 times bigger than x dim (restricted
+                    to original tempalte.data area)
+                * Adding a 't' at the end of the ratio, makes the tickmarks and
+                    boxes move along.
 
             * Dimension attribute keys (dimension length=n):
 
@@ -2512,6 +2536,7 @@ class Canvas(object):
                         * 5 signifies "Rivers"
 
                     .. note::
+
                         Values 6 through 11 signify the line type defined by
                         the files data_continent_other7 through data_continent_other12.
 
@@ -2555,7 +2580,7 @@ class Canvas(object):
 
                     .. code-block:: python
 
-                        # if ==1, create images in the background
+                        # if 1, create images in the background (not on canvas)
                         bg = 0|1
 
         :Example:
@@ -2567,17 +2592,17 @@ class Canvas(object):
                 >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
                 >>> slab1 = f('u') # use the data file to create a cdms2 slab
                 >>> slab2 = f('v') # need 2 slabs, so get another
-                >>> a.plot(slab1) # this call will use default settings for template and boxfill
+                >>> a.plot(slab1) # default settings for template and boxfill
                 <vcs.displayplot.Dp ...>
-                >>> a.plot(slab1, 'polar', 'isofill', 'polar') # this is specifying the template and graphics method
+                >>> a.plot(slab1,'polar','isofill','polar') # specify template and graphics method
                 <vcs.displayplot.Dp ...>
                 >>> t=a.gettemplate('polar') # get the polar template
                 >>> vec=a.getvector() # get default vector
-                >>> a.plot(slab1, slab2, t, vec) # plot the data as a vector using the 'AMIP' template
+                >>> a.plot(slab1, slab2, t, vec) # plot data as vector using polar template
                 <vcs.displayplot.Dp ...>
                 >>> a.clear() # clear the VCS Canvas of all plots
                 >>> box=a.getboxfill() # get default boxfill graphics method
-                >>> a.plot(box,t,slab2) # plot array data using box 'new' and template 't'
+                >>> a.plot(box,t,slab2) # plot data with boxfill and polar
                 <vcs.displayplot.Dp ...>
 
         %s
@@ -4030,6 +4055,7 @@ class Canvas(object):
                 []
                 >>> array=[range(10) for _ in range(10)]
                 >>> a.plot(array)
+                <vcs.displayplot.Dp ...>
                 >>> a.return_display_names() # has display name for new plot
                 [...]
 
@@ -5974,9 +6000,9 @@ class Canvas(object):
 
                 >>> a=vcs.init()
                 >>> dua=a.dummy_user_action # alias long name
-                >>> dua("falafel", 37, the_answer=42, barbara="streisand")
+                >>> dua("falafel", 37, the_answer=42)
                 Arguments: ('falafel', 37)
-                Keywords: {'the_answer': 42, 'barbara': 'streisand'}
+                Keywords: {'the_answer': 42}
 
 
         :param args: Any number of arguments, without a keyword specifier.

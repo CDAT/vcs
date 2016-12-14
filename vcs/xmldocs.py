@@ -1,45 +1,86 @@
 plot_keywords_doc = """
-    :param xaxis: Axis object to replace the slab -1 dim axis
-    :param yaxis: Axis object to replace the slab -2 dim axis, only if slab has more than 1D
-    :param zaxis: Axis object to replace the slab -3 dim axis, only if slab has more than 2D
-    :param taxis: Axis object to replace the slab -4 dim axis, only if slab has more than 3D
-    :param waxis: Axis object to replace the slab -5 dim axis, only if slab has more than 4D
-    :param xrev: reverse x axis
-    :param yrev: reverse y axis, only if slab has more than 1D
-    :param xarray: Values to use instead of x axis
-    :param yarray: Values to use instead of y axis, only if var has more than 1D
-    :param zarray: Values to use instead of z axis, only if var has more than 2D
-    :param tarray: Values to use instead of t axis, only if var has more than 3D
-    :param warray: Values to use instead of w axis, only if var has more than 4D
-    :param continents: continents type number
-    :param name: replaces variable name on plot
-    :param time: replaces time name on plot
-    :param units: replaces units value on plot
-    :param ymd: replaces year/month/day on plot
-    :param hms: replaces hh/mm/ss on plot
-    :param file_comment: replaces file_comment on plot
-    :param xbounds: Values to use instead of x axis bounds values
-    :param ybounds: Values to use instead of y axis bounds values (if exist)
-    :param xname: replace xaxis name on plot
-    :param yname: replace yaxis name on plot (if exists)
-    :param zname: replace zaxis name on plot (if exists)
-    :param tname: replace taxis name on plot (if exists)
-    :param wname: replace waxis name on plot (if exists)
-    :param xunits: replace xaxis units on plot
-    :param yunits: replace yaxis units on plot (if exists)
-    :param zunits: replace zaxis units on plot (if exists)
-    :param tunits: replace taxis units on plot (if exists)
-    :param wunits: replace waxis units on plot (if exists)
-    :param xweights: replace xaxis weights used for computing mean
-    :param yweights: replace xaxis weights used for computing mean
-    :param comment1: replaces comment1 on plot
-    :param comment2: replaces comment2 on plot
-    :param comment3: replaces comment3 on plot
-    :param comment4: replaces comment4 on plot
-    :param long_name: replaces long_name on plot
-    :param grid: replaces array grid (if exists)
-    :param bg: plots in background mode
-    :param ratio: sets the y/x ratio ,if passed as a string with 't' at the end, will aslo moves the ticks
+    :param xaxis: Axis object to replace the slab -1 dim axis.
+        Keyword parameter.
+    :param yaxis: Axis object to replace the slab -2 dim axis, only if slab has more than 1D.
+        Keyword parameter.
+    :param zaxis: Axis object to replace the slab -3 dim axis, only if slab has more than 2D.
+        Keyword parameter.
+    :param taxis: Axis object to replace the slab -4 dim axis, only if slab has more than 3D.
+        Keyword parameter.
+    :param waxis: Axis object to replace the slab -5 dim axis, only if slab has more than 4D.
+        Keyword parameter.
+    :param xrev: reverse x axis.
+        Keyword parameter.
+    :param yrev: reverse y axis, only if slab has more than 1D.
+        Keyword parameter.
+    :param xarray: Values to use instead of x axis.
+        Keyword parameter.
+    :param yarray: Values to use instead of y axis, only if var has more than 1D.
+        Keyword parameter.
+    :param zarray: Values to use instead of z axis, only if var has more than 2D.
+        Keyword parameter.
+    :param tarray: Values to use instead of t axis, only if var has more than 3D.
+        Keyword parameter.
+    :param warray: Values to use instead of w axis, only if var has more than 4D.
+        Keyword parameter.
+    :param continents: continents type number.
+        Keyword parameter.
+    :param name: replaces variable name on plot.
+        Keyword parameter.
+    :param time: replaces time name on plot.
+        Keyword parameter.
+    :param units: replaces units value on plot.
+        Keyword parameter.
+    :param ymd: replaces year/month/day on plot.
+        Keyword parameter.
+    :param hms: replaces hh/mm/ss on plot.
+        Keyword parameter.
+    :param file_comment: replaces file_comment on plot.
+        Keyword parameter.
+    :param xbounds: Values to use instead of x axis bounds values.
+        Keyword parameter.
+    :param ybounds: Values to use instead of y axis bounds values (if exist).
+        Keyword parameter.
+    :param xname: replace xaxis name on plot.
+        Keyword parameter.
+    :param yname: replace yaxis name on plot (if exists).
+        Keyword parameter.
+    :param zname: replace zaxis name on plot (if exists).
+        Keyword parameter.
+    :param tname: replace taxis name on plot (if exists).
+        Keyword parameter.
+    :param wname: replace waxis name on plot (if exists).
+        Keyword parameter.
+    :param xunits: replace xaxis units on plot.
+        Keyword parameter.
+    :param yunits: replace yaxis units on plot (if exists).
+        Keyword parameter.
+    :param zunits: replace zaxis units on plot (if exists).
+        Keyword parameter.
+    :param tunits: replace taxis units on plot (if exists).
+        Keyword parameter.
+    :param wunits: replace waxis units on plot (if exists).
+        Keyword parameter.
+    :param xweights: replace xaxis weights used for computing mean.
+        Keyword parameter.
+    :param yweights: replace xaxis weights used for computing mean.
+        Keyword parameter.
+    :param comment1: replaces comment1 on plot.
+        Keyword parameter.
+    :param comment2: replaces comment2 on plot.
+        Keyword parameter.
+    :param comment3: replaces comment3 on plot.
+        Keyword parameter.
+    :param comment4: replaces comment4 on plot.
+        Keyword parameter.
+    :param long_name: replaces long_name on plot.
+        Keyword parameter.
+    :param grid: replaces array grid (if exists).
+        Keyword parameter.
+    :param bg: plots in background mode.
+        Keyword parameter.
+    :param ratio: sets the y/x ratio ,if passed as a string with 't' at the end, will aslo moves the ticks.
+        Keyword parameter.
     :type xaxis: cdms2.axis.TransientAxis
     :type yaxis: cdms2.axis.TransientAxis
     :type zaxis: cdms2.axis.TransientAxis
@@ -251,68 +292,68 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
 
     :return: Has no return, but at the end target_dict should be full of formatted docstrings
     """
-    dict = {}
+    d = {}
     for obj_type in type_dict.keys():
         for obj_name in type_dict[obj_type].keys():
             # default values. Change as necessary.
             example1 = ''
             example2 = ''
-            dict['type'] = obj_type
-            dict['name'] = dict['sp_name'] = obj_name
-            dict['parent'] = type_dict[obj_type][obj_name]['parent']
-            dict['parent2'] = type_dict[obj_type][obj_name]['parent2']
-            dict['sp_parent'] = ''
-            dict['tc'] = ''
-            dict['ex2'] = ''
-            dict['rtype'] = type_dict[obj_type][obj_name]['rtype']
+            d['type'] = obj_type
+            d['name'] = d['sp_name'] = obj_name
+            d['parent'] = type_dict[obj_type][obj_name]['parent']
+            d['parent2'] = type_dict[obj_type][obj_name]['parent2']
+            d['sp_parent'] = ''
+            d['tc'] = ''
+            d['ex2'] = ''
+            d['rtype'] = type_dict[obj_type][obj_name]['rtype']
             if type_dict[obj_type][obj_name]['title']:
-                dict['cap'] = dict['name'].title()
+                d['cap'] = d['name'].title()
             else:
-                dict['cap'] = dict['name']
+                d['cap'] = d['name']
             if obj_name in ['3d_vector', '3d_scalar', '3d_dual_scalar']:
-                dict['sp_name'] = 'dv3d'
+                d['sp_name'] = 'dv3d'
             elif obj_name in ['1d', 'scatter', 'textcombined', 'xyvsy']:
                 if obj_name == 'textcombined':
-                    dict['tc'] = """
+                    d['tc'] = """
             >>> try: # try to create a new textcombined, in case none exist
             ...     vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
             ... except:
             ...     pass"""
-                    dict['sp_parent'] = "'EXAMPLE_tt', 'EXAMPLE_tto'"
+                    d['sp_parent'] = "'EXAMPLE_tt', 'EXAMPLE_tto'"
                 elif obj_name == '1d':
-                    dict['sp_parent'] = "'default'"
+                    d['sp_parent'] = "'default'"
                 else:
                     sp_parent = 'default_'+obj_name+'_'
-                    dict['sp_parent'] = "'%s'" % sp_parent
-                    dict['parent'] = dict['sp_parent']
+                    d['sp_parent'] = "'%s'" % sp_parent
+                    d['parent'] = d['sp_parent']
         # section for manageElements 'get' methods
             if method == 'get':
                 example1 = """%(tc)s
             >>> ex=vcs.get%(name)s(%(sp_parent)s)  # instance of '%(parent)s' %(name)s %(type)s%(plot)s"""
-                # set up dict['plot'] and dict['plot2']
+                # set up d['plot'] and d['plot2']
                 plot = ''
                 plot2 = ''
                 numslabs = type_dict[obj_type][obj_name]['slabs']
-                dict['slabs'] = ''
-                dict['args'] = ''
+                d['slabs'] = ''
+                d['args'] = ''
                 if numslabs > 0:
                     # TODO: replace with something that can actually be plotted by taylordiagram()
                     if obj_name is "taylordiagram":
-                        dict['slabs'] = """
+                        d['slabs'] = """
             >>> import cdms2 # Need cdms2 to create a slab
             >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
             >>> slab1 = f('u') # use the data file to create a cdms2 slab"""
                     else:
-                        dict['slabs'] = """
+                        d['slabs'] = """
             >>> import cdms2 # Need cdms2 to create a slab
             >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
             >>> slab1 = f('u') # use the data file to create a cdms2 slab"""
-                        dict['args'] = ", slab1"
+                    d['args'] = ", slab1"
                     if numslabs == 2:
                         slab2 = """
             >>> slab2 = f('v') # need 2 slabs, so get another"""
-                        dict['slabs'] = dict['slabs'] + slab2
-                        dict['args'] = dict['args'] + ", slab2"
+                        d['slabs'] = d['slabs'] + slab2
+                        d['args'] = d['args'] + ", slab2"
             # for vcs objects that have a self-named plotting function, i.e. fillarea()
                 if type_dict[obj_type][obj_name]['callable']:
                     plot = """%(slabs)s
@@ -323,26 +364,26 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             >>> a.%(name)s(ex2%(args)s) # plot using specified %(name)s object
             <vcs.displayplot.Dp ...>"""
             # for objects like template, where a call to plot() needs to be made
-                elif obj_name not in ['textorientation', 'texttable', 'colormap']:
+                elif obj_name not in ['textorientation', 'texttable', 'colormap', 'projection', 'template']:
                     plot = """%(slabs)s
             >>> a.plot(ex%(args)s) # plot using specified %(name)s object
             <vcs.displayplot.Dp ...>"""
                     plot2 = """
             >>> a.plot(ex2%(args)s) # plot using specified %(name)s object
             <vcs.displayplot.Dp ...>"""
-                dict['plot'] = plot % dict
-                dict['ex1'] = example1 % dict
-                if dict['parent2']:
+                d['plot'] = plot % d
+                d['ex1'] = example1 % d
+                if d['parent2']:
                     example2 = """
             >>> ex2=vcs.get%(name)s('%(parent2)s')  # instance of '%(parent2)s' %(name)s %(type)s%(plot2)s
                     """
-                    dict['plot2'] = plot2 % dict
-                    dict['ex2'] = example2 % dict
+                    d['plot2'] = plot2 % d
+                    d['ex2'] = example2 % d
         # section for manageElements 'create' methods
             elif method == 'create':
-                # if obj_name is tc, dict['tc'] should be populated by code that creates a tc at this point
+                # if obj_name is tc, d['tc'] should be populated by code that creates a tc at this point
                 if obj_name == "textcombined":
-                    example1 = dict['tc'] + """
+                    example1 = d['tc'] + """
             >>> vcs.listelements('%(name)s') # should now contain 'EXAMPLE_tt:::EXAMPLE_tto'
             [...'EXAMPLE_tt:::EXAMPLE_tto'...]"""
                 else:
@@ -350,21 +391,21 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             >>> ex=vcs.create%(name)s('%(name)s_ex1') # Create '%(name)s_ex1'; inherits 'default'
             >>> vcs.listelements('%(name)s') # should now contain '%(name)s_ex1'
             [...'%(name)s_ex1'...]"""
-                dict['ex1'] = example1 % dict
-                if dict['parent2']:
+                d['ex1'] = example1 % d
+                if d['parent2']:
                     example2 = """
             >>> ex2=vcs.create%(name)s('%(name)s_ex2','%(parent2)s') # create '%(name)s_ex2'; inherits '%(parent2)s'
             >>> vcs.listelements('%(name)s') # should now contain '%(name)s_ex2'
             [...'%(name)s_ex2'...]"""
-                    dict['ex2'] = example2 % dict
+                    d['ex2'] = example2 % d
             elif method == 'script':
                 if obj_name == "textcombined":
-                    dict['call'] = obj_name
-                    dict['name'] = 'text table and text orientation'
+                    d['call'] = obj_name
+                    d['name'] = 'text table and text orientation'
                 else:
-                    dict['call'] = dict['name']
-            target_dict[obj_name] = docstring % dict
-            dict.clear()
+                    d['call'] = d['name']
+            target_dict[obj_name] = docstring % d
+            d.clear()
 
 # contains VCS object details used to build Example doctests and fill in docstrings
 #   Keys:

@@ -14,7 +14,7 @@ Exception raised:
         ["sample A","type B","thing C"],True)
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1522, in drawLinesAndMarkersLegend
         strings, scratched, bg, render)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/utils.py", line 2400, in drawLinesAndMarkersLegend
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/utils.py", line 2693, in drawLinesAndMarkersLegend
         if scratched is not None and scratched[i] is not False:
     TypeError: 'bool' object has no attribute '__getitem__'
 ```
@@ -30,9 +30,9 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.template.P.moveto[0]>", line 1, in <module>
         t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 116, in createtemplate
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 113, in createtemplate
         name, source = check_name_source(name, source, 'template')
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 93, in check_name_source
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 90, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
     vcsError: Error template object named example1 already exists
 ```
@@ -62,9 +62,9 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.template.P.reset[0]>", line 1, in <module>
         t = vcs.createtemplate('example1', 'default') # template 'example1' inherits from 'default'
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 116, in createtemplate
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 113, in createtemplate
         name, source = check_name_source(name, source, 'template')
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 93, in check_name_source
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 90, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
     vcsError: Error template object named example1 already exists
 ```
@@ -94,9 +94,9 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.template.P.scale[0]>", line 1, in <module>
         t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 116, in createtemplate
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 113, in createtemplate
         name, source = check_name_source(name, source, 'template')
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 93, in check_name_source
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 90, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
     vcsError: Error template object named example1 already exists
 ```

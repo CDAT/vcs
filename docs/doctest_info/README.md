@@ -20,19 +20,11 @@ Doctest Info
 
 [Pytickmarks] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/Pytickmarks.md)
 
-[validation_functions] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/validation_functions.md)
-
-[VTKAnimate] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/VTKAnimate.md)
-
-[VTKPlots] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/VTKPlots.md)
-
-[animate_helper] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/animate_helper.md)
+[VCS_validation_functions] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/VCS_validation_functions.md)
 
 [boxfill] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/boxfill.md)
 
 [colormap] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/colormap.md)
-
-[colorpicker] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/colorpicker.md)
 
 [colors] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/colors.md)
 
@@ -78,13 +70,7 @@ Doctest Info
 
 [utils] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/utils.md)
 
-[vcs2vtk] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/vcs2vtk.md)
-
 [vcshelp] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/vcshelp.md)
 
-[vcsvtk] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/vcsvtk.md)
-
 [vector] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/vector.md)
-
-[vtk_ui] (https://github.com/embrown/vcs/blob/more_documentation/docs/doctest_info/vtk_ui.md)
 
