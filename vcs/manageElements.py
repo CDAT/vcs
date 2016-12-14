@@ -445,7 +445,7 @@ getisoline.__doc__ = getisoline.__doc__ % (
 
 def create1d(name=None, source='default'):
     """
-    Creates a new :class:`vcs.unified1d.G1d` object called name, and inheriting from source.
+    Creates a new :py:class:`vcs.unified1d.G1d` object called name, and inheriting from source.
 
     :Example:
 
@@ -455,18 +455,21 @@ def create1d(name=None, source='default'):
             *******************1d Names List**********************
             ...
             *******************End 1d Names List**********************
-            >>> oneD_default = vcs.create1d() # inherit default, name generated
-            >>> oneD_named = vcs.create1d("one_D") # inherit default, name "one_D"
-            >>> new_one_D = vcs.create1d(source="one_D") # inherit from "one_D"
+            >>> vcs.create1d() # inherits default, name generated
+            <vcs.unified1D.G1d ...>
+            >>> vcs.create1d("one_D") # inherits default, name "one_D"
+            <vcs.unified1D.G1d ...>
+            >>> vcs.create1d(source="one_D") # inherits from "one_D"
+            <vcs.unified1D.G1d ...>
 
     :param name: A string name for the 1d to be created. If None, a unique name will be created.
     :type name: :py:class:`str`
 
     :param source: A 1d object or string name of a 1d object from which the new 1d will inherit.
-    :type source: :py:class:`str` or :class:`vcs.unified1D.G1d`
+    :type source: :py:class:`str` or :py:class:`vcs.unified1D.G1d`
 
     :return: A new 1d object, inheriting from source.
-    :rtype: :class:`vcs.unified1d.G1d`
+    :rtype: :py:class:`vcs.unified1d.G1d`
     """
     name, source = check_name_source(name, source, '1d')
     return unified1D.G1d(name, source)
@@ -474,7 +477,7 @@ def create1d(name=None, source='default'):
 
 def get1d(name):
     """
-    Given name, returns a :class:`vcs.unified1d.G1d` from vcs with that name.
+    Given name, returns a :py:class:`vcs.unified1d.G1d` from vcs with that name.
     Unlike other VCS 'get' functions, name cannot be None when calling get1d().
 
     :Example:
@@ -485,13 +488,14 @@ def get1d(name):
             *******************1d Names List**********************
             ...
             *******************End 1d Names List**********************
-            >>> blue = vcs.get1d('blue_yxvsx')
+            >>> vcs.get1d('blue_yxvsx')
+            <vcs.unified1D.G1d ...>
 
     :param name: String name of a 1d in vcs. If there is no 1d with that name, an error will be raised.
     :type name: :py:class:`str`
 
     :return: A 1d from vcs with the given name.
-    :rtype: :class:`vcs.unified1d.G1d`
+    :rtype: :py:class:`vcs.unified1d.G1d`
     """
     # Check to make sure the argument passed in is a STRING
     if not isinstance(name, str):

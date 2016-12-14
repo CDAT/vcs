@@ -65,7 +65,7 @@ def consume_entry(readfile, writefile, endpoints, prepend, append):
 def cleanup():
     import glob, os
     gb = glob.glob
-    patterns = ["example.*", "*.json", "*.svg", "ex_*", "my*", "filename.*"]
+    patterns = ["example.*", "*.json", "*.svg", "ex_*", "my*", "filename.*", "*.png"]
     files = []
     for pattern in patterns:
         fnames = gb(pattern)

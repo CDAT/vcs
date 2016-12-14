@@ -364,6 +364,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             >>> a.%(name)s(ex2%(args)s) # plot using specified %(name)s object
             <vcs.displayplot.Dp ...>"""
             # for objects like template, where a call to plot() needs to be made
+            # objects in the list cannot be plotted without a graphics method
                 elif obj_name not in ['textorientation', 'texttable', 'colormap', 'projection', 'template']:
                     plot = """%(slabs)s
             >>> a.plot(ex%(args)s) # plot using specified %(name)s object
@@ -858,14 +859,19 @@ markerdoc = """
 #############################################################################
 
 create_GM_input = """
-    :param new_GM_name: (Ex: 'my_awesome_gm') name of the new graphics method object. If no name is given, then one will be created for use.
+    :param new_GM_name: (Ex: 'my_awesome_gm') name of the new graphics method
+        object. If no name is given, then one will be created for use.
     :type new_GM_name: str
-    :param source_GM_name: (Ex: 'default') copy the contents of the source object to the newly created one. If no name is given, then the 'default' graphics methond contents is copied over to the new object.
+
+    :param source_GM_name: (Ex: 'default') copy the contents of the source
+        object to the newly created one. If no name is given, the 'default'
+        graphics method contents are copied over to the new object.
     :type source_GM_name: str
     """  # noqa
 
 get_GM_input = """
-    :param GM_name: (Ex: 'default') retrieve the graphics method object of the given name. If no name is given, then retrieve the 'default' graphics method.
+    :param GM_name: (Ex: 'default') retrieve the graphics method object of the
+        given name. If no name is given, retrieve the 'default' graphics method.
     :type GM_name: str
     """  # noqa
 
@@ -880,7 +886,8 @@ plot_2D_input = """
     """  # noqa
 
 plot_2_1D_input = """
-    :param slab_or_primary_object: Data at least 1D, last dimension(s) will be plotted, or secondary vcs object
+    :param slab_or_primary_object: Data at least 1D, last dimension(s) will be
+        plotted, or secondary vcs object
     :type slab_or_primary_object: array
     """  # noqa
 plot_2_1D_options = """
