@@ -14,7 +14,7 @@ Exception raised:
         ["sample A","type B","thing C"],True)
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1522, in drawLinesAndMarkersLegend
         strings, scratched, bg, render)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/utils.py", line 2693, in drawLinesAndMarkersLegend
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/utils.py", line 2690, in drawLinesAndMarkersLegend
         if scratched is not None and scratched[i] is not False:
     TypeError: 'bool' object has no attribute '__getitem__'
 ```

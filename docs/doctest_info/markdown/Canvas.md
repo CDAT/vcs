@@ -1,14 +1,3 @@
-vcs.Canvas.Canvas.clean_auto_generated_objects
-----------------------------------------------
-```python
-Failed example:
-    boxes == new_boxes # should not be the same
-Expected:
-    False
-Got:
-    True
-```
-
 vcs.Canvas.Canvas.createtext
 ----------------------------
 ```python
@@ -19,17 +8,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x11868c230>
-```
-
-vcs.Canvas.Canvas.drawtext
---------------------------
-```python
-Failed example:
-    tc=drawtc(Tt_name='draw_tt',To_name='draw_tto',string=msg)
-Expected:
-    <vcs.textcombined.Tc object at 0x...>
-Got nothing
+    <vcs.textcombined.Tc object at 0x1186ab050>
 ```
 
 vcs.Canvas.Canvas.get3d_dual_scalar
@@ -41,7 +20,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11873b398>
+    <vcs.displayplot.Dp object at 0x1354a87f8>
 ```
 
 vcs.Canvas.Canvas.get3d_scalar
@@ -53,7 +32,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x14ee81910>
+    <vcs.displayplot.Dp object at 0x127bde280>
 ```
 
 vcs.Canvas.Canvas.get3d_vector
@@ -67,7 +46,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x14ee33280>
+    <vcs.displayplot.Dp object at 0x14f922280>
 ```
 
 vcs.Canvas.Canvas.gettaylordiagram
@@ -83,7 +62,7 @@ Exception raised:
         a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1320, in taylordiagram
         return self.__plot(arglist, parms)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3701, in __plot
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3700, in __plot
         t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1967, in plot
         self.draw(canvas, data)
@@ -102,17 +81,6 @@ Failed example:
 Expected:
     1
 Got nothing
-```
-
-vcs.Canvas.Canvas.show
-----------------------
-```python
-Failed example:
-    vcs.show() # show all vcs object types
-Expected:
-    ['1d','3d_dual_scalar','3d_scalar','3d_vector','boxfill', ...]
-Got:
-    ['1d', '3d_dual_scalar', '3d_scalar', '3d_vector', 'boxfill', 'colormap', 'display', 'fillarea', 'font', 'fontNumber', 'isofill', 'isoline', 'line', 'list', 'marker', 'meshfill', 'projection', 'scatter', 'taylordiagram', 'template', 'textcombined', 'textorientation', 'texttable', 'vector', 'xvsy', 'xyvsy', 'yxvsx']
 ```
 
 Missing Doctests

@@ -1151,16 +1151,16 @@ class Canvas(object):
                 >>> a=vcs.init()
                 >>> clean=a.clean_auto_generated_objects # alias long name
                 >>> clean() # clean possible old objects from vcs
-                >>> boxes=a.listelements('boxfill') # initial boxfill names
+                >>> txt=a.listelements('textorientation') # initial objects
                 >>> array=[range(10) for _ in range(10)]
                 >>> a.plot(array)
                 <vcs.displayplot.Dp object at 0x...>
-                >>> new_boxes=a.listelements('boxfill') # has new names
-                >>> boxes == new_boxes # should not be the same
+                >>> new_txt=a.listelements('textorientation') # has new names
+                >>> txt == new_txt # should not be the same
                 False
                 >>> clean()
-                >>> new_boxes=a.listelements('boxfill') # back to initial state
-                >>> boxes == new_boxes # should have the same contents
+                >>> new_txt=a.listelements('textorientation') # back to initial
+                >>> txt == new_txt # should have the same contents
                 True
 
 
@@ -2314,7 +2314,6 @@ class Canvas(object):
                 <vcs.textcombined.Tc object at 0x...>
                 >>> msg=["Hello", "drawtextcombined!"]
                 >>> tc=drawtc(Tt_name='draw_tt',To_name='draw_tto',string=msg)
-                <vcs.textcombined.Tc object at 0x...>
 
         :param Tt_name: String name of a texttable object
         :type Tt_name: :py:class:`str`

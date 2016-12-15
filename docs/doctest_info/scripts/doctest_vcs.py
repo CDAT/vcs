@@ -4,11 +4,11 @@ import doctest, argparse, importlib, re
 def log_stats(module_name, verbose):
     # open .results file to read, and .md file to log
     try:
-        results = open(module_name+".report", "r+")
+        results = open("../reports/" + module_name + ".report", "r+")
     except:
-        raise SystemError("File not found: " + module_name + ".results")
+        raise SystemError("File not found: " + "../reports/" + module_name + ".results")
     else:
-        log = open(module_name+'.md', 'w+')
+        log = open("../markdown/" + module_name + '.md', 'w+')
         missing_header = re.compile("^[0-9]+ items had no tests:$")
         # missing tests will be followed by either passed all tests or "tests in items" entry
         passing_header = re.compile("^[0-9]+ items passed all tests:$")

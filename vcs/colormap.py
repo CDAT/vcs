@@ -308,7 +308,7 @@ class Cp(object):
             .. doctest:: colormap_setcolorcell
 
                 >>> a = vcs.init() # Create a vcs Canvas
-                >>> cmap = a.createcolormap('example', 'default') # Create a colormap
+                >>> cmap = a.createcolormap('scc_cmap') # Create a colormap
                 >>> cmap.setcolorcell(40,80,95,1.0) # Set RGBA values
 
         :param index: Integer from 0-255.
@@ -338,7 +338,7 @@ class Cp(object):
             .. doctest:: colormap_getcolorcell
 
                 >>> a=vcs.init() # Create a vcs Canvas
-                >>> cmap = a.createcolormap('example', 'default') # Create a colormap
+                >>> cmap = a.createcolormap('gcc_cmap') # Create a colormap
                 >>> cmap.getcolorcell(1) # Get RGBA values
                 [26, 0, 33, 100]
 

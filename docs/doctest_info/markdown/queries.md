@@ -19,7 +19,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x1180c1230>
+    <vcs.textcombined.Tc object at 0x118008230>
 ```
 
 Missing Doctests

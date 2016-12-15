@@ -176,4 +176,25 @@ Missing Doctests
 
 :x:```    vcs.VCS_validation_functions.checkVectorType```
 
- 
+:x:```    vcs.VCS_validation_functions.checkWrap```
+
+:x:```    vcs.VCS_validation_functions.checkYesNo```
+
+:x:```    vcs.VCS_validation_functions.checkedRaise```
+
+:x:```    vcs.VCS_validation_functions.checkname```
+
+:x:```    vcs.VCS_validation_functions.color2vcs```
+
+:x:```    vcs.VCS_validation_functions.deg2DMS```
+
+:x:```    vcs.VCS_validation_functions.getProjType```
+
+:x:```    vcs.VCS_validation_functions.isListorTuple```
+
+:x:```    vcs.VCS_validation_functions.isNumber```
+
+:x:```    vcs.VCS_validation_functions.matchVcsColor```
+
+:x:```    vcs.VCS_validation_functions.setProjParameter```
+

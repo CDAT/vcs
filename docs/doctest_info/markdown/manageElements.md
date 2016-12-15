@@ -22,7 +22,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x118041230>
+    <vcs.textcombined.Tc object at 0x118141230>
 ```
 
 vcs.manageElements.get3d_dual_scalar
@@ -34,7 +34,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11915d7f8>
+    <vcs.displayplot.Dp object at 0x119a5bc58>
 ```
 
 vcs.manageElements.get3d_scalar
@@ -46,7 +46,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11862b398>
+    <vcs.displayplot.Dp object at 0x119013050>
 ```
 
 vcs.manageElements.get3d_vector
@@ -60,61 +60,31 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11809f398>
-```
-
-vcs.manageElements.getprojection
---------------------------------
-```python
-Failed example:
-    a.plot(ex, slab1) # plot using specified projection object
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.manageElements.getprojection[6]>", line 1, in <module>
-        a.plot(ex, slab1) # plot using specified projection object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2636, in plot
-        a = self.__plot(arglist, keyargs)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2967, in __plot
-        setattr(copy_mthd, p, keyargs[p])
-    AttributeError: 'NoneType' object has no attribute 'projection'
-```
-
-vcs.manageElements.getprojection
---------------------------------
-```python
-Failed example:
-    a.plot(ex2, slab1) # plot using specified projection object
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.manageElements.getprojection[8]>", line 1, in <module>
-        a.plot(ex2, slab1) # plot using specified projection object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2636, in plot
-        a = self.__plot(arglist, keyargs)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2967, in __plot
-        setattr(copy_mthd, p, keyargs[p])
-    AttributeError: 'NoneType' object has no attribute 'projection'
+    <vcs.displayplot.Dp object at 0x1181efa28>
 ```
 
 vcs.manageElements.gettaylordiagram
 -----------------------------------
 ```python
 Failed example:
-    a.taylordiagram(ex) # plot using specified taylordiagram object
+    a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
 Exception raised:
     Traceback (most recent call last):
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
         compileflags, 1) in test.globs
       File "<doctest vcs.manageElements.gettaylordiagram[6]>", line 1, in <module>
-        a.taylordiagram(ex) # plot using specified taylordiagram object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1319, in taylordiagram
-        arglist = _determine_arg_list('taylordiagram', args)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 272, in _determine_arg_list
-        arglist[igraphics_method])
-    vcsError: Graphics method taylordiagram requires 1 slab.
+        a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1320, in taylordiagram
+        return self.__plot(arglist, parms)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3700, in __plot
+        t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1967, in plot
+        self.draw(canvas, data)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1207, in draw
+        d0 = float(data[i][0])
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/numpy/ma/core.py", line 4182, in __float__
+        raise TypeError("Only length-1 arrays can be converted "
+    TypeError: Only length-1 arrays can be converted to Python scalars
 ```
 
 Missing Doctests

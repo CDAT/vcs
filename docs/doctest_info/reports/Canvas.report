@@ -161,7 +161,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    boxes=a.listelements('boxfill') # initial boxfill names
+    txt=a.listelements('textorientation') # initial objects
 Expecting nothing
 ok
 Trying:
@@ -174,21 +174,27 @@ Expecting:
     <vcs.displayplot.Dp object at 0x...>
 ok
 Trying:
-    new_boxes=a.listelements('boxfill') # has new names
+    new_txt=a.listelements('textorientation') # has new names
 Expecting nothing
 ok
 Trying:
-    boxes == new_boxes # should not be the same
+    txt == new_txt # should not be the same
 Expecting:
     False
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1159, in vcs.Canvas.Canvas.clean_auto_generated_objects
-Failed example:
-    boxes == new_boxes # should not be the same
-Expected:
-    False
-Got:
+ok
+Trying:
+    clean()
+Expecting nothing
+ok
+Trying:
+    new_txt=a.listelements('textorientation') # back to initial
+Expecting nothing
+ok
+Trying:
+    txt == new_txt # should have the same contents
+Expecting:
     True
+ok
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -231,8 +237,9 @@ Expecting:
     *******************End 1d Names List**********************
 ok
 Trying:
-    blue = vcs.get1d('blue_yxvsx')
-Expecting nothing
+    vcs.get1d('blue_yxvsx')
+Expecting:
+    <vcs.unified1D.G1d ...>
 ok
 Trying:
     vcs.show('3d_dual_scalar') # show all available 3d_dual_scalar
@@ -577,7 +584,12 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x11868c230>
+    <vcs.textcombined.Tc object at 0x1186ab050>
+Trying:
+    vcs.listelements('textcombined') # should now contain 'EXAMPLE_tt:::EXAMPLE_tto'
+Expecting:
+    [...'EXAMPLE_tt:::EXAMPLE_tto'...]
+ok
 Trying:
     vcs.show('textorientation') # show all available textorientation
 Expecting:
@@ -833,15 +845,8 @@ Expecting nothing
 ok
 Trying:
     tc=drawtc(Tt_name='draw_tt',To_name='draw_tto',string=msg)
-Expecting:
-    <vcs.textcombined.Tc object at 0x...>
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2316, in vcs.Canvas.Canvas.drawtext
-Failed example:
-    tc=drawtc(Tt_name='draw_tt',To_name='draw_tto',string=msg)
-Expected:
-    <vcs.textcombined.Tc object at 0x...>
-Got nothing
+Expecting nothing
+ok
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1068,7 +1073,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11873b398>
+    <vcs.displayplot.Dp object at 0x1354a87f8>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1106,7 +1111,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x14ee81910>
+    <vcs.displayplot.Dp object at 0x127bde280>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1150,7 +1155,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x14ee33280>
+    <vcs.displayplot.Dp object at 0x14f922280>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1629,7 +1634,7 @@ Exception raised:
         a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1320, in taylordiagram
         return self.__plot(arglist, parms)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3701, in __plot
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3700, in __plot
         t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1967, in plot
         self.draw(canvas, data)
@@ -1901,7 +1906,7 @@ Trying:
 Expecting:
     1
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5606, in vcs.Canvas.Canvas.isinfile
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5605, in vcs.Canvas.Canvas.isinfile
 Failed example:
     a.isinfile(box, 'deft_box.py')
 Expected:
@@ -2800,15 +2805,43 @@ ok
 Trying:
     vcs.show() # show all vcs object types
 Expecting:
-    ['1d','3d_dual_scalar','3d_scalar','3d_vector','boxfill', ...]
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5602, in vcs.Canvas.Canvas.show
-Failed example:
-    vcs.show() # show all vcs object types
-Expected:
-    ['1d','3d_dual_scalar','3d_scalar','3d_vector','boxfill', ...]
-Got:
-    ['1d', '3d_dual_scalar', '3d_scalar', '3d_vector', 'boxfill', 'colormap', 'display', 'fillarea', 'font', 'fontNumber', 'isofill', 'isoline', 'line', 'list', 'marker', 'meshfill', 'projection', 'scatter', 'taylordiagram', 'template', 'textcombined', 'textorientation', 'texttable', 'vector', 'xvsy', 'xyvsy', 'yxvsx']
+    ['1d', '3d_dual_scalar', '3d_scalar', '3d_vector', 'boxfill', ...]
+ok
+Trying:
+    vcs.show('boxfill') # List boxfill objects 
+Expecting:
+    *******************Boxfill Names List**********************
+    ...
+    *******************End Boxfill Names List**********************
+ok
+Trying:
+    vcs.show('3d_vector') # List 3d_vector objects 
+Expecting:
+    *******************3d_vector Names List**********************
+    ...
+    *******************End 3d_vector Names List**********************
+ok
+Trying:
+    vcs.show('3d_scalar') # List 3d_scalar objects 
+Expecting:
+    *******************3d_scalar Names List**********************
+    ...
+    *******************End 3d_scalar Names List**********************
+ok
+Trying:
+    vcs.show('3d_dual_scalar') # List 3d_dual_scalar objects 
+Expecting:
+    *******************3d_dual_scalar Names List**********************
+    ...
+    *******************End 3d_dual_scalar Names List**********************
+ok
+Trying:
+    vcs.show('1d') # List 1d objects
+Expecting:
+    *******************1d Names List**********************
+    ...
+    *******************End 1d Names List**********************
+ok
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -3265,12 +3298,13 @@ ok
     vcs.Canvas._process_keyword
     vcs.Canvas.change_date_time
     vcs.Canvas.dictionarytovcslist
-113 items passed all tests:
+116 items passed all tests:
   14 tests in vcs.Canvas.Canvas.boxfill
    2 tests in vcs.Canvas.Canvas.canvasid
    5 tests in vcs.Canvas.Canvas.canvasinfo
    6 tests in vcs.Canvas.Canvas.change_display_graphic_method
    4 tests in vcs.Canvas.Canvas.check_name_source
+  11 tests in vcs.Canvas.Canvas.clean_auto_generated_objects
    4 tests in vcs.Canvas.Canvas.clear
    4 tests in vcs.Canvas.Canvas.close
    2 tests in vcs.Canvas.Canvas.create1d
@@ -3301,6 +3335,7 @@ ok
    3 tests in vcs.Canvas.Canvas.drawlogooff
    3 tests in vcs.Canvas.Canvas.drawlogoon
    4 tests in vcs.Canvas.Canvas.drawmarker
+   6 tests in vcs.Canvas.Canvas.drawtext
    3 tests in vcs.Canvas.Canvas.dummy_user_action
    9 tests in vcs.Canvas.Canvas.eps
   10 tests in vcs.Canvas.Canvas.ffmpeg
@@ -3370,6 +3405,7 @@ ok
    5 tests in vcs.Canvas.Canvas.setcolormap
    5 tests in vcs.Canvas.Canvas.setcontinentsline
    4 tests in vcs.Canvas.Canvas.setcontinentstype
+   6 tests in vcs.Canvas.Canvas.show
    6 tests in vcs.Canvas.Canvas.svg
    7 tests in vcs.Canvas.Canvas.switchfonts
    8 tests in vcs.Canvas.Canvas.taylordiagram
@@ -3380,16 +3416,13 @@ ok
    8 tests in vcs.Canvas.Canvas.xyvsy
    8 tests in vcs.Canvas.Canvas.yxvsx
 **********************************************************************
-9 items had failures:
-   1 of  11 in vcs.Canvas.Canvas.clean_auto_generated_objects
+6 items had failures:
    1 of   3 in vcs.Canvas.Canvas.createtext
-   1 of   6 in vcs.Canvas.Canvas.drawtext
    1 of   8 in vcs.Canvas.Canvas.get3d_dual_scalar
    1 of   7 in vcs.Canvas.Canvas.get3d_scalar
    1 of   8 in vcs.Canvas.Canvas.get3d_vector
    1 of   7 in vcs.Canvas.Canvas.gettaylordiagram
    1 of   4 in vcs.Canvas.Canvas.isinfile
-   1 of   6 in vcs.Canvas.Canvas.show
 691 tests in 205 items.
-682 passed and 9 failed.
-***Test Failed*** 9 failures.
+685 passed and 6 failed.
+***Test Failed*** 6 failures.

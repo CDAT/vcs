@@ -7,5 +7,5 @@ MODULES=("Canvas" "Pboxeslines" "Pdata" "Pformat" "Plegend" "Ptext" "Pxlabels"
 "textorientation" "texttable" "unified1D" "utils" "vcshelp" "vector")
 
 
-for module in "${MODULES[@]}"; do python doctest_vcs.py "$module" -a -v -r > "$module.report"; done;
+for module in "${MODULES[@]}"; do python doctest_vcs.py "$module" -a -v -r > ../reports/"$module.report"; done;
 for module in "${MODULES[@]}"; do python doctest_vcs.py "$module" -v -r --LO; done;

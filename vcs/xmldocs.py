@@ -279,7 +279,7 @@ listdoc = """ Lists the current values of object attributes"""
 
 def populate_docstrings(type_dict, target_dict, docstring, method):
     """
-    A function to generate docstrings from a dictionary.
+    A function to populate docstrings from a dictionary.
     Structure of the function is pretty specific to type_dicts shaped like xmldoc.obj_details.
 
     Indentation of the docstring snippets is screwy because they need to maintain alignment

@@ -1,4 +1,25 @@
 Trying:
+    cns=vcs.check_name_source # alias for long function name
+Expecting nothing
+ok
+Trying:
+    vcs.show('boxfill')
+Expecting:
+    *******************Boxfill Names List**********************
+    ...
+    *******************End Boxfill Names List**********************
+ok
+Trying:
+    cns('NEW', 'quick', 'boxfill') # name 'NEW' should be available
+Expecting:
+    ('NEW', 'quick')
+ok
+Trying:
+    cns(None, 'default', 'boxfill') # generate unique boxfill name
+Expecting:
+    ('__boxfill_...', 'default')
+ok
+Trying:
     vcs.show('1d')
 Expecting:
     *******************1d Names List**********************
@@ -6,16 +27,19 @@ Expecting:
     *******************End 1d Names List**********************
 ok
 Trying:
-    oneD_default = vcs.create1d() # inherit default, name generated
-Expecting nothing
+    vcs.create1d() # inherits default, name generated
+Expecting:
+    <vcs.unified1D.G1d ...>
 ok
 Trying:
-    oneD_named = vcs.create1d("one_D") # inherit default, name "one_D"
-Expecting nothing
+    vcs.create1d("one_D") # inherits default, name "one_D"
+Expecting:
+    <vcs.unified1D.G1d ...>
 ok
 Trying:
-    new_one_D = vcs.create1d(source="one_D") # inherit from "one_D"
-Expecting nothing
+    vcs.create1d(source="one_D") # inherits from "one_D"
+Expecting:
+    <vcs.unified1D.G1d ...>
 ok
 Trying:
     vcs.show('3d_dual_scalar') # show all available 3d_dual_scalar
@@ -25,11 +49,11 @@ Expecting:
     *******************End 3d_dual_scalar Names List**********************
 ok
 Trying:
-    ex=vcs.create3d_dual_scalar('3d_dual_scalar_ex1') # Create 3d_dual_scalar '3d_dual_scalar_ex1' that inherits from 'default'
+    ex=vcs.create3d_dual_scalar('3d_dual_scalar_ex1') # Create '3d_dual_scalar_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('3d_dual_scalar') # should now contain the '3d_dual_scalar_ex1' 3d_dual_scalar
+    vcs.listelements('3d_dual_scalar') # should now contain '3d_dual_scalar_ex1'
 Expecting:
     [...'3d_dual_scalar_ex1'...]
 ok
@@ -41,11 +65,11 @@ Expecting:
     *******************End 3d_scalar Names List**********************
 ok
 Trying:
-    ex=vcs.create3d_scalar('3d_scalar_ex1') # Create 3d_scalar '3d_scalar_ex1' that inherits from 'default'
+    ex=vcs.create3d_scalar('3d_scalar_ex1') # Create '3d_scalar_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('3d_scalar') # should now contain the '3d_scalar_ex1' 3d_scalar
+    vcs.listelements('3d_scalar') # should now contain '3d_scalar_ex1'
 Expecting:
     [...'3d_scalar_ex1'...]
 ok
@@ -57,11 +81,11 @@ Expecting:
     *******************End 3d_vector Names List**********************
 ok
 Trying:
-    ex=vcs.create3d_vector('3d_vector_ex1') # Create 3d_vector '3d_vector_ex1' that inherits from 'default'
+    ex=vcs.create3d_vector('3d_vector_ex1') # Create '3d_vector_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('3d_vector') # should now contain the '3d_vector_ex1' 3d_vector
+    vcs.listelements('3d_vector') # should now contain '3d_vector_ex1'
 Expecting:
     [...'3d_vector_ex1'...]
 ok
@@ -73,20 +97,20 @@ Expecting:
     *******************End Boxfill Names List**********************
 ok
 Trying:
-    ex=vcs.createboxfill('boxfill_ex1') # Create boxfill 'boxfill_ex1' that inherits from 'default'
+    ex=vcs.createboxfill('boxfill_ex1') # Create 'boxfill_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('boxfill') # should now contain the 'boxfill_ex1' boxfill
+    vcs.listelements('boxfill') # should now contain 'boxfill_ex1'
 Expecting:
     [...'boxfill_ex1'...]
 ok
 Trying:
-    ex2=vcs.createboxfill('boxfill_ex2','polar') # create 'boxfill_ex2' from 'polar' template
+    ex2=vcs.createboxfill('boxfill_ex2','polar') # create 'boxfill_ex2'; inherits 'polar'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('boxfill') # should now contain the 'boxfill_ex2' boxfill
+    vcs.listelements('boxfill') # should now contain 'boxfill_ex2'
 Expecting:
     [...'boxfill_ex2'...]
 ok
@@ -98,20 +122,20 @@ Expecting:
     *******************End Colormap Names List**********************
 ok
 Trying:
-    ex=vcs.createcolormap('colormap_ex1') # Create colormap 'colormap_ex1' that inherits from 'default'
+    ex=vcs.createcolormap('colormap_ex1') # Create 'colormap_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('colormap') # should now contain the 'colormap_ex1' colormap
+    vcs.listelements('colormap') # should now contain 'colormap_ex1'
 Expecting:
     [...'colormap_ex1'...]
 ok
 Trying:
-    ex2=vcs.createcolormap('colormap_ex2','rainbow') # create 'colormap_ex2' from 'rainbow' template
+    ex2=vcs.createcolormap('colormap_ex2','rainbow') # create 'colormap_ex2'; inherits 'rainbow'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('colormap') # should now contain the 'colormap_ex2' colormap
+    vcs.listelements('colormap') # should now contain 'colormap_ex2'
 Expecting:
     [...'colormap_ex2'...]
 ok
@@ -123,11 +147,11 @@ Expecting:
     *******************End Fillarea Names List**********************
 ok
 Trying:
-    ex=vcs.createfillarea('fillarea_ex1') # Create fillarea 'fillarea_ex1' that inherits from 'default'
+    ex=vcs.createfillarea('fillarea_ex1') # Create 'fillarea_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('fillarea') # should now contain the 'fillarea_ex1' fillarea
+    vcs.listelements('fillarea') # should now contain 'fillarea_ex1'
 Expecting:
     [...'fillarea_ex1'...]
 ok
@@ -139,20 +163,20 @@ Expecting:
     *******************End Isofill Names List**********************
 ok
 Trying:
-    ex=vcs.createisofill('isofill_ex1') # Create isofill 'isofill_ex1' that inherits from 'default'
+    ex=vcs.createisofill('isofill_ex1') # Create 'isofill_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('isofill') # should now contain the 'isofill_ex1' isofill
+    vcs.listelements('isofill') # should now contain 'isofill_ex1'
 Expecting:
     [...'isofill_ex1'...]
 ok
 Trying:
-    ex2=vcs.createisofill('isofill_ex2','polar') # create 'isofill_ex2' from 'polar' template
+    ex2=vcs.createisofill('isofill_ex2','polar') # create 'isofill_ex2'; inherits 'polar'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('isofill') # should now contain the 'isofill_ex2' isofill
+    vcs.listelements('isofill') # should now contain 'isofill_ex2'
 Expecting:
     [...'isofill_ex2'...]
 ok
@@ -164,20 +188,20 @@ Expecting:
     *******************End Isoline Names List**********************
 ok
 Trying:
-    ex=vcs.createisoline('isoline_ex1') # Create isoline 'isoline_ex1' that inherits from 'default'
+    ex=vcs.createisoline('isoline_ex1') # Create 'isoline_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('isoline') # should now contain the 'isoline_ex1' isoline
+    vcs.listelements('isoline') # should now contain 'isoline_ex1'
 Expecting:
     [...'isoline_ex1'...]
 ok
 Trying:
-    ex2=vcs.createisoline('isoline_ex2','polar') # create 'isoline_ex2' from 'polar' template
+    ex2=vcs.createisoline('isoline_ex2','polar') # create 'isoline_ex2'; inherits 'polar'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('isoline') # should now contain the 'isoline_ex2' isoline
+    vcs.listelements('isoline') # should now contain 'isoline_ex2'
 Expecting:
     [...'isoline_ex2'...]
 ok
@@ -189,20 +213,20 @@ Expecting:
     *******************End Line Names List**********************
 ok
 Trying:
-    ex=vcs.createline('line_ex1') # Create line 'line_ex1' that inherits from 'default'
+    ex=vcs.createline('line_ex1') # Create 'line_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('line') # should now contain the 'line_ex1' line
+    vcs.listelements('line') # should now contain 'line_ex1'
 Expecting:
     [...'line_ex1'...]
 ok
 Trying:
-    ex2=vcs.createline('line_ex2','red') # create 'line_ex2' from 'red' template
+    ex2=vcs.createline('line_ex2','red') # create 'line_ex2'; inherits 'red'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('line') # should now contain the 'line_ex2' line
+    vcs.listelements('line') # should now contain 'line_ex2'
 Expecting:
     [...'line_ex2'...]
 ok
@@ -214,20 +238,20 @@ Expecting:
     *******************End Marker Names List**********************
 ok
 Trying:
-    ex=vcs.createmarker('marker_ex1') # Create marker 'marker_ex1' that inherits from 'default'
+    ex=vcs.createmarker('marker_ex1') # Create 'marker_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('marker') # should now contain the 'marker_ex1' marker
+    vcs.listelements('marker') # should now contain 'marker_ex1'
 Expecting:
     [...'marker_ex1'...]
 ok
 Trying:
-    ex2=vcs.createmarker('marker_ex2','red') # create 'marker_ex2' from 'red' template
+    ex2=vcs.createmarker('marker_ex2','red') # create 'marker_ex2'; inherits 'red'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('marker') # should now contain the 'marker_ex2' marker
+    vcs.listelements('marker') # should now contain 'marker_ex2'
 Expecting:
     [...'marker_ex2'...]
 ok
@@ -239,20 +263,20 @@ Expecting:
     *******************End Meshfill Names List**********************
 ok
 Trying:
-    ex=vcs.createmeshfill('meshfill_ex1') # Create meshfill 'meshfill_ex1' that inherits from 'default'
+    ex=vcs.createmeshfill('meshfill_ex1') # Create 'meshfill_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('meshfill') # should now contain the 'meshfill_ex1' meshfill
+    vcs.listelements('meshfill') # should now contain 'meshfill_ex1'
 Expecting:
     [...'meshfill_ex1'...]
 ok
 Trying:
-    ex2=vcs.createmeshfill('meshfill_ex2','a_polar_meshfill') # create 'meshfill_ex2' from 'a_polar_meshfill' template
+    ex2=vcs.createmeshfill('meshfill_ex2','a_polar_meshfill') # create 'meshfill_ex2'; inherits 'a_polar_meshfill'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('meshfill') # should now contain the 'meshfill_ex2' meshfill
+    vcs.listelements('meshfill') # should now contain 'meshfill_ex2'
 Expecting:
     [...'meshfill_ex2'...]
 ok
@@ -264,20 +288,20 @@ Expecting:
     *******************End Projection Names List**********************
 ok
 Trying:
-    ex=vcs.createprojection('projection_ex1') # Create projection 'projection_ex1' that inherits from 'default'
+    ex=vcs.createprojection('projection_ex1') # Create 'projection_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('projection') # should now contain the 'projection_ex1' projection
+    vcs.listelements('projection') # should now contain 'projection_ex1'
 Expecting:
     [...'projection_ex1'...]
 ok
 Trying:
-    ex2=vcs.createprojection('projection_ex2','orthographic') # create 'projection_ex2' from 'orthographic' template
+    ex2=vcs.createprojection('projection_ex2','orthographic') # create 'projection_ex2'; inherits 'orthographic'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('projection') # should now contain the 'projection_ex2' projection
+    vcs.listelements('projection') # should now contain 'projection_ex2'
 Expecting:
     [...'projection_ex2'...]
 ok
@@ -289,11 +313,11 @@ Expecting:
     *******************End Scatter Names List**********************
 ok
 Trying:
-    ex=vcs.createscatter('scatter_ex1') # Create scatter 'scatter_ex1' that inherits from 'default'
+    ex=vcs.createscatter('scatter_ex1') # Create 'scatter_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('scatter') # should now contain the 'scatter_ex1' scatter
+    vcs.listelements('scatter') # should now contain 'scatter_ex1'
 Expecting:
     [...'scatter_ex1'...]
 ok
@@ -305,11 +329,11 @@ Expecting:
     *******************End Taylordiagram Names List**********************
 ok
 Trying:
-    ex=vcs.createtaylordiagram('taylordiagram_ex1') # Create taylordiagram 'taylordiagram_ex1' that inherits from 'default'
+    ex=vcs.createtaylordiagram('taylordiagram_ex1') # Create 'taylordiagram_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('taylordiagram') # should now contain the 'taylordiagram_ex1' taylordiagram
+    vcs.listelements('taylordiagram') # should now contain 'taylordiagram_ex1'
 Expecting:
     [...'taylordiagram_ex1'...]
 ok
@@ -321,20 +345,20 @@ Expecting:
     *******************End Template Names List**********************
 ok
 Trying:
-    ex=vcs.createtemplate('template_ex1') # Create template 'template_ex1' that inherits from 'default'
+    ex=vcs.createtemplate('template_ex1') # Create 'template_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('template') # should now contain the 'template_ex1' template
+    vcs.listelements('template') # should now contain 'template_ex1'
 Expecting:
     [...'template_ex1'...]
 ok
 Trying:
-    ex2=vcs.createtemplate('template_ex2','polar') # create 'template_ex2' from 'polar' template
+    ex2=vcs.createtemplate('template_ex2','polar') # create 'template_ex2'; inherits 'polar'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('template') # should now contain the 'template_ex2' template
+    vcs.listelements('template') # should now contain 'template_ex2'
 Expecting:
     [...'template_ex2'...]
 ok
@@ -345,7 +369,7 @@ Expecting:
     ...
     *******************End Textcombined Names List**********************
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1388, in vcs.manageElements.createtext
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1438, in vcs.manageElements.createtext
 Failed example:
     vcs.show('textcombined') # show all available textcombined
 Expected:
@@ -356,6 +380,27 @@ Got:
     *******************Textcombined Names List**********************
     *******************End Textcombined Names List**********************
 Trying:
+    try: # try to create a new textcombined, in case none exist
+        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+    except:
+        pass
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1442, in vcs.manageElements.createtext
+Failed example:
+    try: # try to create a new textcombined, in case none exist
+        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+    except:
+        pass
+Expected nothing
+Got:
+    <vcs.textcombined.Tc object at 0x118141230>
+Trying:
+    vcs.listelements('textcombined') # should now contain 'EXAMPLE_tt:::EXAMPLE_tto'
+Expecting:
+    [...'EXAMPLE_tt:::EXAMPLE_tto'...]
+ok
+Trying:
     vcs.show('textorientation') # show all available textorientation
 Expecting:
     *******************Textorientation Names List**********************
@@ -363,20 +408,20 @@ Expecting:
     *******************End Textorientation Names List**********************
 ok
 Trying:
-    ex=vcs.createtextorientation('textorientation_ex1') # Create textorientation 'textorientation_ex1' that inherits from 'default'
+    ex=vcs.createtextorientation('textorientation_ex1') # Create 'textorientation_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('textorientation') # should now contain the 'textorientation_ex1' textorientation
+    vcs.listelements('textorientation') # should now contain 'textorientation_ex1'
 Expecting:
     [...'textorientation_ex1'...]
 ok
 Trying:
-    ex2=vcs.createtextorientation('textorientation_ex2','bigger') # create 'textorientation_ex2' from 'bigger' template
+    ex2=vcs.createtextorientation('textorientation_ex2','bigger') # create 'textorientation_ex2'; inherits 'bigger'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('textorientation') # should now contain the 'textorientation_ex2' textorientation
+    vcs.listelements('textorientation') # should now contain 'textorientation_ex2'
 Expecting:
     [...'textorientation_ex2'...]
 ok
@@ -388,20 +433,20 @@ Expecting:
     *******************End Texttable Names List**********************
 ok
 Trying:
-    ex=vcs.createtexttable('texttable_ex1') # Create texttable 'texttable_ex1' that inherits from 'default'
+    ex=vcs.createtexttable('texttable_ex1') # Create 'texttable_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('texttable') # should now contain the 'texttable_ex1' texttable
+    vcs.listelements('texttable') # should now contain 'texttable_ex1'
 Expecting:
     [...'texttable_ex1'...]
 ok
 Trying:
-    ex2=vcs.createtexttable('texttable_ex2','bigger') # create 'texttable_ex2' from 'bigger' template
+    ex2=vcs.createtexttable('texttable_ex2','bigger') # create 'texttable_ex2'; inherits 'bigger'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('texttable') # should now contain the 'texttable_ex2' texttable
+    vcs.listelements('texttable') # should now contain 'texttable_ex2'
 Expecting:
     [...'texttable_ex2'...]
 ok
@@ -413,11 +458,11 @@ Expecting:
     *******************End Vector Names List**********************
 ok
 Trying:
-    ex=vcs.createvector('vector_ex1') # Create vector 'vector_ex1' that inherits from 'default'
+    ex=vcs.createvector('vector_ex1') # Create 'vector_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('vector') # should now contain the 'vector_ex1' vector
+    vcs.listelements('vector') # should now contain 'vector_ex1'
 Expecting:
     [...'vector_ex1'...]
 ok
@@ -429,11 +474,11 @@ Expecting:
     *******************End Xvsy Names List**********************
 ok
 Trying:
-    ex=vcs.createxvsy('xvsy_ex1') # Create xvsy 'xvsy_ex1' that inherits from 'default'
+    ex=vcs.createxvsy('xvsy_ex1') # Create 'xvsy_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('xvsy') # should now contain the 'xvsy_ex1' xvsy
+    vcs.listelements('xvsy') # should now contain 'xvsy_ex1'
 Expecting:
     [...'xvsy_ex1'...]
 ok
@@ -445,11 +490,11 @@ Expecting:
     *******************End Xyvsy Names List**********************
 ok
 Trying:
-    ex=vcs.createxyvsy('xyvsy_ex1') # Create xyvsy 'xyvsy_ex1' that inherits from 'default'
+    ex=vcs.createxyvsy('xyvsy_ex1') # Create 'xyvsy_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('xyvsy') # should now contain the 'xyvsy_ex1' xyvsy
+    vcs.listelements('xyvsy') # should now contain 'xyvsy_ex1'
 Expecting:
     [...'xyvsy_ex1'...]
 ok
@@ -461,11 +506,11 @@ Expecting:
     *******************End Yxvsx Names List**********************
 ok
 Trying:
-    ex=vcs.createyxvsx('yxvsx_ex1') # Create yxvsx 'yxvsx_ex1' that inherits from 'default'
+    ex=vcs.createyxvsx('yxvsx_ex1') # Create 'yxvsx_ex1'; inherits 'default'
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('yxvsx') # should now contain the 'yxvsx_ex1' yxvsx
+    vcs.listelements('yxvsx') # should now contain 'yxvsx_ex1'
 Expecting:
     [...'yxvsx_ex1'...]
 ok
@@ -477,8 +522,9 @@ Expecting:
     *******************End 1d Names List**********************
 ok
 Trying:
-    blue = vcs.get1d('blue_yxvsx')
-Expecting nothing
+    vcs.get1d('blue_yxvsx')
+Expecting:
+    <vcs.unified1D.G1d ...>
 ok
 Trying:
     a=vcs.init()
@@ -514,14 +560,14 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1656, in vcs.manageElements.get3d_dual_scalar
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1707, in vcs.manageElements.get3d_dual_scalar
 Failed example:
     a.plot(ex, slab1, slab2) # plot using specified 3d_dual_scalar object
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x119059398>
+    <vcs.displayplot.Dp object at 0x119a5bc58>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -552,14 +598,14 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1615, in vcs.manageElements.get3d_scalar
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1665, in vcs.manageElements.get3d_scalar
 Failed example:
     a.plot(ex, slab1) # plot using specified 3d_scalar object
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11857a168>
+    <vcs.displayplot.Dp object at 0x119013050>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -594,7 +640,7 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1696, in vcs.manageElements.get3d_vector
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1748, in vcs.manageElements.get3d_vector
 Failed example:
     a.plot(ex, slab1, slab2) # plot using specified 3d_vector object
 Expected:
@@ -603,7 +649,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11827f398>
+    <vcs.displayplot.Dp object at 0x1181efa28>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -863,30 +909,8 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    import cdms2 # Need cdms2 to create a slab
-Expecting nothing
-ok
-Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
-Expecting nothing
-ok
-Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
-Expecting nothing
-ok
-Trying:
-    a.plot(ex, slab1) # plot using specified projection object
-Expecting:
-    <vcs.displayplot.Dp ...>
-ok
-Trying:
     ex2=vcs.getprojection('orthographic')  # instance of 'orthographic' projection graphics method
 Expecting nothing
-ok
-Trying:
-    a.plot(ex2, slab1) # plot using specified projection object
-Expecting:
-    <vcs.displayplot.Dp ...>
 ok
 Trying:
     a=vcs.init()
@@ -948,24 +972,30 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.taylordiagram(ex) # plot using specified taylordiagram object
+    a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 255, in vcs.manageElements.gettaylordiagram
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 292, in vcs.manageElements.gettaylordiagram
 Failed example:
-    a.taylordiagram(ex) # plot using specified taylordiagram object
+    a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
 Exception raised:
     Traceback (most recent call last):
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
         compileflags, 1) in test.globs
       File "<doctest vcs.manageElements.gettaylordiagram[6]>", line 1, in <module>
-        a.taylordiagram(ex) # plot using specified taylordiagram object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1274, in taylordiagram
-        arglist = _determine_arg_list('taylordiagram', args)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 272, in _determine_arg_list
-        arglist[igraphics_method])
-    vcsError: Graphics method taylordiagram requires 1 slab.
+        a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1320, in taylordiagram
+        return self.__plot(arglist, parms)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3700, in __plot
+        t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1967, in plot
+        self.draw(canvas, data)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1207, in draw
+        d0 = float(data[i][0])
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/numpy/ma/core.py", line 4182, in __float__
+        raise TypeError("Only length-1 arrays can be converted "
+    TypeError: Only length-1 arrays can be converted to Python scalars
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -980,30 +1010,8 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    import cdms2 # Need cdms2 to create a slab
-Expecting nothing
-ok
-Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
-Expecting nothing
-ok
-Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
-Expecting nothing
-ok
-Trying:
-    a.plot(ex, slab1) # plot using specified template object
-Expecting:
-    <vcs.displayplot.Dp ...>
-ok
-Trying:
     ex2=vcs.gettemplate('polar')  # instance of 'polar' template graphics method
 Expecting nothing
-ok
-Trying:
-    a.plot(ex2, slab1) # plot using specified template object
-Expecting:
-    <vcs.displayplot.Dp ...>
 ok
 Trying:
     a=vcs.init()
@@ -1015,23 +1023,21 @@ Expecting:
     [...]
 ok
 Trying:
-    try:
-       vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
-Expecting:
-    <vcs.textcombined.Tc ...>
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1500, in vcs.manageElements.gettextcombined
-Failed example:
-    try:
-       vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.manageElements.gettextcombined[2]>", line 2
+    try: # try to create a new textcombined, in case none exist
         vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
-                                                                         ^
-    SyntaxError: invalid syntax
+    except:
+        pass
+Expecting nothing
+ok
+Trying:
+    ex=vcs.gettextcombined('EXAMPLE_tt', 'EXAMPLE_tto')  # instance of 'EXAMPLE_tt:::EXAMPLE_tto' textcombined secondary method
+Expecting nothing
+ok
+Trying:
+    a.textcombined(ex) # plot using specified textcombined object
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1238,9 +1244,8 @@ Trying:
     vcs.setLineAttributes(new_1d, 'continents')
 Expecting nothing
 ok
-23 items had no tests:
+22 items had no tests:
     vcs.manageElements
-    vcs.manageElements.check_name_source
     vcs.manageElements.removeCp
     vcs.manageElements.removeG
     vcs.manageElements.removeG1d
@@ -1262,7 +1267,8 @@ ok
     vcs.manageElements.removeTm
     vcs.manageElements.removeTo
     vcs.manageElements.removeTt
-42 items passed all tests:
+44 items passed all tests:
+   4 tests in vcs.manageElements.check_name_source
    4 tests in vcs.manageElements.create1d
    3 tests in vcs.manageElements.create3d_dual_scalar
    3 tests in vcs.manageElements.create3d_scalar
@@ -1294,9 +1300,10 @@ ok
    6 tests in vcs.manageElements.getline
    6 tests in vcs.manageElements.getmarker
    9 tests in vcs.manageElements.getmeshfill
-   9 tests in vcs.manageElements.getprojection
+   4 tests in vcs.manageElements.getprojection
    8 tests in vcs.manageElements.getscatter
-   9 tests in vcs.manageElements.gettemplate
+   4 tests in vcs.manageElements.gettemplate
+   5 tests in vcs.manageElements.gettextcombined
    4 tests in vcs.manageElements.gettextorientation
    4 tests in vcs.manageElements.gettexttable
    8 tests in vcs.manageElements.getvector
@@ -1306,14 +1313,12 @@ ok
    3 tests in vcs.manageElements.removeobject
    7 tests in vcs.manageElements.setLineAttributes
 **********************************************************************
-6 items had failures:
-   4 of   4 in vcs.manageElements.createtext
+5 items had failures:
+   2 of   3 in vcs.manageElements.createtext
    1 of   8 in vcs.manageElements.get3d_dual_scalar
    1 of   7 in vcs.manageElements.get3d_scalar
    1 of   8 in vcs.manageElements.get3d_vector
    1 of   7 in vcs.manageElements.gettaylordiagram
-   4 of   6 in vcs.manageElements.gettextcombined
-261 tests in 71 items.
-249 passed and 12 failed.
-***Test Failed*** 12 failures.
-Done logging manageElements.md
+253 tests in 71 items.
+247 passed and 6 failed.
+***Test Failed*** 6 failures.
