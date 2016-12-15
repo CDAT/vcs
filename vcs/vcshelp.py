@@ -27,8 +27,7 @@ import queries
 
 
 def objecthelp(*arg):
-    """
-    Print the documentation of each object in the argument list.
+    """Print the documentation of each object in the argument list.
     Prints a blank line if no documentation.
 
     :Example:
@@ -36,9 +35,8 @@ def objecthelp(*arg):
         .. doctest:: vcshelp_objecthelp
 
             >>> fa=vcs.getfillarea()
-            >>> vcs.objecthelp(fa)
-            <BLANKLINE>
-            The Fillarea class object...
+            >>> vcs.objecthelp(fa) # print fillarea class documentation
+            The Fillarea class ...
 
     :param arg: Instance(s) of VCS object(s) to display the documentation for.
         Multiple objects should be comma-delimited.
@@ -49,7 +47,27 @@ def objecthelp(*arg):
 
 
 def help(*arg):
+    """Prints the documentation for named VCS class(es) and/or function(s).
 
+    :Example:
+
+        .. doctest:: vcs_vcshelp_help
+
+            >>> vcs.help('fillareaobject') # show fillarea help
+            The Fillarea class ...
+            >>> vcs.help('getboxfill')
+
+
+    :param arg: One or multiple strings containing the name(s) of object(s)
+        and/or function(s) to view the documentation for.
+
+        .. note::
+
+            To get help on a VCS object class, you must supply a string that
+            is the name of that class, plus the word "object".
+            (i.e. vcs.help("templateobject") will print the documentation for
+            the template class)
+    """
     if (len(arg) == 0):
         b = ['fillarea', 'line', 'marker', 'textcombined', 'textorientation',
              'texttable', 'projection']

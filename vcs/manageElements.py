@@ -96,8 +96,7 @@ def check_name_source(name, source, typ):
 
 
 def createtemplate(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -117,8 +116,7 @@ createtemplate.__doc__ = createtemplate.__doc__ % xmldocs.create_docs['template'
 
 
 def gettemplate(Pt_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Pt_name_src: String name of an existing template VCS object
     :type Pt_name_src: :py:class:`str`
@@ -137,8 +135,7 @@ gettemplate.__doc__ = gettemplate.__doc__ % xmldocs.get_docs['template']
 
 
 def createprojection(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -157,8 +154,7 @@ createprojection.__doc__ = createprojection.__doc__ % xmldocs.create_docs['proje
 
 
 def getprojection(Proj_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Proj_name_src: String name of an existing VCS projection object
     :type Proj_name_src: :py:class:`str`
@@ -178,8 +174,7 @@ getprojection.__doc__ = getprojection.__doc__ % xmldocs.get_docs['projection']
 
 
 def createboxfill(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -190,37 +185,21 @@ def createboxfill(name=None, source='default'):
 
     :return: A boxfill graphics method object
     :rtype: vcs.boxfill.Gfb
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
 
     name, source = check_name_source(name, source, 'boxfill')
     return boxfill.Gfb(name, source)
-createboxfill.__doc__ = createboxfill.__doc__ % (
-    xmldocs.create_docs['boxfill'],
-    xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.create_GM_input, xmldocs.boxfill_output)
+createboxfill.__doc__ = createboxfill.__doc__ % xmldocs.create_docs['boxfill']
 
 
 def getboxfill(Gfb_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gfb_name_src: String name of an existing boxfill VCS object
     :type Gfb_name_src: :py:class:`str`
 
     :return: A pre-existing boxfill graphics method
     :rtype: vcs.boxfill.Gfb
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     # Check to make sure the argument passed in is a STRING
     if not isinstance(Gfb_name_src, str):
@@ -229,14 +208,11 @@ def getboxfill(Gfb_name_src='default'):
     if Gfb_name_src not in vcs.elements["boxfill"].keys():
         raise "The boxfill method: '%s' does not seem to exist"
     return vcs.elements["boxfill"][Gfb_name_src]
-getboxfill.__doc__ = getboxfill.__doc__ % (
-    xmldocs.get_docs['boxfill'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.get_GM_input, xmldocs.boxfill_output)
+getboxfill.__doc__ = getboxfill.__doc__ % xmldocs.get_docs['boxfill']
 
 
 def createtaylordiagram(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -266,8 +242,7 @@ createtaylordiagram.__doc__ = createtaylordiagram.__doc__ % xmldocs.create_docs[
 
 
 def gettaylordiagram(Gtd_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gtd_name_src: String name of an existing taylordiagram VCS object
     :type Gtd_name_src: :py:class:`str`
@@ -290,8 +265,7 @@ gettaylordiagram.__doc__ = gettaylordiagram.__doc__ % xmldocs.get_docs['taylordi
 
 
 def createmeshfill(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -309,8 +283,7 @@ createmeshfill.__doc__ = createmeshfill.__doc__ % xmldocs.create_docs['meshfill'
 
 
 def getmeshfill(Gfm_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gfm_name_src: String name of an existing meshfill VCS object
     :type Gfm_name_src: :py:class:`str`
@@ -331,8 +304,7 @@ getmeshfill.__doc__ = getmeshfill.__doc__ % xmldocs.get_docs['meshfill']
 
 
 def createisofill(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -343,36 +315,21 @@ def createisofill(name=None, source='default'):
 
     :returns: An isofill graphics method
     :rtype: vcs.isofill.Gfi
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
 
     name, source = check_name_source(name, source, 'isofill')
     return isofill.Gfi(name, source)
-createisofill.__doc__ = createisofill.__doc__ % (
-    xmldocs.create_docs['isofill'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core,
-    xmldocs.axesconvert, xmldocs.create_GM_input, xmldocs.isofill_output)
+createisofill.__doc__ = createisofill.__doc__ % xmldocs.create_docs['isofill']
 
 
 def getisofill(Gfi_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gfi_name_src: String name of an existing isofill VCS object
     :type Gfi_name_src: :py:class:`str`
 
     :returns: The specified isofill VCS object
     :rtype: vcs.isofill.Gfi
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
 
     # Check to make sure the argument passed in is a STRING
@@ -382,14 +339,11 @@ def getisofill(Gfi_name_src='default'):
     if Gfi_name_src not in vcs.elements["isofill"]:
         raise ValueError("The isofill '%s' does not exists" % Gfi_name_src)
     return vcs.elements["isofill"][Gfi_name_src]
-getisofill.__doc__ = getisofill.__doc__ % (
-    xmldocs.get_docs['isofill'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.get_GM_input, xmldocs.isofill_output)
+getisofill.__doc__ = getisofill.__doc__ % xmldocs.get_docs['isofill']
 
 
 def createisoline(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -400,36 +354,22 @@ def createisoline(name=None, source='default'):
 
     :returns: An isoline graphics method object
     :rtype: vcs.isoline.Gi
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
 
     name, source = check_name_source(name, source, 'isoline')
     return isoline.Gi(name, source)
-createisoline.__doc__ = createisoline.__doc__ % (
-    xmldocs.create_docs['isoline'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.create_GM_input, xmldocs.isoline_output)
+createisoline.__doc__ = createisoline.__doc__ % xmldocs.create_docs['isoline']
+
 
 
 def getisoline(Gi_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gi_name_src: String name of an existing isoline VCS object
     :type Gi_name_src: :py:class:`str`
 
     :returns: The requested isoline VCS object
     :rtype: vcs.isoline.Gi
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
 
     # Check to make sure the argument passed in is a STRING
@@ -438,14 +378,11 @@ def getisoline(Gi_name_src='default'):
     if Gi_name_src not in vcs.elements["isoline"]:
         raise ValueError("The isoline '%s' does not exists" % Gi_name_src)
     return vcs.elements["isoline"][Gi_name_src]
-getisoline.__doc__ = getisoline.__doc__ % (
-    xmldocs.get_docs['isoline'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.get_GM_input, xmldocs.isoline_output)
+getisoline.__doc__ = getisoline.__doc__ % xmldocs.get_docs['isoline']
 
 
 def create1d(name=None, source='default'):
-    """
-    Creates a new :py:class:`vcs.unified1d.G1d` object called name, and inheriting from source.
+    """Creates a new :py:class:`vcs.unified1d.G1d` object called name, and inheriting from source.
 
     :Example:
 
@@ -476,8 +413,7 @@ def create1d(name=None, source='default'):
 
 
 def get1d(name):
-    """
-    Given name, returns a :py:class:`vcs.unified1d.G1d` from vcs with that name.
+    """Given name, returns a :py:class:`vcs.unified1d.G1d` from vcs with that name.
     Unlike other VCS 'get' functions, name cannot be None when calling get1d().
 
     :Example:
@@ -507,8 +443,7 @@ def get1d(name):
 
 
 def createxyvsy(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -520,12 +455,6 @@ def createxyvsy(name=None, source='default'):
 
     :returns: A XYvsY graphics method object
     :rtype: vcs.unified1D.G1d
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     try:
         gm = vcs.create1d(name, source)
@@ -539,40 +468,28 @@ def createxyvsy(name=None, source='default'):
             raise ve
     gm.flip = True
     return gm
-createxyvsy.__doc__ = createxyvsy.__doc__ % (
-    xmldocs.create_docs['xyvsy'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.create_GM_input, xmldocs.xyvsy_output)
+createxyvsy.__doc__ = createxyvsy.__doc__ % xmldocs.create_docs['xyvsy']
 
 
 def getxyvsy(GXy_name_src='default'):
-    """
-    %s
+    """%s
 
     :param GXy_name_src: String name of an existing Xyvsy graphics method
     :type GXy_name_src: :py:class:`str`
 
     :returns: An XYvsY graphics method object
     :rtype: vcs.unified1D.G1d
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     gm = vcs.get1d(GXy_name_src)
     if gm.g_type != "xyvsy":
         # Already existed when name_src was created, most likely
         return vcs.get1d(GXy_name_src + "_xyvsy")
     return gm
-getxyvsy.__doc__ = getxyvsy.__doc__ % (
-    xmldocs.get_docs['xyvsy'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.get_GM_input, xmldocs.xyvsy_output)
+getxyvsy.__doc__ = getxyvsy.__doc__ % xmldocs.get_docs['xyvsy']
 
 
 def createyxvsx(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -583,12 +500,6 @@ def createyxvsx(name=None, source='default'):
 
     :returns: A YXvsX graphics method object
     :rtype: vcs.unified1D.G1d
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     try:
         gm = vcs.create1d(name, source)
@@ -601,39 +512,29 @@ def createyxvsx(name=None, source='default'):
         else:
             raise ve
     return gm
-createyxvsx.__doc__ = createyxvsx.__doc__ % (
-    xmldocs.create_docs['yxvsx'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.create_GM_input, xmldocs.yxvsx_output)
+createyxvsx.__doc__ = createyxvsx.__doc__ % xmldocs.create_docs['yxvsx']
+
 
 
 def getyxvsx(GYx_name_src='default'):
-    """
-    %s
+    """%s
 
     :param GYx_name_src: String name of an existing Yxvsx graphics method
     :type GYx_name_src: str
 
     :return: A Yxvsx graphics method object
     :rtype: vcs.unified1D.G1d
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     gm = vcs.get1d(GYx_name_src)
     if gm.g_type != "yxvsx":
         return vcs.get1d(GYx_name_src + "_yxvsx")
     return gm
-getyxvsx.__doc__ = getyxvsx.__doc__ % (
-    xmldocs.get_docs['yxvsx'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.get_GM_input, xmldocs.yxvsx_output)
+getyxvsx.__doc__ = getyxvsx.__doc__ % xmldocs.get_docs['yxvsx']
+    
 
 
 def createxvsy(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -644,12 +545,6 @@ def createxvsy(name=None, source='default'):
 
     :returns: A XvsY graphics method object
     :rtype: vcs.unified1D.G1d
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     try:
         gm = vcs.create1d(name, source)
@@ -662,39 +557,30 @@ def createxvsy(name=None, source='default'):
         else:
             raise ve
     return gm
-createxvsy.__doc__ = createxvsy.__doc__ % (
-    xmldocs.create_docs['xvsy'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.create_GM_input, xmldocs.xvsy_output)
+createxvsy.__doc__ = createxvsy.__doc__ % xmldocs.create_docs['xvsy']
+    
 
 
 def getxvsy(GXY_name_src='default'):
-    """
-    %s
+    """%s
 
     :param GXY_name_src: String name of a 1d graphics method
     :type GXY_name_src: :py:class:`str`
 
     :returns: A XvsY graphics method object
     :rtype: vcs.unified1D.G1d
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     gm = vcs.get1d(GXY_name_src)
     # Deliberately yxvsx here; xvsy is just an alias
     if gm.g_type != "yxvsx":
         return vcs.get1d(GXY_name_src + "_xvsy")
     return gm
-getxvsy.__doc__ = getxvsy.__doc__ % (
-    xmldocs.get_docs['xvsy'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.get_GM_input, xmldocs.xvsy_output)
+getxvsy.__doc__ = getxvsy.__doc__ % xmldocs.get_docs['xvsy']
+    
 
 
 def createvector(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -712,8 +598,7 @@ createvector.__doc__ = createvector.__doc__ % xmldocs.create_docs['vector']
 
 
 def getvector(Gv_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gv_name_src: String name of an existing vector VCS object
     :type Gv_name_src: :py:class:`str`
@@ -732,8 +617,7 @@ getvector.__doc__ = getvector.__doc__ % xmldocs.get_docs['vector']
 
 
 def createscatter(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -744,12 +628,6 @@ def createscatter(name=None, source='default'):
 
     :return: A scatter graphics method
     :rtype: vcs.unified1D.G1d
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     try:
         gm = vcs.create1d(name, source)
@@ -763,42 +641,32 @@ def createscatter(name=None, source='default'):
             raise ve
     gm.linewidth = 0
     return gm
-createscatter.__doc__ = createscatter.__doc__ % (
-    xmldocs.create_docs['scatter'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.create_GM_input, xmldocs.scatter_output)
+createscatter.__doc__ = createscatter.__doc__ % xmldocs.create_docs['scatter']
+    
 
 
 def getscatter(GSp_name_src='default'):
-    """
-    %s
+    """%s
 
     :param GSp_name_src: String name of an existing scatter VCS object.
     :type GSp_name_src: :py:class:`str`
 
     :returns: A scatter graphics method object
     :rtype: vcs.unified1D.G1d
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     gm = vcs.get1d(GSp_name_src)
     if gm.g_type != "scatter":
         return vcs.get1d(GSp_name_src + "_scatter")
     return gm
-getscatter.__doc__ = getscatter.__doc__ % (
-    xmldocs.get_docs['scatter'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.get_GM_input, xmldocs.scatter_output)
+getscatter.__doc__ = getscatter.__doc__ % xmldocs.get_docs['scatter']
+    
 
 
 def createline(name=None, source='default', ltype=None,
                width=None, color=None, priority=None,
                viewport=None, worldcoordinate=None,
                x=None, y=None, projection=None):
-    """
-    %s
+    """%s
 
     :param name: Name of created object
     :type name: :py:class:`str`
@@ -836,7 +704,6 @@ def createline(name=None, source='default', ltype=None,
 
     :returns: A VCS line secondary method object
     :rtype: vcs.line.Tl
-
     """
     name, source = check_name_source(name, source, 'line')
 
@@ -864,8 +731,7 @@ createline.__doc__ = createline.__doc__ % xmldocs.create_docs['line']
 
 
 def setLineAttributes(to, l):
-    """
-    Set attributes linecolor, linewidth and linetype from line l on object to.
+    """Set attributes linecolor, linewidth and linetype from line l on object to.
 
     :Example:
 
@@ -914,8 +780,7 @@ def getline(name='default', ltype=None, width=None, color=None,
             priority=None, viewport=None,
             worldcoordinate=None,
             x=None, y=None):
-    """
-    %s
+    """%s
 
     :param name: Name of created object
     :type name: :py:class:`str`
@@ -982,8 +847,7 @@ def createmarker(name=None, source='default', mtype=None,
                  size=None, color=None, priority=None,
                  viewport=None, worldcoordinate=None,
                  x=None, y=None, projection=None):
-    """
-    %s
+    """%s
 
     :param name: Name of created object
     :type name: :py:class:`str`
@@ -1048,8 +912,7 @@ def getmarker(name='default', mtype=None, size=None, color=None,
               priority=None, viewport=None,
               worldcoordinate=None,
               x=None, y=None):
-    """
-    %s
+    """%s
 
     :param name: Name of created object
     :type name: :py:class:`str`
@@ -1117,8 +980,7 @@ def createfillarea(name=None, source='default', style=None,
                    index=None, color=None, priority=None,
                    viewport=None, worldcoordinate=None,
                    x=None, y=None):
-    """
-    %s
+    """%s
 
     :param name: Name of created object
     :type name: :py:class:`str`
@@ -1185,8 +1047,7 @@ def getfillarea(name='default', style=None,
                 priority=None, viewport=None,
                 worldcoordinate=None,
                 x=None, y=None):
-    """
-    %s
+    """%s
 
     :param name: String name of an existing fillarea VCS object
     :type name: :py:class:`str`
@@ -1219,7 +1080,6 @@ def getfillarea(name='default', style=None,
 
     :returns: A fillarea secondary object
     :rtype: vcs.fillarea.Tf
-
     """
 
     # Check to make sure the argument passed in is a STRING
@@ -1253,8 +1113,7 @@ def createtexttable(name=None, source='default', font=None,
                     spacing=None, expansion=None, color=None, priority=None,
                     viewport=None, worldcoordinate=None,
                     x=None, y=None):
-    """
-    %s
+    """%s
 
     :param name: Name of created object
     :type name: :py:class:`str`
@@ -1325,8 +1184,7 @@ def gettexttable(name='default', font=None,
                  priority=None, viewport=None,
                  worldcoordinate=None,
                  x=None, y=None):
-    """
-    %s
+    """%s
 
     :param name: String name of an existing VCS texttable object
     :type name: :py:class:`str`
@@ -1372,8 +1230,7 @@ gettexttable.__doc__ = gettexttable.__doc__ % xmldocs.get_docs['texttable']
 
 
 def createtextorientation(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -1393,8 +1250,7 @@ createtextorientation.__doc__ = createtextorientation.__doc__ % xmldocs.create_d
 
 
 def gettextorientation(To_name_src='default'):
-    """
-    %s
+    """%s
 
     :param To_name_src: String name of an existing textorientation VCS object
     :type To_name_src: :py:class:`str`
@@ -1419,8 +1275,7 @@ def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_sourc
                        font=None, spacing=None, expansion=None, color=None,
                        priority=None, viewport=None, worldcoordinate=None, x=None, y=None,
                        height=None, angle=None, path=None, halign=None, valign=None, projection=None):
-    """
-    %s
+    """%s
 
     :param Tt_name: Name of created object
     :type Tt_name: :py:class:`str`
@@ -1528,8 +1383,7 @@ def gettextcombined(Tt_name_src='default', To_name_src=None, string=None, font=N
                     expansion=None, color=None,
                     priority=None, viewport=None, worldcoordinate=None, x=None, y=None,
                     height=None, angle=None, path=None, halign=None, valign=None):
-    """
-    %s
+    """%s
 
     :param Tt_name_src: Name of created object
     :type Tt_name_src: :py:class:`str`
@@ -1639,8 +1493,7 @@ gettext = gettextcombined
 
 
 def get3d_scalar(Gfdv3d_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gfdv3d_name_src: String name of an existing 3d_scalar VCS object.
     :type Gfdv3d_name_src: str
@@ -1661,8 +1514,7 @@ get3d_scalar.__doc__ = get3d_scalar.__doc__ % xmldocs.get_docs['3d_scalar']
 
 
 def create3d_scalar(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -1680,8 +1532,7 @@ create3d_scalar.__doc__ = create3d_scalar.__doc__ % xmldocs.create_docs['3d_scal
 
 
 def get3d_dual_scalar(Gfdv3d_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gfdv3d_name_src: String name of an existing 3d_dual_scalar VCS object
     :type Gfdv3d_name_src: :py:class:`str`
@@ -1701,8 +1552,7 @@ get3d_dual_scalar.__doc__ = get3d_dual_scalar.__doc__ % xmldocs.get_docs['3d_dua
 
 
 def create3d_dual_scalar(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -1721,8 +1571,7 @@ create3d_dual_scalar.__doc__ = create3d_dual_scalar.__doc__ % xmldocs.create_doc
 
 
 def get3d_vector(Gfdv3d_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gfdv3d_name_src: String name of an existing 3d_vector VCS object
     :type Gfdv3d_name_src: :py:class:`str`
@@ -1743,8 +1592,7 @@ get3d_vector.__doc__ = get3d_vector.__doc__ % xmldocs.get_docs['3d_vector']
 
 
 def create3d_vector(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
     :type name: :py:class:`str`
@@ -1769,8 +1617,7 @@ create3d_vector.__doc__ = create3d_vector.__doc__ % xmldocs.create_docs['3d_vect
 
 
 def createcolormap(Cp_name=None, Cp_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Cp_name: The name of the created object
     :type Cp_name: :py:class:`str`
@@ -1789,8 +1636,7 @@ createcolormap.__doc__ = createcolormap.__doc__ % xmldocs.create_docs['colormap'
 
 
 def getcolormap(Cp_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Cp_name_src: String name of an existing colormap VCS object
     :type Cp_name_src: :py:class:`str`
@@ -1912,17 +1758,11 @@ def removeP(obj):
 
 
 def removeobject(obj):
-    """
-    The user has the ability to create primary and secondary class
+    """The user has the ability to create primary and secondary class
     objects. The function allows the user to remove these objects
     from the appropriate class list.
 
     .. note::
-
-        To remove the object completely from Python, remember to
-        use the "del" function.
-
-    .. admonition:: Also note
 
         The user is not allowed to remove a "default" class
         object.

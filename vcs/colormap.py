@@ -251,7 +251,7 @@ class Cp(object):
         return self._index
 
     def setindex(self, value):
-        # usually we cannot set index, but there is an exception for lading
+        # usually we cannot set index, but there is an exception for loading
         # from json files
         if not(isinstance(value, dict) and value.keys() == [u'data', ]):
             raise Exception("invalid")

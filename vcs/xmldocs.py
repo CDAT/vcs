@@ -1,86 +1,86 @@
 plot_keywords_doc = """
     :param xaxis: Axis object to replace the slab -1 dim axis.
-        Keyword parameter.
+         (**keyword parameter**)
     :param yaxis: Axis object to replace the slab -2 dim axis, only if slab has more than 1D.
-        Keyword parameter.
+         (**keyword parameter**)
     :param zaxis: Axis object to replace the slab -3 dim axis, only if slab has more than 2D.
-        Keyword parameter.
+         (**keyword parameter**)
     :param taxis: Axis object to replace the slab -4 dim axis, only if slab has more than 3D.
-        Keyword parameter.
+         (**keyword parameter**)
     :param waxis: Axis object to replace the slab -5 dim axis, only if slab has more than 4D.
-        Keyword parameter.
+         (**keyword parameter**)
     :param xrev: reverse x axis.
-        Keyword parameter.
+         (**keyword parameter**)
     :param yrev: reverse y axis, only if slab has more than 1D.
-        Keyword parameter.
+         (**keyword parameter**)
     :param xarray: Values to use instead of x axis.
-        Keyword parameter.
+         (**keyword parameter**)
     :param yarray: Values to use instead of y axis, only if var has more than 1D.
-        Keyword parameter.
+         (**keyword parameter**)
     :param zarray: Values to use instead of z axis, only if var has more than 2D.
-        Keyword parameter.
+         (**keyword parameter**)
     :param tarray: Values to use instead of t axis, only if var has more than 3D.
-        Keyword parameter.
+         (**keyword parameter**)
     :param warray: Values to use instead of w axis, only if var has more than 4D.
-        Keyword parameter.
+         (**keyword parameter**)
     :param continents: continents type number.
-        Keyword parameter.
+         (**keyword parameter**)
     :param name: replaces variable name on plot.
-        Keyword parameter.
+         (**keyword parameter**)
     :param time: replaces time name on plot.
-        Keyword parameter.
+         (**keyword parameter**)
     :param units: replaces units value on plot.
-        Keyword parameter.
+         (**keyword parameter**)
     :param ymd: replaces year/month/day on plot.
-        Keyword parameter.
+         (**keyword parameter**)
     :param hms: replaces hh/mm/ss on plot.
-        Keyword parameter.
+         (**keyword parameter**)
     :param file_comment: replaces file_comment on plot.
-        Keyword parameter.
+         (**keyword parameter**)
     :param xbounds: Values to use instead of x axis bounds values.
-        Keyword parameter.
+         (**keyword parameter**)
     :param ybounds: Values to use instead of y axis bounds values (if exist).
-        Keyword parameter.
+         (**keyword parameter**)
     :param xname: replace xaxis name on plot.
-        Keyword parameter.
+         (**keyword parameter**)
     :param yname: replace yaxis name on plot (if exists).
-        Keyword parameter.
+         (**keyword parameter**)
     :param zname: replace zaxis name on plot (if exists).
-        Keyword parameter.
+         (**keyword parameter**)
     :param tname: replace taxis name on plot (if exists).
-        Keyword parameter.
+         (**keyword parameter**)
     :param wname: replace waxis name on plot (if exists).
-        Keyword parameter.
+         (**keyword parameter**)
     :param xunits: replace xaxis units on plot.
-        Keyword parameter.
+         (**keyword parameter**)
     :param yunits: replace yaxis units on plot (if exists).
-        Keyword parameter.
+         (**keyword parameter**)
     :param zunits: replace zaxis units on plot (if exists).
-        Keyword parameter.
+         (**keyword parameter**)
     :param tunits: replace taxis units on plot (if exists).
-        Keyword parameter.
+         (**keyword parameter**)
     :param wunits: replace waxis units on plot (if exists).
-        Keyword parameter.
+         (**keyword parameter**)
     :param xweights: replace xaxis weights used for computing mean.
-        Keyword parameter.
+         (**keyword parameter**)
     :param yweights: replace xaxis weights used for computing mean.
-        Keyword parameter.
+         (**keyword parameter**)
     :param comment1: replaces comment1 on plot.
-        Keyword parameter.
+         (**keyword parameter**)
     :param comment2: replaces comment2 on plot.
-        Keyword parameter.
+         (**keyword parameter**)
     :param comment3: replaces comment3 on plot.
-        Keyword parameter.
+         (**keyword parameter**)
     :param comment4: replaces comment4 on plot.
-        Keyword parameter.
+         (**keyword parameter**)
     :param long_name: replaces long_name on plot.
-        Keyword parameter.
+         (**keyword parameter**)
     :param grid: replaces array grid (if exists).
-        Keyword parameter.
+         (**keyword parameter**)
     :param bg: plots in background mode.
-        Keyword parameter.
+         (**keyword parameter**)
     :param ratio: sets the y/x ratio ,if passed as a string with 't' at the end, will aslo moves the ticks.
-        Keyword parameter.
+         (**keyword parameter**)
     :type xaxis: cdms2.axis.TransientAxis
     :type yaxis: cdms2.axis.TransientAxis
     :type zaxis: cdms2.axis.TransientAxis
@@ -265,8 +265,8 @@ xyscaledoc = """
         .. doctest:: xyscale_%s
 
             >>> a=vcs.init()
-            >>> ex=a.create%s('xyscale_ex') # create a boxfill to work with
-            >>> ex.xyscale(xat='linear', yat='linear') # set xaxisconvert and yaxisconvert to 'linear'
+            >>> ex=a.create%s('xyscale_ex') # create a %s to work with
+            >>> ex.xyscale(xat='linear', yat='linear')
 
     :param xat: Set value for x axis conversion.
     :type xat: str
@@ -408,8 +408,9 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             target_dict[obj_name] = docstring % d
             d.clear()
 
-# contains VCS object details used to build Example doctests and fill in docstrings
+# obj_details contains VCS object details used to build Example doctests and fill in docstrings
 #   Keys:
+#       "graphics method" / "secondary method" : These top-level keys specify the type of objects described within
 #       "callable"(bool): specifies whether the object has a self-named plotting function, i.e. fillarea()
 #       "parent"(str): specifies the name of the object to be used in inheritance for a first example.
 #           Usually 'default', but it can change based on situation.
@@ -669,8 +670,7 @@ queries_is_doc = """
     :rtype: int
     """
 
-get_methods_doc = """
-    VCS contains a list of %(type)ss. This function will create a
+get_methods_doc = """VCS contains a list of %(type)ss. This function will create a
     %(sp_name)s class object from an existing VCS %(sp_name)s %(type)s. If
     no %(sp_name)s name is given, then %(parent)s %(sp_name)s will be used.
 
@@ -717,6 +717,7 @@ get_docs = {}
 docstrings['get'] = [get_docs, get_methods_doc]
 create_docs = {}
 docstrings['create'] = [create_docs, create_methods_doc]
+
 # populate all the docstrings
 for method in docstrings.keys():
     populate_docstrings(obj_details, docstrings[method][0], docstrings[method][1], method)
@@ -904,7 +905,7 @@ plot_2_1D_options = """
 #                                                                           #
 #############################################################################
 plot_output = """
-    :return: Display Plot object representing the plot.
+    :return: A VCS displayplot object.
     :rtype: vcs.displayplot.Dp
     """
 

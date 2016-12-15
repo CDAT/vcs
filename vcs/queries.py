@@ -178,11 +178,9 @@ def isplot(pobj):
         .. doctest:: queries_isplot
 
             >>> a=vcs.init()
-            >>> import cdms2 # need this to make a slab for a boxfill plot
-            >>> f = cdms2.open(vcs.sample_data + '/clt.nc') # open a variable file
-            >>> v = f('v') # create a slab from the variable file
-            >>> dsp_plot=(a.getboxfill(), v) # plot a boxfill. Should return vcs.displayplot.Dp.
-            >>> vcs.queries.isplot(dsp_plot)
+            >>> array=[range(10) for _ in range(10)]
+            >>> dsp=a.plot(array) # plotting should return a displayplot object
+            >>> vcs.queries.isplot(dsp)
             1
 
     :param obj: A VCS object

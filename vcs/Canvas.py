@@ -1,13 +1,7 @@
 """
-Canvas
-------
-
     Canvas objects are the 'visualization' component of VCS. Canvases allow the user to take data and plot it on a
     visible window. This gives users an easy way to preview how changes to data representation in VCS will change the
     visualization of that data.
-
-    Usually created using :py:func:`vcs.init`, this object provides easy access
-    to the functionality of the entire VCS module.
 """
 import warnings
 import numpy.ma
@@ -46,8 +40,7 @@ import subprocess
 import inspect
 import VCS_validation_functions
 from xmldocs import plot_keywords_doc, graphics_method_core, axesconvert, xaxisconvert, \
-    plot_1D_input, plot_2D_input, plot_output, plot_2_1D_input, \
-    plot_2_1D_options
+    plot_1D_input, plot_2D_input, plot_output, plot_2_1D_input, plot_2_1D_options
 gui_canvas_closed = 0
 canvas_closed = 0
 import vcsaddons  # noqa
@@ -108,7 +101,7 @@ def dictionarytovcslist(dictionary, name):
 
 
 def _determine_arg_list(g_name, actual_args):
-    "Determine what is in the argument list for plotting graphics methods"
+    """Determine what is in the argument list for plotting graphics methods"""
 
     itemplate_name = 2
     igraphics_method = 3
@@ -292,8 +285,7 @@ def _process_keyword(obj, target, source, keyargs, default=None):
 
 
 class Canvas(object):
-    """
-    Usually created using :py:func:`vcs.init`, this object provides easy access
+    """Usually created using :py:func:`vcs.init`, this object provides easy access
     to the functionality of the entire VCS module:
 
     See :py:func:`vcs.Canvas.Canvas.plot` for more information on the type of
@@ -480,8 +472,7 @@ class Canvas(object):
         self.interact(*args, **kargs)
 
     def interact(self, *args, **kargs):
-        """
-        Puts the canvas into interactive mode.
+        """Puts the canvas into interactive mode.
 
         :param args:
         :param kargs:
@@ -795,8 +786,7 @@ class Canvas(object):
         return tv
 
     def objecthelp(self, *arg):
-        """
-        Print out information on the VCS object. See example below on its use.
+        """Print out information on the VCS object. See example below on its use.
 
         :Example:
 
@@ -945,8 +935,7 @@ class Canvas(object):
 
     # Functions to set/querie drawing of UV-CDAT logo
     def drawlogoon(self):
-        """
-        Show UV-CDAT logo on the canvas
+        """Show UV-CDAT logo on the canvas
 
         :Example:
 
@@ -960,8 +949,7 @@ class Canvas(object):
         self.enableLogo = True
 
     def drawlogooff(self):
-        """
-        Hide UV-CDAT logo on the canvas
+        """Hide UV-CDAT logo on the canvas
 
         :Example:
 
@@ -975,8 +963,7 @@ class Canvas(object):
         self.enableLogo = False
 
     def getdrawlogo(self):
-        """
-        Returns value of draw logo. By default, draw logo is set to True.
+        """Returns value of draw logo. By default, draw logo is set to True.
 
         :Example:
 
@@ -995,8 +982,7 @@ class Canvas(object):
         return self.enableLogo
 
     def initLogoDrawing(self):
-        """
-        Initializes logo drawing for the canvas.
+        """Initializes logo drawing for the canvas.
 
         :Example:
 
@@ -1012,8 +998,7 @@ class Canvas(object):
         self.drawLogo = self.enableLogo
 
     def update(self, *args, **kargs):
-        """
-        If a series of commands are given to VCS and the Canvas Mode is
+        """If a series of commands are given to VCS and the Canvas Mode is
         set to manual, then use this function to update the plot(s)
         manually.
 
@@ -1040,8 +1025,7 @@ class Canvas(object):
         return self.backend.update(*args, **kargs)
 
     def scriptobject(self, obj, script_filename=None, mode=None):
-        """
-        Save individual attributes sets (i.e., individual primary class
+        """Save individual attributes sets (i.e., individual primary class
         objects and/or secondary class objects). These attribute sets
         are saved in the user's current directory in one of two formats:
         Python script, or a Javascript Object.
@@ -1135,8 +1119,7 @@ class Canvas(object):
         return vcs.removeP(*args)
 
     def clean_auto_generated_objects(self, type=None):
-        """
-        Cleans up all automatically generated VCS objects.
+        """Cleans up all automatically generated VCS objects.
 
         This function will delete all references to objects that
         VCS created automatically in response to user actions but are
@@ -1226,13 +1209,10 @@ class Canvas(object):
     getboxfill.__doc__ = vcs.manageElements.getboxfill.__doc__
 
     def boxfill(self, *args, **parms):
-        """
-        Generate a boxfill plot given the data, boxfill graphics method, and
+        """Generate a boxfill plot given the data, boxfill graphics method, and
         template. If no boxfill class object is given, then the 'default' boxfill
         graphics method is used. Similarly, if no template class object is given,
         then the 'default' template is used.
-
-
 
         :Example:
 
@@ -1289,8 +1269,7 @@ class Canvas(object):
     gettaylordiagram.__doc__ = vcs.manageElements.gettaylordiagram.__doc__
 
     def taylordiagram(self, *args, **parms):
-        """
-        Generate a taylordiagram plot given the data, taylordiagram graphics method, and
+        """Generate a taylordiagram plot given the data, taylordiagram graphics method, and
         template. If no taylordiagram class object is given, then the 'default' taylordiagram
         graphics method is used. Similarly, if no template class object is given,
         then the 'default' template is used.
@@ -1328,8 +1307,7 @@ class Canvas(object):
     getmeshfill.__doc__ = vcs.manageElements.getmeshfill.__doc__
 
     def meshfill(self, *args, **parms):  # noqa
-        """
-        Generate a meshfill plot given the data, the mesh, a meshfill graphics method, and
+        """Generate a meshfill plot given the data, the mesh, a meshfill graphics method, and
         a template. If no meshfill class object is given, then the 'default' meshfill
         graphics method is used. Similarly, if no template class object is given,
         then the 'default' template is used.
@@ -1353,18 +1331,19 @@ class Canvas(object):
             .. doctest:: canvas_meshfill
 
                 >>> a=vcs.init()
-                >>> a.show('meshfill') # Show all the existing meshfill graphics methods
+                >>> a.show('meshfill') # Show all meshfill graphics methods
                 *******************Meshfill Names List**********************
                 ...
                 *******************End Meshfill Names List**********************
                 >>> import cdms2 # Need cdms2 to create a slab
-                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
-                >>> slab = f('clt') # use the data file to create a cdms2 slab
-                >>> mesh=a.getmeshfill() # Create instance of 'default'
-                >>> a.meshfill(slab,mesh) # Plot array using specified mesh and default template
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
+                >>> slab = f('clt') # use data file to create a cdms2 slab
+                >>> m=a.getmeshfill() # Create instance of 'default'
+                >>> a.meshfill(slab,m) # Plot with default mesh & template
                 <vcs.displayplot.Dp ...>
                 >>> a.clear() # Clear VCS canvas
-                >>> a.meshfill(slab,mesh,'quick','a_polar_meshfill')  # Plot slab with polar mesh, quick template
+                >>> p='a_polar_meshfill' # will use this to plot
+                >>> a.meshfill(slab,m,'quick', p) # polar mesh, quick template
                 <vcs.displayplot.Dp ...>
 
         :returns: A VCS displayplot object.
@@ -1421,8 +1400,7 @@ class Canvas(object):
     getisofill.__doc__ = vcs.manageElements.getisofill.__doc__
 
     def isofill(self, *args, **parms):
-        """
-        Generate a isofill plot given the data, isofill graphics method, and
+        """Generate a isofill plot given the data, isofill graphics method, and
         template. If no isofill class object is given, then the 'default' isofill
         graphics method is used. Similarly, if no template class object is given,
         then the 'default' template is used.
@@ -1452,9 +1430,6 @@ class Canvas(object):
         %s
         %s
         %s
-
-        :returns: A VCS displayplot object.
-        :rtype: vcs.displayplot.Dp
         """
         arglist = _determine_arg_list('isofill', args)
         return self.__plot(arglist, parms)
@@ -1470,8 +1445,7 @@ class Canvas(object):
     getisoline.__doc__ = vcs.manageElements.getisoline.__doc__
 
     def isoline(self, *args, **parms):
-        """
-        Generate a isoline plot given the data, isoline graphics method, and
+        """Generate a isoline plot given the data, isoline graphics method, and
         template. If no isoline class object is given, then the 'default' isoline
         graphics method is used. Similarly, if no template class object is given,
         then the 'default' template is used.
@@ -1499,9 +1473,6 @@ class Canvas(object):
         %s
         %s
         %s
-
-        :returns: A VCS displayplot object.
-        :rtype: vcs.displayplot.Dp
         """
         arglist = _determine_arg_list('isoline', args)
         return self.__plot(arglist, parms)
@@ -1525,8 +1496,7 @@ class Canvas(object):
     getxyvsy.__doc__ = vcs.manageElements.getxyvsy.__doc__
 
     def xyvsy(self, *args, **parms):
-        """
-        Generate a Xyvsy plot given the data, Xyvsy graphics method, and
+        """Generate a Xyvsy plot given the data, Xyvsy graphics method, and
         template. If no Xyvsy class object is given, then the 'default' Xyvsy
         graphics method is used. Similarly, if no template class object is given,
         then the 'default' template is used.
@@ -1554,9 +1524,6 @@ class Canvas(object):
         %s
         %s
         %s
-
-        :returns: A VCS displayplot object.
-        :rtype: vcs.displayplot.Dp
         """
         arglist = _determine_arg_list('xyvsy', args)
         return self.__plot(arglist, parms)
@@ -1572,8 +1539,7 @@ class Canvas(object):
     getyxvsx.__doc__ = vcs.manageElements.getyxvsx.__doc__
 
     def yxvsx(self, *args, **parms):
-        """
-        Generate a Yxvsx plot given the data, Yxvsx graphics method, and
+        """Generate a Yxvsx plot given the data, Yxvsx graphics method, and
         template. If no Yxvsx class object is given, then the 'default' Yxvsx
         graphics method is used. Simerly, if no template class object is given,
         then the 'default' template is used.
@@ -1601,9 +1567,6 @@ class Canvas(object):
         %s
         %s
         %s
-
-        :returns: A VCS displayplot object.
-        :rtype: vcs.displayplot.Dp
         """
         arglist = _determine_arg_list('yxvsx', args)
         return self.__plot(arglist, parms)
@@ -1619,8 +1582,7 @@ class Canvas(object):
     getxvsy.__doc__ = vcs.manageElements.getxvsy.__doc__
 
     def xvsy(self, *args, **parms):
-        """
-        Generate a XvsY plot given the data, XvsY graphics method, and
+        """Generate a XvsY plot given the data, XvsY graphics method, and
         template. If no XvsY class object is given, then the 'default' XvsY
         graphics method is used. Similarly, if no template class object is given,
         then the 'default' template is used.
@@ -1651,9 +1613,6 @@ class Canvas(object):
         %s
         %s
         %s
-
-        :returns: A VCS displayplot object.
-        :rtype: vcs.displayplot.Dp
         """
         arglist = _determine_arg_list('xvsy', args)
         return self.__plot(arglist, parms)
@@ -1672,8 +1631,7 @@ class Canvas(object):
     getvector.__doc__ = vcs.manageElements.getvector.__doc__
 
     def vector(self, *args, **parms):
-        """
-        Generate a vector plot given the data, vector graphics method, and
+        """Generate a vector plot given the data, vector graphics method, and
         template. If no vector class object is given, then the 'default' vector
         graphics method is used. Similarly, if no template class object is given,
         then the 'default' template is used.
@@ -1713,8 +1671,7 @@ class Canvas(object):
     getscatter.__doc__ = vcs.manageElements.getscatter.__doc__
 
     def scatter(self, *args, **parms):
-        """
-        Generate a scatter plot given the data, scatter graphics method, and
+        """Generate a scatter plot given the data, scatter graphics method, and
         template. If no scatter class object is given, then the 'default' scatter
         graphics method is used. Similarly, if no template class object is given,
         then the 'default' template is used.
@@ -1744,9 +1701,6 @@ class Canvas(object):
         %s
         %s
         %s
-
-        :returns: A VCS displayplot object.
-        :rtype: vcs.displayplot.Dp
         """
 
         arglist = _determine_arg_list('scatter', args)
@@ -1771,8 +1725,7 @@ class Canvas(object):
     getline.__doc__ = vcs.manageElements.getline.__doc__
 
     def line(self, *args, **parms):
-        """
-        Plot a line segment on the Vcs Canvas. If no line class
+        """Plot a line segment on the Vcs Canvas. If no line class
         object is given, then an error will be returned.
 
         :Example:
@@ -1803,8 +1756,7 @@ class Canvas(object):
                  priority=1, viewport=[0.0, 1.0, 0.0, 1.0],
                  worldcoordinate=[0.0, 1.0, 0.0, 1.0],
                  x=None, y=None, projection='default', bg=0):
-        """
-        Generate and draw a line object on the VCS Canvas.
+        """Generate and draw a line object on the VCS Canvas.
 
         :Example:
 
@@ -1899,8 +1851,7 @@ class Canvas(object):
     getmarker.__doc__ = vcs.manageElements.getmarker.__doc__
 
     def marker(self, *args, **parms):
-        """
-        Plot a marker segment on the Vcs Canvas. If no marker class
+        """Plot a marker segment on the Vcs Canvas. If no marker class
         object is given, then an error will be returned.
 
         :Example:
@@ -1931,8 +1882,7 @@ class Canvas(object):
                    priority=1, viewport=[0.0, 1.0, 0.0, 1.0],
                    worldcoordinate=[0.0, 1.0, 0.0, 1.0],
                    x=None, y=None, bg=0):
-        """
-        Generate and draw a marker object on the VCS Canvas.
+        """Generate and draw a marker object on the VCS Canvas.
 
         :Example:
 
@@ -2023,8 +1973,7 @@ class Canvas(object):
     getfillarea.__doc__ = vcs.manageElements.getfillarea.__doc__
 
     def fillarea(self, *args, **parms):
-        """
-        Generate a fillarea plot
+        """Generate a fillarea plot
 
         Plot a fillarea segment on the Vcs Canvas. If no fillarea class
         object is given, then an error will be returned.
@@ -2057,8 +2006,7 @@ class Canvas(object):
                      priority=1, viewport=[0.0, 1.0, 0.0, 1.0],
                      worldcoordinate=[0.0, 1.0, 0.0, 1.0],
                      x=None, y=None, bg=0):
-        """
-        Generate and draw a fillarea object on the VCS Canvas.
+        """Generate and draw a fillarea object on the VCS Canvas.
 
         :Example:
 
@@ -2189,14 +2137,8 @@ class Canvas(object):
     gettext = gettextcombined
 
     def textcombined(self, *args, **parms):
-        """
-        Plot a textcombined segment on the Vcs Canvas. If no textcombined class
+        """Plot a textcombined segment on the Vcs Canvas. If no textcombined class
         object is given, then an error will be returned.
-
-        .. note::
-
-            The text() function is an alias for textcombined().
-            See example for usage.
 
         :Example:
 
@@ -2259,8 +2201,7 @@ class Canvas(object):
     text = textcombined
 
     def gettextextent(self, textobject):
-        """
-        Returns the coordinate of the box surrounding a text object once printed
+        """Returns the coordinate of the box surrounding a text object once printed
 
         :Example:
 
@@ -2297,8 +2238,7 @@ class Canvas(object):
                          priority=1, viewport=[0.0, 1.0, 0.0, 1.0],
                          worldcoordinate=[0.0, 1.0, 0.0, 1.0],
                          x=None, y=None, bg=0):
-        """
-        Draw a textcombined object on the VCS Canvas.
+        """Draw a textcombined object on the VCS Canvas.
 
         :Example:
 
@@ -2408,8 +2348,7 @@ class Canvas(object):
     #    self.plot(*self.__last_plot_actual_args, **self.__last_plot_keyargs)
 
     def plot(self, *actual_args, **keyargs):
-        """
-        Plot an array(s) of data given a template and graphics method.
+        """Plot an array(s) of data given a template and graphics method.
 
         The VCS template is used to define where the data and variable
         attributes will  be displayed on the VCS Canvas.
@@ -4041,8 +3980,7 @@ class Canvas(object):
         self.backend.setAnimationStepper(stepper)
 
     def return_display_names(self, *args):
-        """
-        Show the list of display names associated with all active plots
+        """Show the list of display names associated with all active plots
         on the canvas.
 
         :Example:
@@ -4065,8 +4003,7 @@ class Canvas(object):
         return self.display_names
 
     def remove_display_name(self, *args):
-        """
-        Removes a plotted item from the canvas.
+        """Removes a plotted item from the canvas.
 
         :Example:
 
@@ -4093,7 +4030,7 @@ class Canvas(object):
 
     def cgm(self, file, mode='w'):
         """
-        .. deprecated::
+        .. deprecated:: 2.6.1
 
             Exporting images to CGM format is no longer supported.
             To generate an image from the canvas, see
@@ -4112,8 +4049,7 @@ class Canvas(object):
         return self.backend.cgm(file)
 
     def clear(self, *args, **kargs):
-        """
-        Clears all the VCS displays on a page (i.e., the VCS Canvas object).
+        """Clears all the VCS displays on a page (i.e., the VCS Canvas object).
 
         :Example:
 
@@ -4156,8 +4092,7 @@ class Canvas(object):
         return
 
     def close(self, *args, **kargs):
-        """
-        Close the VCS Canvas. It will not deallocate the VCS Canvas object.
+        """Close the VCS Canvas. It will not deallocate the VCS Canvas object.
         To deallocate the VCS Canvas, use the destroy method.
 
         :Example:
@@ -4179,8 +4114,7 @@ class Canvas(object):
         return a
 
     def destroy(self):
-        """
-        Destroy the VCS Canvas. It will deallocate the VCS Canvas object.
+        """Destroy the VCS Canvas. It will deallocate the VCS Canvas object.
 
         :Example:
 
@@ -4200,12 +4134,11 @@ class Canvas(object):
         gc.collect()
 
     def change_display_graphic_method(self, display, type, name):
-        """
-        Changes the type and graphic method of a plot.
+        """Changes the type and graphic method of a plot.
 
         :Example:
 
-            doctest:: canvas_change_display_graphic_method
+            .. doctest:: canvas_change_display_graphic_method
 
                 >>> a=vcs.init()
                 >>> cdgm=a.change_display_graphic_method # alias long name
@@ -4233,8 +4166,8 @@ class Canvas(object):
 
     def get_selected_display(self):
         """
-        .. admonition:: Not Yet Implemented
-
+        .. attention:: 
+            
             This function does not currently work.
             It will be implemented in the future.
         """
@@ -4244,8 +4177,7 @@ class Canvas(object):
         self.canvas.plot_annotation(*args)
 
     def flush(self, *args):
-        """
-        The flush command executes all buffered X events in the queue.
+        """The flush command executes all buffered X events in the queue.
 
         :Example:
 
@@ -4260,8 +4192,7 @@ class Canvas(object):
         return self.backend.flush(*args)
 
     def geometry(self, *args):
-        """
-        The geometry command is used to set the size and position of the VCS canvas.
+        """The geometry command is used to set the size and position of the VCS canvas.
 
         :Example:
 
@@ -4286,8 +4217,7 @@ class Canvas(object):
         return a
 
     def canvasinfo(self, *args, **kargs):
-        """
-        Obtain the current attributes of the VCS Canvas window.
+        """Obtain the current attributes of the VCS Canvas window.
 
         :Example:
 
@@ -4313,8 +4243,7 @@ class Canvas(object):
         return self.backend.canvasinfo(*args, **kargs)
 
     def getcontinentstype(self, *args):
-        """
-        Retrieve continents type from VCS; either an integer between 0 and 11 or the
+        """Retrieve continents type from VCS; either an integer between 0 and 6 or the
         path to a custom continentstype.
 
         :Example:
@@ -4322,9 +4251,11 @@ class Canvas(object):
             .. doctest:: canvas_getcontinentstype
 
                 >>> a=vcs.init()
-                >>> cont_type = a.getcontinentstype() # Get the continents type
+                >>> a.setcontinentstype(6)
+                >>> a.getcontinentstype() # Get the continents type
+                6
 
-        :returns: An int between 1 and 0, or the path to a custom continentstype
+        :returns An int between 0 and 6, or the path to a custom continentstype
         :rtype: :py:class:`int` or system filepath
         """
         try:
@@ -4333,8 +4264,7 @@ class Canvas(object):
             return None
 
     def pstogif(self, filename, *opt):
-        """
-        In some cases, the user may want to save the plot out as a gif image. This
+        """In some cases, the user may want to save the plot out as a gif image. This
         routine allows the user to convert a postscript file to a gif file.
 
         :Example:
@@ -4354,9 +4284,6 @@ class Canvas(object):
 
         :param opt: One of 'l' or 'p', indicating landscape or portrait mode, respectively.
         :type opt: :py:class:`str`
-
-        :returns: ???
-        :rtype: ???
         """
         from os import popen
 
@@ -4392,7 +4319,7 @@ class Canvas(object):
         than the graphics method. This will also be used for animating plots over the
         third and fourth dimensions.
 
-        .. admonition:: Not Yet Implemented
+        .. attention::
 
             This function does not currently work.
             It will be implemented in the future.
@@ -4403,8 +4330,7 @@ class Canvas(object):
         return p
 
     def landscape(self, width=-99, height=-99, x=-99, y=-99, clear=0):
-        """
-        Change the VCS Canvas orientation to Landscape.
+        """Change the VCS Canvas orientation to Landscape.
 
         .. note::
 
@@ -4482,10 +4408,8 @@ class Canvas(object):
         return l
 
     def listelements(self, *args):
-        """
-        Returns a Python list of all VCS object names, or a list of names
-        of objects of the given type.
-
+        """Returns a sorted Python list of all VCS object names, or a list of
+        names of objects of the given type.
 
         :Example:
 
@@ -4508,27 +4432,25 @@ class Canvas(object):
         return L
 
     def updateorientation(self, *args):
-        """
-        Takes a string 'portrait' or 'landscape' and updates a Canvas object's
+        """Takes a string 'portrait' or 'landscape' and updates a Canvas object's
         orientation accordingly.
 
-        .. admonition:: Not Yet Implemented
+        :param args: String with value 'landscape' or 'portrait'
+        :type args: :py:class:`str`
+
+        .. attention::
 
             This function does not currently work.
             It will be implemented in the future.
 
             Use :func:`landscape` or :func:`portrait` instead.
-
-        :param args: String with value 'landscape' or 'portrait'
-        :type args: :py:class:`str`
         """
         a = self.canvas.updateorientation(*args)
 
         return a
 
     def open(self, width=None, height=None, **kargs):
-        """
-        Open VCS Canvas object. This routine really just manages the VCS canvas.
+        """Open VCS Canvas object. This routine really just manages the VCS canvas.
         It can be used to display the VCS Canvas.
 
         :Example:
@@ -4551,8 +4473,7 @@ class Canvas(object):
         return a
 
     def canvasid(self, *args):
-        """
-        Get the ID of this canvas.
+        """Get the ID of this canvas.
         This ID number is found at the top of the VCS Canvas,
         as part of its title.
 
@@ -4569,8 +4490,7 @@ class Canvas(object):
         return self._canvas_id
 
     def portrait(self, width=-99, height=-99, x=-99, y=-99, clear=0):
-        """
-        Change the VCS Canvas orientation to Portrait.
+        """Change the VCS Canvas orientation to Portrait.
 
         .. note::
 
@@ -4637,8 +4557,7 @@ class Canvas(object):
         return p
 
     def ffmpeg(self, movie, files, bitrate=1024, rate=None, options=None):
-        """
-        MPEG output from a list of valid files.
+        """MPEG output from a list of valid files.
         Can output to more than just mpeg format.
 
         .. note::
@@ -4779,8 +4698,7 @@ class Canvas(object):
         return result == 0
 
     def getantialiasing(self):
-        """
-        Returns the current antialiasing rate for the canvas.
+        """Returns the current antialiasing rate for the canvas.
 
         :Example:
 
@@ -4797,8 +4715,7 @@ class Canvas(object):
         return self.backend.getantialiasing()
 
     def setantialiasing(self, antialiasing):
-        """
-        Sets the antialiasing rate for the canvas.
+        """Sets the antialiasing rate for the canvas.
 
         :Example:
 
@@ -4816,8 +4733,7 @@ class Canvas(object):
         self.backend.setantialiasing(antialiasing)
 
     def setbgoutputdimensions(self, width=None, height=None, units='inches'):
-        """
-        Sets dimensions for output in bg mode.
+        """Sets dimensions for output in bg mode.
 
         :Example:
 
@@ -4854,8 +4770,7 @@ class Canvas(object):
     def put_png_on_canvas(
             self, filename, zoom=1, xOffset=0, yOffset=0,
             units="percent", fitToHeight=True, *args, **kargs):
-        """
-        Display a PNG file on the canvas
+        """Display a PNG file on the canvas
 
         :Example:
 
@@ -4901,8 +4816,7 @@ class Canvas(object):
 
     def png(self, file, width=None, height=None,
             units=None, draw_white_background=True, **args):
-        """
-        PNG output, dimensions set via setbgoutputdimensions
+        """PNG output, dimensions set via setbgoutputdimensions
 
         :Example:
 
@@ -4948,8 +4862,7 @@ class Canvas(object):
 
     def pdf(self, file, width=None, height=None, units='inches',
             textAsPaths=True):
-        """
-        PDF output is another form of vector graphics.
+        """PDF output is another form of vector graphics.
 
         .. note::
 
@@ -4997,8 +4910,7 @@ class Canvas(object):
 
     def svg(self, file, width=None, height=None, units='inches',
             textAsPaths=True):
-        """
-        SVG output is another form of vector graphics.
+        """SVG output is another form of vector graphics.
 
         .. note::
 
@@ -5141,8 +5053,7 @@ class Canvas(object):
         return top_margin, bottom_margin, right_margin, left_margin
 
     def isopened(self):
-        """
-        Returns a boolean value indicating whether the canvas is opened or not.
+        """Returns a boolean value indicating whether the canvas is opened or not.
 
         :Example:
 
@@ -5236,8 +5147,7 @@ class Canvas(object):
         return W, H
 
     def postscript(self, file, mode='r', orientation=None, width=None, height=None, units='inches', textAsPaths=True):
-        """
-        Postscript output is another form of vector graphics. It is larger than its CGM output
+        """Postscript output is another form of vector graphics. It is larger than its CGM output
         counter part, because it is stored out in ASCII format.
 
         There are two modes for saving a postscript file: 'Append' (a) mode appends postscript
@@ -5324,8 +5234,7 @@ class Canvas(object):
         vcs.scriptrun(aFile, *args, **kargs)
 
     def setcolormap(self, name):
-        """
-        It is necessary to change the colormap. This routine will change the VCS
+        """It is necessary to change the colormap. This routine will change the VCS
         color map.
 
         If the the visual display is 16-bit, 24-bit, or 32-bit TrueColor, then a redrawing
@@ -5359,8 +5268,7 @@ class Canvas(object):
         return
 
     def setcolorcell(self, *args):
-        """
-        Set a individual color cell in the active colormap. If default is
+        """Set a individual color cell in the active colormap. If default is
         the active colormap, then return an error string.
 
         If the the visul display is 16-bit, 24-bit, or 32-bit TrueColor, then a redrawing
@@ -5392,8 +5300,7 @@ class Canvas(object):
         return a
 
     def setcontinentsline(self, line="default"):
-        """
-        One has the option of configuring the appearance of the lines used to
+        """One has the option of configuring the appearance of the lines used to
         draw continents by providing a VCS Line object.
 
         :Example:
@@ -5414,8 +5321,7 @@ class Canvas(object):
         self._continents_line = line
 
     def getcontinentsline(self):
-        """
-        Returns the continents line associated with the canvas.
+        """Returns the continents line associated with the canvas.
 
         :Example:
 
@@ -5436,8 +5342,7 @@ class Canvas(object):
             return self._continents_line
 
     def setcontinentstype(self, value):
-        """
-        One has the option of using continental maps that are predefined or that
+        """One has the option of using continental maps that are predefined or that
         are user-defined. Predefined continental maps are either internal to VCS
         or are specified by external files. User-defined continental maps are
         specified by additional external files that must be read as input.
@@ -5465,9 +5370,11 @@ class Canvas(object):
             .. doctest:: canvas_setcontinentstype
 
                 >>> a=vcs.init()
-                >>> a.setcontinentstype(3)
-                >>> array = [range(1, 11) for _ in range(1, 11)]
-                >>> a.plot(array,'default','isofill','quick')
+                >>> a.setcontinentstype(4) "Political Borders"
+                >>> import cdms2 # We need cdms2 to create a slab
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
+                >>> v = f('v') # use the data file to create a slab
+                >>> a.plot(v,'default','isofill','quick') # map with borders
                 <vcs.displayplot.Dp ...>
 
         :param value: Integer representing continent type, as specified in function description
@@ -5495,8 +5402,7 @@ class Canvas(object):
 
     def gif(self, filename='noname.gif', merge='r', orientation=None,
             geometry='1600x1200'):
-        """
-        In some cases, the user may want to save the plot out as a gif image. This
+        """In some cases, the user may want to save the plot out as a gif image. This
         routine allows the user to save the VCS canvas output as a SUN gif file.
         This file can be converted to other gif formats with the aid of xv and other
         such imaging tools found freely on the web.
@@ -5509,7 +5415,7 @@ class Canvas(object):
         file; 'Replace' (r) mode overwrites an existing gif file with new gif output.
         The default mode is to overwrite an existing gif file (i.e. mode (r)).
 
-        .. admonition:: Not Yet Implemented
+        .. attention::
 
             This function does not currently work.
             It will be implemented in the future.
@@ -5529,8 +5435,7 @@ class Canvas(object):
         warnings.warn("Export to GhostScript is no longer supported", DeprecationWarning)
 
     def eps(self, file, mode='r', orientation=None, width=None, height=None, units='inches', textAsPaths=True):
-        """
-        In some cases, the user may want to save the plot out as an Encapsulated
+        """In some cases, the user may want to save the plot out as an Encapsulated
         PostScript image. This routine allows the user to save the VCS canvas output
         as an Encapsulated PostScript file.
         This file can be converted to other image formats with the aid of xv and other
@@ -5591,8 +5496,7 @@ class Canvas(object):
     show.__doc__ = vcs.utils.show.__doc__
 
     def isinfile(self, GM, file=None):
-        """
-        Checks if a graphic method is stored in a file
+        """Checks if a graphic method is stored in a file
         if no file name is passed then looks into the initial.attributes file
 
         :Example:
@@ -5630,8 +5534,7 @@ class Canvas(object):
         return
 
     def saveinitialfile(self):
-        """
-        At start-up, VCS reads a script file named initial.attributes that
+        """At start-up, VCS reads a script file named initial.attributes that
         defines the initial appearance of the VCS Interface. Although not
         required to run VCS, this initial.attributes file contains many
         predefined settings to aid the beginning user of VCS.
@@ -5641,7 +5544,9 @@ class Canvas(object):
             .. code-block:: python
 
                 a=vcs.init()
-                a.saveinitialfile()
+                box=vcs.createboxfill('m_box')
+                line=vcs.createline('m_line')
+                a.saveinitialfile() # m_line, m_box saved for future sessions
 
         .. warning::
 
@@ -5658,8 +5563,7 @@ class Canvas(object):
         return vcs.saveinitialfile()
 
     def raisecanvas(self, *args):
-        """
-        Raise the VCS Canvas to the top of all open windows.
+        """Raise the VCS Canvas to the top of all open windows.
 
         :Example:
 
@@ -5673,8 +5577,7 @@ class Canvas(object):
         return self.backend.raisecanvas(*args)
 
     def islandscape(self):
-        """
-        Indicates if VCS's orientation is landscape.
+        """Indicates if VCS's orientation is landscape.
 
         Returns a 1 if orientation is landscape.
         Otherwise, it will return a 0, indicating false (not in landscape mode).
@@ -5699,8 +5602,7 @@ class Canvas(object):
             return 0
 
     def isportrait(self):
-        """
-        Indicates if VCS's orientation is portrait.
+        """Indicates if VCS's orientation is portrait.
 
 
         :Example:
@@ -5723,13 +5625,7 @@ class Canvas(object):
             return 0
 
     def getplot(self, Dp_name_src='default', template=None):
-        """
-        .. admonition:: Not Yet Implemented
-
-            This function does not currently work.
-            It will be implemented in the future.
-
-        This function will create a display plot object from an existing display
+        """This function will create a display plot object from an existing display
         plot object from an existing VCS plot. If no display plot name
         is given, then None is returned.
 
@@ -5742,6 +5638,11 @@ class Canvas(object):
 
         :returns: A VCS displayplot object
         :rtype: vcs.displayplot.Dp
+
+        .. attention::
+
+            This function does not currently work.
+            It will be implemented in the future.
         """
         if not isinstance(Dp_name_src, str):
             raise ValueError('Error -  The argument must be a string.')
@@ -5761,8 +5662,7 @@ class Canvas(object):
     getcolormap.__doc__ = vcs.manageElements.getcolormap.__doc__
 
     def addfont(self, path, name=""):
-        """
-        Add a font to VCS.
+        """Add a font to VCS.
 
         :param path: Path to the font file you wish to add (must be .ttf)
         :type path: :py:class:`str`
@@ -5811,8 +5711,7 @@ class Canvas(object):
     getfontname.__doc__ = vcs.utils.getfontname.__doc__
 
     def getfont(self, font):
-        """
-        Get the font name/number associated with a font number/name
+        """Get the font name/number associated with a font number/name
 
         :Example:
 
@@ -5845,8 +5744,7 @@ class Canvas(object):
             raise vcsError("Error you must pass a string or int")
 
     def switchfonts(self, font1, font2):
-        """
-        Switch the font numbers of two fonts.
+        """Switch the font numbers of two fonts.
 
         :Example:
 
@@ -5890,19 +5788,19 @@ class Canvas(object):
         vcs.elements['fontNumber'][index2] = tmp
 
     def copyfontto(self, font1, font2):
-        """
-        .. admonition:: Not Yet Implemented
-
-            This function does not currently work.
-            It will be added in the future.
-
-        Copy 'font1' into 'font2'.
+        """Copy 'font1' into 'font2'.
 
         :param font1: Name/number of font to copy
         :type font1: :py:class:`str` or int
 
         :param font2: Name/number of destination
         :type font2: :py:class:`str` or :py:class:`int`
+
+        .. attention::
+
+            This function does not currently work.
+            It will be added in the future.
+
         """
         if isinstance(font1, str):
             index1 = self.getfont(font1)
@@ -5925,24 +5823,22 @@ class Canvas(object):
         return self.canvas.copyfontto(*(index1, index2))
 
     def setdefaultfont(self, font):
-        """
-        .. admonition:: Not Yet Implemented
-
-            This function does not currently work.
-            It will be implemented in the future.
-
-        Sets the passed/def show font as the default font for vcs
+        """Sets the passed/def show font as the default font for vcs
 
         :param font: Font name or index to use as default
         :type font: :py:class:`str` or :py:class:`int`
+
+        .. attention::
+
+            This function does not currently work.
+            It will be implemented in the future.
         """
         if isinstance(font, str):
             font = self.getfont(font)
         return self.copyfontto(font, 1)
 
     def orientation(self, *args, **kargs):
-        """
-        Return canvas orientation.
+        """Return canvas orientation.
 
         The current implementation does not use any args or kargs.
 
@@ -5964,8 +5860,7 @@ class Canvas(object):
     getcolorcell.__doc__ = vcs.utils.getcolorcell.__doc__
 
     def getcolormapname(self):
-        """
-        Returns the name of the colormap this canvas is set to use by default.
+        """Returns the name of the colormap this canvas is set to use by default.
 
         :Example:
 
@@ -5987,8 +5882,7 @@ class Canvas(object):
         return self.colormap
 
     def dummy_user_action(self, *args, **kargs):
-        """
-        Given args and kargs, prints the arguments and keyword arguments
+        """Given args and kargs, prints the arguments and keyword arguments
         associated with those parameters.
 
         Use this function to test what args and kargs are, if you're unsure.
