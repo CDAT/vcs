@@ -31,7 +31,7 @@ def log_stats(module_name, verbose):
                     log.write("-")
                 log.write("\n")
                 log.write("```python\n")
-                consume_entry(results, log, err_endpoints, "", "")
+                consume_entry(results, log, err_endpoints)
                 log.write("```\n\n")
             if re.match(missing_header, line):
                 header="Missing Doctests"
@@ -46,16 +46,18 @@ def log_stats(module_name, verbose):
 
 
 # note: will only consume the first full error
-def consume_entry(readfile, writefile, endpoints, prepend, append):
+def consume_entry(readfile, writefile, endpoints, prepend="", append=""):
     more = True
+    private = re.compile("_[_A-z0-9]+")
     line = readfile.readline()
     while more and line != '':
-        if append != "":
-            index = line.find("\n")
-            new_line = prepend + line[:index] + append + line[index:]
-            writefile.write(new_line)
-        else:
-            writefile.write(prepend + line + append)
+        if not re.match(private,line.split('.')[-1]):
+            if append != "":
+                index = line.find("\n")
+                new_line = prepend + line[:index] + append + line[index:]
+                writefile.write(new_line)
+            else:
+                writefile.write(prepend + line + append)
         line = readfile.readline()
         for endpoint in endpoints:
             if re.match(endpoint, line):
