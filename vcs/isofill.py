@@ -741,7 +741,7 @@ class Gfi(object):
         print "fillareaopacity = ", self.fillareaopacity
         print "levels = ", self.levels
         print "legend = ", self.legend
-    list.__doc__ = xmldocs.listdoc
+    list.__doc__ = xmldocs.listdoc % {"name": "isofill", "parent": ""}
 
     #
     #

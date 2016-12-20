@@ -982,7 +982,7 @@ class Gfb(object):
         print "ext_1 = ", self.ext_1
         print "ext_2 = ", self.ext_2
         print "missing = ", self.missing
-    list.__doc__ = xmldocs.listdoc
+    list.__doc__ = xmldocs.listdoc % {"name": "boxfill", "parent": ""}
     ###########################################################################
     #                                                                         #
     # Script out primary boxfill graphics method in VCS to a file.            #

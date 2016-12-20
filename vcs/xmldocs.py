@@ -274,8 +274,24 @@ xyscaledoc = """
     :param yat: Set value for y axis conversion.
     :type yat: str
     """
-listdoc = """ Lists the current values of object attributes"""
 
+# for listdoc, plug in a dictionary where you use it
+#    Dict Keys:
+#       "name": String name to complete the call to vcs.get$OBJ_TYPE()
+#       "parent": String argument for calls to vcs.get$OBJ_TYPE() that require specification of an obj to inherit from.
+#           mainly used for get1d, but possible uses for text objects also exist (maybe others too).
+#           If providing a parent name, use either double quotes in a string literal, or a string literal in double
+#           quotes (i.e. '"parent"' or "'parent'"). Else, use an empty string.
+listdoc = """Lists the current values of object attributes
+
+    :Example:
+
+        .. doctest:: listdoc
+
+            >>> a=vcs.init()
+            >>> obj=a.get%(name)s(%(parent)s) # default
+            >>> obj.list() # print %(name)s attributes
+    """
 
 def populate_docstrings(type_dict, target_dict, docstring, method):
     """
@@ -615,6 +631,7 @@ obj_details = {
 # this will be used to populate all the docstrings in the same for loop (should better utilize locality)
 docstrings = {}
 
+# for any of the doc templates, see the obj_details dict above for explanation of the keywords in the template.
 scriptdoc = """
     Saves out a copy of the %(name)s %(type)s in JSON, or Python format to a designated file.
 

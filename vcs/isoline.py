@@ -1056,7 +1056,7 @@ class Gi(object):
         print "scale = ", self.scale
         print "angle = ", self.angle
         print "spacing = ", self.spacing
-    list.__doc__ = xmldocs.listdoc
+    list.__doc__ = xmldocs.listdoc % {"name": "isoline", "parent": ""}
 
     ##########################################################################
     #                                                                           #

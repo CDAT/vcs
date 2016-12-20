@@ -406,9 +406,6 @@ class Tl(object):
     #                                                                           #
     ##########################################################################
     def script(self, script_filename=None, mode=None):
-        """
-        docstring moved to xmldocs
-"""
         if (script_filename is None):
             raise ValueError(
                 'Error - Must provide an output script file name.')

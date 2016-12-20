@@ -49,7 +49,7 @@ import inspect
 import cdutil
 from projection import round_projections
 from projection import elliptical_projections
-from xmldocs import scriptdocs
+from xmldocs import scriptdocs, listdoc
 
 # Following for class properties
 
@@ -534,6 +534,12 @@ class P(object):
         vcs.elements["template"][Pic_name] = self
 
     def list(self, single=None):
+        """
+        %s
+
+        :param single: String value indicating which properties to list
+        :type single: str
+        """
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
 
@@ -756,6 +762,7 @@ class P(object):
             self.legend.list()
         elif (single == 'data'):
             self.data.list()
+    list.__doc__ = list.__doc__ % (listdoc % {"name": "template", "parent": ""})
 
     ###########################################################################
     #                                                                         #
@@ -1232,7 +1239,6 @@ class P(object):
     def blank(self, attribute=None):
         """This function turns off elements of a template object.
 
-
         :param attribute: String or list, indicating the elements of a template
             which should be turned off. If attribute is left blank, or is None,
             all elements of the template will be turned off.
@@ -1268,11 +1274,12 @@ class P(object):
 
             .. doctest:: template_reset
 
-                >>> t = vcs.createtemplate('example1', 'default') # template 'example1' inherits from 'default'
-                >>> t.reset('x',0.15,0.5,t.data.x1,t.data.x2) # Set x1 value to 0.15 and x2 value to 0.5
+                >>> t=vcs.createtemplate('t_reset') # inherits from 'default'
+                >>> data, data2 = t.data.x1, t.data.x2
+                >>> t.reset('x',0.15,0.5,data,data2) # Set x1 to 0.15, x2 to 0.5
 
         :param sub_name: String indicating the name of the sub-attribute to be reset.
-                         For example, sub-name='x' would cause the x1 ans x2 attributes to be set.
+            For example, sub_name='x' would cause the x1 ans x2 attributes to be set.
         :type sub_name: str
 
         :param v1: Float value to used to set the sub_name1 attribute.
@@ -1281,10 +1288,12 @@ class P(object):
         :param v2: Float value used to set the sub_name2 attribute.
         :type v2: float
 
-        :param ov1: Float value of the old sub-name1 attribute value. Used to compute an offset ratio.
+        :param ov1: Float value of the old sub-name1 attribute value.
+            Used to compute an offset ratio.
         :type ov1: float
 
-        :param ov2: Float value of the old sub-name1 attribute value. Used to compute an offset ratio.
+        :param ov2: Float value of the old sub-name1 attribute value.
+            Used to compute an offset ratio.
         :type ov2: float
         """
 
@@ -1468,56 +1477,84 @@ class P(object):
                                   linecolors, linetypes, linewidths,
                                   markercolors, markertypes, markersizes,
                                   strings, scratched=None, bg=False, render=True):
-        """Draws a legend with line/marker/text inside a template legend box
-        Auto adjust text size to make it fit inside the box
-        Auto arrange the elements to fill the box nicely
+        """Draws a legend with line/marker/text inside a template legend box.
+        Auto adjusts text size to make it fit inside the box.
+        Auto arranges the elements to fill the box nicely.
 
         :Example:
 
             .. doctest:: template_drawLinesAndMarkersLegend
 
-                >>> import vcs
                 >>> x = vcs.init()
                 >>> t = vcs.createtemplate()
-                >>> t.drawLinesAndMarkersLegend(x,
-                ...     ["red","blue","green"], ["solid","dash","dot"],[1,4,8],
-                ...     ["blue","green","red"], ["cross","square","dot"],[3,4,5],
-                ...     ["sample A","type B","thing C"],True)
+                >>> l_colors=["red","blue","green"]
+                >>> l_types=["solid","dash","dot"]
+                >>> l_widths=[1,4,8]
+                >>> m_colors=["blue","green","red"]
+                >>> m_types=["cross","square","dot"]
+                >>> m_sizes=[3,4,5]
+                >>> strings=["sample A","type B","thing C"]
+                >>> scratch=[True,False,True]
+                >>> t.drawLinesAndMarkersLegend(x, l_colors, l_types, l_widths,
+                ...     m_colors, m_types, m_sizes, strings, scratch)
                 >>> x.png("sample")
 
         :param canvas: a VCS canvas object onto which to draw the legend
         :type canvas: vcs.Canvas.Canvas
 
-        :param linecolors: list containing the colors of each line to draw
-        :type linecolors: list of either colorInt, (r,g,b,opacity), or string color names
+        :param linecolors: A list containing the colors of each line to draw.
+            Colors are represented as either an int from 0-255, an rgba tuple,
+            or a string color name.
+        :type linecolors: `list`_
 
-        :param linetypes: list containing the type of each line to draw
-        :type linetypes: list on int of line stype strings
+        :param linetypes: A list containing the type of each line to draw.
+            Line types are represented as either integers or strings.
+            See :py:class:`vcs.line.Tl` for more information.
+        :type linetypes: `list`_
 
-        :param linewidths: list containing each line width
-        :type linewidths: list of float
+        :param linewidths: A list containing floats each representing the
+            width of each line.
+        :type linewidths: `list`_
 
-        :param markercolors: list of the markers colors to draw
-        :type markercolors: list of either colorInt, (r,g,b,opacity), or string color names
+        :param markercolors: A list of the markers colors to draw.
+            Colors are represented as either an int from 0-255, an rgba tuple,
+            or a string color name.
+        :type markercolors: `list`_
 
-        :param markertypes: list of the marker types to draw
-        :type markertypes: list of int or  string of marker names
+        :param markertypes: A list of the marker types to draw.
+            Marker types are represented as either integers or strings.
+            See :py:class:`vcs.marker.Tm` for more information.
+        :type markertypes: `list`_
 
-        :param markersizes: list of the size of each marker to draw
-        :type markersizes: list of float
+        :param markersizes: A list of floats representing marker sizes.
+        :type markersizes: `list`_
 
-        :param strings: list of the string to draw next to each line/marker
-        :type strings: list of string
+        :param strings: A list of strings to draw next to each line/marker.
+        :type strings: `list`_
 
-        :param scratched: None (off) or list. list contains False where no scratch is needed
-            For scratched provide True or line type to use for scratch
-            color will match that of text
-        :type scratched: None or list of bool
+        :param scratched: A list indicating which strings should be "scratched"
+            off in the template.
 
-        :param bg: do we draw in background or foreground
+            To "scratch" a string, the corresponding location in the scratched
+            list must contain either True or the line type to use for the
+            scratch. A value of False at a given index will leave the
+            corresponding index of strings untouched.
+
+            Size of the scratched list must be equal to the size of the strings
+            list.
+
+            Scratch color will match that of text.
+
+            If scratched is None, or is not provided, no strings will be
+            scratched.
+        :type scratched: `None`_ or `list`_
+
+        :param bg: Boolean value indicating whether or not to draw in the
+            background. Defaults to False.
         :type bg: bool
 
-        :param render: do we render or not (so it less flashy)
+        :param render: Boolean value indicating whether or not to render.
+            Defaults to True.
         :type render: bool
         """
         return vcs.utils.drawLinesAndMarkersLegend(canvas,
@@ -1527,13 +1564,25 @@ class P(object):
                                                    strings, scratched, bg, render)
 
     def drawAttributes(self, x, slab, gm, bg=False, **kargs):
-        """Draws attribtes of slab onto a canvas
+        """Draws attributes of slab onto a canvas
+
+        :Example:
+
+            .. doctest:: templates_drawAttributes
+
+                >>> a=vcs.init()
+                >>> import cdms2 # We need cdms2 to create a slab
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
+                >>> s = f('clt') # use the data file to create a slab
+                >>> t=a.gettemplate()
+                >>> b=a.getboxfill() # boxfill gm
+                >>> t.drawAttributes(a,s,b) # shows attributes of s on canvas
 
         :param x: vcs canvas onto which attributes will be drawn
         :type x: vcs.Canvas.Canvas
 
         :param slab: slab to get attributes from
-        :type slab: cdms2.tvariable.TransientVariable, numpy.ndarray
+        :type slab: cdms2.tvariable.TransientVariable or numpy.ndarray
         """
         displays = []
         # figures out the min and max and set them as atributes...
@@ -1610,9 +1659,6 @@ class P(object):
              max=None, X=None, Y=None, **kargs):
         """This plots the template stuff on the Canvas.
         It needs a slab and a graphic method.
-
-        :returns: A list containing all the displays used
-        :rtype: `list`_
         """
 
         displays = []
@@ -1784,7 +1830,9 @@ class P(object):
                      ext_2='n', x=None, bg=False, priority=None,
                      cmap=None, style=['solid'], index=[1],
                      opacity=[], **kargs):
-        """This function, draws the colorbar, it needs:
+        """
+        This function, draws the colorbar, it needs:
+
         colors : The colors to be plotted
         levels : The levels that each color represent
         legend : To overwrite, saying just draw box at
@@ -1793,6 +1841,20 @@ class P(object):
         x : the canvas where to plot it
         bg: background mode ?
         returns a list of displays used
+        :param colors:
+        :param levels:
+        :param legend:
+        :param ext_1:
+        :param ext_2:
+        :param x:
+        :param bg:
+        :param priority:
+        :param cmap:
+        :param style:
+        :param index:
+        :param opacity:
+        :param kargs:
+        :return:
         """
 
         kargs["donotstoredisplay"] = True

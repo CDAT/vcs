@@ -813,7 +813,7 @@ class G1d(object):
         print "markercolor = ", self.markercolor
         print "markersize = ", self.markersize
         print "flip = ", self.flip
-    list.__doc__ = xmldocs.listdoc
+    list.__doc__ = xmldocs.listdoc % {"name": "1d", "parent": "'default'"}
 
     ###########################################################################
     #                                                                         #
