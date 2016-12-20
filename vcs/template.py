@@ -2,6 +2,16 @@
 # Adapted for numpy/ma/cdms2 by convertcdms.py
 # Template (P) module
 
+    .. _list: https://docs.python.org/2/library/functions.html#list
+    .. _tuple: https://docs.python.org/2/library/functions.html#tuple
+    .. _dict: https://docs.python.org/2/library/stdtypes.html#mapping-types-dict
+    .. _None: https://docs.python.org/2/library/constants.html?highlight=none#None
+    .. _str: https://docs.python.org/2/library/functions.html?highlight=str#str
+    .. _bool: https://docs.python.org/2/library/functions.html?highlight=bool#bool
+    .. _float: https://docs.python.org/2/library/functions.html?highlight=float#float
+    .. _int: https://docs.python.org/2/library/functions.html?highlight=float#int
+    .. _long: https://docs.python.org/2/library/functions.html?highlight=float#long
+    .. _file: https://docs.python.org/2/library/functions.html?highlight=open#file
 """
 ###############################################################################
 #                                                                             #
@@ -139,8 +149,7 @@ def process_src(nm, code):
 #############################################################################
 class P(object):
 
-    """
-    The template primary method (P) determines the location of each picture
+    """The template primary method (P) determines the location of each picture
     segment, the space to be allocated to it, and related properties relevant
     to its display.
 
@@ -1004,8 +1013,7 @@ class P(object):
     # Canvas
     def drawTicks(self, slab, gm, x, axis, number,
                   vp, wc, bg=False, X=None, Y=None, **kargs):
-        """
-        Draws the ticks for the axis x number number
+        """Draws the ticks for the axis x number number
         using the label passed by the graphic  method
         vp and wc are from the actual canvas, they have
         been reset when they get here...
@@ -1222,13 +1230,13 @@ class P(object):
         return displays
 
     def blank(self, attribute=None):
-        """
-        This function turns off elements of a template object.
+        """This function turns off elements of a template object.
 
 
-    :param attribute: String or list, indicating the elements of a template which should be turned off.
-                      If attribute is left blank, or is None, all elements of the template will be turned off.
-    :type attribute: None, str, list
+    :param attribute: String or list, indicating the elements of a template
+        which should be turned off. If attribute is left blank, or is None,
+        all elements of the template will be turned off.
+    :type attribute: `None`_ or  `str`_ or `list`_
         """
         if attribute is None:
             attribute = self.__slots__
@@ -1246,8 +1254,7 @@ class P(object):
                 pass
 
     def reset(self, sub_name, v1, v2, ov1=None, ov2=None):
-        """
-        This function resets all the attributes having a
+        """This function resets all the attributes having a
         sub-attribute with the specified name.
 
         .. note::
@@ -1255,7 +1262,7 @@ class P(object):
             Respect how far from original position you are
             i.e. you move to x1,x2 from old_x1, old_x2
             if your current x1 value is not == to old_x1_value,
-            then respect how far from it you  were
+            then respect how far from it you were
 
         Example:
 
@@ -1326,8 +1333,7 @@ class P(object):
                     pass
 
     def move(self, p, axis):
-        """
-        Move a template by p% along the axis 'x' or 'y'.
+        """Move a template by p% along the axis 'x' or 'y'.
         Positive values of p mean movement toward right/top
         Negative values of p mean movement toward left/bottom
         The reference point is t.data.x1/y1
@@ -1356,8 +1362,7 @@ class P(object):
         self.reset(axis, v1, v2, ov1, ov2)
 
     def moveto(self, x, y):
-        """
-        Move a template to point (x,y), adjusting all attributes so data.x1 = x, and data.y1 = y.
+        """Move a template to point (x,y), adjusting all attributes so data.x1 = x, and data.y1 = y.
 
         :Example:
 
@@ -1366,10 +1371,12 @@ class P(object):
                 >>> t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
                 >>> t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
 
-        :param x: Float representing the new coordinate of the template's data.x1 attribute.
+        :param x: Float representing the new coordinate of the template's
+            data.x1 attribute.
         :type x: float
 
-        :param y: Float representing the new coordinate of the template's data.y1 attribute.
+        :param y: Float representing the new coordinate of the template's
+            data.y1 attribute.
         :type y: float
         """
         # p/=100.
@@ -1385,8 +1392,7 @@ class P(object):
         self.reset('y', v1, v2, ov1, ov2)
 
     def scale(self, scale, axis='xy', font=-1):
-        """
-        Scale a template along the axis 'x' or 'y' by scale
+        """Scale a template along the axis 'x' or 'y' by scale
         Positive values of scale mean increase
         Negative values of scale mean decrease
         The reference point is t.data.x1/y1
@@ -1430,8 +1436,7 @@ class P(object):
             self.scalefont(scale)
 
     def scalefont(self, scale):
-        """
-        Scales the template font by scale.
+        """Scales the template font by scale.
 
         Example:
 
@@ -1462,8 +1467,7 @@ class P(object):
                                   linecolors, linetypes, linewidths,
                                   markercolors, markertypes, markersizes,
                                   strings, scratched=None, bg=False, render=True):
-        """
-        Draws a legend with line/marker/text inside a template legend box
+        """Draws a legend with line/marker/text inside a template legend box
         Auto adjust text size to make it fit inside the box
         Auto arrange the elements to fill the box nicely
 
@@ -1603,12 +1607,11 @@ class P(object):
 
     def plot(self, x, slab, gm, bg=False, min=None,
              max=None, X=None, Y=None, **kargs):
-        """
-        This plots the template stuff on the Canvas.
+        """This plots the template stuff on the Canvas.
         It needs a slab and a graphic method.
 
         :returns: A list containing all the displays used
-        :rtype: list
+        :rtype: `list`_
         """
 
         displays = []
@@ -1780,8 +1783,7 @@ class P(object):
                      ext_2='n', x=None, bg=False, priority=None,
                      cmap=None, style=['solid'], index=[1],
                      opacity=[], **kargs):
-        """
-        This function, draws the colorbar, it needs:
+        """This function, draws the colorbar, it needs:
         colors : The colors to be plotted
         levels : The levels that each color represent
         legend : To overwrite, saying just draw box at
@@ -2062,8 +2064,7 @@ class P(object):
     def ratio_linear_projection(self, lon1, lon2, lat1, lat2,
                                 Rwished=None, Rout=None,
                                 box_and_ticks=0, x=None):
-        """
-        Computes ratio to shrink the data area of a template such that the
+        """Computes ratio to shrink the data area of a template such that the
         overall area has the least possible deformation in linear projection
 
         .. note::
@@ -2079,27 +2080,27 @@ class P(object):
                 >>> t.ratio_linear_projection(-135,-50,20,50) # USA
 
         :param lon1: Start longitude for plot.
-        :type lon1: float or int
+        :type lon1: `float`_ or `int`_
 
         :param lon2: End longitude for plot
-        :type lon2: float or int
+        :type lon2: `float`_ or `int`_
 
         :param lat1: Start latitude for plot.
-        :type lat1: float or int
+        :type lat1: `float`_ or `int`_
 
         :param lat2: End latitude for plot
-        :type lat2: float or int
+        :type lat2: `float`_ or `int`_
 
         :param Rwished: Ratio y/x wished.
             If None, ratio will be determined automatically.
-        :type Rwished: float or int
+        :type Rwished: `float`_ or `int`_
 
         :param Rout: Ratio of output (default is US Letter=11./8.5)
             Also you can pass a string: "A4","US LETTER", "X"/"SCREEN",
             the latest uses the window information
             box_and_ticks: Also redefine box and ticks to the new region.
             If None, Rout will be determined automatically.
-        :type Rout: float or int
+        :type Rout: `float`_ or `int`_
 
         """
 
@@ -2130,8 +2131,7 @@ class P(object):
         return
 
     def ratio(self, Rwished, Rout=None, box_and_ticks=0, x=None):
-        """
-        Computes ratio to shrink the data area of a template
+        """Computes ratio to shrink the data area of a template
         to have an y/x ratio of Rwished
         has the least possible deformation in linear projection
 
@@ -2144,7 +2144,7 @@ class P(object):
 
         :param Rwished: Ratio y/x wished.
             Rwished MUST be provided.
-        :type Rwished: float or int
+        :type Rwished: `float`_ or `int`_
 
         :param Rout: Ratio of output (default is US Letter=11./8.5).
             Also you can pass a string: "A4","US LETTER",

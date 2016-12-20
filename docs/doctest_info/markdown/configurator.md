@@ -4,8 +4,6 @@ Missing Doctests
 
 :x:```    vcs.configurator.Configurator```
 
-:x:```    vcs.configurator.Configurator.__init__```
-
 :x:```    vcs.configurator.Configurator.activate```
 
 :x:```    vcs.configurator.Configurator.actor_at_point```

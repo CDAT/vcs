@@ -19,11 +19,11 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    ex=a.createisoline('xyscale_ex') # create a boxfill to work with
+    ex=a.createisoline('xyscale_ex') # create a isoline to work with
 Expecting nothing
 ok
 Trying:
-    ex.xyscale(xat='linear', yat='linear') # set xaxisconvert and yaxisconvert to 'linear'
+    ex.xyscale(xat='linear', yat='linear')
 Expecting nothing
 ok
 114 items had no tests:

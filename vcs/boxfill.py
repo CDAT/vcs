@@ -130,14 +130,12 @@ def process_src(nm, code):
 
 class Gfb(object):
 
-    __doc__ = """
-    The boxfill graphics method (Gfb) displays a two-dimensional data array
-    by surrounding each data value by a colored grid box.
+    __doc__ = """The boxfill graphics method (Gfb) displays a two-dimensional
+    data array by surrounding each data value by a colored grid box.
 
     This class is used to define a boxfill table entry used in VCS, or it
     can be used to change some or all of the attributes in an existing
     boxfill table entry.
-
 
     .. describe:: General use of a boxfill:
 
@@ -374,8 +372,7 @@ class Gfb(object):
             """ % xmldocs.graphics_method_core  # noqa
 
     def rename(self, newname):
-        """
-        Renames the boxfill in the VCS name table.
+        """Renames the boxfill in the VCS name table.
 
         .. note::
 

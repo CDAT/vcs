@@ -8,7 +8,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x118041230>
+    <vcs.textcombined.Tc object at 0x117ed7410>
 ```
 
 vcs.textcombined.Tc.script
@@ -36,88 +36,6 @@ Missing Doctests
 :x:```    vcs.textcombined.Tc.To_name```
 
 :x:```    vcs.textcombined.Tc.Tt_name```
-
-:x:```    vcs.textcombined.Tc.__init__```
-
-:x:```    vcs.textcombined.Tc._getToname```
-
-:x:```    vcs.textcombined.Tc._getTtname```
-
-:x:```    vcs.textcombined.Tc._getangle```
-
-:x:```    vcs.textcombined.Tc._getcolor```
-
-:x:```    vcs.textcombined.Tc._getcolormap```
-
-:x:```    vcs.textcombined.Tc._getexpansion```
-
-:x:```    vcs.textcombined.Tc._getfcolor```
-
-:x:```    vcs.textcombined.Tc._getfont```
-
-:x:```    vcs.textcombined.Tc._gethalign```
-
-:x:```    vcs.textcombined.Tc._getheight```
-
-:x:```    vcs.textcombined.Tc._getpath```
-
-:x:```    vcs.textcombined.Tc._getpriority```
-
-:x:```    vcs.textcombined.Tc._getprojection```
-
-:x:```    vcs.textcombined.Tc._getspacing```
-
-:x:```    vcs.textcombined.Tc._getstring```
-
-:x:```    vcs.textcombined.Tc._getvalign```
-
-:x:```    vcs.textcombined.Tc._getviewport```
-
-:x:```    vcs.textcombined.Tc._getworldcoordinate```
-
-:x:```    vcs.textcombined.Tc._getx```
-
-:x:```    vcs.textcombined.Tc._gety```
-
-:x:```    vcs.textcombined.Tc._setToname```
-
-:x:```    vcs.textcombined.Tc._setTtname```
-
-:x:```    vcs.textcombined.Tc._setangle```
-
-:x:```    vcs.textcombined.Tc._setcolor```
-
-:x:```    vcs.textcombined.Tc._setcolormap```
-
-:x:```    vcs.textcombined.Tc._setexpansion```
-
-:x:```    vcs.textcombined.Tc._setfcolor```
-
-:x:```    vcs.textcombined.Tc._setfont```
-
-:x:```    vcs.textcombined.Tc._sethalign```
-
-:x:```    vcs.textcombined.Tc._setheight```
-
-:x:```    vcs.textcombined.Tc._setpath```
-
-:x:```    vcs.textcombined.Tc._setpriority```
-
-:x:```    vcs.textcombined.Tc._setprojection```
-
-:x:```    vcs.textcombined.Tc._setspacing```
-
-:x:```    vcs.textcombined.Tc._setstring```
-
-:x:```    vcs.textcombined.Tc._setvalign```
-
-:x:```    vcs.textcombined.Tc._setviewport```
-
-:x:```    vcs.textcombined.Tc._setworldcoordinate```
-
-:x:```    vcs.textcombined.Tc._setx```
-
-:x:```    vcs.textcombined.Tc._sety```
 
 :x:```    vcs.textcombined.Tc.angle```
 

@@ -12,9 +12,9 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.template.P.drawLinesAndMarkersLegend[3]>", line 4, in <module>
         ["sample A","type B","thing C"],True)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1522, in drawLinesAndMarkersLegend
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1526, in drawLinesAndMarkersLegend
         strings, scratched, bg, render)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/utils.py", line 2690, in drawLinesAndMarkersLegend
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/utils.py", line 2666, in drawLinesAndMarkersLegend
         if scratched is not None and scratched[i] is not False:
     TypeError: 'bool' object has no attribute '__getitem__'
 ```
@@ -30,7 +30,7 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.template.P.moveto[0]>", line 1, in <module>
         t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 113, in createtemplate
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 112, in createtemplate
         name, source = check_name_source(name, source, 'template')
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 90, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
@@ -62,7 +62,7 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.template.P.reset[0]>", line 1, in <module>
         t = vcs.createtemplate('example1', 'default') # template 'example1' inherits from 'default'
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 113, in createtemplate
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 112, in createtemplate
         name, source = check_name_source(name, source, 'template')
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 90, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
@@ -94,7 +94,7 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.template.P.scale[0]>", line 1, in <module>
         t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 113, in createtemplate
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 112, in createtemplate
         name, source = check_name_source(name, source, 'template')
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 90, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
@@ -148,14 +148,6 @@ Missing Doctests
 :x:```    vcs.template```
 
 :x:```    vcs.template.P```
-
-:x:```    vcs.template.P.__init__```
-
-:x:```    vcs.template.P._getName```
-
-:x:```    vcs.template.P._getOrientation```
-
-:x:```    vcs.template.P._setOrientation```
 
 :x:```    vcs.template.P.blank```
 
@@ -276,10 +268,6 @@ Missing Doctests
 :x:```    vcs.template.P.zunits```
 
 :x:```    vcs.template.P.zvalue```
-
-:x:```    vcs.template._getgen```
-
-:x:```    vcs.template._setgen```
 
 :x:```    vcs.template.epsilon_gte```
 

@@ -44,8 +44,6 @@ Missing Doctests
 
 :x:```    vcs.dv3d.Gf3DDualScalar.ZSlider```
 
-:x:```    vcs.dv3d.Gf3DDualScalar.__init__```
-
 :x:```    vcs.dv3d.Gf3Dscalar```
 
 :x:```    vcs.dv3d.Gf3Dscalar.Animation```
@@ -87,8 +85,6 @@ Missing Doctests
 :x:```    vcs.dv3d.Gf3Dscalar.YSlider```
 
 :x:```    vcs.dv3d.Gf3Dscalar.ZSlider```
-
-:x:```    vcs.dv3d.Gf3Dscalar.__init__```
 
 :x:```    vcs.dv3d.Gf3Dvector```
 
@@ -132,25 +128,9 @@ Missing Doctests
 
 :x:```    vcs.dv3d.Gf3Dvector.ZSlider```
 
-:x:```    vcs.dv3d.Gf3Dvector.__init__```
-
 :x:```    vcs.dv3d.Gfdv3d```
 
 :x:```    vcs.dv3d.Gfdv3d.NumCores```
-
-:x:```    vcs.dv3d.Gfdv3d.__init__```
-
-:x:```    vcs.dv3d.Gfdv3d._getNumCores```
-
-:x:```    vcs.dv3d.Gfdv3d._getaxes```
-
-:x:```    vcs.dv3d.Gfdv3d._getname```
-
-:x:```    vcs.dv3d.Gfdv3d._setNumCores```
-
-:x:```    vcs.dv3d.Gfdv3d._setaxes```
-
-:x:```    vcs.dv3d.Gfdv3d._setname```
 
 :x:```    vcs.dv3d.Gfdv3d.addParameters```
 

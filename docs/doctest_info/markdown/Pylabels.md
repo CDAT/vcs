@@ -4,8 +4,6 @@ Missing Doctests
 
 :x:```    vcs.Pylabels.Pyl```
 
-:x:```    vcs.Pylabels.Pyl.__init__```
-
 :x:```    vcs.Pylabels.Pyl.list```
 
 :x:```    vcs.Pylabels.Pyl.priority```

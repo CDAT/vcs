@@ -1,13 +1,5 @@
 Trying:
-    import vcs
-Expecting nothing
-ok
-Trying:
-    import os
-Expecting nothing
-ok
-Trying:
-    import sys
+    import os, sys
 Expecting nothing
 ok
 Trying:
@@ -19,7 +11,11 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    logo1 = vcs.utils.Logo(os.path.join(sys.prefix,"share","vcs","uvcdat.png"))
+    path=os.path.join(sys.prefix,"share","vcs","uvcdat.png")
+Expecting nothing
+ok
+Trying:
+    logo1=vcs.utils.Logo(path)
 Expecting nothing
 ok
 Trying:
@@ -63,7 +59,11 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    logo1 = vcs.utils.Logo(os.path.join(sys.prefix,"share/vcs/uvcdat.png"))
+    path=os.path.join(sys.prefix,"share/vcs/uvcdat.png")
+Expecting nothing
+ok
+Trying:
+    logo1 = vcs.utils.Logo(path)
 Expecting nothing
 ok
 Trying:
@@ -247,18 +247,18 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.show('colormap') # Show all the existing colormap secondary methods
+    a.show('colormap') # Show all  colormap secondary methods
 Expecting:
     *******************Colormap Names List**********************
     ...
     *******************End Colormap Names List**********************
 ok
 Trying:
-    cp=a.getcolormap() # cp instance of 'default' colormap secondary method
+    cp=a.getcolormap() # 'default' colormap
 Expecting nothing
 ok
 Trying:
-    cp2=a.getcolormap('rainbow') # cp2 instance of existing 'rainbow' colormap secondary method
+    cp2=a.getcolormap('rainbow') # 'rainbow' colormap
 Expecting nothing
 ok
 Trying:
@@ -663,8 +663,8 @@ ok
     vcs.utils.scriptrun_scr
     vcs.utils.setTicksandLabels
 26 items passed all tests:
-  13 tests in vcs.utils.Logo
-  11 tests in vcs.utils.Logo.plot
+  12 tests in vcs.utils.Logo
+  12 tests in vcs.utils.Logo.plot
    4 tests in vcs.utils.creategraphicsmethod
    2 tests in vcs.utils.download_sample_data_files
    5 tests in vcs.utils.drawLinesAndMarkersLegend

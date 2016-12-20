@@ -4,8 +4,6 @@ Missing Doctests
 
 :x:```    vcs.Pxtickmarks.Pxt```
 
-:x:```    vcs.Pxtickmarks.Pxt.__init__```
-
 :x:```    vcs.Pxtickmarks.Pxt.line```
 
 :x:```    vcs.Pxtickmarks.Pxt.list```

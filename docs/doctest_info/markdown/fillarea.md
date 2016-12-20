@@ -4,40 +4,6 @@ Missing Doctests
 
 :x:```    vcs.fillarea.Tf```
 
-:x:```    vcs.fillarea.Tf.__init__```
-
-:x:```    vcs.fillarea.Tf._getfillareacolors```
-
-:x:```    vcs.fillarea.Tf._getfillareaindices```
-
-:x:```    vcs.fillarea.Tf._getfillareaopacity```
-
-:x:```    vcs.fillarea.Tf._getfillareastyle```
-
-:x:```    vcs.fillarea.Tf._getname```
-
-:x:```    vcs.fillarea.Tf._getpriority```
-
-:x:```    vcs.fillarea.Tf._getx```
-
-:x:```    vcs.fillarea.Tf._gety```
-
-:x:```    vcs.fillarea.Tf._setfillareacolors```
-
-:x:```    vcs.fillarea.Tf._setfillareaindices```
-
-:x:```    vcs.fillarea.Tf._setfillareaopacity```
-
-:x:```    vcs.fillarea.Tf._setfillareastyle```
-
-:x:```    vcs.fillarea.Tf._setname```
-
-:x:```    vcs.fillarea.Tf._setpriority```
-
-:x:```    vcs.fillarea.Tf._setx```
-
-:x:```    vcs.fillarea.Tf._sety```
-
 :x:```    vcs.fillarea.Tf.color```
 
 :x:```    vcs.fillarea.Tf.colormap```

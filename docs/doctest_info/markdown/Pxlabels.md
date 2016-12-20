@@ -4,8 +4,6 @@ Missing Doctests
 
 :x:```    vcs.Pxlabels.Pxl```
 
-:x:```    vcs.Pxlabels.Pxl.__init__```
-
 :x:```    vcs.Pxlabels.Pxl.list```
 
 :x:```    vcs.Pxlabels.Pxl.priority```

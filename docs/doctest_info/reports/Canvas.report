@@ -576,7 +576,7 @@ Trying:
         pass
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2212, in vcs.Canvas.Canvas.createtext
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2170, in vcs.Canvas.Canvas.createtext
 Failed example:
     try: # try to create a new textcombined, in case none exist
         vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
@@ -584,7 +584,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x1186ab050>
+    <vcs.textcombined.Tc object at 0x1185bd050>
 Trying:
     vcs.listelements('textcombined') # should now contain 'EXAMPLE_tt:::EXAMPLE_tto'
 Expecting:
@@ -1066,14 +1066,14 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1448, in vcs.Canvas.Canvas.get3d_dual_scalar
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1436, in vcs.Canvas.Canvas.get3d_dual_scalar
 Failed example:
     a.plot(ex, slab1, slab2) # plot using specified 3d_dual_scalar object
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1354a87f8>
+    <vcs.displayplot.Dp object at 0x1100894b0>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1104,14 +1104,14 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1447, in vcs.Canvas.Canvas.get3d_scalar
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1435, in vcs.Canvas.Canvas.get3d_scalar
 Failed example:
     a.plot(ex, slab1) # plot using specified 3d_scalar object
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x127bde280>
+    <vcs.displayplot.Dp object at 0x153b92b40>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1146,7 +1146,7 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1448, in vcs.Canvas.Canvas.get3d_vector
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1436, in vcs.Canvas.Canvas.get3d_vector
 Failed example:
     a.plot(ex, slab1, slab2) # plot using specified 3d_vector object
 Expected:
@@ -1155,7 +1155,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x14f922280>
+    <vcs.displayplot.Dp object at 0x10fe875c8>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1280,8 +1280,13 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    cont_type = a.getcontinentstype() # Get the continents type
+    a.setcontinentstype(6)
 Expecting nothing
+ok
+Trying:
+    a.getcontinentstype() # Get the continents type
+Expecting:
+    6
 ok
 Trying:
     a=vcs.init()
@@ -1623,7 +1628,7 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1315, in vcs.Canvas.Canvas.gettaylordiagram
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1304, in vcs.Canvas.Canvas.gettaylordiagram
 Failed example:
     a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
 Exception raised:
@@ -1632,9 +1637,9 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.Canvas.Canvas.gettaylordiagram[6]>", line 1, in <module>
         a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1320, in taylordiagram
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1310, in taylordiagram
         return self.__plot(arglist, parms)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3700, in __plot
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3650, in __plot
         t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1967, in plot
         self.draw(canvas, data)
@@ -1906,7 +1911,7 @@ Trying:
 Expecting:
     1
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5605, in vcs.Canvas.Canvas.isinfile
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5520, in vcs.Canvas.Canvas.isinfile
 Failed example:
     a.isinfile(box, 'deft_box.py')
 Expected:
@@ -2199,7 +2204,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.show('meshfill') # Show all the existing meshfill graphics methods
+    a.show('meshfill') # Show all meshfill graphics methods
 Expecting:
     *******************Meshfill Names List**********************
     ...
@@ -2210,19 +2215,19 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
 Expecting nothing
 ok
 Trying:
-    slab = f('clt') # use the data file to create a cdms2 slab
+    slab = f('clt') # use data file to create a cdms2 slab
 Expecting nothing
 ok
 Trying:
-    mesh=a.getmeshfill() # Create instance of 'default'
+    m=a.getmeshfill() # Create instance of 'default'
 Expecting nothing
 ok
 Trying:
-    a.meshfill(slab,mesh) # Plot array using specified mesh and default template
+    a.meshfill(slab,m) # Plot with default mesh & template
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -2231,7 +2236,11 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.meshfill(slab,mesh,'quick','a_polar_meshfill')  # Plot slab with polar mesh, quick template
+    p='a_polar_meshfill' # will use this to plot
+Expecting nothing
+ok
+Trying:
+    a.meshfill(slab,m,'quick', p) # polar mesh, quick template
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -2790,15 +2799,34 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.setcontinentstype(3)
+    a.setcontinentstype(4) "Political Borders"
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5384, in vcs.Canvas.Canvas.setcontinentstype
+Failed example:
+    a.setcontinentstype(4) "Political Borders"
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.Canvas.Canvas.setcontinentstype[1]>", line 1
+        a.setcontinentstype(4) "Political Borders"
+                                                 ^
+    SyntaxError: invalid syntax
+Trying:
+    import cdms2 # We need cdms2 to create a slab
 Expecting nothing
 ok
 Trying:
-    array = [range(1, 11) for _ in range(1, 11)]
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
 Expecting nothing
 ok
 Trying:
-    a.plot(array,'default','isofill','quick')
+    v = f('v') # use the data file to create a slab
+Expecting nothing
+ok
+Trying:
+    a.plot(v,'default','isofill','quick') # map with borders
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -3298,7 +3326,7 @@ ok
     vcs.Canvas._process_keyword
     vcs.Canvas.change_date_time
     vcs.Canvas.dictionarytovcslist
-116 items passed all tests:
+115 items passed all tests:
   14 tests in vcs.Canvas.Canvas.boxfill
    2 tests in vcs.Canvas.Canvas.canvasid
    5 tests in vcs.Canvas.Canvas.canvasinfo
@@ -3348,7 +3376,7 @@ ok
    4 tests in vcs.Canvas.Canvas.getcolormap
    4 tests in vcs.Canvas.Canvas.getcolormapname
    3 tests in vcs.Canvas.Canvas.getcontinentsline
-   2 tests in vcs.Canvas.Canvas.getcontinentstype
+   3 tests in vcs.Canvas.Canvas.getcontinentstype
    4 tests in vcs.Canvas.Canvas.getdrawlogo
    4 tests in vcs.Canvas.Canvas.getfillarea
    7 tests in vcs.Canvas.Canvas.getfont
@@ -3381,7 +3409,7 @@ ok
    2 tests in vcs.Canvas.Canvas.listelements
    9 tests in vcs.Canvas.Canvas.marker
    4 tests in vcs.Canvas.Canvas.match_color
-   9 tests in vcs.Canvas.Canvas.meshfill
+  10 tests in vcs.Canvas.Canvas.meshfill
    3 tests in vcs.Canvas.Canvas.objecthelp
    3 tests in vcs.Canvas.Canvas.open
    2 tests in vcs.Canvas.Canvas.orientation
@@ -3404,7 +3432,6 @@ ok
   11 tests in vcs.Canvas.Canvas.setcolorcell
    5 tests in vcs.Canvas.Canvas.setcolormap
    5 tests in vcs.Canvas.Canvas.setcontinentsline
-   4 tests in vcs.Canvas.Canvas.setcontinentstype
    6 tests in vcs.Canvas.Canvas.show
    6 tests in vcs.Canvas.Canvas.svg
    7 tests in vcs.Canvas.Canvas.switchfonts
@@ -3416,13 +3443,14 @@ ok
    8 tests in vcs.Canvas.Canvas.xyvsy
    8 tests in vcs.Canvas.Canvas.yxvsx
 **********************************************************************
-6 items had failures:
+7 items had failures:
    1 of   3 in vcs.Canvas.Canvas.createtext
    1 of   8 in vcs.Canvas.Canvas.get3d_dual_scalar
    1 of   7 in vcs.Canvas.Canvas.get3d_scalar
    1 of   8 in vcs.Canvas.Canvas.get3d_vector
    1 of   7 in vcs.Canvas.Canvas.gettaylordiagram
    1 of   4 in vcs.Canvas.Canvas.isinfile
-691 tests in 205 items.
-685 passed and 6 failed.
-***Test Failed*** 6 failures.
+   1 of   6 in vcs.Canvas.Canvas.setcontinentstype
+695 tests in 205 items.
+688 passed and 7 failed.
+***Test Failed*** 7 failures.

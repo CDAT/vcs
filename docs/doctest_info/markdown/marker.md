@@ -4,48 +4,6 @@ Missing Doctests
 
 :x:```    vcs.marker.Tm```
 
-:x:```    vcs.marker.Tm.__init__```
-
-:x:```    vcs.marker.Tm._getfillareacolors```
-
-:x:```    vcs.marker.Tm._getname```
-
-:x:```    vcs.marker.Tm._getpriority```
-
-:x:```    vcs.marker.Tm._getprojection```
-
-:x:```    vcs.marker.Tm._getsize```
-
-:x:```    vcs.marker.Tm._gettype```
-
-:x:```    vcs.marker.Tm._getvp```
-
-:x:```    vcs.marker.Tm._getwc```
-
-:x:```    vcs.marker.Tm._getx```
-
-:x:```    vcs.marker.Tm._gety```
-
-:x:```    vcs.marker.Tm._setfillareacolors```
-
-:x:```    vcs.marker.Tm._setname```
-
-:x:```    vcs.marker.Tm._setpriority```
-
-:x:```    vcs.marker.Tm._setprojection```
-
-:x:```    vcs.marker.Tm._setsize```
-
-:x:```    vcs.marker.Tm._settype```
-
-:x:```    vcs.marker.Tm._setvp```
-
-:x:```    vcs.marker.Tm._setwc```
-
-:x:```    vcs.marker.Tm._setx```
-
-:x:```    vcs.marker.Tm._sety```
-
 :x:```    vcs.marker.Tm.color```
 
 :x:```    vcs.marker.Tm.colormap```

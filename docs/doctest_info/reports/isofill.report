@@ -31,11 +31,11 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    ex=a.createisofill('xyscale_ex') # create a boxfill to work with
+    ex=a.createisofill('xyscale_ex') # create a isofill to work with
 Expecting nothing
 ok
 Trying:
-    ex.xyscale(xat='linear', yat='linear') # set xaxisconvert and yaxisconvert to 'linear'
+    ex.xyscale(xat='linear', yat='linear')
 Expecting nothing
 ok
 83 items had no tests:

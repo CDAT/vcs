@@ -4,12 +4,6 @@ Missing Doctests
 
 :x:```    vcs.Pformat.Pf```
 
-:x:```    vcs.Pformat.Pf.__init__```
-
-:x:```    vcs.Pformat.Pf._getformat```
-
-:x:```    vcs.Pformat.Pf._setformat```
-
 :x:```    vcs.Pformat.Pf.format```
 
 :x:```    vcs.Pformat.Pf.list```

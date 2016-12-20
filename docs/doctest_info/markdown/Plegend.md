@@ -4,8 +4,6 @@ Missing Doctests
 
 :x:```    vcs.Plegend.Pls```
 
-:x:```    vcs.Plegend.Pls.__init__```
-
 :x:```    vcs.Plegend.Pls.arrow```
 
 :x:```    vcs.Plegend.Pls.line```

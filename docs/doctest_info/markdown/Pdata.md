@@ -4,8 +4,6 @@ Missing Doctests
 
 :x:```    vcs.Pdata.Pds```
 
-:x:```    vcs.Pdata.Pds.__init__```
-
 :x:```    vcs.Pdata.Pds.list```
 
 :x:```    vcs.Pdata.Pds.priority```

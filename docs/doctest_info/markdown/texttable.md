@@ -20,68 +20,6 @@ Missing Doctests
 
 :x:```    vcs.texttable.Tt```
 
-:x:```    vcs.texttable.Tt.__init__```
-
-:x:```    vcs.texttable.Tt._getbackgroundcolor```
-
-:x:```    vcs.texttable.Tt._getbackgroundopacity```
-
-:x:```    vcs.texttable.Tt._getcolor```
-
-:x:```    vcs.texttable.Tt._getexpansion```
-
-:x:```    vcs.texttable.Tt._getfillincolor```
-
-:x:```    vcs.texttable.Tt._getfont```
-
-:x:```    vcs.texttable.Tt._getname```
-
-:x:```    vcs.texttable.Tt._getpriority```
-
-:x:```    vcs.texttable.Tt._getprojection```
-
-:x:```    vcs.texttable.Tt._getspacing```
-
-:x:```    vcs.texttable.Tt._getstring```
-
-:x:```    vcs.texttable.Tt._getvp```
-
-:x:```    vcs.texttable.Tt._getwc```
-
-:x:```    vcs.texttable.Tt._getx```
-
-:x:```    vcs.texttable.Tt._gety```
-
-:x:```    vcs.texttable.Tt._setbackgroundcolor```
-
-:x:```    vcs.texttable.Tt._setbackgroundopacity```
-
-:x:```    vcs.texttable.Tt._setcolor```
-
-:x:```    vcs.texttable.Tt._setexpansion```
-
-:x:```    vcs.texttable.Tt._setfillincolor```
-
-:x:```    vcs.texttable.Tt._setfont```
-
-:x:```    vcs.texttable.Tt._setname```
-
-:x:```    vcs.texttable.Tt._setpriority```
-
-:x:```    vcs.texttable.Tt._setprojection```
-
-:x:```    vcs.texttable.Tt._setspacing```
-
-:x:```    vcs.texttable.Tt._setstring```
-
-:x:```    vcs.texttable.Tt._setvp```
-
-:x:```    vcs.texttable.Tt._setwc```
-
-:x:```    vcs.texttable.Tt._setx```
-
-:x:```    vcs.texttable.Tt._sety```
-
 :x:```    vcs.texttable.Tt.backgroundcolor```
 
 :x:```    vcs.texttable.Tt.backgroundopacity```

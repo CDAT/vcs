@@ -17,7 +17,7 @@ Trying:
         ["sample A","type B","thing C"],True)
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1477, in vcs.template.P.drawLinesAndMarkersLegend
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1481, in vcs.template.P.drawLinesAndMarkersLegend
 Failed example:
     t.drawLinesAndMarkersLegend(x,
         ["red","blue","green"], ["solid","dash","dot"],[1,4,8],
@@ -29,9 +29,9 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.template.P.drawLinesAndMarkersLegend[3]>", line 4, in <module>
         ["sample A","type B","thing C"],True)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1522, in drawLinesAndMarkersLegend
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1526, in drawLinesAndMarkersLegend
         strings, scratched, bg, render)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/utils.py", line 2690, in drawLinesAndMarkersLegend
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/utils.py", line 2666, in drawLinesAndMarkersLegend
         if scratched is not None and scratched[i] is not False:
     TypeError: 'bool' object has no attribute '__getitem__'
 Trying:
@@ -54,7 +54,7 @@ Trying:
     t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1366, in vcs.template.P.moveto
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1371, in vcs.template.P.moveto
 Failed example:
     t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
 Exception raised:
@@ -63,7 +63,7 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.template.P.moveto[0]>", line 1, in <module>
         t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 113, in createtemplate
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 112, in createtemplate
         name, source = check_name_source(name, source, 'template')
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 90, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
@@ -72,7 +72,7 @@ Trying:
     t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1367, in vcs.template.P.moveto
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1372, in vcs.template.P.moveto
 Failed example:
     t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
 Exception raised:
@@ -102,7 +102,7 @@ Trying:
     t = vcs.createtemplate('example1', 'default') # template 'example1' inherits from 'default'
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1264, in vcs.template.P.reset
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1271, in vcs.template.P.reset
 Failed example:
     t = vcs.createtemplate('example1', 'default') # template 'example1' inherits from 'default'
 Exception raised:
@@ -111,7 +111,7 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.template.P.reset[0]>", line 1, in <module>
         t = vcs.createtemplate('example1', 'default') # template 'example1' inherits from 'default'
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 113, in createtemplate
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 112, in createtemplate
         name, source = check_name_source(name, source, 'template')
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 90, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
@@ -120,7 +120,7 @@ Trying:
     t.reset('x',0.15,0.5,t.data.x1,t.data.x2) # Set x1 value to 0.15 and x2 value to 0.5
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1265, in vcs.template.P.reset
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1272, in vcs.template.P.reset
 Failed example:
     t.reset('x',0.15,0.5,t.data.x1,t.data.x2) # Set x1 value to 0.15 and x2 value to 0.5
 Exception raised:
@@ -134,7 +134,7 @@ Trying:
     t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1399, in vcs.template.P.scale
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1405, in vcs.template.P.scale
 Failed example:
     t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
 Exception raised:
@@ -143,7 +143,7 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.template.P.scale[0]>", line 1, in <module>
         t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 113, in createtemplate
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 112, in createtemplate
         name, source = check_name_source(name, source, 'template')
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 90, in check_name_source
         raise vcsError("Error %s object named %s already exists" % (typ, name))
@@ -152,7 +152,7 @@ Trying:
     t.scale(0.5) # Halves the template size
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1400, in vcs.template.P.scale
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1406, in vcs.template.P.scale
 Failed example:
     t.scale(0.5) # Halves the template size
 Exception raised:
@@ -166,7 +166,7 @@ Trying:
     t.scale(1.2) # Upsize everything to 20% more than the original size
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1401, in vcs.template.P.scale
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1407, in vcs.template.P.scale
 Failed example:
     t.scale(1.2) # Upsize everything to 20% more than the original size
 Exception raised:
@@ -180,7 +180,7 @@ Trying:
     t.scale(2,'x') # Double the x axis
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1402, in vcs.template.P.scale
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1408, in vcs.template.P.scale
 Failed example:
     t.scale(2,'x') # Double the x axis
 Exception raised:

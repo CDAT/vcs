@@ -4,8 +4,6 @@ Missing Doctests
 
 :x:```    vcs.colormap.Cp```
 
-:x:```    vcs.colormap.Cp.__init__```
-
 :x:```    vcs.colormap.Cp.getindex```
 
 :x:```    vcs.colormap.Cp.getname```
@@ -21,12 +19,6 @@ Missing Doctests
 :x:```    vcs.colormap.Cp.setname```
 
 :x:```    vcs.colormap.RGB_Table```
-
-:x:```    vcs.colormap.RGB_Table.__getitem__```
-
-:x:```    vcs.colormap.RGB_Table.__init__```
-
-:x:```    vcs.colormap.RGB_Table.__setitem__```
 
 :x:```    vcs.colormap.process_src```
 

@@ -4,8 +4,6 @@ Missing Doctests
 
 :x:```    vcs.Pboxeslines.Pbl```
 
-:x:```    vcs.Pboxeslines.Pbl.__init__```
-
 :x:```    vcs.Pboxeslines.Pbl.line```
 
 :x:```    vcs.Pboxeslines.Pbl.list```

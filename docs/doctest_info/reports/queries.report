@@ -298,33 +298,18 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    import cdms2 # need this to make a slab for a boxfill plot
+    array=[range(10) for _ in range(10)]
 Expecting nothing
 ok
 Trying:
-    f = cdms2.open(vcs.sample_data + '/clt.nc') # open a variable file
+    dsp=a.plot(array) # plotting should return a displayplot object
 Expecting nothing
 ok
 Trying:
-    v = f('v') # create a slab from the variable file
-Expecting nothing
-ok
-Trying:
-    dsp_plot=(a.getboxfill(), v) # plot a boxfill. Should return vcs.displayplot.Dp.
-Expecting nothing
-ok
-Trying:
-    vcs.queries.isplot(dsp_plot)
+    vcs.queries.isplot(dsp)
 Expecting:
     1
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/queries.py", line 185, in vcs.queries.isplot
-Failed example:
-    vcs.queries.isplot(dsp_plot)
-Expected:
-    1
-Got:
-    0
+ok
 Trying:
     a=vcs.init() # Make a VCS Canvas object to work with:
 Expecting nothing
@@ -444,7 +429,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x118008230>
+    <vcs.textcombined.Tc object at 0x118014d70>
 Trying:
     a.show('textcombined') # Show all available textcombined
 Expecting:
@@ -583,7 +568,7 @@ Expecting:
 ok
 1 items had no tests:
     vcs.queries
-26 items passed all tests:
+27 items passed all tests:
    2 tests in vcs.queries.graphicsmethodlist
    7 tests in vcs.queries.graphicsmethodtype
    4 tests in vcs.queries.is1d
@@ -599,6 +584,7 @@ ok
    4 tests in vcs.queries.isline
    4 tests in vcs.queries.ismarker
    4 tests in vcs.queries.ismeshfill
+   4 tests in vcs.queries.isplot
    4 tests in vcs.queries.isprojection
    4 tests in vcs.queries.isscatter
    4 tests in vcs.queries.issecondaryobject
@@ -611,9 +597,8 @@ ok
    4 tests in vcs.queries.isxyvsy
    4 tests in vcs.queries.isyxvsx
 **********************************************************************
-2 items had failures:
-   1 of   6 in vcs.queries.isplot
+1 items had failures:
    1 of   5 in vcs.queries.istextcombined
-115 tests in 29 items.
-113 passed and 2 failed.
-***Test Failed*** 2 failures.
+113 tests in 29 items.
+112 passed and 1 failed.
+***Test Failed*** 1 failures.

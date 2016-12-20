@@ -22,7 +22,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x118141230>
+    <vcs.textcombined.Tc object at 0x117ed7410>
 ```
 
 vcs.manageElements.get3d_dual_scalar
@@ -34,7 +34,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x119a5bc58>
+    <vcs.displayplot.Dp object at 0x11895b050>
 ```
 
 vcs.manageElements.get3d_scalar
@@ -46,7 +46,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x119013050>
+    <vcs.displayplot.Dp object at 0x11863e5c8>
 ```
 
 vcs.manageElements.get3d_vector
@@ -60,7 +60,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1181efa28>
+    <vcs.displayplot.Dp object at 0x120750b40>
 ```
 
 vcs.manageElements.gettaylordiagram
@@ -74,9 +74,8 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.manageElements.gettaylordiagram[6]>", line 1, in <module>
         a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1320, in taylordiagram
-        return self.__plot(arglist, parms)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3700, in __plot
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1310, in taylordiagram
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3650, in __plot
         t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1967, in plot
         self.draw(canvas, data)

@@ -8,7 +8,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x1186ab050>
+    <vcs.textcombined.Tc object at 0x1185bd050>
 ```
 
 vcs.Canvas.Canvas.get3d_dual_scalar
@@ -20,7 +20,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1354a87f8>
+    <vcs.displayplot.Dp object at 0x1100894b0>
 ```
 
 vcs.Canvas.Canvas.get3d_scalar
@@ -32,7 +32,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x127bde280>
+    <vcs.displayplot.Dp object at 0x153b92b40>
 ```
 
 vcs.Canvas.Canvas.get3d_vector
@@ -46,7 +46,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x14f922280>
+    <vcs.displayplot.Dp object at 0x10fe875c8>
 ```
 
 vcs.Canvas.Canvas.gettaylordiagram
@@ -60,9 +60,8 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.Canvas.Canvas.gettaylordiagram[6]>", line 1, in <module>
         a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1320, in taylordiagram
-        return self.__plot(arglist, parms)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3700, in __plot
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1310, in taylordiagram
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3650, in __plot
         t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1967, in plot
         self.draw(canvas, data)
@@ -83,77 +82,26 @@ Expected:
 Got nothing
 ```
 
+vcs.Canvas.Canvas.setcontinentstype
+-----------------------------------
+```python
+Failed example:
+    a.setcontinentstype(4) "Political Borders"
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.Canvas.Canvas.setcontinentstype[1]>", line 1
+        a.setcontinentstype(4) "Political Borders"
+                                                 ^
+    SyntaxError: invalid syntax
+```
+
 Missing Doctests
 ----------------
 :x:```    vcs.Canvas```
 
 :x:```    vcs.Canvas.Canvas```
-
-:x:```    vcs.Canvas.Canvas._Canvas__new_elts```
-
-:x:```    vcs.Canvas.Canvas._Canvas__plot```
-
-:x:```    vcs.Canvas.Canvas.__init__```
-
-:x:```    vcs.Canvas.Canvas._compute_margins```
-
-:x:```    vcs.Canvas.Canvas._compute_width_height```
-
-:x:```    vcs.Canvas.Canvas._continentspath```
-
-:x:```    vcs.Canvas.Canvas._datawc_tv```
-
-:x:```    vcs.Canvas.Canvas._get_user_actions```
-
-:x:```    vcs.Canvas.Canvas._get_user_actions_names```
-
-:x:```    vcs.Canvas.Canvas._getanimate```
-
-:x:```    vcs.Canvas.Canvas._getanimate_info```
-
-:x:```    vcs.Canvas.Canvas._getcanvas```
-
-:x:```    vcs.Canvas.Canvas._getisplottinggridded```
-
-:x:```    vcs.Canvas.Canvas._getmode```
-
-:x:```    vcs.Canvas.Canvas._getpausetime```
-
-:x:```    vcs.Canvas.Canvas._getvarglist```
-
-:x:```    vcs.Canvas.Canvas._getviewport```
-
-:x:```    vcs.Canvas.Canvas._getwinfo_id```
-
-:x:```    vcs.Canvas.Canvas._getworldcoordinate```
-
-:x:```    vcs.Canvas.Canvas._reconstruct_tv```
-
-:x:```    vcs.Canvas.Canvas._scriptrun```
-
-:x:```    vcs.Canvas.Canvas._set_user_actions```
-
-:x:```    vcs.Canvas.Canvas._set_user_actions_names```
-
-:x:```    vcs.Canvas.Canvas._setanimate```
-
-:x:```    vcs.Canvas.Canvas._setanimate_info```
-
-:x:```    vcs.Canvas.Canvas._setcanvas```
-
-:x:```    vcs.Canvas.Canvas._setisplottinggridded```
-
-:x:```    vcs.Canvas.Canvas._setmode```
-
-:x:```    vcs.Canvas.Canvas._setpausetime```
-
-:x:```    vcs.Canvas.Canvas._setvarglist```
-
-:x:```    vcs.Canvas.Canvas._setviewport```
-
-:x:```    vcs.Canvas.Canvas._setwinfo_id```
-
-:x:```    vcs.Canvas.Canvas._setworldcoordinate```
 
 :x:```    vcs.Canvas.Canvas.addfont```
 
@@ -233,19 +181,11 @@ Missing Doctests
 
 :x:```    vcs.Canvas.SIGNAL```
 
-:x:```    vcs.Canvas.SIGNAL.__call__```
-
-:x:```    vcs.Canvas.SIGNAL.__init__```
-
 :x:```    vcs.Canvas.SIGNAL.clear```
 
 :x:```    vcs.Canvas.SIGNAL.connect```
 
 :x:```    vcs.Canvas.SIGNAL.disconnect```
-
-:x:```    vcs.Canvas._determine_arg_list```
-
-:x:```    vcs.Canvas._process_keyword```
 
 :x:```    vcs.Canvas.change_date_time```
 

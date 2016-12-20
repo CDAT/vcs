@@ -51,7 +51,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    ex.xyscale(xat='linear', yat='linear') # set xaxisconvert and yaxisconvert to 'linear'
+    ex.xyscale(xat='linear', yat='linear')
 Expecting nothing
 ok
 97 items had no tests:

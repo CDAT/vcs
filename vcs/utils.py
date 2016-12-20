@@ -1,5 +1,4 @@
-"""
-Utils contains functions and objects that provide VCS with useful utilities.
+"""Utils contains functions and objects that provide VCS with useful utilities.
 
 .. _list: https://docs.python.org/2/library/functions.html#list
 .. _tuple: https://docs.python.org/2/library/functions.html#tuple
@@ -67,8 +66,7 @@ defaultColorsRange = range(256)
 
 
 def get_png_dims(fnm):
-    """
-    Given the path to a png, return width, height of the png.
+    """Given the path to a png, return width, height of the png.
 
     :Example:
 
@@ -101,8 +99,7 @@ def get_png_dims(fnm):
 
 
 class Logo(object):
-    """
-    Creates a 'logo' object
+    """Creates a 'logo' object
 
     This also to draw a logo either from a text string or a picture (png) file.
     Picture will be shrunk to fit within the canvas if it's too big to fit
@@ -111,26 +108,22 @@ class Logo(object):
 
         .. doctest:: utils_Logo
 
-            >>> import vcs
-            >>> import os
-            >>> import sys
+            >>> import os, sys
             >>> x=vcs.init()
             >>> x.open()
-            >>> logo1 = vcs.utils.Logo(os.path.join(sys.prefix,"share","vcs","uvcdat.png"))
+            >>> path=os.path.join(sys.prefix,"share","vcs","uvcdat.png")
+            >>> logo1=vcs.utils.Logo(path)
             >>> logo1.x=.7
             >>> logo1.y=.8
-
             >>> logo2 = vcs.utils.Logo("My Test Logo")
             >>> logo2.x = .2
             >>> logo2.y = .2
-
             >>> logo1.plot(x)
             >>> logo2.plot(x)
     """
 
     def __init__(self, source=None, x=.93, y=.95, width=None, height=None):
-        """
-        Initialize a new "logo" object to be plotted later on a canvas
+        """Initialize a new "logo" object to be plotted later on a canvas
 
         :param source: text string or path to png file representing the logo
         :type source: `str`_
@@ -173,8 +166,7 @@ class Logo(object):
         self.height = height
 
     def plot(self, canvas, bg=True):
-        """
-        Plot the logo onto a given Canvas
+        """Plot the logo onto a given Canvas
 
         :Example:
 
@@ -183,14 +175,13 @@ class Logo(object):
                 >>> import os, sys
                 >>> x=vcs.init()
                 >>> x.open()
-                >>> logo1 = vcs.utils.Logo(os.path.join(sys.prefix,"share/vcs/uvcdat.png"))
+                >>> path=os.path.join(sys.prefix,"share/vcs/uvcdat.png")
+                >>> logo1 = vcs.utils.Logo(path)
                 >>> logo1.x=.7
                 >>> logo1.y=.8
-
                 >>> logo2 = vcs.utils.Logo("My Test Logo")
                 >>> logo2.x = .2
                 >>> logo2.y = .2
-
                 >>> logo1.plot(x)
                 >>> logo2.plot(x)
 
@@ -268,9 +259,8 @@ def process_range_from_old_scr(code, g):
 
 
 def dumpToDict(obj, skipped=[], must=[]):
-    """
-    Takes a VCS object and serializes its properties and their associated values
-    in a Python `dict`_ .
+    """Takes a VCS object and serializes its properties and their associated
+    values in a Python `dict`_ .
 
     :Example:
 
@@ -294,10 +284,13 @@ def dumpToDict(obj, skipped=[], must=[]):
     :type must: `list`_
 
     :return: A tuple containing:
+
         * a dictionary with mappings of the object's property names
             to the values associated with those property names.
+
         * a dictionary with mappings of more complex properties' names
             to sets containing any associated property values.
+
     :rtype: `tuple`_
     """
     dic = {}
@@ -334,9 +327,8 @@ def dumpToDict(obj, skipped=[], must=[]):
 
 
 def dumpToJson(obj, fileout, skipped=["info", "member"], must=[], indent=indent, sort_keys=sort_keys):
-    """
-    Uses :py:func:`vcs.utils.dumpToDict` and `json.dumps`_ to construct a JSON
-    representation of a VCS object's property values.
+    """Uses :py:func:`vcs.utils.dumpToDict` and `json.dumps`_ to construct a
+    JSON representation of a VCS object's property values.
 
     :Example:
 
@@ -358,14 +350,17 @@ def dumpToJson(obj, fileout, skipped=["info", "member"], must=[], indent=indent,
     :type skipped: `list`_
 
     :param must: A list of strings, associated with property names which must
-    be captured in the serialization.
+        be captured in the serialization.
     :type must: `list`_
 
     :param indent: An integer representing whether to pretty-print the JSON.
-        If indent is a non-negative integer, JSON will be printed with proper
-        indentation levels.
-        If indent is None, 0, or negative, JSON will be printed in its most
-        compact form.
+
+        * If indent is a non-negative integer, JSON will be printed with proper
+            indentation levels.
+
+        * If indent is None, 0, or negative, JSON will be printed in its most
+            compact form.
+
     :type indent: `int`_ or `None`_
 
     :param sort_keys: Boolean value indicating whether output should be sorted
@@ -431,8 +426,7 @@ def dumpToJson(obj, fileout, skipped=["info", "member"], must=[], indent=indent,
 
 
 def getfontname(number):
-    """
-    Retrieve a font name for a given font index.
+    """Retrieve a font name for a given font index.
 
     :Example:
 
@@ -452,8 +446,7 @@ def getfontname(number):
 
 
 def getfontnumber(name):
-    """
-    Retrieve a font index for a given font name.
+    """Retrieve a font index for a given font name.
 
     :Example:
 
@@ -520,8 +513,7 @@ def process_src_element(code):
 
 
 def listelements(typ=None):
-    """
-    List the elements of a given VCS object type.
+    """List the elements of a given VCS object type.
 
     :Example:
 
@@ -569,8 +561,7 @@ def listelements(typ=None):
 #
 #
 def show(*args):
-    """
-    Show the list of VCS primary and secondary class objects.
+    """Show the list of VCS primary and secondary class objects.
 
     :Example:
 
@@ -1120,8 +1111,7 @@ class VCSUtilsError (Exception):
 
 
 def minmax(*data):
-    """
-    Return the minimum and maximum of a series of array/list/tuples
+    """Return the minimum and maximum of a series of array/list/tuples
     (or combination of these)
     You can combine list/tuples/arrays pretty much any combination is allowed
 
@@ -1141,7 +1131,7 @@ def minmax(*data):
     :type data: `list`_
 
     :returns: A tuple in the form (min, max)
-    :rtype: tuple
+    :rtype: `tuple`_
     """
 
     mx = -1.E77
@@ -1170,8 +1160,7 @@ def minmax(*data):
 
 
 def mkevenlevels(n1, n2, nlev=10):
-    """
-    Return a series of evenly spaced levels going from n1 to n2.
+    """Return a series of evenly spaced levels going from n1 to n2.
     By default 10 intervals will be produced.
 
     :Example:
@@ -1185,17 +1174,17 @@ def mkevenlevels(n1, n2, nlev=10):
             >>> vcs.mkevenlevels(100,0,nlev=5)
             [100.0, 80.0, 60.0, 40.0, 20.0, 0.0]
 
-    :param n1: Beginning of range. Int or float.
-    :type n1: int, float
+    :param n1: Beginning of range.
+    :type n1: `int`_ or `float`_
 
     :param n2: End of range. Int or float.
-    :type n2: int, float
+    :type n2: `int`_ or `float`_
 
     :param nlev: Number of levels by which to split the given range.
     :type nlev: `int`_
 
     :returns: List of floats, splitting range evenly between n1 and n2
-    :rtype: list
+    :rtype: `list`_
 """
     import numpy.ma
     lev = numpy.ma.arange(nlev + 1, dtype=numpy.float)
@@ -1206,8 +1195,7 @@ def mkevenlevels(n1, n2, nlev=10):
 
 
 def mkscale(n1, n2, nc=12, zero=1, ends=False):
-    """
-    This function return a nice scale given a min and a max
+    """This function return a nice scale given a min and a max
 
     .. warning::
 
@@ -1233,27 +1221,27 @@ def mkscale(n1, n2, nc=12, zero=1, ends=False):
             [0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
 
     :param n1: Minimum number in range.
-    :type n1: float
+    :type n1: `float`_
 
     :param n2: Maximum number in range.
-    :type n2: float
+    :type n2: `float`_
 
     :param nc: Maximum number of intervals
-    :type nc: int
+    :type nc: `int`_
 
     :param zero: Integer flag to indicate how zero should be handled. Flags are as follows
         -1: zero MUST NOT be a contour
         0: let the function decide # NOT IMPLEMENTED
         1: zero CAN be a contour  (default)
         2: zero MUST be a contour
-    :type zero: int
+    :type zero: `int`_
 
     :param end: Boolean value indicating whether n1 and n2 should be part of the returned labels.
         Defaults to False.
-    :type end: bool
+    :type end: `bool`_
 
     :returns: List of floats split into nc intervals
-    :rtype: list
+    :rtype: `list`_
     """
     if n1 == n2:
         return [n1]
@@ -1344,8 +1332,7 @@ def __split2contiguous(levels):
 
 
 def mklabels(vals, output='dict'):
-    """
-    This function gets levels and output strings for nice display of the
+    """This function gets levels and output strings for nice display of the
     levels values.
 
     :Examples:
@@ -1381,13 +1368,13 @@ def mklabels(vals, output='dict'):
             ['2E-5', '5E-5']
 
     :param vals: List or tuple of float values
-    :type vals: `list`_, :py:class:`tuple`
+    :type vals: `list`_, `tuple`_
 
     :param output: Specifies the desired output type. One of ['dict', 'list'].
-    :type output: :py:class:`str`
+    :type output: `str`_
 
     :returns: Dictionary or list of labels for the given values.
-    :rtype: :py:class:`dict` or `list`_
+    :rtype: `dict`_ or `list`_
     """
     import numpy.ma
     if isinstance(vals[0], list) or isinstance(vals[0], tuple):
@@ -1488,8 +1475,7 @@ def mklabels(vals, output='dict'):
 
 
 def getcolors(levs, colors=None, split=1, white="white"):
-    """
-    For isofill/boxfill purposes
+    """For isofill/boxfill purposes
     Given a list of levels this function returns the colors that would
     best spread a list of "user-defined" colors (default is 0 to 255,
     i.e 256 colors), always using the first and last color.
@@ -1531,7 +1517,7 @@ def getcolors(levs, colors=None, split=1, white="white"):
 
     :param white: If split is on and an interval goes from <0 to >0 this color
                   will be used within this interval.
-    :type white: `int`_ or `string`_ or `tuple`_
+    :type white: `int`_ or `str`_ or `tuple`_
 
     :returns: List of colors
     :rtype: `list`_
@@ -1646,8 +1632,7 @@ def getcolors(levs, colors=None, split=1, white="white"):
 
 
 def generate_time_labels(d1, d2, units, calendar=cdtime.DefaultCalendar):
-    """
-    Generates a dictionary of time labels for an interval of time,
+    """Generates a dictionary of time labels for an interval of time,
     in a user defined units system.
 
     :Example:
@@ -1668,7 +1653,7 @@ def generate_time_labels(d1, d2, units, calendar=cdtime.DefaultCalendar):
     :param d1: The beginning of the time interval to be labelled. Expects a cdtime object.
                 Can also take int, long, or float,
                 which will be used to create a cdtime object with the given units parameter.
-    :type d1: cdtime object, int, long, float
+    :type d1: cdtime object or `int`_ or `long`_ or `float`_
 
     :param d2: The end of the time interval to be labelled. Expects a cdtime object.
                 Can also take int, long, or float,
@@ -1678,8 +1663,7 @@ def generate_time_labels(d1, d2, units, calendar=cdtime.DefaultCalendar):
     :param units: String with the format '[time_unit] since [date]'.
     :type units: `str`_
 
-    :param calendar: A cdtime calendar,
-    :type calendar:
+    :param calendar: A cdtime calendar
 
     :returns: Dictionary of time labels over the given time interval
     :rtype: dict
@@ -1812,8 +1796,7 @@ def prettifyAxisLabels(ticks, axis):
 
 def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                       datawc_y1, datawc_y2, x=None, y=None):
-    """
-    Sets the labels and ticks for a graphics method made in python
+    """Sets the labels and ticks for a graphics method made in python
 
     :param gm: A VCS graphics method to alter
     :type gm: VCS graphics method
@@ -1969,8 +1952,7 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
 
 
 def getcolormap(Cp_name_src='default'):
-    """
-    VCS contains a list of secondary methods. This function will create a
+    """VCS contains a list of secondary methods. This function will create a
     colormap class object from an existing VCS colormap secondary method. If
     no colormap name is given, then colormap 'default' will be used.
 
@@ -1985,12 +1967,12 @@ def getcolormap(Cp_name_src='default'):
         .. doctest:: utils_getcolormap
 
             >>> a=vcs.init()
-            >>> a.show('colormap') # Show all the existing colormap secondary methods
+            >>> a.show('colormap') # Show all  colormap secondary methods
             *******************Colormap Names List**********************
             ...
             *******************End Colormap Names List**********************
-            >>> cp=a.getcolormap() # cp instance of 'default' colormap secondary method
-            >>> cp2=a.getcolormap('rainbow') # cp2 instance of existing 'rainbow' colormap secondary method
+            >>> cp=a.getcolormap() # 'default' colormap
+            >>> cp2=a.getcolormap('rainbow') # 'rainbow' colormap
 
 
     :param Cp_name_src: String name of an existing colormap VCS object
@@ -2007,9 +1989,9 @@ def getcolormap(Cp_name_src='default'):
 
 
 def getcolorcell(cell, obj=None):
-    """
-    Gets the colorcell of the provided object's colormap at the specified cell index.
-    If no object is provided, or if the provided object has no colormap, the default colormap is used.
+    """Gets the colorcell of the provided object's colormap at the specified
+    cell index. If no object is provided, or if the provided object has no
+    colormap, the default colormap is used.
 
     :Example:
 
@@ -2024,7 +2006,7 @@ def getcolorcell(cell, obj=None):
     :param cell: An integer value indicating the index of the desired colorcell.
     :type cell: `int`_
 
-    :param obj: Optional parameter containing the object to extract a colormap from.
+    :param obj: Optional parameter with the object to get a colormap from.
     :type obj: Any VCS object capable of containing a colormap
 
     :return: The RGBA values of the colormap at the specified cell index.
@@ -2040,8 +2022,7 @@ def getcolorcell(cell, obj=None):
 
 
 def setcolorcell(obj, num, r, g, b, a=100):
-    """
-    Set a individual color cell in the active colormap. If default is
+    """Set a individual color cell in the active colormap. If default is
     the active colormap, then return an error string.
 
     .. note::
@@ -2064,7 +2045,8 @@ def setcolorcell(obj, num, r, g, b, a=100):
     :param obj: String name of a colormap, or a VCS object
     :type obj: `str`_ or VCS object
 
-    :param num: Integer specifying which color cell to change. Must be from 0-239.
+    :param num: Integer specifying which color cell to change.
+        Must be from 0-239.
     :type num: `int`_
 
     :param r: Integer specifying the red value for the colorcell
@@ -2076,7 +2058,8 @@ def setcolorcell(obj, num, r, g, b, a=100):
     :param b: Integer specifying the blue value for the colorcell
     :type b: `int`_
 
-    :param a: Integer specifying the opacity value for the colorcell. Must be from 0-100.
+    :param a: Integer specifying the opacity value for the colorcell.
+        Must be from 0-100.
     :type a: `int`_
     """
 
@@ -2090,9 +2073,7 @@ def setcolorcell(obj, num, r, g, b, a=100):
 
 
 def match_color(color, colormap=None):
-    """
-    Returns the color in the colormap that is
-    closest to the required color.
+    """Returns the color in the colormap that's closest to the specified color.
 
     :Example:
 
@@ -2109,7 +2090,8 @@ def match_color(color, colormap=None):
     :param color: Either a string name, or a rgb value between 0 and 100.
     :type color: `str`_ or `int`_
 
-    :param colormap: A VCS colormap object. If not specified, the default colormap is used.
+    :param colormap: A VCS colormap object. If not specified, the default
+        colormap is used.
     :type colormap: vcs.colormap.Cp
 
     :returns: Integer value representing a matching rgb color
@@ -2145,8 +2127,7 @@ def match_color(color, colormap=None):
 
 
 def monotonic(x):
-    """
-    Uses `numpy.diff <https://docs.scipy.org/doc/numpy-1.10.1/reference/generated/numpy.diff.html>`_
+    """Uses `numpy.diff <https://docs.scipy.org/doc/numpy-1.10.1/reference/generated/numpy.diff.html>`_
     to determine whether the data given by x is monotonic in nature.
 
     :Example:
@@ -2185,8 +2166,7 @@ def monotonic(x):
 
 
 def getgraphicsmethod(type, name):
-    """
-    Retrieves an existing graphics method, given by type and name.
+    """Retrieves an existing graphics method, given by type and name.
 
     :Example:
 
@@ -2224,8 +2204,7 @@ def getgraphicsmethod(type, name):
 
 
 def creategraphicsmethod(gtype, gname='default', name=None):
-    """
-    Creates a graphics method of the type given by gtype.
+    """Creates a graphics method of the type given by gtype.
 
     :Example:
 
@@ -2301,8 +2280,7 @@ def getDataWcValue(v):
 
 
 def getworldcoordinates(gm, X, Y):
-    """
-    Given a graphics method and two axes, calculates correct world coordinates.
+    """Given a graphics method and two axes, calculates correct world coordinates.
 
     :Example:
 
@@ -2417,8 +2395,7 @@ def getworldcoordinates(gm, X, Y):
 
 
 def rgba_color(color, colormap):
-    """
-    Try all of the various syntaxes of colors and return 0-100 RGBA values.
+    """Try all of the various syntaxes of colors and return 0-100 RGBA values.
 
     :Example:
 
@@ -2479,8 +2456,7 @@ def png_read_metadata(path):
 
 
 def download_sample_data_files(path=None):
-    """
-    Downloads sample data to be used with VCS.
+    """Downloads sample data to be used with VCS.
     Default download directory is vcs.sample_data, but if __path__ is provided
     then data will be downloaded to that path.
 
@@ -2544,8 +2520,7 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
                               linecolors, linetypes, linewidths,
                               markercolors, markertypes, markersizes,
                               strings, scratched=None, bg=False, render=True):
-    """
-    Draws a legend with line/marker/text inside a template legend box
+    """Draws a legend with line/marker/text inside a template legend box
     Auto adjust text size to make it fit inside the box
     Auto arrange the elements to fill the box nicely
 
@@ -2607,7 +2582,8 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
         Or foreground (False).
     :type bg: `bool`_
 
-    :param render: do we render or not (so it less flashy)
+    :param render: Boolean value indicating whether or not to render the new
+        lines and markers.
     :type render: `bool`_
     """
 

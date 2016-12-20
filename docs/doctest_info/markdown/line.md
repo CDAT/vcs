@@ -4,48 +4,6 @@ Missing Doctests
 
 :x:```    vcs.line.Tl```
 
-:x:```    vcs.line.Tl.__init__```
-
-:x:```    vcs.line.Tl._getfillareacolors```
-
-:x:```    vcs.line.Tl._getname```
-
-:x:```    vcs.line.Tl._getpriority```
-
-:x:```    vcs.line.Tl._getprojection```
-
-:x:```    vcs.line.Tl._gettype```
-
-:x:```    vcs.line.Tl._getvp```
-
-:x:```    vcs.line.Tl._getwc```
-
-:x:```    vcs.line.Tl._getwidth```
-
-:x:```    vcs.line.Tl._getx```
-
-:x:```    vcs.line.Tl._gety```
-
-:x:```    vcs.line.Tl._setfillareacolors```
-
-:x:```    vcs.line.Tl._setname```
-
-:x:```    vcs.line.Tl._setpriority```
-
-:x:```    vcs.line.Tl._setprojection```
-
-:x:```    vcs.line.Tl._settype```
-
-:x:```    vcs.line.Tl._setvp```
-
-:x:```    vcs.line.Tl._setwc```
-
-:x:```    vcs.line.Tl._setwidth```
-
-:x:```    vcs.line.Tl._setx```
-
-:x:```    vcs.line.Tl._sety```
-
 :x:```    vcs.line.Tl.color```
 
 :x:```    vcs.line.Tl.colormap```

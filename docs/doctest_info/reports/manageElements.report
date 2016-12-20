@@ -369,7 +369,7 @@ Expecting:
     ...
     *******************End Textcombined Names List**********************
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1438, in vcs.manageElements.createtext
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1293, in vcs.manageElements.createtext
 Failed example:
     vcs.show('textcombined') # show all available textcombined
 Expected:
@@ -386,7 +386,7 @@ Trying:
         pass
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1442, in vcs.manageElements.createtext
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1297, in vcs.manageElements.createtext
 Failed example:
     try: # try to create a new textcombined, in case none exist
         vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
@@ -394,7 +394,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x118141230>
+    <vcs.textcombined.Tc object at 0x117ed7410>
 Trying:
     vcs.listelements('textcombined') # should now contain 'EXAMPLE_tt:::EXAMPLE_tto'
 Expecting:
@@ -560,14 +560,14 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1707, in vcs.manageElements.get3d_dual_scalar
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1557, in vcs.manageElements.get3d_dual_scalar
 Failed example:
     a.plot(ex, slab1, slab2) # plot using specified 3d_dual_scalar object
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x119a5bc58>
+    <vcs.displayplot.Dp object at 0x11895b050>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -598,14 +598,14 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1665, in vcs.manageElements.get3d_scalar
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1517, in vcs.manageElements.get3d_scalar
 Failed example:
     a.plot(ex, slab1) # plot using specified 3d_scalar object
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x119013050>
+    <vcs.displayplot.Dp object at 0x11863e5c8>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -640,7 +640,7 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1748, in vcs.manageElements.get3d_vector
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1596, in vcs.manageElements.get3d_vector
 Failed example:
     a.plot(ex, slab1, slab2) # plot using specified 3d_vector object
 Expected:
@@ -649,7 +649,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1181efa28>
+    <vcs.displayplot.Dp object at 0x120750b40>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -976,7 +976,7 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 292, in vcs.manageElements.gettaylordiagram
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 266, in vcs.manageElements.gettaylordiagram
 Failed example:
     a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
 Exception raised:
@@ -985,9 +985,9 @@ Exception raised:
         compileflags, 1) in test.globs
       File "<doctest vcs.manageElements.gettaylordiagram[6]>", line 1, in <module>
         a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1320, in taylordiagram
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1310, in taylordiagram
         return self.__plot(arglist, parms)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3700, in __plot
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3650, in __plot
         t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1967, in plot
         self.draw(canvas, data)

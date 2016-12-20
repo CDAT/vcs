@@ -2,17 +2,7 @@ Missing Doctests
 ----------------
 :x:```    vcs.utils```
 
-:x:```    vcs.utils.Logo.__init__```
-
 :x:```    vcs.utils.VCSUtilsError```
-
-:x:```    vcs.utils.VCSUtilsError.__init__```
-
-:x:```    vcs.utils.VCSUtilsError.__str__```
-
-:x:```    vcs.utils.__split2contiguous```
-
-:x:```    vcs.utils._scriptrun```
 
 :x:```    vcs.utils.getDataWcValue```
 

@@ -1,14 +1,3 @@
-vcs.queries.isplot
-------------------
-```python
-Failed example:
-    vcs.queries.isplot(dsp_plot)
-Expected:
-    1
-Got:
-    0
-```
-
 vcs.queries.istextcombined
 --------------------------
 ```python
@@ -19,7 +8,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x118008230>
+    <vcs.textcombined.Tc object at 0x118014d70>
 ```
 
 Missing Doctests

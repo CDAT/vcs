@@ -1,5 +1,16 @@
 """
 # Colormap (Cp) module
+
+    .. _list: https://docs.python.org/2/library/functions.html#list
+    .. _tuple: https://docs.python.org/2/library/functions.html#tuple
+    .. _dict: https://docs.python.org/2/library/stdtypes.html#mapping-types-dict
+    .. _None: https://docs.python.org/2/library/constants.html?highlight=none#None
+    .. _str: https://docs.python.org/2/library/functions.html?highlight=str#str
+    .. _bool: https://docs.python.org/2/library/functions.html?highlight=bool#bool
+    .. _float: https://docs.python.org/2/library/functions.html?highlight=float#float
+    .. _int: https://docs.python.org/2/library/functions.html?highlight=float#int
+    .. _long: https://docs.python.org/2/library/functions.html?highlight=float#long
+    .. _file: https://docs.python.org/2/library/functions.html?highlight=open#file
 """
 ##########################################################################
 #                                                                               #
@@ -300,8 +311,7 @@ class Cp(object):
 
     # Set a colorcell RGB
     def setcolorcell(self, index, red, green, blue, alpha=100.):
-        """
-        Sets the R,G,B,A values of a colorcell
+        """Sets the R,G,B,A values of a colorcell
 
         :Example:
 
@@ -312,19 +322,19 @@ class Cp(object):
                 >>> cmap.setcolorcell(40,80,95,1.0) # Set RGBA values
 
         :param index: Integer from 0-255.
-        :type index: int
+        :type index: `int`_
 
         :param red: Integer from 0-255 representing the concentration of red in the colorcell.
-        :type red: int
+        :type red: `int`_
 
         :param green: Integer from 0-255 representing the concentration of green in the colorcell.
-        :type green: int
+        :type green: `int`_
 
         :param blue: Integer from 0-255 representing the concentration of blue in the colorcell.
-        :type blue: int
+        :type blue: `int`_
 
         :param alpha: Float representing the percentage of opacity in the colorcell.
-        :type alpha: float
+        :type alpha: `float`_
         """
         self.index[index] = [red, green, blue, alpha]
 
@@ -343,10 +353,10 @@ class Cp(object):
                 [26, 0, 33, 100]
 
         :param index: Index of a cell in the colormap. Must be an integer from 0-255.
-        :type index: int
+        :type index: `int`_
 
         :returns: A list containing the red, green, blue, and alpha values of the colorcell at the given index.
-        :rtype: list
+        :rtype: `list`_
         """
         return self.index[index]
 

@@ -4,8 +4,6 @@ Missing Doctests
 
 :x:```    vcs.Pytickmarks.Pyt```
 
-:x:```    vcs.Pytickmarks.Pyt.__init__```
-
 :x:```    vcs.Pytickmarks.Pyt.line```
 
 :x:```    vcs.Pytickmarks.Pyt.list```

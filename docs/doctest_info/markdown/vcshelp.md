@@ -1,98 +1,51 @@
-vcs.vcshelp.objecthelp
-----------------------
+vcs.vcshelp.help
+----------------
 ```python
 Failed example:
-    vcs.objecthelp(fa)
-Expected:
-    <BLANKLINE>
-    The Fillarea class object...
+    vcs.help('getboxfill')
+Expected nothing
 Got:
+    VCS contains a list of graphics methods. This function will create a
+        boxfill class object from an existing VCS boxfill graphics method. If
+        no boxfill name is given, then default boxfill will be used.
     <BLANKLINE>
-        The Fillarea class object allows the user to edit fillarea attributes, including
-        fillarea interior style, style index, and color index.
+        .. note::
     <BLANKLINE>
-        This class is used to define an fillarea table entry used in VCS, or it
-        can be used to change some or all of the fillarea attributes in an
-        existing fillarea table entry.
+            VCS does not allow the modification of 'default' attribute sets.
+            However, a 'default' attribute set that has been copied under a
+            different name can be modified. (See the :py:func:`vcs.manageElements.createboxfill` function.)
+    <BLANKLINE>
+        :Example:
+    <BLANKLINE>
+            .. doctest:: manageElements_get
+    <BLANKLINE>
+                >>> a=vcs.init()
+                >>> vcs.listelements('boxfill') # Show all the existing boxfill graphics methods
+                [...]
+                >>> ex=vcs.getboxfill()  # instance of 'default' boxfill graphics method
+                >>> import cdms2 # Need cdms2 to create a slab
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+                >>> slab1 = f('u') # use the data file to create a cdms2 slab
+                >>> a.boxfill(ex, slab1) # plot using specified boxfill object
+                <vcs.displayplot.Dp ...>
+                >>> ex2=vcs.getboxfill('polar')  # instance of 'polar' boxfill graphics method
+                >>> a.boxfill(ex2, slab1) # plot using specified boxfill object
+                <vcs.displayplot.Dp ...>
     <BLANKLINE>
     <BLANKLINE>
-        .. describe:: Useful Functions:
+        :param Gfb_name_src: String name of an existing boxfill VCS object
+        :type Gfb_name_src: :py:class:`str`
     <BLANKLINE>
-            .. code-block:: python
-    <BLANKLINE>
-                # VCS Canvas Constructor
-                a=vcs.init()
-                # Show predefined fillarea objects
-                a.show('fillarea')
-                # Updates the VCS Canvas at user's request
-                a.update()
-    <BLANKLINE>
-        .. describe:: Create a fillarea object:
-    <BLANKLINE>
-            .. code-block:: python
-    <BLANKLINE>
-                #Create a VCS Canvas object
-                a=vcs.init()
-    <BLANKLINE>
-                # Two ways to create a fillarea:
-    <BLANKLINE>
-                # Copies content of 'def37' to 'new'ea:
-                fa=a.createfillarea('new','def37')
-                # Copies content of 'default' to 'new'
-                fa=a.createfillarea('new')
-    <BLANKLINE>
-        .. describe::  Modify an existing fillarea:
-    <BLANKLINE>
-            .. code-block:: python
-    <BLANKLINE>
-                fa=a.getfillarea('red')
-    <BLANKLINE>
-        * Overview of fillarea attributes:
-    <BLANKLINE>
-            * List all the fillarea attribute values
-    <BLANKLINE>
-                .. code-block:: python
-    <BLANKLINE>
-                    fa.list()
-    <BLANKLINE>
-            * There are three possibilities for setting the isofill style:
-    <BLANKLINE>
-                .. code-block:: python
-    <BLANKLINE>
-                    fa.style = 'solid'
-                    fa.style = 'hatch'
-                    fa.style = 'pattern'
-    <BLANKLINE>
-            * Setting index, color, opacity:
-    <BLANKLINE>
-                .. code-block:: python
-    <BLANKLINE>
-                    # Range from 1 to 20
-                    fa.index=1
-                    # Range from 1 to 256
-                    fa.color=100
-                    # Range from 0 to 100
-                    fa.opacity=100
-    <BLANKLINE>
-            * Setting the graphics priority viewport, worldcoordinate:
-    <BLANKLINE>
-                .. code-block:: python
-    <BLANKLINE>
-                    fa.priority=1
-                    # FloatType [0,1]x[0,1]
-                    fa.viewport=[0, 1.0, 0,1.0]
-                    # FloatType [#,#]x[#,#]
-                    fa.worldcoordinate=[0,1.0,0,1.0]
-    <BLANKLINE>
-            * Setting x and y values:
-    <BLANKLINE>
-                .. code-block:: python
-    <BLANKLINE>
-                    #List of FloatTypes
-                    fa.x=[[0,.1,.2], [.3,.4,.5]]
-                    # List of FloatTypes
-                    fa.y=[[.5,.4,.3], [.2,.1,0]]
-    <BLANKLINE>
+        :return: A pre-existing boxfill graphics method
+        :rtype: vcs.boxfill.Gfb
     <BLANKLINE>
 ```
+
+Missing Doctests
+----------------
+:x:```    vcs.vcshelp```
+
+:x:```    vcs.vcshelp.help__doc__```
+
+:x:```    vcs.vcshelp.mode__doc__```
 
