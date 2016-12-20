@@ -5381,7 +5381,7 @@ class Canvas(object):
             .. doctest:: canvas_setcontinentstype
 
                 >>> a=vcs.init()
-                >>> a.setcontinentstype(4) "Political Borders"
+                >>> a.setcontinentstype(4) # "Political Borders"
                 >>> import cdms2 # We need cdms2 to create a slab
                 >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
                 >>> v = f('v') # use the data file to create a slab

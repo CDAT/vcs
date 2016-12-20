@@ -1233,10 +1233,10 @@ class P(object):
         """This function turns off elements of a template object.
 
 
-    :param attribute: String or list, indicating the elements of a template
-        which should be turned off. If attribute is left blank, or is None,
-        all elements of the template will be turned off.
-    :type attribute: `None`_ or  `str`_ or `list`_
+        :param attribute: String or list, indicating the elements of a template
+            which should be turned off. If attribute is left blank, or is None,
+            all elements of the template will be turned off.
+        :type attribute: `None`_ or  `str`_ or `list`_
         """
         if attribute is None:
             attribute = self.__slots__
@@ -1260,7 +1260,7 @@ class P(object):
         .. note::
 
             Respect how far from original position you are
-            i.e. you move to x1,x2 from old_x1, old_x2
+            i.e. if you move to x1,x2 from old_x1, old_x2
             if your current x1 value is not == to old_x1_value,
             then respect how far from it you were
 
@@ -1342,14 +1342,16 @@ class P(object):
 
             .. doctest:: template_move
 
-                >>> t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+                >>> t=vcs.createtemplate('t_move') # inherits default template
                 >>> t.move(0.2,'x') # Move everything right by 20%
                 >>> t.move(0.2,'y') # Move everything up by 20%
 
-        :param p: Float indicating the percentage by which the template should move. i.e. 0.2 = 20%.
+        :param p: Float indicating the percentage by which the template should
+            move. i.e. 0.2 = 20%.
         :type p: float
 
-        :param axis: One of ['x', 'y']. The axis along which the template will move.
+        :param axis: The axis on which the template will move.
+            One of ['x', 'y'].
         :type axis: str
         """
         if axis not in ['x', 'y']:
@@ -1368,8 +1370,8 @@ class P(object):
 
             .. doctest:: template_moveto
 
-                >>> t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
-                >>> t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
+                >>> t=vcs.createtemplate('t_move2') # inherits default template
+                >>> t.moveto(0.2, 0.2) # Move template so x1 and y1 are 0.2
 
         :param x: Float representing the new coordinate of the template's
             data.x1 attribute.
@@ -1393,18 +1395,17 @@ class P(object):
 
     def scale(self, scale, axis='xy', font=-1):
         """Scale a template along the axis 'x' or 'y' by scale
-        Positive values of scale mean increase
-        Negative values of scale mean decrease
-        The reference point is t.data.x1/y1
+        Positive values of scale mean increase.
+        Negative values of scale mean decrease.
+        The reference point is the template's x1 and y1 data.
 
         :Example:
 
             .. doctest:: template_scale
 
-
-                >>> t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+                >>> t=vcs.createtemplate('t_scale') # inherits default template
                 >>> t.scale(0.5) # Halves the template size
-                >>> t.scale(1.2) # Upsize everything to 20% more than the original size
+                >>> t.scale(1.2) # Increases size by 20%
                 >>> t.scale(2,'x') # Double the x axis
 
         :param scale: Float representing the factor by which to scale the template.
@@ -1414,8 +1415,8 @@ class P(object):
         :type axis: str
 
         :param font: Integer flag indicating what should be done with the template's fonts. One of [-1, 0, 1].
-                    0: means do not scale the fonts. 1: means scale the fonts.
-                    -1: means do not scale the fonts unless axis='xy'
+            0: means do not scale the fonts. 1: means scale the fonts.
+            -1: means do not scale the fonts unless axis='xy'
         :type font: int
 
         """
@@ -1438,12 +1439,12 @@ class P(object):
     def scalefont(self, scale):
         """Scales the template font by scale.
 
-        Example:
+        :Example:
 
-            Create template 'example1' which inherits from 'default' template
-            t = vcs.createtemplate('example1', 'default')
-            reduces the fonts size by 2
-            t.scalefont(0.5)
+            .. doctest:: template_scalefont
+
+                >>> t=vcs.createtemplate('t_scfnt') # inherits default template
+                >>> t.scalefont(0.5) # reduces the fonts size by 2
 
         :param scale: Float representing the factor by which to scale the template's font size.
         :type scale: float
@@ -1509,8 +1510,8 @@ class P(object):
         :type strings: list of string
 
         :param scratched: None (off) or list. list contains False where no scratch is needed
-                      For scratched provide True or line type to use for scratch
-                      color will match that of text
+            For scratched provide True or line type to use for scratch
+            color will match that of text
         :type scratched: None or list of bool
 
         :param bg: do we draw in background or foreground
