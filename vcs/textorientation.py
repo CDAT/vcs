@@ -340,22 +340,26 @@ class To(object):
                 fp.write("v=vcs.init()\n\n")
 
             unique_name = '__To__' + self.name
-            fp.write(
-                "#----------Text Orientation (To) member (attribute) listings ----------\n")
+            fp.write("#----------Text Orientation (To) member (attribute) listings ----------\n")
             fp.write("to_list=v.listelements('textorientation')\n")
             fp.write("if ('%s' in to_list):\n" % self.name)
-            fp.write(
-                "   %s = v.gettextorientation('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.gettextorientation('%s')\n" % (unique_name, self.name))
             fp.write("else:\n")
-            fp.write(
-                "   %s = v.createtextorientation('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.createtextorientation('%s')\n" % (unique_name, self.name))
             fp.write("%s.height = %g\n" % (unique_name, self.height))
             fp.write("%s.angle = %g\n" % (unique_name, self.angle))
-            fp.write("%s.path = '%s'\n" % (unique_name, self.path))
-            fp.write("%s.halign = '%s'\n" % (unique_name, self.halign))
-            fp.write("%s.valign = '%s'\n\n" % (unique_name, self.valign))
+            if type(self.path) is str:
+                fp.write("%s.path = '%s'\n" % (unique_name, self.path))
+            else:
+                fp.write("%s.path = %s\n" % (unique_name, self.path))
+            if type(self.halign) is str:
+                fp.write("%s.halign = '%s'\n" % (unique_name, self.halign))
+            else:
+                fp.write("%s.halign = %s\n" % (unique_name, self.halign))
+            if type(self.valign) is str:
+                fp.write("%s.valign = '%s'\n\n" % (unique_name, self.valign))
+            else:
+                fp.write("%s.valign = %s\n\n" % (unique_name, self.valign))
             fp.close()
         else:
             # Json type

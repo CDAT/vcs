@@ -923,17 +923,17 @@ class G1d(object):
                 "%s.yaxisconvert = '%s'\n" %
                 (unique_name, self.yaxisconvert))
             # Unique attribute for yxvsx
-            fp.write("%s.linetype = %s\n" % (unique_name, self.linetype))
+            fp.write("%s.linetype = '%s'\n" % (unique_name, self.linetype))
             fp.write("%s.linecolor = %s\n" % (unique_name, self.linecolor))
             fp.write("%s.linewidth = %s\n" % (unique_name, self.linewidth))
-            fp.write("%s.marker = %s\n" % (unique_name, self.marker))
+            fp.write("%s.marker = '%s'\n" % (unique_name, self.marker))
             fp.write("%s.markercolor = %s\n" % (unique_name, self.markercolor))
             fp.write("%s.markersize = %s\n\n" % (unique_name, self.markersize))
-            fp.write("%s.flip = '%s'\n\n" % (unique_name, repr(self.flip)))
-            fp.write(
-                "%s.colormap = '%s'\n\n" %
-                (unique_name, repr(
-                    self.colormap)))
+            fp.write("%s.flip = %s\n\n" % (unique_name, repr(self.flip)))
+            if self.colormap is not None:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, repr(self.colormap)))
+            else:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, self.colormap))
         else:
             # Json type
             mode += "+"

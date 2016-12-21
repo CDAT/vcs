@@ -488,33 +488,26 @@ class Tf(object):
                 fp.write("v=vcs.init()\n\n")
 
             unique_name = '__Tf__' + self.name
-            fp.write(
-                "#----------Fillarea (Tf) member (attribute) listings ----------\n")
+            fp.write("#----------Fillarea (Tf) member (attribute) listings ----------\n")
             fp.write("tf_list=v.listelements('fillarea')\n")
             fp.write("if ('%s' in tf_list):\n" % self.name)
-            fp.write(
-                "   %s = v.getfillarea('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.getfillarea('%s')\n" % (unique_name, self.name))
             fp.write("else:\n")
-            fp.write(
-                "   %s = v.createfillarea('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.createfillarea('%s')\n" % (unique_name, self.name))
             fp.write("%s.style = %s\n" % (unique_name, self.style))
             fp.write("%s.index = %s\n" % (unique_name, self.index))
             fp.write("%s.color = %s\n\n" % (unique_name, self.color))
             fp.write("%s.opacity = %s\n\n" % (unique_name, self.opacity))
             fp.write("%s.priority = %d\n" % (unique_name, self.priority))
             fp.write("%s.viewport = %s\n" % (unique_name, self.viewport))
-            fp.write(
-                "%s.worldcoordinate = %s\n" %
-                (unique_name, self.worldcoordinate))
+            fp.write("%s.worldcoordinate = %s\n" % (unique_name, self.worldcoordinate))
             fp.write("%s.x = %s\n" % (unique_name, self.x))
             fp.write("%s.y = %s\n\n" % (unique_name, self.y))
-            fp.write("%s.projection = %s\n\n" % (unique_name, self.projection))
-            fp.write(
-                "%s.colormap = %s\n\n" %
-                (unique_name, repr(
-                    self.colormap)))
+            fp.write("%s.projection = '%s'\n\n" % (unique_name, self.projection))
+            if self.colormap is not None:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, repr(self.colormap)))
+            else:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, self.colormap))
         else:
             # Json type
             mode += "+"

@@ -1095,92 +1095,61 @@ class Gi(object):
                 fp.write("v=vcs.init()\n\n")
 
             unique_name = '__Gi__' + self.name
-            fp.write(
-                "#----------Isoline (Gi) member (attribute) listings ----------\n")
+            fp.write("#----------Isoline (Gi) member (attribute) listings ----------\n")
             fp.write("gi_list=v.listelements('isoline')\n")
             fp.write("if ('%s' in gi_list):\n" % self.name)
             fp.write("   %s = v.getisoline('%s')\n" % (unique_name, self.name))
             fp.write("else:\n")
-            fp.write(
-                "   %s = v.createisoline('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.createisoline('%s')\n" % (unique_name, self.name))
             # Common core graphics method attributes
             fp.write("%s.projection = '%s'\n" % (unique_name, self.projection))
-            fp.write(
-                "%s.xticlabels1 = '%s'\n" %
-                (unique_name, self.xticlabels1))
-            fp.write(
-                "%s.xticlabels2 = '%s'\n" %
-                (unique_name, self.xticlabels2))
+            fp.write("%s.xticlabels1 = '%s'\n" % (unique_name, self.xticlabels1))
+            fp.write("%s.xticlabels2 = '%s'\n" % (unique_name, self.xticlabels2))
             fp.write("%s.xmtics1 = '%s'\n" % (unique_name, self.xmtics1))
             fp.write("%s.xmtics2 = '%s'\n" % (unique_name, self.xmtics2))
-            fp.write(
-                "%s.yticlabels1 = '%s'\n" %
-                (unique_name, self.yticlabels1))
-            fp.write(
-                "%s.yticlabels2 = '%s'\n" %
-                (unique_name, self.yticlabels2))
+            fp.write("%s.yticlabels1 = '%s'\n" % (unique_name, self.yticlabels1))
+            fp.write("%s.yticlabels2 = '%s'\n" % (unique_name, self.yticlabels2))
             fp.write("%s.ymtics1 = '%s'\n" % (unique_name, self.ymtics1))
             fp.write("%s.ymtics2 = '%s'\n" % (unique_name, self.ymtics2))
             if isinstance(self.datawc_x1, (int, long, float)):
                 fp.write("%s.datawc_x1 = %g\n" % (unique_name, self.datawc_x1))
             else:
-                fp.write(
-                    "%s.datawc_x1 = '%s'\n" %
-                    (unique_name, self.datawc_x1))
+                fp.write("%s.datawc_x1 = '%s'\n" % (unique_name, self.datawc_x1))
             if isinstance(self.datawc_y1, (int, long, float)):
                 fp.write("%s.datawc_y1 = %g\n" % (unique_name, self.datawc_y1))
             else:
-                fp.write(
-                    "%s.datawc_y1 = '%s'\n" %
-                    (unique_name, self.datawc_y1))
+                fp.write("%s.datawc_y1 = '%s'\n" % (unique_name, self.datawc_y1))
             if isinstance(self.datawc_x2, (int, long, float)):
                 fp.write("%s.datawc_x2 = %g\n" % (unique_name, self.datawc_x2))
             else:
-                fp.write(
-                    "%s.datawc_x2 = '%s'\n" %
-                    (unique_name, self.datawc_x2))
+                fp.write("%s.datawc_x2 = '%s'\n" % (unique_name, self.datawc_x2))
             if isinstance(self.datawc_y2, (int, long, float)):
                 fp.write("%s.datawc_y2 = %g\n" % (unique_name, self.datawc_y2))
             else:
-                fp.write(
-                    "%s.datawc_y2 = '%s'\n" %
-                    (unique_name, self.datawc_y2))
-            fp.write(
-                "%s.datawc_calendar = %g\n" %
-                (unique_name, self.datawc_calendar))
-            fp.write(
-                "%s.datawc_timeunits = '%s'\n\n" %
-                (unique_name, self.datawc_timeunits))
-            fp.write(
-                "%s.xaxisconvert = '%s'\n" %
-                (unique_name, self.xaxisconvert))
-            fp.write(
-                "%s.yaxisconvert = '%s'\n" %
-                (unique_name, self.yaxisconvert))
+                fp.write("%s.datawc_y2 = '%s'\n" % (unique_name, self.datawc_y2))
+            fp.write("%s.datawc_calendar = %g\n" % (unique_name, self.datawc_calendar))
+            fp.write("%s.datawc_timeunits = '%s'\n\n" % (unique_name, self.datawc_timeunits))
+            fp.write("%s.xaxisconvert = '%s'\n" % (unique_name, self.xaxisconvert))
+            fp.write("%s.yaxisconvert = '%s'\n" % (unique_name, self.yaxisconvert))
             # Unique attribute for isoline
-            fp.write("%s.label = '%s'\n" % (unique_name, self.label))
-            fp.write("%s.labelskipdistance = '%s'\n" %
-                     (unique_name, self.labelskipdistance))
-            fp.write("%s.labelbackgroundcolors = '%s'\n" %
-                     (unique_name, self.labelbackgroundcolors))
-            fp.write("%s.labelbackgroundopacities = '%s'\n" %
-                     (unique_name, self.labelbackgroundopacities))
+            fp.write("%s.label = %s\n" % (unique_name, self.label))
+            fp.write("%s.labelskipdistance = %s\n" % (unique_name, self.labelskipdistance))
+            fp.write("%s.labelbackgroundcolors = %s\n" % (unique_name, self.labelbackgroundcolors))
+            fp.write("%s.labelbackgroundopacities = %s\n" % (unique_name, self.labelbackgroundopacities))
             fp.write("%s.linetypes = %s\n" % (unique_name, self.linetypes))
             fp.write("%s.linecolors = %s\n" % (unique_name, self.linecolors))
             fp.write("%s.linewidths = %s\n" % (unique_name, self.linewidths))
             fp.write("%s.text = %s\n" % (unique_name, self.text))
             fp.write("%s.textcolors = %s\n" % (unique_name, self.textcolors))
             fp.write("%s.level = %s\n\n" % (unique_name, self.level))
-
-            fp.write("%s.clockwise =  '%s'\n" % (unique_name, self.clockwise))
-            fp.write("%s.scale =  '%s'\n" % (unique_name, self.scale))
-            fp.write("%s.angle =  '%s'\n" % (unique_name, self.angle))
-            fp.write("%s.spacing =  '%s'\n" % (unique_name, self.spacing))
-            fp.write(
-                "%s.colormap = '%s'\n\n" %
-                (unique_name, repr(
-                    self.colormap)))
+            fp.write("%s.clockwise =  %s\n" % (unique_name, self.clockwise))
+            fp.write("%s.scale =  %s\n" % (unique_name, self.scale))
+            fp.write("%s.angle =  %s\n" % (unique_name, self.angle))
+            fp.write("%s.spacing =  %s\n" % (unique_name, self.spacing))
+            if self.colormap is not None:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, repr(self.colormap)))
+            else:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, self.colormap))
         else:
             # Json type
             mode += "+"

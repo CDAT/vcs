@@ -406,9 +406,6 @@ class Tl(object):
     #                                                                           #
     ##########################################################################
     def script(self, script_filename=None, mode=None):
-        """
-        docstring moved to xmldocs
-"""
         if (script_filename is None):
             raise ValueError(
                 'Error - Must provide an output script file name.')
@@ -449,8 +446,7 @@ class Tl(object):
                 fp.write("v=vcs.init()\n\n")
 
             unique_name = '__Tl__' + self.name
-            fp.write(
-                "#----------Line (Tl) member (attribute) listings ----------\n")
+            fp.write("#----------Line (Tl) member (attribute) listings ----------\n")
             fp.write("tl_list=v.listelements('line')\n")
             fp.write("if ('%s' in tl_list):\n" % self.name)
             fp.write("   %s = v.getline('%s')\n" % (unique_name, self.name))
@@ -461,16 +457,14 @@ class Tl(object):
             fp.write("%s.color = %s\n" % (unique_name, self.color))
             fp.write("%s.priority = %d\n" % (unique_name, self.priority))
             fp.write("%s.viewport = %s\n" % (unique_name, self.viewport))
-            fp.write(
-                "%s.worldcoordinate = %s\n" %
-                (unique_name, self.worldcoordinate))
+            fp.write("%s.worldcoordinate = %s\n" % (unique_name, self.worldcoordinate))
             fp.write("%s.x = %s\n" % (unique_name, self.x))
             fp.write("%s.y = %s\n\n" % (unique_name, self.y))
-            fp.write("%s.projection = %s\n\n" % (unique_name, self.projection))
-            fp.write(
-                "%s.colormap = '%s'\n\n" %
-                (unique_name, repr(
-                    self.colormap)))
+            fp.write("%s.projection = '%s'\n\n" % (unique_name, self.projection))
+            if self.colormap is not None:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, repr(self.colormap)))
+            else:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, self.colormap))
         else:
             # Json type
             mode += "+"

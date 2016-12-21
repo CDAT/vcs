@@ -486,50 +486,48 @@ class Tc(object):
                 fp.write("v=vcs.init()\n\n")
 
             unique_name = '__Tt__' + self.Tt_name
-            fp.write(
-                "#----------Text Table (Tt) member (attribute) listings ----------\n")
-            fp.write("tt_list=v.listelements('texttable')\n")
-            fp.write("if ('%s' in tt_list):\n" % self.Tt_name)
-            fp.write(
-                "   %s = v.gettexttable('%s')\n" %
-                (unique_name, self.Tt_name))
-            fp.write("else:\n")
-            fp.write(
-                "   %s = v.createtexttable('%s')\n" %
-                (unique_name, self.Tt_name))
+            fp.write("%s = v.createtexttable()\n" % unique_name)
             fp.write("%s.font = %g\n" % (unique_name, self.font))
             fp.write("%s.spacing = %g\n" % (unique_name, self.spacing))
             fp.write("%s.expansion = %g\n" % (unique_name, self.expansion))
             fp.write("%s.color = %s\n\n" % (unique_name, repr(self.color)))
-            fp.write(
-                "%s.fillincolor = %g\n\n" %
-                (unique_name, self.fillincolor))
+            fp.write("%s.fillincolor = %g\n\n" % (unique_name, self.fillincolor))
             fp.write("%s.priority = %d\n" % (unique_name, self.priority))
             fp.write("%s.viewport = %s\n" % (unique_name, self.viewport))
-            fp.write(
-                "%s.worldcoordinate = %s\n" %
-                (unique_name, self.worldcoordinate))
+            fp.write("%s.worldcoordinate = %s\n" % (unique_name, self.worldcoordinate))
             fp.write("%s.x = %s\n" % (unique_name, self.x))
             fp.write("%s.y = %s\n\n" % (unique_name, self.y))
-            fp.write("%s.projection = %s\n\n" % (unique_name, self.projection))
+            fp.write("%s.projection = '%s'\n\n" % (unique_name, self.projection))
+            tt_unique = unique_name
 
             unique_name = '__To__' + self.To_name
-            fp.write(
-                "#----------Text Orientation (To) member (attribute) listings ----------\n")
-            fp.write("to_list=v.listelements('textorientation')\n")
-            fp.write("if ('%s' in to_list):\n" % self.To_name)
-            fp.write(
-                "   %s = v.gettextorientation('%s')\n" %
-                (unique_name, self.To_name))
-            fp.write("else:\n")
-            fp.write(
-                "   %s = v.createtextorientation('%s')\n" %
-                (unique_name, self.To_name))
+            fp.write("#----------Text Orientation (To) member (attribute) listings ----------\n")
+            fp.write("%s = v.createtextorientation()\n" % unique_name)
             fp.write("%s.height = %g\n" % (unique_name, self.height))
             fp.write("%s.angle = %g\n" % (unique_name, self.angle))
-            fp.write("%s.path = '%s'\n" % (unique_name, self.path))
-            fp.write("%s.halign = '%s'\n" % (unique_name, self.halign))
-            fp.write("%s.valign = '%s'\n\n" % (unique_name, self.valign))
+            if type(self.path) is str:
+                fp.write("%s.path = '%s'\n" % (unique_name, self.path))
+            else:
+                fp.write("%s.path = %s\n" % (unique_name, self.path))
+            if type(self.halign) is str:
+                fp.write("%s.halign = '%s'\n" % (unique_name, self.halign))
+            else:
+                fp.write("%s.halign = %s\n" % (unique_name, self.halign))
+            if type(self.valign) is str:
+                fp.write("%s.valign = '%s'\n\n" % (unique_name, self.valign))
+            else:
+                fp.write("%s.valign = %s\n" % (unique_name, self.valign))
+            fp.write("try:\n")
+            fp.write("    tt = vcs.gettexttable(%s)\n" % self.Tt_name)
+            fp.write("    vcs.removeobject(tt)\n")
+            fp.write("except:\n    pass\n\n")
+            fp.write("try:\n")
+            fp.write("    to = vcs.gettextorientation(%s)\n" % self.To_name)
+            fp.write("    vcs.removeobject(to)\n")
+            fp.write("except:\n    pass\n\n")
+            fp.write("#----------Text Combined (Tc) creation ----------\n")
+            fp.write("vcs.createtext(Tt_name='%s', To_name='%s', Tt_source=%s, To_source=%s)\n\n"
+                     % (self.Tt_name, self.To_name, tt_unique, unique_name))
             fp.close()
         else:
             # Json type
