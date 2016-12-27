@@ -45,7 +45,7 @@ def log_stats(module_name, verbose):
     print ("Done logging "+module_name+".md")
 
 
-# note: will only consume the first full error
+# note: will only consume the first full error (maybe)
 def consume_entry(readfile, writefile, endpoints, prepend="", append=""):
     more = True
     private = re.compile("_[_A-z0-9]+")

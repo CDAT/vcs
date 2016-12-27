@@ -584,12 +584,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x118776050>
-Trying:
-    vcs.listelements('textcombined') # should now contain 'EXAMPLE_tt:::EXAMPLE_tto'
-Expecting:
-    [...'EXAMPLE_tt:::EXAMPLE_tto'...]
-ok
+    <vcs.textcombined.Tc object at 0x1180eb320>
 Trying:
     vcs.show('textorientation') # show all available textorientation
 Expecting:
@@ -1073,7 +1068,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1449b0e88>
+    <vcs.displayplot.Dp object at 0x11c7057f8>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1111,7 +1106,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1271195c8>
+    <vcs.displayplot.Dp object at 0x153eab5c8>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1155,7 +1150,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x127148d70>
+    <vcs.displayplot.Dp object at 0x153e695c8>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1612,42 +1607,14 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    import cdms2 # Need cdms2 to create a slab
-Expecting nothing
-ok
-Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
-Expecting nothing
-ok
-Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
+    slab1 = [[0, 1, 2, 3, 4], [0.1, 0.2, 0.3, 0.4, 0.5]]
 Expecting nothing
 ok
 Trying:
     a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
 Expecting:
     <vcs.displayplot.Dp ...>
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1304, in vcs.Canvas.Canvas.gettaylordiagram
-Failed example:
-    a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.Canvas.Canvas.gettaylordiagram[6]>", line 1, in <module>
-        a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1310, in taylordiagram
-        return self.__plot(arglist, parms)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3650, in __plot
-        t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1967, in plot
-        self.draw(canvas, data)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1207, in draw
-        d0 = float(data[i][0])
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/numpy/ma/core.py", line 4182, in __float__
-        raise TypeError("Only length-1 arrays can be converted "
-    TypeError: Only length-1 arrays can be converted to Python scalars
+ok
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -3315,7 +3282,7 @@ ok
     vcs.Canvas._process_keyword
     vcs.Canvas.change_date_time
     vcs.Canvas.dictionarytovcslist
-116 items passed all tests:
+117 items passed all tests:
   14 tests in vcs.Canvas.Canvas.boxfill
    2 tests in vcs.Canvas.Canvas.canvasid
    5 tests in vcs.Canvas.Canvas.canvasinfo
@@ -3378,6 +3345,7 @@ ok
    9 tests in vcs.Canvas.Canvas.getmeshfill
    4 tests in vcs.Canvas.Canvas.getprojection
    8 tests in vcs.Canvas.Canvas.getscatter
+   5 tests in vcs.Canvas.Canvas.gettaylordiagram
    4 tests in vcs.Canvas.Canvas.gettemplate
    5 tests in vcs.Canvas.Canvas.gettextcombined
    6 tests in vcs.Canvas.Canvas.gettextextent
@@ -3433,13 +3401,12 @@ ok
    8 tests in vcs.Canvas.Canvas.xyvsy
    8 tests in vcs.Canvas.Canvas.yxvsx
 **********************************************************************
-6 items had failures:
+5 items had failures:
    1 of   3 in vcs.Canvas.Canvas.createtext
    1 of   8 in vcs.Canvas.Canvas.get3d_dual_scalar
    1 of   7 in vcs.Canvas.Canvas.get3d_scalar
    1 of   8 in vcs.Canvas.Canvas.get3d_vector
-   1 of   7 in vcs.Canvas.Canvas.gettaylordiagram
    1 of   4 in vcs.Canvas.Canvas.isinfile
-695 tests in 205 items.
-689 passed and 6 failed.
-***Test Failed*** 6 failures.
+693 tests in 205 items.
+688 passed and 5 failed.
+***Test Failed*** 5 failures.

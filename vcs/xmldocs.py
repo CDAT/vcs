@@ -342,6 +342,10 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                     sp_parent = 'default_'+obj_name+'_'
                     d['sp_parent'] = "'%s'" % sp_parent
                     d['parent'] = d['sp_parent']
+        # From here to the end of the inner for loop is intended to be a section for specific use-cases for the
+        #   template keywords. This section aims to take the 'method' parameter and use it to insert proper examples for
+        #   keywords which fit that method.
+
         # section for manageElements 'get' methods
             if method == 'get':
                 example1 = """%(tc)s
@@ -356,9 +360,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                     # TODO: replace with something that can actually be plotted by taylordiagram()
                     if obj_name is "taylordiagram":
                         d['slabs'] = """
-            >>> import cdms2 # Need cdms2 to create a slab
-            >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
-            >>> slab1 = f('u') # use the data file to create a cdms2 slab"""
+            >>> slab1 = [[0, 1, 2, 3, 4], [0.1, 0.2, 0.3, 0.4, 0.5]]"""
                     else:
                         d['slabs'] = """
             >>> import cdms2 # Need cdms2 to create a slab
@@ -368,8 +370,8 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                     if numslabs == 2:
                         slab2 = """
             >>> slab2 = f('v') # need 2 slabs, so get another"""
-                        d['slabs'] = d['slabs'] + slab2
-                        d['args'] = d['args'] + ", slab2"
+                        d['slabs'] += slab2
+                        d['args'] += ", slab2"
             # for vcs objects that have a self-named plotting function, i.e. fillarea()
                 if type_dict[obj_type][obj_name]['callable']:
                     plot = """%(slabs)s
@@ -628,10 +630,26 @@ obj_details = {
     }
 }
 # docstrings is a dictionary to store all docstring dictionaries and their associated docstrings
-# this will be used to populate all the docstrings in the same for loop (should better utilize locality)
+# this will be used to populate all the docstrings in the same for loop (should better utilize locality (maybe))
 docstrings = {}
 
-# for any of the doc templates, see the obj_details dict above for explanation of the keywords in the template.
+# keywords in these docstring tmeplates relate somewhat to keys described in obj_details above.
+# Population of these strings is taken care of in the populate_docstrings function.
+
+# For the sanity of future developers, I'll document the meaning of the keys I used and the convention I followed:
+# Keys:
+#   'name' : the name of the VCS object being referred to (boxfill, 1d, textorientation, etc.). This is used to talk
+#       about the object and to call the object's get/create functions in most cases.
+#   'type' : the type of object we are dealing with. Mostly just 'secondary method' or 'graphics method'.
+#   'sp_parent' : used if the object doesn't have a sensible default for its *get* function. Examples of objects which
+#       need this are the 1d family of objects and textcombined objects. If the object does have a sensible default,
+#       (e.g. getboxfill()) this key should be an empty string. When providing a string to 'sp_parent', it should be
+#       of format "'blah'" or '"blah"', and if multiple arguments are needed, they should be provided ('"blah", "blah"')
+#   'tc'    : no textcombined objects exist by default in VCS, so this key is for an entry that will create one when
+#       it is needed for an example. All other times, it will be an empty string.
+#   'call' : the name to be used for a call to the object's *get* function. Only really used for textcombined, and only
+#       in the context of the script() function. All other cases, 'call' == 'name'
+#   'ex(1|2)'   : these should be filled in with code examples in doctest format.
 scriptdoc = """
     Saves out a copy of the %(name)s %(type)s in JSON, or Python format to a designated file.
 
@@ -656,7 +674,8 @@ scriptdoc = """
             >>> ex.script('filename.py') # Append to a Python script named 'filename.py'
             >>> ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
 
-    :param script_filename: Output name of the script file. If no extension is specified, a .json object is created.
+    :param script_filename: Output name of the script file.
+        If no extension is specified, a .json object is created.
     :type script_filename: str
 
     :param mode: Either 'w' for replace, or 'a' for append. Defaults to 'a', if not specified.
