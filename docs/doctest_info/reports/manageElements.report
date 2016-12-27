@@ -394,7 +394,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x117e5a410>
+    <vcs.textcombined.Tc object at 0x118015410>
 Trying:
     vcs.listelements('textcombined') # should now contain 'EXAMPLE_tt:::EXAMPLE_tto'
 Expecting:
@@ -567,7 +567,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1183bca28>
+    <vcs.displayplot.Dp object at 0x118568050>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -605,7 +605,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1180296e0>
+    <vcs.displayplot.Dp object at 0x1189005c8>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -649,7 +649,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x128abec58>
+    <vcs.displayplot.Dp object at 0x11a097b40>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -960,42 +960,14 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    import cdms2 # Need cdms2 to create a slab
-Expecting nothing
-ok
-Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
-Expecting nothing
-ok
-Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
+    slab1 = [[0, 1, 2, 3, 4], [0.1, 0.2, 0.3, 0.4, 0.5]]
 Expecting nothing
 ok
 Trying:
     a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
 Expecting:
     <vcs.displayplot.Dp ...>
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 266, in vcs.manageElements.gettaylordiagram
-Failed example:
-    a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.manageElements.gettaylordiagram[6]>", line 1, in <module>
-        a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1310, in taylordiagram
-        return self.__plot(arglist, parms)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3650, in __plot
-        t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1967, in plot
-        self.draw(canvas, data)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1207, in draw
-        d0 = float(data[i][0])
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/numpy/ma/core.py", line 4182, in __float__
-        raise TypeError("Only length-1 arrays can be converted "
-    TypeError: Only length-1 arrays can be converted to Python scalars
+ok
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1267,7 +1239,7 @@ ok
     vcs.manageElements.removeTm
     vcs.manageElements.removeTo
     vcs.manageElements.removeTt
-44 items passed all tests:
+45 items passed all tests:
    4 tests in vcs.manageElements.check_name_source
    4 tests in vcs.manageElements.create1d
    3 tests in vcs.manageElements.create3d_dual_scalar
@@ -1302,6 +1274,7 @@ ok
    9 tests in vcs.manageElements.getmeshfill
    4 tests in vcs.manageElements.getprojection
    8 tests in vcs.manageElements.getscatter
+   5 tests in vcs.manageElements.gettaylordiagram
    4 tests in vcs.manageElements.gettemplate
    5 tests in vcs.manageElements.gettextcombined
    4 tests in vcs.manageElements.gettextorientation
@@ -1313,12 +1286,11 @@ ok
    3 tests in vcs.manageElements.removeobject
    7 tests in vcs.manageElements.setLineAttributes
 **********************************************************************
-5 items had failures:
+4 items had failures:
    2 of   3 in vcs.manageElements.createtext
    1 of   8 in vcs.manageElements.get3d_dual_scalar
    1 of   7 in vcs.manageElements.get3d_scalar
    1 of   8 in vcs.manageElements.get3d_vector
-   1 of   7 in vcs.manageElements.gettaylordiagram
-253 tests in 71 items.
-247 passed and 6 failed.
-***Test Failed*** 6 failures.
+251 tests in 71 items.
+246 passed and 5 failed.
+***Test Failed*** 5 failures.

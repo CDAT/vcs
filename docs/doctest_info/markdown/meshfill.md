@@ -3,7 +3,9 @@ vcs.meshfill.Gfm.list
 ```python
 Failed example:
     obj.list() # print meshfill attributes
-Expected nothing
+Expected:
+     ----------...----------
+    ...
 Got:
      ---------- Meshfill (Gmf) member (attribute) listings ---------
     graphics method = Gfm
@@ -64,8 +66,6 @@ Missing Doctests
 
 :x:```    vcs.meshfill.Gfm.colors```
 
-:x:```    vcs.meshfill.Gfm.datawc```
-
 :x:```    vcs.meshfill.Gfm.datawc_calendar```
 
 :x:```    vcs.meshfill.Gfm.datawc_timeunits```
@@ -108,8 +108,6 @@ Missing Doctests
 
 :x:```    vcs.meshfill.Gfm.xaxisconvert```
 
-:x:```    vcs.meshfill.Gfm.xmtics```
-
 :x:```    vcs.meshfill.Gfm.xmtics1```
 
 :x:```    vcs.meshfill.Gfm.xmtics2```
@@ -121,8 +119,6 @@ Missing Doctests
 :x:```    vcs.meshfill.Gfm.xticlabels2```
 
 :x:```    vcs.meshfill.Gfm.yaxisconvert```
-
-:x:```    vcs.meshfill.Gfm.ymtics```
 
 :x:```    vcs.meshfill.Gfm.ymtics1```
 

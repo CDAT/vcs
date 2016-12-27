@@ -31,7 +31,7 @@ Failed example:
     t.drawAttributes(a,s,b) # shows attributes of s on canvas
 Expected nothing
 Got:
-    [<vcs.displayplot.Dp object at 0x1188f3e88>, <vcs.displayplot.Dp object at 0x1187c64b0>, <vcs.displayplot.Dp object at 0x1189007f8>, <vcs.displayplot.Dp object at 0x118900050>, <vcs.displayplot.Dp object at 0x11890b050>]
+    [<vcs.displayplot.Dp object at 0x11864be88>, <vcs.displayplot.Dp object at 0x1186164b0>, <vcs.displayplot.Dp object at 0x118883398>, <vcs.displayplot.Dp object at 0x118883e88>, <vcs.displayplot.Dp object at 0x11888d4b0>]
 Trying:
     x = vcs.init()
 Expecting nothing
@@ -91,12 +91,16 @@ Expecting nothing
 ok
 Trying:
     obj.list() # print template attributes
-Expecting nothing
+Expecting:
+     ----------...----------
+    ...
 **********************************************************************
 File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 546, in vcs.template.P.list
 Failed example:
     obj.list() # print template attributes
-Expected nothing
+Expected:
+     ----------...----------
+    ...
 Got:
     ----------Template (P) member (attribute) listings ----------
     method = P

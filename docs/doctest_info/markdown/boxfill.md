@@ -1,46 +1,3 @@
-vcs.boxfill.Gfb.list
---------------------
-```python
-Failed example:
-    obj.list() # print boxfill attributes
-Expected nothing
-Got:
-     ----------Boxfill (Gfb) member (attribute) listings ----------
-    graphics method = Gfb
-    name = default
-    projection = linear
-    xticlabels1 = *
-    xticlabels2 = *
-    xmtics1 = 
-    xmtics2 = 
-    yticlabels1 = *
-    yticlabels2 = *
-    ymtics1 =  
-    ymtics2 =  
-    datawc_x1 = 1e+20
-    datawc_y1 =  1e+20
-    datawc_x2 =  1e+20
-    datawc_y2 =  1e+20
-    datawc_timeunits =  days since 2000
-    datawc_calendar =  135441
-    xaxisconvert =  linear
-    yaxisconvert =  linear
-    boxfill_type =  linear
-    level_1 =  1e+20
-    level_2 =  1e+20
-    levels =  [1e+20, 1e+20]
-    color_1 =  0
-    color_2 =  255
-    fillareacolors =  None
-    fillareastyle =  solid
-    fillareaindices =  [1]
-    fillareaopacity =  []
-    legend =  None
-    ext_1 =  False
-    ext_2 =  False
-    missing =  (0.0, 0.0, 0.0, 100.0)
-```
-
 Missing Doctests
 ----------------
 :x:```    vcs.boxfill```
@@ -56,8 +13,6 @@ Missing Doctests
 :x:```    vcs.boxfill.Gfb.colormap```
 
 :x:```    vcs.boxfill.Gfb.colors```
-
-:x:```    vcs.boxfill.Gfb.datawc```
 
 :x:```    vcs.boxfill.Gfb.datawc_calendar```
 
@@ -105,8 +60,6 @@ Missing Doctests
 
 :x:```    vcs.boxfill.Gfb.xaxisconvert```
 
-:x:```    vcs.boxfill.Gfb.xmtics```
-
 :x:```    vcs.boxfill.Gfb.xmtics1```
 
 :x:```    vcs.boxfill.Gfb.xmtics2```
@@ -118,8 +71,6 @@ Missing Doctests
 :x:```    vcs.boxfill.Gfb.xticlabels2```
 
 :x:```    vcs.boxfill.Gfb.yaxisconvert```
-
-:x:```    vcs.boxfill.Gfb.ymtics```
 
 :x:```    vcs.boxfill.Gfb.ymtics1```
 

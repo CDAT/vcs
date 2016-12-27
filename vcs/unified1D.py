@@ -764,7 +764,7 @@ class G1d(object):
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
         self.xmtics2 = xmt2
-    xmtics.__doc__ = xmldocs.xmticsdoc
+    xmtics.__doc__ = xmldocs.xmticsdoc % {"name": "1d"}
 
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
@@ -774,14 +774,14 @@ class G1d(object):
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1
         self.ymtics2 = ymt2
-    ymtics.__doc__ = xmldocs.ymticsdoc
+    ymtics.__doc__ = xmldocs.ymticsdoc % {"name": "1d"}
 
     def datawc(self, dsp1=1e20, dsp2=1e20, dsp3=1e20, dsp4=1e20):
         self.datawc_y1 = dsp1
         self.datawc_y2 = dsp2
         self.datawc_x1 = dsp3
         self.datawc_x2 = dsp4
-    datawc.__doc__ = xmldocs.datawcdoc
+    datawc.__doc__ = xmldocs.datawcdoc % {"name": "1d"}
 
     def list(self):
         if (self.name == '__removed_from_VCS__'):

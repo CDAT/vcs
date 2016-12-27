@@ -1,41 +1,3 @@
-vcs.isofill.Gfi.list
---------------------
-```python
-Failed example:
-    obj.list() # print isofill attributes
-Expected nothing
-Got:
-     ----------Isofill (Gfi) member (attribute) listings ----------
-    graphics method = Gfi
-    name = default
-    projection = linear
-    xticlabels1 = *
-    xticlabels2 = *
-    xmtics1 = 
-    xmtics2 = 
-    yticlabels1 = *
-    yticlabels2 = *
-    ymtics1 =  
-    ymtics2 =  
-    datawc_x1 = 1e+20
-    datawc_y1 =  1e+20
-    datawc_x2 =  1e+20
-    datawc_y2 =  1e+20
-    datawc_timeunits =  days since 2000
-    datawc_calendar =  135441
-    xaxisconvert =  linear
-    yaxisconvert =  linear
-    missing =  (0.0, 0.0, 0.0, 100.0)
-    ext_1 =  False
-    ext_2 =  False
-    fillareastyle =  solid
-    fillareaindices =  [1]
-    fillareacolors =  [1]
-    fillareaopacity =  []
-    levels =  ([1.0000000200408773e+20, 1.0000000200408773e+20],)
-    legend =  None
-```
-
 vcs.isofill.Gfi.script
 ----------------------
 ```python
@@ -61,8 +23,6 @@ Missing Doctests
 :x:```    vcs.isofill.Gfi.colormap```
 
 :x:```    vcs.isofill.Gfi.colors```
-
-:x:```    vcs.isofill.Gfi.datawc```
 
 :x:```    vcs.isofill.Gfi.datawc_calendar```
 
@@ -102,8 +62,6 @@ Missing Doctests
 
 :x:```    vcs.isofill.Gfi.xaxisconvert```
 
-:x:```    vcs.isofill.Gfi.xmtics```
-
 :x:```    vcs.isofill.Gfi.xmtics1```
 
 :x:```    vcs.isofill.Gfi.xmtics2```
@@ -115,8 +73,6 @@ Missing Doctests
 :x:```    vcs.isofill.Gfi.xticlabels2```
 
 :x:```    vcs.isofill.Gfi.yaxisconvert```
-
-:x:```    vcs.isofill.Gfi.ymtics```
 
 :x:```    vcs.isofill.Gfi.ymtics1```
 

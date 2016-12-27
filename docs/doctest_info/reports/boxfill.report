@@ -3,52 +3,32 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    ex=a.createboxfill('boxfill_dwc')
+Expecting nothing
+ok
+Trying:
+    ex.datawc(0.0, 0.1, 1.0, 1.1) # sets datawc y1, y2, x1, x2
+Expecting nothing
+ok
+Trying:
+    ex.datawc_y1, ex.datawc_y2, ex.datawc_x1, ex.datawc_x2
+Expecting:
+    (0.0, 0.1, 1.0, 1.1)
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
     obj=a.getboxfill() # default
 Expecting nothing
 ok
 Trying:
     obj.list() # print boxfill attributes
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/boxfill.py", line 993, in vcs.boxfill.Gfb.list
-Failed example:
-    obj.list() # print boxfill attributes
-Expected nothing
-Got:
-     ----------Boxfill (Gfb) member (attribute) listings ----------
-    graphics method = Gfb
-    name = default
-    projection = linear
-    xticlabels1 = *
-    xticlabels2 = *
-    xmtics1 = 
-    xmtics2 = 
-    yticlabels1 = *
-    yticlabels2 = *
-    ymtics1 =  
-    ymtics2 =  
-    datawc_x1 = 1e+20
-    datawc_y1 =  1e+20
-    datawc_x2 =  1e+20
-    datawc_y2 =  1e+20
-    datawc_timeunits =  days since 2000
-    datawc_calendar =  135441
-    xaxisconvert =  linear
-    yaxisconvert =  linear
-    boxfill_type =  linear
-    level_1 =  1e+20
-    level_2 =  1e+20
-    levels =  [1e+20, 1e+20]
-    color_1 =  0
-    color_2 =  255
-    fillareacolors =  None
-    fillareastyle =  solid
-    fillareaindices =  [1]
-    fillareaopacity =  []
-    legend =  None
-    ext_1 =  False
-    ext_2 =  False
-    missing =  (0.0, 0.0, 0.0, 100.0)
+Expecting:
+     ----------...----------
+    ...
+ok
 Trying:
     b=vcs.createboxfill()
 Expecting nothing
@@ -98,14 +78,54 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    ex=a.createboxfill('xyscale_ex') # create a boxfill to work with
+    ex=vcs.createboxfill()
+Expecting nothing
+ok
+Trying:
+    ex.xmtics("lon5") # every 5 degrees
+Expecting nothing
+ok
+Trying:
+    tmp=vcs.createtemplate() # custom template to plot minitics
+Expecting nothing
+ok
+Trying:
+    tmp.xmintic1.priority = 1 # plotting will now show xmtics
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    ex=a.createboxfill('boxfill_xys') # make a boxfill
 Expecting nothing
 ok
 Trying:
     ex.xyscale(xat='linear', yat='linear')
 Expecting nothing
 ok
-96 items had no tests:
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    ex=vcs.createboxfill()
+Expecting nothing
+ok
+Trying:
+    ex.ymtics("lat5") # every 5 degrees
+Expecting nothing
+ok
+Trying:
+    tmp=vcs.createtemplate() # custom template to plot minitics
+Expecting nothing
+ok
+Trying:
+    tmp.ymintic1.priority = 1 # plotting will now show ymtics
+Expecting nothing
+ok
+93 items had no tests:
     vcs.boxfill
     vcs.boxfill.Gfb
     vcs.boxfill.Gfb.__init__
@@ -164,7 +184,6 @@ ok
     vcs.boxfill.Gfb.color_2
     vcs.boxfill.Gfb.colormap
     vcs.boxfill.Gfb.colors
-    vcs.boxfill.Gfb.datawc
     vcs.boxfill.Gfb.datawc_calendar
     vcs.boxfill.Gfb.datawc_timeunits
     vcs.boxfill.Gfb.datawc_x1
@@ -188,27 +207,26 @@ ok
     vcs.boxfill.Gfb.name
     vcs.boxfill.Gfb.projection
     vcs.boxfill.Gfb.xaxisconvert
-    vcs.boxfill.Gfb.xmtics
     vcs.boxfill.Gfb.xmtics1
     vcs.boxfill.Gfb.xmtics2
     vcs.boxfill.Gfb.xticlabels
     vcs.boxfill.Gfb.xticlabels1
     vcs.boxfill.Gfb.xticlabels2
     vcs.boxfill.Gfb.yaxisconvert
-    vcs.boxfill.Gfb.ymtics
     vcs.boxfill.Gfb.ymtics1
     vcs.boxfill.Gfb.ymtics2
     vcs.boxfill.Gfb.yticlabels
     vcs.boxfill.Gfb.yticlabels1
     vcs.boxfill.Gfb.yticlabels2
     vcs.boxfill.process_src
-3 items passed all tests:
+7 items passed all tests:
+   4 tests in vcs.boxfill.Gfb.datawc
+   3 tests in vcs.boxfill.Gfb.list
    6 tests in vcs.boxfill.Gfb.rename
    4 tests in vcs.boxfill.Gfb.script
+   5 tests in vcs.boxfill.Gfb.xmtics
    3 tests in vcs.boxfill.Gfb.xyscale
-**********************************************************************
-1 items had failures:
-   1 of   3 in vcs.boxfill.Gfb.list
-16 tests in 100 items.
-15 passed and 1 failed.
-***Test Failed*** 1 failures.
+   5 tests in vcs.boxfill.Gfb.ymtics
+30 tests in 100 items.
+30 passed and 0 failed.
+Test passed.

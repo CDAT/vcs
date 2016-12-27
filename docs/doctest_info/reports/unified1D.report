@@ -3,45 +3,32 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    ex=a.create1d('1d_dwc')
+Expecting nothing
+ok
+Trying:
+    ex.datawc(0.0, 0.1, 1.0, 1.1) # sets datawc y1, y2, x1, x2
+Expecting nothing
+ok
+Trying:
+    ex.datawc_y1, ex.datawc_y2, ex.datawc_x1, ex.datawc_x2
+Expecting:
+    (0.0, 0.1, 1.0, 1.1)
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
     obj=a.get1d('default') # default
 Expecting nothing
 ok
 Trying:
     obj.list() # print 1d attributes
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/unified1D.py", line 824, in vcs.unified1D.G1d.list
-Failed example:
-    obj.list() # print 1d attributes
-Expected nothing
-Got:
-     ----------Yxvsx (GYx) member (attribute) listings ----------
-    graphics method = G1d
-    name = default
-    projection = linear
-    xticlabels1 = *
-    xticlabels2 = *
-    xmtics1 = 
-    xmtics2 = 
-    yticlabels1 = *
-    yticlabels2 = *
-    ymtics1 =  
-    ymtics2 =  
-    datawc_x1 = 1e+20
-    datawc_y1 =  1e+20
-    datawc_x2 =  1e+20
-    datawc_y2 =  1e+20
-    datawc_timeunits =  days since 2000
-    datawc_calendar =  135441
-    xaxisconvert =  linear
-    yaxisconvert =  linear
-    linetype =  solid
-    linecolor =  (0.0, 0.0, 0.0, 100.0)
-    linewidth =  1
-    marker =  dot
-    markercolor =  (0.0, 0.0, 0.0, 100.0)
-    markersize =  1
-    flip =  False
+Expecting:
+     ----------...----------
+    ...
+ok
 Trying:
     a=vcs.init() # Make a Canvas object to work with
 Expecting nothing
@@ -58,7 +45,47 @@ Trying:
     ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
 Expecting nothing
 ok
-95 items had no tests:
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    ex=vcs.create1d()
+Expecting nothing
+ok
+Trying:
+    ex.xmtics("lon5") # every 5 degrees
+Expecting nothing
+ok
+Trying:
+    tmp=vcs.createtemplate() # custom template to plot minitics
+Expecting nothing
+ok
+Trying:
+    tmp.xmintic1.priority = 1 # plotting will now show xmtics
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    ex=vcs.create1d()
+Expecting nothing
+ok
+Trying:
+    ex.ymtics("lat5") # every 5 degrees
+Expecting nothing
+ok
+Trying:
+    tmp=vcs.createtemplate() # custom template to plot minitics
+Expecting nothing
+ok
+Trying:
+    tmp.ymintic1.priority = 1 # plotting will now show ymtics
+Expecting nothing
+ok
+92 items had no tests:
     vcs.unified1D
     vcs.unified1D.G1d
     vcs.unified1D.G1d.__init__
@@ -118,7 +145,6 @@ ok
     vcs.unified1D.G1d._setyticlabels1
     vcs.unified1D.G1d._setyticlabels2
     vcs.unified1D.G1d.colormap
-    vcs.unified1D.G1d.datawc
     vcs.unified1D.G1d.datawc_calendar
     vcs.unified1D.G1d.datawc_timeunits
     vcs.unified1D.G1d.datawc_x1
@@ -139,14 +165,12 @@ ok
     vcs.unified1D.G1d.setLineAttributes
     vcs.unified1D.G1d.smooth
     vcs.unified1D.G1d.xaxisconvert
-    vcs.unified1D.G1d.xmtics
     vcs.unified1D.G1d.xmtics1
     vcs.unified1D.G1d.xmtics2
     vcs.unified1D.G1d.xticlabels
     vcs.unified1D.G1d.xticlabels1
     vcs.unified1D.G1d.xticlabels2
     vcs.unified1D.G1d.yaxisconvert
-    vcs.unified1D.G1d.ymtics
     vcs.unified1D.G1d.ymtics1
     vcs.unified1D.G1d.ymtics2
     vcs.unified1D.G1d.yticlabels
@@ -154,11 +178,12 @@ ok
     vcs.unified1D.G1d.yticlabels2
     vcs.unified1D.load
     vcs.unified1D.process_src
-1 items passed all tests:
+5 items passed all tests:
+   4 tests in vcs.unified1D.G1d.datawc
+   3 tests in vcs.unified1D.G1d.list
    4 tests in vcs.unified1D.G1d.script
-**********************************************************************
-1 items had failures:
-   1 of   3 in vcs.unified1D.G1d.list
-7 tests in 97 items.
-6 passed and 1 failed.
-***Test Failed*** 1 failures.
+   5 tests in vcs.unified1D.G1d.xmtics
+   5 tests in vcs.unified1D.G1d.ymtics
+21 tests in 97 items.
+21 passed and 0 failed.
+Test passed.

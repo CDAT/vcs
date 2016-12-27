@@ -220,30 +220,58 @@ ticlabelsdoc = """
     Sets the %sticlabels1 and %sticlabels2 values on the object
 
     :param %stl1: Sets the object's value for :py:attr:`%sticlabels1`.
-                  Must be  a str, or a dictionary object with float:str mappings.
+        Must be  a str, or a dictionary object with float:str mappings.
     :type %stl1: {float:str} or str
 
     :param %stl2: Sets the object's value for :py:attr:`%sticlabels2`.
-                  Must be a str, or a dictionary object with float:str mappings.
+        Must be a str, or a dictionary object with float:str mappings.
     :type %stl2: {float:str} or str
            """
 xticlabelsdoc = ticlabelsdoc % (('x',) * 8)
 yticlabelsdoc = ticlabelsdoc % (('y',) * 8)
 
 mticsdoc = """
-    Sets the %smtics1 and %smtics2 values on the object
+    Sets the %(x_y)smtics1 and %(x_y)smtics2 values on the object.
 
-    :param %smt1: Value for :py:attr:`%smtics1`. Must be a str, or a dictionary object with float:str mappings.
-    :type %smt1: {float:str} or str
+    .. note::
 
-    :param %smt2: Value for :py:attr:`%smtics2`. Must be a str, or a dictionary object with float:str mappings.
-    :type %smt2: {float:str} or str
+        The mtics attributes are not inherently plotted by the default template.
+        The example below shows how to apply a custom template and enable it to
+        plot mtics.
+
+    :Example:
+
+        .. doctest:: %(name)s_%(x_y)smtics
+
+            >>> a=vcs.init()
+            >>> ex=vcs.create%(name)s()
+            >>> ex.%(x_y)smtics("%(axis)s5") # every 5 degrees
+            >>> tmp=vcs.createtemplate() # custom template to plot minitics
+            >>> tmp.%(x_y)smintic1.priority = 1 # plotting will now show %(x_y)smtics
+            
+    :param %(x_y)smt1: Value for :py:attr:`%(x_y)smtics1`.
+        Must be a str, or a dictionary object with float:str mappings.
+    :type %(x_y)smt1: dict or str
+
+    :param %(x_y)smt2: Value for :py:attr:`%(x_y)smtics2`.
+        Must be a str, or a dictionary object with float:str mappings.
+    :type %(x_y)smt2: dict or str
     """
-xmticsdoc = mticsdoc % (('x',) * 8)
-ymticsdoc = mticsdoc % (('y',) * 8)
+xmticsdoc = mticsdoc % {"x_y": "x", "axis": "lon", "name": "%(name)s"}
+ymticsdoc = mticsdoc % {"x_y": "y", "axis": "lat", "name": "%(name)s"}
 
 datawcdoc = """
     Sets the data world coordinates for object
+
+    :Example:
+
+        .. doctest:: datawc_%(name)s
+
+            >>> a=vcs.init()
+            >>> ex=a.create%(name)s('%(name)s_dwc')
+            >>> ex.datawc(0.0, 0.1, 1.0, 1.1) # sets datawc y1, y2, x1, x2
+            >>> ex.datawc_y1, ex.datawc_y2, ex.datawc_x1, ex.datawc_x2
+            (0.0, 0.1, 1.0, 1.1)
 
     :param dsp1: Sets the :py:attr:`datawc_y1` property of the object.
     :type dsp1: float
@@ -265,7 +293,7 @@ xyscaledoc = """
         .. doctest:: xyscale_%s
 
             >>> a=vcs.init()
-            >>> ex=a.create%s('xyscale_ex') # create a %s object
+            >>> ex=a.create%s('%s_xys') # make a %s
             >>> ex.xyscale(xat='linear', yat='linear')
 
     :param xat: Set value for x axis conversion.
@@ -291,6 +319,8 @@ listdoc = """Lists the current values of object attributes
             >>> a=vcs.init()
             >>> obj=a.get%(name)s(%(parent)s) # default
             >>> obj.list() # print %(name)s attributes
+             ----------...----------
+            ...
     """
 
 def populate_docstrings(type_dict, target_dict, docstring, method):
@@ -344,7 +374,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                     d['parent'] = d['sp_parent']
         # From here to the end of the inner for loop is intended to be a section for specific use-cases for the
         #   template keywords. This section aims to take the 'method' parameter and use it to insert proper examples for
-        #   keywords which fit that method.
+        #   that method.
 
         # section for manageElements 'get' methods
             if method == 'get':

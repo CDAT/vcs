@@ -8,7 +8,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x1180eb320>
+    <vcs.textcombined.Tc object at 0x118776500>
 ```
 
 vcs.Canvas.Canvas.get3d_dual_scalar
@@ -20,7 +20,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11c7057f8>
+    <vcs.displayplot.Dp object at 0x1100eb4b0>
 ```
 
 vcs.Canvas.Canvas.get3d_scalar
@@ -32,7 +32,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x153eab5c8>
+    <vcs.displayplot.Dp object at 0x1544486e0>
 ```
 
 vcs.Canvas.Canvas.get3d_vector
@@ -46,7 +46,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x153e695c8>
+    <vcs.displayplot.Dp object at 0x15447ad70>
 ```
 
 vcs.Canvas.Canvas.isinfile

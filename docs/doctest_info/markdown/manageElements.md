@@ -22,7 +22,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x117e5a410>
+    <vcs.textcombined.Tc object at 0x118015410>
 ```
 
 vcs.manageElements.get3d_dual_scalar
@@ -34,7 +34,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1183bca28>
+    <vcs.displayplot.Dp object at 0x118568050>
 ```
 
 vcs.manageElements.get3d_scalar
@@ -46,7 +46,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1180296e0>
+    <vcs.displayplot.Dp object at 0x1189005c8>
 ```
 
 vcs.manageElements.get3d_vector
@@ -60,30 +60,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x128abec58>
-```
-
-vcs.manageElements.gettaylordiagram
------------------------------------
-```python
-Failed example:
-    a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.manageElements.gettaylordiagram[6]>", line 1, in <module>
-        a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1310, in taylordiagram
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 3650, in __plot
-        t.plot(arglist[0], canvas=self, template=arglist[2], **keyargs)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1967, in plot
-        self.draw(canvas, data)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/taylor.py", line 1207, in draw
-        d0 = float(data[i][0])
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/numpy/ma/core.py", line 4182, in __float__
-        raise TypeError("Only length-1 arrays can be converted "
-    TypeError: Only length-1 arrays can be converted to Python scalars
+    <vcs.displayplot.Dp object at 0x11a097b40>
 ```
 
 Missing Doctests

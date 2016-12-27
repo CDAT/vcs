@@ -3,17 +3,38 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    ex=a.createmeshfill('meshfill_dwc')
+Expecting nothing
+ok
+Trying:
+    ex.datawc(0.0, 0.1, 1.0, 1.1) # sets datawc y1, y2, x1, x2
+Expecting nothing
+ok
+Trying:
+    ex.datawc_y1, ex.datawc_y2, ex.datawc_x1, ex.datawc_x2
+Expecting:
+    (0.0, 0.1, 1.0, 1.1)
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
     obj=a.getmeshfill() # default
 Expecting nothing
 ok
 Trying:
     obj.list() # print meshfill attributes
-Expecting nothing
+Expecting:
+     ----------...----------
+    ...
 **********************************************************************
 File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/meshfill.py", line 779, in vcs.meshfill.Gfm.list
 Failed example:
     obj.list() # print meshfill attributes
-Expected nothing
+Expected:
+     ----------...----------
+    ...
 Got:
      ---------- Meshfill (Gmf) member (attribute) listings ---------
     graphics method = Gfm
@@ -79,14 +100,54 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    ex=a.createmeshfill('xyscale_ex') # create a meshfill to work with
+    ex=vcs.createmeshfill()
+Expecting nothing
+ok
+Trying:
+    ex.xmtics("lon5") # every 5 degrees
+Expecting nothing
+ok
+Trying:
+    tmp=vcs.createtemplate() # custom template to plot minitics
+Expecting nothing
+ok
+Trying:
+    tmp.xmintic1.priority = 1 # plotting will now show xmtics
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    ex=a.createmeshfill('meshfill_xys') # make a meshfill
 Expecting nothing
 ok
 Trying:
     ex.xyscale(xat='linear', yat='linear')
 Expecting nothing
 ok
-88 items had no tests:
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    ex=vcs.createmeshfill()
+Expecting nothing
+ok
+Trying:
+    ex.ymtics("lat5") # every 5 degrees
+Expecting nothing
+ok
+Trying:
+    tmp=vcs.createtemplate() # custom template to plot minitics
+Expecting nothing
+ok
+Trying:
+    tmp.ymintic1.priority = 1 # plotting will now show ymtics
+Expecting nothing
+ok
+85 items had no tests:
     vcs.meshfill
     vcs.meshfill.Gfm
     vcs.meshfill.Gfm.__init__
@@ -138,7 +199,6 @@ ok
     vcs.meshfill.Gfm._setyticlabels2
     vcs.meshfill.Gfm.colormap
     vcs.meshfill.Gfm.colors
-    vcs.meshfill.Gfm.datawc
     vcs.meshfill.Gfm.datawc_calendar
     vcs.meshfill.Gfm.datawc_timeunits
     vcs.meshfill.Gfm.datawc_x1
@@ -160,14 +220,12 @@ ok
     vcs.meshfill.Gfm.projection
     vcs.meshfill.Gfm.wrap
     vcs.meshfill.Gfm.xaxisconvert
-    vcs.meshfill.Gfm.xmtics
     vcs.meshfill.Gfm.xmtics1
     vcs.meshfill.Gfm.xmtics2
     vcs.meshfill.Gfm.xticlabels
     vcs.meshfill.Gfm.xticlabels1
     vcs.meshfill.Gfm.xticlabels2
     vcs.meshfill.Gfm.yaxisconvert
-    vcs.meshfill.Gfm.ymtics
     vcs.meshfill.Gfm.ymtics1
     vcs.meshfill.Gfm.ymtics2
     vcs.meshfill.Gfm.yticlabels
@@ -175,12 +233,15 @@ ok
     vcs.meshfill.Gfm.yticlabels2
     vcs.meshfill.load
     vcs.meshfill.process_src
-1 items passed all tests:
+4 items passed all tests:
+   4 tests in vcs.meshfill.Gfm.datawc
+   5 tests in vcs.meshfill.Gfm.xmtics
    3 tests in vcs.meshfill.Gfm.xyscale
+   5 tests in vcs.meshfill.Gfm.ymtics
 **********************************************************************
 2 items had failures:
    1 of   3 in vcs.meshfill.Gfm.list
    1 of   4 in vcs.meshfill.Gfm.script
-10 tests in 91 items.
-8 passed and 2 failed.
+24 tests in 91 items.
+22 passed and 2 failed.
 ***Test Failed*** 2 failures.

@@ -1,39 +1,3 @@
-vcs.unified1D.G1d.list
-----------------------
-```python
-Failed example:
-    obj.list() # print 1d attributes
-Expected nothing
-Got:
-     ----------Yxvsx (GYx) member (attribute) listings ----------
-    graphics method = G1d
-    name = default
-    projection = linear
-    xticlabels1 = *
-    xticlabels2 = *
-    xmtics1 = 
-    xmtics2 = 
-    yticlabels1 = *
-    yticlabels2 = *
-    ymtics1 =  
-    ymtics2 =  
-    datawc_x1 = 1e+20
-    datawc_y1 =  1e+20
-    datawc_x2 =  1e+20
-    datawc_y2 =  1e+20
-    datawc_timeunits =  days since 2000
-    datawc_calendar =  135441
-    xaxisconvert =  linear
-    yaxisconvert =  linear
-    linetype =  solid
-    linecolor =  (0.0, 0.0, 0.0, 100.0)
-    linewidth =  1
-    marker =  dot
-    markercolor =  (0.0, 0.0, 0.0, 100.0)
-    markersize =  1
-    flip =  False
-```
-
 Missing Doctests
 ----------------
 :x:```    vcs.unified1D```
@@ -41,8 +5,6 @@ Missing Doctests
 :x:```    vcs.unified1D.G1d```
 
 :x:```    vcs.unified1D.G1d.colormap```
-
-:x:```    vcs.unified1D.G1d.datawc```
 
 :x:```    vcs.unified1D.G1d.datawc_calendar```
 
@@ -84,8 +46,6 @@ Missing Doctests
 
 :x:```    vcs.unified1D.G1d.xaxisconvert```
 
-:x:```    vcs.unified1D.G1d.xmtics```
-
 :x:```    vcs.unified1D.G1d.xmtics1```
 
 :x:```    vcs.unified1D.G1d.xmtics2```
@@ -97,8 +57,6 @@ Missing Doctests
 :x:```    vcs.unified1D.G1d.xticlabels2```
 
 :x:```    vcs.unified1D.G1d.yaxisconvert```
-
-:x:```    vcs.unified1D.G1d.ymtics```
 
 :x:```    vcs.unified1D.G1d.ymtics1```
 

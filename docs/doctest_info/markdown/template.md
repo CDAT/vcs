@@ -5,7 +5,7 @@ Failed example:
     t.drawAttributes(a,s,b) # shows attributes of s on canvas
 Expected nothing
 Got:
-    [<vcs.displayplot.Dp object at 0x1188f3e88>, <vcs.displayplot.Dp object at 0x1187c64b0>, <vcs.displayplot.Dp object at 0x1189007f8>, <vcs.displayplot.Dp object at 0x118900050>, <vcs.displayplot.Dp object at 0x11890b050>]
+    [<vcs.displayplot.Dp object at 0x11864be88>, <vcs.displayplot.Dp object at 0x1186164b0>, <vcs.displayplot.Dp object at 0x118883398>, <vcs.displayplot.Dp object at 0x118883e88>, <vcs.displayplot.Dp object at 0x11888d4b0>]
 ```
 
 vcs.template.P.list
@@ -13,7 +13,9 @@ vcs.template.P.list
 ```python
 Failed example:
     obj.list() # print template attributes
-Expected nothing
+Expected:
+     ----------...----------
+    ...
 Got:
     ----------Template (P) member (attribute) listings ----------
     method = P
