@@ -1,3 +1,46 @@
+vcs.boxfill.Gfb.list
+--------------------
+```python
+Failed example:
+    obj.list() # print boxfill attributes
+Expected nothing
+Got:
+     ----------Boxfill (Gfb) member (attribute) listings ----------
+    graphics method = Gfb
+    name = default
+    projection = linear
+    xticlabels1 = *
+    xticlabels2 = *
+    xmtics1 = 
+    xmtics2 = 
+    yticlabels1 = *
+    yticlabels2 = *
+    ymtics1 =  
+    ymtics2 =  
+    datawc_x1 = 1e+20
+    datawc_y1 =  1e+20
+    datawc_x2 =  1e+20
+    datawc_y2 =  1e+20
+    datawc_timeunits =  days since 2000
+    datawc_calendar =  135441
+    xaxisconvert =  linear
+    yaxisconvert =  linear
+    boxfill_type =  linear
+    level_1 =  1e+20
+    level_2 =  1e+20
+    levels =  [1e+20, 1e+20]
+    color_1 =  0
+    color_2 =  255
+    fillareacolors =  None
+    fillareastyle =  solid
+    fillareaindices =  [1]
+    fillareaopacity =  []
+    legend =  None
+    ext_1 =  False
+    ext_2 =  False
+    missing =  (0.0, 0.0, 0.0, 100.0)
+```
+
 Missing Doctests
 ----------------
 :x:```    vcs.boxfill```
@@ -53,8 +96,6 @@ Missing Doctests
 :x:```    vcs.boxfill.Gfb.level_2```
 
 :x:```    vcs.boxfill.Gfb.levels```
-
-:x:```    vcs.boxfill.Gfb.list```
 
 :x:```    vcs.boxfill.Gfb.missing```
 

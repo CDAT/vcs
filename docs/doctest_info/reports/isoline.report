@@ -1,4 +1,55 @@
 Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    obj=a.getisoline() # default
+Expecting nothing
+ok
+Trying:
+    obj.list() # print isoline attributes
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/isoline.py", line 1067, in vcs.isoline.Gi.list
+Failed example:
+    obj.list() # print isoline attributes
+Expected nothing
+Got:
+     ----------Isoline (Gi) member (attribute) listings ----------
+    graphics method = Gi
+    name = default
+    projection = linear
+    xticlabels1 = *
+    xticlabels2 = *
+    xmtics1 = 
+    xmtics2 = 
+    yticlabels1 = *
+    yticlabels2 = *
+    ymtics1 =  
+    ymtics2 =  
+    datawc_x1 = 1e+20
+    datawc_y1 =  1e+20
+    datawc_x2 =  1e+20
+    datawc_y2 =  1e+20
+    datawc_timeunits =  days since 2000
+    datawc_calendar =  135441
+    xaxisconvert =  linear
+    yaxisconvert =  linear
+    label =  n
+    labelskipdistance =  0.0
+    labelbackgroundcolors =  None
+    labelbackgroundopacities =  None
+    linetypes =  ['solid']
+    linecolors =  [(0.0, 0.0, 0.0, 100.0)]
+    linewidths =  [1.0]
+    text =  None
+    textcolors =  None
+    level =  [[0.0, 1.0000000200408773e+20]]
+    clockwise =  [0]
+    scale =  [1.0]
+    angle =  [35.0]
+    spacing =  [1.0]
+Trying:
     a=vcs.init() # Make a Canvas object to work with
 Expecting nothing
 ok
@@ -26,7 +77,7 @@ Trying:
     ex.xyscale(xat='linear', yat='linear')
 Expecting nothing
 ok
-114 items had no tests:
+113 items had no tests:
     vcs.isoline
     vcs.isoline.Gi
     vcs.isoline.Gi.__init__
@@ -116,7 +167,6 @@ ok
     vcs.isoline.Gi.linecolors
     vcs.isoline.Gi.linetypes
     vcs.isoline.Gi.linewidths
-    vcs.isoline.Gi.list
     vcs.isoline.Gi.name
     vcs.isoline.Gi.projection
     vcs.isoline.Gi.scale
@@ -144,6 +194,9 @@ ok
 2 items passed all tests:
    4 tests in vcs.isoline.Gi.script
    3 tests in vcs.isoline.Gi.xyscale
-7 tests in 116 items.
-7 passed and 0 failed.
-Test passed.
+**********************************************************************
+1 items had failures:
+   1 of   3 in vcs.isoline.Gi.list
+10 tests in 116 items.
+9 passed and 1 failed.
+***Test Failed*** 1 failures.

@@ -1,4 +1,55 @@
 Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    obj=a.getboxfill() # default
+Expecting nothing
+ok
+Trying:
+    obj.list() # print boxfill attributes
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/boxfill.py", line 993, in vcs.boxfill.Gfb.list
+Failed example:
+    obj.list() # print boxfill attributes
+Expected nothing
+Got:
+     ----------Boxfill (Gfb) member (attribute) listings ----------
+    graphics method = Gfb
+    name = default
+    projection = linear
+    xticlabels1 = *
+    xticlabels2 = *
+    xmtics1 = 
+    xmtics2 = 
+    yticlabels1 = *
+    yticlabels2 = *
+    ymtics1 =  
+    ymtics2 =  
+    datawc_x1 = 1e+20
+    datawc_y1 =  1e+20
+    datawc_x2 =  1e+20
+    datawc_y2 =  1e+20
+    datawc_timeunits =  days since 2000
+    datawc_calendar =  135441
+    xaxisconvert =  linear
+    yaxisconvert =  linear
+    boxfill_type =  linear
+    level_1 =  1e+20
+    level_2 =  1e+20
+    levels =  [1e+20, 1e+20]
+    color_1 =  0
+    color_2 =  255
+    fillareacolors =  None
+    fillareastyle =  solid
+    fillareaindices =  [1]
+    fillareaopacity =  []
+    legend =  None
+    ext_1 =  False
+    ext_2 =  False
+    missing =  (0.0, 0.0, 0.0, 100.0)
+Trying:
     b=vcs.createboxfill()
 Expecting nothing
 ok
@@ -54,7 +105,7 @@ Trying:
     ex.xyscale(xat='linear', yat='linear')
 Expecting nothing
 ok
-97 items had no tests:
+96 items had no tests:
     vcs.boxfill
     vcs.boxfill.Gfb
     vcs.boxfill.Gfb.__init__
@@ -133,7 +184,6 @@ ok
     vcs.boxfill.Gfb.level_1
     vcs.boxfill.Gfb.level_2
     vcs.boxfill.Gfb.levels
-    vcs.boxfill.Gfb.list
     vcs.boxfill.Gfb.missing
     vcs.boxfill.Gfb.name
     vcs.boxfill.Gfb.projection
@@ -156,6 +206,9 @@ ok
    6 tests in vcs.boxfill.Gfb.rename
    4 tests in vcs.boxfill.Gfb.script
    3 tests in vcs.boxfill.Gfb.xyscale
-13 tests in 100 items.
-13 passed and 0 failed.
-Test passed.
+**********************************************************************
+1 items had failures:
+   1 of   3 in vcs.boxfill.Gfb.list
+16 tests in 100 items.
+15 passed and 1 failed.
+***Test Failed*** 1 failures.

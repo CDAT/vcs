@@ -1,146 +1,337 @@
-vcs.template.P.drawLinesAndMarkersLegend
-----------------------------------------
+vcs.template.P.drawAttributes
+-----------------------------
 ```python
 Failed example:
-    t.drawLinesAndMarkersLegend(x,
-        ["red","blue","green"], ["solid","dash","dot"],[1,4,8],
-        ["blue","green","red"], ["cross","square","dot"],[3,4,5],
-        ["sample A","type B","thing C"],True)
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.template.P.drawLinesAndMarkersLegend[3]>", line 4, in <module>
-        ["sample A","type B","thing C"],True)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/template.py", line 1526, in drawLinesAndMarkersLegend
-        strings, scratched, bg, render)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/utils.py", line 2666, in drawLinesAndMarkersLegend
-        if scratched is not None and scratched[i] is not False:
-    TypeError: 'bool' object has no attribute '__getitem__'
+    t.drawAttributes(a,s,b) # shows attributes of s on canvas
+Expected nothing
+Got:
+    [<vcs.displayplot.Dp object at 0x1188f3e88>, <vcs.displayplot.Dp object at 0x1187c64b0>, <vcs.displayplot.Dp object at 0x1189007f8>, <vcs.displayplot.Dp object at 0x118900050>, <vcs.displayplot.Dp object at 0x11890b050>]
 ```
 
-vcs.template.P.moveto
----------------------
+vcs.template.P.list
+-------------------
 ```python
 Failed example:
-    t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.template.P.moveto[0]>", line 1, in <module>
-        t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 112, in createtemplate
-        name, source = check_name_source(name, source, 'template')
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 90, in check_name_source
-        raise vcsError("Error %s object named %s already exists" % (typ, name))
-    vcsError: Error template object named example1 already exists
-```
-
-vcs.template.P.moveto
----------------------
-```python
-Failed example:
-    t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.template.P.moveto[1]>", line 1, in <module>
-        t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
-    NameError: name 't' is not defined
-```
-
-vcs.template.P.reset
---------------------
-```python
-Failed example:
-    t = vcs.createtemplate('example1', 'default') # template 'example1' inherits from 'default'
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.template.P.reset[0]>", line 1, in <module>
-        t = vcs.createtemplate('example1', 'default') # template 'example1' inherits from 'default'
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 112, in createtemplate
-        name, source = check_name_source(name, source, 'template')
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 90, in check_name_source
-        raise vcsError("Error %s object named %s already exists" % (typ, name))
-    vcsError: Error template object named example1 already exists
-```
-
-vcs.template.P.reset
---------------------
-```python
-Failed example:
-    t.reset('x',0.15,0.5,t.data.x1,t.data.x2) # Set x1 value to 0.15 and x2 value to 0.5
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.template.P.reset[1]>", line 1, in <module>
-        t.reset('x',0.15,0.5,t.data.x1,t.data.x2) # Set x1 value to 0.15 and x2 value to 0.5
-    NameError: name 't' is not defined
-```
-
-vcs.template.P.scale
---------------------
-```python
-Failed example:
-    t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.template.P.scale[0]>", line 1, in <module>
-        t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 112, in createtemplate
-        name, source = check_name_source(name, source, 'template')
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 90, in check_name_source
-        raise vcsError("Error %s object named %s already exists" % (typ, name))
-    vcsError: Error template object named example1 already exists
-```
-
-vcs.template.P.scale
---------------------
-```python
-Failed example:
-    t.scale(0.5) # Halves the template size
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.template.P.scale[1]>", line 1, in <module>
-        t.scale(0.5) # Halves the template size
-    NameError: name 't' is not defined
-```
-
-vcs.template.P.scale
---------------------
-```python
-Failed example:
-    t.scale(1.2) # Upsize everything to 20% more than the original size
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.template.P.scale[2]>", line 1, in <module>
-        t.scale(1.2) # Upsize everything to 20% more than the original size
-    NameError: name 't' is not defined
-```
-
-vcs.template.P.scale
---------------------
-```python
-Failed example:
-    t.scale(2,'x') # Double the x axis
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.template.P.scale[3]>", line 1, in <module>
-        t.scale(2,'x') # Double the x axis
-    NameError: name 't' is not defined
+    obj.list() # print template attributes
+Expected nothing
+Got:
+    ----------Template (P) member (attribute) listings ----------
+    method = P
+    name = default
+    orientation = 0
+    member =  file
+         priority = 1
+         x = 0.0500000007451
+         y = 0.0130000002682
+         texttable = default
+         textorientation = default
+    member =  function
+         priority = 1
+         x = 0.0500000007451
+         y = 0.0130000002682
+         texttable = default
+         textorientation = default
+    member =  logicalmask
+         priority = 1
+         x = 0.0500000007451
+         y = 0.0329999998212
+         texttable = default
+         textorientation = default
+    member =  transformation
+         priority = 1
+         x = 0.0500000007451
+         y = 0.0529999993742
+         texttable = default
+         textorientation = default
+    member =  source
+         priority = 1
+         x = 0.0500000007451
+         y = 0.941999971867
+         texttable = default
+         textorientation = default
+    member =  dataname
+         priority = 1
+         x = 0.0500000007451
+         y = 0.922999978065
+         texttable = default
+         textorientation = default
+    member =  title
+         priority = 1
+         x = 0.15000000596
+         y = 0.922999978065
+         texttable = default
+         textorientation = default
+    member =  units
+         priority = 1
+         x = 0.670000016689
+         y = 0.922999978065
+         texttable = default
+         textorientation = default
+    member =  crdate
+         priority = 1
+         x = 0.75
+         y = 0.922999978065
+         texttable = default
+         textorientation = default
+    member =  crtime
+         priority = 1
+         x = 0.850000023842
+         y = 0.922999978065
+         texttable = default
+         textorientation = default
+    member =  comment1
+         priority = 1
+         x = 0.10000000149
+         y = 0.954999983311
+         texttable = default
+         textorientation = default
+    member =  comment2
+         priority = 1
+         x = 0.10000000149
+         y = 0.975000023842
+         texttable = default
+         textorientation = default
+    member =  comment3
+         priority = 1
+         x = 0.10000000149
+         y = 0.995000004768
+         texttable = default
+         textorientation = default
+    member =  comment4
+         priority = 1
+         x = 0.10000000149
+         y = 0.999000012875
+         texttable = default
+         textorientation = default
+    member =  xname
+         priority = 1
+         x = 0.5
+         y = 0.21
+         texttable = default
+         textorientation = defcenter
+    member =  yname
+         priority = 1
+         x = 0.006
+         y = 0.56
+         texttable = default
+         textorientation = defup
+    member =  zname
+         priority = 0
+         x = 0.0
+         y = 0.995000004768
+         texttable = default
+         textorientation = default
+    member =  tname
+         priority = 1
+         x = 0.0
+         y = 0.995000004768
+         texttable = default
+         textorientation = default
+    member =  xunits
+         priority = 1
+         x = 0.600000023842
+         y = 0.277000010014
+         texttable = default
+         textorientation = default
+    member =  yunits
+         priority = 1
+         x = 0.019999999553
+         y = 0.658999979496
+         texttable = default
+         textorientation = default
+    member =  zunits
+         priority = 0
+         x = 0.0
+         y = 0.995000004768
+         texttable = default
+         textorientation = default
+    member =  tunits
+         priority = 0
+         x = 0.0
+         y = 0.995000004768
+         texttable = default
+         textorientation = default
+    member =  xvalue
+         priority = 1
+         x = 0.800000011921
+         y = 0.941999971867
+         format = default
+         texttable = default
+         textorientation = default
+    member =  yvalue
+         priority = 1
+         x = 0.800000011921
+         y = 0.922999978065
+         format = default
+         texttable = default
+         textorientation = default
+    member =  zvalue
+         priority = 1
+         x = 0.800000011921
+         y = 0.902999997139
+         format = default
+         texttable = default
+         textorientation = default
+    member =  tvalue
+         priority = 1
+         x = 0.800000011921
+         y = 0.883000016212
+         format = default
+         texttable = default
+         textorientation = default
+    member =  mean
+         priority = 1
+         x = 0.0500000007451
+         y = 0.899999976158
+         format = default
+         texttable = default
+         textorientation = default
+    member =  min
+         priority = 1
+         x = 0.449999988079
+         y = 0.899999976158
+         format = default
+         texttable = default
+         textorientation = default
+    member =  max
+         priority = 1
+         x = 0.25
+         y = 0.899999976158
+         format = default
+         texttable = default
+         textorientation = default
+    member =  xtic1
+         priority = 1
+         y1 = 0.259999990463
+         y2 = 0.24699999392
+         line = default
+    member =  xtic2
+         priority = 1
+         y1 = 0.860000014305
+         y2 = 0.871999979019
+         line = default
+    member =  xmintic1
+         priority = 0
+         y1 = 0.259999990463
+         y2 = 0.256999999285
+         line = default
+    member =  xmintic2
+         priority = 0
+         y1 = 0.860000014305
+         y2 = 0.860000014305
+         line = default
+    member =  ytic1
+         priority = 1
+         x1 = 0.0500000007451
+         x2 = 0.0399999991059
+         line = default
+    member =  ytic2
+         priority = 1
+         x1 = 0.949999988079
+         x2 = 0.959999978542
+         line = default
+    member =  ymintic1
+         priority = 0
+         x1 = 0.0500000007451
+         x2 = 0.0450000017881
+         line = default
+    member =  ymintic2
+         priority = 0
+         x1 = 0.949999988079
+         x2 = 0.954999983311
+         line = default
+    member =  xlabel1
+         priority = 1
+         y = 0.234999999404
+         texttable = default
+         textorientation = defcenter
+    member =  xlabel2
+         priority = 0
+         y = 0.870000004768
+         texttable = default
+         textorientation = defcenter
+    member =  ylabel1
+         priority = 1
+         x = 0.0399999991059
+         texttable = default
+         textorientation = defright
+    member =  ylabel2
+         priority = 0
+         x = 0.959999978542
+         texttable = default
+         textorientation = default
+    member =  box1
+         priority = 1
+         x1 = 0.0500000007451
+         y1 = 0.259999990463
+         x2 = 0.949999988079
+         y2 = 0.860000014305
+         line = default
+    member =  box2
+         priority = 0
+         x1 = 0.0
+         y1 = 0.300000011921
+         x2 = 0.920000016689
+         y2 = 0.879999995232
+         line = default
+    member =  box3
+         priority = 0
+         x1 = 0.0
+         y1 = 0.319999992847
+         x2 = 0.910000026226
+         y2 = 0.860000014305
+         line = default
+    member =  box4
+         priority = 0
+         x1 = 0.0
+         y1 = 0.0
+         x2 = 0.0
+         y2 = 0.0
+         line = default
+    member =  line1
+         priority = 0
+         x1 = 0.0500000007451
+         y1 = 0.560000002384
+         x2 = 0.949999988079
+         y2 = 0.560000002384
+         line = default
+    member =  line2
+         priority = 0
+         x1 = 0.5
+         y1 = 0.259999990463
+         x2 = 0.5
+         y2 = 0.860000014305
+         line = default
+    member =  line3
+         priority = 0
+         x1 = 0.0
+         y1 = 0.52999997139
+         x2 = 0.899999976158
+         y2 = 0.52999997139
+         line = default
+    member =  line4
+         priority = 0
+         x1 = 0.0
+         y1 = 0.990000009537
+         x2 = 0.899999976158
+         y2 = 0.990000009537
+         line = default
+    member =  legend
+         priority = 1
+         x1 = 0.0500000007451
+         y1 = 0.129999995232
+         x2 = 0.949999988079
+         y2 = 0.159999996424
+         line = default
+         texttable = default
+         textorientation = defcenter
+         offset = 0.01
+    member =  data
+         priority = 1
+         x1 = 0.0500000007451
+         y1 = 0.259999990463
+         x2 = 0.949999988079
+         y2 = 0.860000014305
 ```
 
 Missing Doctests
@@ -175,8 +366,6 @@ Missing Doctests
 
 :x:```    vcs.template.P.dataname```
 
-:x:```    vcs.template.P.drawAttributes```
-
 :x:```    vcs.template.P.drawColorBar```
 
 :x:```    vcs.template.P.drawTicks```
@@ -195,8 +384,6 @@ Missing Doctests
 
 :x:```    vcs.template.P.line4```
 
-:x:```    vcs.template.P.list```
-
 :x:```    vcs.template.P.logicalmask```
 
 :x:```    vcs.template.P.max```
@@ -210,8 +397,6 @@ Missing Doctests
 :x:```    vcs.template.P.orientation```
 
 :x:```    vcs.template.P.plot```
-
-:x:```    vcs.template.P.scalefont```
 
 :x:```    vcs.template.P.source```
 

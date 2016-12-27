@@ -1,4 +1,50 @@
 Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    obj=a.getisofill() # default
+Expecting nothing
+ok
+Trying:
+    obj.list() # print isofill attributes
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/isofill.py", line 752, in vcs.isofill.Gfi.list
+Failed example:
+    obj.list() # print isofill attributes
+Expected nothing
+Got:
+     ----------Isofill (Gfi) member (attribute) listings ----------
+    graphics method = Gfi
+    name = default
+    projection = linear
+    xticlabels1 = *
+    xticlabels2 = *
+    xmtics1 = 
+    xmtics2 = 
+    yticlabels1 = *
+    yticlabels2 = *
+    ymtics1 =  
+    ymtics2 =  
+    datawc_x1 = 1e+20
+    datawc_y1 =  1e+20
+    datawc_x2 =  1e+20
+    datawc_y2 =  1e+20
+    datawc_timeunits =  days since 2000
+    datawc_calendar =  135441
+    xaxisconvert =  linear
+    yaxisconvert =  linear
+    missing =  (0.0, 0.0, 0.0, 100.0)
+    ext_1 =  False
+    ext_2 =  False
+    fillareastyle =  solid
+    fillareaindices =  [1]
+    fillareacolors =  [1]
+    fillareaopacity =  []
+    levels =  ([1.0000000200408773e+20, 1.0000000200408773e+20],)
+    legend =  None
+Trying:
     a=vcs.init() # Make a Canvas object to work with
 Expecting nothing
 ok
@@ -38,7 +84,7 @@ Trying:
     ex.xyscale(xat='linear', yat='linear')
 Expecting nothing
 ok
-83 items had no tests:
+82 items had no tests:
     vcs.isofill
     vcs.isofill.Gfi
     vcs.isofill.Gfi.__init__
@@ -102,7 +148,6 @@ ok
     vcs.isofill.Gfi.fillareastyle
     vcs.isofill.Gfi.legend
     vcs.isofill.Gfi.levels
-    vcs.isofill.Gfi.list
     vcs.isofill.Gfi.missing
     vcs.isofill.Gfi.name
     vcs.isofill.Gfi.projection
@@ -125,8 +170,9 @@ ok
 1 items passed all tests:
    3 tests in vcs.isofill.Gfi.xyscale
 **********************************************************************
-1 items had failures:
+2 items had failures:
+   1 of   3 in vcs.isofill.Gfi.list
    1 of   4 in vcs.isofill.Gfi.script
-7 tests in 85 items.
-6 passed and 1 failed.
-***Test Failed*** 1 failures.
+10 tests in 85 items.
+8 passed and 2 failed.
+***Test Failed*** 2 failures.

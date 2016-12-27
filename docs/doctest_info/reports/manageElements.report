@@ -394,7 +394,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x117ed7410>
+    <vcs.textcombined.Tc object at 0x117e5a410>
 Trying:
     vcs.listelements('textcombined') # should now contain 'EXAMPLE_tt:::EXAMPLE_tto'
 Expecting:
@@ -567,7 +567,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11895b050>
+    <vcs.displayplot.Dp object at 0x1183bca28>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -605,7 +605,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11863e5c8>
+    <vcs.displayplot.Dp object at 0x1180296e0>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -649,7 +649,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x120750b40>
+    <vcs.displayplot.Dp object at 0x128abec58>
 Trying:
     a=vcs.init()
 Expecting nothing

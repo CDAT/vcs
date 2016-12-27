@@ -8,7 +8,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x1185bd050>
+    <vcs.textcombined.Tc object at 0x118776050>
 ```
 
 vcs.Canvas.Canvas.get3d_dual_scalar
@@ -20,7 +20,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1100894b0>
+    <vcs.displayplot.Dp object at 0x1449b0e88>
 ```
 
 vcs.Canvas.Canvas.get3d_scalar
@@ -32,7 +32,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x153b92b40>
+    <vcs.displayplot.Dp object at 0x1271195c8>
 ```
 
 vcs.Canvas.Canvas.get3d_vector
@@ -46,7 +46,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x10fe875c8>
+    <vcs.displayplot.Dp object at 0x127148d70>
 ```
 
 vcs.Canvas.Canvas.gettaylordiagram
@@ -80,21 +80,6 @@ Failed example:
 Expected:
     1
 Got nothing
-```
-
-vcs.Canvas.Canvas.setcontinentstype
------------------------------------
-```python
-Failed example:
-    a.setcontinentstype(4) "Political Borders"
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.Canvas.Canvas.setcontinentstype[1]>", line 1
-        a.setcontinentstype(4) "Political Borders"
-                                                 ^
-    SyntaxError: invalid syntax
 ```
 
 Missing Doctests

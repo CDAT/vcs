@@ -265,7 +265,7 @@ xyscaledoc = """
         .. doctest:: xyscale_%s
 
             >>> a=vcs.init()
-            >>> ex=a.create%s('xyscale_ex') # create a %s to work with
+            >>> ex=a.create%s('xyscale_ex') # create a %s object
             >>> ex.xyscale(xat='linear', yat='linear')
 
     :param xat: Set value for x axis conversion.

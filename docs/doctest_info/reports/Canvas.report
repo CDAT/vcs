@@ -584,7 +584,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x1185bd050>
+    <vcs.textcombined.Tc object at 0x118776050>
 Trying:
     vcs.listelements('textcombined') # should now contain 'EXAMPLE_tt:::EXAMPLE_tto'
 Expecting:
@@ -1073,7 +1073,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1100894b0>
+    <vcs.displayplot.Dp object at 0x1449b0e88>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1111,7 +1111,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x153b92b40>
+    <vcs.displayplot.Dp object at 0x1271195c8>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1155,7 +1155,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x10fe875c8>
+    <vcs.displayplot.Dp object at 0x127148d70>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -2799,20 +2799,9 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.setcontinentstype(4) "Political Borders"
+    a.setcontinentstype(4) # "Political Borders"
 Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5384, in vcs.Canvas.Canvas.setcontinentstype
-Failed example:
-    a.setcontinentstype(4) "Political Borders"
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.Canvas.Canvas.setcontinentstype[1]>", line 1
-        a.setcontinentstype(4) "Political Borders"
-                                                 ^
-    SyntaxError: invalid syntax
+ok
 Trying:
     import cdms2 # We need cdms2 to create a slab
 Expecting nothing
@@ -3326,7 +3315,7 @@ ok
     vcs.Canvas._process_keyword
     vcs.Canvas.change_date_time
     vcs.Canvas.dictionarytovcslist
-115 items passed all tests:
+116 items passed all tests:
   14 tests in vcs.Canvas.Canvas.boxfill
    2 tests in vcs.Canvas.Canvas.canvasid
    5 tests in vcs.Canvas.Canvas.canvasinfo
@@ -3432,6 +3421,7 @@ ok
   11 tests in vcs.Canvas.Canvas.setcolorcell
    5 tests in vcs.Canvas.Canvas.setcolormap
    5 tests in vcs.Canvas.Canvas.setcontinentsline
+   6 tests in vcs.Canvas.Canvas.setcontinentstype
    6 tests in vcs.Canvas.Canvas.show
    6 tests in vcs.Canvas.Canvas.svg
    7 tests in vcs.Canvas.Canvas.switchfonts
@@ -3443,14 +3433,13 @@ ok
    8 tests in vcs.Canvas.Canvas.xyvsy
    8 tests in vcs.Canvas.Canvas.yxvsx
 **********************************************************************
-7 items had failures:
+6 items had failures:
    1 of   3 in vcs.Canvas.Canvas.createtext
    1 of   8 in vcs.Canvas.Canvas.get3d_dual_scalar
    1 of   7 in vcs.Canvas.Canvas.get3d_scalar
    1 of   8 in vcs.Canvas.Canvas.get3d_vector
    1 of   7 in vcs.Canvas.Canvas.gettaylordiagram
    1 of   4 in vcs.Canvas.Canvas.isinfile
-   1 of   6 in vcs.Canvas.Canvas.setcontinentstype
 695 tests in 205 items.
-688 passed and 7 failed.
-***Test Failed*** 7 failures.
+689 passed and 6 failed.
+***Test Failed*** 6 failures.

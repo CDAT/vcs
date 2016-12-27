@@ -8,7 +8,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x118014d70>
+    <vcs.textcombined.Tc object at 0x117e56d70>
 ```
 
 Missing Doctests

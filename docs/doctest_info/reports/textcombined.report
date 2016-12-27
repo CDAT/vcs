@@ -17,7 +17,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x117ed7410>
+    <vcs.textcombined.Tc object at 0x118015410>
 Trying:
     ex=a.gettextcombined('EXAMPLE_tt', 'EXAMPLE_tto') # Get default textcombined
 Expecting nothing

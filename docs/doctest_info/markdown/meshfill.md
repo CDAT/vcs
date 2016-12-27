@@ -1,3 +1,43 @@
+vcs.meshfill.Gfm.list
+---------------------
+```python
+Failed example:
+    obj.list() # print meshfill attributes
+Expected nothing
+Got:
+     ---------- Meshfill (Gmf) member (attribute) listings ---------
+    graphics method = Gfm
+    name = default
+    projection = linear
+    xticlabels1 = *
+    xticlabels2 = *
+    xmtics1 = 
+    xmtics2 = 
+    yticlabels1 = *
+    yticlabels2 = *
+    ymtics1 = 
+    ymtics2 = 
+    datawc_x1 = 1e+20
+    datawc_y1 = 1e+20
+    datawc_x2 = 1e+20
+    datawc_y2 = 1e+20
+    datawc_timeunits =  days since 2000
+    datawc_calendar =  135441
+    xaxisconvert = linear
+    yaxisconvert = linear
+    levels = ([1.0000000200408773e+20, 1.0000000200408773e+20],)
+    fillareacolors = [1]
+    fillareastyle = solid
+    fillareaindices = None
+    legend = None
+    ext_1 = False
+    ext_2 = False
+    missing = (0.0, 0.0, 0.0, 100.0)
+    mesh = 0
+    wrap = [0.0, 0.0]
+    colormap =  None
+```
+
 vcs.meshfill.Gfm.script
 -----------------------
 ```python
@@ -55,8 +95,6 @@ Missing Doctests
 :x:```    vcs.meshfill.Gfm.legend```
 
 :x:```    vcs.meshfill.Gfm.levels```
-
-:x:```    vcs.meshfill.Gfm.list```
 
 :x:```    vcs.meshfill.Gfm.mesh```
 
