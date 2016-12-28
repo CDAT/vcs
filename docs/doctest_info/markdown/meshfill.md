@@ -1,3 +1,45 @@
+vcs.meshfill.Gfm.colors
+-----------------------
+```python
+Failed example:
+    a.plot(ex, array, array)
+Expected nothing
+Got:
+    <vcs.displayplot.Dp object at 0x118345398>
+```
+
+vcs.meshfill.Gfm.exts
+---------------------
+```python
+Failed example:
+    ex.exts(True, True) # arrows on both ends
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.meshfill.Gfm.exts[3]>", line 1, in <module>
+        ex.exts(True, True) # arrows on both ends
+    AttributeError: 'function' object has no attribute 'exts'
+```
+
+vcs.meshfill.Gfm.exts
+---------------------
+```python
+Failed example:
+    a.plot(ex, array, array)
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.meshfill.Gfm.exts[4]>", line 1, in <module>
+        a.plot(ex, array, array)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2570, in plot
+        arglist = _determine_arg_list(None, actual_args)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 213, in _determine_arg_list
+        type(args[i]))
+    vcsError: Unknown type <type 'instancemethod'> of argument to plotting command.
+```
+
 vcs.meshfill.Gfm.list
 ---------------------
 ```python
@@ -64,8 +106,6 @@ Missing Doctests
 
 :x:```    vcs.meshfill.Gfm.colormap```
 
-:x:```    vcs.meshfill.Gfm.colors```
-
 :x:```    vcs.meshfill.Gfm.datawc_calendar```
 
 :x:```    vcs.meshfill.Gfm.datawc_timeunits```
@@ -81,8 +121,6 @@ Missing Doctests
 :x:```    vcs.meshfill.Gfm.ext_1```
 
 :x:```    vcs.meshfill.Gfm.ext_2```
-
-:x:```    vcs.meshfill.Gfm.exts```
 
 :x:```    vcs.meshfill.Gfm.fillareacolors```
 
@@ -112,8 +150,6 @@ Missing Doctests
 
 :x:```    vcs.meshfill.Gfm.xmtics2```
 
-:x:```    vcs.meshfill.Gfm.xticlabels```
-
 :x:```    vcs.meshfill.Gfm.xticlabels1```
 
 :x:```    vcs.meshfill.Gfm.xticlabels2```
@@ -123,8 +159,6 @@ Missing Doctests
 :x:```    vcs.meshfill.Gfm.ymtics1```
 
 :x:```    vcs.meshfill.Gfm.ymtics2```
-
-:x:```    vcs.meshfill.Gfm.yticlabels```
 
 :x:```    vcs.meshfill.Gfm.yticlabels1```
 

@@ -1019,7 +1019,7 @@ class Gtd(object):
         return canvas.plot(a, iso, tmpl, bg=self.bg)
 
     def list(self):
-        print ' ----------Taylordiagram (Gtd) member (attribute) listings ----------'
+        print ' ---------- Taylordiagram (Gtd) member (attribute) listings ----------'
         print 'graphic method = Gtd'
         print 'name =', self.name
         print 'detail =', self.detail

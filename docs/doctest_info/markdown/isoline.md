@@ -62,8 +62,6 @@ Missing Doctests
 
 :x:```    vcs.isoline.Gi.xmtics2```
 
-:x:```    vcs.isoline.Gi.xticlabels```
-
 :x:```    vcs.isoline.Gi.xticlabels1```
 
 :x:```    vcs.isoline.Gi.xticlabels2```
@@ -73,8 +71,6 @@ Missing Doctests
 :x:```    vcs.isoline.Gi.ymtics1```
 
 :x:```    vcs.isoline.Gi.ymtics2```
-
-:x:```    vcs.isoline.Gi.yticlabels```
 
 :x:```    vcs.isoline.Gi.yticlabels1```
 

@@ -759,7 +759,7 @@ class G1d(object):
     def xticlabels(self, xtl1='', xtl2=''):
         self.xticlabels1 = xtl1
         self.xticlabels2 = xtl2
-    xticlabels.__doc__ = xmldocs.xticlabelsdoc
+    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name": "1d"}
 
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
@@ -769,7 +769,7 @@ class G1d(object):
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
         self.yticlabels2 = ytl2
-    yticlabels.__doc__ = xmldocs.yticlabelsdoc
+    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name": "1d"}
 
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1
@@ -786,7 +786,7 @@ class G1d(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Yxvsx (GYx) member (attribute) listings ----------"
+        print "", "---------- Yxvsx (GYx) member (attribute) listings ----------"
         print "graphics method =", self.g_name
         print "name =", self.name
         print "projection =", self.projection

@@ -54,7 +54,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    ex.xmtics("lon5") # every 5 degrees
+    ex.xmtics("lon5") # minitick every 5 degrees
 Expecting nothing
 ok
 Trying:
@@ -62,7 +62,19 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    tmp.xmintic1.priority = 1 # plotting will now show xmtics
+    tmp.xmintic1.priority = 1 # plotting shows xmtics
+Expecting nothing
+ok
+Trying:
+    a = vcs.init()
+Expecting nothing
+ok
+Trying:
+    ex = a.create1d()
+Expecting nothing
+ok
+Trying:
+    ex.xticlabels({0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"}) # plot will show labels
 Expecting nothing
 ok
 Trying:
@@ -74,7 +86,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    ex.ymtics("lat5") # every 5 degrees
+    ex.ymtics("lat5") # minitick every 5 degrees
 Expecting nothing
 ok
 Trying:
@@ -82,10 +94,22 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    tmp.ymintic1.priority = 1 # plotting will now show ymtics
+    tmp.ymintic1.priority = 1 # plotting shows ymtics
 Expecting nothing
 ok
-92 items had no tests:
+Trying:
+    a = vcs.init()
+Expecting nothing
+ok
+Trying:
+    ex = a.create1d()
+Expecting nothing
+ok
+Trying:
+    ex.yticlabels({0: "Eq.", 37.6819: "L", 55.7558: "M"}) # plot will show labels
+Expecting nothing
+ok
+90 items had no tests:
     vcs.unified1D
     vcs.unified1D.G1d
     vcs.unified1D.G1d.__init__
@@ -167,23 +191,23 @@ ok
     vcs.unified1D.G1d.xaxisconvert
     vcs.unified1D.G1d.xmtics1
     vcs.unified1D.G1d.xmtics2
-    vcs.unified1D.G1d.xticlabels
     vcs.unified1D.G1d.xticlabels1
     vcs.unified1D.G1d.xticlabels2
     vcs.unified1D.G1d.yaxisconvert
     vcs.unified1D.G1d.ymtics1
     vcs.unified1D.G1d.ymtics2
-    vcs.unified1D.G1d.yticlabels
     vcs.unified1D.G1d.yticlabels1
     vcs.unified1D.G1d.yticlabels2
     vcs.unified1D.load
     vcs.unified1D.process_src
-5 items passed all tests:
+7 items passed all tests:
    4 tests in vcs.unified1D.G1d.datawc
    3 tests in vcs.unified1D.G1d.list
    4 tests in vcs.unified1D.G1d.script
    5 tests in vcs.unified1D.G1d.xmtics
+   3 tests in vcs.unified1D.G1d.xticlabels
    5 tests in vcs.unified1D.G1d.ymtics
-21 tests in 97 items.
-21 passed and 0 failed.
+   3 tests in vcs.unified1D.G1d.yticlabels
+27 tests in 97 items.
+27 passed and 0 failed.
 Test passed.

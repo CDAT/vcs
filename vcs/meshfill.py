@@ -685,12 +685,12 @@ class Gfm(object):
 
     def colors(self, color1=16, color2=239):
         self.fillareacolors = range(color1, color2)
-    colors.__doc__ = xmldocs.colorsdoc
+    colors.__doc__ = xmldocs.colorsdoc % {"name": "meshfill", "data": "array, array"}
 
     def exts(self, ext1='n', ext2='y'):
         self.ext_1 = ext1
         self.ext_2 = ext2
-    exts.__doc__ = xmldocs.extsdoc
+    exts.__doc__ = xmldocs.extsdoc % {"name": "meshfill", "data": "array, array"}
 
 #
 # Doesn't make sense to inherit. This would mean more coding in C.
@@ -699,7 +699,7 @@ class Gfm(object):
     def xticlabels(self, xtl1='', xtl2=''):
         self.xticlabels1 = xtl1
         self.xticlabels2 = xtl2
-    xticlabels.__doc__ = xmldocs.xticlabelsdoc
+    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name": "meshfill"}
 
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
@@ -709,7 +709,7 @@ class Gfm(object):
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
         self.yticlabels2 = ytl2
-    yticlabels.__doc__ = xmldocs.yticlabelsdoc
+    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name": "meshfill"}
 
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1

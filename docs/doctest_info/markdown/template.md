@@ -5,7 +5,7 @@ Failed example:
     t.drawAttributes(a,s,b) # shows attributes of s on canvas
 Expected nothing
 Got:
-    [<vcs.displayplot.Dp object at 0x11864be88>, <vcs.displayplot.Dp object at 0x1186164b0>, <vcs.displayplot.Dp object at 0x118883398>, <vcs.displayplot.Dp object at 0x118883e88>, <vcs.displayplot.Dp object at 0x11888d4b0>]
+    [<vcs.displayplot.Dp object at 0x1187f8e88>, <vcs.displayplot.Dp object at 0x1186924b0>, <vcs.displayplot.Dp object at 0x118803910>, <vcs.displayplot.Dp object at 0x118803a28>, <vcs.displayplot.Dp object at 0x118820050>]
 ```
 
 vcs.template.P.list
@@ -17,7 +17,7 @@ Expected:
      ----------...----------
     ...
 Got:
-    ----------Template (P) member (attribute) listings ----------
+    ---------- Template (P) member (attribute) listings ----------
     method = P
     name = default
     orientation = 0

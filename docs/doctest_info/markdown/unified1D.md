@@ -50,8 +50,6 @@ Missing Doctests
 
 :x:```    vcs.unified1D.G1d.xmtics2```
 
-:x:```    vcs.unified1D.G1d.xticlabels```
-
 :x:```    vcs.unified1D.G1d.xticlabels1```
 
 :x:```    vcs.unified1D.G1d.xticlabels2```
@@ -61,8 +59,6 @@ Missing Doctests
 :x:```    vcs.unified1D.G1d.ymtics1```
 
 :x:```    vcs.unified1D.G1d.ymtics2```
-
-:x:```    vcs.unified1D.G1d.yticlabels```
 
 :x:```    vcs.unified1D.G1d.yticlabels1```
 

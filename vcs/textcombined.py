@@ -416,9 +416,9 @@ class Tc(object):
         if ((self.Tt_name == '__removed_from_VCS__') or
                 (self.To_name == '__removed_from_VCS__')):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Text combined (Tc) member (attribute) listings ----------"
+        print "", "---------- Text combined (Tc) member (attribute) listings ----------"
         print "secondary method =", self.s_name
-        print "", "----------Text Table (Tt) member (attribute) listings ----------"
+        print "", "---------- Text Table (Tt) member (attribute) listings ----------"
         print "Tt_name =", self.Tt_name
         print "font =", self.font
         print "spacing =", self.spacing
@@ -432,7 +432,7 @@ class Tc(object):
         print "x =", self.x
         print "y =", self.y
         print "projection =", self.projection
-        print "", "----------Text Orientation (To) member (attribute) listings ----------"
+        print "", "---------- Text Orientation (To) member (attribute) listings ----------"
         print "To_name =", self.To_name
         print "height =", self.height
         print "angle =", self.angle

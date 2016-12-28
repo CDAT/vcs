@@ -329,12 +329,12 @@ class Gfb(object):
                 .. py:attribute:: color_1 (float)
 
                     Used in conjunction with boxfill_type linear/log10,
-                    sets the legend's color range first value.
+                    sets the first value of the legend's color range.
 
                 .. py:attribute:: color_2 (float)
 
                     Used in conjunction with boxfill_type linear/log10.
-                    Sets the legend's color range lasst value.
+                    Sets the last value of the legend's color range.
 
                 .. py:attribute:: legend ({float:str})
 
@@ -824,12 +824,12 @@ class Gfb(object):
     def colors(self, color1=0, color2=255):
         self.color_1 = color1
         self.color_2 = color2
-    colors.__doc__ = xmldocs.colorsdoc
+    colors.__doc__ = xmldocs.colorsdoc  % {"name": "boxfill", "data": "array"}
 
     def exts(self, ext1='n', ext2='y'):
         self.ext_1 = ext1
         self.ext_2 = ext2
-    exts.__doc__ = xmldocs.extsdoc
+    exts.__doc__ = xmldocs.extsdoc % {"name": "boxfill", "data": "array"}
 #
 # Doesn't make sense to inherit. This would mean more coding in C.
 # I put this code back.
@@ -838,7 +838,7 @@ class Gfb(object):
     def xticlabels(self, xtl1='', xtl2=''):
         self.xticlabels1 = xtl1
         self.xticlabels2 = xtl2
-    xticlabels.__doc__ = xmldocs.xticlabelsdoc
+    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name" : "boxfill"}
 
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
@@ -848,7 +848,7 @@ class Gfb(object):
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
         self.yticlabels2 = ytl2
-    yticlabels.__doc__ = xmldocs.yticlabelsdoc
+    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name" : "boxfill"}
 
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1
@@ -948,7 +948,7 @@ class Gfb(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Boxfill (Gfb) member (attribute) listings ----------"
+        print "", "---------- Boxfill (Gfb) member (attribute) listings ----------"
         print "graphics method =", self.g_name
         print "name =", self.name
         print "projection =", self.projection

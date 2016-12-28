@@ -477,7 +477,7 @@ class Tt(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Text Table (Tt) member (attribute) listings ----------"
+        print "", "---------- Text Table (Tt) member (attribute) listings ----------"
         print "secondary method =", self.s_name
         print "name =", self.name
         print "string =", self.string

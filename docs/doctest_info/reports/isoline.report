@@ -54,7 +54,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    ex.xmtics("lon5") # every 5 degrees
+    ex.xmtics("lon5") # minitick every 5 degrees
 Expecting nothing
 ok
 Trying:
@@ -62,7 +62,19 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    tmp.xmintic1.priority = 1 # plotting will now show xmtics
+    tmp.xmintic1.priority = 1 # plotting shows xmtics
+Expecting nothing
+ok
+Trying:
+    a = vcs.init()
+Expecting nothing
+ok
+Trying:
+    ex = a.createisoline()
+Expecting nothing
+ok
+Trying:
+    ex.xticlabels({0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"}) # plot will show labels
 Expecting nothing
 ok
 Trying:
@@ -86,7 +98,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    ex.ymtics("lat5") # every 5 degrees
+    ex.ymtics("lat5") # minitick every 5 degrees
 Expecting nothing
 ok
 Trying:
@@ -94,10 +106,22 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    tmp.ymintic1.priority = 1 # plotting will now show ymtics
+    tmp.ymintic1.priority = 1 # plotting shows ymtics
 Expecting nothing
 ok
-110 items had no tests:
+Trying:
+    a = vcs.init()
+Expecting nothing
+ok
+Trying:
+    ex = a.createisoline()
+Expecting nothing
+ok
+Trying:
+    ex.yticlabels({0: "Eq.", 37.6819: "L", 55.7558: "M"}) # plot will show labels
+Expecting nothing
+ok
+108 items had no tests:
     vcs.isoline
     vcs.isoline.Gi
     vcs.isoline.Gi.__init__
@@ -196,25 +220,25 @@ ok
     vcs.isoline.Gi.xaxisconvert
     vcs.isoline.Gi.xmtics1
     vcs.isoline.Gi.xmtics2
-    vcs.isoline.Gi.xticlabels
     vcs.isoline.Gi.xticlabels1
     vcs.isoline.Gi.xticlabels2
     vcs.isoline.Gi.yaxisconvert
     vcs.isoline.Gi.ymtics1
     vcs.isoline.Gi.ymtics2
-    vcs.isoline.Gi.yticlabels
     vcs.isoline.Gi.yticlabels1
     vcs.isoline.Gi.yticlabels2
     vcs.isoline.get_att_from_sub
     vcs.isoline.load
     vcs.isoline.process_src
-6 items passed all tests:
+8 items passed all tests:
    4 tests in vcs.isoline.Gi.datawc
    3 tests in vcs.isoline.Gi.list
    4 tests in vcs.isoline.Gi.script
    5 tests in vcs.isoline.Gi.xmtics
+   3 tests in vcs.isoline.Gi.xticlabels
    3 tests in vcs.isoline.Gi.xyscale
    5 tests in vcs.isoline.Gi.ymtics
-24 tests in 116 items.
-24 passed and 0 failed.
+   3 tests in vcs.isoline.Gi.yticlabels
+30 tests in 116 items.
+30 passed and 0 failed.
 Test passed.

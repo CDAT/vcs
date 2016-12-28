@@ -22,7 +22,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x118015410>
+    <vcs.textcombined.Tc object at 0x117fd8410>
 ```
 
 vcs.manageElements.get3d_dual_scalar
@@ -34,7 +34,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x118568050>
+    <vcs.displayplot.Dp object at 0x11862ac58>
 ```
 
 vcs.manageElements.get3d_scalar
@@ -46,7 +46,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x1189005c8>
+    <vcs.displayplot.Dp object at 0x1189215c8>
 ```
 
 vcs.manageElements.get3d_vector
@@ -60,7 +60,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11a097b40>
+    <vcs.displayplot.Dp object at 0x11a305b40>
 ```
 
 Missing Doctests

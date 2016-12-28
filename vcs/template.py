@@ -544,7 +544,7 @@ class P(object):
             raise ValueError('This instance has been removed from VCS.')
 
         if (single is None):
-            print "----------Template (P) member " +\
+            print "---------- Template (P) member " +\
                 "(attribute) listings ----------"
             print "method =", self.p_name
             print "name =", self.name

@@ -368,7 +368,7 @@ class Cp(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Colormap (Cp) member (attribute) listings ----------"
+        print "", "---------- Colormap (Cp) member (attribute) listings ----------"
         print "secondary method =", self.s_name
         print "name =", self.name
         print "index =", self.index

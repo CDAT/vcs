@@ -200,35 +200,75 @@ axesconvert = xaxisconvert + yaxisconvert
 colorsdoc = """
     Sets the color_1 and color_2 properties of the object.
 
-    :param color1: Sets the :py:attr:`color_1` value on the object
+    .. note::
+
+        color_1 and color_2 control which parts of the colormap to use for the
+        plot. It defaults to the full range of the colormap (0-255), but if you
+        use fewer colors, it will break up your data into precisely that many
+        discrete colors.
+
+    :Example:
+
+        .. doctest:: %(name)s_colors
+
+            >>> a=vcs.init()
+            >>> array=[range(10) for _ in range(10)]
+            >>> ex=a.create%(name)s()
+            >>> ex.colors(0, 64) # use colorcells 0-64 of colormap
+            >>> a.plot(ex, %(data)s)
+
+    :param color1: Sets the :py:attr:`color_1` value on the object.
     :type color1: int
 
-    :param color2: Sets the :py:attr:`color_2` value on the object
+    :param color2: Sets the :py:attr:`color_2` value on the object.
     :type color2: int
     """
 
 extsdoc = """
     Sets the ext_1 and ext_2 values on the object.
 
-    :param ext1: Sets the :py:attr:`ext_1` value on the object. 'y' sets it to True, 'n' sets it to False.
-    :type ext1: str
+    :Example:
 
-    :param ext2: Sets the :py:attr:`ext_2` value on the object. 'y' sets it to True, 'n' sets it to False.
-    :type ext2: str
-           """
+        .. doctest %(name)s_exts
+
+            >>> a=vcs.init()
+            >>> array=[range(10) for _ in range(10)]
+            >>> ex=a.create%(name)s
+            >>> ex.exts(True, True) # arrows on both ends
+            >>> a.plot(ex, %(data)s)
+
+    :param ext1: Sets the :py:attr:`ext_1` value on the object.
+        'y' sets it to True, 'n' sets it to False.
+        True or False can be used in lieu of 'y' and 'n'.
+    :type ext1: str or bool
+
+    :param ext2: Sets the :py:attr:`ext_2` value on the object.
+        'y' sets it to True, 'n' sets it to False.
+        True or False can be used in lieu of 'y' and 'n'.
+    :type ext2: str or bool
+    """
 ticlabelsdoc = """
-    Sets the %sticlabels1 and %sticlabels2 values on the object
+    Sets the %(x_y)sticlabels1 and %(x_y)sticlabels2 values on the object
+    
+    :Example:
+        
+        .. doctest:: %(name)s_%(x_y)sticlabels
 
-    :param %stl1: Sets the object's value for :py:attr:`%sticlabels1`.
+            >>> a = vcs.init()
+            >>> ex = a.create%(name)s()
+            >>> ex.%(x_y)sticlabels(%(labels)s) # plot will show labels
+
+    :param %(x_y)stl1: Sets the object's value for :py:attr:`%(x_y)sticlabels1`.
         Must be  a str, or a dictionary object with float:str mappings.
-    :type %stl1: {float:str} or str
+    :type %(x_y)stl1: dict or str
 
-    :param %stl2: Sets the object's value for :py:attr:`%sticlabels2`.
+    :param %(x_y)stl2: Sets the object's value for :py:attr:`%(x_y)sticlabels2`.
         Must be a str, or a dictionary object with float:str mappings.
-    :type %stl2: {float:str} or str
-           """
-xticlabelsdoc = ticlabelsdoc % (('x',) * 8)
-yticlabelsdoc = ticlabelsdoc % (('y',) * 8)
+    :type %(x_y)stl2: dict or str
+    """
+xticlabelsdoc = ticlabelsdoc % {"x_y": "x", "labels":'{0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"}',
+                                "name": "%(name)s"}
+yticlabelsdoc = ticlabelsdoc % {"x_y": "y", "labels":'{0: "Eq.", 37.6819: "L", 55.7558: "M"}', "name": "%(name)s"}
 
 mticsdoc = """
     Sets the %(x_y)smtics1 and %(x_y)smtics2 values on the object.
@@ -237,7 +277,8 @@ mticsdoc = """
 
         The mtics attributes are not inherently plotted by the default template.
         The example below shows how to apply a custom template and enable it to
-        plot mtics.
+        plot mtics. To plot a the %(name)s after setting the mtics and template,
+        refer to :py:func:`vcs.Canvas.plot` or :py:func:`vcs.Canvas.%(name)s`.
 
     :Example:
 
@@ -245,9 +286,9 @@ mticsdoc = """
 
             >>> a=vcs.init()
             >>> ex=vcs.create%(name)s()
-            >>> ex.%(x_y)smtics("%(axis)s5") # every 5 degrees
+            >>> ex.%(x_y)smtics("%(axis)s5") # minitick every 5 degrees
             >>> tmp=vcs.createtemplate() # custom template to plot minitics
-            >>> tmp.%(x_y)smintic1.priority = 1 # plotting will now show %(x_y)smtics
+            >>> tmp.%(x_y)smintic1.priority = 1 # plotting shows %(x_y)smtics
             
     :param %(x_y)smt1: Value for :py:attr:`%(x_y)smtics1`.
         Must be a str, or a dictionary object with float:str mappings.
@@ -372,8 +413,8 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                     sp_parent = 'default_'+obj_name+'_'
                     d['sp_parent'] = "'%s'" % sp_parent
                     d['parent'] = d['sp_parent']
-        # From here to the end of the inner for loop is intended to be a section for specific use-cases for the
-        #   template keywords. This section aims to take the 'method' parameter and use it to insert proper examples for
+        # From here to the end of the inner for loop is intended to be a section for specific use-cases for the template
+        #   string keywords. This section aims to take the 'method' parameter and use it to insert proper examples for
         #   that method.
 
         # section for manageElements 'get' methods
@@ -917,6 +958,18 @@ markerdoc = """
         .. py:attribute:: markersize (None/int)
 
             size of markers
+    """
+
+color_one_two_doc = """
+        .. py:attribute:: color_1 (float)
+
+            Used in conjunction with boxfill_type linear/log10,
+            sets the first value of the legend's color range.
+
+        .. py:attribute:: color_2 (float)
+
+            Used in conjunction with boxfill_type linear/log10.
+            Sets the last value of the legend's color range.
     """
 
 #############################################################################
