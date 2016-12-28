@@ -1,7 +1,19 @@
 import doctest, argparse, importlib, re
 
 
-def log_stats(module_name, verbose):
+def log_stats(module_name):
+    """Parses a .report file for the given module and writes the doctest errors to a .md file.
+    The .md file will be named to match the module_name.
+    If the report was generated using the --verbose or -v flag, the .md file will also contain a list of locations
+    within the module where therea re no doctests.
+
+    The .report file is assumed to exist in ../reports/ directory.
+
+    :param module_name: String name of the module for which the .report file will be parsed.
+        If no .report file exists for that module, this function exits with a SystemError.
+    :param verbose: Boolean to indicate whether the parsed report was produced using the verbose flag.
+    :return:
+    """
     # open .results file to read, and .md file to log
     try:
         results = open("../reports/" + module_name + ".report", "r+")
@@ -18,11 +30,8 @@ def log_stats(module_name, verbose):
         err_header = re.compile('File "')
         err_indicator = re.compile('\*\*\*\*')
         line = results.readline()
-        if verbose:
-            err_endpoints = [trying, no_tests]
-            missing_endpoints = [passing_header, tests_in_items, err_indicator]
-        else:
-            err_endpoints = [err_indicator,]
+        err_endpoints = [trying, no_tests, err_indicator]
+        missing_endpoints = [passing_header, tests_in_items, err_indicator]
         while line != '':
             if re.match(err_header, line):
                 where = line.split()[-1]
@@ -47,6 +56,15 @@ def log_stats(module_name, verbose):
 
 # note: will only consume the first full error (maybe)
 def consume_entry(readfile, writefile, endpoints, prepend="", append=""):
+    """Consumes a log entry from readfile up to one of a list of possible endpoints.
+    Writes each line in the entry to writefile.
+
+    :param readfile: File to read from
+    :param writefile: File to write to
+    :param endpoints: List of compiled regular expressions which are the possible points at which a log entry can end.
+    :param prepend: A string to prepend to the line from readfile before outputting to writefile
+    :param append: A string to append to the line from readfile before outputting to writefile
+    """
     more = True
     private = re.compile("_[_A-z0-9]+")
     line = readfile.readline()
@@ -65,6 +83,9 @@ def consume_entry(readfile, writefile, endpoints, prepend="", append=""):
 
 
 def cleanup():
+    """Cleanup for the doctests. If some files aren't being deleted after testing, add their glob signature to the
+    paterns list.
+    """
     import glob, os
     gb = glob.glob
     patterns = ["example.*", "*.json", "*.svg", "ex_*", "my*", "filename.*", "*.png", "deft_box.py"]
@@ -96,7 +117,6 @@ parser.add_argument('-a', '--all', action="store_true", default=False,
 args = parser.parse_args()
 
 if not args.LO:
-    import vcs
     if args.log and not args.report:
         args.report = True
     options=doctest.ELLIPSIS
@@ -107,7 +127,7 @@ if not args.LO:
     doctest.testmod(m, optionflags=options, report=args.report, verbose=args.verbose)
     cleanup()
     if args.log:
-        log_stats(args.module, args.verbose)
+        log_stats(args.module)
 else:
-    log_stats(args.module, args.verbose)
+    log_stats(args.module)
 exit()
