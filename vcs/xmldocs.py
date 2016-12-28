@@ -216,6 +216,7 @@ colorsdoc = """
             >>> ex=a.create%(name)s()
             >>> ex.colors(0, 64) # use colorcells 0-64 of colormap
             >>> a.plot(ex, %(data)s)
+            <vcs.displayplot.Dp object at 0x...>
 
     :param color1: Sets the :py:attr:`color_1` value on the object.
     :type color1: int
@@ -233,9 +234,10 @@ extsdoc = """
 
             >>> a=vcs.init()
             >>> array=[range(10) for _ in range(10)]
-            >>> ex=a.create%(name)s
+            >>> ex=a.create%(name)s()
             >>> ex.exts(True, True) # arrows on both ends
             >>> a.plot(ex, %(data)s)
+            <vcs.displayplot.Dp object at 0x...>
 
     :param ext1: Sets the :py:attr:`ext_1` value on the object.
         'y' sets it to True, 'n' sets it to False.
@@ -255,8 +257,12 @@ ticlabelsdoc = """
         .. doctest:: %(name)s_%(x_y)sticlabels
 
             >>> a = vcs.init()
+            >>> import cdms2 # Need cdms2 to create a slab
+            >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
             >>> ex = a.create%(name)s()
-            >>> ex.%(x_y)sticlabels(%(labels)s) # plot will show labels
+            >>> ex.%(x_y)sticlabels(%(labels)s)
+            >>> a.plot(ex, %(data)s) # plot shows labels
+            <vcs.displayplot.Dp object at 0x...>
 
     :param %(x_y)stl1: Sets the object's value for :py:attr:`%(x_y)sticlabels1`.
         Must be  a str, or a dictionary object with float:str mappings.
@@ -267,8 +273,9 @@ ticlabelsdoc = """
     :type %(x_y)stl2: dict or str
     """
 xticlabelsdoc = ticlabelsdoc % {"x_y": "x", "labels":'{0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"}',
-                                "name": "%(name)s"}
-yticlabelsdoc = ticlabelsdoc % {"x_y": "y", "labels":'{0: "Eq.", 37.6819: "L", 55.7558: "M"}', "name": "%(name)s"}
+                                "name": "%(name)s", "data": "%(data)s"}
+yticlabelsdoc = ticlabelsdoc % {"x_y": "y", "labels":'{0: "Eq.", 37.6819: "L", 55.7558: "M"}', "name": "%(name)s",
+                                "data": "%(data)s"}
 
 mticsdoc = """
     Sets the %(x_y)smtics1 and %(x_y)smtics2 values on the object.
@@ -360,7 +367,7 @@ listdoc = """Lists the current values of object attributes
             >>> a=vcs.init()
             >>> obj=a.get%(name)s(%(parent)s) # default
             >>> obj.list() # print %(name)s attributes
-             ----------...----------
+             ---------- ... ----------
             ...
     """
 

@@ -16,14 +16,9 @@ Expecting nothing
 ok
 Trying:
     a.plot(ex, array)
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/isofill.py", line 689, in vcs.isofill.Gfi.colors
-Failed example:
-    a.plot(ex, array)
-Expected nothing
-Got:
-    <vcs.displayplot.Dp object at 0x118352280>
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
+ok
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -50,41 +45,18 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    ex=a.createisofill
+    ex=a.createisofill()
 Expecting nothing
 ok
 Trying:
     ex.exts(True, True) # arrows on both ends
 Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/isofill.py", line 686, in vcs.isofill.Gfi.exts
-Failed example:
-    ex.exts(True, True) # arrows on both ends
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.isofill.Gfi.exts[3]>", line 1, in <module>
-        ex.exts(True, True) # arrows on both ends
-    AttributeError: 'function' object has no attribute 'exts'
+ok
 Trying:
     a.plot(ex, array)
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/isofill.py", line 687, in vcs.isofill.Gfi.exts
-Failed example:
-    a.plot(ex, array)
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.isofill.Gfi.exts[4]>", line 1, in <module>
-        a.plot(ex, array)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2570, in plot
-        arglist = _determine_arg_list(None, actual_args)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 213, in _determine_arg_list
-        type(args[i]))
-    vcsError: Unknown type <type 'instancemethod'> of argument to plotting command.
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
+ok
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -96,7 +68,7 @@ ok
 Trying:
     obj.list() # print isofill attributes
 Expecting:
-     ----------...----------
+     ---------- ... ----------
     ...
 ok
 Trying:
@@ -152,12 +124,25 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
+Expecting nothing
+ok
+Trying:
     ex = a.createisofill()
 Expecting nothing
 ok
 Trying:
-    ex.xticlabels({0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"}) # plot will show labels
+    ex.xticlabels({0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"})
 Expecting nothing
+ok
+Trying:
+    a.plot(ex, f('u')) # plot shows labels
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
 ok
 Trying:
     a=vcs.init()
@@ -196,12 +181,25 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
+Expecting nothing
+ok
+Trying:
     ex = a.createisofill()
 Expecting nothing
 ok
 Trying:
-    ex.yticlabels({0: "Eq.", 37.6819: "L", 55.7558: "M"}) # plot will show labels
+    ex.yticlabels({0: "Eq.", 37.6819: "L", 55.7558: "M"})
 Expecting nothing
+ok
+Trying:
+    a.plot(ex, f('u')) # plot shows labels
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
 ok
 75 items had no tests:
     vcs.isofill
@@ -279,19 +277,19 @@ ok
     vcs.isofill.Gfi.yticlabels2
     vcs.isofill.load
     vcs.isofill.process_src
-7 items passed all tests:
+9 items passed all tests:
+   5 tests in vcs.isofill.Gfi.colors
    4 tests in vcs.isofill.Gfi.datawc
+   5 tests in vcs.isofill.Gfi.exts
    3 tests in vcs.isofill.Gfi.list
    5 tests in vcs.isofill.Gfi.xmtics
-   3 tests in vcs.isofill.Gfi.xticlabels
+   6 tests in vcs.isofill.Gfi.xticlabels
    3 tests in vcs.isofill.Gfi.xyscale
    5 tests in vcs.isofill.Gfi.ymtics
-   3 tests in vcs.isofill.Gfi.yticlabels
+   6 tests in vcs.isofill.Gfi.yticlabels
 **********************************************************************
-3 items had failures:
-   1 of   5 in vcs.isofill.Gfi.colors
-   2 of   5 in vcs.isofill.Gfi.exts
+1 items had failures:
    1 of   4 in vcs.isofill.Gfi.script
-40 tests in 85 items.
-36 passed and 4 failed.
-***Test Failed*** 4 failures.
+46 tests in 85 items.
+45 passed and 1 failed.
+***Test Failed*** 1 failures.

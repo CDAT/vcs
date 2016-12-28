@@ -26,7 +26,7 @@ ok
 Trying:
     obj.list() # print isoline attributes
 Expecting:
-     ----------...----------
+     ---------- ... ----------
     ...
 ok
 Trying:
@@ -70,12 +70,25 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
+Expecting nothing
+ok
+Trying:
     ex = a.createisoline()
 Expecting nothing
 ok
 Trying:
-    ex.xticlabels({0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"}) # plot will show labels
+    ex.xticlabels({0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"})
 Expecting nothing
+ok
+Trying:
+    a.plot(ex, f('u')) # plot shows labels
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
 ok
 Trying:
     a=vcs.init()
@@ -114,12 +127,25 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
+Expecting nothing
+ok
+Trying:
     ex = a.createisoline()
 Expecting nothing
 ok
 Trying:
-    ex.yticlabels({0: "Eq.", 37.6819: "L", 55.7558: "M"}) # plot will show labels
+    ex.yticlabels({0: "Eq.", 37.6819: "L", 55.7558: "M"})
 Expecting nothing
+ok
+Trying:
+    a.plot(ex, f('u')) # plot shows labels
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
 ok
 108 items had no tests:
     vcs.isoline
@@ -235,10 +261,10 @@ ok
    3 tests in vcs.isoline.Gi.list
    4 tests in vcs.isoline.Gi.script
    5 tests in vcs.isoline.Gi.xmtics
-   3 tests in vcs.isoline.Gi.xticlabels
+   6 tests in vcs.isoline.Gi.xticlabels
    3 tests in vcs.isoline.Gi.xyscale
    5 tests in vcs.isoline.Gi.ymtics
-   3 tests in vcs.isoline.Gi.yticlabels
-30 tests in 116 items.
-30 passed and 0 failed.
+   6 tests in vcs.isoline.Gi.yticlabels
+36 tests in 116 items.
+36 passed and 0 failed.
 Test passed.

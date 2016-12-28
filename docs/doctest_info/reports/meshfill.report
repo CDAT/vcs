@@ -16,14 +16,9 @@ Expecting nothing
 ok
 Trying:
     a.plot(ex, array, array)
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/meshfill.py", line 706, in vcs.meshfill.Gfm.colors
-Failed example:
-    a.plot(ex, array, array)
-Expected nothing
-Got:
-    <vcs.displayplot.Dp object at 0x118345398>
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
+ok
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -50,41 +45,18 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    ex=a.createmeshfill
+    ex=a.createmeshfill()
 Expecting nothing
 ok
 Trying:
     ex.exts(True, True) # arrows on both ends
 Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/meshfill.py", line 703, in vcs.meshfill.Gfm.exts
-Failed example:
-    ex.exts(True, True) # arrows on both ends
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.meshfill.Gfm.exts[3]>", line 1, in <module>
-        ex.exts(True, True) # arrows on both ends
-    AttributeError: 'function' object has no attribute 'exts'
+ok
 Trying:
     a.plot(ex, array, array)
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/meshfill.py", line 704, in vcs.meshfill.Gfm.exts
-Failed example:
-    a.plot(ex, array, array)
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.meshfill.Gfm.exts[4]>", line 1, in <module>
-        a.plot(ex, array, array)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2570, in plot
-        arglist = _determine_arg_list(None, actual_args)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 213, in _determine_arg_list
-        type(args[i]))
-    vcsError: Unknown type <type 'instancemethod'> of argument to plotting command.
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
+ok
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -96,14 +68,14 @@ ok
 Trying:
     obj.list() # print meshfill attributes
 Expecting:
-     ----------...----------
+     ---------- ... ----------
     ...
 **********************************************************************
 File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/meshfill.py", line 779, in vcs.meshfill.Gfm.list
 Failed example:
     obj.list() # print meshfill attributes
 Expected:
-     ----------...----------
+     ---------- ... ----------
     ...
 Got:
      ---------- Meshfill (Gmf) member (attribute) listings ---------
@@ -190,12 +162,25 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
+Expecting nothing
+ok
+Trying:
     ex = a.createmeshfill()
 Expecting nothing
 ok
 Trying:
-    ex.xticlabels({0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"}) # plot will show labels
+    ex.xticlabels({0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"})
 Expecting nothing
+ok
+Trying:
+    a.plot(ex, f('u')) # plot shows labels
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
 ok
 Trying:
     a=vcs.init()
@@ -234,12 +219,25 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
+Expecting nothing
+ok
+Trying:
     ex = a.createmeshfill()
 Expecting nothing
 ok
 Trying:
-    ex.yticlabels({0: "Eq.", 37.6819: "L", 55.7558: "M"}) # plot will show labels
+    ex.yticlabels({0: "Eq.", 37.6819: "L", 55.7558: "M"})
 Expecting nothing
+ok
+Trying:
+    a.plot(ex, f('u')) # plot shows labels
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
 ok
 81 items had no tests:
     vcs.meshfill
@@ -323,19 +321,19 @@ ok
     vcs.meshfill.Gfm.yticlabels2
     vcs.meshfill.load
     vcs.meshfill.process_src
-6 items passed all tests:
+8 items passed all tests:
+   5 tests in vcs.meshfill.Gfm.colors
    4 tests in vcs.meshfill.Gfm.datawc
+   5 tests in vcs.meshfill.Gfm.exts
    5 tests in vcs.meshfill.Gfm.xmtics
-   3 tests in vcs.meshfill.Gfm.xticlabels
+   6 tests in vcs.meshfill.Gfm.xticlabels
    3 tests in vcs.meshfill.Gfm.xyscale
    5 tests in vcs.meshfill.Gfm.ymtics
-   3 tests in vcs.meshfill.Gfm.yticlabels
+   6 tests in vcs.meshfill.Gfm.yticlabels
 **********************************************************************
-4 items had failures:
-   1 of   5 in vcs.meshfill.Gfm.colors
-   2 of   5 in vcs.meshfill.Gfm.exts
+2 items had failures:
    1 of   3 in vcs.meshfill.Gfm.list
    1 of   4 in vcs.meshfill.Gfm.script
-40 tests in 91 items.
-35 passed and 5 failed.
-***Test Failed*** 5 failures.
+46 tests in 91 items.
+44 passed and 2 failed.
+***Test Failed*** 2 failures.

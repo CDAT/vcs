@@ -990,7 +990,7 @@ class Gi(object):
         # specific_options_doc
         self.xticlabels1 = xtl1
         self.xticlabels2 = xtl2
-    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name": "isoline"}
+    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name": "isoline", "data": "f('u')"}
 
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
@@ -1000,7 +1000,7 @@ class Gi(object):
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
         self.yticlabels2 = ytl2
-    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name": "isoline"}
+    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name": "isoline", "data": "f('u')"}
 
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1

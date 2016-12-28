@@ -16,14 +16,9 @@ Expecting nothing
 ok
 Trying:
     a.plot(ex, array)
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/boxfill.py", line 845, in vcs.boxfill.Gfb.colors
-Failed example:
-    a.plot(ex, array)
-Expected nothing
-Got:
-    <vcs.displayplot.Dp object at 0x102d51a28>
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
+ok
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -50,41 +45,18 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    ex=a.createboxfill
+    ex=a.createboxfill()
 Expecting nothing
 ok
 Trying:
     ex.exts(True, True) # arrows on both ends
 Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/boxfill.py", line 842, in vcs.boxfill.Gfb.exts
-Failed example:
-    ex.exts(True, True) # arrows on both ends
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.boxfill.Gfb.exts[3]>", line 1, in <module>
-        ex.exts(True, True) # arrows on both ends
-    AttributeError: 'function' object has no attribute 'exts'
+ok
 Trying:
     a.plot(ex, array)
-Expecting nothing
-**********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/boxfill.py", line 843, in vcs.boxfill.Gfb.exts
-Failed example:
-    a.plot(ex, array)
-Exception raised:
-    Traceback (most recent call last):
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
-        compileflags, 1) in test.globs
-      File "<doctest vcs.boxfill.Gfb.exts[4]>", line 1, in <module>
-        a.plot(ex, array)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2570, in plot
-        arglist = _determine_arg_list(None, actual_args)
-      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 213, in _determine_arg_list
-        type(args[i]))
-    vcsError: Unknown type <type 'instancemethod'> of argument to plotting command.
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
+ok
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -96,7 +68,7 @@ ok
 Trying:
     obj.list() # print boxfill attributes
 Expecting:
-     ----------...----------
+     ---------- ... ----------
     ...
 ok
 Trying:
@@ -168,12 +140,25 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
+Expecting nothing
+ok
+Trying:
     ex = a.createboxfill()
 Expecting nothing
 ok
 Trying:
-    ex.xticlabels({0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"}) # plot will show labels
+    ex.xticlabels({0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"})
 Expecting nothing
+ok
+Trying:
+    a.plot(ex, f('u')) # plot shows labels
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
 ok
 Trying:
     a=vcs.init()
@@ -212,12 +197,25 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
+Expecting nothing
+ok
+Trying:
     ex = a.createboxfill()
 Expecting nothing
 ok
 Trying:
-    ex.yticlabels({0: "Eq.", 37.6819: "L", 55.7558: "M"}) # plot will show labels
+    ex.yticlabels({0: "Eq.", 37.6819: "L", 55.7558: "M"})
 Expecting nothing
+ok
+Trying:
+    a.plot(ex, f('u')) # plot shows labels
+Expecting:
+    <vcs.displayplot.Dp object at 0x...>
 ok
 89 items had no tests:
     vcs.boxfill
@@ -309,20 +307,18 @@ ok
     vcs.boxfill.Gfb.yticlabels1
     vcs.boxfill.Gfb.yticlabels2
     vcs.boxfill.process_src
-9 items passed all tests:
+11 items passed all tests:
+   5 tests in vcs.boxfill.Gfb.colors
    4 tests in vcs.boxfill.Gfb.datawc
+   5 tests in vcs.boxfill.Gfb.exts
    3 tests in vcs.boxfill.Gfb.list
    6 tests in vcs.boxfill.Gfb.rename
    4 tests in vcs.boxfill.Gfb.script
    5 tests in vcs.boxfill.Gfb.xmtics
-   3 tests in vcs.boxfill.Gfb.xticlabels
+   6 tests in vcs.boxfill.Gfb.xticlabels
    3 tests in vcs.boxfill.Gfb.xyscale
    5 tests in vcs.boxfill.Gfb.ymtics
-   3 tests in vcs.boxfill.Gfb.yticlabels
-**********************************************************************
-2 items had failures:
-   1 of   5 in vcs.boxfill.Gfb.colors
-   2 of   5 in vcs.boxfill.Gfb.exts
-46 tests in 100 items.
-43 passed and 3 failed.
-***Test Failed*** 3 failures.
+   6 tests in vcs.boxfill.Gfb.yticlabels
+52 tests in 100 items.
+52 passed and 0 failed.
+Test passed.

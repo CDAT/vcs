@@ -838,7 +838,7 @@ class Gfb(object):
     def xticlabels(self, xtl1='', xtl2=''):
         self.xticlabels1 = xtl1
         self.xticlabels2 = xtl2
-    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name" : "boxfill"}
+    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name" : "boxfill", "data": "f('u')"}
 
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
@@ -848,7 +848,7 @@ class Gfb(object):
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
         self.yticlabels2 = ytl2
-    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name" : "boxfill"}
+    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name" : "boxfill", "data": "f('u')"}
 
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1
