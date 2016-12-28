@@ -84,23 +84,22 @@ class Tl(object):
 
         .. code-block:: python
 
-            # VCS Canvas Constructor
-            a=vcs.init()
-            # Show predefined line objects
-            a.show('line')
-            # Will list all the line attribute values
-            ln.list()
-            # Updates the VCS Canvas at user's request
-            a.update()
+            >>> a=vcs.init() # VCS Canvas Constructor
+            >>> a.show('line') # Show predefined line objects
+            *******************Line Names List**********************
+            ...
+            *******************End Line Names List**********************
+            >>> a.getline('red').list() # show properties of 'red' line
+             ---------- ... ----------
+            ...
+            >>> a.update() # manually update canvas
 
     .. describe:: Create a new instance of line:
 
         .. code-block:: python
 
-            # Copies content of 'red' to 'new'
-            ln=a.createline('new','red')
-            # Copies content of 'default' to 'new'
-            ln=a.createline('new')
+            >>> ln=a.createline('new','red') # Copies 'red' to 'new'
+            >>> ln=a.createline('new2') # Copies 'default' to 'new2'
 
     .. describe:: Modify an existing line:
 
@@ -108,55 +107,45 @@ class Tl(object):
 
             .. code-block:: python
 
-                ln=a.getline('red')
+                >>> ln=a.getline('red')
 
         * Set line color:
 
             .. code-block:: python
 
-                # Range from 1 to 256
-                ln.color=100
+                >>> ln.color=100 # Range from 1 to 256
 
         * Set line width:
 
             .. code-block:: python
 
-                # Range from 1 to 300
-                ln.width=100
+                >>> ln.width=100 # Range from 1 to 300
 
         * Specify the line type:
 
             .. code-block:: python
 
-                # Same as ln.type=0
-                 ln.type='solid'
-                 # Same as ln.type=1
-                 ln.type='dash'
-                 # Same as ln.type=2
-                 ln.type='dot'
-                 # Same as ln.type=3
-                 ln.type='dash-dot'
-                 # Same as ln.type=4
-                 ln.type='long-dash'
+                >>> ln.type='solid' # Same as ln.type=0
+                >>> ln.type='dash' # Same as ln.type=1
+                >>> ln.type='dot' # Same as ln.type=2
+                >>> ln.type='dash-dot' # Same as ln.type=3
+                >>> ln.type='long-dash' # Same as ln.type=4
 
         * Set the graphics priority on the canvas:
 
             .. code-block:: python
 
-                ln.priority=1
-                # FloatType [0,1]x[0,1]
-                ln.viewport=[0, 1.0, 0,1.0]
-                # FloatType [#,#]x[#,#]
-                ln.worldcoordinate=[0,1.0,0,1.0]
+                >>> ln.priority=1
+                >>> ln.viewport=[0, 1.0, 0,1.0] # float [0,1]x[0,1]
+                >>> ln.worldcoordinate=[0,1.0,0,1.0] # float [#,#]x[#,#]
 
         * Set line x and y values:
 
             .. code-block:: python
 
-                # List of FloatTypes
-                ln.x=[[0,.1,.2], [.3,.4,.5]]
-                # List of FloatTypes
-                ln.y=[[.5,.4,.3], [.2,.1,0]]
+                >>> ln.x=[[0,.1,.2], [.3,.4,.5]] # List of floats
+                >>> ln.y=[[.5,.4,.3], [.2,.1,0]] # List of floats
+
     """
     __slots__ = [
         's_name',

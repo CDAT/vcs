@@ -1070,3 +1070,84 @@ outfill_output = """
 outline_output = """
        outline :: (Ex: 0) no default
     """
+#############################################################################
+#                                                                           #
+# Parameters section                                                        #
+#                                                                           #
+#############################################################################
+name = """
+        :param name: Name of the object to be created.
+        :type name: `str`_
+        """
+priority = """
+        :param priority: The layer on which the object will be drawn.
+        :type priority: `int`_
+        """
+color = """
+        :param color: A color name from the
+            `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
+            or an integer value from 0-255, or an RGB/RGBA tuple/list
+            (e.g. (0,100,0), (100,100,0,50))
+        :type color: `str`_ or `int`_ or `tuple`_
+        """
+viewport = """
+        :param viewport: 4 floats between 0 and 1 which specify the area that
+            X/Y values are mapped to inside of the canvas.
+        :type viewport: list of floats
+        """
+worldcoordinate = """
+        :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
+        :type worldcoordinate: `list`_
+        """
+x_y_coords = """
+        :param x: List of lists of x coordinates. Values must be floats between
+            worldcoordinate[0] and worldcoordinate[1].
+        :type x: `list`_
+
+        :param y: List of lists of y coordinates. Values must be floats between
+            worldcoordinate[2] and worldcoordinate[3].
+        :type y: `list`_
+        """
+projection = """
+        :param projection: Specifies a geographic projection used to convert x/y
+            from spherical coordinates into 2D coordinates.
+            Can be a VCS projection or a string name of a projection
+        :type projection: `str`_ or :py:class:`vcs.projection.Proj`
+        """
+bg = """
+        :param bg: Boolean value. True => object drawn in background (not shown on canvas).
+            False => object shown on canvas.
+        :type bg: bool
+        """
+output_width = """
+        :param width: Float specifying the desired width of the output,
+            in the specified unit of measurement.
+        :type width: `float`_
+        """
+output_file = """
+        :param file: Desired string name of the output file
+        :type file: `str`_
+        """
+output_height = """
+        :param height: Float specifying the desired height of the output,
+            measured in the chosen units
+        :type height: `float`_
+        """
+output_units = """
+        :param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels',
+            'dot', 'dots']. Defaults to 'inches'.
+        :type units: `str`_
+        """
+canvas_width = """
+        :param width: Width of the canvas, in pixels
+        :type width: `int`_
+        """
+canvas_height = """
+        :param height: Height of the canvas, in pixels
+        :type height: `int`_
+        """
+canvas_clear = """
+        :param clear: Indicates the canvas should be cleared (1),
+            or should not be cleared (0), when orientation is changed.
+        :type clear: `int`_
+        """

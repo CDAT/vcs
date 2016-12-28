@@ -753,7 +753,6 @@ def setLineAttributes(to, l):
 
     :param l: l can be a line name defined in vcs.elements or a line object.
         l will be used to set the properties of to.
-
     :type l: :py:class:`vcs.line.Tl` or str
     """
     import queries
@@ -792,7 +791,7 @@ def getline(name='default', ltype=None, width=None, color=None,
     :type width: :py:class:`int`
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-                  or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+        or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
     :type color: :py:class:`str` or int
 
     :param priority: The layer on which the marker will be drawn.
@@ -862,7 +861,7 @@ def createmarker(name=None, source='default', mtype=None,
     :type size: :py:class:`int`
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-                  or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+        or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
     :type color: :py:class:`str` or int
 
     :param priority: The layer on which the marker will be drawn.
@@ -927,7 +926,7 @@ def getmarker(name='default', mtype=None, size=None, color=None,
     :type size: :py:class:`int`
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-                  or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+        or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
     :type color: :py:class:`str` or int
 
     :param priority: The layer on which the marker will be drawn.
@@ -1066,7 +1065,8 @@ def getfillarea(name='default', style=None,
     :param priority: The layer on which the texttable will be drawn.
     :type priority: :py:class:`int`
 
-    :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
+    :param viewport: 4 floats between 0 and 1 which specify the area that X/Y
+        values are mapped to inside of the canvas.
     :type viewport: list of floats
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
@@ -1137,10 +1137,12 @@ def createtexttable(name=None, source='default', font=None,
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
     :type worldcoordinate: list of floats
 
-    :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
+    :param x: List of lists of x coordinates.
+        Values must be between worldcoordinate[0] and worldcoordinate[1].
     :type x: list of floats
 
-    :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
+    :param y: List of lists of y coordinates.
+        Values must be between worldcoordinate[2] and worldcoordinate[3].
     :type y: list of floats
 
     :returns: A texttable graphics method object

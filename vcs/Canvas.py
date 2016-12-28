@@ -483,12 +483,7 @@ class Canvas(object):
         self.interact(*args, **kargs)
 
     def interact(self, *args, **kargs):
-        """Puts the canvas into interactive mode.
-
-        :param args:
-        :param kargs:
-        :return:
-        """
+        """Puts the canvas into interactive mode."""
         self.configure()
         self.backend.interact(*args, **kargs)
 
@@ -1037,7 +1032,7 @@ class Canvas(object):
 
     def scriptobject(self, obj, script_filename=None, mode=None):
         """Save individual attributes sets (i.e., individual primary class
-        objects and/or secondary class objects). These attribute sets
+        objects and/or secondary objects). These attribute sets
         are saved in the user's current directory in one of two formats:
         Python script, or a Javascript Object.
 
@@ -1074,7 +1069,7 @@ class Canvas(object):
         :param mode: Mode is either "w" for replace or "a" for append.
         :type mode: `str`_
 
-        :param obj: Any VCS primary class or secondary class object.
+        :param obj: Any VCS primary class or secondary object.
         :type obj: VCS object
         """
         if istemplate(obj):
@@ -1158,7 +1153,8 @@ class Canvas(object):
                 True
 
 
-        :param type: Type of objects to remove. By default, will remove everything.
+        :param type: Type of objects to remove. By default, will remove
+            all object types.
         :type type: None, str, list/tuple (of str)
         """
 
@@ -1221,8 +1217,8 @@ class Canvas(object):
 
     def boxfill(self, *args, **parms):
         """Generate a boxfill plot given the data, boxfill graphics method, and
-        template. If no boxfill class object is given, then the 'default' boxfill
-        graphics method is used. Similarly, if no template class object is given,
+        template. If no boxfill object is given, then the 'default' boxfill
+        graphics method is used. Similarly, if no template object is given,
         then the 'default' template is used.
 
         :Example:
@@ -1281,8 +1277,8 @@ class Canvas(object):
 
     def taylordiagram(self, *args, **parms):
         """Generate a taylordiagram plot given the data, taylordiagram graphics method, and
-        template. If no taylordiagram class object is given, then the 'default' taylordiagram
-        graphics method is used. Similarly, if no template class object is given,
+        template. If no taylordiagram object is given, then the 'default' taylordiagram
+        graphics method is used. Similarly, if no template object is given,
         then the 'default' template is used.
 
         :Example:
@@ -1319,8 +1315,8 @@ class Canvas(object):
 
     def meshfill(self, *args, **parms):  # noqa
         """Generate a meshfill plot given the data, the mesh, a meshfill graphics method, and
-        a template. If no meshfill class object is given, then the 'default' meshfill
-        graphics method is used. Similarly, if no template class object is given,
+        a template. If no meshfill object is given, then the 'default' meshfill
+        graphics method is used. Similarly, if no template object is given,
         then the 'default' template is used.
 
         Format:
@@ -1412,8 +1408,8 @@ class Canvas(object):
 
     def isofill(self, *args, **parms):
         """Generate a isofill plot given the data, isofill graphics method, and
-        template. If no isofill class object is given, then the 'default' isofill
-        graphics method is used. Similarly, if no template class object is given,
+        template. If no isofill object is given, then the 'default' isofill
+        graphics method is used. Similarly, if no template object is given,
         then the 'default' template is used.
 
         :Example:
@@ -1457,8 +1453,8 @@ class Canvas(object):
 
     def isoline(self, *args, **parms):
         """Generate a isoline plot given the data, isoline graphics method, and
-        template. If no isoline class object is given, then the 'default' isoline
-        graphics method is used. Similarly, if no template class object is given,
+        template. If no isoline object is given, then the 'default' isoline
+        graphics method is used. Similarly, if no template object is given,
         then the 'default' template is used.
 
         :Example:
@@ -1508,8 +1504,8 @@ class Canvas(object):
 
     def xyvsy(self, *args, **parms):
         """Generate a Xyvsy plot given the data, Xyvsy graphics method, and
-        template. If no Xyvsy class object is given, then the 'default' Xyvsy
-        graphics method is used. Similarly, if no template class object is given,
+        template. If no Xyvsy object is given, then the 'default' Xyvsy
+        graphics method is used. Similarly, if no template object is given,
         then the 'default' template is used.
 
         :Example:
@@ -1551,8 +1547,8 @@ class Canvas(object):
 
     def yxvsx(self, *args, **parms):
         """Generate a Yxvsx plot given the data, Yxvsx graphics method, and
-        template. If no Yxvsx class object is given, then the 'default' Yxvsx
-        graphics method is used. Simerly, if no template class object is given,
+        template. If no Yxvsx object is given, then the 'default' Yxvsx
+        graphics method is used. Simerly, if no template object is given,
         then the 'default' template is used.
 
         :Example:
@@ -1594,8 +1590,8 @@ class Canvas(object):
 
     def xvsy(self, *args, **parms):
         """Generate a XvsY plot given the data, XvsY graphics method, and
-        template. If no XvsY class object is given, then the 'default' XvsY
-        graphics method is used. Similarly, if no template class object is given,
+        template. If no XvsY object is given, then the 'default' XvsY
+        graphics method is used. Similarly, if no template object is given,
         then the 'default' template is used.
 
         :Example:
@@ -1643,8 +1639,8 @@ class Canvas(object):
 
     def vector(self, *args, **parms):
         """Generate a vector plot given the data, vector graphics method, and
-        template. If no vector class object is given, then the 'default' vector
-        graphics method is used. Similarly, if no template class object is given,
+        template. If no vector object is given, then the 'default' vector
+        graphics method is used. Similarly, if no template object is given,
         then the 'default' template is used.
 
         :Example:
@@ -1683,8 +1679,8 @@ class Canvas(object):
 
     def scatter(self, *args, **parms):
         """Generate a scatter plot given the data, scatter graphics method, and
-        template. If no scatter class object is given, then the 'default' scatter
-        graphics method is used. Similarly, if no template class object is given,
+        template. If no scatter object is given, then the 'default' scatter
+        graphics method is used. Similarly, if no template object is given,
         then the 'default' template is used.
 
         :Example:
@@ -1786,8 +1782,7 @@ class Canvas(object):
                 >>> a.line(ln) # Plot using specified line object
                 <vcs.displayplot.Dp ...>
 
-        :param name: Name of created object
-        :type name: `str`_
+        %s
 
         :param ltype: One of "dash", "dash-dot", "solid", "dot", or "long-dash".
         :type ltype: `str`_
@@ -1795,31 +1790,12 @@ class Canvas(object):
         :param width: Thickness of the line to be drawn
         :type width: `int`_
 
-        :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-            or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-        :type color: `str`_ or `int`_
-
-        :param priority: The layer on which the line will be drawn.
-        :type priority: `int`_
-
-        :param viewport: 4 floats between 0 and 1.
-            These specify the area that the X/Y values are mapped to inside of the canvas
-        :type viewport: `list`_
-
-        :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-        :type worldcoordinate: `list`_
-
-        :param x: List of lists of x coordinates.
-            Values must be floats between worldcoordinate[0] and worldcoordinate[1].
-        :type x: `list`_
-
-        :param y: List of lists of y coordinates.
-            Values must be floats between worldcoordinate[2] and worldcoordinate[3].
-        :type y: `list`_
-
-        :param projection: Specify a geographic projection used to convert x/y
-            from spherical coordinates into 2D coordinates.
-        :type projection: `str`_ or :py:class:`vcs.projection.Proj`
+        %s
+        %s
+        %s
+        %s
+        %s
+        %s
 
         :returns: A VCS line object
         :rtype: vcs.line.Tl
@@ -1844,6 +1820,8 @@ class Canvas(object):
         self.line(ln, bg=bg)
 
         return ln
+    drawline.__doc__ = drawline.__doc__ % (xmldocs.name, xmldocs.color, xmldocs.priority, xmldocs.viewport,
+                                           xmldocs.worldcoordinate, xmldocs.x_y_coords, xmldocs.projection)
 
     def createmarker(self, name=None, source='default', mtype=None,  # noqa
                      size=None, color=None, priority=1,
@@ -1912,8 +1890,7 @@ class Canvas(object):
                 >>> a.marker(mrk) # Plot using specified marker object
                 <vcs.displayplot.Dp ...>
 
-        :param name: Name of created object
-        :type name: `str`_
+        %s
 
         :param mtype: Marker type, i.e. 'dot', 'plus', 'star, etc.
         :type mtype: `str`_
@@ -1921,27 +1898,12 @@ class Canvas(object):
         :param size: Size of the marker to draw
         :type size: `int`_
 
-        :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-            or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-        :type color: `str`_ or `int`_
-
-        :param priority: The layer on which the marker will be drawn.
-        :type priority: `int`_
-
-        :param viewport: 4 floats between 0 and 1.
-            These specify the area that the X/Y values are mapped to inside of the canvas
-        :type viewport: `list`_
-
-        :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-        :type worldcoordinate: `list`_
-
-        :param x: List of lists of x coordinates.
-            Values must be floats between worldcoordinate[0] and worldcoordinate[1].
-        :type x: `list`_
-
-        :param y: List of lists of y coordinates.
-            Values must be floats between worldcoordinate[2] and worldcoordinate[3].
-        :type y: `list`_
+        %s
+        %s
+        %s
+        %s
+        %s
+        %s
 
         :returns: A drawmarker object
         :rtype: vcs.marker.Tm
@@ -1965,6 +1927,9 @@ class Canvas(object):
         self.marker(mrk, bg=bg)
 
         return mrk
+
+    drawmarker.__doc__ = drawmarker.__doc__ % (xmldocs.name, xmldocs.color, xmldocs.priority, xmldocs.viewport,
+                                           xmldocs.worldcoordinate, xmldocs.x_y_coords, xmldocs.bg)
 
     def createfillarea(self, name=None, source='default', style=None,
                        index=None, color=None, priority=1,
@@ -2036,46 +2001,28 @@ class Canvas(object):
                 >>> a.fillarea(fa) # Plot using specified fillarea object
                 <vcs.displayplot.Dp ...>
 
-        :param name: Name of created object
-        :type name: `str`_
+        %s
 
         :param style: One of "hatch", "solid", or "pattern".
         :type style: `str`_
 
-        :param index: Specifies which `pattern <http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png>`_
-            to fill the fillarea with. Accepts ints from 1-20.
+        :param index: Specifies which `pattern`_ to fill the fillarea with.
+            Accepts ints from 1-20.
 
         :type index: `int`_
 
-        :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-            or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+        %s
+        %s
+        %s
+        %s
+        %s
+        %s
 
-        :type color: `str`_ or `int`_
-
-        :param priority: The layer on which the fillarea will be drawn.
-        :type priority: `int`_
-
-        :param viewport: 4 floats between 0 and 1.
-            These specify the area that the X/Y values are mapped to inside of the canvas
-        :type viewport: `list`_
-
-        :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-        :type worldcoordinate: `list`_
-
-        :param x: List of lists of x coordinates.
-            Values must be floats between worldcoordinate[0] and worldcoordinate[1].
-        :type x: `list`_
-
-        :param y: List of lists of y coordinates.
-            Values must be floats between worldcoordinate[2] and worldcoordinate[3].
-        :type y: `list`_
-
-        :param bg: Boolean value. True => object drawn in background (not shown on canvas).
-            False => object shown on canvas.
-        :type bg: bool
 
         :returns: A fillarea object
         :rtype: vcs.fillarea.Tf
+
+        .. _pattern: http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png
         """
         if (name is None) or (not isinstance(name, str)):
             raise vcsError('Must provide string name for the fillarea.')
@@ -2096,6 +2043,9 @@ class Canvas(object):
         self.fillarea(fa, bg=bg)
 
         return fa
+
+    drawfillarea.__doc__ = drawfillarea.__doc__ % (xmldocs.name, xmldocs.color, xmldocs.priority, xmldocs.viewport,
+                                               xmldocs.worldcoordinate, xmldocs.x_y_coords, xmldocs.bg)
 
     def createtexttable(self, name=None, source='default', font=None,
                         spacing=None, expansion=None, color=None, priority=None,
@@ -2272,36 +2222,14 @@ class Canvas(object):
         :param To_name: String name of a textorientation object
         :type To_name: `str`_
 
-        :param index: Specifies which `pattern <http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png>`_
-            to fill the fillarea with. Accepts ints from 1-20.
-        :type index: `int`_
+        :param string: String to put onto the new textcombined
+        :type string: `str`_
 
-        :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-            or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-        :type color: `str`_ or `int`_
-
-        :param priority: The layer on which the fillarea will be drawn.
-        :type priority: `int`_
-
-        :param viewport: 4 floats between 0 and 1.
-            These specify the area that the X/Y values are mapped to inside of the canvas
-        :type viewport: `list`_
-
-        :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-        :type worldcoordinate: `list`_
-
-        :param x: List of lists of x coordinates.
-            Values must be floats between worldcoordinate[0] and worldcoordinate[1].
-        :type x: `list`_
-
-        :param y: List of lists of y coordinates.
-            Values must be floats between worldcoordinate[2] and worldcoordinate[3].
-        :type y: `list`_
-
-        :param bg: Boolean value indicating whether to draw in the background.
-            If True, object is drawn in background (not shown on canvas).
-            If False, object is drawn on canvas.
-        :type bg: bool
+        %s
+        %s
+        %s
+        %s
+        %s
 
         :returns: A texttable object
         :rtype: vcs.texttable.Tt
@@ -2344,6 +2272,8 @@ class Canvas(object):
     #
     # Set alias for the secondary drawtextcombined.
     drawtext = drawtextcombined
+    drawtextcombined.__doc__ = drawtextcombined.__doc__ % (xmldocs.color, xmldocs.viewport, xmldocs.worldcoordinate,
+                                                           xmldocs.x_y_coords, xmldocs.bg)
 
     _plot_keywords_ = ['variable', 'grid', 'xaxis', 'xarray',  'xrev', 'yaxis', 'yarray', 'yrev', 'continents',
                        'xbounds', 'ybounds', 'zaxis', 'zarray', 'taxis', 'tarray', 'waxis', 'warray', 'bg', 'ratio',
@@ -4372,21 +4302,15 @@ class Canvas(object):
                 >>> a.landscape(x=100, y = 200) # Change to landscape and set the x and y screen position
                 >>> a.landscape(width = 400, height = 337, x=100, y = 200, clear=1) # landscape with more settings
 
-        :param width: Width of the canvas, in pixels
-        :type width: `int`_
-
-        :param height: Height of the canvas, in pixels
-        :type height: `int`_
+        %s
+        %s
 
         :param x: Unused
         :type x: `int`_
 
         :param y: Unused
         :type y: `int`_
-
-        :param clear: Indicates the canvas should be cleared (1),
-                        or should not be cleared (0), when orientation is changed.
-        :type clear: `int`_
+        %s
         """
         if (self.orientation() == 'landscape'):
             return
@@ -4417,6 +4341,7 @@ class Canvas(object):
         l = self.backend.landscape(*args)
 
         return l
+    landscape.__doc__ = landscape.__doc__ % (xmldocs.canvas_width, xmldocs.canvas_height, xmldocs.canvas_clear)
 
     def listelements(self, *args):
         """Returns a sorted Python list of all VCS object names, or a list of
@@ -4433,7 +4358,7 @@ class Canvas(object):
         :param args: A string containing the name of a VCS object type, or None
         :type args: `str`_ or `None`_
 
-        :returns: If args is None, returns a list of string names of all VCS class objects.
+        :returns: If args is None, returns a list of string names of all VCS objects.
             If args is a string name of a VCS object
         :rtype: `list`_
         """
@@ -4472,16 +4397,14 @@ class Canvas(object):
                 >>> a.open()
                 >>> a.open(800,600)
 
-        :param width: Integer representing the desired width of the opened window in pixels
-        :type width: `int`_
-
-        :param height: Integer representing the desired height of the opened window in pixels
-        :type height: `int`_
+        %s
+        %s
         """
 
         a = self.backend.open(width, height, **kargs)
 
         return a
+    open.__doc__ = open.__doc__ % (xmldocs.canvas_width, xmldocs.canvas_height)
 
     def canvasid(self, *args):
         """Get the ID of this canvas.
@@ -4521,11 +4444,8 @@ class Canvas(object):
                 >>> a.portrait(x=100, y = 200) # Change to portrait and set the x and y screen position
                 >>> a.portrait(width = 337, height = 400, x=100, y = 200, clear=1) # portrait, with more specifications
 
-        :param width: Width to set the canvas to (in pixels)
-        :type width: `int`_
-
-        :param height: Height to set the canvas to (in pixels)
-        :type height: `int`_
+        %s
+        %s
 
         :param x: Unused.
         :type x: None
@@ -4533,9 +4453,7 @@ class Canvas(object):
         :param y: Unused.
         :type y: None
 
-        :param clear: 0: Do not clear the canvas when orientation is changed.
-                      1: clear the canvas when orientation is changed.
-        :type clear: `int`_
+        %s
         """
         if (self.orientation() == 'portrait'):
             return
@@ -4566,6 +4484,8 @@ class Canvas(object):
         p = self.backend.portrait(*args)
 
         return p
+
+    portrait.__doc__ = portrait.__doc__ % (xmldocs.canvas_width, xmldocs.canvas_height, xmldocs.canvas_clear)
 
     def ffmpeg(self, movie, files, bitrate=1024, rate=None, options=None):
         """MPEG output from a list of valid files.
@@ -4607,17 +4527,18 @@ class Canvas(object):
                 <vcs.displayplot.Dp object at 0x...>
                 <vcs.displayplot.Dp object at 0x...>
                 <vcs.displayplot.Dp object at 0x...>
-                >>> a.ffmpeg('mymovie.mpeg',png_files) # generates from list of files
+                >>> a.ffmpeg('m1.mpeg',png_files) # using list of files
                 True
-                >>> a.ffmpeg('mymovie.mpeg',png_files,bitrate=512) # generates mpeg at 512kbit
+                >>> a.ffmpeg('m2.mpeg',png_files,bitrate=512) # 512kbit rate
                 True
-                >>> a.ffmpeg('mymovie.mpeg',png_files,rate=50) # generates movie with 50 frame per second
+                >>> a.ffmpeg('m3.mpeg',png_files,rate=50) # 50 frames/second
                 True
 
         :param movie: Output video file name
         :type movie: `str`_
 
-        :param files: String file name
+        :param files: String name of a file,
+            or a list or tuple of multiple file names
         :type files: `str`_, `list`_, or :py:class:`tuple`
 
         :param rate: Desired output framerate
@@ -4754,15 +4675,9 @@ class Canvas(object):
                 >>> a.setbgoutputdimensions(width=11.5, height= 8.5) # US Legal
                 >>> a.setbgoutputdimensions(width=21, height=29.7, units='cm') # A4
 
-        :param width: Float representing the desired width of the output, using the specified unit of measurement
-        :type width: float
-
-        :param height: Float representing the desired height of the output, using the specified unit of measurement.
-        :type height: float
-
-        :param units: The units of measurement to use for output.
-            One of ['inches', 'in', 'cm', 'mm', 'pixel', 'dot', 'dots'].
-        :type units: `str`_
+        %s
+        %s
+        %s
         """
         if units not in [
                 'inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']:
@@ -4777,6 +4692,8 @@ class Canvas(object):
         self.bgY = H
         return
     # display ping
+    setbgoutputdimensions.__doc__ = setbgoutputdimensions.__doc__ % \
+                                    xmldocs.output_width, xmldocs.output_height, xmldocs.output_units
 
     def put_png_on_canvas(
             self, filename, zoom=1, xOffset=0, yOffset=0,
@@ -4839,22 +4756,13 @@ class Canvas(object):
                 <vcs.displayplot.Dp ...>
                 >>> a.png('example') # Overwrite a png file
 
-        :param file: Output image filename
-        :type file: `str`_
+        %s
+        %s
+        %s
+        %s
 
-        :param width: Float representing the desired width of the output png,
-            using the specified unit of measurement
-        :type width: float
-
-        :param height: Float representing the desired height of the output png,
-            using the specified unit of measurement
-        :type height: float
-
-        :param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots'].
-            Defaults to 'inches'.
-        :type units: `str`_
-
-        :param draw_white_background: Boolean value indicating if the background should be white. Defaults to True.
+        :param draw_white_background: Boolean value indicating if the
+            background should be white. Defaults to True.
         :type draw_white_background: bool
         """
         base = os.path.dirname(file)
@@ -4870,6 +4778,7 @@ class Canvas(object):
             width, height, units)
         return self.backend.png(
             file, W, H, units, draw_white_background, **args)
+    png.__doc__ = png.__doc__ % xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units
 
     def pdf(self, file, width=None, height=None, units='inches',
             textAsPaths=True):
@@ -4891,18 +4800,10 @@ class Canvas(object):
                 >>> a.pdf('example', width=11.5, height= 8.5) # US Legal
                 >>> a.pdf('example', width=21, height=29.7, units='cm') # A4
 
-        :param file: Desired string name of the output file
-        :type file: `str`_
-
-        :param width: Integer specifying the desired width of the output, measured in the chosen units
-        :type width: `int`_
-
-        :param height: Integer specifying the desired height of the output, measured in the chosen units
-        :type height: `int`_
-
-        :param units: Must be one of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots'].
-                      Default is 'inches'.
-        :type units: `str`_
+        %s
+        %s
+        %s
+        %s
 
         :param textAsPaths: Specifies whether to render text objects as paths.
         :type textAsPaths: bool
@@ -4918,6 +4819,7 @@ class Canvas(object):
         if not file.split('.')[-1].lower() in ['pdf']:
             file += '.pdf'
         return self.backend.pdf(file, width=W, height=H, units=units, textAsPaths=textAsPaths)
+    pdf.__doc__ = pdf.__doc__ % xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units
 
     def svg(self, file, width=None, height=None, units='inches',
             textAsPaths=True):
@@ -4939,17 +4841,10 @@ class Canvas(object):
                 >>> a.svg('example', width=11.5, height= 8.5) # US Legal
                 >>> a.svg('example', width=21, height=29.7, units='cm') # A4
 
-        :param file:
-        :type file:
-
-        :param width: Float to set width of output SVG, in specified unit of measurement
-        :type width: float
-
-        :param height: Float to set height of output SVG, in specified unit of measurement
-        :type height: float
-
-        :param units: One of ['inches', 'in', 'cm', 'mm', 'pixel', 'pixels', 'dot', 'dots']. Deafults to 'inches'.
-        :type units: `str`_
+        %s
+        %s
+        %s
+        %s
 
         :param textAsPaths: Specifies whether to render text objects as paths.
         :type textAsPaths: bool
@@ -4965,6 +4860,7 @@ class Canvas(object):
         if not file.split('.')[-1].lower() in ['svg']:
             file += '.svg'
         return self.backend.svg(file, width=W, height=H, units=units, textAsPaths=textAsPaths)
+    svg.__doc__ = svg.__doc__ % xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units
 
     def _compute_margins(
             self, W, H, top_margin, bottom_margin, right_margin, left_margin, dpi):
@@ -5186,25 +5082,15 @@ class Canvas(object):
                 >>> a.postscript('example', width=11.5, height= 8.5) # US Legal (default)
                 >>> a.postscript('example', width=21, height=29.7, units='cm') # A4
 
-        :param file: String name of the desired output file.
-        :type file: `str`_
-
+        %s
         :param mode: The mode in which to open the file. One of 'r' or 'a'.
             When mode is 'r', file will be opened in replace mode.
             When mode is 'a', file will be opened in append mode.
         :type mode: `str`_
 
-        :param width: Desired width of the postscript output,
-            in the specified unit of measurement.
-        :type width: `int`_
-
-        :param height: Desired height of the postscript output,
-            in the specified unit of measurement.
-        :type height: `int`_
-
-        :param units: The units of measurement to use for output.
-            One of ['inches', 'in', 'cm', 'mm', 'pixel', 'dot', 'dots'].
-        :type units: `str`_
+        %s
+        %s
+        %s
 
         :param textAsPaths: Specifies whether to render text objects as paths.
         :type textAsPaths: bool
@@ -5237,6 +5123,9 @@ class Canvas(object):
                 os.remove(psnm)
             else:
                 shutil.move(psnm, file)
+    postscript.__doc__ = postscript.__doc__ % \
+                         xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units
+
 
     def _scriptrun(self, *args):
         return vcs._scriptrun(*args)
@@ -5467,21 +5356,14 @@ class Canvas(object):
                 >>> a.postscript('example', width=11.5, height= 8.5) # US Legal (default)
                 >>> a.postscript('example', width=21, height=29.7, units='cm') # A4
 
-        :param file: String name of the desired output file
-        :type file: `str`_
+        %s
 
         :param mode: The mode in which to open the file. One of 'r' or 'a'.
         :type mode: `str`_
 
-        :param width: Width of the output image, in the unit of measurement specified
-        :type width: float
-
-        :param height: Height of the output image, in the unit of measurement specified
-        :type height: float
-
-        :param units: The units of measurement to use for output.
-            One of ['inches', 'in', 'cm', 'mm', 'pixel', 'dot', 'dots'].
-        :type units: `str`_
+        %s
+        %s
+        %s
         """
         ext = file.split(".")[-1]
         if ext.lower() != 'eps':
@@ -5501,6 +5383,7 @@ class Canvas(object):
 
         os.popen("ps2epsi %s %s" % (tmpfile, file)).readlines()
         os.remove(tmpfile)
+    eps.__doc__ = eps.__doc__ % xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units
 
     def show(self, *args):
         return vcs.show(*args)
@@ -5743,8 +5626,10 @@ class Canvas(object):
         :param font: The font name/number
         :type font: `int`_ or `str`_
 
-        :returns: If font parameter was a string, will return the integer associated with that string.
-                  If font parameter was an integer, will return the string associated with that integer.
+        :returns: If font parameter was a string, will return the integer
+            associated with that string.
+            If font parameter was an integer, will return the string
+            associated with that integer.
         :rtype: `int`_ or str
         """
         if isinstance(font, int):
