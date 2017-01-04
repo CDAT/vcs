@@ -2,7 +2,7 @@ vcs.vector.Gv.script
 --------------------
 ```python
 Failed example:
-    ex.script('filename.py') # Append to a Python script named 'filename.py'
+    ex.script('filename.py') # append to 'filename.py'
 Expected nothing
 Got:
     DEPRECATED: Use linetype or setLineAttributes instead.

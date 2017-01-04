@@ -42,336 +42,336 @@ Expecting:
     <vcs.unified1D.G1d ...>
 ok
 Trying:
-    vcs.show('3d_dual_scalar') # show all available 3d_dual_scalar
+    vcs.show('3d_dual_scalar') # available 3d_dual_scalars
 Expecting:
     *******************3d_dual_scalar Names List**********************
     ...
     *******************End 3d_dual_scalar Names List**********************
 ok
 Trying:
-    ex=vcs.create3d_dual_scalar('3d_dual_scalar_ex1') # Create '3d_dual_scalar_ex1'; inherits 'default'
+    ex=vcs.create3d_dual_scalar('3d_dual_scalar_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('3d_dual_scalar') # should now contain '3d_dual_scalar_ex1'
+    vcs.listelements('3d_dual_scalar') # includes new object
 Expecting:
     [...'3d_dual_scalar_ex1'...]
 ok
 Trying:
-    vcs.show('3d_scalar') # show all available 3d_scalar
+    vcs.show('3d_scalar') # available 3d_scalars
 Expecting:
     *******************3d_scalar Names List**********************
     ...
     *******************End 3d_scalar Names List**********************
 ok
 Trying:
-    ex=vcs.create3d_scalar('3d_scalar_ex1') # Create '3d_scalar_ex1'; inherits 'default'
+    ex=vcs.create3d_scalar('3d_scalar_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('3d_scalar') # should now contain '3d_scalar_ex1'
+    vcs.listelements('3d_scalar') # includes new object
 Expecting:
     [...'3d_scalar_ex1'...]
 ok
 Trying:
-    vcs.show('3d_vector') # show all available 3d_vector
+    vcs.show('3d_vector') # available 3d_vectors
 Expecting:
     *******************3d_vector Names List**********************
     ...
     *******************End 3d_vector Names List**********************
 ok
 Trying:
-    ex=vcs.create3d_vector('3d_vector_ex1') # Create '3d_vector_ex1'; inherits 'default'
+    ex=vcs.create3d_vector('3d_vector_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('3d_vector') # should now contain '3d_vector_ex1'
+    vcs.listelements('3d_vector') # includes new object
 Expecting:
     [...'3d_vector_ex1'...]
 ok
 Trying:
-    vcs.show('boxfill') # show all available boxfill
+    vcs.show('boxfill') # available boxfills
 Expecting:
     *******************Boxfill Names List**********************
     ...
     *******************End Boxfill Names List**********************
 ok
 Trying:
-    ex=vcs.createboxfill('boxfill_ex1') # Create 'boxfill_ex1'; inherits 'default'
+    ex=vcs.createboxfill('boxfill_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('boxfill') # should now contain 'boxfill_ex1'
+    vcs.listelements('boxfill') # includes new object
 Expecting:
     [...'boxfill_ex1'...]
 ok
 Trying:
-    ex2=vcs.createboxfill('boxfill_ex2','polar') # create 'boxfill_ex2'; inherits 'polar'
+    ex2=vcs.createboxfill('boxfill_ex2','polar')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('boxfill') # should now contain 'boxfill_ex2'
+    vcs.listelements('boxfill') # includes new object
 Expecting:
     [...'boxfill_ex2'...]
 ok
 Trying:
-    vcs.show('colormap') # show all available colormap
+    vcs.show('colormap') # available colormaps
 Expecting:
     *******************Colormap Names List**********************
     ...
     *******************End Colormap Names List**********************
 ok
 Trying:
-    ex=vcs.createcolormap('colormap_ex1') # Create 'colormap_ex1'; inherits 'default'
+    ex=vcs.createcolormap('colormap_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('colormap') # should now contain 'colormap_ex1'
+    vcs.listelements('colormap') # includes new object
 Expecting:
     [...'colormap_ex1'...]
 ok
 Trying:
-    ex2=vcs.createcolormap('colormap_ex2','rainbow') # create 'colormap_ex2'; inherits 'rainbow'
+    ex2=vcs.createcolormap('colormap_ex2','rainbow')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('colormap') # should now contain 'colormap_ex2'
+    vcs.listelements('colormap') # includes new object
 Expecting:
     [...'colormap_ex2'...]
 ok
 Trying:
-    vcs.show('fillarea') # show all available fillarea
+    vcs.show('fillarea') # available fillareas
 Expecting:
     *******************Fillarea Names List**********************
     ...
     *******************End Fillarea Names List**********************
 ok
 Trying:
-    ex=vcs.createfillarea('fillarea_ex1') # Create 'fillarea_ex1'; inherits 'default'
+    ex=vcs.createfillarea('fillarea_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('fillarea') # should now contain 'fillarea_ex1'
+    vcs.listelements('fillarea') # includes new object
 Expecting:
     [...'fillarea_ex1'...]
 ok
 Trying:
-    vcs.show('isofill') # show all available isofill
+    vcs.show('isofill') # available isofills
 Expecting:
     *******************Isofill Names List**********************
     ...
     *******************End Isofill Names List**********************
 ok
 Trying:
-    ex=vcs.createisofill('isofill_ex1') # Create 'isofill_ex1'; inherits 'default'
+    ex=vcs.createisofill('isofill_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('isofill') # should now contain 'isofill_ex1'
+    vcs.listelements('isofill') # includes new object
 Expecting:
     [...'isofill_ex1'...]
 ok
 Trying:
-    ex2=vcs.createisofill('isofill_ex2','polar') # create 'isofill_ex2'; inherits 'polar'
+    ex2=vcs.createisofill('isofill_ex2','polar')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('isofill') # should now contain 'isofill_ex2'
+    vcs.listelements('isofill') # includes new object
 Expecting:
     [...'isofill_ex2'...]
 ok
 Trying:
-    vcs.show('isoline') # show all available isoline
+    vcs.show('isoline') # available isolines
 Expecting:
     *******************Isoline Names List**********************
     ...
     *******************End Isoline Names List**********************
 ok
 Trying:
-    ex=vcs.createisoline('isoline_ex1') # Create 'isoline_ex1'; inherits 'default'
+    ex=vcs.createisoline('isoline_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('isoline') # should now contain 'isoline_ex1'
+    vcs.listelements('isoline') # includes new object
 Expecting:
     [...'isoline_ex1'...]
 ok
 Trying:
-    ex2=vcs.createisoline('isoline_ex2','polar') # create 'isoline_ex2'; inherits 'polar'
+    ex2=vcs.createisoline('isoline_ex2','polar')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('isoline') # should now contain 'isoline_ex2'
+    vcs.listelements('isoline') # includes new object
 Expecting:
     [...'isoline_ex2'...]
 ok
 Trying:
-    vcs.show('line') # show all available line
+    vcs.show('line') # available lines
 Expecting:
     *******************Line Names List**********************
     ...
     *******************End Line Names List**********************
 ok
 Trying:
-    ex=vcs.createline('line_ex1') # Create 'line_ex1'; inherits 'default'
+    ex=vcs.createline('line_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('line') # should now contain 'line_ex1'
+    vcs.listelements('line') # includes new object
 Expecting:
     [...'line_ex1'...]
 ok
 Trying:
-    ex2=vcs.createline('line_ex2','red') # create 'line_ex2'; inherits 'red'
+    ex2=vcs.createline('line_ex2','red')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('line') # should now contain 'line_ex2'
+    vcs.listelements('line') # includes new object
 Expecting:
     [...'line_ex2'...]
 ok
 Trying:
-    vcs.show('marker') # show all available marker
+    vcs.show('marker') # available markers
 Expecting:
     *******************Marker Names List**********************
     ...
     *******************End Marker Names List**********************
 ok
 Trying:
-    ex=vcs.createmarker('marker_ex1') # Create 'marker_ex1'; inherits 'default'
+    ex=vcs.createmarker('marker_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('marker') # should now contain 'marker_ex1'
+    vcs.listelements('marker') # includes new object
 Expecting:
     [...'marker_ex1'...]
 ok
 Trying:
-    ex2=vcs.createmarker('marker_ex2','red') # create 'marker_ex2'; inherits 'red'
+    ex2=vcs.createmarker('marker_ex2','red')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('marker') # should now contain 'marker_ex2'
+    vcs.listelements('marker') # includes new object
 Expecting:
     [...'marker_ex2'...]
 ok
 Trying:
-    vcs.show('meshfill') # show all available meshfill
+    vcs.show('meshfill') # available meshfills
 Expecting:
     *******************Meshfill Names List**********************
     ...
     *******************End Meshfill Names List**********************
 ok
 Trying:
-    ex=vcs.createmeshfill('meshfill_ex1') # Create 'meshfill_ex1'; inherits 'default'
+    ex=vcs.createmeshfill('meshfill_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('meshfill') # should now contain 'meshfill_ex1'
+    vcs.listelements('meshfill') # includes new object
 Expecting:
     [...'meshfill_ex1'...]
 ok
 Trying:
-    ex2=vcs.createmeshfill('meshfill_ex2','a_polar_meshfill') # create 'meshfill_ex2'; inherits 'a_polar_meshfill'
+    ex2=vcs.createmeshfill('meshfill_ex2','a_polar_meshfill')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('meshfill') # should now contain 'meshfill_ex2'
+    vcs.listelements('meshfill') # includes new object
 Expecting:
     [...'meshfill_ex2'...]
 ok
 Trying:
-    vcs.show('projection') # show all available projection
+    vcs.show('projection') # available projections
 Expecting:
     *******************Projection Names List**********************
     ...
     *******************End Projection Names List**********************
 ok
 Trying:
-    ex=vcs.createprojection('projection_ex1') # Create 'projection_ex1'; inherits 'default'
+    ex=vcs.createprojection('projection_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('projection') # should now contain 'projection_ex1'
+    vcs.listelements('projection') # includes new object
 Expecting:
     [...'projection_ex1'...]
 ok
 Trying:
-    ex2=vcs.createprojection('projection_ex2','orthographic') # create 'projection_ex2'; inherits 'orthographic'
+    ex2=vcs.createprojection('projection_ex2','orthographic')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('projection') # should now contain 'projection_ex2'
+    vcs.listelements('projection') # includes new object
 Expecting:
     [...'projection_ex2'...]
 ok
 Trying:
-    vcs.show('scatter') # show all available scatter
+    vcs.show('scatter') # available scatters
 Expecting:
     *******************Scatter Names List**********************
     ...
     *******************End Scatter Names List**********************
 ok
 Trying:
-    ex=vcs.createscatter('scatter_ex1') # Create 'scatter_ex1'; inherits 'default'
+    ex=vcs.createscatter('scatter_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('scatter') # should now contain 'scatter_ex1'
+    vcs.listelements('scatter') # includes new object
 Expecting:
     [...'scatter_ex1'...]
 ok
 Trying:
-    vcs.show('taylordiagram') # show all available taylordiagram
+    vcs.show('taylordiagram') # available taylordiagrams
 Expecting:
     *******************Taylordiagram Names List**********************
     ...
     *******************End Taylordiagram Names List**********************
 ok
 Trying:
-    ex=vcs.createtaylordiagram('taylordiagram_ex1') # Create 'taylordiagram_ex1'; inherits 'default'
+    ex=vcs.createtaylordiagram('taylordiagram_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('taylordiagram') # should now contain 'taylordiagram_ex1'
+    vcs.listelements('taylordiagram') # includes new object
 Expecting:
     [...'taylordiagram_ex1'...]
 ok
 Trying:
-    vcs.show('template') # show all available template
+    vcs.show('template') # available templates
 Expecting:
     *******************Template Names List**********************
     ...
     *******************End Template Names List**********************
 ok
 Trying:
-    ex=vcs.createtemplate('template_ex1') # Create 'template_ex1'; inherits 'default'
+    ex=vcs.createtemplate('template_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('template') # should now contain 'template_ex1'
+    vcs.listelements('template') # includes new object
 Expecting:
     [...'template_ex1'...]
 ok
 Trying:
-    ex2=vcs.createtemplate('template_ex2','polar') # create 'template_ex2'; inherits 'polar'
+    ex2=vcs.createtemplate('template_ex2','polar')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('template') # should now contain 'template_ex2'
+    vcs.listelements('template') # includes new object
 Expecting:
     [...'template_ex2'...]
 ok
 Trying:
-    vcs.show('textcombined') # show all available textcombined
+    vcs.show('textcombined') # available textcombineds
 Expecting:
     *******************Textcombined Names List**********************
     ...
     *******************End Textcombined Names List**********************
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1293, in vcs.manageElements.createtext
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1296, in vcs.manageElements.createtext
 Failed example:
-    vcs.show('textcombined') # show all available textcombined
+    vcs.show('textcombined') # available textcombineds
 Expected:
     *******************Textcombined Names List**********************
     ...
@@ -386,7 +386,7 @@ Trying:
         pass
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1297, in vcs.manageElements.createtext
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1300, in vcs.manageElements.createtext
 Failed example:
     try: # try to create a new textcombined, in case none exist
         vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
@@ -394,123 +394,123 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x117fda410>
+    <vcs.textcombined.Tc object at 0x11810e500>
 Trying:
-    vcs.listelements('textcombined') # should now contain 'EXAMPLE_tt:::EXAMPLE_tto'
+    vcs.listelements('textcombined') # includes new object
 Expecting:
     [...'EXAMPLE_tt:::EXAMPLE_tto'...]
 ok
 Trying:
-    vcs.show('textorientation') # show all available textorientation
+    vcs.show('textorientation') # available textorientations
 Expecting:
     *******************Textorientation Names List**********************
     ...
     *******************End Textorientation Names List**********************
 ok
 Trying:
-    ex=vcs.createtextorientation('textorientation_ex1') # Create 'textorientation_ex1'; inherits 'default'
+    ex=vcs.createtextorientation('textorientation_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('textorientation') # should now contain 'textorientation_ex1'
+    vcs.listelements('textorientation') # includes new object
 Expecting:
     [...'textorientation_ex1'...]
 ok
 Trying:
-    ex2=vcs.createtextorientation('textorientation_ex2','bigger') # create 'textorientation_ex2'; inherits 'bigger'
+    ex2=vcs.createtextorientation('textorientation_ex2','bigger')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('textorientation') # should now contain 'textorientation_ex2'
+    vcs.listelements('textorientation') # includes new object
 Expecting:
     [...'textorientation_ex2'...]
 ok
 Trying:
-    vcs.show('texttable') # show all available texttable
+    vcs.show('texttable') # available texttables
 Expecting:
     *******************Texttable Names List**********************
     ...
     *******************End Texttable Names List**********************
 ok
 Trying:
-    ex=vcs.createtexttable('texttable_ex1') # Create 'texttable_ex1'; inherits 'default'
+    ex=vcs.createtexttable('texttable_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('texttable') # should now contain 'texttable_ex1'
+    vcs.listelements('texttable') # includes new object
 Expecting:
     [...'texttable_ex1'...]
 ok
 Trying:
-    ex2=vcs.createtexttable('texttable_ex2','bigger') # create 'texttable_ex2'; inherits 'bigger'
+    ex2=vcs.createtexttable('texttable_ex2','bigger')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('texttable') # should now contain 'texttable_ex2'
+    vcs.listelements('texttable') # includes new object
 Expecting:
     [...'texttable_ex2'...]
 ok
 Trying:
-    vcs.show('vector') # show all available vector
+    vcs.show('vector') # available vectors
 Expecting:
     *******************Vector Names List**********************
     ...
     *******************End Vector Names List**********************
 ok
 Trying:
-    ex=vcs.createvector('vector_ex1') # Create 'vector_ex1'; inherits 'default'
+    ex=vcs.createvector('vector_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('vector') # should now contain 'vector_ex1'
+    vcs.listelements('vector') # includes new object
 Expecting:
     [...'vector_ex1'...]
 ok
 Trying:
-    vcs.show('xvsy') # show all available xvsy
+    vcs.show('xvsy') # available xvsys
 Expecting:
     *******************Xvsy Names List**********************
     ...
     *******************End Xvsy Names List**********************
 ok
 Trying:
-    ex=vcs.createxvsy('xvsy_ex1') # Create 'xvsy_ex1'; inherits 'default'
+    ex=vcs.createxvsy('xvsy_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('xvsy') # should now contain 'xvsy_ex1'
+    vcs.listelements('xvsy') # includes new object
 Expecting:
     [...'xvsy_ex1'...]
 ok
 Trying:
-    vcs.show('xyvsy') # show all available xyvsy
+    vcs.show('xyvsy') # available xyvsys
 Expecting:
     *******************Xyvsy Names List**********************
     ...
     *******************End Xyvsy Names List**********************
 ok
 Trying:
-    ex=vcs.createxyvsy('xyvsy_ex1') # Create 'xyvsy_ex1'; inherits 'default'
+    ex=vcs.createxyvsy('xyvsy_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('xyvsy') # should now contain 'xyvsy_ex1'
+    vcs.listelements('xyvsy') # includes new object
 Expecting:
     [...'xyvsy_ex1'...]
 ok
 Trying:
-    vcs.show('yxvsx') # show all available yxvsx
+    vcs.show('yxvsx') # available yxvsxs
 Expecting:
     *******************Yxvsx Names List**********************
     ...
     *******************End Yxvsx Names List**********************
 ok
 Trying:
-    ex=vcs.createyxvsx('yxvsx_ex1') # Create 'yxvsx_ex1'; inherits 'default'
+    ex=vcs.createyxvsx('yxvsx_ex1')
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('yxvsx') # should now contain 'yxvsx_ex1'
+    vcs.listelements('yxvsx') # includes new object
 Expecting:
     [...'yxvsx_ex1'...]
 ok
@@ -531,12 +531,12 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('3d_dual_scalar') # Show all the existing 3d_dual_scalar graphics methods
+    vcs.listelements('3d_dual_scalar') # list all 3d_dual_scalars
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.get3d_dual_scalar()  # instance of 'default' 3d_dual_scalar graphics method
+    ex=vcs.get3d_dual_scalar()  # 'default' 3d_dual_scalar
 Expecting nothing
 ok
 Trying:
@@ -544,11 +544,11 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data with cdms2
 Expecting nothing
 ok
 Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
+    slab1 = f('u') # take a slab from the data
 Expecting nothing
 ok
 Trying:
@@ -556,29 +556,29 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.plot(ex, slab1, slab2) # plot using specified 3d_dual_scalar object
+    a.plot(ex, slab1, slab2) # plot 3d_dual_scalar
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1557, in vcs.manageElements.get3d_dual_scalar
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1561, in vcs.manageElements.get3d_dual_scalar
 Failed example:
-    a.plot(ex, slab1, slab2) # plot using specified 3d_dual_scalar object
+    a.plot(ex, slab1, slab2) # plot 3d_dual_scalar
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x118548168>
+    <vcs.displayplot.Dp object at 0x118526c58>
 Trying:
     a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('3d_scalar') # Show all the existing 3d_scalar graphics methods
+    vcs.listelements('3d_scalar') # list all 3d_scalars
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.get3d_scalar()  # instance of 'default' 3d_scalar graphics method
+    ex=vcs.get3d_scalar()  # 'default' 3d_scalar
 Expecting nothing
 ok
 Trying:
@@ -586,37 +586,37 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data with cdms2
 Expecting nothing
 ok
 Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
+    slab1 = f('u') # take a slab from the data
 Expecting nothing
 ok
 Trying:
-    a.plot(ex, slab1) # plot using specified 3d_scalar object
+    a.plot(ex, slab1) # plot 3d_scalar
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1517, in vcs.manageElements.get3d_scalar
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1521, in vcs.manageElements.get3d_scalar
 Failed example:
-    a.plot(ex, slab1) # plot using specified 3d_scalar object
+    a.plot(ex, slab1) # plot 3d_scalar
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11806f168>
+    <vcs.displayplot.Dp object at 0x118375e88>
 Trying:
     a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('3d_vector') # Show all the existing 3d_vector graphics methods
+    vcs.listelements('3d_vector') # list all 3d_vectors
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.get3d_vector()  # instance of 'default' 3d_vector graphics method
+    ex=vcs.get3d_vector()  # 'default' 3d_vector
 Expecting nothing
 ok
 Trying:
@@ -624,11 +624,11 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data with cdms2
 Expecting nothing
 ok
 Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
+    slab1 = f('u') # take a slab from the data
 Expecting nothing
 ok
 Trying:
@@ -636,31 +636,31 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.plot(ex, slab1, slab2) # plot using specified 3d_vector object
+    a.plot(ex, slab1, slab2) # plot 3d_vector
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1596, in vcs.manageElements.get3d_vector
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1600, in vcs.manageElements.get3d_vector
 Failed example:
-    a.plot(ex, slab1, slab2) # plot using specified 3d_vector object
+    a.plot(ex, slab1, slab2) # plot 3d_vector
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x12963e398>
+    <vcs.displayplot.Dp object at 0x119c9d910>
 Trying:
     a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('boxfill') # Show all the existing boxfill graphics methods
+    vcs.listelements('boxfill') # list all boxfills
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.getboxfill()  # instance of 'default' boxfill graphics method
+    ex=vcs.getboxfill()  # 'default' boxfill
 Expecting nothing
 ok
 Trying:
@@ -668,59 +668,24 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data with cdms2
 Expecting nothing
 ok
 Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
+    slab1 = f('u') # take a slab from the data
 Expecting nothing
 ok
 Trying:
-    a.boxfill(ex, slab1) # plot using specified boxfill object
+    a.boxfill(ex, slab1) # plot boxfill
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
 Trying:
-    ex2=vcs.getboxfill('polar')  # instance of 'polar' boxfill graphics method
+    ex2=vcs.getboxfill('polar')  # boxfill #2
 Expecting nothing
 ok
 Trying:
-    a.boxfill(ex2, slab1) # plot using specified boxfill object
-Expecting:
-    <vcs.displayplot.Dp ...>
-ok
-Trying:
-    a=vcs.init()
-Expecting nothing
-ok
-Trying:
-    vcs.listelements('colormap') # Show all the existing colormap secondary methods
-Expecting:
-    [...]
-ok
-Trying:
-    ex=vcs.getcolormap()  # instance of 'default' colormap secondary method
-Expecting nothing
-ok
-Trying:
-    ex2=vcs.getcolormap('rainbow')  # instance of 'rainbow' colormap secondary method
-Expecting nothing
-ok
-Trying:
-    a=vcs.init()
-Expecting nothing
-ok
-Trying:
-    vcs.listelements('fillarea') # Show all the existing fillarea secondary methods
-Expecting:
-    [...]
-ok
-Trying:
-    ex=vcs.getfillarea()  # instance of 'default' fillarea secondary method
-Expecting nothing
-ok
-Trying:
-    a.fillarea(ex) # plot using specified fillarea object
+    a.boxfill(ex2, slab1) # plot boxfill
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -729,12 +694,47 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('isofill') # Show all the existing isofill graphics methods
+    vcs.listelements('colormap') # list all colormaps
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.getisofill()  # instance of 'default' isofill graphics method
+    ex=vcs.getcolormap()  # 'default' colormap
+Expecting nothing
+ok
+Trying:
+    ex2=vcs.getcolormap('rainbow')  # colormap #2
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('fillarea') # list all fillareas
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getfillarea()  # 'default' fillarea
+Expecting nothing
+ok
+Trying:
+    a.fillarea(ex) # plot fillarea
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('isofill') # list all isofills
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getisofill()  # 'default' isofill
 Expecting nothing
 ok
 Trying:
@@ -742,24 +742,24 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data with cdms2
 Expecting nothing
 ok
 Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
+    slab1 = f('u') # take a slab from the data
 Expecting nothing
 ok
 Trying:
-    a.isofill(ex, slab1) # plot using specified isofill object
+    a.isofill(ex, slab1) # plot isofill
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
 Trying:
-    ex2=vcs.getisofill('polar')  # instance of 'polar' isofill graphics method
+    ex2=vcs.getisofill('polar')  # isofill #2
 Expecting nothing
 ok
 Trying:
-    a.isofill(ex2, slab1) # plot using specified isofill object
+    a.isofill(ex2, slab1) # plot isofill
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -768,12 +768,12 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('isoline') # Show all the existing isoline graphics methods
+    vcs.listelements('isoline') # list all isolines
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.getisoline()  # instance of 'default' isoline graphics method
+    ex=vcs.getisoline()  # 'default' isoline
 Expecting nothing
 ok
 Trying:
@@ -781,51 +781,24 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data with cdms2
 Expecting nothing
 ok
 Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
+    slab1 = f('u') # take a slab from the data
 Expecting nothing
 ok
 Trying:
-    a.isoline(ex, slab1) # plot using specified isoline object
+    a.isoline(ex, slab1) # plot isoline
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
 Trying:
-    ex2=vcs.getisoline('polar')  # instance of 'polar' isoline graphics method
+    ex2=vcs.getisoline('polar')  # isoline #2
 Expecting nothing
 ok
 Trying:
-    a.isoline(ex2, slab1) # plot using specified isoline object
-Expecting:
-    <vcs.displayplot.Dp ...>
-ok
-Trying:
-    a=vcs.init()
-Expecting nothing
-ok
-Trying:
-    vcs.listelements('line') # Show all the existing line secondary methods
-Expecting:
-    [...]
-ok
-Trying:
-    ex=vcs.getline()  # instance of 'default' line secondary method
-Expecting nothing
-ok
-Trying:
-    a.line(ex) # plot using specified line object
-Expecting:
-    <vcs.displayplot.Dp ...>
-ok
-Trying:
-    ex2=vcs.getline('red')  # instance of 'red' line secondary method
-Expecting nothing
-ok
-Trying:
-    a.line(ex2) # plot using specified line object
+    a.isoline(ex2, slab1) # plot isoline
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -834,25 +807,25 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('marker') # Show all the existing marker secondary methods
+    vcs.listelements('line') # list all lines
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.getmarker()  # instance of 'default' marker secondary method
+    ex=vcs.getline()  # 'default' line
 Expecting nothing
 ok
 Trying:
-    a.marker(ex) # plot using specified marker object
+    a.line(ex) # plot line
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
 Trying:
-    ex2=vcs.getmarker('red')  # instance of 'red' marker secondary method
+    ex2=vcs.getline('red')  # line #2
 Expecting nothing
 ok
 Trying:
-    a.marker(ex2) # plot using specified marker object
+    a.line(ex2) # plot line
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -861,12 +834,39 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('meshfill') # Show all the existing meshfill graphics methods
+    vcs.listelements('marker') # list all markers
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.getmeshfill()  # instance of 'default' meshfill graphics method
+    ex=vcs.getmarker()  # 'default' marker
+Expecting nothing
+ok
+Trying:
+    a.marker(ex) # plot marker
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    ex2=vcs.getmarker('red')  # marker #2
+Expecting nothing
+ok
+Trying:
+    a.marker(ex2) # plot marker
+Expecting:
+    <vcs.displayplot.Dp ...>
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('meshfill') # list all meshfills
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getmeshfill()  # 'default' meshfill
 Expecting nothing
 ok
 Trying:
@@ -874,24 +874,24 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data with cdms2
 Expecting nothing
 ok
 Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
+    slab1 = f('u') # take a slab from the data
 Expecting nothing
 ok
 Trying:
-    a.meshfill(ex, slab1) # plot using specified meshfill object
+    a.meshfill(ex, slab1) # plot meshfill
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
 Trying:
-    ex2=vcs.getmeshfill('a_polar_meshfill')  # instance of 'a_polar_meshfill' meshfill graphics method
+    ex2=vcs.getmeshfill('a_polar_meshfill')  # meshfill #2
 Expecting nothing
 ok
 Trying:
-    a.meshfill(ex2, slab1) # plot using specified meshfill object
+    a.meshfill(ex2, slab1) # plot meshfill
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -900,29 +900,12 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('projection') # Show all the existing projection graphics methods
+    vcs.listelements('projection') # list all projections
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.getprojection()  # instance of 'default' projection graphics method
-Expecting nothing
-ok
-Trying:
-    ex2=vcs.getprojection('orthographic')  # instance of 'orthographic' projection graphics method
-Expecting nothing
-ok
-Trying:
-    a=vcs.init()
-Expecting nothing
-ok
-Trying:
-    vcs.listelements('scatter') # Show all the existing scatter graphics methods
-Expecting:
-    [...]
-ok
-Trying:
-    ex=vcs.getscatter('default_scatter_')  # instance of ''default_scatter_'' scatter graphics method
+    ex=vcs.getprojection()  # 'default' projection
 Expecting nothing
 ok
 Trying:
@@ -930,11 +913,40 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data with cdms2
 Expecting nothing
 ok
 Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
+    slab1 = f('u') # take a slab from the data
+Expecting nothing
+ok
+Trying:
+    ex2=vcs.getprojection('orthographic')  # projection #2
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    vcs.listelements('scatter') # list all scatters
+Expecting:
+    [...]
+ok
+Trying:
+    ex=vcs.getscatter('default_scatter_')  # ''default_scatter_'' scatter
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data with cdms2
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # take a slab from the data
 Expecting nothing
 ok
 Trying:
@@ -942,7 +954,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.scatter(ex, slab1, slab2) # plot using specified scatter object
+    a.scatter(ex, slab1, slab2) # plot scatter
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -951,12 +963,12 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('taylordiagram') # Show all the existing taylordiagram graphics methods
+    vcs.listelements('taylordiagram') # list all taylordiagrams
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.gettaylordiagram()  # instance of 'default' taylordiagram graphics method
+    ex=vcs.gettaylordiagram()  # 'default' taylordiagram
 Expecting nothing
 ok
 Trying:
@@ -964,7 +976,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.taylordiagram(ex, slab1) # plot using specified taylordiagram object
+    a.taylordiagram(ex, slab1) # plot taylordiagram
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -973,16 +985,28 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('template') # Show all the existing template graphics methods
+    vcs.listelements('template') # list all templates
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.gettemplate()  # instance of 'default' template graphics method
+    ex=vcs.gettemplate()  # 'default' template
 Expecting nothing
 ok
 Trying:
-    ex2=vcs.gettemplate('polar')  # instance of 'polar' template graphics method
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data with cdms2
+Expecting nothing
+ok
+Trying:
+    slab1 = f('u') # take a slab from the data
+Expecting nothing
+ok
+Trying:
+    ex2=vcs.gettemplate('polar')  # template #2
 Expecting nothing
 ok
 Trying:
@@ -990,7 +1014,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('textcombined') # Show all the existing textcombined secondary methods
+    vcs.listelements('textcombined') # list all textcombineds
 Expecting:
     [...]
 ok
@@ -1002,11 +1026,11 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    ex=vcs.gettextcombined('EXAMPLE_tt', 'EXAMPLE_tto')  # instance of 'EXAMPLE_tt:::EXAMPLE_tto' textcombined secondary method
+    ex=vcs.gettextcombined('EXAMPLE_tt', 'EXAMPLE_tto')  # 'EXAMPLE_tt:::EXAMPLE_tto' textcombined
 Expecting nothing
 ok
 Trying:
-    a.textcombined(ex) # plot using specified textcombined object
+    a.textcombined(ex) # plot textcombined
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -1015,16 +1039,16 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('textorientation') # Show all the existing textorientation secondary methods
+    vcs.listelements('textorientation') # list all textorientations
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.gettextorientation()  # instance of 'default' textorientation secondary method
+    ex=vcs.gettextorientation()  # 'default' textorientation
 Expecting nothing
 ok
 Trying:
-    ex2=vcs.gettextorientation('bigger')  # instance of 'bigger' textorientation secondary method
+    ex2=vcs.gettextorientation('bigger')  # textorientation #2
 Expecting nothing
 ok
 Trying:
@@ -1032,16 +1056,16 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('texttable') # Show all the existing texttable secondary methods
+    vcs.listelements('texttable') # list all texttables
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.gettexttable()  # instance of 'default' texttable secondary method
+    ex=vcs.gettexttable()  # 'default' texttable
 Expecting nothing
 ok
 Trying:
-    ex2=vcs.gettexttable('bigger')  # instance of 'bigger' texttable secondary method
+    ex2=vcs.gettexttable('bigger')  # texttable #2
 Expecting nothing
 ok
 Trying:
@@ -1049,12 +1073,12 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('vector') # Show all the existing vector graphics methods
+    vcs.listelements('vector') # list all vectors
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.getvector()  # instance of 'default' vector graphics method
+    ex=vcs.getvector()  # 'default' vector
 Expecting nothing
 ok
 Trying:
@@ -1062,11 +1086,11 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data with cdms2
 Expecting nothing
 ok
 Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
+    slab1 = f('u') # take a slab from the data
 Expecting nothing
 ok
 Trying:
@@ -1074,7 +1098,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.vector(ex, slab1, slab2) # plot using specified vector object
+    a.vector(ex, slab1, slab2) # plot vector
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -1083,12 +1107,12 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('xvsy') # Show all the existing xvsy graphics methods
+    vcs.listelements('xvsy') # list all xvsys
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.getxvsy()  # instance of 'default_xvsy_' xvsy graphics method
+    ex=vcs.getxvsy()  # 'default_xvsy_' xvsy
 Expecting nothing
 ok
 Trying:
@@ -1096,11 +1120,11 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data with cdms2
 Expecting nothing
 ok
 Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
+    slab1 = f('u') # take a slab from the data
 Expecting nothing
 ok
 Trying:
@@ -1108,7 +1132,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.xvsy(ex, slab1, slab2) # plot using specified xvsy object
+    a.xvsy(ex, slab1, slab2) # plot xvsy
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -1117,12 +1141,12 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('xyvsy') # Show all the existing xyvsy graphics methods
+    vcs.listelements('xyvsy') # list all xyvsys
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.getxyvsy('default_xyvsy_')  # instance of ''default_xyvsy_'' xyvsy graphics method
+    ex=vcs.getxyvsy('default_xyvsy_')  # ''default_xyvsy_'' xyvsy
 Expecting nothing
 ok
 Trying:
@@ -1130,15 +1154,15 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data with cdms2
 Expecting nothing
 ok
 Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
+    slab1 = f('u') # take a slab from the data
 Expecting nothing
 ok
 Trying:
-    a.xyvsy(ex, slab1) # plot using specified xyvsy object
+    a.xyvsy(ex, slab1) # plot xyvsy
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -1147,12 +1171,12 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    vcs.listelements('yxvsx') # Show all the existing yxvsx graphics methods
+    vcs.listelements('yxvsx') # list all yxvsxs
 Expecting:
     [...]
 ok
 Trying:
-    ex=vcs.getyxvsx()  # instance of 'default_yxvsx_' yxvsx graphics method
+    ex=vcs.getyxvsx()  # 'default_yxvsx_' yxvsx
 Expecting nothing
 ok
 Trying:
@@ -1160,15 +1184,15 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data with cdms2
 Expecting nothing
 ok
 Trying:
-    slab1 = f('u') # use the data file to create a cdms2 slab
+    slab1 = f('u') # take a slab from the data
 Expecting nothing
 ok
 Trying:
-    a.yxvsx(ex, slab1) # plot using specified yxvsx object
+    a.yxvsx(ex, slab1) # plot yxvsx
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -1272,10 +1296,10 @@ ok
    6 tests in vcs.manageElements.getline
    6 tests in vcs.manageElements.getmarker
    9 tests in vcs.manageElements.getmeshfill
-   4 tests in vcs.manageElements.getprojection
+   7 tests in vcs.manageElements.getprojection
    8 tests in vcs.manageElements.getscatter
    5 tests in vcs.manageElements.gettaylordiagram
-   4 tests in vcs.manageElements.gettemplate
+   7 tests in vcs.manageElements.gettemplate
    5 tests in vcs.manageElements.gettextcombined
    4 tests in vcs.manageElements.gettextorientation
    4 tests in vcs.manageElements.gettexttable
@@ -1291,6 +1315,6 @@ ok
    1 of   8 in vcs.manageElements.get3d_dual_scalar
    1 of   7 in vcs.manageElements.get3d_scalar
    1 of   8 in vcs.manageElements.get3d_vector
-251 tests in 71 items.
-246 passed and 5 failed.
+257 tests in 71 items.
+252 passed and 5 failed.
 ***Test Failed*** 5 failures.

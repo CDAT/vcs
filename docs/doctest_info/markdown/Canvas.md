@@ -8,45 +8,45 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x11875d410>
+    <vcs.textcombined.Tc object at 0x11877a140>
 ```
 
 vcs.Canvas.Canvas.get3d_dual_scalar
 -----------------------------------
 ```python
 Failed example:
-    a.plot(ex, slab1, slab2) # plot using specified 3d_dual_scalar object
+    a.plot(ex, slab1, slab2) # plot 3d_dual_scalar
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11874c5c8>
+    <vcs.displayplot.Dp object at 0x12a60f4b0>
 ```
 
 vcs.Canvas.Canvas.get3d_scalar
 ------------------------------
 ```python
 Failed example:
-    a.plot(ex, slab1) # plot using specified 3d_scalar object
+    a.plot(ex, slab1) # plot 3d_scalar
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x154341280>
+    <vcs.displayplot.Dp object at 0x154c9eb40>
 ```
 
 vcs.Canvas.Canvas.get3d_vector
 ------------------------------
 ```python
 Failed example:
-    a.plot(ex, slab1, slab2) # plot using specified 3d_vector object
+    a.plot(ex, slab1, slab2) # plot 3d_vector
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x154372d70>
+    <vcs.displayplot.Dp object at 0x154c585c8>
 ```
 
 vcs.Canvas.Canvas.isinfile
@@ -116,8 +116,6 @@ Missing Doctests
 :x:```    vcs.Canvas.Canvas.savecontinentstype```
 
 :x:```    vcs.Canvas.Canvas.scalar3d```
-
-:x:```    vcs.Canvas.Canvas.scriptrun```
 
 :x:```    vcs.Canvas.Canvas.setAnimationStepper```
 

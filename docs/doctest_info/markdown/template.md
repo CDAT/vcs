@@ -5,7 +5,7 @@ Failed example:
     t.drawAttributes(a,s,b) # shows attributes of s on canvas
 Expected nothing
 Got:
-    [<vcs.displayplot.Dp object at 0x11874ee88>, <vcs.displayplot.Dp object at 0x1187134b0>, <vcs.displayplot.Dp object at 0x1188887f8>, <vcs.displayplot.Dp object at 0x118888280>, <vcs.displayplot.Dp object at 0x1188886e0>]
+    [<vcs.displayplot.Dp object at 0x118798e88>, <vcs.displayplot.Dp object at 0x1188eb4b0>, <vcs.displayplot.Dp object at 0x118903b40>, <vcs.displayplot.Dp object at 0x11890f168>, <vcs.displayplot.Dp object at 0x11890f6e0>]
 ```
 
 vcs.template.P.list

@@ -2319,7 +2319,7 @@ class Canvas(object):
 
         .. describe:: Plot attribute keywords:
 
-            .. note:: Attribute Precedence
+            .. note:: **Attribute Precedence**
 
                 Specific attributes take precedence over general attributes.
                 In particular, specific attributes override variable object
@@ -2339,7 +2339,7 @@ class Canvas(object):
                 *  0, 'off': overwrite self.ratio and do nothing about the ratio
                 * 'auto': computes an automatic ratio
                 * '3', 3: y dim will be 3 times bigger than x dim (restricted
-                    to original tempalte.data area)
+                    to original template.data area)
                 * Adding a 't' at the end of the ratio, makes the tickmarks and
                     boxes move along.
 
@@ -2468,7 +2468,7 @@ class Canvas(object):
 
                 >>> a=vcs.init()
                 >>> import cdms2 # Need cdms2 to create a slab
-                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
                 >>> slab1 = f('u') # use the data file to create a cdms2 slab
                 >>> slab2 = f('v') # need 2 slabs, so get another
                 >>> a.plot(slab1) # default settings for template and boxfill
@@ -4692,8 +4692,8 @@ class Canvas(object):
         self.bgY = H
         return
     # display ping
-    setbgoutputdimensions.__doc__ = setbgoutputdimensions.__doc__ % \
-                                    xmldocs.output_width, xmldocs.output_height, xmldocs.output_units
+    setbgoutputdimensions.__doc__ = setbgoutputdimensions.__doc__ % (xmldocs.output_width, xmldocs.output_height,
+                                                                     xmldocs.output_units)
 
     def put_png_on_canvas(
             self, filename, zoom=1, xOffset=0, yOffset=0,
@@ -4778,7 +4778,7 @@ class Canvas(object):
             width, height, units)
         return self.backend.png(
             file, W, H, units, draw_white_background, **args)
-    png.__doc__ = png.__doc__ % xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units
+    png.__doc__ = png.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
 
     def pdf(self, file, width=None, height=None, units='inches',
             textAsPaths=True):
@@ -4819,7 +4819,7 @@ class Canvas(object):
         if not file.split('.')[-1].lower() in ['pdf']:
             file += '.pdf'
         return self.backend.pdf(file, width=W, height=H, units=units, textAsPaths=textAsPaths)
-    pdf.__doc__ = pdf.__doc__ % xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units
+    pdf.__doc__ = pdf.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
 
     def svg(self, file, width=None, height=None, units='inches',
             textAsPaths=True):
@@ -4860,7 +4860,7 @@ class Canvas(object):
         if not file.split('.')[-1].lower() in ['svg']:
             file += '.svg'
         return self.backend.svg(file, width=W, height=H, units=units, textAsPaths=textAsPaths)
-    svg.__doc__ = svg.__doc__ % xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units
+    svg.__doc__ = svg.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
 
     def _compute_margins(
             self, W, H, top_margin, bottom_margin, right_margin, left_margin, dpi):
@@ -5123,14 +5123,45 @@ class Canvas(object):
                 os.remove(psnm)
             else:
                 shutil.move(psnm, file)
-    postscript.__doc__ = postscript.__doc__ % \
-                         xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units
+    postscript.__doc__ = postscript.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height,
+                                               xmldocs.output_units)
 
 
     def _scriptrun(self, *args):
         return vcs._scriptrun(*args)
 
     def scriptrun(self, aFile, *args, **kargs):
+        """
+        Given the path to a script containing a VCS object, scriptrun
+        runs that script to build the object.
+
+        :Example:
+
+            .. doctest:: canvas_scriptrun
+
+                >>> b=vcs.createboxfill('new_box')
+                >>> b.script('new_box') # json representation of 'new_box'
+                >>> bfs=vcs.listelements('boxfill') # list all boxfills
+                >>> i=bfs.index('new_box')
+                >>> bfs[i] # shows 'new_box' exists
+                'new_box'
+                >>> vcs.removeobject(b) # remove new_box
+                'Removed boxfill object new_box'
+                >>> bfs=vcs.listelements('boxfill') # list all boxfills
+                >>> try:
+                ...     bfs.index('new_box')
+                ... except:
+                ...     print ("boxfill 'new_box' doesn't exist")
+                boxfill 'new_box' doesn't exist
+                >>> vcs.scriptrun('new_box.json') # re-creates 'new_box'
+                >>> bfs=vcs.listelements('boxfill') # list all boxfills
+                >>> i=bfs.index('new_box')
+                >>> bfs[i]  # shows 'new_box' exists (again)
+                'new_box'
+
+        :param aFile: String representing the path to a the script.
+        :type aFile: str
+        """
         vcs.scriptrun(aFile, *args, **kargs)
 
     def setcolormap(self, name):
@@ -5383,7 +5414,7 @@ class Canvas(object):
 
         os.popen("ps2epsi %s %s" % (tmpfile, file)).readlines()
         os.remove(tmpfile)
-    eps.__doc__ = eps.__doc__ % xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units
+    eps.__doc__ = eps.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
 
     def show(self, *args):
         return vcs.show(*args)

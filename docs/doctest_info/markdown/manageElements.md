@@ -2,7 +2,7 @@ vcs.manageElements.createtext
 -----------------------------
 ```python
 Failed example:
-    vcs.show('textcombined') # show all available textcombined
+    vcs.show('textcombined') # available textcombineds
 Expected:
     *******************Textcombined Names List**********************
     ...
@@ -22,45 +22,45 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x117fda410>
+    <vcs.textcombined.Tc object at 0x11810e500>
 ```
 
 vcs.manageElements.get3d_dual_scalar
 ------------------------------------
 ```python
 Failed example:
-    a.plot(ex, slab1, slab2) # plot using specified 3d_dual_scalar object
+    a.plot(ex, slab1, slab2) # plot 3d_dual_scalar
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x118548168>
+    <vcs.displayplot.Dp object at 0x118526c58>
 ```
 
 vcs.manageElements.get3d_scalar
 -------------------------------
 ```python
 Failed example:
-    a.plot(ex, slab1) # plot using specified 3d_scalar object
+    a.plot(ex, slab1) # plot 3d_scalar
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x11806f168>
+    <vcs.displayplot.Dp object at 0x118375e88>
 ```
 
 vcs.manageElements.get3d_vector
 -------------------------------
 ```python
 Failed example:
-    a.plot(ex, slab1, slab2) # plot using specified 3d_vector object
+    a.plot(ex, slab1, slab2) # plot 3d_vector
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x12963e398>
+    <vcs.displayplot.Dp object at 0x119c9d910>
 ```
 
 Missing Doctests

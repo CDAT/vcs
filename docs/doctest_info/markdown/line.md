@@ -2,8 +2,6 @@ Missing Doctests
 ----------------
 :x:```    vcs.line```
 
-:x:```    vcs.line.Tl```
-
 :x:```    vcs.line.Tl.color```
 
 :x:```    vcs.line.Tl.colormap```

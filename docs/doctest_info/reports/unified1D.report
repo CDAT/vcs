@@ -30,19 +30,19 @@ Expecting:
     ...
 ok
 Trying:
-    a=vcs.init() # Make a Canvas object to work with
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    ex=a.getyxvsx() # Get default yxvsx
+    ex=a.getyxvsx()
 Expecting nothing
 ok
 Trying:
-    ex.script('filename.py') # Append to a Python script named 'filename.py'
+    ex.script('filename.py') # append to 'filename.py'
 Expecting nothing
 ok
 Trying:
-    ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
+    ex.script('filename','w') # Create/overwrite 'filename.json'
 Expecting nothing
 ok
 Trying:

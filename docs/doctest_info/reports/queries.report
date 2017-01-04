@@ -41,18 +41,18 @@ Expecting:
     vcsError: The object passed is not a graphics method object.
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('1d') # Show all available 1d
+    a.show('1d') # available 1ds
 Expecting:
     *******************1d Names List**********************
     ...
     *******************End 1d Names List**********************
 ok
 Trying:
-    ex = a.get1d('default') # To  test an existing 1d object
+    ex = a.get1d('default')
 Expecting nothing
 ok
 Trying:
@@ -61,18 +61,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('3d_dual_scalar') # Show all available 3d_dual_scalar
+    a.show('3d_dual_scalar') # available 3d_dual_scalars
 Expecting:
     *******************3d_dual_scalar Names List**********************
     ...
     *******************End 3d_dual_scalar Names List**********************
 ok
 Trying:
-    ex = a.get3d_dual_scalar() # To  test an existing 3d_dual_scalar object
+    ex = a.get3d_dual_scalar()
 Expecting nothing
 ok
 Trying:
@@ -81,18 +81,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('3d_scalar') # Show all available 3d_scalar
+    a.show('3d_scalar') # available 3d_scalars
 Expecting:
     *******************3d_scalar Names List**********************
     ...
     *******************End 3d_scalar Names List**********************
 ok
 Trying:
-    ex = a.get3d_scalar() # To  test an existing 3d_scalar object
+    ex = a.get3d_scalar()
 Expecting nothing
 ok
 Trying:
@@ -101,18 +101,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('3d_vector') # Show all available 3d_vector
+    a.show('3d_vector') # available 3d_vectors
 Expecting:
     *******************3d_vector Names List**********************
     ...
     *******************End 3d_vector Names List**********************
 ok
 Trying:
-    ex = a.get3d_vector() # To  test an existing 3d_vector object
+    ex = a.get3d_vector()
 Expecting nothing
 ok
 Trying:
@@ -121,18 +121,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('boxfill') # Show all available boxfill
+    a.show('boxfill') # available boxfills
 Expecting:
     *******************Boxfill Names List**********************
     ...
     *******************End Boxfill Names List**********************
 ok
 Trying:
-    ex = a.getboxfill() # To  test an existing boxfill object
+    ex = a.getboxfill()
 Expecting nothing
 ok
 Trying:
@@ -141,18 +141,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('colormap') # Show all available colormap
+    a.show('colormap') # available colormaps
 Expecting:
     *******************Colormap Names List**********************
     ...
     *******************End Colormap Names List**********************
 ok
 Trying:
-    ex = a.getcolormap() # To  test an existing colormap object
+    ex = a.getcolormap()
 Expecting nothing
 ok
 Trying:
@@ -161,18 +161,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('fillarea') # Show all available fillarea
+    a.show('fillarea') # available fillareas
 Expecting:
     *******************Fillarea Names List**********************
     ...
     *******************End Fillarea Names List**********************
 ok
 Trying:
-    ex = a.getfillarea() # To  test an existing fillarea object
+    ex = a.getfillarea()
 Expecting nothing
 ok
 Trying:
@@ -194,18 +194,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('isofill') # Show all available isofill
+    a.show('isofill') # available isofills
 Expecting:
     *******************Isofill Names List**********************
     ...
     *******************End Isofill Names List**********************
 ok
 Trying:
-    ex = a.getisofill() # To  test an existing isofill object
+    ex = a.getisofill()
 Expecting nothing
 ok
 Trying:
@@ -214,18 +214,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('isoline') # Show all available isoline
+    a.show('isoline') # available isolines
 Expecting:
     *******************Isoline Names List**********************
     ...
     *******************End Isoline Names List**********************
 ok
 Trying:
-    ex = a.getisoline() # To  test an existing isoline object
+    ex = a.getisoline()
 Expecting nothing
 ok
 Trying:
@@ -234,18 +234,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('line') # Show all available line
+    a.show('line') # available lines
 Expecting:
     *******************Line Names List**********************
     ...
     *******************End Line Names List**********************
 ok
 Trying:
-    ex = a.getline() # To  test an existing line object
+    ex = a.getline()
 Expecting nothing
 ok
 Trying:
@@ -254,18 +254,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('marker') # Show all available marker
+    a.show('marker') # available markers
 Expecting:
     *******************Marker Names List**********************
     ...
     *******************End Marker Names List**********************
 ok
 Trying:
-    ex = a.getmarker() # To  test an existing marker object
+    ex = a.getmarker()
 Expecting nothing
 ok
 Trying:
@@ -274,18 +274,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('meshfill') # Show all available meshfill
+    a.show('meshfill') # available meshfills
 Expecting:
     *******************Meshfill Names List**********************
     ...
     *******************End Meshfill Names List**********************
 ok
 Trying:
-    ex = a.getmeshfill() # To  test an existing meshfill object
+    ex = a.getmeshfill()
 Expecting nothing
 ok
 Trying:
@@ -311,18 +311,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('projection') # Show all available projection
+    a.show('projection') # available projections
 Expecting:
     *******************Projection Names List**********************
     ...
     *******************End Projection Names List**********************
 ok
 Trying:
-    ex = a.getprojection() # To  test an existing projection object
+    ex = a.getprojection()
 Expecting nothing
 ok
 Trying:
@@ -331,18 +331,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('scatter') # Show all available scatter
+    a.show('scatter') # available scatters
 Expecting:
     *******************Scatter Names List**********************
     ...
     *******************End Scatter Names List**********************
 ok
 Trying:
-    ex = a.getscatter('default_scatter_') # To  test an existing scatter object
+    ex = a.getscatter('default_scatter_')
 Expecting nothing
 ok
 Trying:
@@ -371,18 +371,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('taylordiagram') # Show all available taylordiagram
+    a.show('taylordiagram') # available taylordiagrams
 Expecting:
     *******************Taylordiagram Names List**********************
     ...
     *******************End Taylordiagram Names List**********************
 ok
 Trying:
-    ex = a.gettaylordiagram() # To  test an existing taylordiagram object
+    ex = a.gettaylordiagram()
 Expecting nothing
 ok
 Trying:
@@ -391,18 +391,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('template') # Show all available template
+    a.show('template') # available templates
 Expecting:
     *******************Template Names List**********************
     ...
     *******************End Template Names List**********************
 ok
 Trying:
-    ex = a.gettemplate() # To  test an existing template object
+    ex = a.gettemplate()
 Expecting nothing
 ok
 Trying:
@@ -411,7 +411,7 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
@@ -429,16 +429,16 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x118013d70>
+    <vcs.textcombined.Tc object at 0x11847b050>
 Trying:
-    a.show('textcombined') # Show all available textcombined
+    a.show('textcombined') # available textcombineds
 Expecting:
     *******************Textcombined Names List**********************
     ...
     *******************End Textcombined Names List**********************
 ok
 Trying:
-    ex = a.gettextcombined('EXAMPLE_tt', 'EXAMPLE_tto') # To  test an existing textcombined object
+    ex = a.gettextcombined('EXAMPLE_tt', 'EXAMPLE_tto')
 Expecting nothing
 ok
 Trying:
@@ -447,18 +447,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('textorientation') # Show all available textorientation
+    a.show('textorientation') # available textorientations
 Expecting:
     *******************Textorientation Names List**********************
     ...
     *******************End Textorientation Names List**********************
 ok
 Trying:
-    ex = a.gettextorientation() # To  test an existing textorientation object
+    ex = a.gettextorientation()
 Expecting nothing
 ok
 Trying:
@@ -467,18 +467,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('texttable') # Show all available texttable
+    a.show('texttable') # available texttables
 Expecting:
     *******************Texttable Names List**********************
     ...
     *******************End Texttable Names List**********************
 ok
 Trying:
-    ex = a.gettexttable() # To  test an existing texttable object
+    ex = a.gettexttable()
 Expecting nothing
 ok
 Trying:
@@ -487,18 +487,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('1d') # Show all available 1d
+    a.show('1d') # available 1ds
 Expecting:
     *******************1d Names List**********************
     ...
     *******************End 1d Names List**********************
 ok
 Trying:
-    ex = a.get1d('default') # To  test an existing 1d object
+    ex = a.get1d('default')
 Expecting nothing
 ok
 Trying:
@@ -507,18 +507,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('xvsy') # Show all available xvsy
+    a.show('xvsy') # available xvsys
 Expecting:
     *******************Xvsy Names List**********************
     ...
     *******************End Xvsy Names List**********************
 ok
 Trying:
-    ex = a.getxvsy() # To  test an existing xvsy object
+    ex = a.getxvsy()
 Expecting nothing
 ok
 Trying:
@@ -527,18 +527,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('xyvsy') # Show all available xyvsy
+    a.show('xyvsy') # available xyvsys
 Expecting:
     *******************Xyvsy Names List**********************
     ...
     *******************End Xyvsy Names List**********************
 ok
 Trying:
-    ex = a.getxyvsy('default_xyvsy_') # To  test an existing xyvsy object
+    ex = a.getxyvsy('default_xyvsy_')
 Expecting nothing
 ok
 Trying:
@@ -547,18 +547,18 @@ Expecting:
     1
 ok
 Trying:
-    a=vcs.init() # Make a VCS Canvas object to work with:
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    a.show('yxvsx') # Show all available yxvsx
+    a.show('yxvsx') # available yxvsxs
 Expecting:
     *******************Yxvsx Names List**********************
     ...
     *******************End Yxvsx Names List**********************
 ok
 Trying:
-    ex = a.getyxvsx() # To  test an existing yxvsx object
+    ex = a.getyxvsx()
 Expecting nothing
 ok
 Trying:

@@ -110,31 +110,31 @@ Got:
     wrap = [0.0, 0.0]
     colormap =  None
 Trying:
-    a=vcs.init() # Make a Canvas object to work with
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    ex=a.getmeshfill() # Get default meshfill
+    ex=a.getmeshfill()
 Expecting nothing
 ok
 Trying:
-    ex.script('filename.py') # Append to a Python script named 'filename.py'
+    ex.script('filename.py') # append to 'filename.py'
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/meshfill.py", line 802, in vcs.meshfill.Gfm.script
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/meshfill.py", line 803, in vcs.meshfill.Gfm.script
 Failed example:
-    ex.script('filename.py') # Append to a Python script named 'filename.py'
+    ex.script('filename.py') # append to 'filename.py'
 Exception raised:
     Traceback (most recent call last):
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
         compileflags, 1) in test.globs
       File "<doctest vcs.meshfill.Gfm.script[2]>", line 1, in <module>
-        ex.script('filename.py') # Append to a Python script named 'filename.py'
+        ex.script('filename.py') # append to 'filename.py'
       File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/meshfill.py", line 900, in script
         fp.write("%s.missing = %g\n\n" % (unique_name, self.missing))
     TypeError: float argument required, not tuple
 Trying:
-    ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
+    ex.script('filename','w') # Create/overwrite 'filename.json'
 Expecting nothing
 ok
 Trying:

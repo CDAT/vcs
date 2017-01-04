@@ -12,19 +12,19 @@ Expecting:
     [26, 0, 33, 100]
 ok
 Trying:
-    a=vcs.init() # Make a Canvas object to work with
+    a=vcs.init()
 Expecting nothing
 ok
 Trying:
-    ex=a.getcolormap() # Get default colormap
+    ex=a.getcolormap()
 Expecting nothing
 ok
 Trying:
-    ex.script('filename.py') # Append to a Python script named 'filename.py'
+    ex.script('filename.py') # append to 'filename.py'
 Expecting nothing
 ok
 Trying:
-    ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
+    ex.script('filename','w') # Create/overwrite 'filename.json'
 Expecting nothing
 ok
 Trying:

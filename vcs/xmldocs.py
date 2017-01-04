@@ -389,7 +389,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
     d = {}
     for obj_type in type_dict.keys():
         for obj_name in type_dict[obj_type].keys():
-            # default values. Change as necessary.
+        # default values. Change as necessary.
             example1 = ''
             example2 = ''
             d['type'] = obj_type
@@ -398,7 +398,6 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             d['parent2'] = type_dict[obj_type][obj_name]['parent2']
             d['sp_parent'] = ''
             d['tc'] = ''
-            d['ex2'] = ''
             d['rtype'] = type_dict[obj_type][obj_name]['rtype']
             if type_dict[obj_type][obj_name]['title']:
                 d['cap'] = d['name'].title()
@@ -408,11 +407,11 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                 d['sp_name'] = 'dv3d'
             elif obj_name in ['1d', 'scatter', 'textcombined', 'xyvsy']:
                 if obj_name == 'textcombined':
-                    d['tc'] = """
-            >>> try: # try to create a new textcombined, in case none exist
+                    d['tc'] = """>>> try: # try to create a new textcombined, in case none exist
             ...     vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
             ... except:
-            ...     pass"""
+            ...     pass
+            """
                     d['sp_parent'] = "'EXAMPLE_tt', 'EXAMPLE_tto'"
                 elif obj_name == '1d':
                     d['sp_parent'] = "'default'"
@@ -426,8 +425,9 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
 
         # section for manageElements 'get' methods
             if method == 'get':
-                example1 = """%(tc)s
-            >>> ex=vcs.get%(name)s(%(sp_parent)s)  # instance of '%(parent)s' %(name)s %(type)s%(plot)s"""
+                example1 = """>>> ex=vcs.get%(name)s(%(sp_parent)s)  # '%(parent)s' %(name)s"""
+                if d['tc'] is not '':
+                    example1 = d['tc'] + example1
                 # set up d['plot'] and d['plot2']
                 plot = ''
                 plot2 = ''
@@ -435,15 +435,14 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                 d['slabs'] = ''
                 d['args'] = ''
                 if numslabs > 0:
-                    # TODO: replace with something that can actually be plotted by taylordiagram()
                     if obj_name is "taylordiagram":
                         d['slabs'] = """
             >>> slab1 = [[0, 1, 2, 3, 4], [0.1, 0.2, 0.3, 0.4, 0.5]]"""
                     else:
                         d['slabs'] = """
             >>> import cdms2 # Need cdms2 to create a slab
-            >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
-            >>> slab1 = f('u') # use the data file to create a cdms2 slab"""
+            >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # get data with cdms2
+            >>> slab1 = f('u') # take a slab from the data"""
                     d['args'] = ", slab1"
                     if numslabs == 2:
                         slab2 = """
@@ -452,55 +451,68 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                         d['args'] += ", slab2"
             # for vcs objects that have a self-named plotting function, i.e. fillarea()
                 if type_dict[obj_type][obj_name]['callable']:
-                    plot = """%(slabs)s
-            >>> a.%(name)s(ex%(args)s) # plot using specified %(name)s object
+                    plot = """
+            >>> a.%(name)s(ex%(args)s) # plot %(name)s
             <vcs.displayplot.Dp ...>"""
                     # set up plot2
                     plot2 = """
-            >>> a.%(name)s(ex2%(args)s) # plot using specified %(name)s object
-            <vcs.displayplot.Dp ...>"""
+            >>> a.%(name)s(ex2%(args)s) # plot %(name)s
+            <vcs.displayplot.Dp ...>""" % d
             # for objects like template, where a call to plot() needs to be made
             # objects in the list cannot be plotted without a graphics method
                 elif obj_name not in ['textorientation', 'texttable', 'colormap', 'projection', 'template']:
-                    plot = """%(slabs)s
-            >>> a.plot(ex%(args)s) # plot using specified %(name)s object
-            <vcs.displayplot.Dp ...>"""
+                    plot = """
+            >>> a.plot(ex%(args)s) # plot %(name)s
+            <vcs.displayplot.Dp ...>
+            """
                     plot2 = """
-            >>> a.plot(ex2%(args)s) # plot using specified %(name)s object
+            >>> a.plot(ex2%(args)s) # plot %(name)s
             <vcs.displayplot.Dp ...>"""
-                d['plot'] = plot % d
-                d['ex1'] = example1 % d
+                if d['slabs'] is not '':
+                    plot = d['slabs'] + plot
+                example1 += plot
+                d['example'] = example1 % d
                 if d['parent2']:
                     example2 = """
-            >>> ex2=vcs.get%(name)s('%(parent2)s')  # instance of '%(parent2)s' %(name)s %(type)s%(plot2)s
-                    """
-                    d['plot2'] = plot2 % d
-                    d['ex2'] = example2 % d
+            >>> ex2=vcs.get%(name)s('%(parent2)s')  # %(name)s #2"""
+                    example2 += plot2
+                    d['example'] += example2 % d
         # section for manageElements 'create' methods
             elif method == 'create':
                 # if obj_name is tc, d['tc'] should be populated by code that creates a tc at this point
                 if obj_name == "textcombined":
-                    example1 = d['tc'] + """
-            >>> vcs.listelements('%(name)s') # should now contain 'EXAMPLE_tt:::EXAMPLE_tto'
+                    example1 = d['tc'] + """>>> vcs.listelements('%(name)s') # includes new object
             [...'EXAMPLE_tt:::EXAMPLE_tto'...]"""
                 else:
-                    example1 = """
-            >>> ex=vcs.create%(name)s('%(name)s_ex1') # Create '%(name)s_ex1'; inherits 'default'
-            >>> vcs.listelements('%(name)s') # should now contain '%(name)s_ex1'
-            [...'%(name)s_ex1'...]"""
-                d['ex1'] = example1 % d
+                    example1 = """>>> ex=vcs.create%(name)s('%(name)s_ex1')
+            >>> vcs.listelements('%(name)s') # includes new object
+            [...'%(name)s_ex1'...]
+            """
+                d['example'] = example1 % d
                 if d['parent2']:
-                    example2 = """
-            >>> ex2=vcs.create%(name)s('%(name)s_ex2','%(parent2)s') # create '%(name)s_ex2'; inherits '%(parent2)s'
-            >>> vcs.listelements('%(name)s') # should now contain '%(name)s_ex2'
-            [...'%(name)s_ex2'...]"""
-                    d['ex2'] = example2 % d
+                    example2 = """>>> ex2=vcs.create%(name)s('%(name)s_ex2','%(parent2)s')
+            >>> vcs.listelements('%(name)s') # includes new object
+            [...'%(name)s_ex2'...]
+            """
+                    d['example'] += example2 % d
             elif method == 'script':
                 if obj_name == "textcombined":
                     d['call'] = obj_name
                     d['name'] = 'text table and text orientation'
                 else:
                     d['call'] = d['name']
+            elif method == 'is':
+                example = """>>> a.show('%(name)s') # available %(name)ss
+            *******************%(cap)s Names List**********************
+            ...
+            *******************End %(cap)s Names List**********************
+            >>> ex = a.get%(name)s(%(sp_parent)s)
+            >>> vcs.queries.is%(name)s(ex)
+            1
+            """
+                if d['tc'] is not '':
+                    example = d['tc'] + example
+                d['example'] = example % d
             target_dict[obj_name] = docstring % d
             d.clear()
 
@@ -728,8 +740,8 @@ docstrings = {}
 #   'call' : the name to be used for a call to the object's *get* function. Only really used for textcombined, and only
 #       in the context of the script() function. All other cases, 'call' == 'name'
 #   'ex(1|2)'   : these should be filled in with code examples in doctest format.
-scriptdoc = """
-    Saves out a copy of the %(name)s %(type)s in JSON, or Python format to a designated file.
+scriptdoc = """Saves out a copy of the %(name)s %(type)s,
+    in JSON or Python format to a designated file.
 
         .. note::
 
@@ -747,16 +759,18 @@ scriptdoc = """
 
         .. doctest:: script_examples
 
-            >>> a=vcs.init() # Make a Canvas object to work with%(tc)s
-            >>> ex=a.get%(call)s(%(sp_parent)s) # Get default %(call)s
-            >>> ex.script('filename.py') # Append to a Python script named 'filename.py'
-            >>> ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
+            >>> a=vcs.init()
+            %(tc)s
+            >>> ex=a.get%(call)s(%(sp_parent)s)
+            >>> ex.script('filename.py') # append to 'filename.py'
+            >>> ex.script('filename','w') # Create/overwrite 'filename.json'
 
     :param script_filename: Output name of the script file.
         If no extension is specified, a .json object is created.
     :type script_filename: str
 
-    :param mode: Either 'w' for replace, or 'a' for append. Defaults to 'a', if not specified.
+    :param mode: Either 'w' for replace, or 'a' for append.
+        Defaults to 'a', if not specified.
     :type mode: str
     """
 
@@ -768,59 +782,60 @@ queries_is_doc = """
 
         .. doctest:: queries_is
 
-            >>> a=vcs.init() # Make a VCS Canvas object to work with:%(tc)s
-            >>> a.show('%(name)s') # Show all available %(name)s
-            *******************%(cap)s Names List**********************
-            ...
-            *******************End %(cap)s Names List**********************
-            >>> ex = a.get%(name)s(%(sp_parent)s) # To  test an existing %(name)s object
-            >>> vcs.queries.is%(name)s(ex)
-            1
+            >>> a=vcs.init()
+            %(example)s
 
     :param obj: A VCS object
     :type obj: VCS Object
 
-    :returns: An integer indicating whether the object is a %(name)s %(type)s (1), or not (0).
+    :returns: An integer indicating whether the object is a
+        %(name)s %(type)s (1), or not (0).
     :rtype: int
     """
 
-get_methods_doc = """VCS contains a list of %(type)ss. This function will create a
-    %(sp_name)s class object from an existing VCS %(sp_name)s %(type)s. If
-    no %(sp_name)s name is given, then %(parent)s %(sp_name)s will be used.
+get_methods_doc = """VCS contains a list of %(type)ss. This function
+    will create a %(sp_name)s object from an existing
+    VCS %(sp_name)s %(type)s. If no %(sp_name)s name is given,
+    then %(parent)s %(sp_name)s will be used.
 
     .. note::
 
         VCS does not allow the modification of 'default' attribute sets.
         However, a 'default' attribute set that has been copied under a
-        different name can be modified. (See the :py:func:`vcs.manageElements.create%(name)s` function.)
+        different name can be modified.
+        (See the :py:func:`vcs.manageElements.create%(name)s` function.)
 
     :Example:
 
         .. doctest:: manageElements_get
 
             >>> a=vcs.init()
-            >>> vcs.listelements('%(name)s') # Show all the existing %(name)s %(type)ss
-            [...]%(ex1)s%(ex2)s"""
+            >>> vcs.listelements('%(name)s') # list all %(name)ss
+            [...]
+            %(example)s
+    """
 
 create_methods_doc = """
-    Create a new %(sp_name)s %(type)s given the the name and the existing
-    %(sp_name)s %(type)s to copy the attributes from. If no existing
-    %(sp_name)s %(type)s is given, then the default %(sp_name)s %(type)s will be used as the graphics method
-    to which the attributes will be copied from.
+    Create a new %(sp_name)s %(type)s given the the name and
+    the existing %(sp_name)s %(type)s to copy attributes from.
+    If no existing %(sp_name)s %(type)s is given,
+    the default %(sp_name)s %(type)s will be used as the
+    graphics method from which attributes will be copied.
 
     .. note::
 
-        If the name provided already exists, then an error will be returned. %(type)s
-        names must be unique.
+        If the name provided already exists, then an error will be returned.
+        %(type)s names must be unique.
 
     :Example:
 
         .. doctest:: manageElements_create
 
-            >>> vcs.show('%(name)s') # show all available %(name)s
+            >>> vcs.show('%(name)s') # available %(name)ss
             *******************%(cap)s Names List**********************
             ...
-            *******************End %(cap)s Names List**********************%(ex1)s%(ex2)s
+            *******************End %(cap)s Names List**********************
+            %(example)s
             """
 
 scriptdocs = {}
