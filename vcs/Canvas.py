@@ -483,7 +483,23 @@ class Canvas(object):
         self.interact(*args, **kargs)
 
     def interact(self, *args, **kargs):
-        """Puts the canvas into interactive mode."""
+        """Puts the canvas into interactive mode.
+        This allows the user to click on the canvas to add markers,
+        add textboxes, configure settings, rotate 3d plots, and more.
+
+        Press 'Q' with the Canvas selected to quit.
+
+        :Example:
+
+            .. code-block:: python
+
+                a=vcs.init()
+                b=a.getboxfill()
+                array=[range(10) for _ in range(10)]
+                a.plot(b,array)
+                a.interact() # interactively configure Canvas
+
+        """
         self.configure()
         self.backend.interact(*args, **kargs)
 
@@ -808,8 +824,8 @@ class Canvas(object):
         for x in arg:
             print getattr(x, "__doc__", "")
 
-    def __init__(self, mode=1, pause_time=0,
-                 call_from_gui=0, size=None, backend="vtk", geometry=None, bg=None):
+    def __init__(self, mode=1, pause_time=0, call_from_gui=0, size=None,
+                 backend="vtk", geometry=None, bg=None):
         self._canvas_id = vcs.next_canvas_id
         self.ParameterChanged = SIGNAL('ParameterChanged')
         vcs.next_canvas_id += 1
@@ -1059,9 +1075,9 @@ class Canvas(object):
             .. doctest:: canvas_scriptobject
 
                 >>> a=vcs.init()
-                >>> i=a.createisoline('dean') # Create an instance of default isoline object
-                >>> a.scriptobject(i,'ex_isoline.py') # Save isoline object as a Python file 'isoline.py'
-                >>> a.scriptobject(i,'ex_isoline2') # Save isoline object as a JSON object 'isoline2.json'
+                >>> i=a.createisoline('dean') # default isoline object instance
+                >>> a.scriptobject(i,'ex_isoline.py') # Save to 'isoline.py'
+                >>> a.scriptobject(i,'ex_isoline2') # Save to 'isoline2.json'
 
         :param script_filename: Name of the output script file.
         :type script_filename: `str`_
@@ -1226,36 +1242,42 @@ class Canvas(object):
             .. doctest:: canvas_boxfill
 
                 >>> a=vcs.init()
-                >>> a.show('boxfill') # Show all the existing boxfill graphics methods
+                >>> a.show('boxfill') # Show all boxfills
                 *******************Boxfill Names List**********************
                 ...
                 *******************End Boxfill Names List**********************
                 >>> box=a.getboxfill('quick') # Create instance of 'quick'
-                >>> array=[range(10) for _ in range(10)]
-                >>> a.boxfill(array, box) # Plot array using specified box and default template
+                >>> arr=[range(10) for _ in range(10)] # data to plot
+                >>> a.boxfill(arr, box) # Plot array w/ box; default template
                 <vcs.displayplot.Dp ...>
-                >>> template = a.gettemplate('quick') # get quick template
+                >>> t = a.gettemplate('quick') # get quick template
                 >>> a.clear() # Clear VCS canvas
-                >>> a.boxfill(array, box, template) # Plot array using specified box and template
+                >>> a.boxfill(arr, box, t) # Plot w/ box and 'quick' template
                 <vcs.displayplot.Dp ...>
-                >>> a.boxfill(box, array, template) # Plot array using specified box and template
+                >>> a.boxfill(box, arr, t) # Plot w/ box and 'quick' template
                 <vcs.displayplot.Dp ...>
-                >>> a.boxfill(template, array, box) # Plot array using specified box and template
+                >>> a.boxfill(t, arr, box) # Plot w/ box and 'quick' template
                 <vcs.displayplot.Dp ...>
-                >>> a.boxfill(template, box, array) # Plot array using specified box and template
+                >>> a.boxfill(t, box, arr) # Plot w/ box and 'quick' template
                 <vcs.displayplot.Dp ...>
-                >>> a.boxfill(array, 'hovmuller', 'quick') # Use 'hovmuller' template and 'quick' boxfill
+                >>> a.boxfill(arr, 'polar', 'polar') # 'polar' template/boxfill
                 <vcs.displayplot.Dp ...>
-                >>> a.boxfill('hovmuller', array, 'quick') # Use 'hovmuller' template and 'quick' boxfill
+                >>> a.boxfill('polar', arr, 'polar') # 'polar' template/boxfill
                 <vcs.displayplot.Dp ...>
-                >>> a.boxfill('hovmuller', 'quick', array) # Use 'hovmuller template and 'quick' boxfill
+                >>> a.boxfill('polar', 'polar', arr) # 'polar' template/boxfill
                 <vcs.displayplot.Dp ...>
 
             .. note::
 
-                As shown above, the array, 'template', and 'box' parameters can be provided in any order.
+                As shown above, the data, 'template', and 'box' parameters can be provided in any order.
                 The 'template' and 'box' parameters can either be VCS template and boxfill objects,
                 or string names of template and boxfill objects.
+
+                The first string provided is assumed to be a template name. The second is assumed to be a
+                boxfill name.
+
+
+
         %s
         %s
         %s
@@ -1369,6 +1391,31 @@ class Canvas(object):
     get3d_scalar.__doc__ = vcs.manageElements.get3d_scalar.__doc__
 
     def scalar3d(self, *args, **parms):
+        """Generate a 3d_scalar plot given the data, 3d_scalar
+        graphics method, and template. If no 3d_scalar object is given,
+        then the 'default' 3d_scalar graphics method is used.
+        Similarly, if no template is given, the 'default' template is used.
+
+        :Example:
+
+            .. doctest:: canvas_scalar3d
+
+                >>> a=vcs.init()
+                >>> a.show('3d_scalar') # Show all 3d_scalars
+                *******************3d_scalar Names List**********************
+                ...
+                *******************End 3d_scalar Names List**********************
+                >>> ds=a.get3d_scalar() # default 3d_scalar
+                >>> import cdms2 # Need cdms2 to create a slab
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # get data file
+                >>> s = f('clt') # use data file to create a cdms2 slab
+                >>> a.scalar3d(ds,s) # Plot slab with defaults
+                <vcs.displayplot.Dp ...>
+                >>> a.clear() # Clear VCS canvas
+                >>> t = a.gettemplate('polar')
+                >>> a.scalar3d(s,ds,t) # Plot with 'polar' template
+                <vcs.displayplot.Dp ...>
+        """
         arglist = _determine_arg_list('3d_scalar', args)
         return self.__plot(arglist, parms)
 
@@ -1382,6 +1429,36 @@ class Canvas(object):
     get3d_vector.__doc__ = vcs.manageElements.get3d_vector.__doc__
 
     def vector3d(self, *args, **parms):
+        """Generate a 3d_vector plot given the data, 3d_vector
+        graphics method, and template. If no 3d_vector object is given,
+        then the 'default' 3d_vector graphics method is used.
+        Similarly, if no template is given, the 'default' template is used.
+
+        .. note::
+
+            3d_vectors need 2 data objects (slabs) to plot.
+
+            :Example:
+
+                .. doctest:: canvas_vector3d
+
+                    >>> a=vcs.init()
+                    >>> a.show('3d_vector') # Show all 3d_vectors
+                    *******************3d_vector Names List**********************
+                    ...
+                    *******************End 3d_vector Names List**********************
+                    >>> dv3=a.get3d_vector() # default 3d_vector
+                    >>> import cdms2 # Need cdms2 to create a slab
+                    >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # get data file
+                    >>> s = f('u') # use data file to create a cdms2 slab
+                    >>> s2 = f('v') # need two slabs, so get another
+                    >>> a.vector3d(dv3,s,s2) # Plot slabs
+                    <vcs.displayplot.Dp ...>
+                    >>> a.clear() # Clear VCS canvas
+                    >>> t = a.gettemplate('polar')
+                    >>> a.vector3d(s,s2,dv3,t) # Plot with 'polar' template
+                    <vcs.displayplot.Dp ...>
+        """
         arglist = _determine_arg_list('3d_vector', args)
         return self.__plot(arglist, parms)
 
@@ -1395,8 +1472,39 @@ class Canvas(object):
     get3d_dual_scalar.__doc__ = vcs.manageElements.get3d_dual_scalar.__doc__
 
     def dual_scalar3d(self, *args, **parms):
+        """Generate a 3d_dual_scalar plot given the data, 3d_dual_scalar
+        graphics method, and template. If no 3d_dual_scalar object is given,
+        then the 'default' 3d_dual_scalar graphics method is used.
+        Similarly, if no template is given, the 'default' template is used.
+
+        .. note::
+
+            3d_dual_scalars need 2 data objects (slabs) to plot.
+
+            :Example:
+
+                .. doctest:: canvas_dual_scalar3d
+
+                    >>> a=vcs.init()
+                    >>> a.show('3d_dual_scalar') # Show all 3d_dual_scalars
+                    *******************3d_dual_scalar Names List**********************
+                    ...
+                    *******************End 3d_dual_scalar Names List**********************
+                    >>> ds3=a.get3d_dual_scalar() # default 3d_dual_scalar
+                    >>> import cdms2 # Need cdms2 to create a slab
+                    >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # get data file
+                    >>> s = f('clt') # use data file to create a cdms2 slab
+                    >>> s2 = f('v') # need two slabs, so get another
+                    >>> a.dual_scalar3d(ds3,s,s2) # Plot slabs
+                    <vcs.displayplot.Dp ...>
+                    >>> a.clear() # Clear VCS canvas
+                    >>> t = a.gettemplate('polar')
+                    >>> a.dual_scalar3d(s,s2,ds3,t) # Plot w/ 'polar' template
+                    <vcs.displayplot.Dp ...>
+        """
         arglist = _determine_arg_list('3d_dual_scalar', args)
         return self.__plot(arglist, parms)
+
 
     def createisofill(self, name=None, source='default'):
         return vcs.createisofill(name, source)
@@ -1407,7 +1515,7 @@ class Canvas(object):
     getisofill.__doc__ = vcs.manageElements.getisofill.__doc__
 
     def isofill(self, *args, **parms):
-        """Generate a isofill plot given the data, isofill graphics method, and
+        """Generate an isofill plot given the data, isofill graphics method, and
         template. If no isofill object is given, then the 'default' isofill
         graphics method is used. Similarly, if no template object is given,
         then the 'default' template is used.
@@ -1417,19 +1525,19 @@ class Canvas(object):
             .. doctest:: canvas_isofill
 
                 >>> a=vcs.init()
-                >>> a.show('isofill') # Show all the existing isofill graphics methods
+                >>> a.show('isofill') # Show all isofill graphics methods
                 *******************Isofill Names List**********************
                 ...
                 *******************End Isofill Names List**********************
                 >>> iso=a.getisofill('quick') # Create instance of 'quick'
                 >>> import cdms2 # Need cdms2 to create a slab
-                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
-                >>> slab = f('clt') # use the data file to create a cdms2 slab
-                >>> a.isofill(slab,iso) # Plot array using specified iso and default template
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # get data file
+                >>> slab = f('clt') # use data file to create a cdms2 slab
+                >>> a.isofill(slab,iso) # Plot slab with iso; default template
                 <vcs.displayplot.Dp ...>
                 >>> a.clear() # Clear VCS canvas
-                >>> template = a.gettemplate('hovmuller')
-                >>> a.isofill(slab,iso,template) # Plot array using specified iso and template
+                >>> t = a.gettemplate('hovmuller')
+                >>> a.isofill(slab,iso,t) # Plot with 'hovmuller' template
                 <vcs.displayplot.Dp ...>
 
         %s
@@ -1492,7 +1600,7 @@ class Canvas(object):
 
     def get1d(self, name):
         return vcs.get1d(name)
-    create1d.__doc__ = vcs.manageElements.get1d.__doc__
+    get1d.__doc__ = vcs.manageElements.get1d.__doc__
 
     def createxyvsy(self, name=None, source='default'):
         return vcs.createxyvsy(name, source)
@@ -4107,8 +4215,8 @@ class Canvas(object):
 
     def get_selected_display(self):
         """
-        .. attention:: 
-            
+        .. attention::
+
             This function does not currently work.
             It will be implemented in the future.
         """

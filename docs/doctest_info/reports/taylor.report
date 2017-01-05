@@ -11,7 +11,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    ex.script('filename','w') # Create/overwrite 'filename.json'
+    ex.script('filename','w') # make/overwrite 'filename.json'
 Expecting nothing
 ok
 133 items had no tests:

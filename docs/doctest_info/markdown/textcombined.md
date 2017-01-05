@@ -8,7 +8,7 @@ Failed example:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x117e4f500>
+    <vcs.textcombined.Tc object at 0x118012500>
 ```
 
 vcs.textcombined.Tc.script

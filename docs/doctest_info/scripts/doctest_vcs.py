@@ -35,11 +35,9 @@ def log_stats(module_name, ignore):
         while line != '':
             if re.match(err_header, line):
                 where = line.split()[-1]
-                log.write(where+"\n")
-                for i in range(len(where)):
-                    log.write("-")
-                log.write("\n")
-                log.write("```python\n")
+                log.write(where + "\n")
+                map(lambda x: log.write('-'), range(len(where)))
+                log.write("\n```python\n")
                 consume_entry(results, log, err_endpoints)
                 log.write("```\n\n")
             if re.match(missing_header, line):
@@ -51,10 +49,11 @@ def log_stats(module_name, ignore):
             line = results.readline()
         log.close()
         results.close()
-    print ("Done logging "+module_name+".md")
+    print ("Done logging " + module_name + ".md")
 
 
 # note: will only consume the first full error (maybe)
+# TODO: re-factor to use python file object's iterator... totally didn't realize those were a thing when I wrote this.
 def consume_entry(readfile, writefile, endpoints, prepend="", append="", ignore=[]):
     """Consumes a log entry from readfile up to one of a list of possible endpoints.
     Writes each line in the entry to writefile.

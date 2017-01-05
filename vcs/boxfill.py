@@ -377,26 +377,27 @@ class Gfb(object):
         .. note::
 
             This function will not rename the 'default' boxfill.
-            If rename is called on the 'default' boxfill, newname is associated with default in the VCS name table,
-            but the boxfill's name will not be changed, and will behave in all ways as a 'default' boxfill.
+            If rename is called on the 'default' boxfill, newname is associated
+            with default in the VCS name table, but the boxfill's name will not
+            be changed, and will behave in all ways as a 'default' boxfill.
 
         :Example:
 
             .. doctest:: gfb_rename
 
-                >>> b=vcs.createboxfill()
-                >>> b.name
-                '...'
-                >>> vcs.listelements('boxfill') # list will include the name show above
-                [...]
+                >>> b=vcs.createboxfill('bar')
+                >>> l=vcs.listelements('boxfill') # list of boxfills
+                >>> 'bar' in l # shows l contains new boxfill
+                True
                 >>> b.rename('foo')
-                >>> b.name
-                'foo'
-                >>> vcs.listelements('boxfill') # list will include 'foo', but not the old name
-                [...'foo'...]
+                >>> l=vcs.listelements('boxfill') # new list of boxfills
+                >>> 'foo' in l # new name is in list
+                True
+                >>> 'bar' in l # old name is not
+                False
 
         :param newname: The new name you want given to the boxfill
-        :type newname:
+        :type newname: str
         """
         if newname == "default":
             raise Exception(
@@ -856,9 +857,6 @@ class Gfb(object):
     ymtics.__doc__ = xmldocs.ymticsdoc % {"name" : "boxfill"}
 
     def datawc(self, dsp1=1e20, dsp2=1e20, dsp3=1e20, dsp4=1e20):
-        """
-
-"""
         self.datawc_y1 = dsp1
         self.datawc_y2 = dsp2
         self.datawc_x1 = dsp3
@@ -871,6 +869,29 @@ class Gfb(object):
     xyscale.__doc__ = xmldocs.xyscaledoc % (('boxfill',) * 4)
 
     def getlevels(self, varmin, varmax):
+        """Given a minimum and a maximum, will generate levels for the boxfill
+        starting at varmin and ending at varmax.
+
+        :Example:
+
+            .. doctest:: boxfill_getlevels
+
+                >>> b=vcs.createboxfill()
+                >>> lvls = b.getlevels(0,100) # 257 levels from 0-100
+                >>> b.levels = lvls # set boxfill's levels attribute
+
+        :param varmin: The smallest number desired for the boxfill's levels
+            attribute.
+        :type varmin: float
+
+        :param varmax: The largest number desired for the boxfill's levels
+            attribute.
+        :type varmin: float
+
+        :return: A numpy array of 257 floats, evenly distributed from varmin to
+            varmax.
+        :rtype: numpy.ndarray
+        """
         if self.boxfill_type == "custom":
             return self.levels
 

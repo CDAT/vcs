@@ -1,5 +1,7 @@
 import vcs, inspect
 
+# VCS objects to generate function references for. Some are modules, some are classes.
+# Probably will need to add to this later when there's more documentation
 objects = [
     vcs.boxfill.Gfb,
     vcs.Canvas.Canvas,
@@ -23,7 +25,8 @@ objects = [
     vcs.utils
 ]
 
-obj_d = {}
+# iterate through objects to find the functions of each, and write RST links for those out to
+# API/functions/$MODULE_NAME.rst
 for obj in objects:
     if inspect.isclass(obj):
         key = obj.__module__ + '.' + obj.__name__
@@ -31,17 +34,14 @@ for obj in objects:
     else:
         key = obj.__name__
         pred = inspect.isfunction
-    obj_d[key] = []
+    funcs = []
     tup_l = inspect.getmembers(obj, predicate=pred)
     for tup in tup_l:
         if not tup[0][0] == '_':
-            obj_d[key].append(':func:`' + key + '.' + tup[0] + '`\n\n')
-
-mod_d = {}
-for key in obj_d:
+            funcs.append(':func:`' + key + '.' + tup[0] + '`\n\n')
     fname = key.split('.')[1]
     with open('functions/' + fname + ".rst", "w+") as f:
         f.write(fname + "\n")
         map(lambda x: f.write('-'), range(len(fname)))
         f.write("\n\n")
-        f.writelines(obj_d[key])
+        f.writelines(funcs)

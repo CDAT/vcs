@@ -83,7 +83,7 @@ Trying:
     ex.script('filename.py') # append to 'filename.py'
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/isofill.py", line 776, in vcs.isofill.Gfi.script
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/isofill.py", line 775, in vcs.isofill.Gfi.script
 Failed example:
     ex.script('filename.py') # append to 'filename.py'
 Exception raised:
@@ -96,7 +96,7 @@ Exception raised:
         fp.write("%s.missing = %g\n" % (unique_name, self.missing))
     TypeError: float argument required, not tuple
 Trying:
-    ex.script('filename','w') # Create/overwrite 'filename.json'
+    ex.script('filename','w') # make/overwrite 'filename.json'
 Expecting nothing
 ok
 Trying:

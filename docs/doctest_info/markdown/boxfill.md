@@ -74,3 +74,5 @@ Missing Doctests
 
 :x:```    vcs.boxfill.Gfb.yticlabels2```
 
+:x:```    vcs.boxfill.process_src```
+

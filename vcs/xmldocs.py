@@ -408,11 +408,11 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             elif obj_name in ['1d', 'scatter', 'textcombined', 'xyvsy']:
                 if obj_name == 'textcombined':
                     d['tc'] = """>>> try: # try to create a new textcombined, in case none exist
-            ...     vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+            ...     vcs.createtextcombined('EX_tt', 'qa', 'EX_tto', '7left')
             ... except:
             ...     pass
             """
-                    d['sp_parent'] = "'EXAMPLE_tt', 'EXAMPLE_tto'"
+                    d['sp_parent'] = "'EX_tt', 'EX_tto'"
                 elif obj_name == '1d':
                     d['sp_parent'] = "'default'"
                 else:
@@ -437,7 +437,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                 if numslabs > 0:
                     if obj_name is "taylordiagram":
                         d['slabs'] = """
-            >>> slab1 = [[0, 1, 2, 3, 4], [0.1, 0.2, 0.3, 0.4, 0.5]]"""
+            >>> slab1 = [[0, 1, 2, 3, 4], [0.1, 0.2, 0.3, 0.4, 0.5]] # data"""
                     else:
                         d['slabs'] = """
             >>> import cdms2 # Need cdms2 to create a slab
@@ -482,7 +482,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                 # if obj_name is tc, d['tc'] should be populated by code that creates a tc at this point
                 if obj_name == "textcombined":
                     example1 = d['tc'] + """>>> vcs.listelements('%(name)s') # includes new object
-            [...'EXAMPLE_tt:::EXAMPLE_tto'...]"""
+            [...'EX_tt:::EX_tto'...]"""
                 else:
                     example1 = """>>> ex=vcs.create%(name)s('%(name)s_ex1')
             >>> vcs.listelements('%(name)s') # includes new object
@@ -496,11 +496,16 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             """
                     d['example'] += example2 % d
             elif method == 'script':
+                d['example'] = """>>> ex=a.get%(call)s(%(sp_parent)s)
+            >>> ex.script('filename.py') # append to 'filename.py'
+            >>> ex.script('filename','w') # make/overwrite 'filename.json'"""
                 if obj_name == "textcombined":
                     d['call'] = obj_name
                     d['name'] = 'text table and text orientation'
+                    d['example'] = d['tc'] + d['example']
                 else:
                     d['call'] = d['name']
+                d['example'] %= d
             elif method == 'is':
                 example = """>>> a.show('%(name)s') # available %(name)ss
             *******************%(cap)s Names List**********************
@@ -695,7 +700,7 @@ obj_details = {
         },
         "textcombined": {
             "callable": True,
-            "parent": "EXAMPLE_tt:::EXAMPLE_tto",
+            "parent": "EX_tt:::EX_tto",
             "parent2": "",
             "rtype": "vcs.textcombined.Tc",
             "slabs": 0,
@@ -737,9 +742,9 @@ docstrings = {}
 #       of format "'blah'" or '"blah"', and if multiple arguments are needed, they should be provided ('"blah", "blah"')
 #   'tc'    : no textcombined objects exist by default in VCS, so this key is for an entry that will create one when
 #       it is needed for an example. All other times, it will be an empty string.
-#   'call' : the name to be used for a call to the object's *get* function. Only really used for textcombined, and only
-#       in the context of the script() function. All other cases, 'call' == 'name'
-#   'ex(1|2)'   : these should be filled in with code examples in doctest format.
+#   'example'   : this should be filled in with code examples in doctest format. Maintain indentation with the origin
+#       docstring. Most of the time, this means 3 indents (12 spaces) from the left side is where all your doctest
+#       lines should start. Look above, in populate_docstrings() to see what I'm tlaking about.
 scriptdoc = """Saves out a copy of the %(name)s %(type)s,
     in JSON or Python format to a designated file.
 
@@ -760,10 +765,7 @@ scriptdoc = """Saves out a copy of the %(name)s %(type)s,
         .. doctest:: script_examples
 
             >>> a=vcs.init()
-            %(tc)s
-            >>> ex=a.get%(call)s(%(sp_parent)s)
-            >>> ex.script('filename.py') # append to 'filename.py'
-            >>> ex.script('filename','w') # Create/overwrite 'filename.json'
+            %(example)s
 
     :param script_filename: Output name of the script file.
         If no extension is specified, a .json object is created.

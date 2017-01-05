@@ -3,7 +3,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.show('boxfill') # Show all the existing boxfill graphics methods
+    a.show('boxfill') # Show all boxfills
 Expecting:
     *******************Boxfill Names List**********************
     ...
@@ -14,16 +14,16 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    array=[range(10) for _ in range(10)]
+    arr=[range(10) for _ in range(10)] # data to plot
 Expecting nothing
 ok
 Trying:
-    a.boxfill(array, box) # Plot array using specified box and default template
+    a.boxfill(arr, box) # Plot array w/ box; default template
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
 Trying:
-    template = a.gettemplate('quick') # get quick template
+    t = a.gettemplate('quick') # get quick template
 Expecting nothing
 ok
 Trying:
@@ -31,37 +31,37 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.boxfill(array, box, template) # Plot array using specified box and template
+    a.boxfill(arr, box, t) # Plot w/ box and 'quick' template
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
 Trying:
-    a.boxfill(box, array, template) # Plot array using specified box and template
+    a.boxfill(box, arr, t) # Plot w/ box and 'quick' template
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
 Trying:
-    a.boxfill(template, array, box) # Plot array using specified box and template
+    a.boxfill(t, arr, box) # Plot w/ box and 'quick' template
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
 Trying:
-    a.boxfill(template, box, array) # Plot array using specified box and template
+    a.boxfill(t, box, arr) # Plot w/ box and 'quick' template
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
 Trying:
-    a.boxfill(array, 'hovmuller', 'quick') # Use 'hovmuller' template and 'quick' boxfill
+    a.boxfill(arr, 'polar', 'polar') # 'polar' template/boxfill
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
 Trying:
-    a.boxfill('hovmuller', array, 'quick') # Use 'hovmuller' template and 'quick' boxfill
+    a.boxfill('polar', arr, 'polar') # 'polar' template/boxfill
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
 Trying:
-    a.boxfill('hovmuller', 'quick', array) # Use 'hovmuller template and 'quick' boxfill
+    a.boxfill('polar', 'polar', arr) # 'polar' template/boxfill
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -237,7 +237,17 @@ Expecting:
     *******************End 1d Names List**********************
 ok
 Trying:
-    vcs.get1d('blue_yxvsx')
+    vcs.create1d() # inherits default, name generated
+Expecting:
+    <vcs.unified1D.G1d ...>
+ok
+Trying:
+    vcs.create1d("one_D") # inherits default, name "one_D"
+Expecting:
+    <vcs.unified1D.G1d ...>
+ok
+Trying:
+    vcs.create1d(source="one_D") # inherits from "one_D"
 Expecting:
     <vcs.unified1D.G1d ...>
 ok
@@ -571,20 +581,20 @@ Expecting:
 ok
 Trying:
     try: # try to create a new textcombined, in case none exist
-        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+        vcs.createtextcombined('EX_tt', 'qa', 'EX_tto', '7left')
     except:
         pass
 Expecting nothing
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2121, in vcs.Canvas.Canvas.createtext
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 2229, in vcs.Canvas.Canvas.createtext
 Failed example:
     try: # try to create a new textcombined, in case none exist
-        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+        vcs.createtextcombined('EX_tt', 'qa', 'EX_tto', '7left')
     except:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x11877a140>
+    <vcs.textcombined.Tc object at 0x11b89e5f0>
 Trying:
     vcs.show('textorientation') # available textorientations
 Expecting:
@@ -847,6 +857,50 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    a.show('3d_dual_scalar') # Show all 3d_dual_scalars
+Expecting:
+    *******************3d_dual_scalar Names List**********************
+    ...
+    *******************End 3d_dual_scalar Names List**********************
+ok
+Trying:
+    ds3=a.get3d_dual_scalar() # default 3d_dual_scalar
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data file
+Expecting nothing
+ok
+Trying:
+    s = f('clt') # use data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    s2 = f('v') # need two slabs, so get another
+Expecting nothing
+ok
+Trying:
+    a.dual_scalar3d(ds3,s,s2) # Plot slabs
+Expecting:
+    <vcs.displayplot.Dp ...>
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1498, in vcs.Canvas.Canvas.dual_scalar3d
+Failed example:
+    a.dual_scalar3d(ds3,s,s2) # Plot slabs
+Expected:
+    <vcs.displayplot.Dp ...>
+Got:
+    initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
+    <vcs.displayplot.Dp object at 0x1185717f8>
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
     dua=a.dummy_user_action # alias long name
 Expecting nothing
 ok
@@ -1028,6 +1082,18 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    vcs.show('1d')
+Expecting:
+    *******************1d Names List**********************
+    ...
+    *******************End 1d Names List**********************
+ok
+Trying:
+    vcs.get1d('blue_yxvsx')
+Expecting:
+    <vcs.unified1D.G1d ...>
+ok
+Trying:
     a=vcs.init()
 Expecting nothing
 ok
@@ -1061,14 +1127,14 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1434, in vcs.Canvas.Canvas.get3d_dual_scalar
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1499, in vcs.Canvas.Canvas.get3d_dual_scalar
 Failed example:
     a.plot(ex, slab1, slab2) # plot 3d_dual_scalar
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x12a60f4b0>
+    <vcs.displayplot.Dp object at 0x127f32c58>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1099,14 +1165,14 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1433, in vcs.Canvas.Canvas.get3d_scalar
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1417, in vcs.Canvas.Canvas.get3d_scalar
 Failed example:
     a.plot(ex, slab1) # plot 3d_scalar
 Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x154c9eb40>
+    <vcs.displayplot.Dp object at 0x12ad7e4b0>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1141,7 +1207,7 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1434, in vcs.Canvas.Canvas.get3d_vector
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1456, in vcs.Canvas.Canvas.get3d_vector
 Failed example:
     a.plot(ex, slab1, slab2) # plot 3d_vector
 Expected:
@@ -1150,7 +1216,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x154c585c8>
+    <vcs.displayplot.Dp object at 0x131af7280>
 Trying:
     a=vcs.init()
 Expecting nothing
@@ -1619,7 +1685,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    slab1 = [[0, 1, 2, 3, 4], [0.1, 0.2, 0.3, 0.4, 0.5]]
+    slab1 = [[0, 1, 2, 3, 4], [0.1, 0.2, 0.3, 0.4, 0.5]] # data
 Expecting nothing
 ok
 Trying:
@@ -1667,13 +1733,13 @@ Expecting:
 ok
 Trying:
     try: # try to create a new textcombined, in case none exist
-        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+        vcs.createtextcombined('EX_tt', 'qa', 'EX_tto', '7left')
     except:
         pass
 Expecting nothing
 ok
 Trying:
-    ex=vcs.gettextcombined('EXAMPLE_tt', 'EXAMPLE_tto')  # 'EXAMPLE_tt:::EXAMPLE_tto' textcombined
+    ex=vcs.gettextcombined('EX_tt', 'EX_tto')  # 'EX_tt:::EX_tto' textcombined
 Expecting nothing
 ok
 Trying:
@@ -1902,7 +1968,7 @@ Trying:
 Expecting:
     1
 **********************************************************************
-File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5434, in vcs.Canvas.Canvas.isinfile
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5542, in vcs.Canvas.Canvas.isinfile
 Failed example:
     a.isinfile(box, 'deft_box.py')
 Expected:
@@ -1931,7 +1997,7 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    a.show('isofill') # Show all the existing isofill graphics methods
+    a.show('isofill') # Show all isofill graphics methods
 Expecting:
     *******************Isofill Names List**********************
     ...
@@ -1946,15 +2012,15 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data file
 Expecting nothing
 ok
 Trying:
-    slab = f('clt') # use the data file to create a cdms2 slab
+    slab = f('clt') # use data file to create a cdms2 slab
 Expecting nothing
 ok
 Trying:
-    a.isofill(slab,iso) # Plot array using specified iso and default template
+    a.isofill(slab,iso) # Plot slab with iso; default template
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -1963,11 +2029,11 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    template = a.gettemplate('hovmuller')
+    t = a.gettemplate('hovmuller')
 Expecting nothing
 ok
 Trying:
-    a.isofill(slab,iso,template) # Plot array using specified iso and template
+    a.isofill(slab,iso,t) # Plot with 'hovmuller' template
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
@@ -2616,6 +2682,46 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    a.show('3d_scalar') # Show all 3d_scalars
+Expecting:
+    *******************3d_scalar Names List**********************
+    ...
+    *******************End 3d_scalar Names List**********************
+ok
+Trying:
+    ds=a.get3d_scalar() # default 3d_scalar
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data file
+Expecting nothing
+ok
+Trying:
+    s = f('clt') # use data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    a.scalar3d(ds,s) # Plot slab with defaults
+Expecting:
+    <vcs.displayplot.Dp ...>
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1412, in vcs.Canvas.Canvas.scalar3d
+Failed example:
+    a.scalar3d(ds,s) # Plot slab with defaults
+Expected:
+    <vcs.displayplot.Dp ...>
+Got:
+    initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
+    <vcs.displayplot.Dp object at 0x1beb944b0>
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
     a.show('scatter') # Show all the existing scatter graphics methods
 Expecting:
     *******************Scatter Names List**********************
@@ -2661,15 +2767,15 @@ Trying:
 Expecting nothing
 ok
 Trying:
-    i=a.createisoline('dean') # Create an instance of default isoline object
+    i=a.createisoline('dean') # default isoline object instance
 Expecting nothing
 ok
 Trying:
-    a.scriptobject(i,'ex_isoline.py') # Save isoline object as a Python file 'isoline.py'
+    a.scriptobject(i,'ex_isoline.py') # Save to 'isoline.py'
 Expecting nothing
 ok
 Trying:
-    a.scriptobject(i,'ex_isoline2') # Save isoline object as a JSON object 'isoline2.json'
+    a.scriptobject(i,'ex_isoline2') # Save to 'isoline2.json'
 Expecting nothing
 ok
 Trying:
@@ -3159,6 +3265,52 @@ Trying:
 Expecting nothing
 ok
 Trying:
+    a.show('3d_vector') # Show all 3d_vectors
+Expecting:
+    *******************3d_vector Names List**********************
+    ...
+    *******************End 3d_vector Names List**********************
+ok
+Trying:
+    dv3=a.get3d_vector() # default 3d_vector
+Expecting nothing
+ok
+Trying:
+    import cdms2 # Need cdms2 to create a slab
+Expecting nothing
+ok
+Trying:
+    f = cdms2.open(vcs.sample_data+'/clt.nc') # get data file
+Expecting nothing
+ok
+Trying:
+    s = f('u') # use data file to create a cdms2 slab
+Expecting nothing
+ok
+Trying:
+    s2 = f('v') # need two slabs, so get another
+Expecting nothing
+ok
+Trying:
+    a.vector3d(dv3,s,s2) # Plot slabs
+Expecting:
+    <vcs.displayplot.Dp ...>
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 1455, in vcs.Canvas.Canvas.vector3d
+Failed example:
+    a.vector3d(dv3,s,s2) # Plot slabs
+Expected:
+    <vcs.displayplot.Dp ...>
+Got:
+    Sample rate: 6 
+    Sample rate: 6 
+    initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
+    <vcs.displayplot.Dp object at 0x1e043fd70>
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
     a.show('xvsy') # Show all the existing XvsY graphics methods
 Expecting:
     *******************Xvsy Names List**********************
@@ -3277,7 +3429,7 @@ Trying:
 Expecting:
     <vcs.displayplot.Dp ...>
 ok
-82 items had no tests:
+78 items had no tests:
     vcs.Canvas
     vcs.Canvas.Canvas
     vcs.Canvas.Canvas._Canvas__new_elts
@@ -3320,9 +3472,7 @@ ok
     vcs.Canvas.Canvas.cgm
     vcs.Canvas.Canvas.configure
     vcs.Canvas.Canvas.copyfontto
-    vcs.Canvas.Canvas.dual_scalar3d
     vcs.Canvas.Canvas.endconfigure
-    vcs.Canvas.Canvas.get1d
     vcs.Canvas.Canvas.get_selected_display
     vcs.Canvas.Canvas.getplot
     vcs.Canvas.Canvas.gif
@@ -3338,7 +3488,6 @@ ok
     vcs.Canvas.Canvas.processParameterChange
     vcs.Canvas.Canvas.removeP
     vcs.Canvas.Canvas.savecontinentstype
-    vcs.Canvas.Canvas.scalar3d
     vcs.Canvas.Canvas.setAnimationStepper
     vcs.Canvas.Canvas.setdefaultfont
     vcs.Canvas.Canvas.start
@@ -3346,7 +3495,6 @@ ok
     vcs.Canvas.Canvas.user_actions
     vcs.Canvas.Canvas.user_actions_names
     vcs.Canvas.Canvas.varglist
-    vcs.Canvas.Canvas.vector3d
     vcs.Canvas.Canvas.viewport
     vcs.Canvas.Canvas.winfo_id
     vcs.Canvas.Canvas.worldcoordinate
@@ -3360,7 +3508,7 @@ ok
     vcs.Canvas._process_keyword
     vcs.Canvas.change_date_time
     vcs.Canvas.dictionarytovcslist
-118 items passed all tests:
+119 items passed all tests:
   14 tests in vcs.Canvas.Canvas.boxfill
    2 tests in vcs.Canvas.Canvas.canvasid
    5 tests in vcs.Canvas.Canvas.canvasinfo
@@ -3369,7 +3517,7 @@ ok
   11 tests in vcs.Canvas.Canvas.clean_auto_generated_objects
    4 tests in vcs.Canvas.Canvas.clear
    4 tests in vcs.Canvas.Canvas.close
-   2 tests in vcs.Canvas.Canvas.create1d
+   4 tests in vcs.Canvas.Canvas.create1d
    3 tests in vcs.Canvas.Canvas.create3d_dual_scalar
    3 tests in vcs.Canvas.Canvas.create3d_scalar
    3 tests in vcs.Canvas.Canvas.create3d_vector
@@ -3404,6 +3552,7 @@ ok
    9 tests in vcs.Canvas.Canvas.fillarea
    4 tests in vcs.Canvas.Canvas.flush
    4 tests in vcs.Canvas.Canvas.geometry
+   2 tests in vcs.Canvas.Canvas.get1d
    3 tests in vcs.Canvas.Canvas.getantialiasing
    9 tests in vcs.Canvas.Canvas.getboxfill
    4 tests in vcs.Canvas.Canvas.getcolorcell
@@ -3480,12 +3629,15 @@ ok
    8 tests in vcs.Canvas.Canvas.xyvsy
    8 tests in vcs.Canvas.Canvas.yxvsx
 **********************************************************************
-5 items had failures:
+8 items had failures:
    1 of   3 in vcs.Canvas.Canvas.createtext
+   3 of  11 in vcs.Canvas.Canvas.dual_scalar3d
    1 of   8 in vcs.Canvas.Canvas.get3d_dual_scalar
    1 of   7 in vcs.Canvas.Canvas.get3d_scalar
    1 of   8 in vcs.Canvas.Canvas.get3d_vector
    1 of   4 in vcs.Canvas.Canvas.isinfile
-711 tests in 205 items.
-706 passed and 5 failed.
-***Test Failed*** 5 failures.
+   3 of  10 in vcs.Canvas.Canvas.scalar3d
+   3 of  11 in vcs.Canvas.Canvas.vector3d
+747 tests in 205 items.
+733 passed and 14 failed.
+***Test Failed*** 14 failures.

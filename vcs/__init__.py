@@ -250,21 +250,20 @@ if os.path.exists(user_init):
 canvaslist = []
 
 
-def init(mode=1, pause_time=0, call_from_gui=0, size=None,
-         backend="vtk", geometry=None, bg=None):
-    """
-    Initialize and construct a VCS Canvas object.
+def init(mode=1, pause_time=0, call_from_gui=0, size=None, backend="vtk",
+         geometry=None, bg=None):
+    """Initialize and construct a VCS Canvas object.
 
     :Example:
 
     .. doctest:: vcs_init
 
         >>> import vcs
-        >>> portrait = vcs.init(size=.5) # Portrait orientation of 1 width per 2 height
+        >>> portrait = vcs.init(size=.5) # Portrait of 1 width per 2 height
         >>> letter = vcs.init(size="letter") # also accepts "usletter"
         >>> a4 = vcs.init(size="a4")
         >>> import vtk
-        >>> my_win = vtk.vtkRenderWindow() # Useful for embedding VCS inside another application
+        >>> my_win = vtk.vtkRenderWindow() # To embed VCS in other applications
         >>> embedded = vcs.init(backend=my_win)
         >>> dict_init = vcs.init(geometry={"width": 1200, "height": 600})
         >>> tuple_init = vcs.init(geometry=(1200, 600))
@@ -273,12 +272,13 @@ def init(mode=1, pause_time=0, call_from_gui=0, size=None,
     :param size: Aspect ratio for canvas (width / height)
     :param backend: Which VCS backend to use
     :param geometry: Size (in pixels) you want the canvas to be.
-    :param bg: Initialize a canvas to render in "background" mode (without displaying a window)
+    :param bg: Initialize a canvas to render in "background" mode (without
+        displaying a window)
     :type size: float or case-insensitive str
-    :type backend: str, `vtk.vtkRenderWindow`
+    :type backend: str, :py:class:`vtk.vtkRenderWindow`
     :type geometry: dict or tuple
     :type bg: bool
-    :return: an initialized canvas
+    :return: An initialized canvas
     :rtype: vcs.Canvas.Canvas
     """
     canvas = Canvas.Canvas(

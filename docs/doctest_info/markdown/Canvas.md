@@ -3,12 +3,24 @@ vcs.Canvas.Canvas.createtext
 ```python
 Failed example:
     try: # try to create a new textcombined, in case none exist
-        vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left')
+        vcs.createtextcombined('EX_tt', 'qa', 'EX_tto', '7left')
     except:
         pass
 Expected nothing
 Got:
-    <vcs.textcombined.Tc object at 0x11877a140>
+    <vcs.textcombined.Tc object at 0x11b89e5f0>
+```
+
+vcs.Canvas.Canvas.dual_scalar3d
+-------------------------------
+```python
+Failed example:
+    a.dual_scalar3d(ds3,s,s2) # Plot slabs
+Expected:
+    <vcs.displayplot.Dp ...>
+Got:
+    initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
+    <vcs.displayplot.Dp object at 0x1185717f8>
 ```
 
 vcs.Canvas.Canvas.get3d_dual_scalar
@@ -20,7 +32,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x12a60f4b0>
+    <vcs.displayplot.Dp object at 0x127f32c58>
 ```
 
 vcs.Canvas.Canvas.get3d_scalar
@@ -32,7 +44,7 @@ Expected:
     <vcs.displayplot.Dp ...>
 Got:
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x154c9eb40>
+    <vcs.displayplot.Dp object at 0x12ad7e4b0>
 ```
 
 vcs.Canvas.Canvas.get3d_vector
@@ -46,7 +58,7 @@ Got:
     Sample rate: 6 
     Sample rate: 6 
     initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
-    <vcs.displayplot.Dp object at 0x154c585c8>
+    <vcs.displayplot.Dp object at 0x131af7280>
 ```
 
 vcs.Canvas.Canvas.isinfile
@@ -57,6 +69,32 @@ Failed example:
 Expected:
     1
 Got nothing
+```
+
+vcs.Canvas.Canvas.scalar3d
+--------------------------
+```python
+Failed example:
+    a.scalar3d(ds,s) # Plot slab with defaults
+Expected:
+    <vcs.displayplot.Dp ...>
+Got:
+    initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
+    <vcs.displayplot.Dp object at 0x1beb944b0>
+```
+
+vcs.Canvas.Canvas.vector3d
+--------------------------
+```python
+Failed example:
+    a.vector3d(dv3,s,s2) # Plot slabs
+Expected:
+    <vcs.displayplot.Dp ...>
+Got:
+    Sample rate: 6 
+    Sample rate: 6 
+    initCamera: Camera => ((0.0, 0.0, 540.0), (0.0, 0.0, 0.0), (0.0, 1.0, 0.0)) 
+    <vcs.displayplot.Dp object at 0x1e043fd70>
 ```
 
 Missing Doctests
@@ -79,11 +117,7 @@ Missing Doctests
 
 :x:```    vcs.Canvas.Canvas.copyfontto```
 
-:x:```    vcs.Canvas.Canvas.dual_scalar3d```
-
 :x:```    vcs.Canvas.Canvas.endconfigure```
-
-:x:```    vcs.Canvas.Canvas.get1d```
 
 :x:```    vcs.Canvas.Canvas.get_selected_display```
 
@@ -115,8 +149,6 @@ Missing Doctests
 
 :x:```    vcs.Canvas.Canvas.savecontinentstype```
 
-:x:```    vcs.Canvas.Canvas.scalar3d```
-
 :x:```    vcs.Canvas.Canvas.setAnimationStepper```
 
 :x:```    vcs.Canvas.Canvas.setdefaultfont```
@@ -130,8 +162,6 @@ Missing Doctests
 :x:```    vcs.Canvas.Canvas.user_actions_names```
 
 :x:```    vcs.Canvas.Canvas.varglist```
-
-:x:```    vcs.Canvas.Canvas.vector3d```
 
 :x:```    vcs.Canvas.Canvas.viewport```
 
