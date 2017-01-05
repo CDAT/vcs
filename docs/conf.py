@@ -52,6 +52,9 @@ extensions = ['sphinx.ext.autodoc',
 # doctest_test_doctest_blocks = None
 doctest_path = sys.path
 
+# Not currently doctesting VCS with sphinx due to some conflicting name errors across tests
+# in the same python instance.
+# Setup and cleanup might be able to fix it, but I couldn't get it to work
 doctest_global_setup = """
 import vcs, cdms2, os
 ex = ex1 = ex2 = None
@@ -286,7 +289,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    (master_doc, 'vcs.tex', u'VCS Documentation',
+    ("API/vcs", 'vcs.tex', u'VCS API Documentation',
      u'AIMS Team', 'manual'),
 ]
 # The name of an image file (relative to this directory) to place at the top of
@@ -295,13 +298,13 @@ latex_documents = [
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
-#latex_use_parts = False
+#latex_toplevel_sectioning = 'section'
 
 # If true, show page references after internal links.
-#latex_show_pagerefs = False
+latex_show_pagerefs = True
 
 # If true, show URL addresses after external links.
-#latex_show_urls = False
+latex_show_urls = 'footnote'
 
 # Documents to append as an appendix to all manuals.
 #latex_appendices = []
