@@ -65,7 +65,7 @@ def consume_entry(readfile, writefile, endpoints, prepend="", append="", ignore=
     :param prepend: A string to prepend to the line from readfile before outputting to writefile
     :param append: A string to append to the line from readfile before outputting to writefile
     :param ignore: A list of regular expressions containing function signatures to ignore (for logging missing doctests
-        only. Gets brought in through commandline or a file via ArgParse.
+        only). Gets brought in through commandline or a file via ArgParse.
     """
     more = True
     sigs = [re.compile("_[_A-z0-9]+")] # func signatures to ignore. Add private functions by default.
