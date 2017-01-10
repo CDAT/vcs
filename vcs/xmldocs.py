@@ -197,6 +197,18 @@ axisconvert = """
 xaxisconvert = axisconvert.format(axis="x")
 yaxisconvert = axisconvert.format(axis="y")
 axesconvert = xaxisconvert + yaxisconvert
+# for these docs, use string.format() when you use them
+#    Keys:
+#       {name}: String name to complete the call to vcs.(get|create)$OBJ_TYPE()
+#       {parent}: String argument for calls to vcs.(get|create)$OBJ_TYPE() that require specification of an obj to
+#           inherit from. Mainly used for get1d, but possible uses for text objects also exist (maybe others too).
+#           If providing a parent name, use either double quotes in a string literal, or a string literal in double
+#           quotes (i.e. '"$PARENT"' or "'$PARENT'"). Else, use an empty string.
+#       {data}: String used for plugging in plotting information. Plug in whatever data is set up in the docstring
+#           in a way that VCS will correctly plot the object.
+#       {x_y}: Literally will be the string "x" or "y".
+#       {axis}: "lat" or "lon", corresponding to the value you put in for {x_y}
+
 colorsdoc = """
     Sets the color_1 and color_2 properties of the object.
 
@@ -230,13 +242,13 @@ extsdoc = """
 
     :Example:
 
-        .. doctest %(name)s_exts
+        .. doctest {name}_exts
 
             >>> a=vcs.init()
             >>> array=[range(10) for _ in range(10)]
-            >>> ex=a.create%(name)s()
+            >>> ex=a.create{name}()
             >>> ex.exts(True, True) # arrows on both ends
-            >>> a.plot(ex, %(data)s)
+            >>> a.plot(ex, {data})
             <vcs.displayplot.Dp object at 0x...>
 
     :param ext1: Sets the :py:attr:`ext_1` value on the object.
@@ -249,74 +261,45 @@ extsdoc = """
         True or False can be used in lieu of 'y' and 'n'.
     :type ext2: str or bool
     """
-ticlabelsdoc = """
-    Sets the %(x_y)sticlabels1 and %(x_y)sticlabels2 values on the object
-    
-    :Example:
-        
-        .. doctest:: %(name)s_%(x_y)sticlabels
-
-            >>> a = vcs.init()
-            >>> import cdms2 # Need cdms2 to create a slab
-            >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
-            >>> ex = a.create%(name)s()
-            >>> ex.%(x_y)sticlabels(%(labels)s)
-            >>> a.plot(ex, %(data)s) # plot shows labels
-            <vcs.displayplot.Dp object at 0x...>
-
-    :param %(x_y)stl1: Sets the object's value for :py:attr:`%(x_y)sticlabels1`.
-        Must be  a str, or a dictionary object with float:str mappings.
-    :type %(x_y)stl1: dict or str
-
-    :param %(x_y)stl2: Sets the object's value for :py:attr:`%(x_y)sticlabels2`.
-        Must be a str, or a dictionary object with float:str mappings.
-    :type %(x_y)stl2: dict or str
-    """
-xticlabelsdoc = ticlabelsdoc % {"x_y": "x", "labels":'{0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"}',
-                                "name": "%(name)s", "data": "%(data)s"}
-yticlabelsdoc = ticlabelsdoc % {"x_y": "y", "labels":'{0: "Eq.", 37.6819: "L", 55.7558: "M"}', "name": "%(name)s",
-                                "data": "%(data)s"}
-
 mticsdoc = """
-    Sets the %(x_y)smtics1 and %(x_y)smtics2 values on the object.
+    Sets the {x_y}mtics1 and {x_y}mtics2 values on the object.
 
     .. note::
 
         The mtics attributes are not inherently plotted by the default template.
         The example below shows how to apply a custom template and enable it to
-        plot mtics. To plot a the %(name)s after setting the mtics and template,
-        refer to :py:func:`vcs.Canvas.plot` or :py:func:`vcs.Canvas.%(name)s`.
+        plot mtics. To plot a the {name} after setting the mtics and template,
+        refer to :py:func:`vcs.Canvas.plot` or :py:func:`vcs.Canvas.{name}`.
 
     :Example:
 
-        .. doctest:: %(name)s_%(x_y)smtics
+        .. doctest:: {name}_{x_y}mtics
 
             >>> a=vcs.init()
-            >>> ex=vcs.create%(name)s()
-            >>> ex.%(x_y)smtics("%(axis)s5") # minitick every 5 degrees
+            >>> ex=vcs.create{name}()
+            >>> ex.{x_y}mtics("{axis}5") # minitick every 5 degrees
             >>> tmp=vcs.createtemplate() # custom template to plot minitics
-            >>> tmp.%(x_y)smintic1.priority = 1 # plotting shows %(x_y)smtics
+            >>> tmp.{x_y}mintic1.priority = 1 # plotting shows {x_y}mtics
             
-    :param %(x_y)smt1: Value for :py:attr:`%(x_y)smtics1`.
+    :param {x_y}mt1: Value for :py:attr:`{x_y}mtics1`.
         Must be a str, or a dictionary object with float:str mappings.
-    :type %(x_y)smt1: dict or str
+    :type {x_y}mt1: dict or str
 
-    :param %(x_y)smt2: Value for :py:attr:`%(x_y)smtics2`.
+    :param {x_y}mt2: Value for :py:attr:`{x_y}mtics2`.
         Must be a str, or a dictionary object with float:str mappings.
-    :type %(x_y)smt2: dict or str
+    :type {x_y}mt2: dict or str
     """
-xmticsdoc = mticsdoc % {"x_y": "x", "axis": "lon", "name": "%(name)s"}
-ymticsdoc = mticsdoc % {"x_y": "y", "axis": "lat", "name": "%(name)s"}
-
+xmticsdoc = mticsdoc.format(x_y="x", axis="lon", name="{name}")
+ymticsdoc = mticsdoc.format(x_y="x", axis="lat", name="{name}")
 datawcdoc = """
     Sets the data world coordinates for object
 
     :Example:
 
-        .. doctest:: datawc_%(name)s
+        .. doctest:: datawc_{name}
 
             >>> a=vcs.init()
-            >>> ex=a.create%(name)s('%(name)s_dwc')
+            >>> ex=a.create{name}('{name}_dwc')
             >>> ex.datawc(0.0, 0.1, 1.0, 1.1) # sets datawc y1, y2, x1, x2
             >>> ex.datawc_y1, ex.datawc_y2, ex.datawc_x1, ex.datawc_x2
             (0.0, 0.1, 1.0, 1.1)
@@ -338,10 +321,10 @@ xyscaledoc = """
 
     :Example:
 
-        .. doctest:: xyscale_%s
+        .. doctest:: xyscale_{name}
 
             >>> a=vcs.init()
-            >>> ex=a.create%s('%s_xys') # make a %s
+            >>> ex=a.create{name}('{name}_xys') # make a {name}
             >>> ex.xyscale(xat='linear', yat='linear')
 
     :param xat: Set value for x axis conversion.
@@ -350,14 +333,6 @@ xyscaledoc = """
     :param yat: Set value for y axis conversion.
     :type yat: str
     """
-
-# for listdoc, plug in a dictionary where you use it
-#    Dict Keys:
-#       "name": String name to complete the call to vcs.get$OBJ_TYPE()
-#       "parent": String argument for calls to vcs.get$OBJ_TYPE() that require specification of an obj to inherit from.
-#           mainly used for get1d, but possible uses for text objects also exist (maybe others too).
-#           If providing a parent name, use either double quotes in a string literal, or a string literal in double
-#           quotes (i.e. '"parent"' or "'parent'"). Else, use an empty string.
 listdoc = """Lists the current values of object attributes
 
     :Example:
@@ -365,11 +340,40 @@ listdoc = """Lists the current values of object attributes
         .. doctest:: listdoc
 
             >>> a=vcs.init()
-            >>> obj=a.get%(name)s(%(parent)s) # default
-            >>> obj.list() # print %(name)s attributes
+            >>> obj=a.get{name}({parent}) # default
+            >>> obj.list() # print {name} attributes
              ---------- ... ----------
             ...
     """
+# due to the labels being plugged in below, we have to use a dictionary to format this docstring.
+# .format() messes up because it tries to interpret the labels dictionary as a keyword.
+ticlabelsdoc = """
+    Sets the %(x_y)sticlabels1 and %(x_y)sticlabels2 values on the object
+
+    :Example:
+
+        .. doctest:: %(name)s_%(x_y)sticlabels
+
+            >>> a = vcs.init()
+            >>> import cdms2 # Need cdms2 to create a slab
+            >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
+            >>> ex = a.create%(name)s()
+            >>> ex.%(x_y)sticlabels(%(labels)s)
+            >>> a.plot(ex, %(data)s) # plot shows labels
+            <vcs.displayplot.Dp object at 0x...>
+
+    :param %(x_y)stl1: Sets the object's value for :py:attr:`%(x_y)sticlabels1`.
+        Must be  a str, or a dictionary object with float:str mappings.
+    :type %(x_y)stl1: dict or str
+
+    :param %(x_y)stl2: Sets the object's value for :py:attr:`%(x_y)sticlabels2`.
+        Must be a str, or a dictionary object with float:str mappings.
+    :type %(x_y)stl2: dict or str
+    """
+xticlabelsdoc = ticlabelsdoc % {"x_y": "x", "labels": '{0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"}',
+                                    "name": "%(name)s", "data": "%(data)s"}
+yticlabelsdoc = ticlabelsdoc % {"x_y": "y", "labels": '{0: "Eq.", 37.6819: "L", 55.7558: "M"}', "name": "%(name)s",
+                                    "data": "%(data)s"}
 
 def populate_docstrings(type_dict, target_dict, docstring, method):
     """
@@ -853,6 +857,12 @@ docstrings['create'] = [create_docs, create_methods_doc]
 for method in docstrings.keys():
     populate_docstrings(obj_details, docstrings[method][0], docstrings[method][1], method)
 
+#############################################################################
+#                                                                           #
+# Attributes section                                                        #
+#                                                                           #
+#############################################################################
+
 exts_attrs = """
             .. py:attribute:: ext_1 (str)
 
@@ -907,6 +917,93 @@ missing_attr = """
 
                 Color to use for missing value or values not in defined ranges
     """
+
+# 3d plot attributes
+toggle_vs = """
+            .. py:attribute:: Toggle{v_s}Plot (vcs.on or vcs.off)
+
+                Toggles the visibility of the :ref:`dv3d-{v_s}` ({i_e}) plot constituent.
+                
+                **Interact Mode:** Toggle visibility with button click.
+"""
+toggle_volume = toggle_vs.format(v_s="Volume", i_e="volume render")
+toggle_surface = toggle_vs.format(v_s="Surface", i_e="isosurface")
+axisslider = """
+            .. py:attribute:: {axis}Slider (float, vcs.on or vcs.off)
+
+                Sets the position and visibility of the {axis} :term:`Slice` plane.
+                The position is in {coord} coordinates.
+                
+                **Interact Mode:** Adjust position with the slider.
+"""
+xslider = axisslider.format(axis="X", coord="longitude")
+yslider = axisslider.format(axis="Y", coord="latitude")
+zslider = axisslider.format(axis="Z", coord="relative (0.0 = bottom, > 1.0 = top)")
+verticalscaling = """
+            .. py:attribute:: VerticalScaling (float)
+
+                Scales the vertical dimension of the plot.
+
+                Accepts values from ~ 0.1 -- 10.0
+                
+                **Interact Mode:** Adjust position with the slider.
+"""
+scalecolormap = """
+            .. py:attribute:: ScaleColormap (floats: [max,min])
+
+                Sets the value range of the current colormap.
+                Initialized to the max (full) range value of the data.
+                
+                **Interact Mode:** Adjust colormap range (min, max) with the pair of sliders.
+"""
+scaletransferfunction = """
+            .. py:attribute:: ScaleTransferFunction (floats: [max,min])
+
+                Sets the value range of the :term:`Volume` plot constituent, which maps this range of variable
+                values to opacity. Initialized to the max (full) range value of the data.
+                
+                **Interact Mode:** Adjust TF range (min, max) with the pair of sliders.
+"""
+toggleclipping = """
+            .. py:attribute:: ToggleClipping (Up to six floats: [ xmin, xmax, ymin, ymax, zmin, zmax ])
+
+                Sets the clip bounds for the :term:`Volume` plot constituent.
+
+                **Interact Mode:** Drag the spheres on the adjustable frame.
+"""
+isosurfacevalue = """
+            .. py:attribute:: IsosurfaceValue (float between the variable max and min values)
+
+                Sets the variable value that defines the isosurface (:term:`Surface`).
+
+                **Interact Mode:** Adjust the isosurface value using the slider.
+"""
+scaleopacity = """
+            .. py:attribute:: ScaleOpacity (floats: [ max, min ])
+
+                Sets the opacity range of the :term:`Volume` plot constituent,
+                which maps the selected range of variable values to this opacity range.
+                Initialized to [1,1]
+
+                **Interact Mode:** Adjust opacity range (min, max) with the pair of sliders.
+"""
+basemapopacity = """
+            .. py:attribute:: BasemapOpacity (float between 0.0 and 1.0.)
+
+                Sets the opacity of the underlying earth map.
+
+                **Interact Mode:** Adjust the opacity with the slider.
+"""
+camera = """
+            .. py:attribute:: Camera (dict with three keys: 'Position', 'ViewUp', and 'FocalPoint')
+
+                Sets the position and orientation of the camera.
+
+                The values of Position and FocalPoint are positions in model coordinates, and ViewUp is a unit vector.
+
+                **Interact Mode:** Left-click in window and drag to rotate. Right-click and drag to zoom/pan.
+                Shift-Left-click and drag to translate.
+"""
 
 meshfill_doc = """
     %s

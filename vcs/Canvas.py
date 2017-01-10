@@ -2067,16 +2067,16 @@ class Canvas(object):
             .. doctest:: canvas_fillarea
 
                     >>> a=vcs.init()
-                    >>> a.show('fillarea') # Show all the existing fillarea objects
+                    >>> a.show('fillarea') # Show all fillarea objects
                     *******************Fillarea Names List**********************
                     ...
                     *******************End Fillarea Names List**********************
-                    >>> fa=a.createfillarea() # Create instance of default fillarea
-                    >>> fa.style=1 # Set the fillarea style
-                    >>> fa.index=4 # Set the fillarea index
-                    >>> fa.color = 242 # Set the fillarea color
-                    >>> fa.x=[0.25,0.75] # Set the x value points
-                    >>> fa.y=[0.2,0.5] # Set the y value points
+                    >>> fa=a.createfillarea() # instance of default fillarea
+                    >>> fa.style=1 # Set fillarea style
+                    >>> fa.index=4 # Set fillarea index
+                    >>> fa.color = 242 # Set fillarea color
+                    >>> fa.x=[0.25,0.75] # Set x value points
+                    >>> fa.y=[0.2,0.5] # Set y value points
                     >>> a.fillarea(fa) # Plot using specified fillarea object
                     <vcs.displayplot.Dp ...>
 

@@ -556,7 +556,7 @@ fuzzy_boolean_valid_value_string = "True/False, 'True'/'False', 1/0, " \
 
 
 def checkFuzzyBoolean(self, name, value):
-    """Checks if a value can be interpreted as true or false.
+    __doc__ = """Checks if a value can be interpreted as true or false.
 
     Accepted values are %s.
     """ % fuzzy_boolean_valid_value_string

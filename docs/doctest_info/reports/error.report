@@ -1,8 +1,0 @@
-4 items had no tests:
-    vcs.error
-    vcs.error.vcsError
-    vcs.error.vcsError.__init__
-    vcs.error.vcsError.__str__
-0 tests in 4 items.
-0 passed and 0 failed.
-Test passed.

@@ -995,7 +995,7 @@ class Gi(object):
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
         self.xmtics2 = xmt2
-    xmtics.__doc__ = xmldocs.xmticsdoc % {"name": "isoline"}
+    xmtics.__doc__ = xmldocs.xmticsdoc.format(name="isoline")
 
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
@@ -1005,19 +1005,19 @@ class Gi(object):
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1
         self.ymtics2 = ymt2
-    ymtics.__doc__ = xmldocs.ymticsdoc % {"name": "isoline"}
+    ymtics.__doc__ = xmldocs.xmticsdoc.format(name="isoline")
 
     def datawc(self, dsp1=1e20, dsp2=1e20, dsp3=1e20, dsp4=1e20):
         self.datawc_y1 = dsp1
         self.datawc_y2 = dsp2
         self.datawc_x1 = dsp3
         self.datawc_x2 = dsp4
-    datawc.__doc__ = xmldocs.datawcdoc % {"name": "isoline"}
+    datawc.__doc__ = xmldocs.datawcdoc.format(name="isoline")
 
     def xyscale(self, xat='', yat=''):
         self.xaxisconvert = xat
         self.yaxisconvert = yat
-    xyscale.__doc__ = xmldocs.xyscaledoc % (('isoline',) * 4)
+    xyscale.__doc__ = xmldocs.xyscaledoc.format(name='isoline')
 
     def list(self):
         if (self.name == '__removed_from_VCS__'):

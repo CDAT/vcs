@@ -1,8 +1,15 @@
-# This file aims at removing elets creation from dpeending on a Canvas, we will try to simply have
-# b = vcs.createboxfill()
-# rather than
-# x=vcs.init()
-# b=x.createboxfill()
+"""
+    .. _list: https://docs.python.org/2/library/functions.html#list
+    .. _tuple: https://docs.python.org/2/library/functions.html#tuple
+    .. _dict: https://docs.python.org/2/library/stdtypes.html#mapping-types-dict
+    .. _None: https://docs.python.org/2/library/constants.html?highlight=none#None
+    .. _str: https://docs.python.org/2/library/functions.html?highlight=str#str
+    .. _bool: https://docs.python.org/2/library/functions.html?highlight=bool#bool
+    .. _float: https://docs.python.org/2/library/functions.html?highlight=float#float
+    .. _int: https://docs.python.org/2/library/functions.html?highlight=float#int
+    .. _long: https://docs.python.org/2/library/functions.html?highlight=float#long
+    .. _file: https://docs.python.org/2/library/functions.html?highlight=open#file
+"""
 import vcs
 import boxfill
 import meshfill
@@ -46,11 +53,11 @@ def check_name_source(name, source, typ):
     :param name: Desired string name for an object of type *typ*,
         inheriting from source object *source*.
         If name is None, a unique name will be generated.
-    :type name: :py:class:`str` or None
+    :type name: `str`_ or None
 
     :param source: Source from which the new object is meant to inherit.
         Can be a VCS object or a string name of a VCS object.
-    :type source: :py:class:`str` or VCS Object
+    :type source: `str`_ or VCS Object
 
     :param typ: String name of a VCS object type.
         (e.g. 'boxfill', 'isofill', 'marker', etc.)
@@ -59,7 +66,7 @@ def check_name_source(name, source, typ):
     :returns: A tuple containing two strings: a unique name and a source name.
         If *name* was provided and an object of type *typ* with that name
         already exists, an error is raised.
-    :rtype: :py:class:`tuple`
+    :rtype: `tuple`_
     """
     elts = vcs.listelements(typ)
     if name is None:
@@ -99,11 +106,11 @@ def createtemplate(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: The object to inherit from.
         Can be a template, or a string name of a template
-    :type source: :py:class:`str` or vcs.template.P
+    :type source: `str`_ or :class:`vcs.template.P`
 
     :returns: A template
     :rtype: vcs.template.P
@@ -119,7 +126,7 @@ def gettemplate(Pt_name_src='default'):
     """%s
 
     :param Pt_name_src: String name of an existing template VCS object
-    :type Pt_name_src: :py:class:`str`
+    :type Pt_name_src: `str`_
 
     :returns: A VCS template object
     :rtype: vcs.template.P
@@ -138,11 +145,11 @@ def createprojection(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: The object to inherit from.
         Can be a projection, or a string name of a projection.
-    :type source: :py:class:`str` or vcs.projection.Proj
+    :type source: `str`_ or :class:`vcs.projection.Proj`
 
     :returns: A projection graphics method object
     :rtype: vcs.projection.Proj
@@ -157,7 +164,7 @@ def getprojection(Proj_name_src='default'):
     """%s
 
     :param Proj_name_src: String name of an existing VCS projection object
-    :type Proj_name_src: :py:class:`str`
+    :type Proj_name_src: `str`_
 
     :returns: A VCS projection object
     :rtype: vcs.projection.Proj
@@ -177,11 +184,11 @@ def createboxfill(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: The object to inherit from.
         can be a boxfill, or a string name of a boxfill.
-    :type source: :py:class:`str` or vcs.boxfill.Gfb
+    :type source: `str`_ or :class:`vcs.boxfill.Gfb`
 
     :return: A boxfill graphics method object
     :rtype: vcs.boxfill.Gfb
@@ -196,7 +203,7 @@ def getboxfill(Gfb_name_src='default'):
     """%s
 
     :param Gfb_name_src: String name of an existing boxfill VCS object
-    :type Gfb_name_src: :py:class:`str`
+    :type Gfb_name_src: `str`_
 
     :return: A pre-existing boxfill graphics method
     :rtype: vcs.boxfill.Gfb
@@ -215,11 +222,11 @@ def createtaylordiagram(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: The object to inherit from.
         Can be a a taylordiagram, or a string name of a taylordiagram.
-    :type source: :py:class:`str` or vcs.taylor.Gtd
+    :type source: `str`_ or :class:`vcs.taylor.Gtd`
 
     :returns: A taylordiagram graphics method object
     :rtype: vcs.taylor.Gtd
@@ -245,7 +252,7 @@ def gettaylordiagram(Gtd_name_src='default'):
     """%s
 
     :param Gtd_name_src: String name of an existing taylordiagram VCS object
-    :type Gtd_name_src: :py:class:`str`
+    :type Gtd_name_src: `str`_
 
     :returns: A taylordiagram VCS object
     :rtype: vcs.taylor.Gtd
@@ -268,11 +275,11 @@ def createmeshfill(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: The object to inherit from.
         Can be a meshfill, or a string name of a meshfill.
-    :type source: :py:class:`str` or vcs.meshfill.Gfm
+    :type source: `str`_ or :class:`vcs.meshfill.Gfm`
 
     :returns: A meshfill graphics method object
     :rtype: vcs.meshfill.Gfm
@@ -286,7 +293,7 @@ def getmeshfill(Gfm_name_src='default'):
     """%s
 
     :param Gfm_name_src: String name of an existing meshfill VCS object
-    :type Gfm_name_src: :py:class:`str`
+    :type Gfm_name_src: `str`_
 
     :returns: A meshfill VCS object
     :rtype: vcs.meshfill.Gfm
@@ -307,11 +314,11 @@ def createisofill(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: The object to inherit from.
         Can be an isofill object, or string name of an isofill object.
-    :type source: :py:class:`str` or vcs.isofill.Gfi
+    :type source: `str`_ or :class:`vcs.isofill.Gfi`
 
     :returns: An isofill graphics method
     :rtype: vcs.isofill.Gfi
@@ -326,7 +333,7 @@ def getisofill(Gfi_name_src='default'):
     """%s
 
     :param Gfi_name_src: String name of an existing isofill VCS object
-    :type Gfi_name_src: :py:class:`str`
+    :type Gfi_name_src: `str`_
 
     :returns: The specified isofill VCS object
     :rtype: vcs.isofill.Gfi
@@ -346,11 +353,11 @@ def createisoline(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: The object to inherit from.
         Can be an isoline object, or string name of an isoline object.
-    :type source: :py:class:`str` or vcs.isoline.Gi
+    :type source: `str`_ or :class:`vcs.isoline.Gi`
 
     :returns: An isoline graphics method object
     :rtype: vcs.isoline.Gi
@@ -366,7 +373,7 @@ def getisoline(Gi_name_src='default'):
     """%s
 
     :param Gi_name_src: String name of an existing isoline VCS object
-    :type Gi_name_src: :py:class:`str`
+    :type Gi_name_src: `str`_
 
     :returns: The requested isoline VCS object
     :rtype: vcs.isoline.Gi
@@ -400,13 +407,13 @@ def create1d(name=None, source='default'):
             <vcs.unified1D.G1d ...>
 
     :param name: A string name for the 1d to be created. If None, a unique name will be created.
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: A 1d object or string name of a 1d object from which the new 1d will inherit.
-    :type source: :py:class:`str` or :py:class:`vcs.unified1D.G1d`
+    :type source: `str`_ or :py:class:`vcs.unified1D.G1d`
 
     :return: A new 1d object, inheriting from source.
-    :rtype: :py:class:`vcs.unified1d.G1d`
+    :rtype: :py:class:`vcs.unified1D.G1d`
     """
     name, source = check_name_source(name, source, '1d')
     return unified1D.G1d(name, source)
@@ -428,7 +435,7 @@ def get1d(name):
             <vcs.unified1D.G1d ...>
 
     :param name: String name of a 1d in vcs. If there is no 1d with that name, an error will be raised.
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :return: A 1d from vcs with the given name.
     :rtype: :py:class:`vcs.unified1d.G1d`
@@ -446,12 +453,12 @@ def createxyvsy(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
 
     :param source: The object to inherit from.
         Can be a xyvsy, or a string name of a xyvsy.
-    :type source: :py:class:`str` or vcs.unified1D.G1d
+    :type source: `str`_ or :class:`vcs.unified1D.G1d`
 
     :returns: A XYvsY graphics method object
     :rtype: vcs.unified1D.G1d
@@ -475,7 +482,7 @@ def getxyvsy(GXy_name_src='default'):
     """%s
 
     :param GXy_name_src: String name of an existing Xyvsy graphics method
-    :type GXy_name_src: :py:class:`str`
+    :type GXy_name_src: `str`_
 
     :returns: An XYvsY graphics method object
     :rtype: vcs.unified1D.G1d
@@ -492,11 +499,11 @@ def createyxvsx(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: The object to inherit from.
         Can be a yxvsy, or a string name of a yxvsy.
-    :type source: :py:class:`str` or vcs.unified1D.G1d
+    :type source: `str`_ or :class:`vcs.unified1D.G1d`
 
     :returns: A YXvsX graphics method object
     :rtype: vcs.unified1D.G1d
@@ -537,11 +544,11 @@ def createxvsy(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: The object to inherit from.
         Can be a xvsy, or a string name of a xvsy.
-    :type source: :py:class:`str` or vcs.unified1D.G1d
+    :type source: `str`_ or :class:`vcs.unified1D.G1d`
 
     :returns: A XvsY graphics method object
     :rtype: vcs.unified1D.G1d
@@ -565,7 +572,7 @@ def getxvsy(GXY_name_src='default'):
     """%s
 
     :param GXY_name_src: String name of a 1d graphics method
-    :type GXY_name_src: :py:class:`str`
+    :type GXY_name_src: `str`_
 
     :returns: A XvsY graphics method object
     :rtype: vcs.unified1D.G1d
@@ -583,11 +590,11 @@ def createvector(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: The object to inherit from.
         Can be a vector, or a string name of a vector.
-    :type source: :py:class:`str` or vcs.vector.Gv
+    :type source: `str`_ or :class:`vcs.vector.Gv`
 
     :returns: A vector graphics method object
     :rtype: vcs.vector.Gv
@@ -601,7 +608,7 @@ def getvector(Gv_name_src='default'):
     """%s
 
     :param Gv_name_src: String name of an existing vector VCS object
-    :type Gv_name_src: :py:class:`str`
+    :type Gv_name_src: `str`_
 
     :returns: A vector graphics method object
     :rtype: vcs.vector.Gv
@@ -620,11 +627,11 @@ def createscatter(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: The object to inherit from.
         Can be a scatter or, a string name of a scatter.
-    :type source: :py:class:`str` or vcs.unified1D.G1d
+    :type source: `str`_ or :class:`vcs.unified1D.G1d`
 
     :return: A scatter graphics method
     :rtype: vcs.unified1D.G1d
@@ -649,7 +656,7 @@ def getscatter(GSp_name_src='default'):
     """%s
 
     :param GSp_name_src: String name of an existing scatter VCS object.
-    :type GSp_name_src: :py:class:`str`
+    :type GSp_name_src: `str`_
 
     :returns: A scatter graphics method object
     :rtype: vcs.unified1D.G1d
@@ -669,38 +676,38 @@ def createline(name=None, source='default', ltype=None,
     """%s
 
     :param name: Name of created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: a line, or string name of a line
-    :type source: :py:class:`str`
+    :type source: `str`_
 
     :param ltype: One of "dash", "dash-dot", "solid", "dot", or "long-dash".
-    :type ltype: :py:class:`str`
+    :type ltype: `str`_
 
     :param width: Thickness of the line to be created
-    :type width: :py:class:`int`
+    :type width: `int`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: :py:class:`str` or :py:class:`int`
+    :type color: `str`_ or `int`_
 
     :param priority: The layer on which the line will be drawn.
-    :type priority: :py:class:`int`
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :param projection: Specify a geographic projection used to convert x/y from spherical coordinates to 2D coordinates.
-    :type projection: :py:class:`str` or projection object
+    :type projection: `str`_ or projection object
 
     :returns: A VCS line secondary method object
     :rtype: vcs.line.Tl
@@ -782,32 +789,32 @@ def getline(name='default', ltype=None, width=None, color=None,
     """%s
 
     :param name: Name of created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param ltype: One of "dash", "dash-dot", "solid", "dot", or "long-dash".
-    :type ltype: :py:class:`str`
+    :type ltype: `str`_
 
     :param width: Thickness of the line to be created
-    :type width: :py:class:`int`
+    :type width: `int`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
         or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: :py:class:`str` or int
+    :type color: `str`_ or int
 
     :param priority: The layer on which the marker will be drawn.
-    :type priority: :py:class:`int`
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :returns: A VCS line object
     :rtype: vcs.line.Tl
@@ -849,35 +856,35 @@ def createmarker(name=None, source='default', mtype=None,
     """%s
 
     :param name: Name of created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: A marker, or string name of a marker
-    :type source: :py:class:`str`
+    :type source: `str`_
 
     :param mtype: Specifies the type of marker, i.e. "dot", "circle"
-    :type mtype: :py:class:`str`
+    :type mtype: `str`_
 
     :param size:
-    :type size: :py:class:`int`
+    :type size: `int`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
         or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: :py:class:`str` or int
+    :type color: `str`_ or int
 
     :param priority: The layer on which the marker will be drawn.
-    :type priority: :py:class:`int`
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :returns: A secondary marker method
     :rtype: vcs.marker.Tm
@@ -914,35 +921,35 @@ def getmarker(name='default', mtype=None, size=None, color=None,
     """%s
 
     :param name: Name of created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: A marker, or string name of a marker
-    :type source: :py:class:`str`
+    :type source: `str`_
 
     :param mtype: Specifies the type of marker, i.e. "dot", "circle"
-    :type mtype: :py:class:`str`
+    :type mtype: `str`_
 
     :param size: Size of the marker
-    :type size: :py:class:`int`
+    :type size: `int`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
         or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: :py:class:`str` or int
+    :type color: `str`_ or int
 
     :param priority: The layer on which the marker will be drawn.
-    :type priority: :py:class:`int`
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :returns: A marker graphics method object
     :rtype: vcs.marker.Tm
@@ -982,37 +989,37 @@ def createfillarea(name=None, source='default', style=None,
     """%s
 
     :param name: Name of created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: a fillarea, or string name of a fillarea
-    :type source: :py:class:`str`
+    :type source: `str`_
 
     :param style: One of "hatch", "solid", or "pattern".
-    :type style: :py:class:`str`
+    :type style: `str`_
 
     :param index: Specifies which `pattern <http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png>`_ to fill with.
         Accepts ints from 1-20.
-    :type index: :py:class:`int`
+    :type index: `int`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
         or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
 
-    :type color: :py:class:`str` or int
+    :type color: `str`_ or int
 
     :param priority: The layer on which the fillarea will be drawn.
-    :type priority: :py:class:`int`
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :returns: A fillarea object
     :rtype: vcs.fillarea.Tf
@@ -1049,34 +1056,34 @@ def getfillarea(name='default', style=None,
     """%s
 
     :param name: String name of an existing fillarea VCS object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param style: One of "hatch", "solid", or "pattern".
-    :type style: :py:class:`str`
+    :type style: `str`_
 
     :param index: Specifies which `pattern <http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png>`_ to fill with.
                   Accepts ints from 1-20.
-    :type index: :py:class:`int`
+    :type index: `int`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: :py:class:`str` or int
+    :type color: `str`_ or int
 
     :param priority: The layer on which the texttable will be drawn.
-    :type priority: :py:class:`int`
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y
         values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :returns: A fillarea secondary object
     :rtype: vcs.fillarea.Tf
@@ -1116,34 +1123,34 @@ def createtexttable(name=None, source='default', font=None,
     """%s
 
     :param name: Name of created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: a texttable, or string name of a texttable
-    :type source: :py:class:`str`
+    :type source: `str`_
 
     :param font: Which font to use (index or name).
-    :type font: :py:class:`int` or :py:class:`str`
+    :type font: `int`_ or `str`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: :py:class:`str` or int
+    :type color: `str`_ or int
 
     :param priority: The layer on which the texttable will be drawn.
-    :type priority: :py:class:`int`
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates.
         Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates.
         Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :returns: A texttable graphics method object
     :rtype: vcs.texttable.Tt
@@ -1189,29 +1196,29 @@ def gettexttable(name='default', font=None,
     """%s
 
     :param name: String name of an existing VCS texttable object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param font: Which font to use (index or name).
-    :type font: :py:class:`int` or :py:class:`str`
+    :type font: `int`_ or `str`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: :py:class:`str` or int
+    :type color: `str`_ or int
 
     :param priority: The layer on which the texttable will be drawn.
-    :type priority: :py:class:`int`
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :returns: A texttable graphics method object
     :rtype: vcs.texttable.Tt
@@ -1235,11 +1242,11 @@ def createtextorientation(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: The object to inherit from.
         Can be a textorientation, or a string name of a textorientation.
-    :type source: :py:class:`str` or vcs.textorientation.To
+    :type source: `str`_ or :class:`vcs.textorientation.To`
 
     :returns: A textorientation secondary method
     :rtype: vcs.textorientation.To
@@ -1255,7 +1262,7 @@ def gettextorientation(To_name_src='default'):
     """%s
 
     :param To_name_src: String name of an existing textorientation VCS object
-    :type To_name_src: :py:class:`str`
+    :type To_name_src: `str`_
 
     :returns: A textorientation VCS object
     :rtype: vcs.textorientation.To
@@ -1280,54 +1287,54 @@ def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_sourc
     """%s
 
     :param Tt_name: Name of created object
-    :type Tt_name: :py:class:`str`
+    :type Tt_name: `str`_
 
     :param Tt_source: Texttable object to inherit from. Can be a texttable, or a string name of a texttable.
-    :type Tt_source: :py:class:`str` or vcs.texttable.Tt
+    :type Tt_source: `str`_ or :class:`vcs.texttable.Tt`
 
     :param To_name: Name of the textcombined's text orientation  (to be created)
-    :type To_name: :py:class:`str`
+    :type To_name: `str`_
 
     :param To_source: Name of the textorientation to inherit.
             Can be a textorientation, or a string name of a textorientation.
-    :type To_source: :py:class:`str` or vcs.textorientation.To
+    :type To_source: `str`_ or :class:`vcs.textorientation.To`
 
     :param font: Which font to use (index or name).
-    :type font: :py:class:`int` or :py:class:`str`
+    :type font: `int`_ or `str`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: :py:class:`str` or int
+    :type color: `str`_ or int
 
     :param priority: The layer on which the object will be drawn.
-    :type priority: :py:class:`int`
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :param height: Size of the font
-    :type height: :py:class:`int`
+    :type height: `int`_
 
     :param angle: Angle of the text, in degrees
-    :type angle: :py:class:`int`
+    :type angle: `int`_
 
     :param halign: Horizontal alignment of the text. One of ["left", "center", "right"].
-    :type halign: :py:class:`str`
+    :type halign: `str`_
 
     :param valign: Vertical alignment of the text. One of ["top", "center", "botom"].
-    :type valign: :py:class:`str`
+    :type valign: `str`_
 
     :param projection: Specify a geographic projection used to convert x/y from spherical coordinates to 2D coordinates.
-    :type projection: :py:class:`str` or projection object
+    :type projection: `str`_ or projection object
 
     :returns: A VCS text object
     :rtype: vcs.textcombined.Tc
@@ -1388,47 +1395,49 @@ def gettextcombined(Tt_name_src='default', To_name_src=None, string=None, font=N
     """%s
 
     :param Tt_name_src: Name of created object
-    :type Tt_name_src: :py:class:`str`
+    :type Tt_name_src: `str`_
 
     :param To_name_src: Name of parent textorientation object
-    :type To_name_src: :py:class:`str`
+    :type To_name_src: `str`_
 
     :param string: Text to render
-    :type string: list of str
+    :type string: `list`_
 
     :param font: Which font to use (index or name)
-    :type font: :py:class:`int` or :py:class:`str`
+    :type font: `int`_ or `str`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
         or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: :py:class:`str` or int
+    :type color: `str`_ or int
 
     :param priority: The layer on which the object will be drawn.
-    :type priority: :py:class:`int`
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
-    :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :param x: List of lists of x coordinates.
+        Values must be between worldcoordinate[0] and worldcoordinate[1].
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :param height: Size of the font
-    :type height: :py:class:`int`
+    :type height: `int`_
 
-    :param angle: Angle of the rendered text, in degrees
-    :type angle: list of int
+    :param angle: Angle of the rendered text, in degrees.
+        Must be a list of integers.
+    :type angle: `list`_
 
     :param halign: Horizontal alignment of the text. One of ["left", "center", "right"]
-    :type halign: :py:class:`str`
+    :type halign: `str`_
 
     :param valign: Vertical alignment of the text. One of ["top", "center", "bottom"]
-    :type valign: :py:class:`str`
+    :type valign: `str`_
 
     :returns: A textcombined object
     :rtype: vcs.textcombined.Tc
@@ -1519,11 +1528,11 @@ def create3d_scalar(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: The object to inherit from.
         Can be a 3d_scalar, or a string name of a 3d_scalar.
-    :type source: :py:class:`str` or vcs.dv3d.Gf3Dscalar
+    :type source: `str`_ or :class:`vcs.dv3d.Gf3Dscalar`
 
     :returns: A 3d_scalar graphics method object
     :rtype: vcs.dv3d.Gf3Dscalar
@@ -1537,7 +1546,7 @@ def get3d_dual_scalar(Gfdv3d_name_src='default'):
     """%s
 
     :param Gfdv3d_name_src: String name of an existing 3d_dual_scalar VCS object
-    :type Gfdv3d_name_src: :py:class:`str`
+    :type Gfdv3d_name_src: `str`_
 
     :returns: A pre-existing 3d_dual_scalar VCS object
     :rtype: vcs.dv3d.Gf3DDualScalar
@@ -1557,11 +1566,11 @@ def create3d_dual_scalar(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: The object to inherit from.
         Can be a 3d_dual_scalar, or a string name of a 3d_dual_scalar.
-    :type source: :py:class:`str` or vcs.dv3d.Gf3DDualScalar
+    :type source: `str`_ or :class:`vcs.dv3d.Gf3DDualScalar`
 
     :returns: A 3d_dual_scalar graphics method object
     :rtype: vcs.dv3d.Gf3DDualScalar
@@ -1576,7 +1585,7 @@ def get3d_vector(Gfdv3d_name_src='default'):
     """%s
 
     :param Gfdv3d_name_src: String name of an existing 3d_vector VCS object
-    :type Gfdv3d_name_src: :py:class:`str`
+    :type Gfdv3d_name_src: `str`_
 
     :returns: A pre-existing 3d_vector VCS object
     :rtype: vcs.dv3d.Gf3Dvector
@@ -1597,11 +1606,11 @@ def create3d_vector(name=None, source='default'):
     """%s
 
     :param name: The name of the created object
-    :type name: :py:class:`str`
+    :type name: `str`_
 
     :param source: The object to inherit from.
         Can be a 3d_vector, or a string name of a 3d_vector.
-    :type source: :py:class:`str` or vcs.dv3d.Gf3Dvector
+    :type source: `str`_ or :class:`vcs.dv3d.Gf3Dvector`
 
     :returns: A 3d_vector graphics method object
     :rtype: vcs.dv3d.Gf3Dvector
@@ -1622,11 +1631,11 @@ def createcolormap(Cp_name=None, Cp_name_src='default'):
     """%s
 
     :param Cp_name: The name of the created object
-    :type Cp_name: :py:class:`str`
+    :type Cp_name: `str`_
 
     :param Cp_name_src: The object to inherit from.
         Can be a colormap or a string name of a colormap.
-    :type Cp_name_src: :py:class:`str` or vcs.colormap.Cp
+    :type Cp_name_src: `str`_ or :class:`vcs.colormap.Cp`
 
     :returns: A VCS colormap object
     :rtype: vcs.colormap.Cp
@@ -1641,7 +1650,7 @@ def getcolormap(Cp_name_src='default'):
     """%s
 
     :param Cp_name_src: String name of an existing colormap VCS object
-    :type Cp_name_src: :py:class:`str`
+    :type Cp_name_src: `str`_
 
     :returns: A pre-existing VCS colormap object
     :rtype: vcs.colormap.Cp

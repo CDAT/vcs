@@ -673,7 +673,7 @@ class Gfi(object):
     def exts(self, ext1='n', ext2='y'):
         self.ext_1 = ext1
         self.ext_2 = ext2
-    exts.__doc__ = xmldocs.extsdoc % {"name": "isofill", "data": "array"}
+    exts.__doc__ = xmldocs.extsdoc.format(name="isofill", data="array")
 #
 # Doesn't make sense to inherit. This would mean more coding in C.
 # I put this code back.
@@ -687,7 +687,7 @@ class Gfi(object):
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
         self.xmtics2 = xmt2
-    xmtics.__doc__ = xmldocs.xmticsdoc % {"name": "isofill"}
+    xmtics.__doc__ = xmldocs.xmticsdoc.format(name="isofill")
 
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
@@ -697,19 +697,19 @@ class Gfi(object):
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1
         self.ymtics2 = ymt2
-    ymtics.__doc__ = xmldocs.ymticsdoc % {"name": "isofill"}
+    ymtics.__doc__ = xmldocs.xmticsdoc.format(name="isofill")
 
     def datawc(self, dsp1=1e20, dsp2=1e20, dsp3=1e20, dsp4=1e20):
         self.datawc_y1 = dsp1
         self.datawc_y2 = dsp2
         self.datawc_x1 = dsp3
         self.datawc_x2 = dsp4
-    datawc.__doc__ = xmldocs.datawcdoc % {"name": "isofill"}
+    datawc.__doc__ = xmldocs.datawcdoc.format(name="isofill")
 
     def xyscale(self, xat='', yat=''):
         self.xaxisconvert = xat
         self.yaxisconvert = yat
-    xyscale.__doc__ = xmldocs.xyscaledoc % (('isofill',) * 4)
+    xyscale.__doc__ = xmldocs.xyscaledoc.format(name='isofill')
 
     def list(self):
         print "", "---------- Isofill (Gfi) member (attribute) listings ----------"

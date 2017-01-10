@@ -25,7 +25,7 @@
 import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import scriptdocs
+from xmldocs import scriptdocs, listdoc
 
 
 def process_src(nm, code):
@@ -494,7 +494,7 @@ class Tt(object):
         print "x =", self.x
         print "y =", self.y
         print 'colormap =', self.colormap
-
+    list.__doc__ = listdoc % {"name": "texttable", "parent": ""}
     ##########################################################################
     #                                                                           #
     # Script out secondary text table method in VCS to a file.                  #

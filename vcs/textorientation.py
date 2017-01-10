@@ -24,7 +24,7 @@
 #
 import VCS_validation_functions
 import vcs
-from xmldocs import scriptdocs
+from xmldocs import scriptdocs, listdoc
 
 
 def process_src(nm, code):
@@ -293,6 +293,7 @@ class To(object):
         print "path =", self.path
         print "halign =", self.halign
         print "valign =", self.valign
+    list.__doc__ = listdoc % {"name": "textorientation", "parent": ""}
 
     ##########################################################################
     #                                                                           #

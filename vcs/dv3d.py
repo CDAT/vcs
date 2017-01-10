@@ -1,22 +1,41 @@
-'''
-Created on Jun 18, 2014
-
-@author: tpmaxwel
-'''
-
+"""
+If in interact mode (see :func:`vcs.Canvas.Canvas.interact`), these attributes can be configured interactively, via the
+method described in the **Interact Mode** section of the attribute description.
+"""
+# @author: tpmaxwel
 import VCS_validation_functions
 import multiprocessing
 import vcs
 import time
 from DV3D.ConfigurationFunctions import ConfigManager
+from xmldocs import toggle_surface, toggle_volume, xslider, yslider, zslider, verticalscaling, scalecolormap, \
+    scaletransferfunction, toggleclipping, isosurfacevalue, scaleopacity, basemapopacity, camera
 
 
 class Gfdv3d(object):
-    """
+    __doc__ = """
     Gfdv3d is class from which Gf3Dvector, Gf3Dscalar, and Gf3DDualScalar
     inherit. It sets up properties and functions common to all of the 3d
     graphics method objects.
-    """
+
+    Attributes
+    ----------
+
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+    """ % (toggle_surface, toggle_volume, xslider, yslider, zslider, verticalscaling, scalecolormap,
+           scaletransferfunction, toggleclipping, isosurfacevalue, scaleopacity, basemapopacity, camera)
     __slots__ = [
         '__doc__',
         'name',

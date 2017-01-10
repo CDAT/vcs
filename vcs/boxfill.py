@@ -830,7 +830,7 @@ class Gfb(object):
     def exts(self, ext1='n', ext2='y'):
         self.ext_1 = ext1
         self.ext_2 = ext2
-    exts.__doc__ = xmldocs.extsdoc % {"name": "boxfill", "data": "array"}
+    exts.__doc__ = xmldocs.extsdoc.format(name="boxfill", data="array")
 #
 # Doesn't make sense to inherit. This would mean more coding in C.
 # I put this code back.
@@ -839,34 +839,34 @@ class Gfb(object):
     def xticlabels(self, xtl1='', xtl2=''):
         self.xticlabels1 = xtl1
         self.xticlabels2 = xtl2
-    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name" : "boxfill", "data": "f('u')"}
+    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name": "boxfill", "data": "f('u')"}
 
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
         self.xmtics2 = xmt2
-    xmtics.__doc__ = xmldocs.xmticsdoc % {"name" : "boxfill"}
+    xmtics.__doc__ = xmldocs.xmticsdoc.format(name="boxfill")
 
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
         self.yticlabels2 = ytl2
-    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name" : "boxfill", "data": "f('u')"}
+    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name": "boxfill", "data": "f('u')"}
 
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1
         self.ymtics2 = ymt2
-    ymtics.__doc__ = xmldocs.ymticsdoc % {"name" : "boxfill"}
+    ymtics.__doc__ = xmldocs.xmticsdoc.format(name="boxfill")
 
     def datawc(self, dsp1=1e20, dsp2=1e20, dsp3=1e20, dsp4=1e20):
         self.datawc_y1 = dsp1
         self.datawc_y2 = dsp2
         self.datawc_x1 = dsp3
         self.datawc_x2 = dsp4
-    datawc.__doc__ = xmldocs.datawcdoc % {"name": "boxfill"}
+    datawc.__doc__ = xmldocs.datawcdoc.format(name="boxfill")
 
     def xyscale(self, xat='linear', yat='linear'):
         self.xaxisconvert = xat
         self.yaxisconvert = yat
-    xyscale.__doc__ = xmldocs.xyscaledoc % (('boxfill',) * 4)
+    xyscale.__doc__ = xmldocs.xyscaledoc.format(name='boxfill')
 
     def getlevels(self, varmin, varmax):
         """Given a minimum and a maximum, will generate levels for the boxfill
