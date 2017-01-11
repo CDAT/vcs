@@ -412,7 +412,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             elif obj_name in ['1d', 'scatter', 'textcombined', 'xyvsy']:
                 if obj_name == 'textcombined':
                     d['tc'] = """>>> try: # try to create a new textcombined, in case none exist
-            ...     vcs.createtextcombined('EX_tt', 'qa', 'EX_tto', '7left')
+            ...     tc = vcs.createtextcombined('EX_tt', 'qa', 'EX_tto', '7left')
             ... except:
             ...     pass
             """
@@ -472,6 +472,22 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                     plot2 = """
             >>> a.plot(ex2%(args)s) # plot %(name)s
             <vcs.displayplot.Dp ...>"""
+                if obj_name.find('3d') >= 0:
+                    if obj_name is "3d_vector":
+                        plot = """
+            >>> a.plot(ex%(args)s) # plot %(name)s
+            Sample rate: 6
+            Sample rate: 6
+            initCamera: Camera => (...)
+            <vcs.displayplot.Dp ...>
+            """
+                    else:
+                        plot = """
+            >>> a.plot(ex%(args)s) # plot %(name)s
+            initCamera: Camera => (...)
+            <vcs.displayplot.Dp ...>
+            """
+
                 if d['slabs'] is not '':
                     plot = d['slabs'] + plot
                 example1 += plot
@@ -1004,7 +1020,6 @@ camera = """
                 **Interact Mode:** Left-click in window and drag to rotate. Right-click and drag to zoom/pan.
                 Shift-Left-click and drag to translate.
 """
-
 meshfill_doc = """
     %s
     %s
@@ -1013,9 +1028,7 @@ meshfill_doc = """
     %s
     %s
     """ % (levels_attr, fillarea_colors_attr, fillarea_attrs, legend_attr, exts_attrs, missing_attr)
-
 isofill_doc = meshfill_doc
-
 fillareadoc = """
         .. py:attribute:: fillareacolor (int)
 
@@ -1029,7 +1042,6 @@ fillareadoc = """
 
             pattern to use when filling a level and using pattern/hatch
     """  # noqa
-
 linesdoc = """
         .. py:attribute:: line ([str,...]/[vcs.line.Tl,...]/[int,...])
 
@@ -1056,7 +1068,6 @@ linedoc = """
 
             width for each isoline
     """  # noqa
-
 textsdoc = """
         .. py:attribute:: text (None/[vcs.textcombined.Tc,...])
 
@@ -1066,7 +1077,6 @@ textsdoc = """
 
             colors to use for each countour label
     """  # noqa
-
 markerdoc = """
         .. py:attribute:: marker (None/int/str/vcs.marker.Tm)
 
@@ -1080,7 +1090,6 @@ markerdoc = """
 
             size of markers
     """
-
 color_one_two_doc = """
         .. py:attribute:: color_1 (float)
 
@@ -1092,7 +1101,6 @@ color_one_two_doc = """
             Used in conjunction with boxfill_type linear/log10.
             Sets the last value of the legend's color range.
     """
-
 #############################################################################
 #                                                                           #
 # Graphics Method input section.                                            #
@@ -1148,39 +1156,30 @@ plot_output = """
     :return: A VCS displayplot object.
     :rtype: vcs.displayplot.Dp
     """
-
 boxfill_output = """
        boxfill :: (Ex: 0) no default
     """
-
 isofill_output = """
        isofill :: (Ex: 0) no default
     """
-
 isoline_output = """
        isoline :: (Ex: 0) no default
     """
-
 yxvsx_output = """
        yxvsx :: (Ex: 0) no default
     """
-
 xyvsy_output = """
        xyvsy :: (Ex: 0) no default
     """
-
 xvsy_output = """
        xvsy :: (Ex: 0) no default
     """
-
 scatter_output = """
        scatter :: (Ex: 0) no default
     """
-
 outfill_output = """
        outfill :: (Ex: 0) no default
     """
-
 outline_output = """
        outline :: (Ex: 0) no default
     """

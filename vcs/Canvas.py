@@ -3,6 +3,8 @@
     visible window. This gives users an easy way to preview how changes to data representation in VCS will change the
     visualization of that data.
 
+    .. pragma: skip-doctest
+
     .. _list: https://docs.python.org/2/library/functions.html#list
     .. _tuple: https://docs.python.org/2/library/functions.html#tuple
     .. _dict: https://docs.python.org/2/library/stdtypes.html#mapping-types-dict
@@ -301,6 +303,8 @@ class Canvas(object):
 
     See :py:func:`vcs.Canvas.Canvas.plot` for more information on the type of
     data that can be plotted on a Canvas object.
+
+    .. pragma: skip-doctest
     """
     __slots__ = [
         '_mode',
@@ -499,6 +503,7 @@ class Canvas(object):
                 a.plot(b,array)
                 a.interact() # interactively configure Canvas
 
+        .. pragma: skip-doctest
         """
         self.configure()
         self.backend.interact(*args, **kargs)
@@ -1276,8 +1281,6 @@ class Canvas(object):
                 The first string provided is assumed to be a template name. The second is assumed to be a
                 boxfill name.
 
-
-
         %s
         %s
         %s
@@ -1410,6 +1413,7 @@ class Canvas(object):
                 >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # get data file
                 >>> s = f('clt') # use data file to create a cdms2 slab
                 >>> a.scalar3d(ds,s) # Plot slab with defaults
+                initCamera: Camera => (...)
                 <vcs.displayplot.Dp ...>
                 >>> a.clear() # Clear VCS canvas
                 >>> t = a.gettemplate('polar')
@@ -1453,10 +1457,16 @@ class Canvas(object):
                     >>> s = f('u') # use data file to create a cdms2 slab
                     >>> s2 = f('v') # need two slabs, so get another
                     >>> a.vector3d(dv3,s,s2) # Plot slabs
+                    Sample rate: 6
+                    Sample rate: 6
+                    initCamera: Camera => (...)
                     <vcs.displayplot.Dp ...>
                     >>> a.clear() # Clear VCS canvas
                     >>> t = a.gettemplate('polar')
                     >>> a.vector3d(s,s2,dv3,t) # Plot with 'polar' template
+                    Sample rate: 6
+                    Sample rate: 6
+                    initCamera: Camera => (...)
                     <vcs.displayplot.Dp ...>
         """
         arglist = _determine_arg_list('3d_vector', args)
@@ -1496,10 +1506,13 @@ class Canvas(object):
                     >>> s = f('clt') # use data file to create a cdms2 slab
                     >>> s2 = f('v') # need two slabs, so get another
                     >>> a.dual_scalar3d(ds3,s,s2) # Plot slabs
+                    initCamera: Camera => (...)
                     <vcs.displayplot.Dp ...>
                     >>> a.clear() # Clear VCS canvas
+                         saved state data to file  <...>
                     >>> t = a.gettemplate('polar')
                     >>> a.dual_scalar3d(s,s2,ds3,t) # Plot w/ 'polar' template
+                    initCamera: Camera => (...)
                     <vcs.displayplot.Dp ...>
         """
         arglist = _determine_arg_list('3d_dual_scalar', args)

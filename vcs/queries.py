@@ -30,6 +30,8 @@
     .. _int: https://docs.python.org/2/library/functions.html?highlight=float#int
     .. _long: https://docs.python.org/2/library/functions.html?highlight=float#long
     .. _file: https://docs.python.org/2/library/functions.html?highlight=open#file
+
+    .. pragma: skip-doctest
 """
 import boxfill
 import isofill
@@ -145,9 +147,9 @@ def graphicsmethodtype(gobj):
             vcsError: The object passed is not a graphics method object.
 
     :returns: If gobj is a graphics method object, returns its type: 'boxfill', 'isofill', 'isoline', 'meshfill',
-            'scatter', 'vector', 'xvsy', 'xyvsy', 'yxvsx', 'taylordiagram', '1d', '3d_scalar', '3d_dual_scalar',
-            '3d_vector'.
-            If gobj is not a graphics method object, raises an exception and prints a vcsError message.
+        'scatter', 'vector', 'xvsy', 'xyvsy', 'yxvsx', 'taylordiagram', '1d', '3d_scalar', '3d_dual_scalar',
+        '3d_vector'.
+        If gobj is not a graphics method object, raises an exception and prints a vcsError message.
     :rtype: `str`_ or `None`_
     """
     import vcsaddons
