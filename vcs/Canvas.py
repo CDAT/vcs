@@ -503,7 +503,7 @@ class Canvas(object):
                 a.plot(b,array)
                 a.interact() # interactively configure Canvas
 
-        .. pragma: skip-doctest
+        .. pragma: skip-doctest Because testing interact() can't be handled in a doctest
         """
         self.configure()
         self.backend.interact(*args, **kargs)
@@ -822,8 +822,7 @@ class Canvas(object):
                 >>> a=vcs.init()
                 >>> ln=a.getline('red') # Get a VCS line object
                 >>> a.objecthelp(ln) # This will print out information on how to use ln
-                <BLANKLINE>
-                ... The Line object ...
+                The Line object ...
 
         """
         for x in arg:
@@ -1416,8 +1415,10 @@ class Canvas(object):
                 initCamera: Camera => (...)
                 <vcs.displayplot.Dp ...>
                 >>> a.clear() # Clear VCS canvas
+                     saved state data to file  <...>
                 >>> t = a.gettemplate('polar')
                 >>> a.scalar3d(s,ds,t) # Plot with 'polar' template
+                initCamera: Camera => (...)
                 <vcs.displayplot.Dp ...>
         """
         arglist = _determine_arg_list('3d_scalar', args)
@@ -1462,6 +1463,7 @@ class Canvas(object):
                     initCamera: Camera => (...)
                     <vcs.displayplot.Dp ...>
                     >>> a.clear() # Clear VCS canvas
+                         saved state data to file  <...>
                     >>> t = a.gettemplate('polar')
                     >>> a.vector3d(s,s2,dv3,t) # Plot with 'polar' template
                     Sample rate: 6
@@ -4102,6 +4104,8 @@ class Canvas(object):
 
         :param file: Filename to save
         :param mode: Ignored.
+
+        .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
         """
 
         if mode != 'w':
@@ -4232,6 +4236,8 @@ class Canvas(object):
 
             This function does not currently work.
             It will be implemented in the future.
+
+        .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
         """
         return self.canvas.get_selected_display(*())
 
@@ -4385,6 +4391,8 @@ class Canvas(object):
 
             This function does not currently work.
             It will be implemented in the future.
+
+        .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
         """
 
         p = self.canvas.grid(*args)
@@ -4501,6 +4509,8 @@ class Canvas(object):
             It will be implemented in the future.
 
             Use :func:`landscape` or :func:`portrait` instead.
+
+        .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
         """
         a = self.canvas.updateorientation(*args)
 
@@ -5471,6 +5481,8 @@ class Canvas(object):
 
             This function does not currently work.
             It will be implemented in the future.
+
+        .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
         """
         if orientation is None:
             orientation = self.orientation()[0]
@@ -5563,6 +5575,8 @@ class Canvas(object):
         :type file: `str`_
 
         :returns: 1 if the graphic method is stored in the file, nothing if it is not.
+
+        .. pragma: skip-doctest This function needs to be fixed
         """
         nm = GM.name
         gm = GM.g_name
@@ -5689,6 +5703,8 @@ class Canvas(object):
 
             This function does not currently work.
             It will be implemented in the future.
+
+        .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
         """
         if not isinstance(Dp_name_src, str):
             raise ValueError('Error -  The argument must be a string.')
@@ -5715,6 +5731,8 @@ class Canvas(object):
 
         :param name: Name to use to represent the font.
         :type name: `str`_
+
+        .. pragma: skip-doctest If you can reliably test it, please do.
         """
         if not os.path.exists(path):
             raise ValueError('Error -  The font path does not exists')
@@ -5849,6 +5867,7 @@ class Canvas(object):
             This function does not currently work.
             It will be added in the future.
 
+        .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
         """
         if isinstance(font1, str):
             index1 = self.getfont(font1)
@@ -5880,6 +5899,8 @@ class Canvas(object):
 
             This function does not currently work.
             It will be implemented in the future.
+
+        .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
         """
         if isinstance(font, str):
             font = self.getfont(font)

@@ -853,10 +853,8 @@ create_methods_doc = """
 
         .. doctest:: manageElements_create
 
-            >>> vcs.show('%(name)s') # available %(name)ss
-            *******************%(cap)s Names List**********************
-            ...
-            *******************End %(cap)s Names List**********************
+            >>> vcs.listelements('%(name)s') # list %(name)ss
+            [...]
             %(example)s
             """
 

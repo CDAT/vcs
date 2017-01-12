@@ -293,7 +293,7 @@ class To(object):
         print "path =", self.path
         print "halign =", self.halign
         print "valign =", self.valign
-    list.__doc__ = listdoc % {"name": "textorientation", "parent": ""}
+    list.__doc__ = listdoc.format(name="textorientation", parent="")
 
     ##########################################################################
     #                                                                           #

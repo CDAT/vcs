@@ -72,8 +72,7 @@ def process_src(nm, code):
 
 class Tl(object):
 
-    """
-    The Line object allows the manipulation of line type, width, color index,
+    """The Line object allows the manipulation of line type, width, color index,
     view port, world coordinates, and (x,y) points.
 
     This class is used to define an line table entry used in VCS, or it

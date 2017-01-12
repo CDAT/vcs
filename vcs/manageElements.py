@@ -9,6 +9,8 @@
     .. _int: https://docs.python.org/2/library/functions.html?highlight=float#int
     .. _long: https://docs.python.org/2/library/functions.html?highlight=float#long
     .. _file: https://docs.python.org/2/library/functions.html?highlight=open#file
+
+    .. pragma: skip-doctest
 """
 import vcs
 import boxfill

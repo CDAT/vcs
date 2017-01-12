@@ -762,7 +762,7 @@ class P(object):
             self.legend.list()
         elif (single == 'data'):
             self.data.list()
-    list.__doc__ = list.__doc__ % (listdoc % {"name": "template", "parent": ""})
+    list.__doc__ = list.__doc__ % (listdoc.format(name="template", parent=""))
 
     ###########################################################################
     #                                                                         #

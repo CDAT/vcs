@@ -768,7 +768,7 @@ class Gfm(object):
         print 'wrap =', self.wrap
         print 'colormap = ', self.colormap
         return
-    list.__doc__ = xmldocs.listdoc % {"name": "meshfill", "parent": ""}
+    list.__doc__ = xmldocs.listdoc.format(name="meshfill", parent="")
 
     ##########################################################################
     #                                                                           #

@@ -306,7 +306,10 @@ class Gfi(object):
     .. describe:: Attribute descriptions:
 
         %s
-        %s""" % (xmldocs.graphics_method_core, xmldocs.isofill_doc)
+        %s
+
+    .. pragma: skip-doctest
+    """ % (xmldocs.graphics_method_core, xmldocs.isofill_doc)
 
     colormap = VCS_validation_functions.colormap
     __slots__ = [
@@ -741,7 +744,7 @@ class Gfi(object):
         print "fillareaopacity = ", self.fillareaopacity
         print "levels = ", self.levels
         print "legend = ", self.legend
-    list.__doc__ = xmldocs.listdoc % {"name": "isofill", "parent": ""}
+    list.__doc__ = xmldocs.listdoc.format(name="isofill", parent="")
 
     #
     #

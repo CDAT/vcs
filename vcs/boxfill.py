@@ -369,6 +369,8 @@ class Gfb(object):
             * More boxfill attributes:
 
             %s
+
+            .. pragma: skip-doctest
             """ % xmldocs.graphics_method_core  # noqa
 
     def rename(self, newname):
@@ -878,7 +880,7 @@ class Gfb(object):
 
                 >>> b=vcs.createboxfill()
                 >>> lvls = b.getlevels(0,100) # 257 levels from 0-100
-                >>> b.levels = lvls # set boxfill's levels attribute
+                >>> b.levels = list(lvls) # set boxfill's levels attribute
 
         :param varmin: The smallest number desired for the boxfill's levels
             attribute.
@@ -1003,7 +1005,7 @@ class Gfb(object):
         print "ext_1 = ", self.ext_1
         print "ext_2 = ", self.ext_2
         print "missing = ", self.missing
-    list.__doc__ = xmldocs.listdoc % {"name": "boxfill", "parent": ""}
+    list.__doc__ = xmldocs.listdoc.format(name="boxfill", parent="")
     ###########################################################################
     #                                                                         #
     # Script out primary boxfill graphics method in VCS to a file.            #
