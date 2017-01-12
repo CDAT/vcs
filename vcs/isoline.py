@@ -428,6 +428,8 @@ class Gi(object):
             %s
             %s
             %s
+
+            .. pragma: skip-doctest
             """ % (xmldocs.graphics_method_core, xmldocs.linesdoc, xmldocs.textsdoc)
 
     colormap = VCS_validation_functions.colormap
@@ -752,6 +754,8 @@ class Gi(object):
         """
         Add either a (linetype, 1, 1) or (linetype, linecolor, linewidth)
         based on if mixed[i] is a linetype or a line object name.
+
+        .. pragma: skip-doctest TODO: add a setLineAttributes example
         """
         import queries
         types = []
