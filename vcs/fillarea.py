@@ -25,7 +25,7 @@
 import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import scriptdocs
+from xmldocs import scriptdocs, listdoc
 
 
 def getmember(self, name):
@@ -97,7 +97,7 @@ def process_src(nm, code):
 
 #
 #
-# Fillarea (Tm) Class.                                                      #
+# Fillarea (Tf) Class.                                                      #
 #
 #
 
@@ -188,6 +188,7 @@ class Tf(object):
                 # List of FloatTypes
                 fa.y=[[.5,.4,.3], [.2,.1,0]]
 
+        .. pragma: skip-doctest
         """
     __slots__ = [
         'name',
@@ -439,6 +440,7 @@ class Tf(object):
         print "y =", self.y
         print "projection =", self.projection
         print "colormap =", self.colormap
+    list.__doc__ = listdoc.format(name="fillarea", parent="")
 
     #
     #

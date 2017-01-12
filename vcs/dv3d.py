@@ -9,7 +9,7 @@ import vcs
 import time
 from DV3D.ConfigurationFunctions import ConfigManager
 from xmldocs import toggle_surface, toggle_volume, xslider, yslider, zslider, verticalscaling, scalecolormap, \
-    scaletransferfunction, toggleclipping, isosurfacevalue, scaleopacity, basemapopacity, camera
+    scaletransferfunction, toggleclipping, isosurfacevalue, scaleopacity, basemapopacity, camera, scriptdocs
 
 
 class Gfdv3d(object):
@@ -34,6 +34,8 @@ class Gfdv3d(object):
     %s
     %s
     %s
+
+    .. pragma: skip-doctest
     """ % (toggle_surface, toggle_volume, xslider, yslider, zslider, verticalscaling, scalecolormap,
            scaletransferfunction, toggleclipping, isosurfacevalue, scaleopacity, basemapopacity, camera)
     __slots__ = [
@@ -136,6 +138,7 @@ class Gfdv3d(object):
             f = open(script_filename, mode)
             vcs.utils.dumpToJson(self, f)
             f.close()
+    # can we add a scriptdocs[g_name] here and have each derived class pick up the documentation correctly?
 
     def __init__(self, Gfdv3d_name, Gfdv3d_name_src='default'):
         if not isinstance(Gfdv3d_name, str):

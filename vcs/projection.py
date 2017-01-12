@@ -15,7 +15,7 @@
 import VCS_validation_functions
 import vcs
 import copy
-from xmldocs import scriptdocs
+from xmldocs import scriptdocs, listdoc
 
 # used to decide if we show longitude labels for round projections or
 # latitude labels for elliptical projections
@@ -382,6 +382,7 @@ class Proj(object):
             # or
             iso.projection='lambert'
 
+    .. pragma: skip-doctest
     """
 
     def __init__(self, Proj_name=None, Proj_name_src='default'):
@@ -451,6 +452,7 @@ class Proj(object):
 
         for att in self.attributes:
             print att, '=', getattr(self, att)
+    list.__doc__ = listdoc.format(name="projection", parent="")
 
     @property
     def attributes(self):

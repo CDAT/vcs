@@ -242,6 +242,7 @@ class Cp(object):
                 # R, G, B values range from 0 to 100, where 0 is low intensity and 100 is highest intensity
                 cp.color=17,0,0,100
 
+    .. pragma: skip-doctest
     """
     __slots__ = ["s_name", "name", "_name", "index", "_index"]
 
@@ -372,6 +373,7 @@ class Cp(object):
         print "secondary method =", self.s_name
         print "name =", self.name
         print "index =", self.index
+    list.__doc__ = xmldocs.listdoc.format(name="colormap", parent="")
 
     ##########################################################################
     #                                                                           #

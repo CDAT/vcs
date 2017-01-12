@@ -546,7 +546,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
 #       "graphics method" / "secondary method" : These top-level keys specify the type of objects described within
 #       "callable"(bool): specifies whether the object has a self-named plotting function, i.e. fillarea()
 #       "parent"(str): specifies the name of the object to be used in inheritance for a first example.
-#           Usually 'default', but it can change based on situation.
+#           Usually 'default', but it can change based on situation (textcombined, 1d, xyvsy, etc.).
 #       "parent2"(str): specifies a name for object inheritance in a second example. If there is no reliable second
 #           object, (i.e. vcs only has a 'default' object pre-made), use an empty string.
 #       "rtype"(VCS object type): the type of the object to be returned. This is only used for manageElements 'get' and

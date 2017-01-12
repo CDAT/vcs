@@ -305,6 +305,8 @@ class Gfm(object):
     %s
     mesh :: (str/int) (0) Draws the mesh
     wrap :: ([float,float]) ([0.,0.]) Modulo to wrap around on either axis (automatically set to 360 for longitude axes)
+
+    .. pragma: skip-doctest
     """ % (xmldocs.graphics_method_core, xmldocs.meshfill_doc)
 
     ##########################################################################

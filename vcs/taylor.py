@@ -548,6 +548,8 @@ class Gtd(object):
     `Taylor diagrams`_ provide a way of graphically summarizing how closely a pattern matches observations.
 
     .. _Taylor diagrams: http://www-pcmdi.llnl.gov/about/staff/Taylor/CV/Taylor_diagram_primer.pdf
+
+    .. pragma: skip-doctest
     """
     __slots__ = [
         'template',
@@ -919,6 +921,8 @@ class Gtd(object):
         :rtype: float
 
         .. _`skill`: https://en.wikipedia.org/wiki/Forecast_skill
+
+        .. pragma: skip-doctest TODO: add an example/doctest
         """
         alpha = self.skillCoefficient[0]  # default is 1.
         beta = self.skillCoefficient[1]  # default is 1.
@@ -960,6 +964,8 @@ class Gtd(object):
 
         :param function: A function for determining the skill score of a model.
         :type function: function
+
+        .. pragma: skip-doctest TODO add an example/doctest
         """
         if function is None:
             return
@@ -1404,6 +1410,8 @@ class Gtd(object):
 
         :returns: The coordinates for the calculated arc.
         :rtype: tuple
+
+        .. pragma: skip-doctest TODO add an example/doctest
         """
         xs = []
         ys = []
@@ -1929,6 +1937,8 @@ class Gtd(object):
 
         :param canvas: A VCS Canvas object on which the diagram will be plotted.
         :type canvas: vcs.Canvas.Canvas
+
+        .. pragma: skip-doctest TODO add an example/doctest
         """
         self.bg = bg
         self.displays = []

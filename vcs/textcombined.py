@@ -2,7 +2,7 @@
 # Text Combined (Tc) module
 """
 import vcs
-from xmldocs import scriptdocs
+from xmldocs import scriptdocs, listdoc
 # Adapted for numpy/ma/cdms2 by convertcdms.py
 
 ###############################################################################
@@ -201,6 +201,8 @@ class Tc(object):
                 tc.valign='base'
                 # Same as tcvalign=4
                 tc.valign='bottom'
+
+    .. pragma: skip-doctest TODO: convert examples to doctests
     """
 
     __slots__ = [
@@ -413,6 +415,19 @@ class Tc(object):
     #                                                                           #
     ##########################################################################
     def list(self):
+        """Lists the current values of object attributes
+
+        :Example:
+
+            .. doctest:: listdoc
+
+                >>> a=vcs.init()
+                >>> ctc = vcs.createtextcombined # alias long name
+                >>> obj=ctc('list_tt', 'qa', 'list_tto', '7left')
+                >>> obj.list() # print textcombined attributes
+                 ---------- ... ----------
+                ...
+        """
         if ((self.Tt_name == '__removed_from_VCS__') or
                 (self.To_name == '__removed_from_VCS__')):
             raise ValueError('This instance has been removed from VCS.')

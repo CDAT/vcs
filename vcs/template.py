@@ -192,6 +192,7 @@ class P(object):
         .. code-block:: python
 
              temp=a.gettemplate('hovmuller')
+    .. pragma: skip-doctest TODO convert examples to working doctests
     """
     __slots__ = ["name", "_name", "_p_name", "p_name",
                  "_orientation", "_orientation", "_file", "file",
@@ -1024,6 +1025,8 @@ class P(object):
         using the label passed by the graphic  method
         vp and wc are from the actual canvas, they have
         been reset when they get here...
+
+        .. pragma: skip-doctest TODO add example/doctest
         """
 
         kargs["donotstoredisplay"] = True
@@ -1243,6 +1246,8 @@ class P(object):
             which should be turned off. If attribute is left blank, or is None,
             all elements of the template will be turned off.
         :type attribute: `None`_ or  `str`_ or `list`_
+
+        .. pragma: skip-doctest TODO add example/doctest
         """
         if attribute is None:
             attribute = self.__slots__
@@ -1577,6 +1582,7 @@ class P(object):
                 >>> t=a.gettemplate()
                 >>> b=a.getboxfill() # boxfill gm
                 >>> t.drawAttributes(a,s,b) # shows attributes of s on canvas
+                [...]
 
         :param x: vcs canvas onto which attributes will be drawn
         :type x: vcs.Canvas.Canvas
@@ -1659,6 +1665,8 @@ class P(object):
              max=None, X=None, Y=None, **kargs):
         """This plots the template stuff on the Canvas.
         It needs a slab and a graphic method.
+
+        .. pragma: skip-doctest TODO add example/doctest
         """
 
         displays = []
@@ -1855,6 +1863,8 @@ class P(object):
         :param opacity:
         :param kargs:
         :return:
+
+        .. pragma: skip-doctest TODO add example/doctest. And more documentation...
         """
 
         kargs["donotstoredisplay"] = True
@@ -2164,7 +2174,6 @@ class P(object):
             box_and_ticks: Also redefine box and ticks to the new region.
             If None, Rout will be determined automatically.
         :type Rout: `float`_ or `int`_
-
         """
 
         # Converts lat/lon to rad

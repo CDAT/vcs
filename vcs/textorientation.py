@@ -151,6 +151,8 @@ class To(object):
                 to.valign='base'
                 # Same as tovalign=4
                 to.valign='bottom'
+
+    .. pragma: skip-doctest TODO: convert examples to doctests
     """
     __slots__ = [
         's_name',

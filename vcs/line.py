@@ -25,7 +25,7 @@
 import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import scriptdocs
+from xmldocs import scriptdocs, listdoc
 
 
 def process_src(nm, code):
@@ -145,6 +145,8 @@ class Tl(object):
                 >>> ln.x=[[0,.1,.2], [.3,.4,.5]] # List of floats
                 >>> ln.y=[[.5,.4,.3], [.2,.1,0]] # List of floats
 
+    .. ln.x and ln.y above cause ln to be unplottable. Need a better example.
+    .. Use doctests in this class as a model for converting other class docstrings to use doctests.
     """
     __slots__ = [
         's_name',
@@ -387,6 +389,7 @@ class Tl(object):
         print "y =", self.y
         print "projection =", self.projection
         print "colormap =", self.colormap
+    list.__doc__ = listdoc.format(name="line", parent="")
 
     ##########################################################################
     #                                                                           #

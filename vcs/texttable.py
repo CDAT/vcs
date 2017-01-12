@@ -174,6 +174,7 @@ class Tt(object):
                 # List of FloatTypes
                 tt.y=[[.5,.4,.3], [.2,.1,0]]
 
+    .. pragma: skip-doctest TODO: convert examples to doctests
     """
     __slots__ = [
         's_name',
