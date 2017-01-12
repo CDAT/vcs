@@ -715,7 +715,7 @@ class Gfi(object):
     xyscale.__doc__ = xmldocs.xyscaledoc.format(name='isofill')
 
     def list(self):
-        print "", "---------- Isofill (Gfi) member (attribute) listings ----------"
+        print "---------- Isofill (Gfi) member (attribute) listings ----------"
         print "graphics method =", self.g_name
         print "name =", self.name
         print "projection =", self.projection

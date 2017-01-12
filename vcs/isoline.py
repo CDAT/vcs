@@ -1026,7 +1026,7 @@ class Gi(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "---------- Isoline (Gi) member (attribute) listings ----------"
+        print "---------- Isoline (Gi) member (attribute) listings ----------"
         print "graphics method =", self.g_name
         print "name =", self.name
         print "projection =", self.projection

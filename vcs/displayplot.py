@@ -300,7 +300,7 @@ class Dp(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "---------- Display Plot (Dp) member (attribute) listings ----------"
+        print "---------- Display Plot (Dp) member (attribute) listings ----------"
         print "Display plot method =", self.s_name
         print "name =", self.name
         print "off =", self.off

@@ -416,7 +416,7 @@ class Tc(object):
         if ((self.Tt_name == '__removed_from_VCS__') or
                 (self.To_name == '__removed_from_VCS__')):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "---------- Text combined (Tc) member (attribute) listings ----------"
+        print "---------- Text combined (Tc) member (attribute) listings ----------"
         print "secondary method =", self.s_name
         print "", "---------- Text Table (Tt) member (attribute) listings ----------"
         print "Tt_name =", self.Tt_name

@@ -736,7 +736,7 @@ class Gfm(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print ' ---------- Meshfill (Gmf) member (attribute) listings ---------'
+        print '---------- Meshfill (Gmf) member (attribute) listings ----------'
         print 'graphics method =', self.g_name
         print 'name =', self.name
         print 'projection =', self.projection

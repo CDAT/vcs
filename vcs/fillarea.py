@@ -425,7 +425,7 @@ class Tf(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "---------- Fillarea (Tf) member (attribute) listings ----------"
+        print "---------- Fillarea (Tf) member (attribute) listings ----------"
         print "secondary method =", self.s_name
         print "name =", self.name
         print "style =", self.style

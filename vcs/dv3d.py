@@ -244,7 +244,7 @@ class Gfdv3d(object):
         self.cfgManager.initDefaultState()
 
     def list(self):
-        print ' ---------- DV3D (Gfdv3d) member (attribute) listings ---------'
+        print '---------- DV3D (Gfdv3d) member (attribute) listings ----------'
         print 'name =', self.name
         print 'axes =', self.axes
         for pname in self.parameter_names:

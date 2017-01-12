@@ -443,7 +443,7 @@ class Proj(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print ' ---------- Projection (Proj) member (attribute) listings ---------'
+        print '---------- Projection (Proj) member (attribute) listings ----------'
         print 'secondary method =', self.s_name
         print 'name =', self.name
         print 'type =', self.type

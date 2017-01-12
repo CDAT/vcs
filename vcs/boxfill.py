@@ -971,7 +971,7 @@ class Gfb(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "---------- Boxfill (Gfb) member (attribute) listings ----------"
+        print "---------- Boxfill (Gfb) member (attribute) listings ----------"
         print "graphics method =", self.g_name
         print "name =", self.name
         print "projection =", self.projection
