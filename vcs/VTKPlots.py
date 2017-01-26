@@ -669,20 +669,9 @@ class VTKVCSBackend(object):
 
         elif gtype == "fillarea":
             if gm.priority != 0:
-                actors = vcs2vtk.prepFillarea(self.renWin, gm,
+                actors = vcs2vtk.prepFillarea(self, self.renWin, gm,
                                               cmap=self.canvas.colormap)
                 returned["vtk_backend_fillarea_actors"] = actors
-                create_renderer = True
-                for act, geo in actors:
-                    ren = self.fitToViewport(
-                        act,
-                        gm.viewport,
-                        wc=gm.worldcoordinate,
-                        geoBounds=None,
-                        geo=None,
-                        priority=gm.priority,
-                        create_renderer=create_renderer)
-                    create_renderer = False
         else:
             raise Exception(
                 "Graphic type: '%s' not re-implemented yet" %

@@ -1307,7 +1307,7 @@ def __build_pd__():
     return pts, polygons, polygonPolyData
 
 
-def prepFillarea(renWin, farea, cmap=None):
+def prepFillarea(context, renWin, farea, cmap=None):
     n = prepPrimitive(farea)
     if n == 0:
         return []
@@ -1326,7 +1326,10 @@ def prepFillarea(renWin, farea, cmap=None):
     colors = vtk.vtkUnsignedCharArray()
     colors.SetNumberOfComponents(4)
     colors.SetNumberOfTuples(n)
+    colors.SetName("Colors")
     polygonPolyData.GetCellData().SetScalars(colors)
+
+    pattern_polydatas = []
 
     # Iterate through polygons:
     for i in range(n):
@@ -1345,10 +1348,10 @@ def prepFillarea(renWin, farea, cmap=None):
             color_arr = vtk.vtkUnsignedCharArray()
             color_arr.SetNumberOfComponents(4)
             color_arr.SetNumberOfTuples(1)
-            colors.SetNumberOfTuples(colors.GetNumberOfTuples() - 1)
+            color_arr.SetName("BackgroundColors")
             pd.GetCellData().SetScalars(color_arr)
+            pattern_polydatas.append([i, pd])
 
-        idx = farea.index[i]
         N = max(len(x), len(y))
 
         for a in [x, y]:
@@ -1375,34 +1378,21 @@ def prepFillarea(renWin, farea, cmap=None):
             opacity = None
         # Draw colored background for solid
         # transparent/white background for hatches/patterns
+        # Add the color to the color array:
+        if opacity is not None:
+            color[-1] = opacity
+        color = [int(C / 100. * 255) for C in color]
         if st == 'solid':
-            # Add the color to the color array:
-            if opacity is not None:
-                color[-1] = opacity
-            color = [int(C / 100. * 255) for C in color]
-            colors.SetTypedTuple(cellId, color)
+            # In this case, colors is our scalar array
+            # so, add the color at the cell index
+            color_arr.SetTypedTuple(cellId, color)
         else:
+            # In this case, colors is a backup array that represents colors
+            # for the pattern in each polygon. Each tuple in the colors array
+            # should represent the pattern color for the indexed polygon
+            colors.SetTypedTuple(i, color)
+            # color_arr is our scalar array
             color_arr.SetTypedTuple(cellId, [255, 255, 255, 0])
-
-        if st != "solid":
-            # Patterns/hatches support
-            geo, proj_points = project(
-                points, farea.projection, farea.worldcoordinate)
-            pd.SetPoints(proj_points)
-            act = fillareautils.make_patterned_polydata(pd,
-                                                        st,
-                                                        idx,
-                                                        color,
-                                                        opacity,
-                                                        renWin.GetSize())
-            if act is not None:
-                if (st == "pattern" and opacity > 0) or st == "hatch":
-                    m = vtk.vtkPolyDataMapper()
-                    m.SetInputData(pd)
-                    a = vtk.vtkActor()
-                    a.SetMapper(m)
-                    actors.append((a, geo))
-                actors.append((act, geo))
 
     # Transform points
     geo, pts = project(pts, farea.projection, farea.worldcoordinate)
@@ -1412,7 +1402,46 @@ def prepFillarea(renWin, farea, cmap=None):
     m.SetInputData(polygonPolyData)
     a = vtk.vtkActor()
     a.SetMapper(m)
+    ren, xscale, yscale = context.fitToViewport(a,
+                                                farea.viewport,
+                                                wc=farea.worldcoordinate,
+                                                geoBounds=None,
+                                                geo=None,
+                                                priority=farea.priority,
+                                                create_renderer=True)
     actors.append((a, geo))
+    transform = a.GetUserTransform()
+
+    # Patterns/hatches support
+    for i, pd in pattern_polydatas:
+        st = farea.style[i]
+        if st != "solid":
+            geo, proj_points = project(
+                pd.GetPoints(), farea.projection, farea.worldcoordinate)
+            pd.SetPoints(proj_points)
+            transformFilter = vtk.vtkTransformFilter()
+            transformFilter.SetInputData(pd)
+            transformFilter.SetTransform(transform)
+            transformFilter.Update()
+            cellcolor = [0, 0, 0, 0]
+            colors.GetTypedTuple(i, cellcolor)
+            pcolor = [indC * 100. / 255.0 for indC in cellcolor]
+            act = fillareautils.make_patterned_polydata(transformFilter.GetOutput(),
+                                                        st,
+                                                        farea.index[i],
+                                                        pcolor,
+                                                        pcolor[3],
+                                                        renWin.GetSize())
+            if act is not None:
+                # if (st == "pattern" and pcolor[3] > 0) or st == "hatch":
+                    # m = vtk.vtkPolyDataMapper()
+                    # m.SetInputData(transformFilter.GetOutput())
+                    # ac = vtk.vtkActor()
+                    # ac.SetMapper(m)
+                    # ren.AddActor(a)
+                    # actors.append((ac, geo))
+                ren.AddActor(act)
+                actors.append((act, geo))
 
     return actors
 
