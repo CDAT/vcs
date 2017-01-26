@@ -169,10 +169,7 @@ def putMaskOnVTKGrid(data, grid, actorColor=None, cellData=True, deep=True):
         setArray(grid, ghost, vtk.vtkDataSetAttributes.GhostArrayName(),
                  cellData, isScalars=False)
         if (grid.GetExtentType() == vtk.VTK_PIECES_EXTENT):
-            if (cellData):
-                pass
-            else:
-                removeHiddenPoints(grid)
+            removeHiddenPointsOrCells(grid, celldata=cellData)
 
     return mapper
 
@@ -245,20 +242,40 @@ def setInfToValid(geoPoints, ghost):
     return anyInfinity
 
 
-def removeHiddenPoints(grid):
-    ghost = grid.GetPointGhostArray()
+def removeHiddenPointsOrCells(grid, celldata=False):
+    """Remove hidden points or cells from the input VTK polydata.
+
+    Note that, at a time, this method removes only one hidden entity - either
+    points or cells from the input dataset. To remove both, hidden points and
+    cells, call the function twice, toggling the celldata flag for each call.
+
+    Keyword arguments:
+    grid     -- The input dataset
+    celldata -- If True, this method will remove cells, else points
+    """
+
+    # Since this method involves deleting points or cells from the polydata, the
+    # first step is to build "upward" links from points to cells.
+    grid.BuildLinks()
+
+    ghost = grid.GetCellGhostArray() if celldata else grid.GetPointGhostArray()
     if (not ghost):
         return
-    pts = grid.GetPoints()
     minScalar = sys.float_info.max
     minVector = [0, 0, 0]
     minVectorNorm = sys.float_info.max
-    scalars = grid.GetPointData().GetScalars()
-    vectors = grid.GetPointData().GetVectors()
+    num = grid.GetNumberOfCells() if celldata else grid.GetNumberOfPoints()
+    hidden = vtk.vtkDataSetAttributes.HIDDENCELL if celldata else vtk.vtkDataSetAttributes.HIDDENPOINT
+    if not celldata:
+        scalars = grid.GetPointData().GetScalars()
+        vectors = grid.GetPointData().GetVectors()
+    else:
+        scalars = grid.GetCellData().GetScalars()
+        vectors = grid.GetCellData().GetVectors()
     if (scalars or vectors):
         vector = [0, 0, 0]
-        for i in range(pts.GetNumberOfPoints()):
-            if (not (ghost.GetValue(i) & vtk.vtkDataSetAttributes.HIDDENPOINT)):
+        for i in range(num):
+            if (not (ghost.GetValue(i) & hidden)):
                 if (scalars):
                     scalar = scalars.GetValue(i)
                     if (scalar < minScalar):
@@ -271,21 +288,24 @@ def removeHiddenPoints(grid):
                         minVectorNorm = vectorNorm
     hiddenScalars = False
     hiddenVectors = False
-    for i in range(pts.GetNumberOfPoints()):
-        if (ghost.GetValue(i) & vtk.vtkDataSetAttributes.HIDDENPOINT):
-            cells = vtk.vtkIdList()
-            # point hidden, remove all cells used by this point
-            grid.GetPointCells(i, cells)
-            for j in range(cells.GetNumberOfIds()):
-                grid.DeleteCell(cells.GetId(j))
-            # hidden points are not removed. This causes problems
-            # because it changes the scalar range.
-            if(scalars):
-                hiddenScalars = True
-                scalars.SetValue(i, minScalar)
-            if(vectors):
-                hiddenVectors = True
-                vectors.SetTypedTuple(i, minVector)
+    for i in range(num):
+        if (ghost.GetValue(i) & hidden):
+            if not celldata:
+                cells = vtk.vtkIdList()
+                # point hidden, remove all cells used by this point
+                grid.GetPointCells(i, cells)
+                for j in range(cells.GetNumberOfIds()):
+                    grid.DeleteCell(cells.GetId(j))
+                # hidden points are not removed. This causes problems
+                # because it changes the scalar range.
+                if(scalars):
+                    hiddenScalars = True
+                    scalars.SetValue(i, minScalar)
+                if(vectors):
+                    hiddenVectors = True
+                    vectors.SetTypedTuple(i, minVector)
+            else:
+                grid.DeleteCell(i)
     # SetValue does not call modified - we'll have to call it after all calls.
     if (hiddenScalars):
         scalars.Modified()
@@ -547,7 +567,7 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
             # hidden point don't work for polys or unstructured grids.
             # We remove the cells in this case.
             if (vg.GetExtentType() == vtk.VTK_PIECES_EXTENT):
-                removeHiddenPoints(vg)
+                removeHiddenPointsOrCells(vg, celldata=False)
 
         # Sets the vertics into the grid
         vg.SetPoints(geopts)
