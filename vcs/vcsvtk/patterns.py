@@ -73,7 +73,7 @@ class HorizStripe(Pattern):
     def paint(self):
         self.glyph.SetGlyphTypeToDash()
         self.glyph.FilledOn()
-        self.glyph.SetScale(self.scale * 1.5)
+        self.glyph.SetScale(self.scale * 1.2)
 
 
 class VertStripe(HorizStripe):
@@ -102,7 +102,7 @@ class HorizDash(Pattern):
     def paint(self):
         self.glyph.SetGlyphTypeToDash()
         self.glyph.FilledOn()
-        self.glyph.SetScale(self.scale * 3.0 / 4.0)
+        self.glyph.SetScale(self.scale * 0.75)
 
 
 class VertDash(HorizDash):
@@ -115,14 +115,15 @@ class VertDash(HorizDash):
 class Cross(Pattern):
 
     def paint(self):
-        self.glyph.SetGlyphTypeToThickCross()
-        self.glyph.SetScale(self.scale * 3.0 / 4.0)
+        self.glyph.CrossOn()
+        self.glyph.SetScale2(0.1)
 
 
 class FilledCross(Cross):
 
     def paint(self):
-        Cross.paint(self)
+        self.glyph.SetGlyphTypeToThickCross()
+        self.glyph.SetScale(self.scale * 0.6)
         self.glyph.FilledOn()
 
 
@@ -151,7 +152,7 @@ class Square(Pattern):
 
     def paint(self):
         self.glyph.SetGlyphTypeToSquare()
-        self.glyph.SetScale(self.scale * 3.0 / 4.0)
+        self.glyph.SetScale(self.scale * 0.6)
 
 
 class FilledSquare(Square):
@@ -161,19 +162,12 @@ class FilledSquare(Square):
         self.glyph.FilledOn()
 
 
-class Arrow(Pattern):
-
-    def paint(self):
-        self.glyph.SetGlyphTypeToThickArrow()
-        self.glyph.SetScale(self.scale * 3.0 / 4.0)
-
-
 class CircleCross(Pattern):
 
     def paint(self):
         self.glyph.SetGlyphTypeToCircle()
         self.glyph.SetScale(self.scale * 0.5)
-        self.glyph.SetScale2(2.5)
+        self.glyph.SetScale2(1.5)
         self.glyph.CrossOn()
 
 
@@ -181,7 +175,14 @@ class EdgeArrow(Pattern):
 
     def paint(self):
         self.glyph.SetGlyphTypeToEdgeArrow()
-        self.glyph.SetScale(self.scale * 0.75)
+        self.glyph.SetScale(self.scale * 0.5)
+
+
+class EdgeArrowInverted(EdgeArrow):
+
+    def paint(self):
+        EdgeArrow.paint(self)
+        self.glyph.SetRotationAngle(180)
 
 
 # Patterns are 1-indexed, so we always skip the 0th element in this list
@@ -189,4 +190,4 @@ pattern_list = [Pattern, Triangle, FilledTriangle, Dot, FilledDot,
                 HorizStripe, VertStripe, HorizDash, VertDash,
                 DiagStripe, ReverseDiagStripe,
                 Cross, FilledCross, XCross, Diamond, FilledDiamond,
-                Square, FilledSquare, Arrow, CircleCross, EdgeArrow]
+                Square, FilledSquare, CircleCross, EdgeArrow, EdgeArrowInverted]
