@@ -112,7 +112,6 @@ class IsofillPipeline(Pipeline2D):
 
         # And now we need actors to actually render this thing
         actors = []
-        patternActors = []
         ct = 0
         vp = self._resultDict.get('ratio_autot_viewport',
                                   [self._template.data.x1, self._template.data.x2,
@@ -130,13 +129,34 @@ class IsofillPipeline(Pipeline2D):
             else:
                 actors.append([act, plotting_dataset_bounds])
 
+            # create a new renderer for this mapper
+            # (we need one for each mapper because of cmaera flips)
+            # Note that fitToViewport is called on the actor before calling any
+            # patterns code so that patterns are generated for the transformed
+            # data set
+            dataset_renderer, xScale, yScale = self._context().fitToViewport(
+                act, vp,
+                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
+                geo=self._vtkGeoTransform,
+                priority=self._template.data.priority,
+                create_renderer=(mapper is self._maskedDataMapper or dataset_renderer is None))
+
+            if mapper is not self._maskedDataMapper:
                 # Since pattern creation requires a single color, assuming the first
                 c = self.getColorIndexOrRGBA(_colorMap, tmpColors[ct][0])
 
                 # The isofill actor is scaled by the camera, so we need to use this size
                 # instead of window size for scaling the pattern.
                 viewsize = (x2 - x1, y2 - y1)
-                patact = fillareautils.make_patterned_polydata(mapper.GetInput(),
+
+                # Get the transformed contour data
+                transform = act.GetUserTransform()
+                transformFilter = vtk.vtkTransformFilter()
+                transformFilter.SetInputData(mapper.GetInput())
+                transformFilter.SetTransform(transform)
+                transformFilter.Update()
+
+                patact = fillareautils.make_patterned_polydata(transformFilter.GetOutput(),
                                                                fillareastyle=style,
                                                                fillareaindex=tmpIndices[ct],
                                                                fillareacolors=c,
@@ -144,27 +164,11 @@ class IsofillPipeline(Pipeline2D):
                                                                size=viewsize)
 
                 if patact is not None:
-                    patternActors.append(patact)
+                    actors.append([patact, plotting_dataset_bounds])
+                    dataset_renderer.AddActor(patact)
 
                 # increment the count
                 ct += 1
-
-            # create a new renderer for this mapper
-            # (we need one for each mapper because of cmaera flips)
-            dataset_renderer, xScale, yScale = self._context().fitToViewport(
-                act, vp,
-                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
-                geo=self._vtkGeoTransform,
-                priority=self._template.data.priority,
-                create_renderer=(mapper is self._maskedDataMapper or dataset_renderer is None))
-        for act in patternActors:
-            self._context().fitToViewport(
-                act, vp,
-                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
-                geo=self._vtkGeoTransform,
-                priority=self._template.data.priority,
-                create_renderer=True)
-            actors.append([act, plotting_dataset_bounds])
 
         self._resultDict["vtk_backend_actors"] = actors
 
