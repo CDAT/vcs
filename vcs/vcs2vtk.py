@@ -139,12 +139,14 @@ def putMaskOnVTKGrid(data, grid, actorColor=None, cellData=True, deep=True):
             else:
                 lut.SetNumberOfTableValues(2)
                 lut.SetTableValue(0, r / 100., g / 100., b / 100., 0.)
-                lut.SetTableValue(1, r / 100., g / 100., b / 100., 1.)
+                lut.SetTableValue(1, r / 100., g / 100., b / 100., a / 100.)
             geoFilter.Update()
             mapper = vtk.vtkPolyDataMapper()
-            mapper.SetInputData(geoFilter.GetOutput())
+            mapper.SetInputConnection(geoFilter.GetOutputPort())
             mapper.SetLookupTable(lut)
             mapper.SetScalarRange(0, 1)
+            if cellData:
+                mapper.SetScalarModeToUseCellData()
 
         # The ghost array now stores information about hidden (blanked)
         # points/cells. Setting an array entry to the bitwise value
