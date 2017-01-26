@@ -1431,7 +1431,8 @@ def prepFillarea(context, renWin, farea, cmap=None):
                                                         farea.index[i],
                                                         pcolor,
                                                         pcolor[3],
-                                                        renWin.GetSize())
+                                                        renWin.GetSize(),
+                                                        ren)
             if act is not None:
                 # if (st == "pattern" and pcolor[3] > 0) or st == "hatch":
                     # m = vtk.vtkPolyDataMapper()

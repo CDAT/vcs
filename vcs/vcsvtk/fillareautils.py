@@ -4,7 +4,7 @@ from patterns import pattern_list
 
 def make_patterned_polydata(inputContours, fillareastyle=None,
                             fillareaindex=None, fillareacolors=None,
-                            fillareaopacity=None, size=None):
+                            fillareaopacity=None, size=None, renderer=None):
     if inputContours is None or fillareastyle == 'solid':
         return None
     if inputContours.GetNumberOfCells() == 0:
@@ -26,12 +26,34 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
     xBounds = bounds[1] - bounds[0]
     yBounds = bounds[3] - bounds[2]
 
-    if xBounds <= 1 and yBounds <= 1 and size is not None:
-        xBounds *= size[0] / 3
-        yBounds *= size[1] / 3
+    xres = yres = 1
+    if renderer:
+        # Be smart about calculating the resolution by taking the screen pixel
+        # size into account
+        # First, convert a distance of one unit screen distance to data
+        # coordinates
+        point1 = [1.0, 1.0, 0.0]
+        point2 = [0.0, 0.0, 0.0]
+        renderer.SetDisplayPoint(point1)
+        renderer.DisplayToWorld()
+        wpoint1 = renderer.GetWorldPoint()
+        renderer.SetDisplayPoint(point2)
+        renderer.DisplayToWorld()
+        wpoint2 = renderer.GetWorldPoint()
+        diffwpoints = [abs(wpoint1[0] - wpoint2[0]),
+                       abs(wpoint1[1] - wpoint2[1])]
 
-    xres = int(xBounds / 2)
-    yres = int(yBounds / 2)
+        # Choosing an arbitary factor to scale the number of points.
+        # 0.11 was chosen based on visual inspection of result
+        xres = int(0.11 * xBounds / diffwpoints[0])
+        yres = int(0.11 * yBounds / diffwpoints[1])
+    else:
+        if xBounds <= 1 and yBounds <= 1 and size is not None:
+            xBounds *= size[0] / 3
+            yBounds *= size[1] / 3
+
+        xres = int(xBounds / 3)
+        yres = int(yBounds / 3)
 
     numPts = (xres + 1) * (yres + 1)
     patternPts.Allocate(numPts)
