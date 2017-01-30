@@ -1434,13 +1434,6 @@ def prepFillarea(context, renWin, farea, cmap=None):
                                                         renWin.GetSize(),
                                                         ren)
             if act is not None:
-                # if (st == "pattern" and pcolor[3] > 0) or st == "hatch":
-                    # m = vtk.vtkPolyDataMapper()
-                    # m.SetInputData(transformFilter.GetOutput())
-                    # ac = vtk.vtkActor()
-                    # ac.SetMapper(m)
-                    # ren.AddActor(a)
-                    # actors.append((ac, geo))
                 ren.AddActor(act)
                 actors.append((act, geo))
 
