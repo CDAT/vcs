@@ -14,6 +14,29 @@ from vcsvtk import fillareautils
 import sys
 import numbers
 
+
+_DEBUG_VTK = True
+
+
+def debugWriteGrid(grid, name):
+    if (_DEBUG_VTK):
+        writer = vtk.vtkXMLDataSetWriter()
+        gridType = grid.GetDataObjectType()
+        if (gridType == vtk.VTK_STRUCTURED_GRID):
+            ext = ".vts"
+        elif (gridType == vtk.VTK_UNSTRUCTURED_GRID):
+            ext = ".vtu"
+        elif (gridType == vtk.VTK_POLY_DATA):
+            ext = ".vtp"
+        else:
+            print "Unknown grid type: %d" % gridType
+            ext = ".vtk"
+        writer.SetFileName(name + ext)
+        writer.SetInputData(grid)
+        writer.Write()
+
+
+
 f = open(os.path.join(vcs.prefix, "share", "vcs", "wmo_symbols.json"))
 wmo = json.load(f)
 

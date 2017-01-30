@@ -596,6 +596,15 @@ obj_details = {
             "title": True,
 
         },
+        "streamline": {
+            "callable": True,
+            "parent": "default",
+            "parent2": "",
+            "rtype": "vcs.streamline.Gs",
+            "slabs": 2,
+            "title": True,
+
+        },
         "scatter": {
             "callable": True,
             "parent": "default_scatter_",

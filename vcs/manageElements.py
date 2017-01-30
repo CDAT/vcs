@@ -28,6 +28,7 @@ import texttable
 import textorientation
 import textcombined
 import vector
+import streamline
 import xmldocs
 import random
 from error import vcsError
@@ -623,6 +624,44 @@ def getvector(Gv_name_src='default'):
         raise ValueError("The vector '%s' does not exist" % Gv_name_src)
     return vcs.elements["vector"][Gv_name_src]
 getvector.__doc__ = getvector.__doc__ % xmldocs.get_docs['vector']
+
+
+def createstreamline(name=None, source='default'):
+    """
+    %s
+
+    :param name: The name of the created object
+    :type name: str
+
+    :param source: The object to inherit from
+    :type source: a streamline or a string name of a streamline
+
+    :returns: A streamline graphics method object
+    :rtype: vcs.streamline.Gs
+    """
+    name, source = check_name_source(name, source, 'streamline')
+    return streamline.Gs(name, source)
+createstreamline.__doc__ = createstreamline.__doc__ % xmldocs.create_docs['streamline']
+
+
+def getstreamline(Gs_name_src='default'):
+    """
+    %s
+
+    :param Gs_name_src: String name of an existing streamline VCS object
+    :type Gs_name_src: str
+
+    :returns: A streamline graphics method object
+    :rtype: vcs.streamline.Gs
+    """
+
+    # Check to make sure the argument passed in is a STRING
+    if not isinstance(Gs_name_src, str):
+        raise vcsError('The argument must be a string.')
+    if Gs_name_src not in vcs.elements["streamline"]:
+        raise ValueError("The streamline '%s' does not exist" % Gs_name_src)
+    return vcs.elements["streamline"][Gs_name_src]
+getstreamline.__doc__ = getstreamline.__doc__ % xmldocs.get_docs['streamline']
 
 
 def createscatter(name=None, source='default'):
@@ -1712,6 +1751,9 @@ def removeG1d(obj):
 
 def removeGv(obj):
     return removeG(obj, "vector")
+
+def removeGs(obj):
+    return removeG(obj, "streamline")
 
 
 def removeGSp(obj):

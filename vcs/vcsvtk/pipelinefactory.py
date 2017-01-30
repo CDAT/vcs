@@ -27,5 +27,8 @@ def createPipeline(graphics_method, context):
     elif graphics_method.g_name == "Gv":
         from .vectorpipeline import VectorPipeline
         return VectorPipeline(graphics_method, context)
+    elif graphics_method.g_name == "Gs":
+        from .streamlinepipeline import StreamlinePipeline
+        return StreamlinePipeline(graphics_method, context)
 
     return None

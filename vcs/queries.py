@@ -40,6 +40,7 @@ import taylor
 import meshfill
 import unified1D
 import vector
+import streamline
 import line
 import marker
 import fillarea
@@ -91,6 +92,8 @@ def isgraphicsmethod(gobj):
     elif (isinstance(gobj, isoline.Gi)):
         return 1
     elif (isinstance(gobj, vector.Gv)):
+        return 1
+    elif (isinstance(gobj, streamline.Gs)):
         return 1
     elif (isinstance(gobj, unified1D.G1d)):
         return 1
@@ -167,6 +170,8 @@ def graphicsmethodtype(gobj):
         return 'isoline'
     elif (isinstance(gobj, vector.Gv)):
         return 'vector'
+    elif (isinstance(gobj, streamline.Gs)):
+        return 'streamline'
     elif (isinstance(gobj, unified1D.G1d)):
         return "1d"
     elif (isinstance(gobj, taylor.Gtd)):
