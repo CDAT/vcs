@@ -1305,7 +1305,7 @@ class VTKVCSBackend(object):
                 self.renWin.AddRenderer(self.logoRenderer)
 
     def fitToViewport(self, Actor, vp, wc=None, geoBounds=None, geo=None, priority=None,
-                      create_renderer=False):
+                      create_renderer=False, add_actor=True):
 
         # Data range in World Coordinates
         if priority == 0:
@@ -1427,7 +1427,8 @@ class VTKVCSBackend(object):
                 plane.SetNormal(outNormal[0], outNormal[1], outNormal[2])
                 plane = planeCollection.GetNextItem()
 
-        Renderer.AddActor(Actor)
+        if add_actor:
+            Renderer.AddActor(Actor)
         return (Renderer, xScale, yScale)
 
     def update_input(self, vtkobjects, array1, array2=None, update=True):

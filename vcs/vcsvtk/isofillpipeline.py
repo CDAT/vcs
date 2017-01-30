@@ -139,7 +139,8 @@ class IsofillPipeline(Pipeline2D):
                 wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
                 geo=self._vtkGeoTransform,
                 priority=self._template.data.priority,
-                create_renderer=(mapper is self._maskedDataMapper or dataset_renderer is None))
+                create_renderer=(mapper is self._maskedDataMapper or dataset_renderer is None),
+                add_actor=(style == "solid"))
 
             if mapper is not self._maskedDataMapper:
                 # Since pattern creation requires a single color, assuming the first

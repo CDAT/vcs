@@ -90,7 +90,8 @@ class BoxfillPipeline(Pipeline2D):
                 wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
                 geo=self._vtkGeoTransform,
                 priority=self._template.data.priority,
-                create_renderer=(dataset_renderer is None))
+                create_renderer=(dataset_renderer is None),
+                add_actor=(_style == "solid"))
 
             # TODO We shouldn't need this conditional branch, the 'else' body
             # should be used and GetMapper called to get the mapper as needed.
