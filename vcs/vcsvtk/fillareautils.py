@@ -44,9 +44,10 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
                        abs(wpoint1[1] - wpoint2[1])]
 
         # Choosing an arbitary factor to scale the number of points.
-        # 0.11 was chosen based on visual inspection of result
-        xres = int(0.11 * xBounds / diffwpoints[0])
-        yres = int(0.11 * yBounds / diffwpoints[1])
+        # 0.10 was chosen based on visual inspection of result.
+        # Essentially, it means each glyph is 10 pixels high and wide.
+        xres = int(0.10 * xBounds / diffwpoints[0])
+        yres = int(0.10 * yBounds / diffwpoints[1])
     else:
         if xBounds <= 1 and yBounds <= 1 and size is not None:
             xBounds *= size[0] / 3
