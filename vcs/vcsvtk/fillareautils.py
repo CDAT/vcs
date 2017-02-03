@@ -4,7 +4,9 @@ from patterns import pattern_list
 
 def make_patterned_polydata(inputContours, fillareastyle=None,
                             fillareaindex=None, fillareacolors=None,
-                            fillareaopacity=None, size=None, renderer=None):
+                            fillareaopacity=None,
+                            fillareapixelspacing=None, fillareapixelscale=None,
+                            size=None, renderer=None):
     if inputContours is None or fillareastyle == 'solid':
         return None
     if inputContours.GetNumberOfCells() == 0:
@@ -13,6 +15,11 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
         fillareaindex = 1
     if fillareaopacity is None:
         fillareaopacity = 100
+    if fillareapixelspacing is None:
+        fillareapixelspacing = [10, 10]
+    if fillareapixelscale is None:
+        fillareapixelscale = 0.75 * min(fillareapixelspacing[0],
+                                        fillareapixelspacing[1])
 
     # Create a point set laid out on a plane that will be glyphed with the
     # pattern / hatch
@@ -28,7 +35,7 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
 
     xres = yres = 1
     scale = 1.0
-    if renderer:
+    if renderer is not None:
         # Be smart about calculating the resolution by taking the screen pixel
         # size into account
         # First, convert a distance of one unit screen distance to data
@@ -49,9 +56,9 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
         # of 10 pixels and a scale of 7.5 pixels was chosen based on visual
         # inspection of result.  Essentially, it means each glyph is 10 pixels
         # away from its neighbors and 7.5 pixels high and wide.
-        xres = int(xBounds / (10. * diffwpoints[0])) + 1
-        yres = int(yBounds / (10. * diffwpoints[1])) + 1
-        scale = 7.5 * min(diffwpoints[0], diffwpoints[1])
+        xres = int(xBounds / (fillareapixelspacing[0] * diffwpoints[0])) + 1
+        yres = int(yBounds / (fillareapixelspacing[1] * diffwpoints[1])) + 1
+        scale = fillareapixelscale * min(diffwpoints[0], diffwpoints[1])
     else:
         if xBounds <= 1 and yBounds <= 1 and size is not None:
             xBounds *= size[0] / 3
@@ -91,7 +98,7 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
     patternPolyData.GetPointData().SetTCoords(tcoords)
 
     # Create the pattern
-    create_pattern(patternPolyData, xres, yres, scale,
+    create_pattern(patternPolyData, scale,
                    fillareastyle, fillareaindex)
 
     # Create pipeline to create a clipped polydata from the pattern plane.
@@ -137,7 +144,7 @@ def map_colors(clippedPolyData, fillareastyle=None,
         colors.InsertNextTypedTuple(color)
 
 
-def create_pattern(patternPolyData, xres, yres, scale=1.0,
+def create_pattern(patternPolyData, scale=1.0,
                    fillareastyle=None, fillareaindex=None):
     if fillareastyle == 'solid':
         return None
@@ -146,6 +153,6 @@ def create_pattern(patternPolyData, xres, yres, scale=1.0,
         fillareaindex = 1
 
     # Create a pattern source image of the given size
-    pattern = pattern_list[fillareaindex](patternPolyData, xres, yres, scale,
-                                          fillareastyle)
+    pattern = pattern_list[fillareaindex](patternPolyData, scale=scale,
+                                          style=fillareastyle)
     return pattern.render()

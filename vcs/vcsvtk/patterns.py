@@ -2,9 +2,8 @@ import vtk
 
 
 class Pattern(object):
-    def __init__(self, patternPolyData, xres, yres, scale, style):
+    def __init__(self, patternPolyData, scale, style):
         self.patternPolyData = patternPolyData
-        self.size = [xres, yres]
         self.scale = scale
         self.style = style
         self.glyph = None

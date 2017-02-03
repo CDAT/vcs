@@ -1428,11 +1428,13 @@ def prepFillarea(context, renWin, farea, cmap=None):
             pcolor = [indC * 100. / 255.0 for indC in cellcolor]
             act = fillareautils.make_patterned_polydata(transformFilter.GetOutput(),
                                                         st,
-                                                        farea.index[i],
-                                                        pcolor,
-                                                        pcolor[3],
-                                                        renWin.GetSize(),
-                                                        ren)
+                                                        fillareaindex=farea.index[i],
+                                                        fillareacolors=pcolor,
+                                                        fillareaopacity=pcolor[3],
+                                                        fillareapixelspacing=farea.pixelspacing,
+                                                        fillareapixelscale=farea.pixelscale,
+                                                        size=renWin.GetSize(),
+                                                        renderer=ren)
             if act is not None:
                 ren.AddActor(act)
                 actors.append((act, geo))

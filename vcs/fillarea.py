@@ -58,7 +58,7 @@ def process_src(nm, code):
                     except:
                         vals.append(float(V))
                     if a in ["fais"]:
-                        vals[-1] = vals[-1]-1
+                        vals[-1] = vals[-1] - 1
                 atts[a] = vals
     else:
         sp = code.split(",")
@@ -94,6 +94,8 @@ def process_src(nm, code):
                     b._fillareacolor[i] = f.color
                     b._fillareastyle = f.style
                     b._fillareaopacity = f.opacity
+                    b._fillareapixelspacing = f.pixelspacing
+                    b._fillareapixelscale = f.pixelscale
 
 #
 #
@@ -196,6 +198,8 @@ class Tf(object):
         's_name',
         'color',
         'opacity',
+        'pixelspacing',
+        'pixelscale',
         'priority',
         'style',
         'index',
@@ -216,7 +220,9 @@ class Tf(object):
         '_y',
         '_projection',
         '_colormap',
-        '_opacity'
+        '_opacity',
+        '_pixelspacing',
+        '_pixelscale'
     ]
 
     colormap = VCS_validation_functions.colormap
@@ -293,6 +299,33 @@ class Tf(object):
         value = vals
         self._style = value
     style = property(_getfillareastyle, _setfillareastyle)
+
+    def _getfillareapixelspacing(self):
+        return getmember(self, 'pixelspacing')
+
+    def _setfillareapixelspacing(self, value):
+        if value is not None:
+            value = VCS_validation_functions.checkListOfNumbers(
+                self,
+                'pixelspacing',
+                value,
+                minelements=2,
+                maxelements=2,
+                ints=True)
+        self._pixelspacing = value
+    pixelspacing = property(_getfillareapixelspacing, _setfillareapixelspacing)
+
+    def _getfillareapixelscale(self):
+        return getmember(self, 'pixelscale')
+
+    def _setfillareapixelscale(self, value):
+        if value is not None:
+            value = VCS_validation_functions.checkNumber(
+                self,
+                'pixelscale',
+                value)
+        self._pixelscale = value
+    pixelscale = property(_getfillareapixelscale, _setfillareapixelscale)
 
     def _getpriority(self):
         return getmember(self, 'priority')
@@ -396,6 +429,8 @@ class Tf(object):
             self._index = [1, ]
             self._color = [1, ]
             self._opacity = []
+            self._pixelspacing = [10, 10]
+            self._pixelscale = 7.5
             self._priority = 1
             self._viewport = [0., 1., 0., 1.]
             self._worldcoordinate = [0., 1., 0., 1.]
@@ -409,6 +444,8 @@ class Tf(object):
             self.index = src.index
             self.color = src.color
             self.opacity = src.opacity
+            self.pixelspacing = src.pixelspacing
+            self.pixelscale = src.pixelscale
             self.priority = src.priority
             self.viewport = src.viewport
             self.worldcoordinate = src.worldcoordinate
@@ -434,6 +471,8 @@ class Tf(object):
         print "index =", self.index
         print "color =", self.color
         print "opacity =", self.opacity
+        print "pixelspacing =", self.pixelspacing
+        print "pixelscale =", self.pixelscale
         print "priority =", self.priority
         print "viewport =", self.viewport
         print "worldcoordinate =", self.worldcoordinate
@@ -503,6 +542,8 @@ class Tf(object):
             fp.write("%s.index = %s\n" % (unique_name, self.index))
             fp.write("%s.color = %s\n\n" % (unique_name, self.color))
             fp.write("%s.opacity = %s\n\n" % (unique_name, self.opacity))
+            fp.write("%s.pixelspacing = %s\n\n" % (unique_name, self.pixelspacing))
+            fp.write("%s.pixelscale = %s\n\n" % (unique_name, self.pixelscale))
             fp.write("%s.priority = %d\n" % (unique_name, self.priority))
             fp.write("%s.viewport = %s\n" % (unique_name, self.viewport))
             fp.write(

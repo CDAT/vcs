@@ -162,6 +162,8 @@ class IsofillPipeline(Pipeline2D):
                                                                fillareaindex=tmpIndices[ct],
                                                                fillareacolors=c,
                                                                fillareaopacity=tmpOpacities[ct],
+                                                               fillareapixelspacing=self._gm.fillareapixelspacing,
+                                                               fillareapixelscale=self._gm.fillareapixelscale,
                                                                size=viewsize,
                                                                renderer=dataset_renderer)
 
