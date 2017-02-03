@@ -126,7 +126,8 @@ class BoxfillPipeline(Pipeline2D):
                         fillareaindex=self._customBoxfillArgs["tmpIndices"][cti],
                         fillareacolors=c,
                         fillareaopacity=self._customBoxfillArgs["tmpOpacities"][cti],
-                        size=(x2 - x1, y2 - y1))
+                        size=(x2 - x1, y2 - y1),
+                        renderer=dataset_renderer)
 
                     ctj += 1
 
