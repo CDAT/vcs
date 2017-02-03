@@ -27,6 +27,7 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
     yBounds = bounds[3] - bounds[2]
 
     xres = yres = 1
+    scale = 1.0
     if renderer:
         # Be smart about calculating the resolution by taking the screen pixel
         # size into account
@@ -42,12 +43,15 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
         wpoint2 = renderer.GetWorldPoint()
         diffwpoints = [abs(wpoint1[0] - wpoint2[0]),
                        abs(wpoint1[1] - wpoint2[1])]
+        diffwpoints = [1.0 if i < 1e-6 else i for i in diffwpoints]
 
-        # Choosing an arbitary factor to scale the number of points.
-        # 0.10 was chosen based on visual inspection of result.
-        # Essentially, it means each glyph is 10 pixels high and wide.
-        xres = int(0.10 * xBounds / diffwpoints[0])
-        yres = int(0.10 * yBounds / diffwpoints[1])
+        # Choosing an arbitary factor to scale the number of points.  A spacing
+        # of 10 pixels and a scale of 7.5 pixels was chosen based on visual
+        # inspection of result.  Essentially, it means each glyph is 10 pixels
+        # away from its neighbors and 7.5 pixels high and wide.
+        xres = int(xBounds / (10. * diffwpoints[0])) + 1
+        yres = int(yBounds / (10. * diffwpoints[1])) + 1
+        scale = 7.5 * min(diffwpoints[0], diffwpoints[1])
     else:
         if xBounds <= 1 and yBounds <= 1 and size is not None:
             xBounds *= size[0] / 3
@@ -87,7 +91,7 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
     patternPolyData.GetPointData().SetTCoords(tcoords)
 
     # Create the pattern
-    create_pattern(patternPolyData, xres, yres,
+    create_pattern(patternPolyData, xres, yres, scale,
                    fillareastyle, fillareaindex)
 
     # Create pipeline to create a clipped polydata from the pattern plane.
@@ -133,7 +137,7 @@ def map_colors(clippedPolyData, fillareastyle=None,
         colors.InsertNextTypedTuple(color)
 
 
-def create_pattern(patternPolyData, xres, yres,
+def create_pattern(patternPolyData, xres, yres, scale=1.0,
                    fillareastyle=None, fillareaindex=None):
     if fillareastyle == 'solid':
         return None
@@ -142,6 +146,6 @@ def create_pattern(patternPolyData, xres, yres,
         fillareaindex = 1
 
     # Create a pattern source image of the given size
-    pattern = pattern_list[fillareaindex](patternPolyData, xres, yres,
+    pattern = pattern_list[fillareaindex](patternPolyData, xres, yres, scale,
                                           fillareastyle)
     return pattern.render()

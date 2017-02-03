@@ -2,9 +2,10 @@ import vtk
 
 
 class Pattern(object):
-    def __init__(self, patternPolyData, xres, yres, style):
+    def __init__(self, patternPolyData, xres, yres, scale, style):
         self.patternPolyData = patternPolyData
         self.size = [xres, yres]
+        self.scale = scale
         self.style = style
         self.glyph = None
 
@@ -14,12 +15,6 @@ class Pattern(object):
         replaces the input polydata with glyphed output polydata with
         colored cells
         """
-        bounds = self.patternPolyData.GetBounds()
-        xb = bounds[1] - bounds[0]
-        yb = bounds[3] - bounds[2]
-        xscale = xb / self.size[0]
-        yscale = yb / self.size[1]
-        self.scale = min(xscale, yscale)
         self.glyph = vtk.vtkGlyphSource2D()
         self.glyph.SetGlyphTypeToSquare()
         self.glyph.SetScale(self.scale)
@@ -30,7 +25,9 @@ class Pattern(object):
         self.paint()
 
         self.glyph2D = vtk.vtkGlyph2D()
+        self.glyph2D.OrientOff()
         self.glyph2D.ScalingOff()
+        self.glyph2D.SetScaleModeToDataScalingOff()
         self.glyph2D.SetInputData(self.patternPolyData)
         self.glyph2D.SetSourceConnection(self.glyph.GetOutputPort())
         self.glyph2D.Update()
@@ -102,7 +99,6 @@ class HorizDash(Pattern):
     def paint(self):
         self.glyph.SetGlyphTypeToDash()
         self.glyph.FilledOn()
-        self.glyph.SetScale(self.scale * 0.75)
 
 
 class VertDash(HorizDash):
@@ -123,7 +119,6 @@ class FilledCross(Cross):
 
     def paint(self):
         self.glyph.SetGlyphTypeToThickCross()
-        self.glyph.SetScale(self.scale * 0.6)
         self.glyph.FilledOn()
 
 
@@ -152,7 +147,6 @@ class Square(Pattern):
 
     def paint(self):
         self.glyph.SetGlyphTypeToSquare()
-        self.glyph.SetScale(self.scale * 0.6)
 
 
 class FilledSquare(Square):
@@ -166,7 +160,6 @@ class CircleCross(Pattern):
 
     def paint(self):
         self.glyph.SetGlyphTypeToCircle()
-        self.glyph.SetScale(self.scale * 0.5)
         self.glyph.SetScale2(1.5)
         self.glyph.CrossOn()
 
@@ -175,7 +168,6 @@ class EdgeArrow(Pattern):
 
     def paint(self):
         self.glyph.SetGlyphTypeToEdgeArrow()
-        self.glyph.SetScale(self.scale * 0.5)
 
 
 class EdgeArrowInverted(EdgeArrow):
