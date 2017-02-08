@@ -325,6 +325,8 @@ class Gfm(object):
         'fillareastyle',
         'fillareaindices',
         'fillareaopacity',
+        'fillareapixelspacing',
+        'fillareapixelscale',
         'ext_1',
         'ext_2',
         'missing',
@@ -354,6 +356,8 @@ class Gfm(object):
         '_fillareastyle',
         '_fillareaindices',
         '_fillareaopacity',
+        '_fillareapixelspacing',
+        '_fillareapixelscale',
         '_ext_1',
         '_ext_2',
         '_missing',
@@ -436,6 +440,8 @@ class Gfm(object):
     fillareastyle = property(_getfillareastyle, _setfillareastyle)
 
     fillareaopacity = VCS_validation_functions.fillareaopacity
+    fillareapixelspacing = VCS_validation_functions.fillareapixelspacing
+    fillareapixelscale = VCS_validation_functions.fillareapixelscale
 
     ext_1 = VCS_validation_functions.ext_1
     ext_2 = VCS_validation_functions.ext_2
@@ -659,6 +665,8 @@ class Gfm(object):
             self._fillareaindices = None
             self._fillareacolors = [1, ]
             self._fillareaopacity = []
+            self._fillareapixelspacing = None
+            self._fillareapixelscale = None
             self._levels = ([1.0000000200408773e+20, 1.0000000200408773e+20],)
             self._legend = None
             self._mesh = 0
@@ -678,8 +686,9 @@ class Gfm(object):
                         'xmtics1', 'xmtics2', 'yticlabels1', 'yticlabels2', 'ymtics1', 'ymtics2',
                         'datawc_y1', 'datawc_y2', 'datawc_x1',
                         'datawc_x2', 'xaxisconvert', 'yaxisconvert', 'missing', 'levels', 'ext_1', 'ext_2',
-                        'fillareastyle', 'fillareaindices', 'fillareacolors', 'fillareaopacity', 'legend',
-                        'datawc_timeunits', 'datawc_calendar']:
+                        'fillareastyle', 'fillareaindices', 'fillareacolors', 'fillareaopacity',
+                        'fillareapixelspacing', 'fillareapixelscale',
+                        'legend', 'datawc_timeunits', 'datawc_calendar']:
                 setattr(self, "_" + att, getattr(src, "_" + att))
         vcs.elements["meshfill"][Gfm_name] = self
 
