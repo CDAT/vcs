@@ -14,7 +14,6 @@ class MeshfillPipeline(Pipeline2D):
     def __init__(self, gm, context_):
         super(MeshfillPipeline, self).__init__(gm, context_)
 
-        self._patternActors = []
         self._needsCellData = True
 
     def _updateScalarData(self):
@@ -35,7 +34,6 @@ class MeshfillPipeline(Pipeline2D):
         tmpOpacities = prepedContours["tmpOpacities"]
 
         style = self._gm.fillareastyle
-        # self._patternActors = []
 
         mappers = []
         luts = []
@@ -44,7 +42,6 @@ class MeshfillPipeline(Pipeline2D):
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
         _colorMap = self.getColorMap()
-        self._patternActors = []
         for i, l in enumerate(tmpLevels):
             # Ok here we are trying to group together levels can be, a join
             # will happen if: next set of levels contnues where one left off
@@ -83,18 +80,6 @@ class MeshfillPipeline(Pipeline2D):
                 # purposes
                 if not (l[j + 1] < wholeDataMin or l[j] > wholeDataMax):
                     mappers.append(mapper)
-
-            # Since pattern creation requires a single color, assuming the
-            # first
-            c = self.getColorIndexOrRGBA(_colorMap, tmpColors[i][0])
-            act = fillareautils.make_patterned_polydata(geoFilter2.GetOutput(),
-                                                        fillareastyle=style,
-                                                        fillareaindex=tmpIndices[i],
-                                                        fillareacolors=c,
-                                                        fillareaopacity=tmpOpacities[i],
-                                                        size=(x2 - x1, y2 - y1))
-            if act is not None:
-                self._patternActors.append(act)
 
         self._resultDict["vtk_backend_luts"] = luts
         if len(geos) > 0:
@@ -167,6 +152,7 @@ class MeshfillPipeline(Pipeline2D):
              self._template.data.y1, self._template.data.y2])
         dataset_renderer = None
         xScale, yScale = (1, 1)
+        ct = 0
         for mapper in mappers:
             act = vtk.vtkActor()
             act.SetMapper(mapper)
@@ -174,12 +160,6 @@ class MeshfillPipeline(Pipeline2D):
             if hasattr(mapper, "_useWireFrame"):
                 prop = act.GetProperty()
                 prop.SetRepresentationToWireframe()
-
-            # TODO See comment in boxfill.
-            if mapper is self._maskedDataMapper:
-                actors.append([act, self._maskedDataMapper, plotting_dataset_bounds])
-            else:
-                actors.append([act, plotting_dataset_bounds])
 
             # create a new renderer for this mapper
             # (we need one for each mapper because of cmaera flips)
@@ -189,17 +169,38 @@ class MeshfillPipeline(Pipeline2D):
                 geo=self._vtkGeoTransform,
                 priority=self._template.data.priority,
                 create_renderer=(dataset_renderer is None))
-        for act in self._patternActors:
-            if self._vtkGeoTransform is None:
-                # If using geofilter on wireframed does not get wrapped not sure
-                # why so sticking to many mappers
-                self._context().fitToViewport(
-                    act, vp,
-                    wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
-                    geo=self._vtkGeoTransform,
-                    priority=self._template.data.priority,
-                    create_renderer=True)
+
+            # TODO See comment in boxfill.
+            if mapper is self._maskedDataMapper:
+                actors.append([act, self._maskedDataMapper, plotting_dataset_bounds])
+            else:
                 actors.append([act, plotting_dataset_bounds])
+
+                if not hasattr(mapper, "_useWireFrame"):
+                    # Since pattern creation requires a single color, assuming the
+                    # first
+                    c = self.getColorIndexOrRGBA(_colorMap, tmpColors[ct][0])
+
+                    # Get the transformed contour data
+                    transform = act.GetUserTransform()
+                    transformFilter = vtk.vtkTransformFilter()
+                    transformFilter.SetInputData(mapper.GetInput())
+                    transformFilter.SetTransform(transform)
+                    transformFilter.Update()
+
+                    patact = fillareautils.make_patterned_polydata(transformFilter.GetOutput(),
+                                                                   fillareastyle=style,
+                                                                   fillareaindex=tmpIndices[ct],
+                                                                   fillareacolors=c,
+                                                                   fillareaopacity=tmpOpacities[ct],
+                                                                   fillareapixelspacing=self._gm.fillareapixelspacing,
+                                                                   fillareapixelscale=self._gm.fillareapixelscale,
+                                                                   size=self._context().renWin.GetSize(),
+                                                                   renderer=dataset_renderer)
+                    ct += 1
+                if patact is not None:
+                    actors.append([patact, plotting_dataset_bounds])
+                    dataset_renderer.AddActor(patact)
 
         t = self._originalData1.getTime()
         if self._originalData1.ndim > 2:
