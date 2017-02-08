@@ -128,7 +128,7 @@ class BoxfillPipeline(Pipeline2D):
                         fillareaopacity=self._customBoxfillArgs["tmpOpacities"][cti],
                         fillareapixelspacing=self._gm.fillareapixelspacing,
                         fillareapixelscale=self._gm.fillareapixelscale,
-                        size=(x2 - x1, y2 - y1),
+                        size=self._context().renWin.GetSize(),
                         renderer=dataset_renderer)
 
                     ctj += 1

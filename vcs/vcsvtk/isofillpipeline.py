@@ -146,10 +146,6 @@ class IsofillPipeline(Pipeline2D):
                 # Since pattern creation requires a single color, assuming the first
                 c = self.getColorIndexOrRGBA(_colorMap, tmpColors[ct][0])
 
-                # The isofill actor is scaled by the camera, so we need to use this size
-                # instead of window size for scaling the pattern.
-                viewsize = (x2 - x1, y2 - y1)
-
                 # Get the transformed contour data
                 transform = act.GetUserTransform()
                 transformFilter = vtk.vtkTransformFilter()
@@ -164,7 +160,7 @@ class IsofillPipeline(Pipeline2D):
                                                                fillareaopacity=tmpOpacities[ct],
                                                                fillareapixelspacing=self._gm.fillareapixelspacing,
                                                                fillareapixelscale=self._gm.fillareapixelscale,
-                                                               size=viewsize,
+                                                               size=self._context().renWin.GetSize(),
                                                                renderer=dataset_renderer)
 
                 if patact is not None:

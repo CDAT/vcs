@@ -522,8 +522,8 @@ class Gfb(object):
             self._fillareaindices = [1, ]
             self._fillareaopacity = []
             self._fillareacolors = None
-            self._fillareapixelspacing = [10, 10]
-            self._fillareapixelscale = 7.5
+            self._fillareapixelspacing = None
+            self._fillareapixelscale = None
             self._levels = ([1.e20, 1.e20])
             self._level_1 = 1.e20
             self._level_2 = 1.e20

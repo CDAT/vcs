@@ -16,10 +16,13 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
     if fillareaopacity is None:
         fillareaopacity = 100
     if fillareapixelspacing is None:
-        fillareapixelspacing = [10, 10]
+        if size is not None:
+            fillareapixelspacing = [0.015 * x if 0.012 * x > 1 else 1 for x in size]
+        else:
+            fillareapixelspacing = [15, 15]
     if fillareapixelscale is None:
-        fillareapixelscale = 0.75 * min(fillareapixelspacing[0],
-                                        fillareapixelspacing[1])
+        fillareapixelscale = 0.8 * min(fillareapixelspacing[0],
+                                       fillareapixelspacing[1])
 
     # Create a point set laid out on a plane that will be glyphed with the
     # pattern / hatch

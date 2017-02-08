@@ -429,8 +429,8 @@ class Tf(object):
             self._index = [1, ]
             self._color = [1, ]
             self._opacity = []
-            self._pixelspacing = [10, 10]
-            self._pixelscale = 7.5
+            self._pixelspacing = None
+            self._pixelscale = None
             self._priority = 1
             self._viewport = [0., 1., 0., 1.]
             self._worldcoordinate = [0., 1., 0., 1.]
