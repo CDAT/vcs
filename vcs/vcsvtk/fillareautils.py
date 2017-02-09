@@ -17,7 +17,7 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
         fillareaopacity = 100
     if fillareapixelspacing is None:
         if size is not None:
-            fillareapixelspacing = [0.015 * x if 0.012 * x > 1 else 1 for x in size]
+            fillareapixelspacing = [int(0.015 * x) if int(0.015 * x) > 1 else 1 for x in size]
         else:
             fillareapixelspacing = [15, 15]
     if fillareapixelscale is None:
