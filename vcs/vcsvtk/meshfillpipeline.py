@@ -34,6 +34,7 @@ class MeshfillPipeline(Pipeline2D):
         tmpOpacities = prepedContours["tmpOpacities"]
 
         style = self._gm.fillareastyle
+        fareapixelspacing, fareapixelscale = self._patternSpacingAndScale()
 
         mappers = []
         luts = []
@@ -196,8 +197,8 @@ class MeshfillPipeline(Pipeline2D):
                                                                    fillareaindex=tmpIndices[ct],
                                                                    fillareacolors=c,
                                                                    fillareaopacity=tmpOpacities[ct],
-                                                                   fillareapixelspacing=self._gm.fillareapixelspacing,
-                                                                   fillareapixelscale=self._gm.fillareapixelscale,
+                                                                   fillareapixelspacing=fareapixelspacing,
+                                                                   fillareapixelscale=fareapixelscale,
                                                                    size=self._context().renWin.GetSize(),
                                                                    renderer=dataset_renderer)
                     ct += 1
@@ -256,6 +257,8 @@ class MeshfillPipeline(Pipeline2D):
         if patternArgs['index'] is None:
             patternArgs['index'] = [1, ]
         patternArgs['opacity'] = self._gm.fillareaopacity
+        patternArgs['pixelspacing'] = fareapixelspacing
+        patternArgs['pixelscale'] = fareapixelscale
         self._resultDict.update(
             self._context().renderColorBar(self._template, self._contourLevels,
                                            self._contourColors,

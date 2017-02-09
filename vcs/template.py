@@ -1777,7 +1777,7 @@ class P(object):
     def drawColorBar(self, colors, levels, legend=None, ext_1='n',
                      ext_2='n', x=None, bg=False, priority=None,
                      cmap=None, style=['solid'], index=[1],
-                     opacity=[], **kargs):
+                     opacity=[], pixelspacing=[15, 15], pixelscale=12, **kargs):
         """
         This function, draws the colorbar, it needs:
         colors : The colors to be plotted
@@ -1923,6 +1923,8 @@ class P(object):
             opacity = [None, ] * len(colors)
         fa.opacity = opacity
         fa.priority = priority
+        fa.pixelspacing = pixelspacing
+        fa.pixelscale = pixelscale
         if cmap is not None:
             fa.colormap = cmap
         # assigning directly since we gen it we know it's good

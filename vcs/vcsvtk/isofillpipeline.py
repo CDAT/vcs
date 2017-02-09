@@ -34,6 +34,7 @@ class IsofillPipeline(Pipeline2D):
 
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
+        fareapixelspacing, fareapixelscale = self._patternSpacingAndScale()
 
         for i, l in enumerate(tmpLevels):
             # Ok here we are trying to group together levels can be, a join
@@ -158,8 +159,8 @@ class IsofillPipeline(Pipeline2D):
                                                                fillareaindex=tmpIndices[ct],
                                                                fillareacolors=c,
                                                                fillareaopacity=tmpOpacities[ct],
-                                                               fillareapixelspacing=self._gm.fillareapixelspacing,
-                                                               fillareapixelscale=self._gm.fillareapixelscale,
+                                                               fillareapixelspacing=fareapixelspacing,
+                                                               fillareapixelscale=fareapixelscale,
                                                                size=self._context().renWin.GetSize(),
                                                                renderer=dataset_renderer)
 
@@ -217,7 +218,9 @@ class IsofillPipeline(Pipeline2D):
                                            self.getColorMap(),
                                            style=style,
                                            index=self._gm.fillareaindices,
-                                           opacity=self._gm.fillareaopacity))
+                                           opacity=self._gm.fillareaopacity,
+                                           pixelspacing=fareapixelspacing,
+                                           pixelscale=fareapixelscale))
 
         if self._context().canvas._continents is None:
             self._useContinents = False

@@ -78,6 +78,8 @@ class BoxfillPipeline(Pipeline2D):
              self._template.data.y1, self._template.data.y2])
         dataset_renderer = None
         xScale, yScale = (1, 1)
+        fareapixelspacing, fareapixelscale = self._patternSpacingAndScale()
+
         for mapper in self._mappers:
             act = vtk.vtkActor()
             act.SetMapper(mapper)
@@ -126,8 +128,8 @@ class BoxfillPipeline(Pipeline2D):
                         fillareaindex=self._customBoxfillArgs["tmpIndices"][cti],
                         fillareacolors=c,
                         fillareaopacity=self._customBoxfillArgs["tmpOpacities"][cti],
-                        fillareapixelspacing=self._gm.fillareapixelspacing,
-                        fillareapixelscale=self._gm.fillareapixelscale,
+                        fillareapixelspacing=fareapixelspacing,
+                        fillareapixelscale=fareapixelscale,
                         size=self._context().renWin.GetSize(),
                         renderer=dataset_renderer)
 
@@ -187,6 +189,8 @@ class BoxfillPipeline(Pipeline2D):
             patternArgs['style'] = self._gm.fillareastyle
             patternArgs['index'] = self._gm.fillareaindices
             patternArgs['opacity'] = self._gm.fillareaopacity
+            patternArgs['pixelspacing'] = fareapixelspacing
+            patternArgs['pixelscale'] = fareapixelscale
 
         self._resultDict.update(
             self._context().renderColorBar(self._template, self._contourLevels,

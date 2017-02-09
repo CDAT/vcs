@@ -420,3 +420,15 @@ class Pipeline2D(IPipeline2D):
                                               self._data1.getAxis(-1),
                                               self._data1.getAxis(-2)),
                 self._vtkDataSetBounds, self._vtkGeoTransform)
+
+    def _patternSpacingAndScale(self):
+        """Return the pattern pixel spacing and scale if specified or compute
+        new values based on the render window size"""
+        pixelspacing = self._gm.fillareapixelspacing
+        if pixelspacing is None:
+            size = self._context().renWin.GetSize()
+            pixelspacing = [0.015 * x if 0.012 * x > 1 else 1 for x in size]
+        pixelscale = self._gm.fillareapixelscale
+        if pixelscale is None:
+            pixelscale = 0.8 * min(pixelspacing[0], pixelspacing[1])
+        return pixelspacing, pixelscale
