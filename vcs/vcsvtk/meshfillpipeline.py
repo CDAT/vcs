@@ -157,9 +157,11 @@ class MeshfillPipeline(Pipeline2D):
             act = vtk.vtkActor()
             act.SetMapper(mapper)
 
+            wireframe = False
             if hasattr(mapper, "_useWireFrame"):
                 prop = act.GetProperty()
                 prop.SetRepresentationToWireframe()
+                wireframe = True
 
             # create a new renderer for this mapper
             # (we need one for each mapper because of cmaera flips)
@@ -168,7 +170,8 @@ class MeshfillPipeline(Pipeline2D):
                 wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
                 geo=self._vtkGeoTransform,
                 priority=self._template.data.priority,
-                create_renderer=(dataset_renderer is None))
+                create_renderer=(dataset_renderer is None),
+                add_actor=(wireframe or (style == "solid")))
 
             # TODO See comment in boxfill.
             if mapper is self._maskedDataMapper:
@@ -176,7 +179,7 @@ class MeshfillPipeline(Pipeline2D):
             else:
                 actors.append([act, plotting_dataset_bounds])
 
-                if not hasattr(mapper, "_useWireFrame"):
+                if not wireframe:
                     # Since pattern creation requires a single color, assuming the
                     # first
                     c = self.getColorIndexOrRGBA(_colorMap, tmpColors[ct][0])
