@@ -17,11 +17,12 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
         fillareaopacity = 100
     if fillareapixelspacing is None:
         if size is not None:
-            fillareapixelspacing = [int(0.015 * x) if int(0.015 * x) > 1 else 1 for x in size]
+            sp = int(0.015 * min(size[0], size[1]))
+            fillareapixelspacing = 2 * [sp if sp > 1 else 1]
         else:
             fillareapixelspacing = [15, 15]
     if fillareapixelscale is None:
-        fillareapixelscale = 0.8 * min(fillareapixelspacing[0],
+        fillareapixelscale = 1.0 * min(fillareapixelspacing[0],
                                        fillareapixelspacing[1])
 
     # Create a point set laid out on a plane that will be glyphed with the
@@ -37,7 +38,7 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
     yBounds = bounds[3] - bounds[2]
 
     xres = yres = 1
-    scale = 1.0
+    scale = [1.0, 1.0]
     if renderer is not None:
         # Be smart about calculating the resolution by taking the screen pixel
         # size into account
@@ -61,7 +62,8 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
         # away from its neighbors and 7.5 pixels high and wide.
         xres = int(xBounds / (fillareapixelspacing[0] * diffwpoints[0])) + 1
         yres = int(yBounds / (fillareapixelspacing[1] * diffwpoints[1])) + 1
-        scale = fillareapixelscale * min(diffwpoints[0], diffwpoints[1])
+        scale = [fillareapixelscale * x for x in diffwpoints[:2]]
+        print diffwpoints, fillareapixelscale, scale
     else:
         if xBounds <= 1 and yBounds <= 1 and size is not None:
             xBounds *= size[0] / 3

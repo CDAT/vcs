@@ -427,8 +427,9 @@ class Pipeline2D(IPipeline2D):
         pixelspacing = self._gm.fillareapixelspacing
         if pixelspacing is None:
             size = self._context().renWin.GetSize()
-            pixelspacing = [int(0.015 * x) if int(0.015 * x) > 1 else 1 for x in size]
+            sp = int(0.015 * min(size[0], size[1]))
+            pixelspacing = 2 * [sp if sp > 1 else 1]
         pixelscale = self._gm.fillareapixelscale
         if pixelscale is None:
-            pixelscale = 0.8 * min(pixelspacing[0], pixelspacing[1])
+            pixelscale = 1.0 * min(pixelspacing[0], pixelspacing[1])
         return pixelspacing, pixelscale
