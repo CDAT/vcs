@@ -142,16 +142,18 @@ class FilledDiamond(Diamond):
         self.glyph.FilledOn()
 
 
-class Square(Pattern):
+class RotatedCross(Pattern):
+
+    def paint(self):
+        self.glyph.SetGlyphTypeToThickCross()
+        self.glyph.FilledOn()
+        self.glyph.SetRotationAngle(45)
+
+
+class FilledSquare(Pattern):
 
     def paint(self):
         self.glyph.SetGlyphTypeToSquare()
-
-
-class FilledSquare(Square):
-
-    def paint(self):
-        Square.paint(self)
         self.glyph.FilledOn()
 
 
@@ -163,16 +165,17 @@ class CircleCross(Pattern):
         self.glyph.CrossOn()
 
 
-class EdgeArrow(Pattern):
+class ThickArrow(Pattern):
 
     def paint(self):
-        self.glyph.SetGlyphTypeToEdgeArrow()
+        self.glyph.SetGlyphTypeToThickArrow()
+        self.glyph.FilledOn()
 
 
-class EdgeArrowInverted(EdgeArrow):
+class ThickArrowInverted(ThickArrow):
 
     def paint(self):
-        EdgeArrow.paint(self)
+        ThickArrow.paint(self)
         self.glyph.SetRotationAngle(180)
 
 
@@ -181,4 +184,4 @@ pattern_list = [Pattern, Triangle, FilledTriangle, Dot, FilledDot,
                 HorizStripe, VertStripe, HorizDash, VertDash,
                 DiagStripe, ReverseDiagStripe,
                 Cross, FilledCross, XCross, Diamond, FilledDiamond,
-                Square, FilledSquare, CircleCross, EdgeArrow, EdgeArrowInverted]
+                RotatedCross, FilledSquare, CircleCross, ThickArrow, ThickArrowInverted]
