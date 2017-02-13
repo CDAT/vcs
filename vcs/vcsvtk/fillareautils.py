@@ -63,7 +63,6 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
         xres = int(xBounds / (fillareapixelspacing[0] * diffwpoints[0])) + 1
         yres = int(yBounds / (fillareapixelspacing[1] * diffwpoints[1])) + 1
         scale = [fillareapixelscale * x for x in diffwpoints[:2]]
-        print diffwpoints, fillareapixelscale, scale
     else:
         if xBounds <= 1 and yBounds <= 1 and size is not None:
             xBounds *= size[0] / 3

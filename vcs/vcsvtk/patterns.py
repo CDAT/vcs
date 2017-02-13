@@ -206,11 +206,23 @@ class ThickDiagDownRight(Pattern):
     def paint(self):
         pts = self.glyph.GetPoints()
         ptIds = []
-        ptIds.append(pts.InsertNextPoint(-0.5, 0.25, 0.0))
-        ptIds.append(pts.InsertNextPoint(-0.5, 0.75, 0.0))
-        ptIds.append(pts.InsertNextPoint(0.5, -0.25, 0.0))
-        ptIds.append(pts.InsertNextPoint(0.5, -0.75, 0.0))
-        self.glyph.GetPolys().InsertNextCell(4, ptIds)
+        ptIds.append(pts.InsertNextPoint(-0.5, 0.30, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.5, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.30, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, -0.30, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, -0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.30, -0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(6, ptIds)
+        ptIds1 = []
+        ptIds1.append(pts.InsertNextPoint(-0.5, -0.5, 0.0))
+        ptIds1.append(pts.InsertNextPoint(-0.5, -0.25, 0.0))
+        ptIds1.append(pts.InsertNextPoint(-0.25, -0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(3, ptIds1)
+        ptIds2 = []
+        ptIds2.append(pts.InsertNextPoint(0.5, 0.5, 0.0))
+        ptIds2.append(pts.InsertNextPoint(0.5, 0.25, 0.0))
+        ptIds2.append(pts.InsertNextPoint(0.25, 0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(3, ptIds2)
 
 
 class ThinDiagUpRight(Pattern):
@@ -228,11 +240,23 @@ class ThickDiagUpRight(Pattern):
     def paint(self):
         pts = self.glyph.GetPoints()
         ptIds = []
-        ptIds.append(pts.InsertNextPoint(-0.5, -0.25, 0.0))
-        ptIds.append(pts.InsertNextPoint(-0.5, -0.75, 0.0))
-        ptIds.append(pts.InsertNextPoint(0.5, 0.25, 0.0))
-        ptIds.append(pts.InsertNextPoint(0.5, 0.75, 0.0))
-        self.glyph.GetPolys().InsertNextCell(4, ptIds)
+        ptIds.append(pts.InsertNextPoint(-0.5, -0.30, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.5, -0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.30, -0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, 0.30, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.30, 0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(6, ptIds)
+        ptIds1 = []
+        ptIds1.append(pts.InsertNextPoint(0.5, -0.5, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.5, -0.25, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.25, -0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(3, ptIds1)
+        ptIds2 = []
+        ptIds2.append(pts.InsertNextPoint(-0.5, 0.5, 0.0))
+        ptIds2.append(pts.InsertNextPoint(-0.5, 0.25, 0.0))
+        ptIds2.append(pts.InsertNextPoint(-0.25, 0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(3, ptIds2)
 
 
 class XCross(Pattern):
@@ -241,15 +265,15 @@ class XCross(Pattern):
         pts = self.glyph.GetPoints()
         ptIds = []
         ptIds.append(pts.InsertNextPoint(-0.5, 0.35, 0.0))
-        ptIds.append(pts.InsertNextPoint(-0.5, 0.65, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.5, 0.5, 0.0))
         ptIds.append(pts.InsertNextPoint(0.5, -0.35, 0.0))
-        ptIds.append(pts.InsertNextPoint(0.5, -0.65, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, -0.5, 0.0))
         self.glyph.GetPolys().InsertNextCell(4, ptIds)
         ptIds1 = []
         ptIds1.append(pts.InsertNextPoint(-0.5, -0.35, 0.0))
-        ptIds1.append(pts.InsertNextPoint(-0.5, -0.65, 0.0))
+        ptIds1.append(pts.InsertNextPoint(-0.5, -0.5, 0.0))
         ptIds1.append(pts.InsertNextPoint(0.5, 0.35, 0.0))
-        ptIds1.append(pts.InsertNextPoint(0.5, 0.65, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.5, 0.5, 0.0))
         self.glyph.GetPolys().InsertNextCell(4, ptIds1)
 
 
@@ -280,10 +304,10 @@ class Diamond(Pattern):
     def paint(self):
         pts = self.glyph.GetPoints()
         ptIds = []
-        ptIds.append(pts.InsertNextPoint(0.0, -0.5, 0.0))
-        ptIds.append(pts.InsertNextPoint(0.5, 0.0, 0.0))
-        ptIds.append(pts.InsertNextPoint(0.0, 0.5, 0.0))
-        ptIds.append(pts.InsertNextPoint(-0.5, 0.0, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.0, -0.45, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.45, 0.0, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.0, 0.45, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.45, 0.0, 0.0))
         self.glyph.GetPolys().InsertNextCell(4, ptIds)
 
 
