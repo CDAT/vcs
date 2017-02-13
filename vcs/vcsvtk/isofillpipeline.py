@@ -212,6 +212,11 @@ class IsofillPipeline(Pipeline2D):
                     # need exts
                     self._contourLevels.append(1.e20)
 
+        # Compensate for the different viewport size of the colorbar
+        legendpixspacing = [int(fareapixelspacing[0] / (vp[1] - vp[0])),
+                            int(fareapixelspacing[1] / (vp[3] - vp[2]))]
+        legendpixscale = fareapixelscale / (vp[1] - vp[0])
+
         self._resultDict.update(
             self._context().renderColorBar(self._template, self._contourLevels,
                                            self._contourColors, legend,
@@ -219,8 +224,8 @@ class IsofillPipeline(Pipeline2D):
                                            style=style,
                                            index=self._gm.fillareaindices,
                                            opacity=self._gm.fillareaopacity,
-                                           pixelspacing=fareapixelspacing,
-                                           pixelscale=fareapixelscale))
+                                           pixelspacing=legendpixspacing,
+                                           pixelscale=legendpixscale))
 
         if self._context().canvas._continents is None:
             self._useContinents = False

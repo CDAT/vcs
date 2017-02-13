@@ -256,9 +256,11 @@ class MeshfillPipeline(Pipeline2D):
         patternArgs['index'] = self._gm.fillareaindices
         if patternArgs['index'] is None:
             patternArgs['index'] = [1, ]
+        # Compensate for the different viewport size of the colorbar
         patternArgs['opacity'] = self._gm.fillareaopacity
-        patternArgs['pixelspacing'] = fareapixelspacing
-        patternArgs['pixelscale'] = fareapixelscale
+        patternArgs['pixelspacing'] = [int(fareapixelspacing[0] / (vp[1] - vp[0])),
+                                       int(fareapixelspacing[1] / (vp[3] - vp[2]))]
+        patternArgs['pixelscale'] = fareapixelscale / (vp[1] - vp[0])
         self._resultDict.update(
             self._context().renderColorBar(self._template, self._contourLevels,
                                            self._contourColors,

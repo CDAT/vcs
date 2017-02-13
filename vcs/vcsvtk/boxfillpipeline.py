@@ -189,8 +189,10 @@ class BoxfillPipeline(Pipeline2D):
             patternArgs['style'] = self._gm.fillareastyle
             patternArgs['index'] = self._gm.fillareaindices
             patternArgs['opacity'] = self._gm.fillareaopacity
-            patternArgs['pixelspacing'] = fareapixelspacing
-            patternArgs['pixelscale'] = fareapixelscale
+            # Compensate for the different viewport size of the colorbar
+            patternArgs['pixelspacing'] = [int(fareapixelspacing[0] / (vp[1] - vp[0])),
+                                           int(fareapixelspacing[1] / (vp[3] - vp[2]))]
+            patternArgs['pixelscale'] = fareapixelscale / (vp[1] - vp[0])
 
         self._resultDict.update(
             self._context().renderColorBar(self._template, self._contourLevels,
