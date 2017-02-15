@@ -11,7 +11,7 @@ before_install:
 - conda update -y -q conda
 - conda install gcc
 script:
-    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then conda install -c conda-forge -c uvcdat uvcdat-nox nose image-compare; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then conda install -c conda-forge -c uvcdat uvcdat-nox nose image-compare; fi
 - if [ "$TRAVIS_OS_NAME" = "osx" ]; then conda install -c conda-forge -c uvcdat uvcdat nose image-compare; fi
 - export UVCDAT_ANONYMOUS_LOG=False
 - vcs_download_sample_data

@@ -53,8 +53,8 @@ class VCSBaseTest(unittest.TestCase):
         self.x.clear()
         del(self.x)
         # if png dir is empty (no failures) remove it
-        if glob.glob(os.path.join(self.pngsdir,"*")) == []:
-            shutil.rmtree(self.pngsdir)
+        #if glob.glob(os.path.join(self.pngsdir,"*")) == []:
+        #    shutil.rmtree(self.pngsdir)
 
     def checkImage(self,fnm,src=None,threshold=checkimage.defaultThreshold):
         if src is None:
