@@ -19,12 +19,12 @@ class VCSBaseTest(unittest.TestCase):
         return self.getFile(os.path.join(self.tempdir, path), mode)
 
     def setUp(self):
-        global vcs
-        global cdms2
-        global MV2
-        vcs = reload(vcs)
-        cdms2 = reload(cdms2)
-        MV2 = reload(MV2)
+        #global vcs
+        #global cdms2
+        #global MV2
+        #vcs = reload(vcs)
+        #cdms2 = reload(cdms2)
+        #MV2 = reload(MV2)
         self.x=vcs.init()
         self.x.setantialiasing(0)
         self.x.drawlogooff()
@@ -34,16 +34,8 @@ class VCSBaseTest(unittest.TestCase):
         self.pngsdir = "tests_png"
         if not os.path.exists(self.pngsdir):
             os.makedirs(self.pngsdir)
-        p = subprocess.Popen('git rev-parse --abbrev-ref HEAD'.split(),shell=False,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-        o,e = p.communicate()
-        b = o.strip()
-        if not os.path.exists("uvcdat-testdata"):
-            subprocess.call("git clone git://github.com/uv-cdat/uvcdat-testdata".split())
-        os.chdir("uvcdat-testdata")
-        subprocess.call("git pull".split())
-        subprocess.call(("git checkout %s" % (b)).split())
-        os.chdir("..")
         self.basedir = os.path.join("uvcdat-testdata","baselines","vcs")
+        print("WORKNIG DIRECTORY IS:",os.getcwd())
 
 
 
