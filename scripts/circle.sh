@@ -11,6 +11,6 @@ conda config --set anaconda_upload no
 cd /git_repo
 ls -l
 python setup.py install --old-and-unmanageable
-git clone --depth=10 git://github.com/uv-cdat/uvcdat-testdata
+git clone git://github.com/uv-cdat/uvcdat-testdata
 df -h
 python run_tests.py
