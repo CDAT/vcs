@@ -1,0 +1,24 @@
+general:
+  branches:
+    ignore:
+      # We only want to build pull requests for testing. If something is merged,
+      # then we are prepping for release an there is no need to build it again.
+      - master
+
+checkout:
+  post:
+    - ./scripts/checkout_merge_commit.sh
+
+machine:
+  services:
+    - docker
+
+dependencies:
+  # Note, we used to use the naive caching of docker images, but found that it was quicker
+  # just to pull each time. #rollondockercaching
+  override:
+    - docker pull cdat/conda:conda-forge-cdms2
+
+test:
+  override:
+      - docker run -it -v `pwd`:/git_repo -a STDOUT -a STDERR -P cdat/conda:conda-forge-cdms2 /git_repo/scripts/circle.sh
