@@ -90,11 +90,12 @@ for d in outs:
     if d[nm]["result"]!=0:
         failed.append(nm)
 
-if args.verbosity>0: print "Ran %i tests, %i failed (%.2f%%)" % (len(outs),len(failed),float(len(failed))/len(outs)*100.)
-if args.verbosity>1 and len(failed)>0:
-    print "Failed tests:"
-    for f in failed:
-        print "\t",f
+if args.verbosity>0: 
+    print "Ran %i tests, %i failed (%.2f%%)" % (len(outs),len(failed),float(len(failed))/len(outs)*100.)
+    if len(failed)>0:
+        print "Failed tests:"
+        for f in failed:
+            print "\t",f
 if args.html or args.package:
     if not os.path.exists("tests_html"):
         os.makedirs("tests_html")
