@@ -29,6 +29,7 @@ class VCSBaseTest(unittest.TestCase):
         if not os.path.exists(self.pngsdir):
             os.makedirs(self.pngsdir)
         self.basedir = os.path.join("uvcdat-testdata","baselines","vcs")
+        print "HELLO WE ARE HERE!!!!!"
 
 
 
@@ -43,7 +44,7 @@ class VCSBaseTest(unittest.TestCase):
 
     def checkImage(self,fnm,src=None,threshold=checkimage.defaultThreshold):
         if src is None:
-            src = os.path.join(self.basedir,fnm)
+            src = os.path.join(self.basedir,os.path.basename(fnm))
         fnm = os.path.join(self.pngsdir,fnm)
         print "Test file  :",fnm
         print "Source file:",src

@@ -29,9 +29,33 @@ parser.add_argument("-H","--html",action="store_true",help="create and show html
 parser.add_argument("-p","--package",action="store_true",help="package test results (not implemented)")
 parser.add_argument("-c","--coverage",action="store_true",help="run coverage (not implemented)")
 parser.add_argument("-u","--upload",action="store_true",help="upload packaged tests results (not implemented)")
-parser.add_argument("-v","--verbose",action="store_true",help="verbose output")
+parser.add_argument("-v","--verbosity",default=1,choices=[0,1,2],type=int,help="verbosity output level")
 parser.add_argument("-n","--cpus",default=cpus,type=int,help="number of cpus to use")
 parser.add_argument("tests",nargs="*",help="tests to run")
+
+
+def abspath(path,name,prefix):
+    import shutil
+    full_path = os.path.abspath(os.path.join(os.getcwd(),"..",path))
+    if not os.path.exists(name):
+        os.makedirs(name)
+    new = os.path.join(nm,prefix+"_"+os.path.basename(full_path))
+    shutil.copy(full_path,new)
+    return new
+
+
+
+def findDiffFiles(log):
+   i = -1
+   file1 = ""
+   file2 = ""
+   N = len(log)
+   while log[i].find("Source file")==-1 and i>-N:
+       i -= 1
+   if i>-N:
+       file2 = log[i].split()[-1]
+       file1 = log[i-1].split()[-1]
+   return file1, file2
 
 args = parser.parse_args()
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "tests"))
@@ -39,12 +63,12 @@ if len(args.tests)==0:
     names = glob.glob("tests/test_*.py")
 else:
     names = args.tests
-if args.verbose:
+if args.verbosity>1:
     print("Names:",names)
 
 def run_nose(test_name):
-    command = ["nosetests",test_name]
-    if args.verbose:
+    command = ["nosetests","-s",test_name]
+    if args.verbosity>0:
         print "Executing %s in %s" % (" ".join(command),os.getcwd())
     start = time.time()
     P =  subprocess.Popen(command, stdout = subprocess.PIPE, stderr=subprocess.STDOUT,bufsize=0,cwd=os.getcwd())
@@ -52,20 +76,26 @@ def run_nose(test_name):
     while P.poll() is None:
         read = P.stdout.readline()[:-1]
         out.append(read)
-        print read[:-1]
+        if args.verbosity>1: print read[:-1]
     end=time.time()
     return {test_name:{"result":P.poll(),"log":out,"times":{"start":start,"end":end}}}
 
 p = multiprocessing.Pool(args.cpus)
 outs = p.map(run_nose, names)
 results = {}
-exit_code = 0
+failed = []
 for d in outs:
     results.update(d)
-    if d[d.keys()[0]]["result"]!=0:
-        exit_code = 1
+    nm = d.keys()[0]
+    if d[nm]["result"]!=0:
+        failed.append(nm)
 
-if args.html:
+if args.verbosity>0: print "Ran %i tests, %i failed (%.2f%%)" % (len(outs),len(failed),float(len(failed))/len(outs)*100.)
+if args.verbosity>1 and len(failed)>0:
+    print "Failed tests:"
+    for f in failed:
+        print "\t",f
+if args.html or args.package:
     if not os.path.exists("tests_html"):
         os.makedirs("tests_html")
     os.chdir("tests_html")
@@ -105,7 +135,8 @@ if args.html:
             print>>fe,"<script type='text/javascript'>%s</script></head><body>" % js
             print>>fe,"<a href='index.html'>Back To Results List</a>"
             print>>fe,"<h1>Failed test: %s on %s</h1>"%(nm,time.asctime())
-            print>>fe,'<div id="comparison"></div><script type="text/javascript"> ImageCompare.compare(document.getElementById("comparison"), "../tests_png/%s.png", "../uvcdat-testdata/baselines/vcs/%s.png"); </script>' % (nm,nm)
+            file1,file2 = findDiffFiles(result["log"])
+            print>>fe,'<div id="comparison"></div><script type="text/javascript"> ImageCompare.compare(document.getElementById("comparison"), "%s", "%s"); </script>' % (abspath(file2,nm,"test"),abspath(file1,nm,"source"))
         print>>fe,"<a href='index.html'>Back To Results List</a>"
         print>>fe,'<div id="output"><h1>Log</h1><pre>%s</pre></div>' % "\n".join(result["log"])
         print>>fe,"<a href='index.html'>Back To Results List</a>"
@@ -116,5 +147,20 @@ if args.html:
 
     print>>fi,"</table></body></html>"
     fi.close()
-    webbrowser.open("file://%s/index.html"% os.getcwd())
-sys.exit(exit_code)
+    if args.html:
+        webbrowser.open("file://%s/index.html"% os.getcwd())
+    os.chdir("..")
+
+if args.package:
+    import tarfile
+    tnm = "results_%s.tar.bz2" % time.strftime("%Y-%m-%d_%H:%M")
+    t = tarfile.open(tnm,"w:bz2")
+    t.add("tests_html")
+    t.close()
+    if args.verbosity>0:
+        print "Packaged Result Info in:",tnm
+
+
+
+
+sys.exit(len(failed))
