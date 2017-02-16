@@ -52,17 +52,20 @@ def run_nose(test_name):
     while P.poll() is None:
         read = P.stdout.readline()[:-1]
         out.append(read)
-        print read
+        print read[:-1]
     end=time.time()
     return {test_name:{"result":P.poll(),"log":out,"times":{"start":start,"end":end}}}
 
 p = multiprocessing.Pool(args.cpus)
 outs = p.map(run_nose, names)
-if args.html:
-    results = {}
-    for d in outs:
-        results.update(d)
+results = {}
+exit_code = 0
+for d in outs:
+    results.update(d)
+    if d[d.keys()[0]]["result"]!=0:
+        exit_code = 1
 
+if args.html:
     if not os.path.exists("tests_html"):
         os.makedirs("tests_html")
     os.chdir("tests_html")
@@ -114,3 +117,4 @@ if args.html:
     print>>fi,"</table></body></html>"
     fi.close()
     webbrowser.open("file://%s/index.html"% os.getcwd())
+sys.exit(exit_code)

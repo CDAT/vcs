@@ -4602,6 +4602,7 @@ class Canvas(object):
 
         args.append(movie)
 
+        print "ARGS FFMPEG:",args
         result = subprocess.call(args)
 
         if isinstance(files, (list, tuple)):
