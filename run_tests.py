@@ -11,6 +11,7 @@ import time
 import webbrowser
 import shlex
 
+root = os.getcwd()
 cpus = multiprocessing.cpu_count()
 
 parser = argparse.ArgumentParser(description="Run VCS tests",
@@ -87,7 +88,7 @@ if not os.path.exists("uvcdat-testdata"):
 os.chdir("uvcdat-testdata")
 run_command("git pull")
 run_command("git checkout %s" % (b))
-os.chdir("..")
+os.chdir(root)
 
 if args.vtk is not None:
     P, installed_vtk = run_command("conda list vtk")
@@ -181,7 +182,7 @@ if args.html or args.package:
     fi.close()
     if args.html:
         webbrowser.open("file://%s/index.html"% os.getcwd())
-    os.chdir("..")
+    os.chdir(root)
 
 if args.package:
     import tarfile
