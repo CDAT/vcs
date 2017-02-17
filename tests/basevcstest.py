@@ -29,6 +29,7 @@ class VCSBaseTest(unittest.TestCase):
         if not os.path.exists(self.pngsdir):
             os.makedirs(self.pngsdir)
         self.basedir = os.path.join("uvcdat-testdata","baselines","vcs")
+        self.clt = cdms2.open(os.path.join(vcs.sample_data, "clt.nc"))
 
 
     def tearDown(self):

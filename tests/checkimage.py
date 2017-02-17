@@ -71,7 +71,7 @@ def check_result_image(fname, baselinefname, threshold = defaultThreshold,
     bestDiff = None
     bestDiffImage = None
     for baselineFilename in baselinefnames:
-        sys.stdout.write("Comparing '%s' to '%s'..."%(fname, baselineFilename))
+        sys.stdout.write("Comparing %s %s ... "%(fname, baselineFilename))
         baselineImage = image_from_file(baselineFilename)
         if baselineImage is None:
             continue
@@ -103,7 +103,7 @@ def check_result_image(fname, baselinefname, threshold = defaultThreshold,
 
     sp = fname.split(".")
     diffFilename = ".".join(sp[:-1])+"_diff."+sp[-1]
-    print "Saving image diff at '%s'."%diffFilename
+    print "Saving image diff at %s"%diffFilename
     dump_image_to_file(diffFilename, bestDiffImage)
 
     # Print metadata for CDash image upload:

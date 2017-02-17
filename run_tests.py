@@ -9,17 +9,7 @@ import image_compare
 import codecs
 import time
 import webbrowser
-
-# We need to clone baselines
-p = subprocess.Popen('git rev-parse --abbrev-ref HEAD'.split(),shell=False,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-o,e = p.communicate()
-b = o.strip()
-if not os.path.exists("uvcdat-testdata"):
-    subprocess.call("git clone git://github.com/uv-cdat/uvcdat-testdata".split())
-os.chdir("uvcdat-testdata")
-subprocess.call("git pull".split())  # lock issues on mac
-subprocess.call(("git checkout %s" % (b)).split())
-os.chdir("..")
+import shlex
 
 cpus = multiprocessing.cpu_count()
 
@@ -30,9 +20,11 @@ parser.add_argument("-p","--package",action="store_true",help="package test resu
 parser.add_argument("-c","--coverage",action="store_true",help="run coverage (not implemented)")
 parser.add_argument("-u","--upload",action="store_true",help="upload packaged tests results (not implemented)")
 parser.add_argument("-v","--verbosity",default=1,choices=[0,1,2],type=int,help="verbosity output level")
+parser.add_argument("-V","--vtk",default=None,help="conda channel and extras to use for vtk. Command will be 'conda install -c [VTK] vtk'")
 parser.add_argument("-n","--cpus",default=cpus,type=int,help="number of cpus to use")
 parser.add_argument("tests",nargs="*",help="tests to run")
 
+args = parser.parse_args()
 
 def abspath(path,name,prefix):
     import shutil
@@ -44,20 +36,72 @@ def abspath(path,name,prefix):
     return new
 
 
-
 def findDiffFiles(log):
    i = -1
    file1 = ""
    file2 = ""
+   diff = ""
    N = len(log)
    while log[i].find("Source file")==-1 and i>-N:
        i -= 1
    if i>-N:
-       file2 = log[i].split()[-1]
        file1 = log[i-1].split()[-1]
-   return file1, file2
+       for j in range(i,N):
+           if log[j].find("New best!")>-1:
+               file2 = log[j].split()[3]
+           if log[j].find("Saving image diff")>-1:
+               diff = log[j].split()[-1]
+               break
+   return file1, file2, diff
 
-args = parser.parse_args()
+def run_command(command,join_stderr=True):
+    if isinstance(command,basestring):
+        command = shlex.split(command)
+    if args.verbosity>0:
+        print "Executing %s in %s" % (" ".join(command),os.getcwd())
+    if join_stderr:
+        stderr = subprocess.STDOUT
+    else:
+        stderr = subprocess.PIPE
+    P =  subprocess.Popen(command, stdout = subprocess.PIPE, stderr=stderr, bufsize=0,cwd=os.getcwd())
+    out = []
+    while P.poll() is None:
+        read = P.stdout.readline().rstrip()
+        out.append(read)
+        if args.verbosity>1 and len(read)!=0: print read
+    return P,out
+
+def run_nose(test_name):
+    command = ["nosetests","-s",test_name]
+    start = time.time()
+    P,  out = run_command(command)
+    end=time.time()
+    return {test_name:{"result":P.poll(),"log":out,"times":{"start":start,"end":end}}}
+
+# We need to clone baselines
+P,o = run_command('git rev-parse --abbrev-ref HEAD',join_stderr=False)
+o = "".join(o)
+b = o.strip()
+if not os.path.exists("uvcdat-testdata"):
+    run_command("git clone git://github.com/uv-cdat/uvcdat-testdata")
+os.chdir("uvcdat-testdata")
+run_command("git pull")
+run_command("git checkout %s" % (b))
+os.chdir("..")
+
+if args.vtk is not None:
+    P, installed_vtk = run_command("conda list vtk")
+    print installed_vtk
+    while installed_vtk[-1] == "":
+        installed_vtk.pop(-1)
+    installed_vtk = installed_vtk[-1]
+    installed_vtk = installed_vtk.split()
+    vtk_name = installed_vtk[0]
+    vtk_channel = installed_vtk[-1]
+    if args.verbosity>1:
+        print "%s installed from: %s"%(vtk_name,vtk_channel)
+    run_command("conda install -f -y -c %s %s" % (args.vtk,vtk_name))
+
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "tests"))
 if len(args.tests)==0:
     names = glob.glob("tests/test_*.py")
@@ -65,20 +109,6 @@ else:
     names = args.tests
 if args.verbosity>1:
     print("Names:",names)
-
-def run_nose(test_name):
-    command = ["nosetests","-s",test_name]
-    if args.verbosity>0:
-        print "Executing %s in %s" % (" ".join(command),os.getcwd())
-    start = time.time()
-    P =  subprocess.Popen(command, stdout = subprocess.PIPE, stderr=subprocess.STDOUT,bufsize=0,cwd=os.getcwd())
-    out = []
-    while P.poll() is None:
-        read = P.stdout.readline().rstrip()
-        out.append(read)
-        if args.verbosity>1 and len(read)!=0: print read
-    end=time.time()
-    return {test_name:{"result":P.poll(),"log":out,"times":{"start":start,"end":end}}}
 
 p = multiprocessing.Pool(args.cpus)
 outs = p.map(run_nose, names)
@@ -136,8 +166,9 @@ if args.html or args.package:
             print>>fe,"<script type='text/javascript'>%s</script></head><body>" % js
             print>>fe,"<a href='index.html'>Back To Results List</a>"
             print>>fe,"<h1>Failed test: %s on %s</h1>"%(nm,time.asctime())
-            file1,file2 = findDiffFiles(result["log"])
+            file1,file2,diff = findDiffFiles(result["log"])
             print>>fe,'<div id="comparison"></div><script type="text/javascript"> ImageCompare.compare(document.getElementById("comparison"), "%s", "%s"); </script>' % (abspath(file2,nm,"test"),abspath(file1,nm,"source"))
+            print>>fe,"<div id='diff'><img src='%s' alt='diff file'></div>" % abspath(diff,nm,"diff")
         print>>fe,"<a href='index.html'>Back To Results List</a>"
         print>>fe,'<div id="output"><h1>Log</h1><pre>%s</pre></div>' % "\n".join(result["log"])
         print>>fe,"<a href='index.html'>Back To Results List</a>"
