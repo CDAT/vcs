@@ -48,7 +48,7 @@ def findDiffFiles(log):
        file1 = log[i-1].split()[-1]
        for j in range(i,N):
            if log[j].find("New best!")>-1:
-               file2 = log[j].split()[3]
+               file2 = log[j].split()[2]
            if log[j].find("Saving image diff")>-1:
                diff = log[j].split()[-1]
                break
