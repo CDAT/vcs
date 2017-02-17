@@ -29,8 +29,6 @@ class VCSBaseTest(unittest.TestCase):
         if not os.path.exists(self.pngsdir):
             os.makedirs(self.pngsdir)
         self.basedir = os.path.join("uvcdat-testdata","baselines","vcs")
-        print "HELLO WE ARE HERE!!!!!"
-
 
 
     def tearDown(self):
@@ -42,13 +40,14 @@ class VCSBaseTest(unittest.TestCase):
         #if glob.glob(os.path.join(self.pngsdir,"*")) == []:
         #    shutil.rmtree(self.pngsdir)
 
-    def checkImage(self,fnm,src=None,threshold=checkimage.defaultThreshold):
+    def checkImage(self,fnm,src=None,threshold=checkimage.defaultThreshold,pngReady=False):
         if src is None:
             src = os.path.join(self.basedir,os.path.basename(fnm))
         fnm = os.path.join(self.pngsdir,fnm)
         print "Test file  :",fnm
         print "Source file:",src
-        self.x.png(fnm)
+        if not pngReady:
+            self.x.png(fnm)
         ret = checkimage.check_result_image(fnm,src,threshold)
         self.assertEqual(ret,0)
         return ret

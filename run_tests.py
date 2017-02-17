@@ -74,9 +74,9 @@ def run_nose(test_name):
     P =  subprocess.Popen(command, stdout = subprocess.PIPE, stderr=subprocess.STDOUT,bufsize=0,cwd=os.getcwd())
     out = []
     while P.poll() is None:
-        read = P.stdout.readline()[:-1]
+        read = P.stdout.readline().rstrip()
         out.append(read)
-        if args.verbosity>1: print read[:-1]
+        if args.verbosity>1 and len(read)!=0: print read
     end=time.time()
     return {test_name:{"result":P.poll(),"log":out,"times":{"start":start,"end":end}}}
 
