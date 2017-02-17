@@ -1,47 +1,33 @@
-import vcs
-import argparse
-import cdms2
-import  os
-import sys
-
-
-pth = os.path.join(os.path.dirname(__file__),"..")
-sys.path.append(pth)
-import checkimage
+import argparse, os, sys, cdms2, vcs, vcs.testing.regression as regression
 
 parser = argparse.ArgumentParser()
-
 parser.add_argument("-g",dest="gm",default="boxfill",choices = ["boxfill","isofill","meshfill","isoline","vector","1d"])
 parser.add_argument("-s",dest="src",default="vcs",choices=["vcs","canvas","gm"])
 parser.add_argument("-b",dest="baseline")
-
-
 args = parser.parse_args()
 
-x=vcs.init()
-x.setantialiasing(0)
-x.setbgoutputdimensions(1200, 1091, units="pixels")
-x.drawlogooff()
+x = regression.init()
 
 exec("gm = x.create%s()" % args.gm)
 
 if args.src == "vcs":
-  vcs._colorMap = "blue_to_grn"
+  vcs._colorMap = "blue2green"
 elif args.src == "canvas":
   ## Still setting vcs to make sure it is not used
-  vcs._colorMap = "blue_to_grn"
-  x.setcolormap("blue_to_grey")
+  vcs._colorMap = "blue2green"
+  x.setcolormap("blue2grey")
 else:
   ## Still setting vcs and canvas to make sure it is not used
-  vcs._colorMap = "blue_to_grn"
-  x.setcolormap("blue_to_grey")
-  gm.colormap = "blue_to_orange"
+  vcs._colorMap = "blue2green"
+  x.setcolormap("blue2grey")
+  gm.colormap = "blue2orange"
 
 if args.gm != "meshfill":
   f=cdms2.open(os.path.join(vcs.sample_data,"clt.nc"))
   if args.gm == "vector":
-    u = f("u")
-    v = f("v")
+    u = f("u")[...,::2,::2]
+    v = f("v")[...,::2,::2]
+    gm.scale = 8.
   else:
     s=f("clt",slice(0,1))
 else:
@@ -55,7 +41,4 @@ else:
 fnm = "test_vcs_colormaps_source_%s_%s.png" % (args.gm,args.src)
 x.png(fnm)
 baselineImage = args.baseline
-ret = checkimage.check_result_image(fnm, baselineImage,
-                                    checkimage.defaultThreshold)
-
-sys.exit(ret)
+ret = regression.run(x, fnm, baselineImage)
