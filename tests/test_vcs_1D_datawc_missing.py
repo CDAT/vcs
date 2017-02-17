@@ -1,9 +1,6 @@
-_multiprocess_can_split_ = True
-
 import basevcstest
 import numpy
 import MV2
-import os
 
 class TestVCS1DDatawcMissing(basevcstest.VCSBaseTest):
     def test1DMissingDatawc(self):

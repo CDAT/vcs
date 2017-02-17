@@ -23,6 +23,7 @@ parser.add_argument("-u","--upload",action="store_true",help="upload packaged te
 parser.add_argument("-v","--verbosity",default=1,choices=[0,1,2],type=int,help="verbosity output level")
 parser.add_argument("-V","--vtk",default=None,help="conda channel and extras to use for vtk. Command will be 'conda install -c [VTK] vtk'")
 parser.add_argument("-n","--cpus",default=cpus,type=int,help="number of cpus to use")
+parser.add_argument("-g","--git",action="store_true",default=False,help="run git checkout calls")
 parser.add_argument("tests",nargs="*",help="tests to run")
 
 args = parser.parse_args()
@@ -79,16 +80,17 @@ def run_nose(test_name):
     end=time.time()
     return {test_name:{"result":P.poll(),"log":out,"times":{"start":start,"end":end}}}
 
-# We need to clone baselines
-P,o = run_command('git rev-parse --abbrev-ref HEAD',join_stderr=False)
-o = "".join(o)
-b = o.strip()
-if not os.path.exists("uvcdat-testdata"):
-    run_command("git clone git://github.com/uv-cdat/uvcdat-testdata")
-os.chdir("uvcdat-testdata")
-run_command("git pull")
-run_command("git checkout %s" % (b))
-os.chdir(root)
+if args.git or not os.path.exists("uvcdat-testdata"):
+    # We need to clone baselines
+    P,o = run_command('git rev-parse --abbrev-ref HEAD',join_stderr=False)
+    o = "".join(o)
+    b = o.strip()
+    if not os.path.exists("uvcdat-testdata"):
+        run_command("git clone git://github.com/uv-cdat/uvcdat-testdata")
+    os.chdir("uvcdat-testdata")
+    run_command("git pull")
+    run_command("git checkout %s" % (b))
+    os.chdir(root)
 
 if args.vtk is not None:
     P, installed_vtk = run_command("conda list vtk")
@@ -168,9 +170,11 @@ if args.html or args.package:
             print>>fe,"<a href='index.html'>Back To Results List</a>"
             print>>fe,"<h1>Failed test: %s on %s</h1>"%(nm,time.asctime())
             file1,file2,diff = findDiffFiles(result["log"])
-            print>>fe,'<div id="comparison"></div><script type="text/javascript"> ImageCompare.compare(document.getElementById("comparison"), "%s", "%s"); </script>' % (abspath(file2,nm,"test"),abspath(file1,nm,"source"))
-            print>>fe,"<div id='diff'><img src='%s' alt='diff file'></div>" % abspath(diff,nm,"diff")
-        print>>fe,"<a href='index.html'>Back To Results List</a>"
+            if file1!="":
+                print>>fe,'<div id="comparison"></div><script type="text/javascript"> ImageCompare.compare(document.getElementById("comparison"), "%s", "%s"); </script>' % (abspath(file2,nm,"test"),abspath(file1,nm,"source"))
+                print>>fe,"<div><a href='index.html'>Back To Results List</a></div>"
+                print>>fe,"<div id='diff'><img src='%s' alt='diff file'></div>" % abspath(diff,nm,"diff")
+                print>>fe,"<div><a href='index.html'>Back To Results List</a></div>"
         print>>fe,'<div id="output"><h1>Log</h1><pre>%s</pre></div>' % "\n".join(result["log"])
         print>>fe,"<a href='index.html'>Back To Results List</a>"
         print>>fe,"</body></html>"

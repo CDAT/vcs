@@ -13,4 +13,4 @@ ls -l
 python setup.py install --old-and-unmanageable
 git clone git://github.com/uv-cdat/uvcdat-testdata
 df -h
-python run_tests.py -v2
+python run_tests.py -v2 -g
