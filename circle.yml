@@ -22,7 +22,7 @@ machine:
 dependencies:
     override:
     #- docker pull cdat/conda:conda-forge-cdms2
-        - bash vcs/scripts/circleci_mac_dep.sh
+        - bash ./scripts/circleci_mac_dep.sh
   
 
 test:
