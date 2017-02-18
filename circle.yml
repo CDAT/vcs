@@ -10,7 +10,10 @@ checkout:
     - ./scripts/checkout_merge_commit.sh
 
 #machine:
-#  services:
+machine:
+    pre:
+        - sudo -H pip install --upgrade virtualenv
+      #  services:
 #    - docker
 
 #dependencies:
