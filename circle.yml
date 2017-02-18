@@ -13,7 +13,7 @@ checkout:
 #  services:
 #    - docker
 
-dependencies:
+#dependencies:
   # Note, we used to use the naive caching of docker images, but found that it was quicker
   # just to pull each time. #rollondockercaching
   #  override:
@@ -23,4 +23,4 @@ dependencies:
 test:
   override:
       #      - docker run -it -v `pwd`:/git_repo -a STDOUT -a STDERR -P cdat/conda:conda-forge-cdms2 /git_repo/scripts/circle.sh
-      - ./scripts/circleci_mac.sh
+      - bash ./scripts/circleci_mac.sh
