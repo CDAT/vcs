@@ -15,7 +15,7 @@ machine:
         - sudo -H pip install --upgrade virtualenv
         - ls
         - pwd
-        - bash ./scripts/circleci_mac.sh
+        - bash vcs/scripts/circleci_mac.sh
       #  services:
 #    - docker
 
