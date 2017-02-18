@@ -13,6 +13,7 @@ checkout:
 machine:
     pre:
         - sudo -H pip install --upgrade virtualenv
+        - 
       #  services:
 #    - docker
 
