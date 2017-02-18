@@ -4,7 +4,4 @@ bash miniconda.sh -b -p $HOME/miniconda
 export PATH=${HOME}/miniconda/bin:${PATH}
 conda config --set always_yes yes --set changeps1 no
 conda update -y -q conda
-conda install -c conda-forge -c uvcdat uvcdat pyopenssl nose image-compare
-export UVCDAT_ANONYMOUS_LOG=False
-vcs_download_sample_data
 conda config --set anaconda_upload no
