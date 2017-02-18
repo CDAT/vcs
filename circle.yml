@@ -13,7 +13,7 @@ checkout:
 machine:
     pre:
         - sudo -H pip install --upgrade virtualenv
-        - 
+        - bash ./scripts/circleci_mac.sh
       #  services:
 #    - docker
 
