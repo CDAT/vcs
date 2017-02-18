@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-curl https://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -o miniconda.sh
+curl https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -o miniconda.sh
 more miniconda.sh
 bash miniconda.sh -b -p $HOME/miniconda
 export PATH=${HOME}/miniconda/bin:${PATH}
