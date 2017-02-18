@@ -5,3 +5,4 @@ export PATH=${HOME}/miniconda/bin:${PATH}
 conda config --set always_yes yes --set changeps1 no
 conda update -y -q conda
 conda config --set anaconda_upload no
+git clone git://github.com/uv-cdat/uvcdat-testdata
