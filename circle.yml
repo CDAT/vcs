@@ -1,9 +1,9 @@
 general:
-  branches:
-    ignore:
+    #branches:
+    #  ignore:
       # We only want to build pull requests for testing. If something is merged,
       # then we are prepping for release an there is no need to build it again.
-      - master
+      #  - master
   artifacts:
       - tests_html
       - tests_png
@@ -19,16 +19,16 @@ machine:
         - ls
         - pwd
         - bash vcs/scripts/circleci_mac_machine_pre.sh
-      #  services:
-#    - docker
+    services:
+        - docker
 
 dependencies:
     override:
-    #- docker pull cdat/conda:conda-forge-cdms2
         - bash ./scripts/circleci_mac_dep.sh
+        - docker pull cdat/conda:conda-forge-cdms2
   
 
 test:
   override:
-      #      - docker run -it -v `pwd`:/git_repo -a STDOUT -a STDERR -P cdat/conda:conda-forge-cdms2 /git_repo/scripts/circle.sh
       - bash ./scripts/circleci_mac.sh
+      - docker run -it -v `pwd`:/git_repo -a STDOUT -a STDERR -P cdat/conda:conda-forge-cdms2 /git_repo/scripts/circle.sh
