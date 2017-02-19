@@ -14,6 +14,8 @@ checkout:
 
 #machine:
 machine:
+    xcode:
+        version: 7.2
     pre:
         - sudo -H pip install --upgrade virtualenv
         - ls
