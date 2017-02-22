@@ -19,7 +19,7 @@ class VCSBaseTest(unittest.TestCase):
         return self.getFile(os.path.join(self.tempdir, path), mode)
 
     def setUp(self):
-        self.x=vcs.init()
+        self.x=vcs.init(bg=True)
         self.x.setantialiasing(0)
         self.x.drawlogooff()
         self.x.setbgoutputdimensions(1200,1091,units="pixels")
