@@ -9,7 +9,7 @@ class TestVCSAnimateIsofill(basevcstest.VCSBaseTest):
         s=f("clt",slice(0,12)) # read only 12 times steps to speed up things
 
         gm=self.x.createisofill()
-        self.x.plot(s,gm,bg=1)
+        self.x.plot(s,gm,bg=self.bg)
         self.x.animate.create()
         prefix= os.path.split(__file__)[1][:-3]
         self.x.animate.save("%s.mp4"%prefix)

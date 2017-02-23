@@ -15,7 +15,7 @@ class TestVCS1DMany(basevcstest.VCSBaseTest):
 
         one = self.x.create1d()
 
-        self.x.plot(d,one,bg=1)
+        self.x.plot(d,one,bg=self.bg)
 
 
         fnm = "test_vcs_1D_with_manyDs.png"

@@ -36,6 +36,6 @@ class TestVCS1DDatawcMissing(basevcstest.VCSBaseTest):
         """.split()
         data = numpy.array(data,dtype=numpy.float)
         data = MV2.masked_less(data,-900)
-        self.x.plot(data,yx,bg=1)
+        self.x.plot(data,yx,bg=self.bg)
         fnm = "test_vcs_1D_datawc_missing.png"
         self.checkImage(fnm)

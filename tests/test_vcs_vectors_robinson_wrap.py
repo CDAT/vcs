@@ -12,7 +12,7 @@ class TestVCSVectorsRobinsonWrap(basevcstest.VCSBaseTest):
         p = self.x.createprojection()
         p.type = "robinson"
         V.projection = p
-        self.x.plot(u,v,V, bg=1)
+        self.x.plot(u,v,V, bg=self.bg)
 
         fnm = "test_vcs_vectors_robinson_wrap.png"
         self.checkImage(fnm)

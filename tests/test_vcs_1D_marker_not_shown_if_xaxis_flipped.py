@@ -20,7 +20,7 @@ class TestVCS1DBoxfill(basevcstest.VCSBaseTest):
 
         gm.markersize=30
 
-        self.x.plot(data,gm,bg=1)
+        self.x.plot(data,gm,bg=self.bg)
 
         fnm = "test_vcs_1d_marker_not_shown_if_xaxis_flipped.png"
         self.checkImage(fnm)

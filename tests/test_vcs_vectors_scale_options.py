@@ -10,7 +10,7 @@ class TestVCSVectorScale(basevcstest.VCSBaseTest):
         gv.scaletype = scalingType
         if scale is not None:
             gv.scale = scale
-        self.x.plot(u, v, gv, bg=1)
+        self.x.plot(u, v, gv, bg=self.bg)
         outFilename = 'test_vcs_vectors_scale_options_%s.png' % scalingType
         self.checkImage(outFilename)
         self.x.clear()

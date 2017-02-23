@@ -21,5 +21,5 @@ class TestVCSTextsExtents(basevcstest.VCSBaseTest):
             text.x.append(1 - w)
 
         fnm = "test_textextents.png"
-        self.x.plot(text,bg=1)
+        self.x.plot(text,bg=self.bg)
         self.checkImage(fnm)

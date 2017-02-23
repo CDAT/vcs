@@ -29,7 +29,7 @@ class TestVCSMarkersWmo(basevcstest.VCSBaseTest):
             xs.append([M*(X+1)/16.,])
         m.x = xs
         m.y = ys
-        self.x.plot(m,bg=1)
+        self.x.plot(m,bg=self.bg)
         fnm = "test_vcs_wmo_markers.png"
         self.checkImage(fnm)
 

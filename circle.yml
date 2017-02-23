@@ -4,9 +4,9 @@ general:
       # We only want to build pull requests for testing. If something is merged,
       # then we are prepping for release an there is no need to build it again.
       #  - master
-#  artifacts:
-#      - tests_html
-#      - tests_png
+  artifacts:
+      - tests_html
+      - tests_png
 
 checkout:
   post:

@@ -29,7 +29,7 @@ class TestVCS1DMissing(basevcstest.VCSBaseTest):
         data=MV2.masked_where(MV2.logical_and(data>-4,data<-2),data)
 
 
-        self.x.plot(data,yx,bg=1)
+        self.x.plot(data,yx,bg=self.bg)
         fnm = "test_vcs_1d_missing.png"
         self.checkImage(fnm)
 

@@ -10,7 +10,7 @@ class TestVCSMarkerWmoW07(basevcstest.VCSBaseTest):
         m.size=[1.,2.,5.]
         m.x = [[.25,],[.5,],[.75]]
         m.y = [.5,]
-        self.x.plot(m,bg=1)
+        self.x.plot(m,bg=self.bg)
         fnm = 'test_vcs_wmo_marker.png'
         self.checkImage(fnm)
 

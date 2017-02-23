@@ -11,7 +11,7 @@ class TestVCSVectorsMissing(basevcstest.VCSBaseTest):
         v=f("v")
         u=MV2.masked_greater(u,35.)[...,::2,::2]
         v=MV2.masked_greater(v,888.)[...,::2,::2]
-        self.x.plot(u,v,gm,bg=1)
+        self.x.plot(u,v,gm,bg=self.bg)
         fnm = "test_vcs_vectors_missing.png" 
         self.checkImage(fnm)
         

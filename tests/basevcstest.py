@@ -19,7 +19,9 @@ class VCSBaseTest(unittest.TestCase):
         return self.getFile(os.path.join(self.tempdir, path), mode)
 
     def setUp(self):
-        self.x=vcs.init(bg=True)
+        # This is for circleci that crashes for any mac bg=True
+        self.bg = os.enviroment.get("VCS_BACKGROUND",1)
+        self.x=vcs.init()
         self.x.setantialiasing(0)
         self.x.drawlogooff()
         self.x.setbgoutputdimensions(1200,1091,units="pixels")
