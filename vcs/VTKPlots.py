@@ -480,13 +480,10 @@ class VTKVCSBackend(object):
         # Resize and position window to the provided arguments except when the
         # values are default and negative. In the latter case, it should just
         # rotate the window.
-        print "RESIZING TO:",W,H
         if clear:
             self.clear()
         if self.renWin is None:
-            print "YES NO RENWIN"
             if W != -99:
-                print "SETTING BG TO:",W,H
                 self.canvas.bgX = W
                 self.canvas.bgY = H
             else:

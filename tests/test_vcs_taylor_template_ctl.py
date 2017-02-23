@@ -10,9 +10,7 @@ class TestVCSTaylor(basevcstest.VCSBaseTest):
         ## Create a taylordiagrma graphic method
         td=self.x.createtaylordiagram('my')
 
-        print self.x.canvasinfo()
         self.x.portrait()
-        print self.x.canvasinfo()
 
         ## Create a line which we will make dotted and grey
         gdl=self.x.createline('gdl')
