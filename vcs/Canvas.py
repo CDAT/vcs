@@ -4464,13 +4464,14 @@ class Canvas(object):
                 dict = self.canvasinfo(*cargs)
             except:
                 dict = {}
-            height = dict.get('width', -99)
-            width = dict.get('height', -99)
+            height = max(dict.get('width', -99), dict.get('height', -99))
+            width = min(dict.get('width', -99), dict.get('height', -99))
             x = dict.get('x', -99)
             y = dict.get('y', -99)
         self.flush()  # update the canvas by processing all the X events
 
         args = (width, height, x, y, clear)
+        print "SENDING TO VTK:",args
         p = self.backend.portrait(*args)
 
         return p
