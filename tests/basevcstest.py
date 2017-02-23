@@ -21,10 +21,12 @@ class VCSBaseTest(unittest.TestCase):
     def setUp(self):
         # This is for circleci that crashes for any mac bg=True
         self.bg = int(os.environ.get("VCS_BACKGROUND",1))
-        self.x=vcs.init()
+        self.x=vcs.init(geometry={"width": 1200, "height": 1091})
         self.x.setantialiasing(0)
         self.x.drawlogooff()
         self.x.setbgoutputdimensions(1200,1091,units="pixels")
+        if not self.bg:
+            self.x.open()
         self.orig_cwd = os.getcwd()
         self.tempdir = tempfile.mkdtemp()
         self.pngsdir = "tests_png"
@@ -50,7 +52,7 @@ class VCSBaseTest(unittest.TestCase):
         print "Test file  :",fnm
         print "Source file:",src
         if not pngReady:
-            self.x.png(fnm)
+            self.x.png(fnm,width=self.x.bgX,height=self.x.bgY,units="pixels")
         ret = checkimage.check_result_image(fnm,src,threshold)
         self.assertEqual(ret,0)
         return ret
