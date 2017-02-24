@@ -24,7 +24,7 @@
 import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import scriptdocs
+from xmldocs import scriptdocs, listdoc
 
 
 def process_src(nm, code):
@@ -211,6 +211,8 @@ class Tm(object):
                 mk.x=[[0,.1,.2], [.3,.4,.5]]
                 # List of FloatTypes
                 mk.y=[[.5,.4,.3], [.2,.1,0]]
+
+        .. pragma: skip-doctest
         """
     __slots__ = [
         's_name',
@@ -429,7 +431,7 @@ class Tm(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Marker (Tm) member (attribute) listings ----------"
+        print "---------- Marker (Tm) member (attribute) listings ----------"
         print "secondary method =", self.s_name
         print "name =", self.name
         print "type =", self.type
@@ -442,11 +444,9 @@ class Tm(object):
         print "y =", self.y
         print "projection =", self.projection
         print "colormap =", self.colormap
+    list.__doc__ = listdoc.format(name="marker", parent="")
 
     def script(self, script_filename=None, mode=None):
-        """
-        script.__doc__ = xmldocs.marker_script
-"""
         if (script_filename is None):
             raise ValueError(
                 'Error - Must provide an output script file name.')

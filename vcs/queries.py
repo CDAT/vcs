@@ -20,6 +20,18 @@
 ##########################################################################
 
 """
+    .. _list: https://docs.python.org/2/library/functions.html#list
+    .. _tuple: https://docs.python.org/2/library/functions.html#tuple
+    .. _dict: https://docs.python.org/2/library/stdtypes.html#mapping-types-dict
+    .. _None: https://docs.python.org/2/library/constants.html?highlight=none#None
+    .. _str: https://docs.python.org/2/library/functions.html?highlight=str#str
+    .. _bool: https://docs.python.org/2/library/functions.html?highlight=bool#bool
+    .. _float: https://docs.python.org/2/library/functions.html?highlight=float#float
+    .. _int: https://docs.python.org/2/library/functions.html?highlight=float#int
+    .. _long: https://docs.python.org/2/library/functions.html?highlight=float#long
+    .. _file: https://docs.python.org/2/library/functions.html?highlight=open#file
+
+    .. pragma: skip-doctest
 """
 import boxfill
 import isofill
@@ -45,8 +57,7 @@ from error import vcsError
 
 
 def isgraphicsmethod(gobj):
-    """
-    Indicates if the entered argument is one of the following graphics
+    """Indicates if the entered argument is one of the following graphics
     methods: boxfill, isofill, isoline,
     scatter, vector, xvsy, xyvsy, yxvsx.
 
@@ -64,7 +75,7 @@ def isgraphicsmethod(gobj):
 
     :returns: Integer reperesenting whether gobj is one of the above graphics methods.
                 1 indicates true, 0 indicates false.
-    :rtype: int
+    :rtype: `int`_
     """
     import vcsaddons
     if (isinstance(gobj, boxfill.Gfb)):
@@ -107,15 +118,14 @@ def graphicsmethodlist():
 
     :returns: A list of available grapics methods (i.e., 'boxfill', 'isofill', 'isoline', 'meshfill', 'scatter',
             'vector', 'xvsy', 'xyvsy', 'yxvsx', 'taylordiagram', '1d', '3d_scalar', '3d_dual_scalar', '3d_vector').
-    :rtype: list
+    :rtype: `list`_
     """
     return ['boxfill', 'isofill', 'isoline', 'meshfill', 'scatter',
             'vector', 'xvsy', 'xyvsy', 'yxvsx', 'taylordiagram', '1d', '3d_scalar', '3d_dual_scalar', '3d_vector']
 
 
 def graphicsmethodtype(gobj):
-    """
-    Check the type of a graphics object.
+    """Check the type of a graphics object.
 
     Returns None if the object is not a graphics method.
 
@@ -137,10 +147,10 @@ def graphicsmethodtype(gobj):
             vcsError: The object passed is not a graphics method object.
 
     :returns: If gobj is a graphics method object, returns its type: 'boxfill', 'isofill', 'isoline', 'meshfill',
-            'scatter', 'vector', 'xvsy', 'xyvsy', 'yxvsx', 'taylordiagram', '1d', '3d_scalar', '3d_dual_scalar',
-            '3d_vector'.
-            If gobj is not a graphics method object, raises an exception and prints a vcsError message.
-    :rtype: str or None
+        'scatter', 'vector', 'xvsy', 'xyvsy', 'yxvsx', 'taylordiagram', '1d', '3d_scalar', '3d_dual_scalar',
+        '3d_vector'.
+        If gobj is not a graphics method object, raises an exception and prints a vcsError message.
+    :rtype: `str`_ or `None`_
     """
     import vcsaddons
     if (isinstance(gobj, boxfill.Gfb)):
@@ -170,26 +180,23 @@ def graphicsmethodtype(gobj):
 
 
 def isplot(pobj):
-    """
-    Check to see if this object is a VCS secondary display plot.
+    """Check to see if this object is a VCS secondary display plot.
 
     :Example:
 
         .. doctest:: queries_isplot
 
             >>> a=vcs.init()
-            >>> import cdms2 # need this to make a slab for a boxfill plot
-            >>> f = cdms2.open(vcs.sample_data + '/clt.nc') # open a variable file
-            >>> v = f('v') # create a slab from the variable file
-            >>> dsp_plot=(a.getboxfill(), v) # plot a boxfill. Should return vcs.displayplot.Dp.
-            >>> vcs.queries.isplot(dsp_plot)
+            >>> array=[range(10) for _ in range(10)]
+            >>> dsp=a.plot(array) # plotting should return a displayplot object
+            >>> vcs.queries.isplot(dsp)
             1
 
     :param obj: A VCS object
     :type obj: VCS Object
 
     :returns: An integer indicating whether the object is a display plot (1), or not (0).
-    :rtype: int
+    :rtype: `int`_
     """
     if (isinstance(pobj, displayplot.Dp)):
         return 1
@@ -214,25 +221,33 @@ istemplate.__doc__ = xmldocs.is_docs['template']
 
 
 def issecondaryobject(sobj):
-    """
-    Check to see if this object is a VCS secondary object
+    """Check to see if this object is a VCS secondary object
 
         .. note::
 
             Secondary objects will be one of the following:
-            1.) colormap: specification of combinations of 256 available
-                       colors
-            2.) fill area: style, style index, and color index
-            3.) format: specifications for converting numbers to display
-                       strings
-            4.) line: line type, width, and color index
-            5.) list: a sequence of pairs of numerical and character values
-            6.) marker: marker type, size, and color index
-            7.) text table: text font type, character spacing, expansion, and
-                       color index
-            8.) text orientation: character height, angle, path, and
-                       horizontal/vertical alignment
-            9.) projections
+
+                1.) colormap: specification of combinations of 256 available
+                    colors
+
+                2.) fill area: style, style index, and color index
+
+                3.) format: specifications for converting numbers to display
+                    strings
+
+                4.) line: line type, width, and color index
+
+                5.) list: a sequence of pairs of numerical and character values
+
+                6.) marker: marker type, size, and color index
+
+                7.) text table: text font type, character spacing, expansion,
+                    and color index
+
+                8.) text orientation: character height, angle, path, and
+                    horizontal/vertical alignment
+
+                9.) projections
 
     :Example:
 
@@ -251,7 +266,7 @@ def issecondaryobject(sobj):
     :type obj: VCS Object
 
     :returns: An integer indicating whether the object is a projection graphics object (1), or not (0).
-    :rtype: int
+    :rtype: `int`_
     """
     if (isinstance(sobj, line.Tl)):
         return 1

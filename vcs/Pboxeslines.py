@@ -33,7 +33,7 @@ import VCS_validation_functions
 
 class Pbl(object):
 
-    '''
+    """
     The Template text object allows the manipulation of line type, width, and color index.
 
     This class is used to define a line table entry used in VCS, or it
@@ -42,7 +42,7 @@ class Pbl(object):
 
     :Example:
 
-::
+    ::
 
     # Basic Usage Overview:
 
@@ -84,7 +84,7 @@ class Pbl(object):
      ln.type='dash-dot'
      # Same as ln.type=4
      ln.type='long-dash'
-'''
+    """
     ##########################################################################
     #                                                                           #
     # Initialize the line attributes.                                           #

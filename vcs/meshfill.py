@@ -305,6 +305,8 @@ class Gfm(object):
     %s
     mesh :: (str/int) (0) Draws the mesh
     wrap :: ([float,float]) ([0.,0.]) Modulo to wrap around on either axis (automatically set to 360 for longitude axes)
+
+    .. pragma: skip-doctest
     """ % (xmldocs.graphics_method_core, xmldocs.meshfill_doc)
 
     ##########################################################################
@@ -694,12 +696,12 @@ class Gfm(object):
 
     def colors(self, color1=16, color2=239):
         self.fillareacolors = range(color1, color2)
-    colors.__doc__ = xmldocs.colorsdoc
+    colors.__doc__ = xmldocs.colorsdoc % {"name": "meshfill", "data": "array, array"}
 
     def exts(self, ext1='n', ext2='y'):
         self.ext_1 = ext1
         self.ext_2 = ext2
-    exts.__doc__ = xmldocs.extsdoc
+    exts.__doc__ = xmldocs.extsdoc.format(name="meshfill", data="array, array")
 
 #
 # Doesn't make sense to inherit. This would mean more coding in C.
@@ -708,34 +710,34 @@ class Gfm(object):
     def xticlabels(self, xtl1='', xtl2=''):
         self.xticlabels1 = xtl1
         self.xticlabels2 = xtl2
-    xticlabels.__doc__ = xmldocs.xticlabelsdoc
+    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name": "meshfill", "data": "f('u')"}
 
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
         self.xmtics2 = xmt2
-    xmtics.__doc__ = xmldocs.xmticsdoc
+    xmtics.__doc__ = xmldocs.xmticsdoc.format(name="meshfill")
 
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
         self.yticlabels2 = ytl2
-    yticlabels.__doc__ = xmldocs.yticlabelsdoc
+    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name": "meshfill", "data": "f('u')"}
 
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1
         self.ymtics2 = ymt2
-    ymtics.__doc__ = xmldocs.ymticsdoc
+    ymtics.__doc__ = xmldocs.xmticsdoc.format(name="meshfill")
 
     def datawc(self, dsp1=1e20, dsp2=1e20, dsp3=1e20, dsp4=1e20):
         self.datawc_y1 = dsp1
         self.datawc_y2 = dsp2
         self.datawc_x1 = dsp3
         self.datawc_x2 = dsp4
-    datawc.__doc__ = xmldocs.datawcdoc
+    datawc.__doc__ = xmldocs.datawcdoc.format(name="meshfill")
 
     def xyscale(self, xat='', yat=''):
         self.xaxisconvert = xat
         self.yaxisconvert = yat
-    xyscale.__doc__ = xmldocs.xyscaledoc % (('meshfill',) * 2)
+    xyscale.__doc__ = xmldocs.xyscaledoc.format(name='meshfill')
 
     ##########################################################################
     #                                                                           #
@@ -745,7 +747,7 @@ class Gfm(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print ' ---------- Meshfill (Gmf) member (attribute) listings ---------'
+        print '---------- Meshfill (Gmf) member (attribute) listings ----------'
         print 'graphics method =', self.g_name
         print 'name =', self.name
         print 'projection =', self.projection
@@ -777,7 +779,7 @@ class Gfm(object):
         print 'wrap =', self.wrap
         print 'colormap = ', self.colormap
         return
-    list.__doc__ = xmldocs.listdoc
+    list.__doc__ = xmldocs.listdoc.format(name="meshfill", parent="")
 
     ##########################################################################
     #                                                                           #
