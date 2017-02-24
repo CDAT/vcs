@@ -72,12 +72,12 @@ def get_png_dims(fnm):
 
         .. doctest:: utils_get_png_dims
 
-            >>> a=vcs.init()
+            >>> a=vcs.init(bg=True)
             >>> box=vcs.getboxfill('polar')
             >>> array=[range(10) for _ in range(10)]
             >>> a.plot(box,array) # plot something on canvas
             <vcs.displayplot.Dp ...>
-            >>> a.png('box.png') # make a png
+            >>> a.png('box.png', width=1536, height=1186) # make a png
             >>> vcs.get_png_dims('box.png') # get (width, height) of 'box.png'
             (1536, 1186)
 
