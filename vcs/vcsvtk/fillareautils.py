@@ -2,15 +2,11 @@ import vtk
 from patterns import pattern_list
 
 
-def num_pixels_for_size(size):
-    # Select the largest dimension available
-    dim = max(size)
-    return int(round(dim / 20))
-
-
 def make_patterned_polydata(inputContours, fillareastyle=None,
                             fillareaindex=None, fillareacolors=None,
-                            fillareaopacity=None, size=None):
+                            fillareaopacity=None,
+                            fillareapixelspacing=None, fillareapixelscale=None,
+                            size=None, renderer=None):
     if inputContours is None or fillareastyle == 'solid':
         return None
     if inputContours.GetNumberOfCells() == 0:
@@ -19,88 +15,119 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
         fillareaindex = 1
     if fillareaopacity is None:
         fillareaopacity = 100
-    num_pixels = num_pixels_for_size(size)
+    if fillareapixelspacing is None:
+        if size is not None:
+            sp = int(0.015 * min(size[0], size[1]))
+            fillareapixelspacing = 2 * [sp if sp > 1 else 1]
+        else:
+            fillareapixelspacing = [15, 15]
+    if fillareapixelscale is None:
+        fillareapixelscale = 1.0 * min(fillareapixelspacing[0],
+                                       fillareapixelspacing[1])
 
-    # Create the plane that will be textured with the pattern
+    # Create a point set laid out on a plane that will be glyphed with the
+    # pattern / hatch
     # The bounds of the plane match the bounds of the input polydata
     bounds = inputContours.GetBounds()
 
-    patternPlane = vtk.vtkPlaneSource()
-    patternPlane.SetOrigin(bounds[0], bounds[2], 0.0)
-    patternPlane.SetPoint1(bounds[0], bounds[3], 0.0)
-    patternPlane.SetPoint2(bounds[1], bounds[2], 0.0)
-    # Generate texture coordinates for the plane
-    textureMap = vtk.vtkTextureMapToPlane()
-    textureMap.SetInputConnection(patternPlane.GetOutputPort())
+    patternPolyData = vtk.vtkPolyData()
+    patternPts = vtk.vtkPoints()
+    patternPolyData.SetPoints(patternPts)
 
-    # Create the pattern image of the size of the input polydata
-    # and type defined by fillareaindex
     xBounds = bounds[1] - bounds[0]
     yBounds = bounds[3] - bounds[2]
 
-    if xBounds <= 1 and yBounds <= 1 and size is not None:
-        xBounds *= size[0]
-        yBounds *= size[1]
-        xres, yres = int(xBounds), int(yBounds)
+    xres = yres = 1
+    scale = [1.0, 1.0]
+    if renderer is not None:
+        # Be smart about calculating the resolution by taking the screen pixel
+        # size into account
+        # First, convert a distance of one unit screen distance to data
+        # coordinates
+        point1 = [1.0, 1.0, 0.0]
+        point2 = [0.0, 0.0, 0.0]
+        renderer.SetDisplayPoint(point1)
+        renderer.DisplayToWorld()
+        wpoint1 = renderer.GetWorldPoint()
+        renderer.SetDisplayPoint(point2)
+        renderer.DisplayToWorld()
+        wpoint2 = renderer.GetWorldPoint()
+        diffwpoints = [abs(wpoint1[0] - wpoint2[0]),
+                       abs(wpoint1[1] - wpoint2[1])]
+        diffwpoints = [1.0 if i < 1e-6 else i for i in diffwpoints]
 
-    xres = int(4.0*xBounds)
-    yres = int(4.0*yBounds)
+        # Choosing an arbitary factor to scale the number of points.  A spacing
+        # of 10 pixels and a scale of 7.5 pixels was chosen based on visual
+        # inspection of result.  Essentially, it means each glyph is 10 pixels
+        # away from its neighbors and 7.5 pixels high and wide.
+        xres = int(xBounds / (fillareapixelspacing[0] * diffwpoints[0])) + 1
+        yres = int(yBounds / (fillareapixelspacing[1] * diffwpoints[1])) + 1
+        scale = [fillareapixelscale * x for x in diffwpoints[:2]]
+    else:
+        if xBounds <= 1 and yBounds <= 1 and size is not None:
+            xBounds *= size[0] / 3
+            yBounds *= size[1] / 3
 
-    # Handle the case when the bounds are less than 1 in physical dimensions
+        xres = int(xBounds / 3)
+        yres = int(yBounds / 3)
 
-    patternImage = create_pattern(xres, yres, num_pixels, fillareastyle,
-                                  fillareaindex, fillareacolors,
-                                  fillareaopacity)
-    if patternImage is None:
-        return None
+    numPts = (xres + 1) * (yres + 1)
+    patternPts.Allocate(numPts)
+    normals = vtk.vtkFloatArray()
+    normals.SetName("Normals")
+    normals.SetNumberOfComponents(3)
+    normals.Allocate(3 * numPts)
+    tcoords = vtk.vtkFloatArray()
+    tcoords.SetName("TextureCoordinates")
+    tcoords.SetNumberOfComponents(2)
+    tcoords.Allocate(2 * numPts)
 
-    # Extrude the contour since vtkPolyDataToImageStencil
-    # requires 3D polydata
-    extruder = vtk.vtkLinearExtrusionFilter()
-    extruder.SetInputData(inputContours)
-    extruder.SetScaleFactor(1.0)
-    extruder.SetVector(0, 0, 1)
-    extruder.SetExtrusionTypeToNormalExtrusion()
+    x = [0.0, 0.0, 0.0]
+    tc = [0.0, 0.0]
+    v1 = [0.0, bounds[3] - bounds[2]]
+    v2 = [bounds[1] - bounds[0], 0.0]
+    normal = [0.0, 0.0, 1.0]
+    numPt = 0
+    for i in range(yres + 1):
+        tc[0] = i * 1.0 / yres
+        for j in range(xres + 1):
+            tc[1] = j * 1.0 / xres
+            for ii in range(2):
+                x[ii] = bounds[2 * ii] + tc[0] * v1[ii] + tc[1] * v2[ii]
+            patternPts.InsertPoint(numPt, x)
+            tcoords.InsertTuple(numPt, tc)
+            normals.InsertTuple(numPt, normal)
+            numPt += 1
+    patternPolyData.GetPointData().SetNormals(normals)
+    patternPolyData.GetPointData().SetTCoords(tcoords)
 
-    # Create a binary image mask from the extruded polydata
-    pol2stenc = vtk.vtkPolyDataToImageStencil()
-    pol2stenc.SetTolerance(0)
-    pol2stenc.SetInputConnection(extruder.GetOutputPort())
-    pol2stenc.SetOutputOrigin(bounds[0], bounds[2], 0.0)
-    pol2stenc.SetOutputSpacing((bounds[1] - bounds[0]) / xres,
-                               (bounds[3] - bounds[2]) / yres,
-                               0.0)
-    pol2stenc.SetOutputWholeExtent(patternImage.GetExtent())
+    # Create the pattern
+    create_pattern(patternPolyData, scale,
+                   fillareastyle, fillareaindex)
 
-    # Stencil out the fillarea from the pattern image
-    stenc = vtk.vtkImageStencil()
-    stenc.SetInputData(patternImage)
-    stenc.SetStencilConnection(pol2stenc.GetOutputPort())
-    stenc.ReverseStencilOff()
-    stenc.SetBackgroundColor(0, 0, 0, 0)
-    stenc.Update()
-    patternImage = stenc.GetOutput()
+    # Create pipeline to create a clipped polydata from the pattern plane.
+    cutter = vtk.vtkCookieCutter()
+    cutter.SetInputData(patternPolyData)
+    cutter.SetLoopsData(inputContours)
+    cutter.Update()
 
-    # Create the texture using the stenciled pattern
-    patternTexture = vtk.vtkTexture()
-    patternTexture.SetInputData(patternImage)
-    patternTexture.InterpolateOn()
-    patternTexture.RepeatOn()
+    # Now map the colors as cell scalars.
+    # We are doing this here because the vtkCookieCutter does not preserve
+    # cell scalars
+    map_colors(cutter.GetOutput(), fillareastyle,
+               fillareacolors, fillareaopacity)
+
     mapper = vtk.vtkPolyDataMapper()
-    mapper.SetInputConnection(textureMap.GetOutputPort())
+    mapper.SetInputConnection(cutter.GetOutputPort())
     actor = vtk.vtkActor()
     actor.SetMapper(mapper)
-    actor.SetTexture(patternTexture)
     return actor
 
 
-def create_pattern(width, height, num_pixels, fillareastyle=None,
-                   fillareaindex=None, fillareacolors=None, fillareaopacity=None):
+def map_colors(clippedPolyData, fillareastyle=None,
+               fillareacolors=None, fillareaopacity=None):
     if fillareastyle == 'solid':
-        return None
-
-    if fillareaindex is None:
-        fillareaindex = 1
+        return
 
     if fillareacolors is None:
         fillareacolors = [0, 0, 0]
@@ -108,6 +135,28 @@ def create_pattern(width, height, num_pixels, fillareastyle=None,
     if fillareaopacity is None:
         fillareaopacity = 100
 
+    color = [0, 0, 0]
+    if fillareastyle == "hatch":
+        color = [int(c / 100. * 255) for c in fillareacolors[:3]]
+    opacity = int(fillareaopacity / 100. * 255)
+    color.append(opacity)
+    colors = vtk.vtkUnsignedCharArray()
+    colors.SetNumberOfComponents(4)
+    colors.SetName("Colors")
+    clippedPolyData.GetCellData().SetScalars(colors)
+    for i in range(clippedPolyData.GetNumberOfCells()):
+        colors.InsertNextTypedTuple(color)
+
+
+def create_pattern(patternPolyData, scale=1.0,
+                   fillareastyle=None, fillareaindex=None):
+    if fillareastyle == 'solid':
+        return None
+
+    if fillareaindex is None:
+        fillareaindex = 1
+
     # Create a pattern source image of the given size
-    pattern = pattern_list[fillareaindex](width, height, num_pixels, fillareacolors, fillareastyle, fillareaopacity)
+    pattern = pattern_list[fillareaindex](patternPolyData, scale=scale,
+                                          style=fillareastyle)
     return pattern.render()

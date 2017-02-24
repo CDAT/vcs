@@ -2124,3 +2124,34 @@ def _setfillareacolors(self, value):
             value)
     self._fillareacolors = value
 fillareacolors = property(_getfillareacolors, _setfillareacolors)
+
+
+def _getfillareapixelspacing(self):
+    return self._fillareapixelspacing
+
+
+def _setfillareapixelspacing(self, value):
+    if value is not None:
+        value = checkListOfNumbers(
+            self,
+            'fillareapixelspacing',
+            value,
+            minelements=2,
+            maxelements=2,
+            ints=True)
+    self._fillareapixelspacing = value
+fillareapixelspacing = property(_getfillareapixelspacing, _setfillareapixelspacing)
+
+
+def _getfillareapixelscale(self):
+    return self._fillareapixelscale
+
+
+def _setfillareapixelscale(self, value):
+    if value is not None:
+        value = checkNumber(
+            self,
+            'fillareapixelscale',
+            value)
+    self._fillareapixelscale = value
+fillareapixelscale = property(_getfillareapixelscale, _setfillareapixelscale)

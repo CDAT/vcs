@@ -72,7 +72,6 @@ class VTKVCSBackend(object):
         # Turn on anti-aliasing by default
         # Initially set to 16x Multi-Sampled Anti-Aliasing
         self.antialiasing = 8
-        self._rasterPropsInVectorFormats = False
         self._geometry = geometry
 
         if renWin is not None:
@@ -670,39 +669,14 @@ class VTKVCSBackend(object):
 
         elif gtype == "fillarea":
             if gm.priority != 0:
-                actors = vcs2vtk.prepFillarea(self.renWin, gm,
+                actors = vcs2vtk.prepFillarea(self, self.renWin, gm,
                                               cmap=self.canvas.colormap)
                 returned["vtk_backend_fillarea_actors"] = actors
-                create_renderer = True
-                for act, geo in actors:
-                    ren = self.fitToViewport(
-                        act,
-                        gm.viewport,
-                        wc=gm.worldcoordinate,
-                        geoBounds=None,
-                        geo=None,
-                        priority=gm.priority,
-                        create_renderer=create_renderer)
-                    create_renderer = False
         else:
             raise Exception(
                 "Graphic type: '%s' not re-implemented yet" %
                 gtype)
         self.scaleLogo()
-
-        # Decide whether to rasterize background in vector outputs
-        # Current limitation to vectorize:
-        #       * if fillarea style is either pattern or hatch
-        try:
-            if gm.style and all(style != 'solid' for style in gm.style):
-                self._rasterPropsInVectorFormats = True
-        except:
-            pass
-        try:
-            if gm.fillareastyle in ['pattern', 'hatch']:
-                self._rasterPropsInVectorFormats = True
-        except:
-            pass
 
         if not kargs.get("donotstoredisplay", False) and kargs.get(
                 "render", True):
@@ -931,7 +905,8 @@ class VTKVCSBackend(object):
         return returned
 
     def renderColorBar(self, tmpl, levels, colors, legend, cmap,
-                       style=['solid'], index=[1], opacity=[]):
+                       style=['solid'], index=[1], opacity=[],
+                       pixelspacing=[15, 15], pixelscale=12):
         if tmpl.legend.priority > 0:
             tmpl.drawColorBar(
                 colors,
@@ -941,7 +916,9 @@ class VTKVCSBackend(object):
                 cmap=cmap,
                 style=style,
                 index=index,
-                opacity=opacity)
+                opacity=opacity,
+                pixelspacing=pixelspacing,
+                pixelscale=pixelscale)
         return {}
 
     def cleanupData(self, data):
@@ -1116,13 +1093,7 @@ class VTKVCSBackend(object):
         # Since the vcs layer stacks renderers to manually order primitives, sorting
         # is not needed and will only slow things down and introduce artifacts.
         gl.SetSortToOff()
-
-        # Since the patterns are applied as textures on vtkPolyData, enabling
-        # background rasterization is required to write them out
-
-        if self._rasterPropsInVectorFormats:
-            gl.Write3DPropsAsRasterImageOn()
-
+        gl.DrawBackgroundOff()
         gl.SetInput(self.renWin)
         if (output_type == "pdf"):
             gl.SetCompress(1)
@@ -1337,7 +1308,7 @@ class VTKVCSBackend(object):
                 self.renWin.AddRenderer(self.logoRenderer)
 
     def fitToViewport(self, Actor, vp, wc=None, geoBounds=None, geo=None, priority=None,
-                      create_renderer=False):
+                      create_renderer=False, add_actor=True):
 
         # Data range in World Coordinates
         if priority == 0:
@@ -1459,7 +1430,8 @@ class VTKVCSBackend(object):
                 plane.SetNormal(outNormal[0], outNormal[1], outNormal[2])
                 plane = planeCollection.GetNextItem()
 
-        Renderer.AddActor(Actor)
+        if add_actor:
+            Renderer.AddActor(Actor)
         return (Renderer, xScale, yScale)
 
     def update_input(self, vtkobjects, array1, array2=None, update=True):

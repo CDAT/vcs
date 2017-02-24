@@ -49,6 +49,7 @@ def process_src(nm, code):
                 "color_1", "color_2",
                 "fillareastyle", "fillareaindices",
                 "fillareacolors", "fillareaopacity",
+                "fillareapixelspacing", "fillareapixelscale",
                 "legend",
                 "ext_1", "ext_2",
                 "missing",
@@ -413,6 +414,8 @@ class Gfb(object):
         'fillareastyle',
         'fillareaindices',
         'fillareaopacity',
+        'fillareapixelspacing',
+        'fillareapixelscale',
         'ext_1',
         'ext_2',
         'missing',
@@ -446,6 +449,8 @@ class Gfb(object):
         '_fillareastyle',
         '_fillareaindices',
         '_fillareaopacity',
+        '_fillareapixelspacing',
+        '_fillareapixelscale',
         '_ext_1',
         '_ext_2',
         '_missing',
@@ -517,6 +522,8 @@ class Gfb(object):
             self._fillareaindices = [1, ]
             self._fillareaopacity = []
             self._fillareacolors = None
+            self._fillareapixelspacing = None
+            self._fillareapixelscale = None
             self._levels = ([1.e20, 1.e20])
             self._level_1 = 1.e20
             self._level_2 = 1.e20
@@ -552,6 +559,8 @@ class Gfb(object):
             self._fillareaindices = src.fillareaindices
             self._fillareacolors = src.fillareacolors
             self._fillareaopacity = src.fillareaopacity
+            self._fillareapixelspacing = src.fillareapixelspacing
+            self._fillareapixelscale = src.fillareapixelscale
             self._levels = src.levels
             self._level_1 = src.level_1
             self._level_2 = src.level_2
@@ -663,6 +672,8 @@ class Gfb(object):
     fillareastyle = property(_getfillareastyle, _setfillareastyle)
 
     fillareaopacity = VCS_validation_functions.fillareaopacity
+    fillareapixelspacing = VCS_validation_functions.fillareapixelspacing
+    fillareapixelscale = VCS_validation_functions.fillareapixelscale
 
     ext_1 = VCS_validation_functions.ext_1
     ext_2 = VCS_validation_functions.ext_2
@@ -963,6 +974,8 @@ class Gfb(object):
         print "fillareastyle = ", self.fillareastyle
         print "fillareaindices = ", self.fillareaindices
         print "fillareaopacity = ", self.fillareaopacity
+        print "fillareapixelspacing = ", self.fillareapixelspacing
+        print "fillareapixelscale = ", self.fillareapixelscale
         print "legend = ", self.legend
         print "ext_1 = ", self.ext_1
         print "ext_2 = ", self.ext_2
@@ -1093,6 +1106,12 @@ class Gfb(object):
             fp.write(
                 "%s.fillareaopacity = %s\n" %
                 (unique_name, self.fillareaopacity))
+            fp.write(
+                "%s.fillareapixelspacing = %s\n" %
+                (unique_name, self._fillareapixelspacing))
+            fp.write(
+                "%s.fillareapixelscale = %s\n" %
+                (unique_name, self.fillareapixelscale))
             fp.write("%s.legend = %s\n" % (unique_name, self.legend))
             fp.write("%s.ext_1 = '%s'\n" % (unique_name, self.ext_1))
             fp.write("%s.ext_2 = '%s'\n" % (unique_name, self.ext_2))
