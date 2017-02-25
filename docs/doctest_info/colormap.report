@@ -1,0 +1,92 @@
+Trying:
+    a=vcs.init() # Create a vcs Canvas
+Expecting nothing
+ok
+Trying:
+    cmap = a.createcolormap('example', 'default') # Create a colormap
+Expecting nothing
+ok
+Trying:
+    cmap.getcolorcell(1) # Get RGBA values
+Expecting:
+    [26, 0, 33, 100]
+ok
+Trying:
+    a=vcs.init() # Make a Canvas object to work with
+Expecting nothing
+ok
+Trying:
+    ex=a.getcolormap() # Get default colormap
+Expecting nothing
+ok
+Trying:
+    ex.script('filename.py') # Append to a Python script named 'filename.py'
+Expecting nothing
+ok
+Trying:
+    ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
+Expecting nothing
+ok
+Trying:
+    a = vcs.init() # Create a vcs Canvas
+Expecting nothing
+ok
+Trying:
+    cmap = a.createcolormap('example', 'default') # Create a colormap
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/colormap.py", line 311, in vcs.colormap.Cp.setcolorcell
+Failed example:
+    cmap = a.createcolormap('example', 'default') # Create a colormap
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.colormap.Cp.setcolorcell[1]>", line 1, in <module>
+        cmap = a.createcolormap('example', 'default') # Create a colormap
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/Canvas.py", line 5516, in createcolormap
+        return vcs.createcolormap(Cp_name, Cp_name_src)
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 1732, in createcolormap
+        Cp_name, Cp_name_src = check_name_source(Cp_name, Cp_name_src, 'colormap')
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/manageElements.py", line 57, in check_name_source
+        raise vcsError("Error %s object named %s already exists" % (typ, name))
+    vcsError: Error colormap object named example already exists
+Trying:
+    cmap.setcolorcell(40,80,95,1.0) # Set RGBA values
+Expecting nothing
+**********************************************************************
+File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/site-packages/vcs/colormap.py", line 312, in vcs.colormap.Cp.setcolorcell
+Failed example:
+    cmap.setcolorcell(40,80,95,1.0) # Set RGBA values
+Exception raised:
+    Traceback (most recent call last):
+      File "/Users/brown308/anaconda/envs/2.8/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest vcs.colormap.Cp.setcolorcell[2]>", line 1, in <module>
+        cmap.setcolorcell(40,80,95,1.0) # Set RGBA values
+    NameError: name 'cmap' is not defined
+15 items had no tests:
+    vcs.colormap
+    vcs.colormap.Cp
+    vcs.colormap.Cp.__init__
+    vcs.colormap.Cp.getindex
+    vcs.colormap.Cp.getname
+    vcs.colormap.Cp.index
+    vcs.colormap.Cp.list
+    vcs.colormap.Cp.name
+    vcs.colormap.Cp.setindex
+    vcs.colormap.Cp.setname
+    vcs.colormap.RGB_Table
+    vcs.colormap.RGB_Table.__getitem__
+    vcs.colormap.RGB_Table.__init__
+    vcs.colormap.RGB_Table.__setitem__
+    vcs.colormap.process_src
+2 items passed all tests:
+   3 tests in vcs.colormap.Cp.getcolorcell
+   4 tests in vcs.colormap.Cp.script
+**********************************************************************
+1 items had failures:
+   2 of   3 in vcs.colormap.Cp.setcolorcell
+10 tests in 18 items.
+8 passed and 2 failed.
+***Test Failed*** 2 failures.

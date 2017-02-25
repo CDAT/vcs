@@ -428,10 +428,25 @@ def show(*args):
 
             >>> a=vcs.init() # Create a VCS Canvas instance, named 'a'
             >>> a.show('boxfill') # List boxfill objects on Canvas 'a'
+            *******************Boxfill Names List**********************
+            ...
+            *******************End Boxfill Names List**********************
             >>> a.show('isofill') # List isofill objects on Canvas 'a'
+            *******************Isofill Names List**********************
+            ...
+            *******************End Isofill Names List**********************
             >>> a.show('line') # List line objects on Canvas 'a'
+            *******************Line Names List**********************
+            ...
+            *******************End Line Names List**********************
             >>> a.show('marker') # List marker objects on Canvas 'a'
-            >>> a.show('text') # List text objects on Canvas 'a'
+            *******************Marker Names List**********************
+            ...
+            *******************End Marker Names List**********************
+            >>> a.show('textcombined') # List text objects on Canvas 'a'
+            *******************Textcombined Names List**********************
+            ...
+            *******************End Textcombined Names List**********************
     """
     if args == ():
         return vcs.listelements()
@@ -969,7 +984,7 @@ def minmax(*data):
             (-7.0, 8.0)
 
     :param data: A comma-separated list of lists/arrays/tuples
-    :type data: list
+    :type data: :py:class:`list`
 
     :returns: A tuple in the form (min, max)
     :rtype: tuple
@@ -1073,14 +1088,14 @@ def mkscale(n1, n2, nc=12, zero=1, ends=False):
     :type nc: int
 
     :param zero: Integer flag to indicate how zero should be handled. Flags are as follows
-                   -1: zero MUST NOT be a contour
-                    0: let the function decide # NOT IMPLEMENTED
-                    1: zero CAN be a contour  (default)
-                    2: zero MUST be a contour
+        -1: zero MUST NOT be a contour
+        0: let the function decide # NOT IMPLEMENTED
+        1: zero CAN be a contour  (default)
+        2: zero MUST be a contour
     :type zero: int
 
     :param end: Boolean value indicating whether n1 and n2 should be part of the returned labels.
-                Defaults to False.
+        Defaults to False.
     :type end: bool
 
     :returns: List of floats split into nc intervals
@@ -1184,18 +1199,17 @@ def mklabels(vals, output='dict'):
         .. doctest:: utils_mklabels
 
             >>> a=vcs.mkscale(2,20,zero=2)
-            >>> vcs.mklabels (a)
-            {20.0: '20', 18.0: '18', 16.0: '16', 14.0: '14', 12.0: '12',
-                10.0: '10', 8.0: '8', 6.0: '6', 4.0: '4', 2.0: '2', 0.0: '0'}
+            >>> vcs.mklabels(a)
+            {0.0: '0', 2.0: '2', 4.0: '4', 6.0: '6', 8.0: '8', 10.0: '10', 12.0: '12', 14.0: '14', ...}
             >>> vcs.mklabels ( [5,.005])
-            {0.0050000000000000001: '0.005', 5.0: '5.000'}
+            {0.005: '0.005', 5.0: '5.000'}
             >>> vcs.mklabels ( [.00002,.00005])
-            {2.0000000000000002e-05: '2E-5', 5.0000000000000002e-05: '5E-5'}
+            {2e-05: '2E-5', 5e-05: '5E-5'}
             >>> vcs.mklabels ( [.00002,.00005],output='list')
             ['2E-5', '5E-5']
 
     :param vals: List or tuple of float values
-    :type vals: list, tuple
+    :type vals: :py:class:`list`, tuple
 
     :param output: Specifies the desired output type. One of ['dict', 'list'].
     :type output: str
@@ -1320,22 +1334,22 @@ def getcolors(levs, colors=None, split=1, white="white"):
 
             >>> a=[0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0]
             >>> vcs.getcolors (a)
-            [16, 41, 66, 90, 115, 140, 165, 189, 214, 239]
+            [0, 28, 57, 85, 113, 142, 170, 198, 227, 255]
             >>> vcs.getcolors (a,colors=range(16,200))
             [16, 36, 57, 77, 97, 118, 138, 158, 179, 199]
             >>> vcs.getcolors(a,colors=[16,25,15,56,35,234,12,11,19,32,132,17])
             [16, 25, 15, 35, 234, 12, 11, 32, 132, 17]
             >>> a=[-6.0, -2.0, 2.0, 6.0, 10.0, 14.0, 18.0, 22.0, 26.0]
             >>> vcs.getcolors (a,white=241)
-            [72, 241, 128, 150, 172, 195, 217, 239]
+            [0, 241, 128, 153, 179, 204, 230, 255]
             >>> vcs.getcolors (a,white=241,split=0)
-            [16, 48, 80, 112, 143, 175, 207, 239]
+            [0, 36, 73, 109, 146, 182, 219, 255]
 
     :param levs: levels defining the color ranges
-    :type levs: list, tuple
+    :type levs: :py:class:`list`, tuple
 
     :param colors: A list/tuple of the of colors you wish to use
-    :type colors: list
+    :type colors: :py:class:`list`
 
     :param split: Integer flag to split colors between two equal domains.
                     0 : no split
@@ -1466,17 +1480,17 @@ def generate_time_labels(d1, d2, units, calendar=cdtime.DefaultCalendar):
 
     :Example:
 
-        .. doctest:: generate_time_labels
+        .. doctest:: utils_generate_time_labels
 
             # Two ways to generate a dictionary of time labels
-            >>> lbls = generate_time_labels(cdtime.reltime(0,'months since 2000'),
+            >>> import cdtime
+            >>> lbls = vcs.generate_time_labels(cdtime.reltime(0,'months since 2000'),
             ...     cdtime.reltime(12,'months since 2000'),
-            ...     'days since 1800',) # for the year 2000 in units of 'days since 1800'
-            >>> lbls = generate_time_labels(cdtime.reltime(0,'months since 2000'),
+            ...     'days since 1800') # for the year 2000 in units of 'days since 1800'
+            >>> lbls = vcs.generate_time_labels(cdtime.reltime(0,'months since 2000'),
             ...     cdtime.comptime(2001),
-            ...     'days since 1800',) # for the year 2000 in units of 'days since 1800'
-            >>> lbls = generate_time_labels(0, 12, 'months since 2000', ) # Generate a dictionary of time labels
-                                                                        # for year 2000, units of 'months since 2000'
+            ...     'days since 1800') # for the year 2000 in units of 'days since 1800'
+            >>> lbls = vcs.generate_time_labels(0, 12, 'months since 2000') # time labels for year 2000
 
 
     :param d1: The beginning of the time interval to be labelled. Expects a cdtime object.
@@ -1836,7 +1850,7 @@ def getcolorcell(cell, obj=None):
             >>> b=vcs.createboxfill()
             >>> b.colormap='rainbow'
             >>> a.getcolorcell(2,b)
-            [85, 85, 85, 100.0]
+            [26, 1, 34, 100]
 
     :param cell: An integer value indicating the index of the desired colorcell.
     :type cell: int
@@ -1845,7 +1859,7 @@ def getcolorcell(cell, obj=None):
     :type obj: Any VCS object capable of containing a colormap
 
     :return: The RGBA values of the colormap at the specified cell index.
-    :rtype: list
+    :rtype: :py:class:`list`
     """
     if obj is None:
         cmap = vcs.getcolormap()
@@ -1916,9 +1930,12 @@ def match_color(color, colormap=None):
         .. doctest:: utils_match_color
 
             >>> a=vcs.init()
-            >>> print vcs.match_color('salmon')
-            >>> print vcs.match_color('red')
+            >>> print vcs.match_color('salmon', 'magma')
+            192
+            >>> print vcs.match_color('red', 'rainbow')
+            242
             >>> print vcs.match_color([0,0,100],'default') # closest color from blue
+            52
 
     :param color: Either a string name, or a rgb value between 0 and 100.
     :type color: str, int
@@ -1940,7 +1957,7 @@ def match_color(color, colormap=None):
 
     # Now gets the colormap to look in
     if colormap is None:
-        colormap = vcs.getcolormapname()
+        colormap = 'default'
     cmap = vcs.getcolormap(colormap)
 
     # Now tries determines the min rms diff
@@ -2147,7 +2164,7 @@ def rgba_color(color, colormap):
     :type colormap: vcs.colormap.Cp
 
     :returns: List of 4 floats; the R, G, B, and A values associated with the given color.
-    :rtype: list
+    :rtype: :py:class:`list`
     """
     try:
         # Is it a colormap index?
@@ -2252,42 +2269,52 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
             >>> vcs.utils.drawLinesAndMarkersLegend(x,t.legend,
             ...     ["red","blue","green"], ["solid","dash","dot"],[1,4,8],
             ...     ["blue","green","red"], ["cross","square","dot"],[3,4,5],
-            ...     ["sample A","type B","thing C"], None, True, True)
+            ...     ["sample A","type B","thing C"], bg=True)
             >>> x.png("sample")
 
     :param canvas: a VCS canvas object onto which to draw the legend
     :type canvas: vcs.Canvas.Canvas
 
-    :param templateLegend: a template legend object used to determine the coordinates of the box and the box line type
+    :param templateLegend: a template legend object used to determine the
+        coordinates of the box and the box line type
     :type legendTemplate: vcs.Plegend.Pls
 
-    :param linecolors: list containing the colors of each line to draw
-    :type linecolors: list of either colorInt, (r,g,b,opacity), or string color names
+    :param linecolors: list containing the colors of each line to draw.
+         Colors must be specified as either integers, (r,g,b,opacity),
+         or string color names.
+    :type linecolors: :py:class:`list`
 
-    :param linetypes: list containing the type of each line to draw
-    :type linetypes: list on int of line stype strings
+    :param linetypes: list containing the type of each line to draw.
+         values must be int or line type strings
+    :type linetypes: :py:class:`list`
 
-    :param linewidths: list containing each line width
-    :type linewidths: list of float
+    :param linewidths: list containing each line width.
+        line widths must be of type float.
+    :type linewidths: :py:class:`list`
 
-    :param markercolors: list of the markers colors to draw
-    :type markercolors: list of either colorInt, (r,g,b,opacity), or string color names
+    :param markercolors: list of the markers colors to draw.
+        Colors must be specified as either integers, (r,g,b,opacity),
+        or string color names.
+    :type markercolors: :py:class:`list`
 
-    :param markertypes: list of the marker types to draw
-    :type markertypes: list of int or  string of marker names
+    :param markertypes: list of the marker types to draw.
+         Marker type must be int or string of marker type names.
+    :type markertypes: :py:class:`list`
 
-    :param markersizes: list of the size of each marker to draw
-    :type markersizes: list of float
+    :param markersizes: list of the size of each marker to draw.
+        marker size must be of type float.
+    :type markersizes: :py:class:`list`
 
     :param strings: list of the string to draw next to each line/marker
-    :type strings: list of string
+    :type strings: :py:class:`list`
 
-    :param scratched: None (off) or list. list contains False where no scratch is needed
-                      For scratched provide True or line type to use for scratch
-                      color will match that of text
-    :type scratched: None or list of bool
+    :param scratched: None (off) or list. list contains False where no scratch is
+        needed. For scratched, provide True or line type to use for scratch.
+        Color will match that of text.
+    :type scratched: None or :py:class`list`
 
-    :param bg: do we draw in background or foreground
+    :param bg: Boolean value indicating to draw in background (True),
+        Or foreground (False).
     :type bg: bool
 
     :param render: do we render or not (so it less flashy)

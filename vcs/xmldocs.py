@@ -248,6 +248,8 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
     :param target_dict: An empty dictionary to be populated with docstrings
     :param docstring: The template docstring
     :param method: The method that the docstring is for
+
+    :return: Has no return, but at the end target_dict should be full of formatted docstrings
     """
     dict = {}
     for obj_type in type_dict.keys():
@@ -272,7 +274,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             elif obj_name in ['1d', 'scatter', 'textcombined', 'xyvsy']:
                 if obj_name == 'textcombined':
                     dict['tc'] = """
-            >>> a.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
+            >>> vcs.createtextcombined('EXAMPLE_tt', 'qa', 'EXAMPLE_tto', '7left') # Create 'EXAMPLE_tt' and 'EXAMPLE_tto'
             <vcs.textcombined.Tc ...>"""
                     dict['sp_parent'] = "'EXAMPLE_tt', 'EXAMPLE_tto'"
                 elif obj_name == '1d':
@@ -291,11 +293,18 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                 dict['slabs'] = ''
                 dict['args'] = ''
                 if numslabs > 0:
-                    dict['slabs'] = """
+                    # TODO: replace with something that can actually be plotted by taylordiagram()
+                    if obj_name is "taylordiagram":
+                        dict['slabs'] = """
             >>> import cdms2 # Need cdms2 to create a slab
             >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
             >>> slab1 = f('u') # use the data file to create a cdms2 slab"""
-                    dict['args'] = ", slab1"
+                    else:
+                        dict['slabs'] = """
+            >>> import cdms2 # Need cdms2 to create a slab
+            >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # use cdms2 to open a data file
+            >>> slab1 = f('u') # use the data file to create a cdms2 slab"""
+                        dict['args'] = ", slab1"
                     if numslabs == 2:
                         slab2 = """
             >>> slab2 = f('v') # need 2 slabs, so get another"""
@@ -329,8 +338,8 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             elif method == 'create':
                 if obj_name == "textcombined":
                     example1 = dict['tc'] + """
-            >>> vcs.listelements('%(name)s') # should now contain the 'qa_tt:::left_tto' %(name)s
-            [...'qa_tt:::left_tto'...]"""
+            >>> vcs.listelements('%(name)s') # should now contain the 'EXAMPLE_tt:::EXAMPLE_tto' %(name)s
+            [...'EXAMPLE_tt:::EXAMPLE_tto'...]"""
                 else:
                     example1 = """
             >>> ex=vcs.create%(name)s('%(name)s_ex1') # Create %(name)s '%(name)s_ex1' that inherits from 'default'
@@ -471,7 +480,7 @@ obj_details = {
         "projection": {
             "callable": False,
             "parent": "default",
-            "parent2": "polar",
+            "parent2": "orthographic",
             "rtype": "vcs.projection.Proj",
             "slabs": 1,
             "title": True,
@@ -544,7 +553,7 @@ obj_details = {
         },
     }
 }
-# dictionary to store all docstring dictionaries and their associated docstrings
+# docstrings is a dictionary to store all docstring dictionaries and their associated docstrings
 # this will be used to populate all the docstrings in the same for loop (should better utilize locality)
 docstrings = {}
 
@@ -606,7 +615,7 @@ queries_is_doc = """
 get_methods_doc = """
     VCS contains a list of %(type)ss. This function will create a
     %(sp_name)s class object from an existing VCS %(sp_name)s %(type)s. If
-    no %(sp_name)s name is given, then %(sp_name)s '%(parent)s' will be used.
+    no %(sp_name)s name is given, then %(parent)s %(sp_name)s will be used.
 
     .. note::
 
@@ -640,7 +649,8 @@ create_methods_doc = """
             >>> vcs.show('%(name)s') # show all available %(name)s
             *******************%(cap)s Names List**********************
             ...
-            *******************End %(cap)s Names List**********************%(ex1)s%(ex2)s"""
+            *******************End %(cap)s Names List**********************%(ex1)s%(ex2)s
+            """
 
 scriptdocs = {}
 docstrings['script'] = [scriptdocs, scriptdoc]
@@ -721,29 +731,68 @@ meshfill_doc = """
 isofill_doc = meshfill_doc
 
 fillareadoc = """
-    fillareacolor :: (int) (None) color to use for outfilling
-    fillareastyle :: (str) ('solid') style to use for levels filling: solid/pattenr/hatch
-    fillareaindex :: (int) (None) pattern to use when filling a level and using pattern/hatch
+        .. py:attribute:: fillareacolor (int)
+
+            color to use for outfilling
+
+        .. py:attribute:: fillareastyle (str)
+
+            style to use for levels filling: solid/pattenr/hatch
+
+        .. py:attribute:: fillareaindex (int)
+
+            pattern to use when filling a level and using pattern/hatch
     """  # noqa
 
-linesdoc = """    line :: ([str,...]/[vcs.line.Tl,...]/[int,...]) (['solid',]) line type to use for each isoline, can also pass a line object or line object name
-    linecolors :: ([int,...]) ([241]) colors to use for each isoline
-    linewidths :: ([float,...]) ([1.0]) list of width for each isoline
+linesdoc = """
+        .. py:attribute:: line ([str,...]/[vcs.line.Tl,...]/[int,...])
+
+            line type to use for each isoline, can also pass a line object or line object name
+
+        .. py:attribute:: linecolors ([int,...])
+
+            colors to use for each isoline
+
+        .. py:attribute:: linewidths ([float,...])
+
+            list of width for each isoline
     """  # noqa
-linedoc = """    line :: ([str,...]/[vcs.line.Tl,...]/[int,...]) (['solid',]) line type to use for each isoline, can also pass a line object or line object name
-    linecolor :: (int) (241) colors to use for each isoline
-    linewidth :: (float) (1.0) list of width for each isoline
+linedoc = """
+        .. py:attribute:: line ([str,...]/[vcs.line.Tl,...]/[int,...])
+
+            line type to use for each isoline, can also pass a line object or line object name
+
+        .. py:attribute:: linecolor (int)
+
+            color to use for each isoline
+
+        .. py:attribute:: linewidth (float)
+
+            width for each isoline
     """  # noqa
 
 textsdoc = """
-    text :: (None/[vcs.textcombined.Tc,...]) (None) text objects or text objects names to use for each countour labels
-    textcolors :: (None/[int,...]) (None) colors to use for each countour labels
+        .. py:attribute:: text (None/[vcs.textcombined.Tc,...])
+
+            text objects or text objects names to use for each countour label
+
+        .. py:attribute:: textcolors (None/[int,...])
+
+            colors to use for each countour label
     """  # noqa
 
 markerdoc = """
-    marker :: (None/int/str/vcs.marker.Tm) (None) markers type to use
-    markercolor :: (None/int) (None) color to use for markers
-    markersize :: (None/int) (None) size of markers
+        .. py:attribute:: marker (None/int/str/vcs.marker.Tm)
+
+            markers type to use
+
+        .. py:attribute:: markercolor (None/int)
+
+            color to use for markers
+
+        .. py:attribute:: markersize (None/int)
+
+            size of markers
     """
 
 #############################################################################

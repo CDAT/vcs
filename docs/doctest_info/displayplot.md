@@ -1,0 +1,84 @@
+Missing Doctests
+----------------
+:x:```    vcs.displayplot```
+
+:x:```    vcs.displayplot.Dp```
+
+:x:```    vcs.displayplot.Dp.__init__```
+
+:x:```    vcs.displayplot.Dp._get_backend```
+
+:x:```    vcs.displayplot.Dp._getarray```
+
+:x:```    vcs.displayplot.Dp._getcontinents```
+
+:x:```    vcs.displayplot.Dp._getcontinents_line```
+
+:x:```    vcs.displayplot.Dp._getg_name```
+
+:x:```    vcs.displayplot.Dp._getg_type```
+
+:x:```    vcs.displayplot.Dp._getname```
+
+:x:```    vcs.displayplot.Dp._getnewelements```
+
+:x:```    vcs.displayplot.Dp._getoff```
+
+:x:```    vcs.displayplot.Dp._getpriority```
+
+:x:```    vcs.displayplot.Dp._gettemplate```
+
+:x:```    vcs.displayplot.Dp._gettemplate_origin```
+
+:x:```    vcs.displayplot.Dp._repr_png_```
+
+:x:```    vcs.displayplot.Dp._set_backend```
+
+:x:```    vcs.displayplot.Dp._setarray```
+
+:x:```    vcs.displayplot.Dp._setcontinents```
+
+:x:```    vcs.displayplot.Dp._setcontinents_line```
+
+:x:```    vcs.displayplot.Dp._setg_name```
+
+:x:```    vcs.displayplot.Dp._setg_type```
+
+:x:```    vcs.displayplot.Dp._setname```
+
+:x:```    vcs.displayplot.Dp._setnewelements```
+
+:x:```    vcs.displayplot.Dp._setoff```
+
+:x:```    vcs.displayplot.Dp._setpriority```
+
+:x:```    vcs.displayplot.Dp._settemplate```
+
+:x:```    vcs.displayplot.Dp._settemplate_origin```
+
+:x:```    vcs.displayplot.Dp._template_origin```
+
+:x:```    vcs.displayplot.Dp.array```
+
+:x:```    vcs.displayplot.Dp.backend```
+
+:x:```    vcs.displayplot.Dp.continents```
+
+:x:```    vcs.displayplot.Dp.continents_line```
+
+:x:```    vcs.displayplot.Dp.g_name```
+
+:x:```    vcs.displayplot.Dp.g_type```
+
+:x:```    vcs.displayplot.Dp.list```
+
+:x:```    vcs.displayplot.Dp.name```
+
+:x:```    vcs.displayplot.Dp.newelements```
+
+:x:```    vcs.displayplot.Dp.off```
+
+:x:```    vcs.displayplot.Dp.priority```
+
+:x:```    vcs.displayplot.Dp.template```
+

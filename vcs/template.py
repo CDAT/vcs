@@ -1,6 +1,7 @@
-# Adapted for numpy/ma/cdms2 by convertcdms.py
 """
+# Adapted for numpy/ma/cdms2 by convertcdms.py
 # Template (P) module
+
 """
 ###############################################################################
 #                                                                             #
@@ -182,7 +183,7 @@ class P(object):
         .. code-block:: python
 
              temp=a.gettemplate('hovmuller')
-"""
+    """
     __slots__ = ["name", "_name", "_p_name", "p_name",
                  "_orientation", "_orientation", "_file", "file",
                  "_function", "function",
@@ -1250,6 +1251,7 @@ class P(object):
         sub-attribute with the specified name.
 
         .. note::
+
             Respect how far from original position you are
             i.e. you move to x1,x2 from old_x1, old_x2
             if your current x1 value is not == to old_x1_value,
@@ -1257,10 +1259,10 @@ class P(object):
 
         Example:
 
-            Create template 'example1' which inherits from 'default' template
-            t = vcs.createtemplate('example1', 'default')
-            Set x1 value to 0.15 and x2 value to 0.5
-            t.reset('x',0.15,0.5,t.data.x1,t.data.x2)
+            .. doctest:: template_reset
+
+                >>> t = vcs.createtemplate('example1', 'default') # template 'example1' inherits from 'default'
+                >>> t.reset('x',0.15,0.5,t.data.x1,t.data.x2) # Set x1 value to 0.15 and x2 value to 0.5
 
         :param sub_name: String indicating the name of the sub-attribute to be reset.
                          For example, sub-name='x' would cause the x1 ans x2 attributes to be set.
@@ -2063,29 +2065,44 @@ class P(object):
                                 Rwished=None, Rout=None,
                                 box_and_ticks=0, x=None):
         """
-        Computes ratio to shrink the data area of a template in order
-        that the overall area
-        has the least possible deformation in linear projection
+        Computes ratio to shrink the data area of a template such that the
+        overall area has the least possible deformation in linear projection
 
-        Version: 1.1
-        Notes: Thanks to Karl Taylor for the equation of "optimal" ratio
+        .. note::
 
-        Necessary arguments:
-          lon1, lon2: in degrees_east  : Longitude spanned by plot
-          lat1, lat2: in degrees_north : Latitude  spanned by plot
+            lon1/lon2 must be specified in degrees east.
+            lat1/lat2 must be specified in degrees north.
 
-        Optional arguments:
-          Rwished: Ratio y/x wished, None=automagic
-          Rout: Ratio of output (default is US Letter=11./8.5)
-                Also you can pass a string: "A4","US LETTER", "X"/"SCREEN",
-                the latest uses the window information
-          box_and_ticks: Also redefine box and ticks to the new region
-        Returned:
-          vcs template object
+        :Example:
 
-        Usage example:
-          #USA
-          t.ratio_linear_projection(-135,-50,20,50)
+            .. doctest:: template_P_ratio_linear_projection
+
+                >>> t=vcs.gettemplate()
+                >>> t.ratio_linear_projection(-135,-50,20,50) # USA
+
+        :param lon1: Start longitude for plot.
+        :type lon1: float or int
+
+        :param lon2: End longitude for plot
+        :type lon2: float or int
+
+        :param lat1: Start latitude for plot.
+        :type lat1: float or int
+
+        :param lat2: End latitude for plot
+        :type lat2: float or int
+
+        :param Rwished: Ratio y/x wished.
+            If None, ratio will be determined automatically.
+        :type Rwished: float or int
+
+        :param Rout: Ratio of output (default is US Letter=11./8.5)
+            Also you can pass a string: "A4","US LETTER", "X"/"SCREEN",
+            the latest uses the window information
+            box_and_ticks: Also redefine box and ticks to the new region.
+            If None, Rout will be determined automatically.
+        :type Rout: float or int
+
         """
 
         # Converts lat/lon to rad
@@ -2120,21 +2137,25 @@ class P(object):
         to have an y/x ratio of Rwished
         has the least possible deformation in linear projection
 
-        Version: 1.1
+        :Example:
 
-        Necessary arguments:
-          Rwished: Ratio y/x wished
-        Optional arguments:
-          Rout: Ratio of output (default is US Letter=11./8.5)
-                Also you can pass a string: "A4","US LETTER",
-                "X"/"SCREEN", the latest uses the window information
-          box_and_ticks: Also redefine box and ticks to the new region
-        Returned:
-          vcs template object
+            .. doctest:: template_P_ratio
 
-        Usage example:
-          # y is twice x
-          t.ratio(2)
+                >>> t=vcs.gettemplate()
+                >>> t.ratio(2) # y is twice x
+
+        :param Rwished: Ratio y/x wished.
+            Rwished MUST be provided.
+        :type Rwished: float or int
+
+        :param Rout: Ratio of output (default is US Letter=11./8.5).
+            Also you can pass a string: "A4","US LETTER",
+            "X"/"SCREEN", the latest uses the window information
+            box_and_ticks: Also redefine box and ticks to the new region
+        :type Rout: str or None
+
+        :returns: vcs template object
+        :rtype: vcs.template.P
         """
         if x is None:
             x = vcs.init()

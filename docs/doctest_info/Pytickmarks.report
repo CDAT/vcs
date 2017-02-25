@@ -1,0 +1,12 @@
+8 items had no tests:
+    vcs.Pytickmarks
+    vcs.Pytickmarks.Pyt
+    vcs.Pytickmarks.Pyt.__init__
+    vcs.Pytickmarks.Pyt.line
+    vcs.Pytickmarks.Pyt.list
+    vcs.Pytickmarks.Pyt.priority
+    vcs.Pytickmarks.Pyt.x1
+    vcs.Pytickmarks.Pyt.x2
+0 tests in 8 items.
+0 passed and 0 failed.
+Test passed.

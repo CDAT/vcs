@@ -1,0 +1,268 @@
+Missing Doctests
+----------------
+:x:```    vcs.taylor```
+
+:x:```    vcs.taylor.Gtd```
+
+:x:```    vcs.taylor.Gtd.Marker```
+
+:x:```    vcs.taylor.Gtd.__init__```
+
+:x:```    vcs.taylor.Gtd._getMarker```
+
+:x:```    vcs.taylor.Gtd._getarrowangle```
+
+:x:```    vcs.taylor.Gtd._getarrowbase```
+
+:x:```    vcs.taylor.Gtd._getarrowlength```
+
+:x:```    vcs.taylor.Gtd._getcmtics1```
+
+:x:```    vcs.taylor.Gtd._getcticlabels1```
+
+:x:```    vcs.taylor.Gtd._getdetail```
+
+:x:```    vcs.taylor.Gtd._getmax```
+
+:x:```    vcs.taylor.Gtd._getname```
+
+:x:```    vcs.taylor.Gtd._getquadrans```
+
+:x:```    vcs.taylor.Gtd._getreferencevalue```
+
+:x:```    vcs.taylor.Gtd._getskillDrawLabels```
+
+:x:```    vcs.taylor.Gtd._getskillcoefficient```
+
+:x:```    vcs.taylor.Gtd._getskillcolor```
+
+:x:```    vcs.taylor.Gtd._getskillvalues```
+
+:x:```    vcs.taylor.Gtd._getxmtics1```
+
+:x:```    vcs.taylor.Gtd._getxticlabels1```
+
+:x:```    vcs.taylor.Gtd._getymtics1```
+
+:x:```    vcs.taylor.Gtd._getyticlabels1```
+
+:x:```    vcs.taylor.Gtd._setMarker```
+
+:x:```    vcs.taylor.Gtd._setarrowangle```
+
+:x:```    vcs.taylor.Gtd._setarrowbase```
+
+:x:```    vcs.taylor.Gtd._setarrowlength```
+
+:x:```    vcs.taylor.Gtd._setcmtics1```
+
+:x:```    vcs.taylor.Gtd._setcticlabels1```
+
+:x:```    vcs.taylor.Gtd._setdetail```
+
+:x:```    vcs.taylor.Gtd._setmax```
+
+:x:```    vcs.taylor.Gtd._setname```
+
+:x:```    vcs.taylor.Gtd._setquadrans```
+
+:x:```    vcs.taylor.Gtd._setreferencevalue```
+
+:x:```    vcs.taylor.Gtd._setskillDrawLabels```
+
+:x:```    vcs.taylor.Gtd._setskillcoefficient```
+
+:x:```    vcs.taylor.Gtd._setskillcolor```
+
+:x:```    vcs.taylor.Gtd._setskillvalues```
+
+:x:```    vcs.taylor.Gtd._setxmtics1```
+
+:x:```    vcs.taylor.Gtd._setxticlabels1```
+
+:x:```    vcs.taylor.Gtd._setymtics1```
+
+:x:```    vcs.taylor.Gtd._setyticlabels1```
+
+:x:```    vcs.taylor.Gtd.addMarker```
+
+:x:```    vcs.taylor.Gtd.arrowangle```
+
+:x:```    vcs.taylor.Gtd.arrowbase```
+
+:x:```    vcs.taylor.Gtd.arrowlength```
+
+:x:```    vcs.taylor.Gtd.cmtics1```
+
+:x:```    vcs.taylor.Gtd.convert```
+
+:x:```    vcs.taylor.Gtd.cticlabels1```
+
+:x:```    vcs.taylor.Gtd.defaultSkillFunction```
+
+:x:```    vcs.taylor.Gtd.detail```
+
+:x:```    vcs.taylor.Gtd.draw```
+
+:x:```    vcs.taylor.Gtd.drawFrame```
+
+:x:```    vcs.taylor.Gtd.drawSkill```
+
+:x:```    vcs.taylor.Gtd.drawarrow```
+
+:x:```    vcs.taylor.Gtd.getArc```
+
+:x:```    vcs.taylor.Gtd.list```
+
+:x:```    vcs.taylor.Gtd.max```
+
+:x:```    vcs.taylor.Gtd.name```
+
+:x:```    vcs.taylor.Gtd.plot```
+
+:x:```    vcs.taylor.Gtd.quadrans```
+
+:x:```    vcs.taylor.Gtd.referencevalue```
+
+:x:```    vcs.taylor.Gtd.rename```
+
+:x:```    vcs.taylor.Gtd.setWorldCoordinate```
+
+:x:```    vcs.taylor.Gtd.skillCoefficient```
+
+:x:```    vcs.taylor.Gtd.skillColor```
+
+:x:```    vcs.taylor.Gtd.skillDrawLabels```
+
+:x:```    vcs.taylor.Gtd.skillValues```
+
+:x:```    vcs.taylor.Gtd.viewport```
+
+:x:```    vcs.taylor.Gtd.worldcoordinate```
+
+:x:```    vcs.taylor.Gtd.xmtics1```
+
+:x:```    vcs.taylor.Gtd.xticlabels1```
+
+:x:```    vcs.taylor.Gtd.ymtics1```
+
+:x:```    vcs.taylor.Gtd.yticlabels1```
+
+:x:```    vcs.taylor.TDMarker```
+
+:x:```    vcs.taylor.TDMarker.__getstate__```
+
+:x:```    vcs.taylor.TDMarker.__init__```
+
+:x:```    vcs.taylor.TDMarker.__len__```
+
+:x:```    vcs.taylor.TDMarker.__setstate__```
+
+:x:```    vcs.taylor.TDMarker._getcolor```
+
+:x:```    vcs.taylor.TDMarker._getid```
+
+:x:```    vcs.taylor.TDMarker._getid_color```
+
+:x:```    vcs.taylor.TDMarker._getid_font```
+
+:x:```    vcs.taylor.TDMarker._getid_size```
+
+:x:```    vcs.taylor.TDMarker._getline```
+
+:x:```    vcs.taylor.TDMarker._getline_color```
+
+:x:```    vcs.taylor.TDMarker._getline_size```
+
+:x:```    vcs.taylor.TDMarker._getline_type```
+
+:x:```    vcs.taylor.TDMarker._getnumber```
+
+:x:```    vcs.taylor.TDMarker._getsize```
+
+:x:```    vcs.taylor.TDMarker._getstatus```
+
+:x:```    vcs.taylor.TDMarker._getsymbol```
+
+:x:```    vcs.taylor.TDMarker._getxoffset```
+
+:x:```    vcs.taylor.TDMarker._getyoffset```
+
+:x:```    vcs.taylor.TDMarker._setcolor```
+
+:x:```    vcs.taylor.TDMarker._setid```
+
+:x:```    vcs.taylor.TDMarker._setid_color```
+
+:x:```    vcs.taylor.TDMarker._setid_font```
+
+:x:```    vcs.taylor.TDMarker._setid_size```
+
+:x:```    vcs.taylor.TDMarker._setline```
+
+:x:```    vcs.taylor.TDMarker._setline_color```
+
+:x:```    vcs.taylor.TDMarker._setline_size```
+
+:x:```    vcs.taylor.TDMarker._setline_type```
+
+:x:```    vcs.taylor.TDMarker._setnumber```
+
+:x:```    vcs.taylor.TDMarker._setsize```
+
+:x:```    vcs.taylor.TDMarker._setstatus```
+
+:x:```    vcs.taylor.TDMarker._setsymbol```
+
+:x:```    vcs.taylor.TDMarker._setxoffset```
+
+:x:```    vcs.taylor.TDMarker._setyoffset```
+
+:x:```    vcs.taylor.TDMarker.addMarker```
+
+:x:```    vcs.taylor.TDMarker.checklineconnectingtype```
+
+:x:```    vcs.taylor.TDMarker.color```
+
+:x:```    vcs.taylor.TDMarker.eq```
+
+:x:```    vcs.taylor.TDMarker.equalize```
+
+:x:```    vcs.taylor.TDMarker.id```
+
+:x:```    vcs.taylor.TDMarker.id_color```
+
+:x:```    vcs.taylor.TDMarker.id_font```
+
+:x:```    vcs.taylor.TDMarker.id_size```
+
+:x:```    vcs.taylor.TDMarker.insert```
+
+:x:```    vcs.taylor.TDMarker.line```
+
+:x:```    vcs.taylor.TDMarker.line_color```
+
+:x:```    vcs.taylor.TDMarker.line_size```
+
+:x:```    vcs.taylor.TDMarker.line_type```
+
+:x:```    vcs.taylor.TDMarker.list```
+
+:x:```    vcs.taylor.TDMarker.number```
+
+:x:```    vcs.taylor.TDMarker.pop```
+
+:x:```    vcs.taylor.TDMarker.size```
+
+:x:```    vcs.taylor.TDMarker.status```
+
+:x:```    vcs.taylor.TDMarker.symbol```
+
+:x:```    vcs.taylor.TDMarker.xoffset```
+
+:x:```    vcs.taylor.TDMarker.yoffset```
+
+:x:```    vcs.taylor.createnewvcsobj```
+
+:x:```    vcs.taylor.process_src```
+

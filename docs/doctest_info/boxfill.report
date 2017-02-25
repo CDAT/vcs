@@ -1,0 +1,161 @@
+Trying:
+    b=vcs.createboxfill()
+Expecting nothing
+ok
+Trying:
+    b.name
+Expecting:
+    '...'
+ok
+Trying:
+    vcs.listelements('boxfill') # list will include the name show above
+Expecting:
+    [...]
+ok
+Trying:
+    b.rename('foo')
+Expecting nothing
+ok
+Trying:
+    b.name
+Expecting:
+    'foo'
+ok
+Trying:
+    vcs.listelements('boxfill') # list will include 'foo', but not the old name
+Expecting:
+    [...'foo'...]
+ok
+Trying:
+    a=vcs.init() # Make a Canvas object to work with
+Expecting nothing
+ok
+Trying:
+    ex=a.getboxfill() # Get default boxfill
+Expecting nothing
+ok
+Trying:
+    ex.script('filename.py') # Append to a Python script named 'filename.py'
+Expecting nothing
+ok
+Trying:
+    ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
+Expecting nothing
+ok
+Trying:
+    a=vcs.init()
+Expecting nothing
+ok
+Trying:
+    ex=a.createboxfill('xyscale_ex') # create a boxfill to work with
+Expecting nothing
+ok
+Trying:
+    ex.xyscale(xat='linear', yat='linear') # set xaxisconvert and yaxisconvert to 'linear'
+Expecting nothing
+ok
+97 items had no tests:
+    vcs.boxfill
+    vcs.boxfill.Gfb
+    vcs.boxfill.Gfb.__init__
+    vcs.boxfill.Gfb._getboxfilltype
+    vcs.boxfill.Gfb._getcalendar
+    vcs.boxfill.Gfb._getcolor_1
+    vcs.boxfill.Gfb._getcolor_2
+    vcs.boxfill.Gfb._getdatawc_x1
+    vcs.boxfill.Gfb._getdatawc_x2
+    vcs.boxfill.Gfb._getdatawc_y1
+    vcs.boxfill.Gfb._getdatawc_y2
+    vcs.boxfill.Gfb._getfillareaindices
+    vcs.boxfill.Gfb._getfillareastyle
+    vcs.boxfill.Gfb._getlevel_1
+    vcs.boxfill.Gfb._getlevel_2
+    vcs.boxfill.Gfb._getmissing
+    vcs.boxfill.Gfb._getname
+    vcs.boxfill.Gfb._gettimeunits
+    vcs.boxfill.Gfb._getxaxisconvert
+    vcs.boxfill.Gfb._getxmtics1
+    vcs.boxfill.Gfb._getxmtics2
+    vcs.boxfill.Gfb._getxticlabels1
+    vcs.boxfill.Gfb._getxticlabels2
+    vcs.boxfill.Gfb._getyaxisconvert
+    vcs.boxfill.Gfb._getymtics1
+    vcs.boxfill.Gfb._getymtics2
+    vcs.boxfill.Gfb._getyticlabels1
+    vcs.boxfill.Gfb._getyticlabels2
+    vcs.boxfill.Gfb._setboxfilltype
+    vcs.boxfill.Gfb._setcalendar
+    vcs.boxfill.Gfb._setcolor_1
+    vcs.boxfill.Gfb._setcolor_2
+    vcs.boxfill.Gfb._setdatawc_x1
+    vcs.boxfill.Gfb._setdatawc_x2
+    vcs.boxfill.Gfb._setdatawc_y1
+    vcs.boxfill.Gfb._setdatawc_y2
+    vcs.boxfill.Gfb._setfillareaindices
+    vcs.boxfill.Gfb._setfillareastyle
+    vcs.boxfill.Gfb._setlevel_1
+    vcs.boxfill.Gfb._setlevel_2
+    vcs.boxfill.Gfb._setmissing
+    vcs.boxfill.Gfb._setname
+    vcs.boxfill.Gfb._settimeunits
+    vcs.boxfill.Gfb._setxaxisconvert
+    vcs.boxfill.Gfb._setxmtics1
+    vcs.boxfill.Gfb._setxmtics2
+    vcs.boxfill.Gfb._setxticlabels1
+    vcs.boxfill.Gfb._setxticlabels2
+    vcs.boxfill.Gfb._setyaxisconvert
+    vcs.boxfill.Gfb._setymtics1
+    vcs.boxfill.Gfb._setymtics2
+    vcs.boxfill.Gfb._setyticlabels1
+    vcs.boxfill.Gfb._setyticlabels2
+    vcs.boxfill.Gfb.boxfill_type
+    vcs.boxfill.Gfb.color_1
+    vcs.boxfill.Gfb.color_2
+    vcs.boxfill.Gfb.colormap
+    vcs.boxfill.Gfb.colors
+    vcs.boxfill.Gfb.datawc
+    vcs.boxfill.Gfb.datawc_calendar
+    vcs.boxfill.Gfb.datawc_timeunits
+    vcs.boxfill.Gfb.datawc_x1
+    vcs.boxfill.Gfb.datawc_x2
+    vcs.boxfill.Gfb.datawc_y1
+    vcs.boxfill.Gfb.datawc_y2
+    vcs.boxfill.Gfb.ext_1
+    vcs.boxfill.Gfb.ext_2
+    vcs.boxfill.Gfb.exts
+    vcs.boxfill.Gfb.fillareacolors
+    vcs.boxfill.Gfb.fillareaindices
+    vcs.boxfill.Gfb.fillareaopacity
+    vcs.boxfill.Gfb.fillareastyle
+    vcs.boxfill.Gfb.getlegendlabels
+    vcs.boxfill.Gfb.getlevels
+    vcs.boxfill.Gfb.legend
+    vcs.boxfill.Gfb.level_1
+    vcs.boxfill.Gfb.level_2
+    vcs.boxfill.Gfb.levels
+    vcs.boxfill.Gfb.list
+    vcs.boxfill.Gfb.missing
+    vcs.boxfill.Gfb.name
+    vcs.boxfill.Gfb.projection
+    vcs.boxfill.Gfb.xaxisconvert
+    vcs.boxfill.Gfb.xmtics
+    vcs.boxfill.Gfb.xmtics1
+    vcs.boxfill.Gfb.xmtics2
+    vcs.boxfill.Gfb.xticlabels
+    vcs.boxfill.Gfb.xticlabels1
+    vcs.boxfill.Gfb.xticlabels2
+    vcs.boxfill.Gfb.yaxisconvert
+    vcs.boxfill.Gfb.ymtics
+    vcs.boxfill.Gfb.ymtics1
+    vcs.boxfill.Gfb.ymtics2
+    vcs.boxfill.Gfb.yticlabels
+    vcs.boxfill.Gfb.yticlabels1
+    vcs.boxfill.Gfb.yticlabels2
+    vcs.boxfill.process_src
+3 items passed all tests:
+   6 tests in vcs.boxfill.Gfb.rename
+   4 tests in vcs.boxfill.Gfb.script
+   3 tests in vcs.boxfill.Gfb.xyscale
+13 tests in 100 items.
+13 passed and 0 failed.
+Test passed.

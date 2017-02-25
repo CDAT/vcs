@@ -220,19 +220,28 @@ def issecondaryobject(sobj):
         .. note::
 
             Secondary objects will be one of the following:
-            1.) colormap: specification of combinations of 256 available
-                       colors
-            2.) fill area: style, style index, and color index
-            3.) format: specifications for converting numbers to display
-                       strings
-            4.) line: line type, width, and color index
-            5.) list: a sequence of pairs of numerical and character values
-            6.) marker: marker type, size, and color index
-            7.) text table: text font type, character spacing, expansion, and
-                       color index
-            8.) text orientation: character height, angle, path, and
-                       horizontal/vertical alignment
-            9.) projections
+
+                1.) colormap: specification of combinations of 256 available
+                    colors
+
+                2.) fill area: style, style index, and color index
+
+                3.) format: specifications for converting numbers to display
+                    strings
+
+                4.) line: line type, width, and color index
+
+                5.) list: a sequence of pairs of numerical and character values
+
+                6.) marker: marker type, size, and color index
+
+                7.) text table: text font type, character spacing, expansion,
+                    and color index
+
+                8.) text orientation: character height, angle, path, and
+                    horizontal/vertical alignment
+
+                9.) projections
 
     :Example:
 

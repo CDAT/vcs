@@ -1,0 +1,45 @@
+41 items had no tests:
+    vcs.displayplot
+    vcs.displayplot.Dp
+    vcs.displayplot.Dp.__init__
+    vcs.displayplot.Dp._get_backend
+    vcs.displayplot.Dp._getarray
+    vcs.displayplot.Dp._getcontinents
+    vcs.displayplot.Dp._getcontinents_line
+    vcs.displayplot.Dp._getg_name
+    vcs.displayplot.Dp._getg_type
+    vcs.displayplot.Dp._getname
+    vcs.displayplot.Dp._getnewelements
+    vcs.displayplot.Dp._getoff
+    vcs.displayplot.Dp._getpriority
+    vcs.displayplot.Dp._gettemplate
+    vcs.displayplot.Dp._gettemplate_origin
+    vcs.displayplot.Dp._repr_png_
+    vcs.displayplot.Dp._set_backend
+    vcs.displayplot.Dp._setarray
+    vcs.displayplot.Dp._setcontinents
+    vcs.displayplot.Dp._setcontinents_line
+    vcs.displayplot.Dp._setg_name
+    vcs.displayplot.Dp._setg_type
+    vcs.displayplot.Dp._setname
+    vcs.displayplot.Dp._setnewelements
+    vcs.displayplot.Dp._setoff
+    vcs.displayplot.Dp._setpriority
+    vcs.displayplot.Dp._settemplate
+    vcs.displayplot.Dp._settemplate_origin
+    vcs.displayplot.Dp._template_origin
+    vcs.displayplot.Dp.array
+    vcs.displayplot.Dp.backend
+    vcs.displayplot.Dp.continents
+    vcs.displayplot.Dp.continents_line
+    vcs.displayplot.Dp.g_name
+    vcs.displayplot.Dp.g_type
+    vcs.displayplot.Dp.list
+    vcs.displayplot.Dp.name
+    vcs.displayplot.Dp.newelements
+    vcs.displayplot.Dp.off
+    vcs.displayplot.Dp.priority
+    vcs.displayplot.Dp.template
+0 tests in 41 items.
+0 passed and 0 failed.
+Test passed.

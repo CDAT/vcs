@@ -340,7 +340,7 @@ class Cp(object):
                 >>> a=vcs.init() # Create a vcs Canvas
                 >>> cmap = a.createcolormap('example', 'default') # Create a colormap
                 >>> cmap.getcolorcell(1) # Get RGBA values
-                [0, 0, 0, 100.0]
+                [26, 0, 33, 100]
 
         :param index: Index of a cell in the colormap. Must be an integer from 0-255.
         :type index: int

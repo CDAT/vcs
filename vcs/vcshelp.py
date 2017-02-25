@@ -35,13 +35,13 @@ def objecthelp(*arg):
 
         .. doctest:: vcshelp_objecthelp
 
-            >>> objects = [ vcs.get3d_scalar(), vcs.getcolormap(), vcs.getboxfill() ]
-            >>> for object in objects:
-            ...     vcs.objecthelp(object)
-
+            >>> fa=vcs.getfillarea()
+            >>> vcs.objecthelp(fa)
+            <BLANKLINE>
+            The Fillarea class object...
 
     :param arg: Instance(s) of VCS object(s) to display the documentation for.
-                Multiple objects should be comma-delimited.
+        Multiple objects should be comma-delimited.
     :type arg: VCS object, or list of vcs objects
     """
     for x in arg:

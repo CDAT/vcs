@@ -1,0 +1,13 @@
+9 items had no tests:
+    vcs.Ptext
+    vcs.Ptext.Pt
+    vcs.Ptext.Pt.__init__
+    vcs.Ptext.Pt.list
+    vcs.Ptext.Pt.priority
+    vcs.Ptext.Pt.textorientation
+    vcs.Ptext.Pt.texttable
+    vcs.Ptext.Pt.x
+    vcs.Ptext.Pt.y
+0 tests in 9 items.
+0 passed and 0 failed.
+Test passed.

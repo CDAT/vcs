@@ -1,0 +1,155 @@
+Trying:
+    a=vcs.init() # Make a Canvas object to work with
+Expecting nothing
+ok
+Trying:
+    ex=a.gettaylordiagram() # Get default taylordiagram
+Expecting nothing
+ok
+Trying:
+    ex.script('filename.py') # Append to a Python script named 'filename.py'
+Expecting nothing
+ok
+Trying:
+    ex.script('filename','w') # Create or overwrite a JSON file 'filename.json'.
+Expecting nothing
+ok
+133 items had no tests:
+    vcs.taylor
+    vcs.taylor.Gtd
+    vcs.taylor.Gtd.Marker
+    vcs.taylor.Gtd.__init__
+    vcs.taylor.Gtd._getMarker
+    vcs.taylor.Gtd._getarrowangle
+    vcs.taylor.Gtd._getarrowbase
+    vcs.taylor.Gtd._getarrowlength
+    vcs.taylor.Gtd._getcmtics1
+    vcs.taylor.Gtd._getcticlabels1
+    vcs.taylor.Gtd._getdetail
+    vcs.taylor.Gtd._getmax
+    vcs.taylor.Gtd._getname
+    vcs.taylor.Gtd._getquadrans
+    vcs.taylor.Gtd._getreferencevalue
+    vcs.taylor.Gtd._getskillDrawLabels
+    vcs.taylor.Gtd._getskillcoefficient
+    vcs.taylor.Gtd._getskillcolor
+    vcs.taylor.Gtd._getskillvalues
+    vcs.taylor.Gtd._getxmtics1
+    vcs.taylor.Gtd._getxticlabels1
+    vcs.taylor.Gtd._getymtics1
+    vcs.taylor.Gtd._getyticlabels1
+    vcs.taylor.Gtd._setMarker
+    vcs.taylor.Gtd._setarrowangle
+    vcs.taylor.Gtd._setarrowbase
+    vcs.taylor.Gtd._setarrowlength
+    vcs.taylor.Gtd._setcmtics1
+    vcs.taylor.Gtd._setcticlabels1
+    vcs.taylor.Gtd._setdetail
+    vcs.taylor.Gtd._setmax
+    vcs.taylor.Gtd._setname
+    vcs.taylor.Gtd._setquadrans
+    vcs.taylor.Gtd._setreferencevalue
+    vcs.taylor.Gtd._setskillDrawLabels
+    vcs.taylor.Gtd._setskillcoefficient
+    vcs.taylor.Gtd._setskillcolor
+    vcs.taylor.Gtd._setskillvalues
+    vcs.taylor.Gtd._setxmtics1
+    vcs.taylor.Gtd._setxticlabels1
+    vcs.taylor.Gtd._setymtics1
+    vcs.taylor.Gtd._setyticlabels1
+    vcs.taylor.Gtd.addMarker
+    vcs.taylor.Gtd.arrowangle
+    vcs.taylor.Gtd.arrowbase
+    vcs.taylor.Gtd.arrowlength
+    vcs.taylor.Gtd.cmtics1
+    vcs.taylor.Gtd.convert
+    vcs.taylor.Gtd.cticlabels1
+    vcs.taylor.Gtd.defaultSkillFunction
+    vcs.taylor.Gtd.detail
+    vcs.taylor.Gtd.draw
+    vcs.taylor.Gtd.drawFrame
+    vcs.taylor.Gtd.drawSkill
+    vcs.taylor.Gtd.drawarrow
+    vcs.taylor.Gtd.getArc
+    vcs.taylor.Gtd.list
+    vcs.taylor.Gtd.max
+    vcs.taylor.Gtd.name
+    vcs.taylor.Gtd.plot
+    vcs.taylor.Gtd.quadrans
+    vcs.taylor.Gtd.referencevalue
+    vcs.taylor.Gtd.rename
+    vcs.taylor.Gtd.setWorldCoordinate
+    vcs.taylor.Gtd.skillCoefficient
+    vcs.taylor.Gtd.skillColor
+    vcs.taylor.Gtd.skillDrawLabels
+    vcs.taylor.Gtd.skillValues
+    vcs.taylor.Gtd.viewport
+    vcs.taylor.Gtd.worldcoordinate
+    vcs.taylor.Gtd.xmtics1
+    vcs.taylor.Gtd.xticlabels1
+    vcs.taylor.Gtd.ymtics1
+    vcs.taylor.Gtd.yticlabels1
+    vcs.taylor.TDMarker
+    vcs.taylor.TDMarker.__getstate__
+    vcs.taylor.TDMarker.__init__
+    vcs.taylor.TDMarker.__len__
+    vcs.taylor.TDMarker.__setstate__
+    vcs.taylor.TDMarker._getcolor
+    vcs.taylor.TDMarker._getid
+    vcs.taylor.TDMarker._getid_color
+    vcs.taylor.TDMarker._getid_font
+    vcs.taylor.TDMarker._getid_size
+    vcs.taylor.TDMarker._getline
+    vcs.taylor.TDMarker._getline_color
+    vcs.taylor.TDMarker._getline_size
+    vcs.taylor.TDMarker._getline_type
+    vcs.taylor.TDMarker._getnumber
+    vcs.taylor.TDMarker._getsize
+    vcs.taylor.TDMarker._getstatus
+    vcs.taylor.TDMarker._getsymbol
+    vcs.taylor.TDMarker._getxoffset
+    vcs.taylor.TDMarker._getyoffset
+    vcs.taylor.TDMarker._setcolor
+    vcs.taylor.TDMarker._setid
+    vcs.taylor.TDMarker._setid_color
+    vcs.taylor.TDMarker._setid_font
+    vcs.taylor.TDMarker._setid_size
+    vcs.taylor.TDMarker._setline
+    vcs.taylor.TDMarker._setline_color
+    vcs.taylor.TDMarker._setline_size
+    vcs.taylor.TDMarker._setline_type
+    vcs.taylor.TDMarker._setnumber
+    vcs.taylor.TDMarker._setsize
+    vcs.taylor.TDMarker._setstatus
+    vcs.taylor.TDMarker._setsymbol
+    vcs.taylor.TDMarker._setxoffset
+    vcs.taylor.TDMarker._setyoffset
+    vcs.taylor.TDMarker.addMarker
+    vcs.taylor.TDMarker.checklineconnectingtype
+    vcs.taylor.TDMarker.color
+    vcs.taylor.TDMarker.eq
+    vcs.taylor.TDMarker.equalize
+    vcs.taylor.TDMarker.id
+    vcs.taylor.TDMarker.id_color
+    vcs.taylor.TDMarker.id_font
+    vcs.taylor.TDMarker.id_size
+    vcs.taylor.TDMarker.insert
+    vcs.taylor.TDMarker.line
+    vcs.taylor.TDMarker.line_color
+    vcs.taylor.TDMarker.line_size
+    vcs.taylor.TDMarker.line_type
+    vcs.taylor.TDMarker.list
+    vcs.taylor.TDMarker.number
+    vcs.taylor.TDMarker.pop
+    vcs.taylor.TDMarker.size
+    vcs.taylor.TDMarker.status
+    vcs.taylor.TDMarker.symbol
+    vcs.taylor.TDMarker.xoffset
+    vcs.taylor.TDMarker.yoffset
+    vcs.taylor.createnewvcsobj
+    vcs.taylor.process_src
+1 items passed all tests:
+   4 tests in vcs.taylor.Gtd.script
+4 tests in 134 items.
+4 passed and 0 failed.
+Test passed.

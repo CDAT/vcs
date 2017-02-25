@@ -388,33 +388,42 @@ class Gi(object):
         * Attribute descriptions:
 
             .. py:attribute:: label (str)
-            Turn on/off labels on isolines
+
+                Turn on/off labels on isolines
 
             .. py:attribute:: labelskipdistance (float)
-            Minimum distance between isoline labels
+
+                Minimum distance between isoline labels
 
             .. py:attribute:: labelbackgroundcolors ([float])
-            Background color for isoline labels
+
+                Background color for isoline labels
 
             .. py:attribute:: labelbackgroundopacities ([float])
-            Background opacity for isoline labels
+
+                Background opacity for isoline labels
 
             .. py:attribute:: level ([float,...])
-            Isocountours to display
+
+                Isocountours to display
 
             .. py:attribute:: clockwise ([int,...])
-            Draw directional arrows
-            +-(0,1,2) Indicate none/clockwise/clokwise on y axis >0.
-            Clockwise on x axis positive negative value invert behaviour
+
+                Draw directional arrows
+                +-(0,1,2) Indicate none/clockwise/clokwise on y axis >0.
+                Clockwise on x axis positive negative value invert behaviour
 
             .. py:attribute:: scale ([float,...])
-            Scales the directional arrow lengths
+
+                Scales the directional arrow lengths
 
             .. py:attribute:: angle ([float,...])
-            Directional arrows head angle
+
+                Directional arrows head angle
 
             .. py:attribute:: spacing ([float,...])
-            Scales spacing between directional arrows
+
+                Scales spacing between directional arrows
 
             %s
             %s
@@ -740,10 +749,10 @@ class Gi(object):
     line = property(_getline, _setline)
 
     def setLineAttributes(self, mixed):
-        '''
+        """
         Add either a (linetype, 1, 1) or (linetype, linecolor, linewidth)
         based on if mixed[i] is a linetype or a line object name.
-        '''
+        """
         import queries
         types = []
         colors = []

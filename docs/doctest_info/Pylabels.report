@@ -1,0 +1,12 @@
+8 items had no tests:
+    vcs.Pylabels
+    vcs.Pylabels.Pyl
+    vcs.Pylabels.Pyl.__init__
+    vcs.Pylabels.Pyl.list
+    vcs.Pylabels.Pyl.priority
+    vcs.Pylabels.Pyl.textorientation
+    vcs.Pylabels.Pyl.texttable
+    vcs.Pylabels.Pyl.x
+0 tests in 8 items.
+0 passed and 0 failed.
+Test passed.

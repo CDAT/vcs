@@ -27,7 +27,7 @@ import dv3d
 
 
 def check_name_source(name, source, typ):
-    """make sure it is a unique name for this type or generates a name for user"""
+    """Make sure it is a unique name for this type or generates a name for user"""
     elts = vcs.listelements(typ)
     if name is None:
         rnd = random.randint(0, 1000000000000000)
@@ -404,11 +404,55 @@ getisoline.__doc__ = getisoline.__doc__ % (
 
 
 def create1d(name=None, source='default'):
+    """
+    Creates a new :class:`vcs.unified1d.G1d` object called name, and inheriting from source.
+
+    :Example:
+
+        .. doctest:: manageElements_create1d
+
+            >>> vcs.show('1d')
+            *******************1d Names List**********************
+            ...
+            *******************End 1d Names List**********************
+            >>> oneD_default = vcs.create1d() # inherit default, name generated
+            >>> oneD_named = vcs.create1d("one_D") # inherit default, name "one_D"
+            >>> new_one_D = vcs.create1d(source="one_D") # inherit from "one_D"
+
+    :param name: A string name for the 1d to be created. If None, a unique name will be created.
+    :type name: str
+
+    :param source: A 1d object or string name of a 1d object from which the new 1d will inherit.
+    :type source: str or :class:`vcs.unified1D.G1d`
+
+    :return: A new 1d object, inheriting from source.
+    :rtype: :class:`vcs.unified1d.G1d`
+    """
     name, source = check_name_source(name, source, '1d')
     return unified1D.G1d(name, source)
 
 
 def get1d(name):
+    """
+    Given name, returns a :class:`vcs.unified1d.G1d` from vcs with that name.
+    Unlike other VCS 'get' functions, name cannot be None when calling get1d().
+
+    :Example:
+
+        .. doctest:: manageElements_get_1d
+
+            >>> vcs.show('1d')
+            *******************1d Names List**********************
+            ...
+            *******************End 1d Names List**********************
+            >>> blue = vcs.get1d('blue_yxvsx')
+
+    :param name: String name of a 1d in vcs. If there is no 1d with that name, an error will be raised.
+    :type name: str
+
+    :return: A 1d from vcs with the given name.
+    :rtype: :class:`vcs.unified1d.G1d`
+    """
     # Check to make sure the argument passed in is a STRING
     if not isinstance(name, str):
         raise vcsError('The argument must be a string.')
@@ -771,10 +815,32 @@ createline.__doc__ = createline.__doc__ % xmldocs.create_docs['line']
 
 
 def setLineAttributes(to, l):
-    '''
-    Set attributes linecolor, linewidth and linetype from line l.
-    l can be a line name defined in vcs.elements or a line object
-    '''
+    """
+    Set attributes linecolor, linewidth and linetype from line l on object to.
+
+    :Example:
+
+        .. doctest:: manageElements_setLineAttributes
+
+            >>> vcs.show('line')
+            *******************Line Names List**********************
+            ...
+            *******************End Line Names List**********************
+            >>> new_isoline = vcs.createisoline('new_iso')
+            >>> vcs.setLineAttributes(new_isoline, 'continents')
+            >>> new_vector = vcs.createvector('new_vec')
+            >>> vcs.setLineAttributes(new_vector, 'continents')
+            >>> new_1d = vcs.create1d('new_1d', 'blue_yxvsx')
+            >>> vcs.setLineAttributes(new_1d, 'continents')
+
+    :param to: A vector, 1d, or isoline object to set the properties of.
+    :type to: :class:`vcs.vector.Gv`, :class:`vcs.unified1d.G1d`
+
+    :param l: l can be a line name defined in vcs.elements or a line object.
+        l will be used to set the properties of to.
+
+    :type l:py:class:`vcs.line.Tl` or str
+    """
     import queries
     line = None
     if (queries.isline(l)):
@@ -785,9 +851,14 @@ def setLineAttributes(to, l):
         raise ValueError("Expecting a line object or a " +
                          "line name defined in vcs.elements, got type " +
                          type(l).__name__)
-    to.linecolor = line.color[0]
-    to.linewidth = line.width[0]
-    to.linetype = line.type[0]
+    if queries.isisoline(to):
+        to.linecolors = line.color
+        to.linewidths = line.width
+        to.linetypes = line.type
+    else:
+        to.linecolor = line.color[0]
+        to.linewidth = line.width[0]
+        to.linetype = line.type[0]
 
 
 def getline(name='default', ltype=None, width=None, color=None,
@@ -864,7 +935,6 @@ def createmarker(name=None, source='default', mtype=None,
                  x=None, y=None, projection=None):
     """
     %s
-
 
     :param name: Name of created object
     :type name: str
@@ -1011,12 +1081,11 @@ def createfillarea(name=None, source='default', style=None,
     :type style: str
 
     :param index: Specifies which `pattern <http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png>`_ to fill with.
-    Accepts ints from 1-20.
-
+        Accepts ints from 1-20.
     :type index: int
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-    or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+        or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
 
     :type color: str or int
 
@@ -1147,9 +1216,6 @@ def createtexttable(name=None, source='default', font=None,
     :param font: Which font to use (index or name).
     :type font: int or string
 
-    :param expansion: DEPRECATED
-    :type expansion: DEPRECATED
-
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
     :type color: str or int
@@ -1171,6 +1237,10 @@ def createtexttable(name=None, source='default', font=None,
 
     :returns: A texttable graphics method object
     :rtype: vcs.texttable.Tt
+
+    .. note::
+
+        The expansion parameter is no longer used
     """
 
     name, source = check_name_source(name, source, 'texttable')
@@ -1212,11 +1282,8 @@ def gettexttable(name='default', font=None,
     :param name: String name of an existing VCS texttable object
     :type name: str
 
-    :param font: ???
-    :type font: ???
-
-    :param expansion: ???
-    :type expansion: ???
+    :param font: Which font to use (index or name).
+    :type font: int or str
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
@@ -1239,6 +1306,10 @@ def gettexttable(name='default', font=None,
 
     :returns: A texttable graphics method object
     :rtype: vcs.texttable.Tt
+
+    .. note::
+
+        The expansion parameter is no longer used
     """
 
     # Check to make sure the argument passed in is a STRING
@@ -1317,12 +1388,6 @@ def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_sourc
     :param font: Which font to use (index or name).
     :type font: int or str
 
-    :param spacing: DEPRECATED
-    :type spacing: DEPRECATED
-
-    :param expansion: DEPRECATED
-    :type expansion: DEPRECATED
-
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
     :type color: str or int
@@ -1348,9 +1413,6 @@ def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_sourc
     :param angle: Angle of the text, in degrees
     :type angle: int
 
-    :param path: DEPRECATED
-    :type path: DEPRECATED
-
     :param halign: Horizontal alignment of the text. One of ["left", "center", "right"].
     :type halign: str
 
@@ -1362,6 +1424,10 @@ def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_sourc
 
     :returns: A VCS text object
     :rtype: vcs.textcombined.Tc
+
+    .. note::
+
+        The spacing, path, and expansion parameters are no longer used
     """
     # Check if to is defined
     if To_name is None:
@@ -1422,19 +1488,13 @@ def gettextcombined(Tt_name_src='default', To_name_src=None, string=None, font=N
     :type To_name_src: str
 
     :param string: Text to render
-    :param string: list of str
+    :type string: list of str
 
     :param font: Which font to use (index or name)
     :type font: int or str
 
-    :param spacing: DEPRECATED
-    :type spacing: DEPRECATED
-
-    :param expansion: DEPRECATED
-    :type expansion: DEPRECATED
-
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-                  or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+        or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
     :type color: str or int
 
     :param priority: The layer on which the object will be drawn.
@@ -1458,9 +1518,6 @@ def gettextcombined(Tt_name_src='default', To_name_src=None, string=None, font=N
     :param angle: Angle of the rendered text, in degrees
     :type angle: list of int
 
-    :param path: DEPRECATED
-    :type path: DEPRECATED
-
     :param halign: Horizontal alignment of the text. One of ["left", "center", "right"]
     :type halign: str
 
@@ -1469,6 +1526,10 @@ def gettextcombined(Tt_name_src='default', To_name_src=None, string=None, font=N
 
     :returns: A textcombined object
     :rtype: vcs.textcombined.Tc
+
+    .. note::
+
+        The spacing, path, and expansion parameters are no longer used
     """
 
     # Check to make sure the arguments passed in are a STRINGS
@@ -1802,23 +1863,25 @@ def removeobject(obj):
     objects. The function allows the user to remove these objects
     from the appropriate class list.
 
-    Note, To remove the object completely from Python, remember to
-    use the "del" function.
+    .. note::
 
-    Also note, The user is not allowed to remove a "default" class
-    object.
+        To remove the object completely from Python, remember to
+        use the "del" function.
+
+    .. admonition:: Also note
+
+        The user is not allowed to remove a "default" class
+        object.
 
     :Example:
 
         .. doctest:: manageElements_removeobject
 
             >>> a=vcs.init()
-            >>> line=a.getline('red') # To Modify an existing line object
             >>> iso=a.createisoline('dean') # Create an instance of an isoline object
-            >>> a.removeobject(line) # Removes line object from VCS list
-            'Removed line object red'
             >>> a.removeobject(iso) # Remove isoline object from VCS list
             'Removed isoline object dean'
+
     :param obj: Any VCS primary or secondary object
     :type obj: VCS object
 

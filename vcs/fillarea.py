@@ -105,7 +105,6 @@ def process_src(nm, code):
 
 
 class Tf(object):
-
     """
     The Fillarea class object allows the user to edit fillarea attributes, including
     fillarea interior style, style index, and color index.
