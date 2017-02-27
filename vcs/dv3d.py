@@ -1,20 +1,43 @@
-'''
-Created on Jun 18, 2014
-
-@author: tpmaxwel
-'''
-
+"""
+If in interact mode (see :func:`vcs.Canvas.Canvas.interact`), these attributes can be configured interactively, via the
+method described in the **Interact Mode** section of the attribute description.
+"""
+# @author: tpmaxwel
 import VCS_validation_functions
 import multiprocessing
 import vcs
 import time
 from DV3D.ConfigurationFunctions import ConfigManager
+from xmldocs import toggle_surface, toggle_volume, xslider, yslider, zslider, verticalscaling, scalecolormap, \
+    scaletransferfunction, toggleclipping, isosurfacevalue, scaleopacity, basemapopacity, camera, scriptdocs
 
 
 class Gfdv3d(object):
-    """
+    __doc__ = """
+    Gfdv3d is class from which Gf3Dvector, Gf3Dscalar, and Gf3DDualScalar
+    inherit. It sets up properties and functions common to all of the 3d
+    graphics method objects.
 
-    """
+    Attributes
+    ----------
+
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+    %s
+
+    .. pragma: skip-doctest
+    """ % (toggle_surface, toggle_volume, xslider, yslider, zslider, verticalscaling, scalecolormap,
+           scaletransferfunction, toggleclipping, isosurfacevalue, scaleopacity, basemapopacity, camera)
     __slots__ = [
         '__doc__',
         'name',
@@ -115,6 +138,7 @@ class Gfdv3d(object):
             f = open(script_filename, mode)
             vcs.utils.dumpToJson(self, f)
             f.close()
+    # can we add a scriptdocs[g_name] here and have each derived class pick up the documentation correctly?
 
     def __init__(self, Gfdv3d_name, Gfdv3d_name_src='default'):
         if not isinstance(Gfdv3d_name, str):
@@ -223,7 +247,7 @@ class Gfdv3d(object):
         self.cfgManager.initDefaultState()
 
     def list(self):
-        print ' ---------- DV3D (Gfdv3d) member (attribute) listings ---------'
+        print '---------- DV3D (Gfdv3d) member (attribute) listings ----------'
         print 'name =', self.name
         print 'axes =', self.axes
         for pname in self.parameter_names:
@@ -232,14 +256,18 @@ class Gfdv3d(object):
 
 
 class Gf3Dvector(Gfdv3d):
-
+    """
+    Gf3Dvector
+    """
     def __init__(self, Gfdv3d_name, Gfdv3d_name_src='default'):
         self.g_name = '3d_vector'
         Gfdv3d.__init__(self, Gfdv3d_name, Gfdv3d_name_src=Gfdv3d_name_src)
 
 
 class Gf3Dscalar(Gfdv3d):
-
+    """
+    Gf3Dscalar
+    """
     def __init__(self, Gfdv3d_name, Gfdv3d_name_src='default'):
         self.g_name = '3d_scalar'
         Gfdv3d.__init__(self, Gfdv3d_name, Gfdv3d_name_src=Gfdv3d_name_src)
@@ -247,7 +275,9 @@ class Gf3Dscalar(Gfdv3d):
 
 
 class Gf3DDualScalar(Gfdv3d):
-
+    """
+    Gf3DDualScalar
+    """
     def __init__(self, Gfdv3d_name, Gfdv3d_name_src='default'):
         self.g_name = '3d_dual_scalar'
         Gfdv3d.__init__(self, Gfdv3d_name, Gfdv3d_name_src=Gfdv3d_name_src)

@@ -25,7 +25,7 @@
 import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import scriptdocs
+from xmldocs import scriptdocs, listdoc
 
 
 def getmember(self, name):
@@ -99,15 +99,13 @@ def process_src(nm, code):
 
 #
 #
-# Fillarea (Tm) Class.                                                      #
+# Fillarea (Tf) Class.                                                      #
 #
 #
 
 
 class Tf(object):
-
-    """
-    The Fillarea class object allows the user to edit fillarea attributes, including
+    """The Fillarea class allows the user to edit fillarea attributes, including
     fillarea interior style, style index, and color index.
 
     This class is used to define an fillarea table entry used in VCS, or it
@@ -192,6 +190,7 @@ class Tf(object):
                 # List of FloatTypes
                 fa.y=[[.5,.4,.3], [.2,.1,0]]
 
+        .. pragma: skip-doctest
         """
     __slots__ = [
         'name',
@@ -464,7 +463,7 @@ class Tf(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Fillarea (Tf) member (attribute) listings ----------"
+        print "---------- Fillarea (Tf) member (attribute) listings ----------"
         print "secondary method =", self.s_name
         print "name =", self.name
         print "style =", self.style
@@ -480,6 +479,7 @@ class Tf(object):
         print "y =", self.y
         print "projection =", self.projection
         print "colormap =", self.colormap
+    list.__doc__ = listdoc.format(name="fillarea", parent="")
 
     #
     #

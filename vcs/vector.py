@@ -774,7 +774,7 @@ class Gv(object):
         self.yaxisconvert = yat
 
     def list(self):
-        print "", "----------Vector (Gv) member (attribute) listings ----------"
+        print "---------- Vector (Gv) member (attribute) listings ----------"
         print "graphics method =", self.g_name
         print "name =", self.name
         print "projection =", self.projection

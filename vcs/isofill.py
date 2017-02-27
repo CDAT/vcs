@@ -306,7 +306,10 @@ class Gfi(object):
     .. describe:: Attribute descriptions:
 
         %s
-        %s""" % (xmldocs.graphics_method_core, xmldocs.isofill_doc)
+        %s
+
+    .. pragma: skip-doctest
+    """ % (xmldocs.graphics_method_core, xmldocs.isofill_doc)
 
     colormap = VCS_validation_functions.colormap
     __slots__ = [
@@ -677,12 +680,12 @@ class Gfi(object):
 
     def colors(self, color1=16, color2=239):
         self.fillareacolors = range(color1, color2)
-    colors.__doc__ = xmldocs.colorsdoc
+    colors.__doc__ = xmldocs.colorsdoc % {"name": "isofill", "data": "array"}
 
     def exts(self, ext1='n', ext2='y'):
         self.ext_1 = ext1
         self.ext_2 = ext2
-    exts.__doc__ = xmldocs.extsdoc
+    exts.__doc__ = xmldocs.extsdoc.format(name="isofill", data="array")
 #
 # Doesn't make sense to inherit. This would mean more coding in C.
 # I put this code back.
@@ -691,37 +694,37 @@ class Gfi(object):
     def xticlabels(self, xtl1='', xtl2=''):
         self.xticlabels1 = xtl1
         self.xticlabels2 = xtl2
-    xticlabels.__doc__ = xmldocs.xticlabelsdoc
+    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name": "isofill", "data": "f('u')"}
 
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
         self.xmtics2 = xmt2
-    xmtics.__doc__ = xmldocs.xmticsdoc
+    xmtics.__doc__ = xmldocs.xmticsdoc.format(name="isofill")
 
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
         self.yticlabels2 = ytl2
-    yticlabels.__doc__ = xmldocs.yticlabelsdoc
+    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name": "isofill", "data": "f('u')"}
 
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1
         self.ymtics2 = ymt2
-    ymtics.__doc__ = xmldocs.ymticsdoc
+    ymtics.__doc__ = xmldocs.xmticsdoc.format(name="isofill")
 
     def datawc(self, dsp1=1e20, dsp2=1e20, dsp3=1e20, dsp4=1e20):
         self.datawc_y1 = dsp1
         self.datawc_y2 = dsp2
         self.datawc_x1 = dsp3
         self.datawc_x2 = dsp4
-    datawc.__doc__ = xmldocs.datawcdoc
+    datawc.__doc__ = xmldocs.datawcdoc.format(name="isofill")
 
     def xyscale(self, xat='', yat=''):
         self.xaxisconvert = xat
         self.yaxisconvert = yat
-    xyscale.__doc__ = xmldocs.xyscaledoc % (('isofill',) * 2)
+    xyscale.__doc__ = xmldocs.xyscaledoc.format(name='isofill')
 
     def list(self):
-        print "", "----------Isofill (Gfi) member (attribute) listings ----------"
+        print "---------- Isofill (Gfi) member (attribute) listings ----------"
         print "graphics method =", self.g_name
         print "name =", self.name
         print "projection =", self.projection
@@ -752,7 +755,7 @@ class Gfi(object):
         print "fillareapixelscale = ", self.fillareapixelscale
         print "levels = ", self.levels
         print "legend = ", self.legend
-    list.__doc__ = xmldocs.listdoc
+    list.__doc__ = xmldocs.listdoc.format(name="isofill", parent="")
 
     #
     #
