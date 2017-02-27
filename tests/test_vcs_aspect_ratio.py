@@ -4,6 +4,10 @@ import vcs
 
 class TestVCSAspectRatio(basevcstest.VCSBaseTest):
 
+    def __init__(self, *args, **kwargs):
+        kwargs['geometry'] = {"width": 400, "height": 800}
+        super(TestVCSAspectRatio, self).__init__(*args, **kwargs)
+
     def testAspectRatio(self):
         ret = 0 
         gm = vcs.createisofill()
@@ -15,13 +19,11 @@ class TestVCSAspectRatio(basevcstest.VCSBaseTest):
 
     def plotRatio(self, s, gm, ratio):
         ret = 0
-        self.x.geometry(400, 800)
-        self.x.update()
         y = vcs.init()
         y.open()
         y.geometry(800, 400)
         for X in [self.x, y]:
-            X.plot(s,gm,ratio=ratio)
+            X.plot(s, gm, ratio=ratio)
             if X.islandscape():
                 orient = "ldscp"
             else:

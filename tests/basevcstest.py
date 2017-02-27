@@ -15,16 +15,25 @@ import MV2
 
 class VCSBaseTest(unittest.TestCase):
 
+    def __init__(self, *args, **kwargs):
+        self.geometry = {"width": 1200, "height": 1091}
+        if 'geometry' in kwargs:
+            self.geometry = kwargs['geometry']
+            del kwargs['geometry']
+        super(VCSBaseTest, self).__init__(*args, **kwargs)
+
     def getTempFile(self, path, mode="r"):
         return self.getFile(os.path.join(self.tempdir, path), mode)
 
     def setUp(self):
         # This is for circleci that crashes for any mac bg=True
         self.bg = int(os.environ.get("VCS_BACKGROUND",1))
-        self.x=vcs.init(geometry={"width": 1200, "height": 1091})
+        self.x=vcs.init(geometry=self.geometry)
         self.x.setantialiasing(0)
         self.x.drawlogooff()
-        self.x.setbgoutputdimensions(1200,1091,units="pixels")
+        self.x.setbgoutputdimensions(self.geometry['width'],
+                                     self.geometry['height'],
+                                     units="pixels")
         if not self.bg:
             self.x.open()
         self.orig_cwd = os.getcwd()
