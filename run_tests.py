@@ -50,10 +50,16 @@ def findDiffFiles(log):
        file1 = log[i-1].split()[-1]
        for j in range(i,N):
            if log[j].find("New best!")>-1:
-               file2 = log[j].split()[2]
+               if log[j].find("Comparing")>-1:
+                   file2 = log[j].split()[2]
+               else:
+                   k=j-1
+                   while log[k].find("Comparing")==-1 and k>-N:
+                       k-=1
+                   file2 = log[k].split()[2]
            if log[j].find("Saving image diff")>-1:
                diff = log[j].split()[-1]
-               break
+               #break
    return file1, file2, diff
 
 def run_command(command,join_stderr=True):
