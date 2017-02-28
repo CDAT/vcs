@@ -36,3 +36,7 @@ class TestVCSSaveTd(unittest.TestCase):
         self.assertTrue(filecmp.cmp("vcs_test_save_td_to_py.py",good_py))
 
 
+    def tearDown(self):
+        os.remove("vcs_test_save_td_to_json.json")
+        os.remove("vcs_test_save_td_to_py.py")
+
