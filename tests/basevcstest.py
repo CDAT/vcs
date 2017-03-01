@@ -1,17 +1,13 @@
 import unittest
-import shutil
+# import shutil
 import os
 import vcs
 import cdms2
-import MV2
-import tempfile
 import sys
 pth = os.path.dirname(__file__)
 sys.path.append(pth)
 import checkimage
-import subprocess
-import glob
-import MV2
+# import glob
 
 class VCSBaseTest(unittest.TestCase):
 
@@ -21,9 +17,6 @@ class VCSBaseTest(unittest.TestCase):
             self.geometry = kwargs['geometry']
             del kwargs['geometry']
         super(VCSBaseTest, self).__init__(*args, **kwargs)
-
-    def getTempFile(self, path, mode="r"):
-        return self.getFile(os.path.join(self.tempdir, path), mode)
 
     def setUp(self):
         # This is for circleci that crashes for any mac bg=True
@@ -37,7 +30,6 @@ class VCSBaseTest(unittest.TestCase):
         if not self.bg:
             self.x.open()
         self.orig_cwd = os.getcwd()
-        self.tempdir = tempfile.mkdtemp()
         self.pngsdir = "tests_png"
         if not os.path.exists(self.pngsdir):
             os.makedirs(self.pngsdir)
@@ -47,7 +39,6 @@ class VCSBaseTest(unittest.TestCase):
 
     def tearDown(self):
         os.chdir(self.orig_cwd)
-        shutil.rmtree(self.tempdir)
         self.x.clear()
         del(self.x)
         # if png dir is empty (no failures) remove it
