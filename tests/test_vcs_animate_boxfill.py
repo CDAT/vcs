@@ -1,13 +1,10 @@
 import basevcstest
-import cdms2
 import vcs
 import os
 
 class TestVCSAnimateBoxfill(basevcstest.VCSBaseTest):
     def testVCSAnimateBoxfill(self):
-        f=cdms2.open(os.path.join(vcs.sample_data,"clt.nc"))
-        s=f("clt",slice(0,12)) # read only 12 times steps to speed up things
-
+        s=self.clt("clt",slice(0,12)) # read only 12 times steps to speed up things
         gm=self.x.createboxfill()
         self.x.plot(s,gm,bg=self.bg)
         self.x.animate.create()
