@@ -19,10 +19,10 @@ class TestVCSPNG(basevcstest.VCSBaseTest):
         self.putPNGOnCanvas()
         self.putPNGOnCanvas(units="pixels",fitToHeight=False)
         for zoom in [.5, 1.5]:
-            for xoff in [-25,25]:
+            for xoff in [-25.,25.]:
                 for yoff in [25.,-25.]:
                     self.putPNGOnCanvas(zoom=zoom,xoffset=xoff,yoffset=yoff)
             for xoff in [-250.,250.]:
                 for yoff in [250.,-250.]:
-                    self.putPNGOnCanvas(zoom=zoom,xoffset=xoff,yoffset=yoff)
+                    self.putPNGOnCanvas(zoom=zoom,xoffset=xoff,yoffset=yoff,units="pixels",fitToHeight=False)
 
