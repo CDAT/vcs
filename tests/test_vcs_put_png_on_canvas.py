@@ -10,7 +10,7 @@ class TestVCSPNG(basevcstest.VCSBaseTest):
 
     def putPNGOnCanvas(self,fitToHeight=True,units="percent",xoffset=0.,yoffset=0.,zoom=1.):
         self.x.clear()
-        self.x.put_png_on_canvas(self.png,zoom,xoffset,yoffset,units,fitToHeight)
+        self.x.put_png_on_canvas(self.png,zoom,xoffset,yoffset,units,fitToHeight,bg=self.bg)
         fnm = "test_vcs_put_png_on_canvas_%s_%s_%s_%s_%s.png" % (zoom,xoffset,yoffset,units,fitToHeight)
         self.checkImage(fnm,threshold=20.)
 
