@@ -16,19 +16,23 @@ class VCSBaseTest(unittest.TestCase):
         if 'geometry' in kwargs:
             self.geometry = kwargs['geometry']
             del kwargs['geometry']
+        self.bg = int(os.environ.get("VCS_BACKGROUND",1))
+        if 'bg' in kwargs:
+            self.bg = kwargs['bg']
+            del kwargs['bg']
         super(VCSBaseTest, self).__init__(*args, **kwargs)
 
     def setUp(self):
         # This is for circleci that crashes for any mac bg=True
-        self.bg = int(os.environ.get("VCS_BACKGROUND",1))
         self.x=vcs.init(geometry=self.geometry,bg=self.bg)
         self.x.setantialiasing(0)
         self.x.drawlogooff()
-        self.x.setbgoutputdimensions(self.geometry['width'],
-                                     self.geometry['height'],
-                                     units="pixels")
-        if not self.bg:
-            self.x.open()
+        if self.geometry is not None:
+            self.x.setbgoutputdimensions(self.geometry['width'],
+                                         self.geometry['height'],
+                                         units="pixels")
+        #if not self.bg:
+        #    self.x.open()
         self.orig_cwd = os.getcwd()
         self.pngsdir = "tests_png"
         if not os.path.exists(self.pngsdir):
