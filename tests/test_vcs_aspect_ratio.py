@@ -19,10 +19,12 @@ class TestVCSAspectRatio(basevcstest.VCSBaseTest):
 
     def plotRatio(self, s, gm, ratio):
         ret = 0
-        y = vcs.init()
-        y.open()
-        y.geometry(800, 400)
-        for X in [self.x, y]:
+        # y = vcs.init(geometry={"width":800, "height":400})
+        # y.setbgoutputdimensions(800, 400, units="pixels")
+        # if not self.bg:
+        #     y.open()
+        for X in [self.x]:
+            X.clear()
             X.plot(s, gm, ratio=ratio)
             if X.islandscape():
                 orient = "ldscp"
