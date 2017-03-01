@@ -1,5 +1,4 @@
 import os
-import vcs
 import basevcstest
 import struct
 
