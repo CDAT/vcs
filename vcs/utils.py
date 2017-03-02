@@ -2237,7 +2237,10 @@ def creategraphicsmethod(gtype, gname='default', name=None):
         func = vcs.createisoline
     elif gtype in ['isofill', 'Gfi']:
         func = vcs.createisofill
-    elif gtype in ['boxfill', 'Gfb']:
+    elif gtype in ['boxfill', 'Gfb', 'default']:
+        # VCS uses a temporary graphics method type 'default' when the user
+        # doesn't specify a graphics method. This gets replaced later down the
+        # plotting pipeline, but is important for tracking tick information.
         func = vcs.createboxfill
     elif gtype in ['meshfill', 'Gfm']:
         func = vcs.createmeshfill
