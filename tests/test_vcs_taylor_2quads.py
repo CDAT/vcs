@@ -13,5 +13,5 @@ class TestVCSTaylor(basevcstest.VCSBaseTest):
 
         td = self.x.createtaylordiagram('new')
         td.quadrans = 2
-        self.x.plot(data, td, skill = td.defaultSkillFunction, bg=1)
+        self.x.plot(data, td, skill = td.defaultSkillFunction, bg=self.bg)
         self.checkImage("test_vcs_taylor_2quads.png")

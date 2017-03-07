@@ -1,9 +1,8 @@
 import basevcstest
-import vcs
 
 class TestVCSBadPngPath(basevcstest.VCSBaseTest):
 	def testBadPngPath(self):
-		self.x.plot([1,2,3,4,5], bg=1)
+		self.x.plot([1,2,3,4,5], bg=self.bg)
 		try:
 		  x.png(os.path.join("b","c","c","test.png"))
 		  failed = False

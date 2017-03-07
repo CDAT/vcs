@@ -11,6 +11,6 @@ class TestVCSYxMontonic(basevcstest.VCSBaseTest):
         data = cdms2.MV2.arange(120,0,-1)
         data.id = "data"
         data.setAxis(0,t)
-        self.x.plot(data,bg=1)
+        self.x.plot(data,bg=self.bg)
         fnm = 'test_vcs_monotonic_decreasing_yxvsx_default.png'
         self.checkImage(fnm)

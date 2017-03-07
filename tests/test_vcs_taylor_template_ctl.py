@@ -49,5 +49,5 @@ class TestVCSTaylor(basevcstest.VCSBaseTest):
         # Create some dummy data for display purposes
         data=MV2.array([[1.52,.52,],[.83,.84]])
 
-        self.x.plot(data, t, td, bg=1)
+        self.x.plot(data, t, td, bg=self.bg)
         self.checkImage("test_vcs_taylor_template_ctl.png")

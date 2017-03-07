@@ -16,5 +16,5 @@ class TestVCSMissingCMap(basevcstest.VCSBaseTest):
         # Change the missing color to a colorname
         boxfill.missing = "lightgrey"
 
-        self.x.plot(clt, boxfill, bg=1)
+        self.x.plot(clt, boxfill, bg=self.bg)
         self.checkImage("test_vcs_missing_colorname.png")

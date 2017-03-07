@@ -14,7 +14,7 @@ class TestVCSNoContinents(basevcstest.VCSBaseTest):
         t2 = self.x.createtemplate(source=t1.name)
         t2.move(.5, 'y')
 
-        self.x.plot(clt, t1, continents=0, bg=True)
-        self.x.plot(clt, t2, continents=1, bg=True)
+        self.x.plot(clt, t1, continents=0, bg=self.bg)
+        self.x.plot(clt, t2, continents=1, bg=self.bg)
 
         self.checkImage("test_vcs_no_continents.png")
