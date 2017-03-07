@@ -150,7 +150,10 @@ if args.html or args.package:
     <script type="text/javascript" charset="utf8" src="http://rawgit.com/WCRP-CMIP/CMIP6_CVs/master/src/jquery.dataTables.js"></script>
     <script>
     $(document).ready( function () {
-            $('#table_id').DataTable();
+            $('#table_id').DataTable({
+            "order":[[1:'asc'],[0,'asc']],
+            "scrollY":"70vh","paging":false,"scrollCollapse":false}
+            });
                 } );
     </script>
     </head>""" % time.asctime()
