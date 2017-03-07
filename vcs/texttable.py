@@ -25,7 +25,7 @@
 import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import scriptdocs
+from xmldocs import scriptdocs, listdoc
 
 
 def process_src(nm, code):
@@ -174,7 +174,8 @@ class Tt(object):
                 # List of FloatTypes
                 tt.y=[[.5,.4,.3], [.2,.1,0]]
 
-"""
+    .. pragma: skip-doctest TODO: convert examples to doctests
+    """
     __slots__ = [
         's_name',
         'name',
@@ -477,7 +478,7 @@ class Tt(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Text Table (Tt) member (attribute) listings ----------"
+        print "---------- Text Table (Tt) member (attribute) listings ----------"
         print "secondary method =", self.s_name
         print "name =", self.name
         print "string =", self.string
@@ -494,7 +495,7 @@ class Tt(object):
         print "x =", self.x
         print "y =", self.y
         print 'colormap =', self.colormap
-
+    list.__doc__ = listdoc.format(name="texttable", parent="")
     ##########################################################################
     #                                                                           #
     # Script out secondary text table method in VCS to a file.                  #

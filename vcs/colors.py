@@ -8,10 +8,10 @@ def matplotlib2vcs(cmap, vcs_name=None):
     Optional second argument: vcs_name, name of the resulting vcs colormap
 
     :param cmap: A matplotlib colormap or string name of a matplotlib colormap
-    :type cmap: str , matplotlib colormap
+    :type cmap: :py:class:`str` , matplotlib.cm
 
     :param vcs_name: String to set the name of the generated VCS colormap
-    :type vcs_name: str
+    :type vcs_name: :py:class:`str`
 
     :returns: A VCS colormap object
     :rtype: vcs.colormap.Cp

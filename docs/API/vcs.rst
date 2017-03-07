@@ -7,8 +7,9 @@ VCS API Documentation
 
 .. toctree::
 
-    Canvas
+    Canvas/Canvas
     graphics/gm
     template/templ
     secondary/gms
     misc/misc
+    functions/index
