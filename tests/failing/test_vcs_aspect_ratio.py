@@ -9,7 +9,7 @@ class TestVCSAspectRatio(basevcstest.VCSBaseTest):
         super(TestVCSAspectRatio, self).__init__(*args, **kwargs)
 
     def testAspectRatio(self):
-        ret = 0 
+        ret = 0
         gm = vcs.createisofill()
         s = self.clt("clt", time=slice(0,1), squeeze=1)
         for ratio in ["1t", "2t", ".5t", "autot"]:
@@ -31,9 +31,9 @@ class TestVCSAspectRatio(basevcstest.VCSBaseTest):
             else:
                 orient = "port"
             fnm = "aspect_ratio_%s_%s.png" % (orient, ratio)
-            X.png(fnm)
+            X.png(fnm, bg=self.bg)
             print "fnm:",fnm
-            ret +=  self.checkImage(fnm)
+            ret +=  self.checkImage(fnm, pngReady=True)
         return ret
 
 
