@@ -151,8 +151,8 @@ if args.html or args.package:
     <script>
     $(document).ready( function () {
             $('#table_id').DataTable({
-            "order":[[1:'asc'],[0,'asc']],
-            "scrollY":"70vh","paging":false,"scrollCollapse":false}
+            "order":[[1,'asc'],[0,'asc']],
+            "scrollY":"70vh","paging":false,"scrollCollapse":false
             });
                 } );
     </script>
