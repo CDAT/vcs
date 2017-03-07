@@ -8,7 +8,7 @@ class TestVCSBackgroundModeRotate(basevcstest.VCSBaseTest):
 		data = numpy.sin(numpy.arange(100))
 		data = numpy.reshape(data, (10, 10))
 
-                self.x = vcs.init()
+		self.x = vcs.init()
 		self.x.plot(data, bg=self.bg)
 		self.assertEqual(self.x.orientation(), "landscape", "Default canvas orientation failed")
 		c = self.x.canvasinfo()
