@@ -98,17 +98,45 @@ class StreamlinePipeline(Pipeline2D):
         streamer.SetMinimumIntegrationStep(self._gm.minimumsteplength)
         streamer.SetMaximumIntegrationStep(self._gm.maximumsteplength)
         streamer.SetMaximumNumberOfSteps(self._gm.maximumsteps)
-        if (self._gm.maximumstreamlinelength == self._gm._maximumstreamlinelength):
-            # compute maximumstreamlinelength
-            self._gm.maximumstreamlinelength = radius / 2
-            print self._gm.maximumstreamlinelength
-        streamer.SetMaximumPropagation(self._gm.maximumstreamlinelength)
+        streamer.SetMaximumPropagation(2 * radius * self._gm.maximumstreamlinelength)
         streamer.SetTerminalSpeed(self._gm.terminalspeed)
         streamer.SetMaximumError(self._gm.maximumerror)
         streamer.SetIntegrator(integrator)
 
         streamer.Update()
-        vcs2vtk.debugWriteGrid(streamer.GetOutput(), "streamlines")
+        streamlines = streamer.GetOutput()
+        vcs2vtk.debugWriteGrid(streamlines, "streamlines")
+
+        # visualize direction of the flow with glyphs
+        contour = vtk.vtkContourFilter()
+        contour.SetInputConnection(streamer.GetOutputPort())
+        contour.SetValue(0, 0)
+        contour.SetInputArrayToProcess(0, 0, 0, 0, "IntegrationTime")
+
+        contour.Update()
+        vcs2vtk.debugWriteGrid(contour.GetOutput(), "contour")
+
+        glyph2DSource = vtk.vtkGlyphSource2D()
+        glyph2DSource.SetGlyphTypeToEdgeArrow()
+        glyph2DSource.SetFilled(1)
+        glyph2DSource.Update()
+
+        glyph = vtk.vtkGlyph2D()
+        glyph.SetInputConnection(contour.GetOutputPort())
+        glyph.SetInputArrayToProcess(1, 0, 0, 0, "vector")
+        glyph.SetSourceData(glyph2DSource.GetOutput())
+
+        glyph.SetScaleModeToDataScalingOff()
+        glyph.SetScaleFactor(2 * radius * self._gm.glyphscalefactor)
+        glyph.OrientOn()
+        glyph.Update()
+        vcs2vtk.debugWriteGrid(glyph.GetOutput(), "glyph")
+
+        glyphMapper = vtk.vtkPolyDataMapper()
+        glyphMapper.SetInputConnection(glyph.GetOutputPort())
+        glyphMapper.ScalarVisibilityOff()
+        glyphActor = vtk.vtkActor()
+        glyphActor.SetMapper(glyphMapper)
 
         mapper = vtk.vtkPolyDataMapper()
         mapper.SetInputConnection(streamer.GetOutputPort())
@@ -122,6 +150,7 @@ class StreamlinePipeline(Pipeline2D):
         else:
             r, g, b, a = cmap.index[lcolor]
         act.GetProperty().SetColor(r / 100., g / 100., b / 100.)
+        glyphActor.GetProperty().SetColor(r / 100., g / 100., b / 100.)
 
         plotting_dataset_bounds = vcs2vtk.getPlottingBounds(
             vcs.utils.getworldcoordinates(self._gm,
@@ -145,6 +174,11 @@ class StreamlinePipeline(Pipeline2D):
             wc=wc,
             priority=self._template.data.priority,
             create_renderer=True)
+        glyph_renderer, xScale, yScale = self._context().fitToViewport(
+            glyphActor, vp,
+            wc=wc,
+            priority=self._template.data.priority,
+            create_renderer=False)
         kwargs = {'vtk_backend_grid': self._vtkDataSet,
                   'dataset_bounds': self._vtkDataSetBounds,
                   'plotting_dataset_bounds': plotting_dataset_bounds,

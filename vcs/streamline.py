@@ -300,10 +300,11 @@ class Gs(object):
         '_minimumsteplength',
         '_maximumsteplength',
         '_maximumsteps',
-        '_maximumstreamlinelengthdefault',
         '_maximumstreamlinelength',
         '_terminalspeed',
         '_maximumerror',
+
+        '_glyphscalefactor',
     ]
 
     colormap = VCS_validation_functions.colormap
@@ -610,7 +611,8 @@ class Gs(object):
 
     """This property specifies the maximum streamline length (i.e.,
        physical arc length), beyond which line integration is
-       terminated.  This is specified in units of length.
+       terminated.  This is specified as a percentage of the diagonal of
+       the dataset.
 
     """
     def _getmaximumstreamlinelength(self):
@@ -649,6 +651,20 @@ class Gs(object):
             self, 'maximumerror', value)
         self._maximumerror = value
     maximumerror = property(_getmaximumerror, _setmaximumerror)
+
+    """The constant multiplier used to scale the glyph showing the
+        direction of the flow. One represents the diagonal of the
+        bounding box of the dataset. Default value is 0.02
+    """
+    def _getglyphscalefactor(self):
+        return self._glyphscalefactor
+
+    def _setglyphscalefactor(self, value):
+        value = VCS_validation_functions.checkNumber(
+            self, 'glyphscalefactor', value)
+        self._glyphscalefactor = value
+    glyphscalefactor = property(_getglyphscalefactor, _setglyphscalefactor)
+
 
 
     def _getlinewidth(self):
@@ -720,7 +736,6 @@ class Gs(object):
                 # appropriate Python Object.                              #
                 ###########################################################
                 #                                                         #
-        self._maximumstreamlinelengthdefault = 100.0
         if Gs_name in vcs.elements["streamline"]:
             raise ValueError("The streamline method '%s' already exists" % Gs_name)
         self.g_name = 'Gs'
@@ -756,9 +771,10 @@ class Gs(object):
             self._minimumsteplength = 0.01
             self._maximumsteplength = 0.5
             self._maximumsteps = 2000
-            self._maximumstreamlinelength = self._maximumstreamlinelengthdefault
+            self._maximumstreamlinelength = 0.25
             self._terminalspeed = 0.000000000001
             self._maximumerror = 0.000001
+            self._glyphscalefactor = 0.01
         else:
             if isinstance(Gs_name_src, Gs):
                 Gs_name_src = Gs_name_src.name
@@ -777,7 +793,7 @@ class Gs(object):
                         'numberofseeds', 'integratortype', 'integrationdirection',
                         'integrationstepunit', 'initialsteplength', 'minimumsteplength',
                         'maximumsteplength', 'maximumsteps', 'maximumstreamlinelength',
-                        'terminalspeed', 'maximumerror',
+                        'terminalspeed', 'maximumerror', 'glyphscalefactor',
                         'reference']:
 
                 setattr(self, att, getattr(src, att))
@@ -983,6 +999,7 @@ class Gs(object):
             fp.write("%s.maximumstreamlinelength = %d\n" % (unique_name, self.maximumstreamlinelength))
             fp.write("%s.terminalspeed = %d\n" % (unique_name, self.terminalspeed))
             fp.write("%s.maximumerror = %d\n" % (unique_name, self.maximumerror))
+            fp.write("%s.glyphscalefactor = %d\n" % (unique_name, self.glyphscalefactor))
         else:
             # Json type
             mode += "+"
