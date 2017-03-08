@@ -1,7 +1,8 @@
-import cdms2
-import os
-import sys
+import basevcstest
 import vcs
+
+class TestVCSBoxfillCustomNonDefaultLevels(basevcstest.VCSBaseTest):
+    def testBoxfillCustomNonDefaultLevels(self):
 
 # Load the clt data:
 dataFile = cdms2.open(os.path.join(vcs.sample_data, "clt.nc"))

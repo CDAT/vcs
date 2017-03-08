@@ -12,5 +12,5 @@ class TestVCSBoxfillCustomExt1(basevcstest.VCSBaseTest):
         boxfill.levels = levels
         boxfill.ext_1 = "y"
         boxfill.fillareacolors = vcs.getcolors(boxfill.levels)
-        canvas.plot(clt, boxfill, bg=self.bg)
-        self.checkImage("test_boxfill_custom_ext1.png")
+        self.x.plot(clt, boxfill, bg=self.bg)
+        self.checkImage("test_vcs_boxfill_custom_ext1.png")
