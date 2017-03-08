@@ -551,7 +551,7 @@ def listelements(typ=None):
         raise Exception(
             "Error: '%s' is not a valid vcs element\n"
             "Valid vcs elements are: %s" %
-            (typ, vcs.elements.keys()))
+            (typ, sorted(vcs.elements.keys())))
     return sorted(vcs.elements[typ].keys())
 
 
