@@ -3,6 +3,7 @@ from .pipeline2d import Pipeline2D
 import vcs
 from vcs import vcs2vtk
 import math
+import numpy
 import vtk
 
 
@@ -14,6 +15,12 @@ class StreamlinePipeline(Pipeline2D):
         super(StreamlinePipeline, self).__init__(gm, context_)
         self._needsCellData = False
         self._needsVectors = True
+
+    def _updateContourLevelsAndColors(self):
+        """Overrides baseclass implementation."""
+        """Set legend information and colors"""
+        self._updateContourLevelsAndColorsGeneric()
+
 
     def _plotInternal(self):
         """Overrides baseclass implementation."""
@@ -36,23 +43,24 @@ class StreamlinePipeline(Pipeline2D):
         if lonAccessor:
             lon = lonAccessor[:]
 
-        # Streamline attempt
-        l = self._gm.linetype
-        if l is None:
-            l = "default"
-        try:
-            l = vcs.getline(l)
-            lwidth = l.width[0]  # noqa
-            lcolor = l.color[0]
-            lstyle = l.type[0]  # noqa
-        except:
-            lstyle = "solid"  # noqa
-            lwidth = 1.  # noqa
-            lcolor = [0., 0., 0., 100.]
-        if self._gm.linewidth is not None:
-            lwidth = self._gm.linewidth  # noqa
-        if self._gm.linecolor is not None:
-            lcolor = self._gm.linecolor
+        # Streamline color
+        if (not self._gm.coloredbyvector):
+            l = self._gm.linetype
+            if l is None:
+                l = "default"
+            try:
+                l = vcs.getline(l)
+                lwidth = l.width[0]  # noqa
+                lcolor = l.color[0]
+                lstyle = l.type[0]  # noqa
+            except:
+                lstyle = "solid"  # noqa
+                lwidth = 1.  # noqa
+                lcolor = [0., 0., 0., 100.]
+            if self._gm.linewidth is not None:
+                lwidth = self._gm.linewidth  # noqa
+            if self._gm.linecolor is not None:
+                lcolor = self._gm.linecolor
 
         # get the data
         polydata = self._vtkPolyDataFilter.GetOutput()
@@ -125,32 +133,65 @@ class StreamlinePipeline(Pipeline2D):
         glyph.SetInputConnection(contour.GetOutputPort())
         glyph.SetInputArrayToProcess(1, 0, 0, 0, "vector")
         glyph.SetSourceData(glyph2DSource.GetOutput())
-
         glyph.SetScaleModeToDataScalingOff()
         glyph.SetScaleFactor(2 * radius * self._gm.glyphscalefactor)
         glyph.OrientOn()
+        glyph.SetColorModeToColorByVector()
         glyph.Update()
         vcs2vtk.debugWriteGrid(glyph.GetOutput(), "glyph")
 
         glyphMapper = vtk.vtkPolyDataMapper()
         glyphMapper.SetInputConnection(glyph.GetOutputPort())
-        glyphMapper.ScalarVisibilityOff()
         glyphActor = vtk.vtkActor()
         glyphActor.SetMapper(glyphMapper)
 
         mapper = vtk.vtkPolyDataMapper()
         mapper.SetInputConnection(streamer.GetOutputPort())
-        mapper.ScalarVisibilityOff()
         act = vtk.vtkActor()
         act.SetMapper(mapper)
 
         cmap = self.getColorMap()
-        if isinstance(lcolor, (list, tuple)):
-            r, g, b, a = lcolor
+        if (self._gm.coloredbyvector):
+            numLevels = len(self._contourLevels) - 1
+            while len(self._contourColors) < numLevels:
+                self._contourColors.append(self._contourColors[-1])
+
+            lut = vtk.vtkLookupTable()
+            lut.SetNumberOfTableValues(numLevels)
+            for i in range(numLevels):
+                r, g, b, a = self.getColorIndexOrRGBA(cmap, self._contourColors[i])
+                lut.SetTableValue(i, r / 100., g / 100., b / 100., a / 100.)
+            lut.SetVectorModeToMagnitude()
+            if numpy.allclose(self._contourLevels[0], -1.e20):
+                lmn = self._vectorRange[0]
+            else:
+                lmn = self._contourLevels[0][0]
+            if numpy.allclose(self._contourLevels[-1], 1.e20):
+                lmx = self._vectorRange[1]
+            else:
+                lmx = self._contourLevels[-1][-1]
+            lut.SetRange(lmn, lmx)
+
+            mapper.ScalarVisibilityOn()
+            mapper.SetLookupTable(lut)
+            mapper.UseLookupTableScalarRangeOn()
+            mapper.SetScalarModeToUsePointFieldData()
+            mapper.SelectColorArray("vector")
+
+            glyphMapper.ScalarVisibilityOn()
+            glyphMapper.SetLookupTable(lut)
+            glyphMapper.UseLookupTableScalarRangeOn()
+            glyphMapper.SetScalarModeToUsePointFieldData()
+            glyphMapper.SelectColorArray("VectorMagnitude")
         else:
-            r, g, b, a = cmap.index[lcolor]
-        act.GetProperty().SetColor(r / 100., g / 100., b / 100.)
-        glyphActor.GetProperty().SetColor(r / 100., g / 100., b / 100.)
+            mapper.ScalarVisibilityOff()
+            glyphMapper.ScalarVisibilityOff()
+            if isinstance(lcolor, (list, tuple)):
+                r, g, b, a = lcolor
+            else:
+                r, g, b, a = cmap.index[lcolor]
+            act.GetProperty().SetColor(r / 100., g / 100., b / 100.)
+            glyphActor.GetProperty().SetColor(r / 100., g / 100., b / 100.)
 
         plotting_dataset_bounds = vcs2vtk.getPlottingBounds(
             vcs.utils.getworldcoordinates(self._gm,
@@ -179,6 +220,7 @@ class StreamlinePipeline(Pipeline2D):
             wc=wc,
             priority=self._template.data.priority,
             create_renderer=False)
+
         kwargs = {'vtk_backend_grid': self._vtkDataSet,
                   'dataset_bounds': self._vtkDataSetBounds,
                   'plotting_dataset_bounds': plotting_dataset_bounds,
@@ -189,6 +231,13 @@ class StreamlinePipeline(Pipeline2D):
         self._resultDict.update(self._context().renderTemplate(
             self._template, self._data1,
             self._gm, taxis, zaxis, **kwargs))
+        if (self._gm.coloredbyvector):
+            self._resultDict.update(
+                self._context().renderColorBar(self._template, self._contourLevels,
+                                               self._contourColors,
+                                               None,
+                                               self.getColorMap()))
+
 
         if self._context().canvas._continents is None:
             self._useContinents = False
@@ -198,7 +247,3 @@ class StreamlinePipeline(Pipeline2D):
                 self._dataWrapModulo, vp, self._template.data.priority, **kwargs)
         self._resultDict["vtk_backend_actors"] = [[act, plotting_dataset_bounds]]
         self._resultDict["vtk_backend_luts"] = [[None, None]]
-
-    def _updateContourLevelsAndColors(self):
-        """Overrides baseclass implementation."""
-        pass

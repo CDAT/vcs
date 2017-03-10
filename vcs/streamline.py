@@ -23,123 +23,7 @@
 #
 import vcs
 import VCS_validation_functions
-import cdtime
 from xmldocs import scriptdocs
-
-
-def load(nm, json_dict={}):
-    return
-
-
-def process_src(nm, code):
-
-    # Takes VCS script code (string) as input and generates streamline gm from it
-    try:
-        gm = Gs(nm)
-    except:
-        gm = vcs.elements["streamline"][nm]
-    # process attributes with = as assignement
-    for att in ["projection",
-                "xticlabels#1", "xticlabels#2",
-                "xmtics#1", "xmtics#2",
-                "yticlabels#1", "yticlabels#2",
-                "ymtics#1", "ymtics#2",
-                "xaxisconvert", "yaxisconvert",
-                "datawc_tunits",
-                "datawc_tunits",
-                "datawc_calendar",
-                "Tl", "streamline_align", "streamline_type", "ref_streamline",
-                ]:
-        i = code.find(att)
-        if i == -1:
-            continue
-        j = code[i:].find(",") + i
-        if j - i == -1:  # last one no comma
-            j = None
-        scode = code[i:j]
-        sp = scode.split("=")
-        nm = sp[0].strip()
-        nm = nm.replace("#", "")
-        if nm == "streamline_align":
-            nm = "alignement"
-            if sp[1] == "c":
-                sp[1] = "center"
-            elif sp[1] == "h":
-                sp[1] = "head"
-            elif sp[1] == "t":
-                sp[1] = "tail"
-        elif nm == "ref_streamline":
-            nm = "reference"
-        elif nm == "streamline_type":
-            nm = "type"
-        elif nm == "datawc_tunits":
-            nm = "datawc_timeunits"
-        try:
-            # int will be converted
-            setattr(gm, nm, int(sp[1]))
-        except:
-            try:
-                # int and floats will be converted
-                setattr(gm, nm, eval(sp[1]))
-            except:
-                # strings
-                try:
-                    setattr(gm, nm, sp[1])
-                except:
-                    pass  # oh well we stick to default value
-    # Tl
-    i = code.find("Tl")
-    if (i > -1):
-        j = code[i:].find(",")
-        if (j == -1):
-            j = code[i:].find(")")
-        if (j > -1):
-            scode = code[i:(i + j)]
-            sp = scode.split("=")
-            tlValue = sp[1].strip()
-            try:
-                gm.linetype = tlValue
-            except ValueError:
-                try:
-                    gm.setLineAttributes(tlValue)
-                except:
-                    pass
-        # Datawc
-        idwc = code.find(" datawc(")
-        if idwc > -1:
-            jdwc = code[idwc:].find(")") + idwc
-            cd = code[idwc + 8:jdwc]
-            vals = cd.split(",")
-            gm.datawc_x1 = float(vals[0])
-            gm.datawc_y1 = float(vals[1])
-            gm.datawc_x2 = float(vals[2])
-            gm.datawc_y2 = float(vals[3])
-        # idatawc
-        idwc = code.find("idatawc(")
-        if idwc > -1:
-            jdwc = code[idwc:].find(")") + idwc
-            cd = code[idwc + 8:jdwc]
-            vals = cd.split(",")
-            if int(vals[0]) == 1:
-                gm.datawc_x1 = cdtime.reltime(
-                    gm.datawc_x1,
-                    gm.datawc_timeunits).tocomp(
-                    gm.datawc_calendar)
-            if int(vals[1]) == 1:
-                gm.datawc_y1 = cdtime.reltime(
-                    gm.datawc_x2,
-                    gm.datawc_timeunits).tocomp(
-                    gm.datawc_calendar)
-            if int(vals[2]) == 1:
-                gm.datawc_x2 = cdtime.reltime(
-                    gm.datawc_y1,
-                    gm.datawc_timeunits).tocomp(
-                    gm.datawc_calendar)
-            if int(vals[3]) == 1:
-                gm.datawc_y2 = cdtime.reltime(
-                    gm.datawc_y2,
-                    gm.datawc_timeunits).tocomp(
-                    gm.datawc_calendar)
 
 
 class Gs(object):
@@ -269,9 +153,57 @@ class Gs(object):
     """
     __slots__ = [
         'g_name',
+
+        'name',
+        'xaxisconvert',
+        'yaxisconvert',
+        'levels',
+        'ext_1',
+        'ext_2',
+        'fillareacolors',
+        'fillareastyle',
+        'linecolor',
+        'linetype',
+        'linewidth',
+        'projection',
+        'xticlabels1',
+        'xticlabels2',
+        'yticlabels1',
+        'yticlabels2',
+        'xmtics1',
+        'xmtics2',
+        'ymtics1',
+        'ymtics2',
+        'datawc_x1',
+        'datawc_x2',
+        'datawc_y1',
+        'datawc_y2',
+        'datawc_timeunits',
+        'datawc_calendar',
+        'reference',
+        'colormap',
+        'numberofseeds',
+        'integratortype',
+        'integrationdirection',
+        'integrationstepunit',
+        'initialsteplength',
+        'minimumsteplength',
+        'maximumsteplength',
+        'maximumsteps',
+        'maximumstreamlinelength',
+        'terminalspeed',
+        'maximumerror',
+        'glyphscalefactor',
+        'coloredbyvector',
+
         '_name',
         '_xaxisconvert',
         '_yaxisconvert',
+        '_levels',
+        '_ext_1',
+        '_ext_2',
+        '_fillareacolors',
+        '_fillareastyle',
         '_linecolor',
         '_linetype',
         '_linewidth',
@@ -303,8 +235,8 @@ class Gs(object):
         '_maximumstreamlinelength',
         '_terminalspeed',
         '_maximumerror',
-
         '_glyphscalefactor',
+        '_coloredbyvector',
     ]
 
     colormap = VCS_validation_functions.colormap
@@ -361,6 +293,16 @@ class Gs(object):
             value)
         self._yaxisconvert = value
     yaxisconvert = property(_getyaxisconvert, _setyaxisconvert)
+
+    levels = VCS_validation_functions.levels
+    ext_1 = VCS_validation_functions.ext_1
+    ext_2 = VCS_validation_functions.ext_2
+    fillareacolors = VCS_validation_functions.fillareacolors
+
+    def _getfillareastyle(self):
+        return self._fillareastyle
+    fillareastyle = property(_getfillareastyle)
+
 
     def _getprojection(self):
         return self._projection
@@ -665,6 +607,20 @@ class Gs(object):
         self._glyphscalefactor = value
     glyphscalefactor = property(_getglyphscalefactor, _setglyphscalefactor)
 
+    """ If true streamlines are colored by vector magnitude.
+        The mapping between vector magnitude and colors is controlled
+        by levels, ext_1, ext_2 and fillareacolors. If false,
+        streamlines have only one color linecolor.
+    """
+    def _getcoloredbyvector(self):
+        return self._coloredbyvector
+
+    def _setcoloredbyvector(self, value):
+        value = VCS_validation_functions.checkBoolean(
+            self, 'coloredbyvector', value)
+        self._coloredbyvector = value
+    coloredbyvector = property(_getcoloredbyvector, _setcoloredbyvector)
+
 
 
     def _getlinewidth(self):
@@ -763,6 +719,11 @@ class Gs(object):
             self._datawc_timeunits = "days since 2000"
             self._datawc_calendar = 135441
             self._colormap = None
+            self._levels = ([1.0000000200408773e+20, 1.0000000200408773e+20],)
+            self._ext_1 = False
+            self._ext_2 = False
+            self._fillareacolors = [1, ]
+            self._fillareastyle = 'solid'
             self._numberofseeds = 500
             self._integratortype = 2       # runge-kutta45
             self._integrationdirection = 2 # both
@@ -775,6 +736,7 @@ class Gs(object):
             self._terminalspeed = 0.000000000001
             self._maximumerror = 0.000001
             self._glyphscalefactor = 0.01
+            self._coloredbyvector = True
         else:
             if isinstance(Gs_name_src, Gs):
                 Gs_name_src = Gs_name_src.name
@@ -787,13 +749,15 @@ class Gs(object):
                         'xticlabels1', 'xticlabels2', 'xmtics1', 'xmtics2',
                         'yticlabels1', 'yticlabels2', 'ymtics1', 'ymtics2',
                         'datawc_y1', 'datawc_y2', 'datawc_x1',
-                        'datawc_x2', 'xaxisconvert', 'yaxisconvert',
+                        'datawc_x2', 'xaxisconvert', 'yaxisconvert', 'levels',
+                        'ext_1', 'ext_2', 'fillareacolors',
                         'linetype', 'linecolor', 'linewidth',
                         'datawc_timeunits', 'datawc_calendar', 'colormap',
                         'numberofseeds', 'integratortype', 'integrationdirection',
                         'integrationstepunit', 'initialsteplength', 'minimumsteplength',
                         'maximumsteplength', 'maximumsteps', 'maximumstreamlinelength',
                         'terminalspeed', 'maximumerror', 'glyphscalefactor',
+                        'coloredbyvector',
                         'reference']:
 
                 setattr(self, att, getattr(src, att))
@@ -844,6 +808,13 @@ class Gs(object):
         self.parent.mode = mode
         self.yaxisconvert = yat
 
+    def colors(self, color1=16, color2=239):
+        self.fillareacolors = range(color1, color2)
+
+    def exts(self, ext1='n', ext2='y'):
+        self.ext_1 = ext1
+        self.ext_2 = ext2
+
     def list(self):
         print "", "----------Streamline (Gs) member (attribute) listings ----------"
         print "graphics method =", self.g_name
@@ -865,10 +836,28 @@ class Gs(object):
         print "datawc_calendar = ", self.datawc_calendar
         print "xaxisconvert = ", self.xaxisconvert
         print "yaxisconvert = ", self.yaxisconvert
+        print "levels = ", self.levels
+        print "ext_1 = ", self.ext_1
+        print "ext_2 = ", self.ext_2
+        print 'fillareacolors =', self.fillareacolors
+        print 'fillareastyle =', self.fillareastyle
         print "line = ", self.line
         print "linecolor = ", self.linecolor
         print "linewidth = ", self.linewidth
         print "reference = ", self.reference
+        print "numberofseeds = ", self.numberofseeds
+        print "integratortype = ", self.integratortype
+        print "integrationdirection = ", self.integrationdirection
+        print "integrationstepunit = ", self.integrationstepunit
+        print "initialsteplength = ", self.initialsteplength
+        print "minimumsteplength = ", self.minimumsteplength
+        print "maximumsteplength = ", self.maximumsteplength
+        print "maximumsteps = ", self.maximumsteps
+        print "maximumstreamlinelength = ", self.maximumstreamlinelength
+        print "terminalspeed = ", self.terminalspeed
+        print "maximumerror = ", self.maximumerror
+        print "glyphscalefactor = ", self.glyphscalefactor
+        print "coloredbyvector = ", self.coloredbyvector
 
     ##########################################################################
     #                                                                           #
@@ -979,6 +968,14 @@ class Gs(object):
             fp.write(
                 "%s.yaxisconvert = '%s'\n" %
                 (unique_name, self.yaxisconvert))
+            fp.write("%s.levels = '%s'\n" % (unique_name, self.levels))
+            fp.write("%s.ext_1 = '%s'\n" % (unique_name, self.ext_1))
+            fp.write("%s.ext_2 = '%s'\n" % (unique_name, self.ext_2))
+            fp.write("%s.fillareacolors = '%s'\n" %
+                     (unique_name, self.fillareacolors))
+            fp.write("%s.fillareastyle = '%s'\n" %
+                     (unique_name, self.fillareastyle))
+
             # Unique attribute for streamline
             fp.write("%s.line = %s\n" % (unique_name, self.line))
             fp.write("%s.linecolor = %s\n" % (unique_name, self.linecolor))
@@ -1000,6 +997,7 @@ class Gs(object):
             fp.write("%s.terminalspeed = %d\n" % (unique_name, self.terminalspeed))
             fp.write("%s.maximumerror = %d\n" % (unique_name, self.maximumerror))
             fp.write("%s.glyphscalefactor = %d\n" % (unique_name, self.glyphscalefactor))
+            fp.write("%s.coloredbyvector = %r\n" % (unique_name, self.coloredbyvector))
         else:
             # Json type
             mode += "+"
