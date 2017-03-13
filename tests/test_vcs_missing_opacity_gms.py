@@ -13,6 +13,7 @@ class TestVCSPatterns(basevcstest.VCSBaseTest):
 
             # Mask values
             masked = cdms2.MV2.masked_greater(clt, 50.)
+            masked.id = "clt"
             gm = vcs.creategraphicsmethod(gm_type, "default")
 
             # Set the missing color and opacity

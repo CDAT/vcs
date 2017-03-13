@@ -80,7 +80,10 @@ def run_command(command,join_stderr=True):
     return P,out
 
 def run_nose(test_name):
-    command = ["nosetests","-s",test_name]
+    opts = []
+    if args.coverage:
+        opts+=["--with-coverage"]
+    command = ["nosetests",]+opts+["-s",test_name]
     start = time.time()
     P,  out = run_command(command)
     end=time.time()
