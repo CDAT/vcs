@@ -194,6 +194,7 @@ class Gs(object):
         'terminalspeed',
         'maximumerror',
         'glyphscalefactor',
+        'glyphbasefactor',
         'coloredbyvector',
 
         '_name',
@@ -236,6 +237,7 @@ class Gs(object):
         '_terminalspeed',
         '_maximumerror',
         '_glyphscalefactor',
+        '_glyphbasefactor',
         '_coloredbyvector',
     ]
 
@@ -513,7 +515,7 @@ class Gs(object):
     initialsteplength = property(_getinitialsteplength, _setinitialsteplength)
 
     """When using the Runge-Kutta 4-5 integrator, this property specifies
-       the minimum integration step size. Default is 0.01
+       the minimum integration step size. Default is 0.1
 
     """
     def _getminimumsteplength(self):
@@ -539,7 +541,7 @@ class Gs(object):
     maximumsteplength = property(_getmaximumsteplength, _setmaximumsteplength)
 
     """This property specifies the maximum number of steps, beyond which
-    streamline integration is terminated. Default is 2000.
+    streamline integration is terminated. Default is 200.
 
     """
     def _getmaximumsteps(self):
@@ -606,6 +608,20 @@ class Gs(object):
             self, 'glyphscalefactor', value)
         self._glyphscalefactor = value
     glyphscalefactor = property(_getglyphscalefactor, _setglyphscalefactor)
+
+    """The constant multiplier used to scale the glyph base for the
+        arrow showing the flow. The default is 0.75 for which the width of
+        the arrow is 0.75 of its height.
+    """
+    def _getglyphbasefactor(self):
+        return self._glyphbasefactor
+
+    def _setglyphbasefactor(self, value):
+        value = VCS_validation_functions.checkNumber(
+            self, 'glyphbasefactor', value)
+        self._glyphbasefactor = value
+    glyphbasefactor = property(_getglyphbasefactor, _setglyphbasefactor)
+
 
     """ If true streamlines are colored by vector magnitude.
         The mapping between vector magnitude and colors is controlled
@@ -729,13 +745,14 @@ class Gs(object):
             self._integrationdirection = 2 # both
             self._integrationstepunit = 2  # cell length
             self._initialsteplength = 0.2
-            self._minimumsteplength = 0.01
+            self._minimumsteplength = 0.1
             self._maximumsteplength = 0.5
-            self._maximumsteps = 2000
+            self._maximumsteps = 200
             self._maximumstreamlinelength = 0.25
-            self._terminalspeed = 0.000000000001
-            self._maximumerror = 0.000001
-            self._glyphscalefactor = 0.01
+            self._terminalspeed = 0.1
+            self._maximumerror = 0.1
+            self._glyphscalefactor = 0.02
+            self._glyphbasefactor = 0.75
             self._coloredbyvector = True
         else:
             if isinstance(Gs_name_src, Gs):
@@ -757,7 +774,7 @@ class Gs(object):
                         'integrationstepunit', 'initialsteplength', 'minimumsteplength',
                         'maximumsteplength', 'maximumsteps', 'maximumstreamlinelength',
                         'terminalspeed', 'maximumerror', 'glyphscalefactor',
-                        'coloredbyvector',
+                        'glyphbasefactor', 'coloredbyvector',
                         'reference']:
 
                 setattr(self, att, getattr(src, att))
@@ -857,6 +874,7 @@ class Gs(object):
         print "terminalspeed = ", self.terminalspeed
         print "maximumerror = ", self.maximumerror
         print "glyphscalefactor = ", self.glyphscalefactor
+        print "glyphbasefactor = ", self.glyphbasefactor
         print "coloredbyvector = ", self.coloredbyvector
 
     ##########################################################################
@@ -997,6 +1015,7 @@ class Gs(object):
             fp.write("%s.terminalspeed = %d\n" % (unique_name, self.terminalspeed))
             fp.write("%s.maximumerror = %d\n" % (unique_name, self.maximumerror))
             fp.write("%s.glyphscalefactor = %d\n" % (unique_name, self.glyphscalefactor))
+            fp.write("%s.glyphbasefactor = %d\n" % (unique_name, self.glyphbasefactor))
             fp.write("%s.coloredbyvector = %r\n" % (unique_name, self.coloredbyvector))
         else:
             # Json type

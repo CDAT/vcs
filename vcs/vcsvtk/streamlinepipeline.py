@@ -70,14 +70,12 @@ class StreamlinePipeline(Pipeline2D):
 
         # generate random seeds in a circle centered in the center of
         # the bounding box for the data.
-        bb = polydata.GetBounds()
-        center = [(bb[0] + bb[1])/2, (bb[2] + bb[3])/2, 0]
-        radius = math.sqrt((bb[1] - bb[0]) ** 2 + (bb[3] - bb[2]) ** 2) / 2.0
+        dataLength = polydata.GetLength()
 
         seed = vtk.vtkPointSource()
         seed.SetNumberOfPoints(self._gm.numberofseeds)
-        seed.SetCenter(center)
-        seed.SetRadius(radius)
+        seed.SetCenter(polydata.GetCenter())
+        seed.SetRadius(dataLength / 2.0)
         seed.Update()
         seedData = seed.GetOutput()
 
@@ -106,7 +104,7 @@ class StreamlinePipeline(Pipeline2D):
         streamer.SetMinimumIntegrationStep(self._gm.minimumsteplength)
         streamer.SetMaximumIntegrationStep(self._gm.maximumsteplength)
         streamer.SetMaximumNumberOfSteps(self._gm.maximumsteps)
-        streamer.SetMaximumPropagation(2 * radius * self._gm.maximumstreamlinelength)
+        streamer.SetMaximumPropagation(dataLength * self._gm.maximumstreamlinelength)
         streamer.SetTerminalSpeed(self._gm.terminalspeed)
         streamer.SetMaximumError(self._gm.maximumerror)
         streamer.SetIntegrator(integrator)
@@ -115,7 +113,7 @@ class StreamlinePipeline(Pipeline2D):
         streamlines = streamer.GetOutput()
         vcs2vtk.debugWriteGrid(streamlines, "streamlines")
 
-        # visualize direction of the flow with glyphs
+        # glyph seed points
         contour = vtk.vtkContourFilter()
         contour.SetInputConnection(streamer.GetOutputPort())
         contour.SetValue(0, 0)
@@ -124,18 +122,30 @@ class StreamlinePipeline(Pipeline2D):
         contour.Update()
         vcs2vtk.debugWriteGrid(contour.GetOutput(), "contour")
 
+        # arrow glyph source
         glyph2DSource = vtk.vtkGlyphSource2D()
-        glyph2DSource.SetGlyphTypeToEdgeArrow()
-        glyph2DSource.SetFilled(1)
+        glyph2DSource.SetGlyphTypeToTriangle()
+        glyph2DSource.SetRotationAngle(-90)
+        glyph2DSource.FilledOn()
         glyph2DSource.Update()
+        vcs2vtk.debugWriteGrid(glyph2DSource.GetOutput(), "glyphSource")
 
+        # arrow glyph adjustment
+        transform = vtk.vtkTransform()
+        transform.Scale(1., self._gm.glyphbasefactor, 1.)
+        transformFilter = vtk.vtkTransformFilter()
+        transformFilter.SetInputConnection(glyph2DSource.GetOutputPort())
+        transformFilter.SetTransform(transform)
+        transformFilter.Update()
+        glyphLength = transformFilter.GetOutput().GetLength()
+
+        #  drawing the glyphs at the seed points
         glyph = vtk.vtkGlyph2D()
         glyph.SetInputConnection(contour.GetOutputPort())
         glyph.SetInputArrayToProcess(1, 0, 0, 0, "vector")
-        glyph.SetSourceData(glyph2DSource.GetOutput())
+        glyph.SetSourceData(transformFilter.GetOutput())
         glyph.SetScaleModeToDataScalingOff()
-        glyph.SetScaleFactor(2 * radius * self._gm.glyphscalefactor)
-        glyph.OrientOn()
+        glyph.SetScaleFactor(dataLength * self._gm.glyphscalefactor / glyphLength)
         glyph.SetColorModeToColorByVector()
         glyph.Update()
         vcs2vtk.debugWriteGrid(glyph.GetOutput(), "glyph")
@@ -150,6 +160,7 @@ class StreamlinePipeline(Pipeline2D):
         act = vtk.vtkActor()
         act.SetMapper(mapper)
 
+        # color the streamlines and glyphs
         cmap = self.getColorMap()
         if (self._gm.coloredbyvector):
             numLevels = len(self._contourLevels) - 1
