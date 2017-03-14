@@ -195,8 +195,8 @@ if args.html or args.package:
     print>>fi, """<html><head><title>VCS Test Results %s</title>
     <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.12.4.js"></script>
-    <script type="text/javascript" charset="utf8" src="http://rawgit.com/WCRP-CMIP/'\+
-    'CMIP6_CVs/master/src/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8"
+    src="http://rawgit.com/WCRP-CMIP/CMIP6_CVs/master/src/jquery.dataTables.js"></script>
     <script>
     $(document).ready( function () {
             $('#table_id').DataTable({
