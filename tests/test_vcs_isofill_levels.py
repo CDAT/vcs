@@ -13,7 +13,7 @@ class TestVCSIsofill(basevcstest.VCSBaseTest):
         iso=self.x.createisofill()
         iso.levels=levels[level]
         self.x.clear()
-        self.x.plot(data,iso)
+        self.x.plot(data,iso,bg=self.bg)
         self.checkImage("test_vcs_isofill_level%s.png"%level)
 
     def testIsofillLevels(self):
