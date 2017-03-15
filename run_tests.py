@@ -53,6 +53,12 @@ parser.add_argument(
     action="store_true",
     default=False,
     help="run git checkout calls")
+parser.add_argument(
+    "-f",
+    "--failed-only",
+    action="store_true",
+    default=False,
+    help="runs only tests that failed last time and are in the list you provide")
 parser.add_argument("tests", nargs="*", help="tests to run")
 
 args = parser.parse_args()
@@ -162,9 +168,24 @@ sys.path.append(
 if len(args.tests) == 0:
     names = glob.glob("tests/test_*.py")
 else:
-    names = args.tests
+    names = set(args.tests)
+
+if args.failed_only and os.path.exists(os.path.join("tests",".last_failure")):
+    f = open(os.path.join("tests",".last_failure"))
+    failed = set(eval(f.read().strip()))
+    f.close()
+    new_names = []
+    for fnm in failed:
+        if fnm in names:
+            new_names.append(fnm)
+    names = new_names
+
 if args.verbosity > 1:
     print("Names:", names)
+
+if len(names)==0:
+    print "No tests to run"
+    sys.exit(0)
 
 p = multiprocessing.Pool(args.cpus)
 outs = p.map(run_nose, names)
@@ -175,6 +196,9 @@ for d in outs:
     nm = d.keys()[0]
     if d[nm]["result"] != 0:
         failed.append(nm)
+f = open(os.path.join("tests",".last_failure"),"w")
+f.write(repr(failed))
+f.close()
 
 if args.verbosity > 0:
     print "Ran %i tests, %i failed (%.2f%% success)" %\
