@@ -92,7 +92,11 @@ def findDiffFiles(log):
                     k = j - 1
                     while log[k].find("Comparing") == -1 and k > -N:
                         k -= 1
-                    file2 = log[k].split()[2]
+                    try:
+                        file2 = log[k].split()[2]
+                    except:
+                        file2 = log[k].split()[1][:-1]+log[j].split()[0]
+                        print "+++++++++++++++++++++++++",file2
             if log[j].find("Saving image diff") > -1:
                 diff = log[j].split()[-1]
                 # break
