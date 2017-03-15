@@ -1,6 +1,4 @@
 import basevcstest
-import os
-import tempfile
 
 class FakeConfigurator(object):
     def __init__(self):
