@@ -7,8 +7,9 @@ from vtk_ui_test import vtk_ui_test, generate_png
 
 
 class test_vtk_ui_label_render(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         self.win.SetSize(130, 40)
+        self.args = ["test_vtk_ui_label_render_initial.png","test_vtk_ui_label_render_color_change.png"]
 
         label = vcs.vtk_ui.Label(self.inter, "Test Rendering", fgcolor=(0, 0, 0))
 

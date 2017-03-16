@@ -120,7 +120,6 @@ class vtk_ui_test(basevcstest.VCSBaseTest):
 
     def do(self):
         self.passed = 0
-        #raise NotImplementedError("Implement do_test to execute a test.")
 
     def check_image(self, compare_against):
         """
@@ -133,6 +132,7 @@ class vtk_ui_test(basevcstest.VCSBaseTest):
     def test(self):
         self.do()
 
+        print "post test check"
         if self.test_file:
             if self.win.GetOffScreenRendering() == 0:
                 # There was a race condition where resizing might take longer
@@ -148,4 +148,4 @@ class vtk_ui_test(basevcstest.VCSBaseTest):
 
         self.win.Finalize()
         self.inter.TerminateApp()
-	return self.passed
+	self.assertEqual(self.passed,0)

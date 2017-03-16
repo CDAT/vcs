@@ -8,7 +8,7 @@ from vtk_ui_test import vtk_ui_test
 
 
 class test_vtk_ui_text_dimensions(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         text_property = vtk.vtkTextProperty()
         text_property.SetFontFamilyToArial()
         text_property.SetFontSize(24)

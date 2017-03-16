@@ -25,7 +25,7 @@ class KeyableSubclass(vcs.vtk_ui.behaviors.KeyableMixin):
 from vtk_ui_test import vtk_ui_test
 
 class test_vtk_ui_behavior_keyable(vtk_ui_test):
-    def do_test(self):
+    def do(self):
 
         keyable = KeyableSubclass(self.inter)
 

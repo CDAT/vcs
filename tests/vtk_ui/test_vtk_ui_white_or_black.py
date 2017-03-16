@@ -7,7 +7,7 @@ from vtk_ui_test import vtk_ui_test
 
 
 class test_vtk_ui_white_or_black(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         self.win.SetSize(130, 40)
 
         white = (1, 1, 1)

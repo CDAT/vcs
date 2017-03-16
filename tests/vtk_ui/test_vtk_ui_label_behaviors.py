@@ -8,16 +8,17 @@ from vtk_ui_test import vtk_ui_test
 
 
 class test_vtk_ui_label_behaviors(vtk_ui_test):
-    def __init__(self):
-        super(test_vtk_ui_label_behaviors, self).__init__()
+    def setUp(self):
+        super(test_vtk_ui_label_behaviors, self).setUp()
         self.click_action_happened = False
         self.drag_moved = False
         self.drag_stopped = False
 
-    def do_test(self):
+    def do(self):
         self.win.SetSize(100, 30)
+        self.args = ["test_vtk_ui_label_behaviors.png"]
 
-        label = vcs.vtk_ui.Label(self.inter, "Test Text", fgcolor=(0, 0, 0), on_click=self.test_action, movable=True, on_move=self.test_move, on_drag=self.test_drag)
+        label = vcs.vtk_ui.Label(self.inter, "Test Text", fgcolor=(0, 0, 0), on_click=self.try_action, movable=True, on_move=self.try_move, on_drag=self.try_drag)
         label.show()
         label.top = 10
 
@@ -48,13 +49,13 @@ class test_vtk_ui_label_behaviors(vtk_ui_test):
         # Make sure the text has been dragged appropriately
         self.test_file = "test_vtk_ui_label_behaviors.png"
 
-    def test_action(self, point):
+    def try_action(self, point):
         self.click_action_happened = True
 
-    def test_move(self):
+    def try_move(self):
         self.drag_stopped = True
 
-    def test_drag(self, label, dx, dy):
+    def try_drag(self, label, dx, dy):
         if dx == .1 and dy == .1:
             self.drag_moved = True
 

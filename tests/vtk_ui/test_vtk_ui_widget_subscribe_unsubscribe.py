@@ -7,7 +7,7 @@ import vtk
 import vtk_ui_test
 
 class test_vtk_ui_widget_subscribe_unsubscribe(vtk_ui_test.vtk_ui_test):
-    def do_test(self):
+    def do(self):
         self.win.SetSize((100, 100))
 
         vw = vtk.vtkButtonWidget()

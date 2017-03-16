@@ -9,7 +9,7 @@ from vtk_ui_test import vtk_ui_test
 
 
 class test_vtk_ui_set_font(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         prop = vtk.vtkTextProperty()
 
         set_font("Arial", prop)

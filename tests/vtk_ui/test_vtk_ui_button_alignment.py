@@ -6,7 +6,8 @@ from vcs.vtk_ui import button
 from vtk_ui_test import vtk_ui_test
 
 class test_vtk_ui_button_alignment(vtk_ui_test):
-    def do_test(self):
+    def do(self):
+        self.args = ["test_vtk_ui_button_alignment.png"]
         self.win.SetSize(300, 50)
         left_button = button.Button(self.inter, label="Left", halign=button.LEFT_ALIGN, valign=button.TOP_ALIGN, width=125)
         left_button.show()

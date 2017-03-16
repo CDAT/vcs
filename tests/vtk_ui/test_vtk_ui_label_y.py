@@ -8,8 +8,9 @@ from vtk_ui_test import vtk_ui_test
 
 
 class test_vtk_ui_label_y(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         self.win.SetSize(150, 110)
+        self.args = ["test_vtk_ui_label_y.png"]
 
         font_sizes = [10, 18, 24, 31]
 

@@ -40,7 +40,7 @@ def passes_w3c_contrast_ratio(fg, bg):
 
 
 class test_vtk_ui_contrasting_colors(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         # Value tests
         midtone = (.5, .5, .5)
         light = (1, 1, 1)

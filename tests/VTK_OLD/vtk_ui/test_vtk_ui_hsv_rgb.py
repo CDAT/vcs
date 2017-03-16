@@ -29,7 +29,7 @@ def truncate_float(f, to_position=2):
 
 
 class test_vtk_ui_hsv_rgb(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         hsvs = [
             (229, 1, .5),
             (0, 0, 0),

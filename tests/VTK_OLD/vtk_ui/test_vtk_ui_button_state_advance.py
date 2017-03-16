@@ -7,7 +7,7 @@ import vcs.vtk_ui
 from vtk_ui_test import vtk_ui_test
 
 class test_vtk_ui_button_state_advance(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         self.win.SetSize(100, 100)
         states = [vcs.vtk_ui.ButtonState(label="State %d" % i, fgcolor=(.1 * i + .5, .1 * i + .5, .1 * i + .5), bgcolor=(.5 - .1 * i,.5 - .1 * i,.5 - .1 * i)) for i in range(5)]
 

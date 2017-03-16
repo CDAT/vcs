@@ -7,8 +7,9 @@ from vtk_ui_test import vtk_ui_test
 
 
 class test_vtk_ui_label_show_hide(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         self.win.SetSize(130, 80)
+        self.args = ["test_vtk_ui_label_show_hide.png"]
 
         l_show = vcs.vtk_ui.Label(self.inter, "Shown", top=0, fgcolor=(0, 0, 0))
         l_hide = vcs.vtk_ui.Label(self.inter, "Hidden", top=40, fgcolor=(0, 0, 0))

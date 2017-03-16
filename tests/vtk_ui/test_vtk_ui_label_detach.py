@@ -7,8 +7,9 @@ from vtk_ui_test import vtk_ui_test
 
 
 class test_vtk_ui_label_detach(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         self.win.SetSize(130, 40)
+        self.args = ["test_vtk_ui_label_detach.png"]
 
         l = vcs.vtk_ui.Label(self.inter, "This shouldn't be there.", fgcolor=(0, 0, 0))
         l.show()

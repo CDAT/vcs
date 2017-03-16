@@ -1,14 +1,15 @@
 """
-Test button tooltip hides when hovered over
+Test button tooltip shows when hovered over
 """
 import vcs.vtk_ui
 
 import vtk
 from vtk_ui_test import vtk_ui_test
 
-class test_vtk_ui_button_tooltip_hide(vtk_ui_test):
-    def do_test(self):
+class test_vtk_ui_button_tooltip_show(vtk_ui_test):
+    def do(self):
         self.win.SetSize(100, 100)
+        self.args = ["test_vtk_ui_button_tooltip_show.png"]
 
         prop = vtk.vtkTextProperty()
         prop.SetColor(.5, .5, .5)
@@ -22,8 +23,7 @@ class test_vtk_ui_button_tooltip_hide(vtk_ui_test):
         b.hover_timer = 1
 
         self.hover(5, 95, .3)
-        self.test_file = "test_vtk_ui_button_tooltip_hide.png"
-        self.hover(5, 50, .1)
+        self.test_file = "test_vtk_ui_button_tooltip_show.png"
 
 if __name__ == "__main__":
-    test_vtk_ui_button_tooltip_hide().test()
+    test_vtk_ui_button_tooltip_show().test()

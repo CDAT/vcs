@@ -5,7 +5,7 @@ import vcs.vtk_ui
 from vtk_ui_test import vtk_ui_test
 from decimal import Decimal
 class test_vtk_ui_slider_callbacks(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         self.win.SetSize(100, 100)
 
         slider = vcs.vtk_ui.Slider(self.inter, point1=(.1, .5), point2=(.9, .5), end=self.end_callback, update=self.update_callback)

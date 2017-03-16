@@ -8,7 +8,7 @@ from vtk_ui_test import vtk_ui_test
 
 
 class test_vtk_ui_textbox_blank_text(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         self.win.SetSize(130, 130)
 
         textbox = vcs.vtk_ui.Textbox(self.inter, "Test String")

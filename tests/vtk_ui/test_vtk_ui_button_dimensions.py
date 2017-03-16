@@ -7,8 +7,9 @@ import vcs.vtk_ui
 from vtk_ui_test import vtk_ui_test
 
 class test_vtk_ui_button_dimensions(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         self.win.SetSize(290, 300)
+        self.args = ["test_vtk_ui_button_dimensions.png"]
 
         button = vcs.vtk_ui.Button(self.inter, corner_radius=5, font="Arial", height=15, width=100, left=10, top=10, label="100 x 15", bgcolor=(.1, .1, .1), fgcolor=(1, 1, 1), size=14, halign=vcs.vtk_ui.button.LEFT_ALIGN, valign=vcs.vtk_ui.button.CENTER_ALIGN)
         button.place()

@@ -7,8 +7,9 @@ import vcs.vtk_ui
 from vtk_ui_test import vtk_ui_test
 
 class test_vtk_ui_toolbar_close(vtk_ui_test):
-	def do_test(self):
+	def do(self):
 		self.win.SetSize(200, 100)
+                self.args = ["test_vtk_ui_toolbar_close.png"]
 
 		toolbar = vcs.vtk_ui.Toolbar(self.inter, "Test Bar")
 		toolbar.add_button(["Test Button"])

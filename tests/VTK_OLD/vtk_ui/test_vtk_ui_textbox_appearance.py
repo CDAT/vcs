@@ -6,7 +6,7 @@ import vtk
 from vtk_ui_test import vtk_ui_test
 
 class test_vtk_ui_textbox_appearance(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         self.win.SetSize(200, 75)
 
         t = vcs.vtk_ui.Textbox(self.inter, "Sample Text", fgcolor=(0,0,0))

@@ -7,8 +7,9 @@ from vtk_ui_test import vtk_ui_test
 
 
 class test_vtk_ui_label_font_attrs(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         self.win.SetSize(130, 40)
+        self.args = ["test_vtk_ui_label_font_attrs.png"]
 
         l = vcs.vtk_ui.Label(self.inter, "Blue and small")
         l.set_font_size(8)

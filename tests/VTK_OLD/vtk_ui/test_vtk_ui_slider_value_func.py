@@ -9,7 +9,7 @@ class test_vtk_ui_slider_value_func(vtk_ui_test):
         super(test_vtk_ui_slider_value_func, self).__init__()
         self.got_value = 0
 
-    def do_test(self):
+    def do(self):
         self.win.SetSize(200, 200)
 
         slider = vcs.vtk_ui.Slider(self.inter, value=self.get_value, min_val=.3, max_val=.75, point1=(.1, .5), point2=(.9, .5))

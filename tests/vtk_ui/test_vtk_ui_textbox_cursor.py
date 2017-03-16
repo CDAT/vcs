@@ -6,8 +6,9 @@ import datetime
 from vtk_ui_test import vtk_ui_test
 
 class test_vtk_ui_textbox_cursor(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         self.win.SetSize(1050, 55)
+        self.args = ["test_vtk_ui_textbox_cursor.png"]
 
         # Cursor showing
         left = 0

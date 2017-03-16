@@ -12,7 +12,7 @@ class test_vtk_ui_handle_interaction(vtk_ui_test.vtk_ui_test):
         self.h = None
         self.h2 = None
 
-    def do_test(self):
+    def do(self):
         self.win.SetSize(100, 100)
 
         self.h = vcs.vtk_ui.Handle(self.inter, (5, 5), clicked=self.clicked, dragged=self.dragged, released=self.released)

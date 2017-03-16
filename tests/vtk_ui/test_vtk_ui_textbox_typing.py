@@ -24,7 +24,7 @@ def strings_are_the_same(a, b):
     return False
 
 class test_vtk_ui_textbox_typing(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         t = vcs.vtk_ui.Textbox(self.inter, "", fgcolor=(0, 0, 0))
         t.start_editing()
         # Run through whole range of typeable characters

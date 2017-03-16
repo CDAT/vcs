@@ -6,8 +6,9 @@ import vcs, os
 from vtk_ui_test import vtk_ui_test
 
 class test_vtk_ui_button_font(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         self.win.SetSize(100, 80)
+        self.args = ["test_vtk_ui_button_font.png"]
         fonts = ["Arial", "Courier", os.path.join(os.environ["HOME"], vcs.getdotdirectory()[0], "HelvMono.ttf")]
         sizes = [8, 12, 16]
         for ind, font in enumerate(fonts):

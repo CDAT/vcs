@@ -59,6 +59,11 @@ parser.add_argument(
     action="store_true",
     default=False,
     help="runs only tests that failed last time and are in the list you provide")
+parser.add_argument(
+    "--no-vtk-ui",
+    action="store_true",
+    default=False,
+    help="do not vtk_ui tests")
 parser.add_argument("tests", nargs="*", help="tests to run")
 
 args = parser.parse_args()
@@ -70,7 +75,10 @@ def abspath(path, name, prefix):
     if not os.path.exists(name):
         os.makedirs(name)
     new = os.path.join(nm, prefix + "_" + os.path.basename(full_path))
-    shutil.copy(full_path, new)
+    try:
+        shutil.copy(full_path, new)
+    except:
+        pass
     return new
 
 
@@ -171,7 +179,8 @@ sys.path.append(
         "tests"))
 if len(args.tests) == 0:
     names = glob.glob("tests/test_*.py")
-    names += glob.glob("tests/vtk_ui/test_*.py")
+    if not args.no_vtk_ui:
+        names += glob.glob("tests/vtk_ui/test_*.py")
 else:
     names = set(args.tests)
 
