@@ -197,6 +197,7 @@ class Gs(object):
         'glyphscalefactor',
         'glyphbasefactor',
         'coloredbyvector',
+        'numberofglyphs',
 
         '_name',
         '_xaxisconvert',
@@ -240,6 +241,7 @@ class Gs(object):
         '_glyphscalefactor',
         '_glyphbasefactor',
         '_coloredbyvector',
+        '_numberofglyphs',
     ]
 
     colormap = VCS_validation_functions.colormap
@@ -602,7 +604,7 @@ class Gs(object):
 
     """The constant multiplier used to scale the glyph showing the
         direction of the flow. One represents the diagonal of the
-        bounding box of the dataset. Default value is 0.02
+        bounding box of the dataset. Default value is 0.01
     """
     def _getglyphscalefactor(self):
         return self._glyphscalefactor
@@ -640,6 +642,21 @@ class Gs(object):
             self, 'coloredbyvector', value)
         self._coloredbyvector = value
     coloredbyvector = property(_getcoloredbyvector, _setcoloredbyvector)
+
+    """ Number of glyphs per streamline. The default is one, in which
+        case the glyph is placed at the position where the streamline was
+        seeded. Otherwise glyphs are placed equally spaced along the streamline.
+        Not all streamlines will contain all glyphs as streamlines have
+        different lenghts.
+    """
+    def _getnumberofglyphs(self):
+        return self._numberofglyphs
+
+    def _setnumberofglyphs(self, value):
+        value = VCS_validation_functions.checkNumber(
+            self, 'numberofglyphs', value)
+        self._numberofglyphs = value
+    numberofglyphs = property(_getnumberofglyphs, _setnumberofglyphs)
 
 
 
@@ -756,9 +773,10 @@ class Gs(object):
             self._maximumstreamlinelength = 0.25
             self._terminalspeed = 0.1
             self._maximumerror = 0.1
-            self._glyphscalefactor = 0.02
+            self._glyphscalefactor = 0.01
             self._glyphbasefactor = 0.75
             self._coloredbyvector = True
+            self._numberofglyphs = 1
         else:
             if isinstance(Gs_name_src, Gs):
                 Gs_name_src = Gs_name_src.name
@@ -781,7 +799,7 @@ class Gs(object):
                  'initialsteplength', 'minimumsteplength',
                  'maximumsteplength', 'maximumsteps', 'maximumstreamlinelength',
                  'terminalspeed', 'maximumerror', 'glyphscalefactor',
-                 'glyphbasefactor', 'coloredbyvector',
+                 'glyphbasefactor', 'coloredbyvector', 'numberofglyphs',
                 'reference']:
 
                 setattr(self, att, getattr(src, att))
@@ -883,6 +901,7 @@ class Gs(object):
         print "glyphscalefactor = ", self.glyphscalefactor
         print "glyphbasefactor = ", self.glyphbasefactor
         print "coloredbyvector = ", self.coloredbyvector
+        print "numberofglyphs = ", self.numberofglyphs
 
     ##########################################################################
     #                                                                         #
@@ -1039,6 +1058,8 @@ class Gs(object):
                          (unique_name, self.glyphbasefactor))
             fp.write("%s.coloredbyvector = %r\n" %
                          (unique_name, self.coloredbyvector))
+            fp.write("%s.numberofglyphs = %d\n" %
+                         (unique_name, self.numberofglyphs))
         else:
             # Json type
             mode += "+"

@@ -5,7 +5,9 @@ from vcs import vcs2vtk
 import math
 import numpy
 import vtk
-
+from vtk.numpy_interface import dataset_adapter as dsa
+from vtk.numpy_interface import algorithms as algs
+from vtk.util import numpy_support
 
 class StreamlinePipeline(Pipeline2D):
 
@@ -52,17 +54,24 @@ class StreamlinePipeline(Pipeline2D):
             if self._gm.linecolor is not None:
                 lcolor = self._gm.linecolor
 
-        # get the data
-        polydata = self._vtkPolyDataFilter.GetOutput()
-        vcs2vtk.debugWriteGrid(polydata, "data")
+        polydata = dsa.WrapDataObject(self._vtkPolyDataFilter.GetOutput())
+        bb = polydata.VTKObject.GetBounds()
+        # add normalized vector
+        v = polydata.PointData['vector']
+        normVector = numpy_support.numpy_to_vtk(
+            v / numpy.linalg.norm(v, axis=1), True, vtk.VTK_DOUBLE)
+        normVector.SetName('normVector')
+        polydata.GetPointData().AddArray(normVector)
+
+        vcs2vtk.debugWriteGrid(polydata.VTKObject, "data")
 
         # generate random seeds in a circle centered in the center of
         # the bounding box for the data.
-        dataLength = polydata.GetLength()
+        dataLength = polydata.VTKObject.GetLength()
 
         seed = vtk.vtkPointSource()
         seed.SetNumberOfPoints(self._gm.numberofseeds)
-        seed.SetCenter(polydata.GetCenter())
+        seed.SetCenter(polydata.VTKObject.GetCenter())
         seed.SetRadius(dataLength / 2.0)
         seed.Update()
         seedData = seed.GetOutput()
@@ -83,8 +92,11 @@ class StreamlinePipeline(Pipeline2D):
         else:
             integrator = vtk.vtkRungeKutta45()
 
+        # integrate streamlines on normalized vector so that
+        # IntegrationTime stores distance
         streamer = vtk.vtkStreamTracer()
-        streamer.SetInputData(polydata)
+        streamer.SetInputData(polydata.VTKObject)
+        streamer.SetInputArrayToProcess(0, 0, 0, 0, "normVector")
         streamer.SetSourceData(seedData)
         streamer.SetIntegrationDirection(self._gm.integrationdirection)
         streamer.SetIntegrationStepUnit(self._gm.integrationstepunit)
@@ -104,7 +116,19 @@ class StreamlinePipeline(Pipeline2D):
         # glyph seed points
         contour = vtk.vtkContourFilter()
         contour.SetInputConnection(streamer.GetOutputPort())
-        contour.SetValue(0, 0)
+        if (self._gm.numberofglyphs == 1):
+            contour.SetValue(0, 0)
+        else:
+            contour.SetValue(0, 0)
+            r = streamlines.GetPointData().GetArray("IntegrationTime").GetRange()
+            numberofglyphsDownstream = int(math.floor(self._gm.numberofglyphs / 2))
+            numberofglyphsUpstream = int(math.ceil(self._gm.numberofglyphs / 2)) - 1
+            for i in range(1, numberofglyphsDownstream + 1):
+                contour.SetValue(i, r[1] / numberofglyphsDownstream * i)
+            for i in range(1, numberofglyphsUpstream + 1):
+                contour.SetValue(i + numberofglyphsDownstream,
+                                 r[0] / numberofglyphsUpstream * i)
+
         contour.SetInputArrayToProcess(0, 0, 0, 0, "IntegrationTime")
 
         contour.Update()
