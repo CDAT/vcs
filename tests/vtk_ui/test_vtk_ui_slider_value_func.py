@@ -5,12 +5,13 @@ import vcs.vtk_ui
 from vtk_ui_test import vtk_ui_test
 
 class test_vtk_ui_slider_value_func(vtk_ui_test):
-    def __init__(self):
-        super(test_vtk_ui_slider_value_func, self).__init__()
+    def setUp(self):
+        super(test_vtk_ui_slider_value_func, self).setUp()
         self.got_value = 0
 
     def do(self):
         self.win.SetSize(200, 200)
+        self.args = [ "test_vtk_ui_slider_value_func.png"]
 
         slider = vcs.vtk_ui.Slider(self.inter, value=self.get_value, min_val=.3, max_val=.75, point1=(.1, .5), point2=(.9, .5))
 
