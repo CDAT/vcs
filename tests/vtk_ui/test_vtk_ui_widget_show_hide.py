@@ -4,10 +4,11 @@ Test widget show/hide
 import vcs.vtk_ui
 
 import vtk
-from vtk_ui_test import vtk_ui_test, generate_png
+import vtk_ui_test
 
-class test_vtk_ui_widget_show_hide(vtk_ui_test):
-    def do_test(self):
+class test_vtk_ui_widget_show_hide(vtk_ui_test.vtk_ui_test):
+    def do(self):
+        self.args = ['test_vtk_ui_widget_show.png','test_vtk_ui_widget_hide.png']
         self.win.SetSize((100, 100))
 
         vw = vtk.vtkButtonWidget()
@@ -15,7 +16,7 @@ class test_vtk_ui_widget_show_hide(vtk_ui_test):
 
         vr.SetNumberOfStates(1)
         r = vtk.vtkPNGReader()
-        r.SetFileName("Pepper.png")
+        r.SetFileName("tests/vtk_ui/Pepper.png")
         r.Update()
         image = r.GetOutput()
         vr.SetButtonTexture(0, image)
@@ -36,7 +37,7 @@ class test_vtk_ui_widget_show_hide(vtk_ui_test):
                 print "Failed to show correctly"
                 return
         else:
-            generate_png(self.win, self.test_file)
+            vtk_ui_test.generate_png(self.win, self.test_file)
 
         assert w.showing(), "showing() thinks hidden while showing"
 
@@ -51,10 +52,7 @@ class test_vtk_ui_widget_show_hide(vtk_ui_test):
                 print "Failed to hide correctly"
                 return
         else:
-            generate_png(self.win, self.test_file)
+            vtk_ui_test.generate_png(self.win, self.test_file)
         self.test_file = None
         self.passed = 0
 
-
-if __name__ == "__main__":
-    test_vtk_ui_widget_show_hide().test()

@@ -7,8 +7,9 @@ import vcs.vtk_ui
 from vtk_ui_test import vtk_ui_test
 
 class test_vtk_ui_toolbar_in_toolbar_closed(vtk_ui_test):
-	def do_test(self):
+	def do(self):
 		self.win.SetSize(200, 250)
+                self.args = ["test_vtk_ui_toolbar_in_toolbar_closed.png"]
 
 		toolbar = vcs.vtk_ui.Toolbar(self.inter, "Test Bar")
 		tb = toolbar.add_toolbar("Sub-bar")

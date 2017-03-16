@@ -1,4 +1,6 @@
 import os, sys, time, vtk, vcs.vtk_ui
+sys.path.append(os.path.join(os.path.dirname(__file__),".."))
+import basevcstest
 
 
 def init():
@@ -36,14 +38,39 @@ def generate_png(win, fnm):
     png_writer.SetInputConnection(out_filter.GetOutputPort())
     png_writer.Write()
 
+def set_test_file(self,value):
+    if value is None:
+        self._test_file = None
+    else:
+        self._test_file = os.path.join(self.pngsdir,value)
+def get_test_file(self):
+    return self._test_file
 
-class vtk_ui_test(object):
-    def __init__(self):
+def set_args(self,value):
+    args = []
+    for v in value:
+        args.append(os.path.join(self.basedir,v))
+    self._args = args
+def get_args(self):
+    return self._args
+
+class vtk_ui_test(basevcstest.VCSBaseTest):
+    test_file = property(get_test_file,set_test_file)
+    args = property(get_args,set_args)
+    def setUp(self):
         self.win, self.renderer = init()
         self.inter = self.win.GetInteractor()
-        self.test_file = None
         self.passed = 1
-        self.args = sys.argv[1:]
+        self.pngsdir = "tests_pngs"
+        if not os.path.exists(self.pngsdir):
+            os.makedirs(self.pngsdir)
+        self.basedir = os.path.join("uvcdat-testdata","baselines","vcs","vtk_ui")
+        self.test_file = None
+        self.args = []
+
+    def tearDown(self):
+        """ No tear down """
+        return
 
     def hover(self, x, y, duration):
         self.win.Render()
@@ -91,8 +118,9 @@ class vtk_ui_test(object):
         self.set_key(key, shift, alt, control)
         self.key_up()
 
-    def do_test(self):
-        raise NotImplementedError("Implement do_test to execute a test.")
+    def do(self):
+        self.passed = 0
+        #raise NotImplementedError("Implement do_test to execute a test.")
 
     def check_image(self, compare_against):
         """
@@ -100,13 +128,10 @@ class vtk_ui_test(object):
         returns the result of regression.check_result_image
         """
         generate_png(self.win, self.test_file)
-        pth = os.path.join(os.path.dirname(__file__), "../..")
-        sys.path.append(pth)
-        import vcs.testing.regression as regression
-        return regression.check_result_image(self.test_file, compare_against)
+        return self.checkImage(self.test_file, src=compare_against, pngReady=True, pngPathSet=True)
 
     def test(self):
-        self.do_test()
+        self.do()
 
         if self.test_file:
             if self.win.GetOffScreenRendering() == 0:
@@ -123,5 +148,4 @@ class vtk_ui_test(object):
 
         self.win.Finalize()
         self.inter.TerminateApp()
-	print sys.argv[0], "passed" if self.passed == 0 else "failed"
-	sys.exit(self.passed)
+	return self.passed

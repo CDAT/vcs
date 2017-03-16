@@ -4,9 +4,9 @@ Test widget event subscribe / unsubscribe
 import vcs.vtk_ui
 
 import vtk
-from vtk_ui_test import vtk_ui_test
+import vtk_ui_test
 
-class test_vtk_ui_widget_subscribe_unsubscribe(vtk_ui_test):
+class test_vtk_ui_widget_subscribe_unsubscribe(vtk_ui_test.vtk_ui_test):
     def do_test(self):
         self.win.SetSize((100, 100))
 
@@ -15,7 +15,7 @@ class test_vtk_ui_widget_subscribe_unsubscribe(vtk_ui_test):
 
         vr.SetNumberOfStates(1)
         r = vtk.vtkPNGReader()
-        r.SetFileName("Pepper.png")
+        r.SetFileName("tests/vtk_ui/Pepper.png")
         r.Update()
         image = r.GetOutput()
         vr.SetButtonTexture(0, image)
@@ -62,6 +62,3 @@ class test_vtk_ui_widget_subscribe_unsubscribe(vtk_ui_test):
 
         self.passed = 0
 
-
-if __name__ == "__main__":
-    test_vtk_ui_widget_subscribe_unsubscribe().test()

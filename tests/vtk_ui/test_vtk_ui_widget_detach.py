@@ -7,13 +7,13 @@ import vtk
 from vtk_ui_test import vtk_ui_test, generate_png
 
 class test_vtk_ui_widget_detach(vtk_ui_test):
-    def do_test(self):
+    def do(self):
         vw = vtk.vtkButtonWidget()
         vr = vtk.vtkTexturedButtonRepresentation2D()
 
         vr.SetNumberOfStates(1)
         r = vtk.vtkPNGReader()
-        r.SetFileName("Pepper.png")
+        r.SetFileName("tests/vtk_ui/Pepper.png")
         r.Update()
         image = r.GetOutput()
         vr.SetButtonTexture(0, image)

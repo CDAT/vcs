@@ -171,6 +171,7 @@ sys.path.append(
         "tests"))
 if len(args.tests) == 0:
     names = glob.glob("tests/test_*.py")
+    names += glob.glob("tests/vtk_ui/test_*.py")
 else:
     names = set(args.tests)
 
