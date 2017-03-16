@@ -33,16 +33,6 @@ class StreamlinePipeline(Pipeline2D):
         else:
             zaxis = None
 
-        lat = None
-        lon = None
-
-        latAccessor = self._data1.getLatitude()
-        lonAccessor = self._data1.getLongitude()
-        if latAccessor:
-            lat = latAccessor[:]
-        if lonAccessor:
-            lon = lonAccessor[:]
-
         # Streamline color
         if (not self._gm.coloredbyvector):
             l = self._gm.linetype
@@ -64,9 +54,7 @@ class StreamlinePipeline(Pipeline2D):
 
         # get the data
         polydata = self._vtkPolyDataFilter.GetOutput()
-        vectors = polydata.GetPointData().GetVectors()
         vcs2vtk.debugWriteGrid(polydata, "data")
-
 
         # generate random seeds in a circle centered in the center of
         # the bounding box for the data.
@@ -80,7 +68,7 @@ class StreamlinePipeline(Pipeline2D):
         seedData = seed.GetOutput()
 
         # project all points to Z = 0 plane
-        points=seedData.GetPoints()
+        points = seedData.GetPoints()
         for i in range(0, points.GetNumberOfPoints()):
             p = list(points.GetPoint(i))
             p[2] = 0
@@ -248,7 +236,6 @@ class StreamlinePipeline(Pipeline2D):
                                                self._contourColors,
                                                None,
                                                self.getColorMap()))
-
 
         if self._context().canvas._continents is None:
             self._useContinents = False

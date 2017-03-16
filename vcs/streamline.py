@@ -31,11 +31,12 @@ class Gs(object):
     """
     The streamline graphics method displays a streamline plot of a 2D
     streamline field. A streamline is a path that a massless particle
-    takes in a vector field. Streamlines are computed through numerical integration.
+    takes in a vector field. Streamlines are computed through numerical
+    integration.
 
-    This class is used to define an streamline table entry used in VCS, or it  can be
-    used to change some or all of the streamline attributes in an existing streamline table
-    entry.
+    This class is used to define an streamline table entry used in VCS, or it
+    can be used to change some or all of the streamline attributes in an
+    existing streamline table entry.
 
     .. describe:: Useful Functions:
 
@@ -49,7 +50,7 @@ class Gs(object):
             a.show('line')
             # Change the VCS color Map
             a.setcolormap("AMIP")
-            # Plot data 's1', and 's2' with streamline 'v' and 'default' template
+            # Plot 's1', and 's2' with streamline 'v' and 'default' template
             a.streamline(s1, s2, v,'default')
             # Updates the VCS Canvas at user's request
             a.update()
@@ -305,7 +306,6 @@ class Gs(object):
         return self._fillareastyle
     fillareastyle = property(_getfillareastyle)
 
-
     def _getprojection(self):
         return self._projection
 
@@ -452,7 +452,8 @@ class Gs(object):
         return self._numberofseeds
 
     def _setnumberofseeds(self, value):
-        value = VCS_validation_functions.checkNumber(self, 'numberofseeds', value)
+        value = VCS_validation_functions.checkNumber(self,
+                                                     'numberofseeds', value)
         self._numberofseeds = value
     numberofseeds = property(_getnumberofseeds, _setnumberofseeds)
 
@@ -480,7 +481,8 @@ class Gs(object):
         value = VCS_validation_functions.checkNumber(
             self, 'integrationdirection', value, 0, 2)
         self._integrationdirection = value
-    integrationdirection = property(_getintegrationdirection, _setintegrationdirection)
+    integrationdirection =\
+      property(_getintegrationdirection, _setintegrationdirection)
 
     """Integration stepunit. Can be 1 - length or 2 - cell
         length. Default is 2 - cell length. Length is the length of a
@@ -494,7 +496,8 @@ class Gs(object):
         value = VCS_validation_functions.checkNumber(
             self, 'integrationstepunit', value, 0, 2)
         self._integrationstepunit = value
-    integrationstepunit = property(_getintegrationstepunit, _setintegrationstepunit)
+    integrationstepunit =\
+      property(_getintegrationstepunit, _setintegrationstepunit)
 
     """This property specifies the initial integration step size
         expressed as percent of the integrationstepunit.  For
@@ -566,7 +569,8 @@ class Gs(object):
         value = VCS_validation_functions.checkNumber(
             self, 'maximumstreamlinelength', value)
         self._maximumstreamlinelength = value
-    maximumstreamlinelength = property(_getmaximumstreamlinelength, _setmaximumstreamlinelength)
+    maximumstreamlinelength =\
+      property(_getmaximumstreamlinelength, _setmaximumstreamlinelength)
 
     """This property specifies the terminal speed, below which particle
     advection/integration is terminated.
@@ -670,7 +674,8 @@ class Gs(object):
 
     def _setlinetype(self, value):
         if value is not None:
-            value = VCS_validation_functions.checkLineType(self, 'linetype', value)
+            value =VCS_validation_functions.checkLineType(
+                self, 'linetype', value)
         self._linetype = value
     linetype = property(_getlinetype, _setlinetype)
 
@@ -697,7 +702,6 @@ class Gs(object):
         '''
         vcs.setLineAttributes(self, line)
 
-
     def __init__(self, Gs_name, Gs_name_src='default'):
                 #                                                         #
                 ###########################################################
@@ -709,7 +713,8 @@ class Gs(object):
                 ###########################################################
                 #                                                         #
         if Gs_name in vcs.elements["streamline"]:
-            raise ValueError("The streamline method '%s' already exists" % Gs_name)
+            raise ValueError(
+                "The streamline method '%s' already exists" % Gs_name)
         self.g_name = 'Gs'
         self._name = Gs_name
         if Gs_name == 'default':
@@ -741,9 +746,9 @@ class Gs(object):
             self._fillareacolors = [1, ]
             self._fillareastyle = 'solid'
             self._numberofseeds = 500
-            self._integratortype = 2       # runge-kutta45
-            self._integrationdirection = 2 # both
-            self._integrationstepunit = 2  # cell length
+            self._integratortype = 2        # runge-kutta45
+            self._integrationdirection = 2  # both
+            self._integrationstepunit = 2   # cell length
             self._initialsteplength = 0.2
             self._minimumsteplength = 0.1
             self._maximumsteplength = 0.5
@@ -762,20 +767,22 @@ class Gs(object):
                     "The streamline method '%s' does not exists" %
                     Gs_name_src)
             src = vcs.elements["streamline"][Gs_name_src]
-            for att in ['projection',
-                        'xticlabels1', 'xticlabels2', 'xmtics1', 'xmtics2',
-                        'yticlabels1', 'yticlabels2', 'ymtics1', 'ymtics2',
-                        'datawc_y1', 'datawc_y2', 'datawc_x1',
-                        'datawc_x2', 'xaxisconvert', 'yaxisconvert', 'levels',
-                        'ext_1', 'ext_2', 'fillareacolors',
-                        'linetype', 'linecolor', 'linewidth',
-                        'datawc_timeunits', 'datawc_calendar', 'colormap',
-                        'numberofseeds', 'integratortype', 'integrationdirection',
-                        'integrationstepunit', 'initialsteplength', 'minimumsteplength',
-                        'maximumsteplength', 'maximumsteps', 'maximumstreamlinelength',
-                        'terminalspeed', 'maximumerror', 'glyphscalefactor',
-                        'glyphbasefactor', 'coloredbyvector',
-                        'reference']:
+            for att in\
+                ['projection',
+                 'xticlabels1', 'xticlabels2', 'xmtics1', 'xmtics2',
+                 'yticlabels1', 'yticlabels2', 'ymtics1', 'ymtics2',
+                 'datawc_y1', 'datawc_y2', 'datawc_x1',
+                 'datawc_x2', 'xaxisconvert', 'yaxisconvert', 'levels',
+                 'ext_1', 'ext_2', 'fillareacolors',
+                 'linetype', 'linecolor', 'linewidth', 'datawc_timeunits',
+                 'datawc_calendar', 'colormap', 'numberofseeds',
+                 'integratortype', 'integrationdirection',
+                 'integrationstepunit',
+                 'initialsteplength', 'minimumsteplength',
+                 'maximumsteplength', 'maximumsteps', 'maximumstreamlinelength',
+                 'terminalspeed', 'maximumerror', 'glyphscalefactor',
+                 'glyphbasefactor', 'coloredbyvector',
+                'reference']:
 
                 setattr(self, att, getattr(src, att))
         # Ok now we need to stick in the elements
@@ -833,7 +840,7 @@ class Gs(object):
         self.ext_2 = ext2
 
     def list(self):
-        print "", "----------Streamline (Gs) member (attribute) listings ----------"
+        print "", "--------Streamline (Gs) member (attribute) listings --------"
         print "graphics method =", self.g_name
         print "name =", self.name
         print "projection =", self.projection
@@ -878,9 +885,9 @@ class Gs(object):
         print "coloredbyvector = ", self.coloredbyvector
 
     ##########################################################################
-    #                                                                           #
-    # Script streamline (Gs) object to a file.                                      #
-    #                                                                           #
+    #                                                                         #
+    # Script streamline (Gs) object to a file.                                #
+    #                                                                         #
     ##########################################################################
     def script(self, script_filename=None, mode=None):
         if (script_filename is None):
@@ -924,10 +931,11 @@ class Gs(object):
 
             unique_name = '__Gs__' + self.name
             fp.write(
-                "#----------Streamline (Gs) member (attribute) listings ----------\n")
+                "#------Streamline (Gs) member (attribute) listings ------\n")
             fp.write("gv_list=v.listelements('streamline')\n")
             fp.write("if ('%s' in gv_list):\n" % self.name)
-            fp.write("   %s = v.getstreamline('%s')\n" % (unique_name, self.name))
+            fp.write(
+                "   %s = v.getstreamline('%s')\n" % (unique_name, self.name))
             fp.write("else:\n")
             fp.write(
                 "   %s = v.createstreamline('%s')\n" %
@@ -1003,20 +1011,34 @@ class Gs(object):
                 "%s.colormap = '%s'\n\n" %
                 (unique_name, repr(
                     self.colormap)))
-            fp.write("%s.numberofseeds = %d\n" % (unique_name, self.numberofseeds))
-            fp.write("%s.integratortype = %d\n" % (unique_name, self.integratortype))
-            fp.write("%s.integrationdirection = %d\n" % (unique_name, self.integrationdirection))
-            fp.write("%s.integrationstepunit = %d\n" % (unique_name, self.integrationstepunit))
-            fp.write("%s.initialsteplength = %d\n" % (unique_name, self.initialsteplength))
-            fp.write("%s.minimumsteplength = %d\n" % (unique_name, self.minimumsteplength))
-            fp.write("%s.maximumsteplength = %d\n" % (unique_name, self.maximumsteplength))
-            fp.write("%s.maximumsteps = %d\n" % (unique_name, self.maximumsteps))
-            fp.write("%s.maximumstreamlinelength = %d\n" % (unique_name, self.maximumstreamlinelength))
-            fp.write("%s.terminalspeed = %d\n" % (unique_name, self.terminalspeed))
-            fp.write("%s.maximumerror = %d\n" % (unique_name, self.maximumerror))
-            fp.write("%s.glyphscalefactor = %d\n" % (unique_name, self.glyphscalefactor))
-            fp.write("%s.glyphbasefactor = %d\n" % (unique_name, self.glyphbasefactor))
-            fp.write("%s.coloredbyvector = %r\n" % (unique_name, self.coloredbyvector))
+            fp.write("%s.numberofseeds = %d\n" %
+                         (unique_name, self.numberofseeds))
+            fp.write("%s.integratortype = %d\n" %
+                         (unique_name, self.integratortype))
+            fp.write("%s.integrationdirection = %d\n" %
+                         (unique_name, self.integrationdirection))
+            fp.write("%s.integrationstepunit = %d\n" %
+                         (unique_name, self.integrationstepunit))
+            fp.write("%s.initialsteplength = %d\n" %
+                         (unique_name, self.initialsteplength))
+            fp.write("%s.minimumsteplength = %d\n" %
+                         (unique_name, self.minimumsteplength))
+            fp.write("%s.maximumsteplength = %d\n" %
+                         (unique_name, self.maximumsteplength))
+            fp.write("%s.maximumsteps = %d\n" %
+                         (unique_name, self.maximumsteps))
+            fp.write("%s.maximumstreamlinelength = %d\n" %
+                         (unique_name, self.maximumstreamlinelength))
+            fp.write("%s.terminalspeed = %d\n" %
+                         (unique_name, self.terminalspeed))
+            fp.write("%s.maximumerror = %d\n" %
+                         (unique_name, self.maximumerror))
+            fp.write("%s.glyphscalefactor = %d\n" %
+                         (unique_name, self.glyphscalefactor))
+            fp.write("%s.glyphbasefactor = %d\n" %
+                         (unique_name, self.glyphbasefactor))
+            fp.write("%s.coloredbyvector = %r\n" %
+                         (unique_name, self.coloredbyvector))
         else:
             # Json type
             mode += "+"

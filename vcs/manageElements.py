@@ -641,7 +641,8 @@ def createstreamline(name=None, source='default'):
     """
     name, source = check_name_source(name, source, 'streamline')
     return streamline.Gs(name, source)
-createstreamline.__doc__ = createstreamline.__doc__ % xmldocs.create_docs['streamline']
+createstreamline.__doc__ =\
+  createstreamline.__doc__ % xmldocs.create_docs['streamline']
 
 
 def getstreamline(Gs_name_src='default'):
@@ -1751,6 +1752,7 @@ def removeG1d(obj):
 
 def removeGv(obj):
     return removeG(obj, "vector")
+
 
 def removeGs(obj):
     return removeG(obj, "streamline")
