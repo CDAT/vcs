@@ -138,7 +138,7 @@ class StreamlinePipeline(Pipeline2D):
         glyph2DSource = vtk.vtkGlyphSource2D()
         glyph2DSource.SetGlyphTypeToTriangle()
         glyph2DSource.SetRotationAngle(-90)
-        glyph2DSource.FilledOn()
+        glyph2DSource.SetFilled(self._gm.filledglyph)
         glyph2DSource.Update()
         vcs2vtk.debugWriteGrid(glyph2DSource.GetOutput(), "glyphSource")
 
@@ -216,31 +216,21 @@ class StreamlinePipeline(Pipeline2D):
             act.GetProperty().SetColor(r / 100., g / 100., b / 100.)
             glyphActor.GetProperty().SetColor(r / 100., g / 100., b / 100.)
 
-        plotting_dataset_bounds = vcs2vtk.getPlottingBounds(
-            vcs.utils.getworldcoordinates(self._gm,
-                                          self._data1.getAxis(-1),
-                                          self._data1.getAxis(-2)),
-            self._vtkDataSetBounds, self._vtkGeoTransform)
-        x1, x2, y1, y2 = plotting_dataset_bounds
-        if self._vtkGeoTransform is None:
-            wc = plotting_dataset_bounds
-        else:
-            xrange = list(act.GetXRange())
-            yrange = list(act.GetYRange())
-            wc = [xrange[0], xrange[1], yrange[0], yrange[1]]
-
+        plotting_dataset_bounds = self.getPlottingBounds()
         vp = self._resultDict.get('ratio_autot_viewport',
                                   [self._template.data.x1, self._template.data.x2,
                                    self._template.data.y1, self._template.data.y2])
 
         dataset_renderer, xScale, yScale = self._context().fitToViewport(
             act, vp,
-            wc=wc,
+            wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
+            geo=self._vtkGeoTransform,
             priority=self._template.data.priority,
             create_renderer=True)
         glyph_renderer, xScale, yScale = self._context().fitToViewport(
             glyphActor, vp,
-            wc=wc,
+            wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
+            geo=self._vtkGeoTransform,
             priority=self._template.data.priority,
             create_renderer=False)
 

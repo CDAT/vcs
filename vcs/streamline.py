@@ -196,6 +196,7 @@ class Gs(object):
         'maximumerror',
         'glyphscalefactor',
         'glyphbasefactor',
+        'filledglyph',
         'coloredbyvector',
         'numberofglyphs',
 
@@ -240,6 +241,7 @@ class Gs(object):
         '_maximumerror',
         '_glyphscalefactor',
         '_glyphbasefactor',
+        '_filledglyph',
         '_coloredbyvector',
         '_numberofglyphs',
     ]
@@ -561,7 +563,7 @@ class Gs(object):
     """This property specifies the maximum streamline length (i.e.,
        physical arc length), beyond which line integration is
        terminated.  This is specified as a percentage of the diagonal of
-       the dataset.
+       the dataset. The default is 0.25.
 
     """
     def _getmaximumstreamlinelength(self):
@@ -627,6 +629,17 @@ class Gs(object):
             self, 'glyphbasefactor', value)
         self._glyphbasefactor = value
     glyphbasefactor = property(_getglyphbasefactor, _setglyphbasefactor)
+
+    """ Do we draw the arrow glyph filled or we draw only edges
+    """
+    def _getfilledglyph(self):
+        return self._filledglyph
+
+    def _setfilledglyph(self, value):
+        value = VCS_validation_functions.checkNumber(
+            self, 'filledglyph', value)
+        self._filledglyph = value
+    filledglyph = property(_getfilledglyph, _setfilledglyph)
 
 
     """ If true streamlines are colored by vector magnitude.
@@ -775,6 +788,7 @@ class Gs(object):
             self._maximumerror = 0.1
             self._glyphscalefactor = 0.01
             self._glyphbasefactor = 0.75
+            self._filledglyph = True
             self._coloredbyvector = True
             self._numberofglyphs = 1
         else:
@@ -795,12 +809,11 @@ class Gs(object):
                  'linetype', 'linecolor', 'linewidth', 'datawc_timeunits',
                  'datawc_calendar', 'colormap', 'numberofseeds',
                  'integratortype', 'integrationdirection',
-                 'integrationstepunit',
-                 'initialsteplength', 'minimumsteplength',
+                 'integrationstepunit','initialsteplength', 'minimumsteplength',
                  'maximumsteplength', 'maximumsteps', 'maximumstreamlinelength',
                  'terminalspeed', 'maximumerror', 'glyphscalefactor',
-                 'glyphbasefactor', 'coloredbyvector', 'numberofglyphs',
-                'reference']:
+                 'glyphbasefactor', 'filledglyph', 'coloredbyvector',
+                 'numberofglyphs', 'reference']:
 
                 setattr(self, att, getattr(src, att))
         # Ok now we need to stick in the elements
@@ -900,6 +913,7 @@ class Gs(object):
         print "maximumerror = ", self.maximumerror
         print "glyphscalefactor = ", self.glyphscalefactor
         print "glyphbasefactor = ", self.glyphbasefactor
+        print "filledglyph = ", self.filledglyph
         print "coloredbyvector = ", self.coloredbyvector
         print "numberofglyphs = ", self.numberofglyphs
 
@@ -1056,6 +1070,8 @@ class Gs(object):
                          (unique_name, self.glyphscalefactor))
             fp.write("%s.glyphbasefactor = %d\n" %
                          (unique_name, self.glyphbasefactor))
+            fp.write("%s.filledglyph = %r\n" %
+                         (unique_name, self.filledglyph))
             fp.write("%s.coloredbyvector = %r\n" %
                          (unique_name, self.coloredbyvector))
             fp.write("%s.numberofglyphs = %d\n" %
