@@ -86,6 +86,8 @@ def check_result_image(fname, baselinefname, threshold = defaultThreshold,
             bestFilename = baselineFilename
             bestImage = baselineImage
             bestDiffImage = diffImage
+            if bestDiff < threshold:
+                break
         sys.stdout.write("\n")
 
     if bestImage is None:
