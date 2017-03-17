@@ -11,6 +11,7 @@ from time import sleep
 class test_vtk_ui_manager_resize(vtk_ui_test):
     def do(self):
         self.win.SetSize(250, 100)
+        self.args = ["test_vtk_ui_manager_resize.png"]
         # Due to UV-CDAT/uvcdat#1148, have to render on screen when resizing
         self.win.SetOffScreenRendering(0)
 

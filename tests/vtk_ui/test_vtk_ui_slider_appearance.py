@@ -7,6 +7,7 @@ from vtk_ui_test import vtk_ui_test
 class test_vtk_ui_slider_appearance(vtk_ui_test):
     def do(self):
         self.win.SetSize(100, 500)
+        self.args = ["test_vtk_ui_slider_appearance.png"]
 
         slider = vcs.vtk_ui.Slider(self.inter, point1=(.1, .5), point2=(.9, .5))
         slider.show()

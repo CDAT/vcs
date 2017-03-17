@@ -7,8 +7,8 @@ import vtk_ui_test
 import decimal
 
 class test_vtk_ui_handle_interaction(vtk_ui_test.vtk_ui_test):
-    def __init__(self):
-        super(test_vtk_ui_handle_interaction, self).__init__()
+    def setUp(self):
+        super(test_vtk_ui_handle_interaction, self).setUp()
         self.h = None
         self.h2 = None
 

@@ -5,7 +5,7 @@ from vcs.vtk_ui.text import contrasting_color
 
 from vtk_ui_test import vtk_ui_test
 
-def test(fg):
+def tst(fg):
     bg = contrasting_color(*fg)
     print "\tTesting", fg, "vs", bg
     return passes_w3c_contrast_ratio(fg, bg)
@@ -48,19 +48,19 @@ class test_vtk_ui_contrasting_colors(vtk_ui_test):
 
         print "Testing contrasting values"
         passes = True
-        if test(midtone) == False:
+        if tst(midtone) == False:
             print "\tFails midtone"
             passes = False
         else:
             print "\tPasses midtone"
 
-        if test(light) == False:
+        if tst(light) == False:
             print "\tFails light"
             passes = False
         else:
             print "\tPasses light"
 
-        if test(dark) == False:
+        if tst(dark) == False:
             print "\tFails dark"
             passes = False
         else:
@@ -76,32 +76,32 @@ class test_vtk_ui_contrasting_colors(vtk_ui_test):
         magenta = (1, 0, 1)
         passes = True
         print "Testing contrasting hues"
-        if test(red) == False:
+        if tst(red) == False:
             print "\tFails red"
             passes = False
         else:
             print "\tPasses red"
-        if test(blue) == False:
+        if tst(blue) == False:
             print "\tFails blue"
             passes = False
         else:
             print "\tPasses blue"
-        if test(green) == False:
+        if tst(green) == False:
             print "\tFails green"
             passes = False
         else:
             print "\tPasses green"
-        if test(yellow) == False:
+        if tst(yellow) == False:
             print "\tFails yellow"
             passes = False
         else:
             print "\tPasses yellow"
-        if test(cyan) == False:
+        if tst(cyan) == False:
             print "\tFails cyan"
             passes = False
         else:
             print "\tPasses cyan"
-        if test(magenta) == False:
+        if tst(magenta) == False:
             print "\tFails magenta"
             passes = False
         else:
@@ -115,12 +115,12 @@ class test_vtk_ui_contrasting_colors(vtk_ui_test):
         midsaturated = (1, .5, .5)
         passes = True
         print "Testing contrasting saturation"
-        if test(desaturated) == False:
+        if tst(desaturated) == False:
             print "\tFails desaturated"
             passes = False
         else:
             print "\tPasses desaturated"
-        if test(midsaturated) == False:
+        if tst(midsaturated) == False:
             print "\tFails midsaturated"
             passes = False
         else:

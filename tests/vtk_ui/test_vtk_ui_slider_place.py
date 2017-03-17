@@ -7,6 +7,7 @@ from vtk_ui_test import vtk_ui_test
 class test_vtk_ui_slider_place(vtk_ui_test):
     def do(self):
         self.win.SetSize(500, 500)
+        self.args = ["test_vtk_ui_slider_place.png"]
 
         slider = vcs.vtk_ui.Slider(self.inter, point1=(.1, .5), point2=(.9, .5))
         assert slider.x1 == .1, "x1 set incorrectly; expected .1, got %f" % slider.x1

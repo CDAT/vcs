@@ -16,19 +16,19 @@ class test_vtk_ui_text_dimensions(vtk_ui_test):
 
         w, h = vcs.vtk_ui.text.text_dimensions("no descenders", text_property,
                                                dpi)
-        if w != 174 or h != 23:
+        if w != 175 or h != 23:
             print "no descenders width/height changed (%d,%d)"%(w,h)
             return
 
         w, h = vcs.vtk_ui.text.text_dimensions("couple good descenders",
                                                text_property, dpi)
-        if w != 298 or h != 23:
+        if w != 299 or h != 24:
             print "couple good descenders width/height changed (%d, %d)"%(w,h)
             return
 
         w, h = vcs.vtk_ui.text.text_dimensions(
               "This one\nis on\nmultiple lines", text_property, dpi)
-        if w != 150 or h != 73:
+        if w != 151 or h != 73:
             print "Multi-line width/height changed (%d,%d)"%(w,h)
             return
 
