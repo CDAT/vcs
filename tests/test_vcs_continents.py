@@ -59,4 +59,4 @@ class TestVCSContinents(basevcstest.VCSBaseTest):
                 self.x.plot(clt, template, boxfill, continents=7, continents_line=cont_line, bg=self.bg)
                 os.environ["UVCDAT_DIR"] = current_dotdir
 
-        self.checkImage("test_vcs_continents.png")
+        self.checkImage("test_vcs_continents.png",threshold=12)
