@@ -27,6 +27,8 @@ class test_vtk_ui_set_font(vtk_ui_test):
             print "Font was not set to Times"
             return
 
+        # Passes even if file does not exists...
+        # weird
         path = os.path.abspath("blex.ttf")
         set_font(path, prop)
         if prop.GetFontFamily() == vtk.VTK_FONT_FILE:
