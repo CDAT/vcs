@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import glob
 import sys
 import os
@@ -40,7 +41,7 @@ parser.add_argument(
     "-V",
     "--vtk",
     default=None,
-    help="conda channel and extras to use for vtk. Command will be 'conda install -c [VTK] vtk'")
+    help="conda channel and extras to use for vtk. Command will be 'conda install -c [VTK] vtk-cdat'")
 parser.add_argument(
     "-n",
     "--cpus",
@@ -160,7 +161,7 @@ if args.git or not os.path.exists("uvcdat-testdata"):
     os.chdir(root)
 
 if args.vtk is not None:
-    P, installed_vtk = run_command("conda list vtk")
+    P, installed_vtk = run_command("conda list vtk-cdat")
     print installed_vtk
     while installed_vtk[-1] == "":
         installed_vtk.pop(-1)
