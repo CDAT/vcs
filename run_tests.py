@@ -202,6 +202,11 @@ if len(names)==0:
     print "No tests to run"
     sys.exit(0)
 
+# Make sure we have sample data
+import vcs
+reload(vcs)
+vcs.download_sample_data_files()
+
 p = multiprocessing.Pool(args.cpus)
 outs = p.map(run_nose, names)
 results = {}
