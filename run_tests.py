@@ -19,14 +19,14 @@ parser = argparse.ArgumentParser(description="Run VCS tests",
 parser.add_argument("-H", "--html", action="store_true",
                     help="create and show html result page")
 parser.add_argument("-p", "--package", action="store_true",
-                    help="package test results (not implemented)")
+                    help="package test results")
+parser.add_argument("-D", "--dropbox", action="store_true",
+                    help="upload packaged test results to dropbox (access token must be stored in the envirnoment variable DROPBOX_TOKEN)")
 parser.add_argument(
     "-c",
     "--coverage",
     action="store_true",
     help="run coverage (not implemented)")
-parser.add_argument("-u", "--upload", action="store_true",
-                    help="upload packaged tests results (not implemented)")
 parser.add_argument(
     "-v",
     "--verbosity",
@@ -227,7 +227,7 @@ if args.verbosity > 0:
         print "Failed tests:"
         for f in failed:
             print "\t", f
-if args.html or args.package:
+if args.html or args.package or args.dropbox:
     if not os.path.exists("tests_html"):
         os.makedirs("tests_html")
     os.chdir("tests_html")
@@ -295,14 +295,21 @@ if args.html or args.package:
         webbrowser.open("file://%s/index.html" % os.getcwd())
     os.chdir(root)
 
-if args.package:
+if args.package or args.dropbox:
     import tarfile
-    tnm = "results_%s.tar.bz2" % time.strftime("%Y-%m-%d_%H:%M")
+    tnm = "results_%s_%s_%s.tar.bz2" % (os.uname()[0],os.uname()[1],time.strftime("%Y-%m-%d_%H:%M"))
     t = tarfile.open(tnm, "w:bz2")
+    t.add("tests_html")
     t.add("tests_html")
     t.close()
     if args.verbosity > 0:
         print "Packaged Result Info in:", tnm
+if args.dropbox: 
+    import dropbox
+    dbx = dropbox.Dropbox(os.environ.get("DROPBOX_TOKEN",""))
+    f=open(tnm,"rb")
+    dbx.files_upload(f.read(),"/%s"%tnm)
+    f.close()
 
 
 sys.exit(len(failed))
