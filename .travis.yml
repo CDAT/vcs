@@ -25,8 +25,8 @@ script:
 - df -h
 - vcs_download_sample_data
 - pip install dropbox
-  #- python run_tests.py --dropbox -v2 -g --no-vtk-ui -V "conda-forge -c uvcdat/label/nightly -c uvcdat"
-- python run_tests.py --dropbox -v2 -g
+- python run_tests.py --dropbox -v2 -g --no-vtk-ui -V "conda-forge -c uvcdat/label/debug -c uvcdat"
+  #- python run_tests.py --dropbox -v2 -g
 env:
   global:
     secure: Z06idl4BP01QMhrocmfuYV4CcbLmb5ZJZoXXymDr5sLIIfqdMiSL/CfDCRkIwl44vKpTN5R9AAhQV6iNMdU0NOQQrftHJyT5YV4y966FuAA1v9ev7y/cgExJFv7M/4E37WAN6YIcO7E42KZReeNKOAodorpqoT87MW6FAImZbrM=
