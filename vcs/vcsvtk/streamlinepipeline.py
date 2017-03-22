@@ -5,8 +5,6 @@ from vcs import vcs2vtk
 import math
 import numpy
 import vtk
-from vtk.numpy_interface import dataset_adapter as dsa
-from vtk.numpy_interface import algorithms as algs
 from vtk.util import numpy_support
 
 class StreamlinePipeline(Pipeline2D):
@@ -54,24 +52,17 @@ class StreamlinePipeline(Pipeline2D):
             if self._gm.linecolor is not None:
                 lcolor = self._gm.linecolor
 
-        polydata = dsa.WrapDataObject(self._vtkPolyDataFilter.GetOutput())
-        bb = polydata.VTKObject.GetBounds()
-        # add normalized vector
-        v = polydata.PointData['vector']
-        normVector = numpy_support.numpy_to_vtk(
-            v / numpy.linalg.norm(v, axis=1), True, vtk.VTK_DOUBLE)
-        normVector.SetName('normVector')
-        polydata.GetPointData().AddArray(normVector)
-
-        vcs2vtk.debugWriteGrid(polydata.VTKObject, "data")
+        self._vtkPolyDataFilter.Update()
+        polydata = self._vtkPolyDataFilter.GetOutput()
+        vcs2vtk.debugWriteGrid(polydata, "data")
 
         # generate random seeds in a circle centered in the center of
         # the bounding box for the data.
-        dataLength = polydata.VTKObject.GetLength()
+        dataLength = polydata.GetLength()
 
         seed = vtk.vtkPointSource()
         seed.SetNumberOfPoints(self._gm.numberofseeds)
-        seed.SetCenter(polydata.VTKObject.GetCenter())
+        seed.SetCenter(polydata.GetCenter())
         seed.SetRadius(dataLength / 2.0)
         seed.Update()
         seedData = seed.GetOutput()
@@ -95,8 +86,8 @@ class StreamlinePipeline(Pipeline2D):
         # integrate streamlines on normalized vector so that
         # IntegrationTime stores distance
         streamer = vtk.vtkStreamTracer()
-        streamer.SetInputData(polydata.VTKObject)
-        streamer.SetInputArrayToProcess(0, 0, 0, 0, "normVector")
+        streamer.SetInputData(polydata)
+        streamer.SetInputArrayToProcess(0, 0, 0, 0, "vector")
         streamer.SetSourceData(seedData)
         streamer.SetIntegrationDirection(self._gm.integrationdirection)
         streamer.SetIntegrationStepUnit(self._gm.integrationstepunit)
@@ -109,27 +100,23 @@ class StreamlinePipeline(Pipeline2D):
         streamer.SetMaximumError(self._gm.maximumerror)
         streamer.SetIntegrator(integrator)
 
-        streamer.Update()
-        streamlines = streamer.GetOutput()
+        # add arc_length to streamlines
+        arcLengthFilter = vtk.vtkAppendArcLength()
+        arcLengthFilter.SetInputConnection(streamer.GetOutputPort())
+
+        arcLengthFilter.Update()
+        streamlines = arcLengthFilter.GetOutput()
         vcs2vtk.debugWriteGrid(streamlines, "streamlines")
 
         # glyph seed points
         contour = vtk.vtkContourFilter()
-        contour.SetInputConnection(streamer.GetOutputPort())
-        if (self._gm.numberofglyphs == 1):
-            contour.SetValue(0, 0)
-        else:
-            contour.SetValue(0, 0)
-            r = streamlines.GetPointData().GetArray("IntegrationTime").GetRange()
-            numberofglyphsDownstream = int(math.floor(self._gm.numberofglyphs / 2))
-            numberofglyphsUpstream = int(math.ceil(self._gm.numberofglyphs / 2)) - 1
-            for i in range(1, numberofglyphsDownstream + 1):
-                contour.SetValue(i, r[1] / numberofglyphsDownstream * i)
-            for i in range(1, numberofglyphsUpstream + 1):
-                contour.SetValue(i + numberofglyphsDownstream,
-                                 r[0] / numberofglyphsUpstream * i)
-
-        contour.SetInputArrayToProcess(0, 0, 0, 0, "IntegrationTime")
+        contour.SetInputConnection(arcLengthFilter.GetOutputPort())
+        contour.SetValue(0, 0.001)
+        r = streamlines.GetPointData().GetArray("arc_length").GetRange()
+        numberofglyphsoneside = self._gm.numberofglyphs / 2
+        for i in range(1, numberofglyphsoneside):
+            contour.SetValue(i, r[1] / numberofglyphsoneside * i)
+        contour.SetInputArrayToProcess(0, 0, 0, 0, "arc_length")
 
         contour.Update()
         vcs2vtk.debugWriteGrid(contour.GetOutput(), "contour")
