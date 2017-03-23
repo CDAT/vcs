@@ -551,7 +551,7 @@ def listelements(typ=None):
         raise Exception(
             "Error: '%s' is not a valid vcs element\n"
             "Valid vcs elements are: %s" %
-            (typ, vcs.elements.keys()))
+            (typ, sorted(vcs.elements.keys())))
     return sorted(vcs.elements[typ].keys())
 
 
@@ -569,19 +569,19 @@ def show(*args):
 
             >>> vcs.show() # show all vcs object types
             ['1d', '3d_dual_scalar', '3d_scalar', '3d_vector', 'boxfill', ...]
-            >>> vcs.show('boxfill') # List boxfill objects 
+            >>> vcs.show('boxfill') # List boxfill objects
             *******************Boxfill Names List**********************
             ...
             *******************End Boxfill Names List**********************
-            >>> vcs.show('3d_vector') # List 3d_vector objects 
+            >>> vcs.show('3d_vector') # List 3d_vector objects
             *******************3d_vector Names List**********************
             ...
             *******************End 3d_vector Names List**********************
-            >>> vcs.show('3d_scalar') # List 3d_scalar objects 
+            >>> vcs.show('3d_scalar') # List 3d_scalar objects
             *******************3d_scalar Names List**********************
             ...
             *******************End 3d_scalar Names List**********************
-            >>> vcs.show('3d_dual_scalar') # List 3d_dual_scalar objects 
+            >>> vcs.show('3d_dual_scalar') # List 3d_dual_scalar objects
             *******************3d_dual_scalar Names List**********************
             ...
             *******************End 3d_dual_scalar Names List**********************
