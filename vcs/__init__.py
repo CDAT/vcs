@@ -62,7 +62,6 @@ import install_vcs  # noqa
 import os  # noqa
 from manageElements import *  # noqa
 import collections  # noqa
-import testing  # noqa
 
 _colorMap = "viridis"
 
