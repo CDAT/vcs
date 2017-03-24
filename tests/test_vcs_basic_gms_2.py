@@ -5,7 +5,7 @@ import cdms2
 import os
 
 class TestVCSBasicGms(basevcstest.VCSBaseTest):
-    def basicGm(self,gm_type,projtype="default",lat1=0,lat2=0,lon1=0,lon2=0,rg=False,flip=False,zero=False,transparent=False,mask=False,bigvalues=False):
+    def basicGm(self,gm_type,projtype="default",lat1=0,lat2=0,lon1=0,lon2=0,rg=False,flip=False,zero=False,transparent=False,mask=False,bigvalues=False,color=False):
 
         self.x.clear()
         self.x.setcolormap(None)
@@ -47,7 +47,7 @@ class TestVCSBasicGms(basevcstest.VCSBaseTest):
             f=cdms2.open(os.path.join(vcs.sample_data,'sampleCurveGrid4.nc'))
         else:
             f=self.clt
-        if gm_type=="vector":
+        if gm_type in ["vector","streamline"]:
             u=f("u",**xtra)
             v=f("v",**xtra)
             if mask:
@@ -85,14 +85,17 @@ class TestVCSBasicGms(basevcstest.VCSBaseTest):
             for i in range(256):  # tweaks all colors
                 cmap.setcolorcell(i,100.,0,0,i/2.55)
             self.x.setcolormap(cmap)
-            if gm_type == "vector":
+            if gm_type in ["vector","streamline"]:
                 gm.linecolor = [100, 0, 0, 50.]
             elif gm_type in ["yxvsx","xyvsy","yvsx","scatter","1d"]:
                 gm.linecolor = [100, 0, 0, 50.]
                 gm.markercolor = [100, 0, 0, 50.]
 
-        if gm_type=="vector":
-            gm.scale = 4.
+        if gm_type in ["vector","streamline"]:
+            if gm_type == "vector":
+                gm.scale = 4.
+            elif gm_type == "streamline":
+                gm.coloredbyvector = color
             self.x.plot(u,v,gm,bg=self.bg)
         elif gm_type in ["scatter","xvsy"]:
             self.x.plot(s,s2,gm,bg=self.bg)
@@ -112,9 +115,14 @@ class TestVCSBasicGms(basevcstest.VCSBaseTest):
         fnm+=nm_xtra
         self.checkImage(fnm+'.png',threshold=20)
     def testBasicGms(self):
-        for gm in "boxfill isofill isoline vector meshfill yxvsx xvsy xyvsy 1d scatter".split():
-            self.basicGm(gm)
-            self.basicGm(gm,transparent=True)
-            self.basicGm(gm,zero=True)
-            self.basicGm(gm)
-            self.basicGm(gm,mask=True)
+        for gm in "boxfill isofill isoline vector streamline streamline_colored meshfill yxvsx xvsy xyvsy 1d scatter".split():
+            if gm.find("_colored")>-1:
+                gm = gm.split("_colored")[0]
+                color=True
+            else:
+                color = False
+            self.basicGm(gm,color=color)
+            self.basicGm(gm,transparent=True,color=color)
+            self.basicGm(gm,zero=True,color=color)
+            self.basicGm(gm,color=color)
+            self.basicGm(gm,mask=True,color=color)
