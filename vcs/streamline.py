@@ -709,22 +709,6 @@ class Gs(object):
         self._linetype = value
     linetype = property(_getlinetype, _setlinetype)
 
-    def _getline(self):
-        print 'DEPRECATED: Use linetype or setLineAttributes instead.'
-        return self._linetype
-
-    def _setline(self, l):
-        import queries
-        print 'DEPRECATED: Use linetype or setLineAttributes instead.'
-        if (queries.isline(l) or
-                (isinstance(l, basestring) and l in vcs.elements["line"])):
-            l = vcs.elements["line"][l]
-            self.setLineAttributes(l)
-        else:
-            self._linetype = l
-
-    line = property(_getline, _setline)
-
     def setLineAttributes(self, line):
         '''
         Set attributes linecolor, linewidth and linetype from line l.
@@ -895,8 +879,6 @@ class Gs(object):
         print "ext_1 = ", self.ext_1
         print "ext_2 = ", self.ext_2
         print 'fillareacolors =', self.fillareacolors
-        print 'fillareastyle =', self.fillareastyle
-        print "line = ", self.line
         print "linecolor = ", self.linecolor
         print "linewidth = ", self.linewidth
         print "reference = ", self.reference
