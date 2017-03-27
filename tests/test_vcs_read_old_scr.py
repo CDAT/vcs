@@ -15,7 +15,7 @@ class TestVCSReadSCR(unittest.TestCase):
         for k in vcs.elements.keys():
             Ns2[k] = len(vcs.elements[k].keys())
 
-        diffs = {'projection': 0, 'colormap': 53, 'isofill': 187, 'marker': 0, '3d_dual_scalar': 0, 'texttable': 4, '3d_scalar': 0, 'fillarea': 234, 'font': 0, '3d_vector': 0, '1d': 9, 'template': 43, 'textcombined': 0, 'textorientation': 3, 'xvsy': 0, 'xyvsy': 0, 'isoline': 113, 'boxfill': 239, 'fontNumber': 0, 'line': 21, 'meshfill': 0, 'yxvsx': 9, 'taylordiagram': 0, 'list': 26, 'display': 0, 'vector': 55, 'scatter': 0}
+        diffs = {'projection': 0, 'colormap': 53, 'isofill': 187, 'marker': 0, '3d_dual_scalar': 0, 'texttable': 4, '3d_scalar': 0, 'fillarea': 234, 'font': 0, '3d_vector': 0, '1d': 9, 'template': 43, 'textcombined': 0, 'textorientation': 3, 'xvsy': 0, 'xyvsy': 0, 'isoline': 113, 'boxfill': 239, 'fontNumber': 0, 'line': 21, 'meshfill': 0, 'yxvsx': 9, 'taylordiagram': 0, 'list': 26, 'display': 0, 'vector': 55, 'scatter': 0, "streamline": 0}
         for k in vcs.elements.keys():
             print "---Checking number of new elements for",k
             self.assertEqual(diffs[k], Ns2[k]-Ns[k])
