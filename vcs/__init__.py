@@ -62,7 +62,6 @@ import install_vcs  # noqa
 import os  # noqa
 from manageElements import *  # noqa
 import collections  # noqa
-import testing  # noqa
 
 _colorMap = "viridis"
 
@@ -104,6 +103,7 @@ elements["template"] = {}
 elements["taylordiagram"] = {}
 elements["1d"] = {}
 elements["vector"] = {}
+elements["streamline"] = {}
 elements["yxvsx"] = {}
 elements["xyvsy"] = {}
 elements["xvsy"] = {}
@@ -202,6 +202,7 @@ vcs.elements["scatter"]["default"] = sc
 xvy = unified1D.G1d("default_xvsy_")
 vcs.elements["xvsy"]["default"] = xvy
 vector.Gv("default")
+streamline.Gs("default")
 marker.Tm("default")
 meshfill.Gfm("default")
 colormap.Cp("default")
