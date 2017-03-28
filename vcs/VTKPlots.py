@@ -487,9 +487,8 @@ class VTKVCSBackend(object):
                 self.canvas.bgY = H
             else:
                 W = self.canvas.bgX
-            if self._geometry:
-                self._geometry["width"] = self.canvas.bgX
-                self._geometry["height"] = self.canvas.bgY
+                self.canvas.bgX = self.canvas.bgY
+                self.canvas.bgY = W
         else:
             self.renWin.SetSize(W, H)
             self.canvas.bgX = W

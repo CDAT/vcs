@@ -5,5 +5,5 @@ linters:
         max-complexity: 20
 
 files:
-        ignore: ['tests/vtk/*', 'tests/*', 'Tests/*', 'Fonts/*', 'Share/*', 'docs/*', 'scripts/*']
+        ignore: ['tests/*', 'Tests/*', 'Fonts/*', 'Share/*', 'docs/*', 'scripts/*']
 

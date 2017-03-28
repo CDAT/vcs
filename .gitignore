@@ -7,4 +7,3 @@ dist/
 .idea/
 dist/
 vcs.egg-info/
-*.swp

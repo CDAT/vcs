@@ -247,8 +247,7 @@ def _determine_arg_list(g_name, actual_args):
                  arglist[igraphics_method].g_nslabs))
     else:
         if arglist[igraphics_method].lower() in (
-                'scatter', 'vector', 'streamline', 'xvsy', 'stream', 'glyph',
-                '3d_vector', '3d_dual_scalar'):
+                'scatter', 'vector', 'xvsy', 'stream', 'glyph', '3d_vector', '3d_dual_scalar'):
             if found_slabs != 2:
                 raise vcsError(
                     "Graphics method %s requires 2 slabs." %
@@ -1792,54 +1791,6 @@ class Canvas(object):
         """
         arglist = _determine_arg_list('vector', args)
         return self.__plot(arglist, parms)
-
-    def createstreamline(self, name=None, source='default'):
-        return vcs.createstreamline(name, source)
-    createstreamline.__doc__ = vcs.manageElements.createstreamline.__doc__
-
-    def getstreamline(self, Gv_name_src='default'):
-        return vcs.getstreamline(Gv_name_src)
-    getstreamline.__doc__ = vcs.manageElements.getstreamline.__doc__
-
-    def streamline(self, *args, **parms):
-        """
-
-        Generate a streamline plot given the data, streamline graphics method,
-        and template. If no streamline class object is given, then the 'default'
-        streamline graphics method is used. Similarly, if no template class
-        object is given, then the 'default' template is used.
-
-        :Example:
-
-            .. doctest:: canvas_streamline
-
-                >>> a=vcs.init()
-                >>> a.show('streamline') # Show all the existing streamline
-                                         # graphics methods
-                *******************Streamline Names List**********************
-                ...
-                *******************End Streamline Names List********************
-                >>> import cdms2 # Need cdms2 to create a slab
-                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open a data file
-                >>> slab1 = f('u') # use the data file to create a cdms2 slab
-                >>> slab2 = f('v') # streamline needs 2 slabs, so get another
-                >>> a.streamline(slab1, slab2)
-                                   # plot streamline using slab and default
-                                   # streamline
-                <vcs.displayplot.Dp ...>
-                >>> a.clear() # Clear VCS canvas
-                >>> template=a.gettemplate('hovmuller')
-                >>> a.streamline(slab1, slab2, template)
-                                   # Plot array using default streamline
-                                   # and specified template
-                <vcs.displayplot.Dp ...>
-
-        :returns: A VCS displayplot object.
-        :rtype: vcs.displayplot.Dp
-        """
-        arglist = _determine_arg_list('streamline', args)
-        return self.__plot(arglist, parms)
-
 
     def createscatter(self, name=None, source='default'):
         return vcs.createscatter(name, source)
