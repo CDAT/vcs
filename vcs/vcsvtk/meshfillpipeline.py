@@ -153,7 +153,8 @@ class MeshfillPipeline(Pipeline2D):
              self._template.data.y1, self._template.data.y2])
         dataset_renderer = None
         xScale, yScale = (1, 1)
-        ct = 0
+        cti = 0
+        ctj = 0
         for mapper in mappers:
             act = vtk.vtkActor()
             act.SetMapper(mapper)
@@ -183,7 +184,10 @@ class MeshfillPipeline(Pipeline2D):
                 if not wireframe:
                     # Since pattern creation requires a single color, assuming the
                     # first
-                    c = self.getColorIndexOrRGBA(_colorMap, tmpColors[ct][0])
+                    if ctj >= len(tmpColors[cti]):
+                        ctj = 0
+                        cti += 1
+                    c = self.getColorIndexOrRGBA(_colorMap, tmpColors[cti][ctj])
 
                     # Get the transformed contour data
                     transform = act.GetUserTransform()
@@ -194,14 +198,14 @@ class MeshfillPipeline(Pipeline2D):
 
                     patact = fillareautils.make_patterned_polydata(transformFilter.GetOutput(),
                                                                    fillareastyle=style,
-                                                                   fillareaindex=tmpIndices[ct],
+                                                                   fillareaindex=tmpIndices[cti],
                                                                    fillareacolors=c,
-                                                                   fillareaopacity=tmpOpacities[ct],
+                                                                   fillareaopacity=tmpOpacities[cti],
                                                                    fillareapixelspacing=fareapixelspacing,
                                                                    fillareapixelscale=fareapixelscale,
                                                                    size=self._context().renWin.GetSize(),
                                                                    renderer=dataset_renderer)
-                    ct += 1
+                    ctj += 1
                 if patact is not None:
                     actors.append([patact, plotting_dataset_bounds])
                     dataset_renderer.AddActor(patact)

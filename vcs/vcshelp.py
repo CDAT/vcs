@@ -196,6 +196,8 @@ def help(*arg):
                 print vcs.scatter.GSp.__doc__
             elif (arg[i] == 'vectorobject'):
                 print vcs.vector.Gv.__doc__
+            elif (arg[i] == 'streamlineobject'):
+                print vcs.streamline.Gs.__doc__
             elif (arg[i] == 'xvsyobject'):
                 print vcs.xvsy.GXY.__doc__
             elif (arg[i] == 'xyvsyobject'):
@@ -245,6 +247,8 @@ def help(*arg):
                 print vcs.Canvas.Canvas.scatter.__doc__
             elif (arg[i] == 'vector'):
                 print vcs.Canvas.Canvas.vector.__doc__
+            elif (arg[i] == 'streamline'):
+                print vcs.Canvas.Canvas.streamline.__doc__
             elif (arg[i] == 'xvsy'):
                 print vcs.Canvas.Canvas.xvsy.__doc__
             elif (arg[i] == 'xyvsy'):
