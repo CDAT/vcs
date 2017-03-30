@@ -28,14 +28,8 @@ class AllTests(basevcstest.VCSBaseTest):
         fnm += "_robinson.png"
         self.checkImage(fnm)
 
-    def test_vcs_vectors_robinson(self):
+    def testVCSVectorsRobinson(self):
         self.allTests(params=['vectors'])
-
-    def test_vcs_streamline_robinson(self):
         self.allTests(params=['streamline'])
-
-    def test_vcs_streamline_colored_robinson(self):
         self.allTests(params=['streamline', 'colored'])
-
-    def test_vcs_streamline_colored_count_robinson(self):
         self.allTests(params=['streamline', 'colored', 'count'])
