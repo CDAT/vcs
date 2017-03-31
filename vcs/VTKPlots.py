@@ -969,6 +969,8 @@ class VTKVCSBackend(object):
     def put_img_on_canvas(
             self, filename, zoom=1, xOffset=0, yOffset=0,
             units="percent", fitToHeight=True, *args, **kargs):
+        self.createRenWin()
+        winSize = self.renWin.GetSize()
         self.hideGUI()
         readerFactory = vtk.vtkImageReader2Factory()
         reader = readerFactory.CreateImageReader2(filename)
@@ -985,25 +987,28 @@ class VTKVCSBackend(object):
         cam.ParallelProjectionOn()
         width = (ext[1] - ext[0]) * spc[0]
         height = (ext[3] - ext[2]) * spc[1]
+        if fitToHeight:
+            yd = height
+        else:
+            yd = winSize[1]
+        d = cam.GetDistance()
+        heightInWorldCoord = yd / zoom;
+        # window pixel in world (image) coordinates
+        pixelInWorldCoord = heightInWorldCoord / winSize[1]
         if units[:7].lower() == "percent":
-            xoff = width * xOffset / zoom / 200.
-            yoff = height * yOffset / zoom / 200.
+            xoff = winSize[0] * (xOffset / 100.) * pixelInWorldCoord
+            yoff = winSize[1] * (yOffset / 100.) * pixelInWorldCoord
         elif units[:6].lower() == "pixels":
-            xoff = xOffset / zoom
-            yoff = yOffset / zoom
+            xoff = xOffset * pixelInWorldCoord
+            yoff = yOffset * pixelInWorldCoord
         else:
             raise RuntimeError("vtk put image does not understand %s for offset units" % units)
-        xc = origin[0] + .5 * (ext[0] + ext[1]) * spc[0]
-        yc = origin[1] + .5 * (ext[2] + ext[3]) * spc[1]
-        if fitToHeight:
-            yd = (ext[3] - ext[2]) * spc[1]
-        else:
-            sz = self.renWin.GetSize()
-            yd = sz[1]
-        d = cam.GetDistance()
-        cam.SetParallelScale(.5 * yd / zoom)
-        cam.SetFocalPoint(xc + xoff, yc + yoff, 0.)
-        cam.SetPosition(xc + xoff, yc + yoff, d)
+        xc = origin[0] + .5 * width
+        yc = origin[1] + .5 * height
+        cam.SetParallelScale(heightInWorldCoord * 0.5)
+        cam.SetFocalPoint(xc - xoff, yc - yoff, 0.)
+        cam.SetPosition(xc - xoff, yc - yoff, d)
+
         ren.AddActor(a)
         layer = max(self.renWin.GetNumberOfLayers() - 2, 0)
         ren.SetLayer(layer)
