@@ -10,6 +10,7 @@ import codecs
 import time
 import webbrowser
 import shlex
+import cdat_info
 
 root = os.getcwd()
 cpus = multiprocessing.cpu_count()
@@ -203,9 +204,7 @@ if len(names)==0:
     sys.exit(0)
 
 # Make sure we have sample data
-import vcs
-reload(vcs)
-vcs.download_sample_data_files()
+cdat_info.download_sample_data_files(os.path.join(sys.prefix,"share","vcs","test_data_files.txt"),cdat_info.get_sampledata_path())
 
 p = multiprocessing.Pool(args.cpus)
 outs = p.map(run_nose, names)

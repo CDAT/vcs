@@ -102,6 +102,8 @@ class TestVCSBasicGms(basevcstest.VCSBaseTest):
         else:
             self.x.plot(s,gm,bg=self.bg)
         fnm = "test_vcs_basic_%s" % gm_type.lower()
+        if color and gm_type == 'streamline':
+            fnm += "_colored"
         if mask:
             fnm+="_masked"
         elif bigvalues:

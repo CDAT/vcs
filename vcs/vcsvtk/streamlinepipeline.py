@@ -59,10 +59,18 @@ class StreamlinePipeline(Pipeline2D):
         # the bounding box for the data.
         dataLength = polydata.GetLength()
 
+        # by default vtkPointSource uses a global random source in vtkMath which is
+        # seeded only once. It makes more sense to seed a random sequence each time you draw
+        # the streamline plot.
+        pointSequence = vtk.vtkMinimalStandardRandomSequence()
+        pointSequence.SetSeedOnly(1177)  #  replicate the seed from vtkMath
+
+
         seed = vtk.vtkPointSource()
         seed.SetNumberOfPoints(self._gm.numberofseeds)
         seed.SetCenter(polydata.GetCenter())
         seed.SetRadius(dataLength / 2.0)
+        seed.SetRandomSequence(pointSequence)
         seed.Update()
         seedData = seed.GetOutput()
 
