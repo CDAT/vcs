@@ -9,17 +9,6 @@ import os
 
 import cdat_info
 
-try:
-    externals = cdat_info.externals
-except:
-    externals = os.environ.get("EXTERNALS", externals)
-
-os.environ['PATH'] = os.environ['PATH'] + ':' + os.path.join(externals, 'bin')
-
-os.environ['PKG_CONFIG_PATH'] = os.path.join(
-    externals, 'lib', 'pkgconfig') + \
-    ':' + os.environ.get("PKG_CONFIG_PATH", "")
-
 setup(name="vcs",
       version=cdat_info.Version,
       description="Visualization and Control System",
