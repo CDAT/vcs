@@ -61,7 +61,7 @@ class vtk_ui_test(basevcstest.VCSBaseTest):
         self.win, self.renderer = init()
         self.inter = self.win.GetInteractor()
         self.passed = 1
-        self.pngsdir = "tests_pngs"
+        self.pngsdir = "tests_png"
         if not os.path.exists(self.pngsdir):
             os.makedirs(self.pngsdir)
         self.basedir = os.path.join("uvcdat-testdata","baselines","vcs","vtk_ui")
