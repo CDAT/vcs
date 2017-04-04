@@ -2105,8 +2105,6 @@ class P(object):
         txt = x.createtext(
             To_source=self.legend.textorientation,
             Tt_source=self.legend.texttable)
-        ln._priority = priority + 1
-        txt.priority = priority + 1
         txt.string = St
         if isinstance(legend, list):
             if isHorizontal:
