@@ -496,6 +496,7 @@ class Tt(object):
         print "y =", self.y
         print 'colormap =', self.colormap
     list.__doc__ = listdoc.format(name="texttable", parent="")
+
     ##########################################################################
     #                                                                           #
     # Script out secondary text table method in VCS to a file.                  #

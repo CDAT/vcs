@@ -992,7 +992,7 @@ class VTKVCSBackend(object):
         else:
             yd = winSize[1]
         d = cam.GetDistance()
-        heightInWorldCoord = yd / zoom;
+        heightInWorldCoord = yd / zoom
         # window pixel in world (image) coordinates
         pixelInWorldCoord = heightInWorldCoord / winSize[1]
         if units[:7].lower() == "percent":

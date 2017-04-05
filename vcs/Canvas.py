@@ -1521,7 +1521,6 @@ class Canvas(object):
         arglist = _determine_arg_list('3d_dual_scalar', args)
         return self.__plot(arglist, parms)
 
-
     def createisofill(self, name=None, source='default'):
         return vcs.createisofill(name, source)
     createisofill.__doc__ = vcs.manageElements.createisofill.__doc__
@@ -1840,7 +1839,6 @@ class Canvas(object):
         arglist = _determine_arg_list('streamline', args)
         return self.__plot(arglist, parms)
 
-
     def createscatter(self, name=None, source='default'):
         return vcs.createscatter(name, source)
     createscatter.__doc__ = vcs.manageElements.createscatter.__doc__
@@ -2101,7 +2099,7 @@ class Canvas(object):
         return mrk
 
     drawmarker.__doc__ = drawmarker.__doc__ % (xmldocs.name, xmldocs.color, xmldocs.priority, xmldocs.viewport,
-                                           xmldocs.worldcoordinate, xmldocs.x_y_coords, xmldocs.bg)
+                                               xmldocs.worldcoordinate, xmldocs.x_y_coords, xmldocs.bg)
 
     def createfillarea(self, name=None, source='default', style=None,
                        index=None, color=None, priority=1,
@@ -2217,7 +2215,7 @@ class Canvas(object):
         return fa
 
     drawfillarea.__doc__ = drawfillarea.__doc__ % (xmldocs.name, xmldocs.color, xmldocs.priority, xmldocs.viewport,
-                                               xmldocs.worldcoordinate, xmldocs.x_y_coords, xmldocs.bg)
+                                                   xmldocs.worldcoordinate, xmldocs.x_y_coords, xmldocs.bg)
 
     def createtexttable(self, name=None, source='default', font=None,
                         spacing=None, expansion=None, color=None, priority=None,
@@ -5305,7 +5303,6 @@ class Canvas(object):
                 shutil.move(psnm, file)
     postscript.__doc__ = postscript.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height,
                                                xmldocs.output_units)
-
 
     def _scriptrun(self, *args):
         return vcs._scriptrun(*args)

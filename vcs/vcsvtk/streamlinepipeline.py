@@ -1,11 +1,8 @@
 from .pipeline2d import Pipeline2D
-
 import vcs
-from vcs import vcs2vtk
-import math
 import numpy
 import vtk
-from vtk.util import numpy_support
+
 
 class StreamlinePipeline(Pipeline2D):
 
@@ -20,7 +17,6 @@ class StreamlinePipeline(Pipeline2D):
         """Overrides baseclass implementation."""
         """Set legend information and colors"""
         self._updateContourLevelsAndColorsGeneric()
-
 
     def _plotInternal(self):
         """Overrides baseclass implementation."""
@@ -63,8 +59,7 @@ class StreamlinePipeline(Pipeline2D):
         # seeded only once. It makes more sense to seed a random sequence each time you draw
         # the streamline plot.
         pointSequence = vtk.vtkMinimalStandardRandomSequence()
-        pointSequence.SetSeedOnly(1177)  #  replicate the seed from vtkMath
-
+        pointSequence.SetSeedOnly(1177)  # replicate the seed from vtkMath
 
         seed = vtk.vtkPointSource()
         seed.SetNumberOfPoints(self._gm.numberofseeds)

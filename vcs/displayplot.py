@@ -25,7 +25,7 @@
 #
 import VCS_validation_functions
 import vcs
-from xmldocs import listdoc
+from xmldocs import listdoc  # noqa
 
 
 class Dp(object):

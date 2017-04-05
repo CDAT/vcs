@@ -199,15 +199,10 @@ class Logo(object):
             elif self.height is not None:
                 scale = float(self.height) / self.source_height
             else:
-                xdist = cnv_info["width"] - self.x * cnv_info["width"]
-                xscale = xdist / self.source_width * 2.
-                ydist = cnv_info["height"] - self.y * cnv_info["height"]
-                yscale = ydist / self.source_height * 2.
-                scale = min(xscale, yscale)
+                scale = 1.0
 
-            xoff = - (cnv_info["width"] / 2. - self.source_width / 2. * xscale)
-            yoff = - (cnv_info["height"] / 2. -
-                      self.source_height / 2. * yscale)
+            xoff = cnv_info["width"] * (self.x - 0.5)
+            yoff = cnv_info["height"] * (self.y - 0.5)
             canvas.put_png_on_canvas(
                 self.source,
                 zoom=scale,
@@ -2480,7 +2475,7 @@ def download_sample_data_files(path=None):
         path = vcs.sample_data
     import cdat_info
     import sys
-    cdat_info.download_sample_data_files(os.path.join(sys.prefix,"share","vcs","sample_files.txt"),path)
+    cdat_info.download_sample_data_files(os.path.join(sys.prefix, "share", "vcs", "sample_files.txt"), path)
 
 
 def drawLinesAndMarkersLegend(canvas, templateLegend,

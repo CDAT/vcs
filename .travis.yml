@@ -11,10 +11,8 @@ before_install:
 - conda update -y -q conda
 - conda install gcc
 script:
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then conda install -c conda-forge -c uvcdat/label/nightly -c uvcdat uvcdat-nox nose image-compare; fi
-  #- if [ "$TRAVIS_OS_NAME" = "osx" ]; then conda install -c conda-forge -c uvcdat/label/nightly -c uvcdat uvcdat nose image-compare; fi
-- if [ "$TRAVIS_OS_NAME" = "osx" ]; then conda install -c conda-forge -c uvcdat uvcdat nose image-compare; fi
-- if [ "$TRAVIS_OS_NAME" = "osx" ]; then conda install -c uvcdat -c conda-forge mesalib; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then conda install -c uvcdat/label/nightly -c conda-forge -c uvcdat uvcdat-nox nose image-compare flake8; fi
+- if [ "$TRAVIS_OS_NAME" = "osx" ]; then conda install -c uvcdat/label/nightly -c conda-forge -c uvcdat uvcdat nose image-compare flake8; fi
 - export UVCDAT_ANONYMOUS_LOG=False
 - echo $TRAVIS_BRANCH
 - export TRAVIS_PR_BRANCH=$TRAVIS_BRANCH
@@ -23,10 +21,9 @@ script:
 - python setup.py install --old-and-unmanageable
 - git clone git://github.com/uv-cdat/uvcdat-testdata
 - df -h
-- vcs_download_sample_data
 - pip install dropbox
-- python run_tests.py --dropbox -v2 -g --no-vtk-ui -V "conda-forge -c uvcdat/label/debug -c uvcdat"
-  #- python run_tests.py --dropbox -v2 -g
+- if [ "$TRAVIS_OS_NAME" = "osx" ]; then python run_tests.py -v2 -g --no-vtk-ui -V "conda-forge -c uvcdat/label/debug -c uvcdat" ; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then python run_tests.py -v2 -g --no-vtk-ui --dropbox ; fi
 env:
   global:
     secure: Z06idl4BP01QMhrocmfuYV4CcbLmb5ZJZoXXymDr5sLIIfqdMiSL/CfDCRkIwl44vKpTN5R9AAhQV6iNMdU0NOQQrftHJyT5YV4y966FuAA1v9ev7y/cgExJFv7M/4E37WAN6YIcO7E42KZReeNKOAodorpqoT87MW6FAImZbrM=

@@ -485,8 +485,7 @@ class Gs(object):
         value = VCS_validation_functions.checkNumber(
             self, 'integrationdirection', value, 0, 2)
         self._integrationdirection = value
-    integrationdirection =\
-      property(_getintegrationdirection, _setintegrationdirection)
+    integrationdirection = property(_getintegrationdirection, _setintegrationdirection)
 
     """Integration stepunit. Can be 1 - length or 2 - cell
         length. Default is 2 - cell length. Length is the length of a
@@ -500,8 +499,7 @@ class Gs(object):
         value = VCS_validation_functions.checkNumber(
             self, 'integrationstepunit', value, 0, 2)
         self._integrationstepunit = value
-    integrationstepunit =\
-      property(_getintegrationstepunit, _setintegrationstepunit)
+    integrationstepunit = property(_getintegrationstepunit, _setintegrationstepunit)
 
     """This property specifies the initial integration step size
         expressed as percent of the integrationstepunit.  For
@@ -573,8 +571,7 @@ class Gs(object):
         value = VCS_validation_functions.checkNumber(
             self, 'maximumstreamlinelength', value)
         self._maximumstreamlinelength = value
-    maximumstreamlinelength =\
-      property(_getmaximumstreamlinelength, _setmaximumstreamlinelength)
+    maximumstreamlinelength = property(_getmaximumstreamlinelength, _setmaximumstreamlinelength)
 
     """This property specifies the terminal speed, below which particle
     advection/integration is terminated.
@@ -641,7 +638,6 @@ class Gs(object):
         self._filledglyph = value
     filledglyph = property(_getfilledglyph, _setfilledglyph)
 
-
     """ If true streamlines are colored by vector magnitude.
         The mapping between vector magnitude and colors is controlled
         by levels, ext_1, ext_2 and fillareacolors. If false,
@@ -670,8 +666,6 @@ class Gs(object):
             self, 'numberofglyphs', value)
         self._numberofglyphs = value
     numberofglyphs = property(_getnumberofglyphs, _setnumberofglyphs)
-
-
 
     def _getlinewidth(self):
         return self._linewidth
@@ -704,8 +698,7 @@ class Gs(object):
 
     def _setlinetype(self, value):
         if value is not None:
-            value =VCS_validation_functions.checkLineType(
-                self, 'linetype', value)
+            value = VCS_validation_functions.checkLineType(self, 'linetype', value)
         self._linetype = value
     linetype = property(_getlinetype, _setlinetype)
 
@@ -793,7 +786,7 @@ class Gs(object):
                  'linetype', 'linecolor', 'linewidth', 'datawc_timeunits',
                  'datawc_calendar', 'colormap', 'numberofseeds',
                  'integratortype', 'integrationdirection',
-                 'integrationstepunit','initialsteplength', 'minimumsteplength',
+                 'integrationstepunit', 'initialsteplength', 'minimumsteplength',
                  'maximumsteplength', 'maximumsteps', 'maximumstreamlinelength',
                  'terminalspeed', 'maximumerror', 'glyphscalefactor',
                  'glyphbasefactor', 'filledglyph', 'coloredbyvector',
@@ -1026,42 +1019,26 @@ class Gs(object):
                 "%s.colormap = '%s'\n\n" %
                 (unique_name, repr(
                     self.colormap)))
-            fp.write("%s.numberofseeds = %d\n" %
-                         (unique_name, self.numberofseeds))
-            fp.write("%s.integratortype = %d\n" %
-                         (unique_name, self.integratortype))
-            fp.write("%s.integrationdirection = %d\n" %
-                         (unique_name, self.integrationdirection))
-            fp.write("%s.integrationstepunit = %d\n" %
-                         (unique_name, self.integrationstepunit))
-            fp.write("%s.initialsteplength = %d\n" %
-                         (unique_name, self.initialsteplength))
-            fp.write("%s.minimumsteplength = %d\n" %
-                         (unique_name, self.minimumsteplength))
-            fp.write("%s.maximumsteplength = %d\n" %
-                         (unique_name, self.maximumsteplength))
-            fp.write("%s.maximumsteps = %d\n" %
-                         (unique_name, self.maximumsteps))
-            fp.write("%s.maximumstreamlinelength = %d\n" %
-                         (unique_name, self.maximumstreamlinelength))
-            fp.write("%s.terminalspeed = %d\n" %
-                         (unique_name, self.terminalspeed))
-            fp.write("%s.maximumerror = %d\n" %
-                         (unique_name, self.maximumerror))
-            fp.write("%s.glyphscalefactor = %d\n" %
-                         (unique_name, self.glyphscalefactor))
-            fp.write("%s.glyphbasefactor = %d\n" %
-                         (unique_name, self.glyphbasefactor))
-            fp.write("%s.filledglyph = %r\n" %
-                         (unique_name, self.filledglyph))
-            fp.write("%s.coloredbyvector = %r\n" %
-                         (unique_name, self.coloredbyvector))
-            fp.write("%s.numberofglyphs = %d\n" %
-                         (unique_name, self.numberofglyphs))
+            fp.write("%s.numberofseeds = %d\n" % (unique_name, self.numberofseeds))
+            fp.write("%s.integratortype = %d\n" % (unique_name, self.integratortype))
+            fp.write("%s.integrationdirection = %d\n" % (unique_name, self.integrationdirection))
+            fp.write("%s.integrationstepunit = %d\n" % (unique_name, self.integrationstepunit))
+            fp.write("%s.initialsteplength = %d\n" % (unique_name, self.initialsteplength))
+            fp.write("%s.minimumsteplength = %d\n" % (unique_name, self.minimumsteplength))
+            fp.write("%s.maximumsteplength = %d\n" % (unique_name, self.maximumsteplength))
+            fp.write("%s.maximumsteps = %d\n" % (unique_name, self.maximumsteps))
+            fp.write("%s.maximumstreamlinelength = %d\n" % (unique_name, self.maximumstreamlinelength))
+            fp.write("%s.terminalspeed = %d\n" % (unique_name, self.terminalspeed))
+            fp.write("%s.maximumerror = %d\n" % (unique_name, self.maximumerror))
+            fp.write("%s.glyphscalefactor = %d\n" % (unique_name, self.glyphscalefactor))
+            fp.write("%s.glyphbasefactor = %d\n" % (unique_name, self.glyphbasefactor))
+            fp.write("%s.filledglyph = %r\n" % (unique_name, self.filledglyph))
+            fp.write("%s.coloredbyvector = %r\n" % (unique_name, self.coloredbyvector))
+            fp.write("%s.numberofglyphs = %d\n" % (unique_name, self.numberofglyphs))
         else:
             # Json type
             mode += "+"
             f = open(script_filename, mode)
             vcs.utils.dumpToJson(self, f)
             f.close()
-    script.__doc__ = scriptdocs['streamline']
+    script.__doc__ = scriptdocs['streamline']  # noqa

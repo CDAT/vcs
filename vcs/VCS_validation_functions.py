@@ -549,6 +549,7 @@ def checkBoolean(self, name, value):
                  "The '%s' attribute must be either True of False, got %s."
                  % (name, value))
 
+
 fuzzy_boolean_true_strings = ['on', '1', 'true', 'y', 'yes']
 fuzzy_boolean_false_strings = ['off', '0', 'false', 'n', 'no']
 fuzzy_boolean_valid_value_string = "True/False, 'True'/'False', 1/0, " \
@@ -556,8 +557,8 @@ fuzzy_boolean_valid_value_string = "True/False, 'True'/'False', 1/0, " \
 
 
 def checkFuzzyBoolean(self, name, value):
-    __doc__ = """Checks if a value can be interpreted as true or false.
-
+    __doc__ = "Checks if a value can be interpreted as true or false.\n"
+    __doc__ += """
     Accepted values are %s.
     """ % fuzzy_boolean_valid_value_string
     checkName(self, name, value)
@@ -1622,6 +1623,7 @@ def getProjType(self):
         import vcs2vtk
         return vcs2vtk.getProjType(value)
 
+
 proj_ok_parameters = {
     'smajor': [[3, 4, 5, 6, 7, 8, 9, 20, 22, 23], 0, []],
     'sminor': [[3, 4, 5, 6, 7, 8, 9, 20, 22, 23], 1, []],
@@ -1715,7 +1717,7 @@ def _getpriority(self):
 
 def _setpriority(self, value):
     self._priority = checkInt(self, "priority", value)
-priority = property(_getpriority, _setpriority)
+priority = property(_getpriority, _setpriority)  # noqa
 
 
 @property
@@ -1757,7 +1759,7 @@ def _getX2(self):
 
 def _setX2(self, value):
     self._x2 = checkNumber(self, "x2", value, 0., 1.)
-x2 = property(_getX2, _setX2, "x position in % of page")
+x2 = property(_getX2, _setX2, "x position in % of page")  # noqa
 
 
 def _getX(self):
@@ -1766,7 +1768,7 @@ def _getX(self):
 
 def _setX(self, value):
     self._x = checkNumber(self, "x", value, 0., 1.)
-x = property(_getX, _setX, "x position in % of page")
+x = property(_getX, _setX, "x position in % of page")  # noqa
 
 
 def _getY1(self):
@@ -1775,7 +1777,7 @@ def _getY1(self):
 
 def _setY1(self, value):
     self._y1 = checkNumber(self, "y1", value, 0., 1.)
-y1 = property(_getY1, _setY1, "y1 position in % of page")
+y1 = property(_getY1, _setY1, "y1 position in % of page")  # noqa
 
 
 def _getY2(self):
@@ -1784,7 +1786,7 @@ def _getY2(self):
 
 def _setY2(self, value):
     self._y2 = checkNumber(self, "y2", value, 0., 1.)
-y2 = property(_getY2, _setY2, "y2 position in % of page")
+y2 = property(_getY2, _setY2, "y2 position in % of page")  # noqa
 
 
 def _getY(self):
@@ -1793,7 +1795,7 @@ def _getY(self):
 
 def _setY(self, value):
     self._y = checkNumber(self, "y", value, 0., 1.)
-y = property(_getY, _setY, "y position in % of page")
+y = property(_getY, _setY, "y position in % of page")  # noqa
 
 
 def _gettexttable(self):
@@ -1802,7 +1804,7 @@ def _gettexttable(self):
 
 def _settextable(self, value):
     self._texttable = checkTextTable(self, "textable", value)
-texttable = property(_gettexttable, _settextable, "texttable")
+texttable = property(_gettexttable, _settextable, "texttable")  # noqa
 
 
 def _gettextorientation(self):
@@ -1811,10 +1813,7 @@ def _gettextorientation(self):
 
 def _settexorientation(self, value):
     self._textorientation = checkTextOrientation(self, "texorientation", value)
-textorientation = property(
-    _gettextorientation,
-    _settexorientation,
-    "textorientation")
+textorientation = property(_gettextorientation, _settexorientation, "textorientation")  # noqa
 
 
 def _getLine(self):
@@ -1823,7 +1822,7 @@ def _getLine(self):
 
 def _setLine(self, value):
     self._line = checkLine(self, "line", value)
-line = property(_getLine, _setLine, "line properties")
+line = property(_getLine, _setLine, "line properties")  # noqa
 
 
 def _getcolormap(self):
@@ -1846,7 +1845,7 @@ def _setcolormap(self, value):
     if value not in vcs.elements["colormap"]:
         checkedRaise(self, value, "The colormap '%s' does not exists" % value)
     self._colormap = value
-colormap = property(_getcolormap, _setcolormap)
+colormap = property(_getcolormap, _setcolormap)  # noqa
 
 
 @property
@@ -1920,7 +1919,7 @@ def _getlegend(self):
 def _setlegend(self, value):
     value = checkLegend(self, 'legend', value)
     self._legend = value
-legend = property(_getlegend, _setlegend)
+legend = property(_getlegend, _setlegend)  # noqa
 
 
 def _getprojection(self):
@@ -1930,7 +1929,7 @@ def _getprojection(self):
 def _setprojection(self, value):
     value = checkProjection(self, 'projection', value)
     self._projection = value
-projection = property(_getprojection, _setprojection)
+projection = property(_getprojection, _setprojection)  # noqa
 
 #
 #
@@ -2079,7 +2078,7 @@ def _getwc(self):
 def _setwc(self, value):
     value = checkListOfNumbers(self, 'worldcoordinate', value, maxelements=4)
     self._worldcoordinate = value
-worldcoordinate = property(_getwc, _setwc)
+worldcoordinate = property(_getwc, _setwc)  # noqa
 
 
 def _getvp(self):
@@ -2095,7 +2094,7 @@ def _setvp(self, value):
         minvalue=0.,
         maxvalue=1.)
     self._viewport = value
-viewport = property(_getvp, _setvp)
+viewport = property(_getvp, _setvp)  # noqa
 
 
 def _getfillareaopacity(self):
@@ -2109,7 +2108,7 @@ def _setfillareaopacity(self, value):
             'fillareaopacity',
             value)
         self._fillareaopacity = value
-fillareaopacity = property(_getfillareaopacity, _setfillareaopacity)
+fillareaopacity = property(_getfillareaopacity, _setfillareaopacity)  # noqa
 
 
 def _getfillareacolors(self):
@@ -2123,7 +2122,7 @@ def _setfillareacolors(self, value):
             'fillareacolors',
             value)
     self._fillareacolors = value
-fillareacolors = property(_getfillareacolors, _setfillareacolors)
+fillareacolors = property(_getfillareacolors, _setfillareacolors)  # noqa
 
 
 def _getfillareapixelspacing(self):
@@ -2140,7 +2139,7 @@ def _setfillareapixelspacing(self, value):
             maxelements=2,
             ints=True)
     self._fillareapixelspacing = value
-fillareapixelspacing = property(_getfillareapixelspacing, _setfillareapixelspacing)
+fillareapixelspacing = property(_getfillareapixelspacing, _setfillareapixelspacing)  # noqa
 
 
 def _getfillareapixelscale(self):
@@ -2154,4 +2153,4 @@ def _setfillareapixelscale(self, value):
             'fillareapixelscale',
             value)
     self._fillareapixelscale = value
-fillareapixelscale = property(_getfillareapixelscale, _setfillareapixelscale)
+fillareapixelscale = property(_getfillareapixelscale, _setfillareapixelscale)  # noqa
