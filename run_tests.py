@@ -239,7 +239,7 @@ if args.html or args.package or args.dropbox:
     <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.12.4.js"></script>
     <script type="text/javascript" charset="utf8"
-    src="ihttps://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
     <script>
     $(document).ready( function () {
             $('#table_id').DataTable({
