@@ -14,6 +14,7 @@ class TestVCSAnimate(basevcstest.VCSBaseTest):
             s2 = f("sample")
 
             s = MV2.resize(s2, (4, 32, 48))
+            s.id = 'sample'
             t = cdms2.createAxis(range(4))
             t.units = "months since 2015"
             t.id = "time"
