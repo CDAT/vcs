@@ -47,20 +47,21 @@ model for defining a plot, that is decomposed into three parts:
    them to other users.
 """
 
-import cdat_info
-import sys
-import os
-import collections
 _doValidation = True
 next_canvas_id = 1
+import cdat_info  # noqa
 prefix = cdat_info.get_prefix()
 sample_data = cdat_info.get_sampledata_path()
 cdat_info.pingPCMDIdb("cdat", "vcs")
 from utils import *  # noqa
+import colors  # noqa
+import Canvas  # noqa
 from vcshelp import *  # noqa
 from queries import *  # noqa
 import install_vcs  # noqa
+import os  # noqa
 from manageElements import *  # noqa
+import collections  # noqa
 
 _colorMap = "viridis"
 
@@ -157,7 +158,7 @@ for nm, fnt in [
     ("AvantGarde", "AvantGarde-Book_Bold.ttf"),
 ]:
     pth = os.path.join(
-        sys.prefix,
+        vcs.prefix,
         "share",
         "vcs",
         fnt)
@@ -228,7 +229,7 @@ template.P("default")
 t = taylor.Gtd("default")
 
 
-pth = [sys.prefix, 'share', 'vcs', 'initial.attributes']
+pth = [vcs.prefix, 'share', 'vcs', 'initial.attributes']
 try:
     vcs.scriptrun(os.path.join(*pth))
 except:

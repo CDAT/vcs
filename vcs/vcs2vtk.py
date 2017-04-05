@@ -14,7 +14,7 @@ from vcsvtk import fillareautils
 import sys
 import numbers
 
-f = open(os.path.join(vcs.prefix, "share", "vcs", "wmo_symbols.json"))
+f = open(os.path.join(sys.prefix, "share", "vcs", "wmo_symbols.json"))
 wmo = json.load(f)
 
 projNames = [
