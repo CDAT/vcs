@@ -236,10 +236,10 @@ if args.html or args.package or args.dropbox:
     fi = open("index.html", "w")
     print>>fi, "<!DOCTYPE html>"
     print>>fi, """<html><head><title>VCS Test Results %s</title>
-    <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.12.4.js"></script>
     <script type="text/javascript" charset="utf8"
-    src="http://rawgit.com/WCRP-CMIP/CMIP6_CVs/master/src/jquery.dataTables.js"></script>
+    src="ihttps://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
     <script>
     $(document).ready( function () {
             $('#table_id').DataTable({
