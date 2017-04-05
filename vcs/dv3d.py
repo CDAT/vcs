@@ -8,8 +8,8 @@ import multiprocessing
 import vcs
 import time
 from DV3D.ConfigurationFunctions import ConfigManager
-from xmldocs import toggle_surface, toggle_volume, xslider, yslider, zslider, verticalscaling, scalecolormap, \
-    scaletransferfunction, toggleclipping, isosurfacevalue, scaleopacity, basemapopacity, camera, scriptdocs
+from xmldocs import toggle_surface, toggle_volume, xslider, yslider, zslider, verticalscaling, scalecolormap  # noqa
+from xmldocs import scaletransferfunction, toggleclipping, isosurfacevalue, scaleopacity, basemapopacity, camera, scriptdocs  # noqa
 
 
 class Gfdv3d(object):
@@ -281,7 +281,3 @@ class Gf3DDualScalar(Gfdv3d):
     def __init__(self, Gfdv3d_name, Gfdv3d_name_src='default'):
         self.g_name = '3d_dual_scalar'
         Gfdv3d.__init__(self, Gfdv3d_name, Gfdv3d_name_src=Gfdv3d_name_src)
-
-if __name__ == '__main__':
-    dv3d = vcs.get3d_scalar()
-    dv3d.script('/tmp/test.json')

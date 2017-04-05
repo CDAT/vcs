@@ -2480,7 +2480,7 @@ def download_sample_data_files(path=None):
         path = vcs.sample_data
     import cdat_info
     import sys
-    cdat_info.download_sample_data_files(os.path.join(sys.prefix,"share","vcs","sample_files.txt"),path)
+    cdat_info.download_sample_data_files(os.path.join(sys.prefix, "share", "vcs", "sample_files.txt"), path)
 
 
 def drawLinesAndMarkersLegend(canvas, templateLegend,

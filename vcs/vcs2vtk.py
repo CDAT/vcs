@@ -592,6 +592,7 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
            }
     return out
 
+
 # Continents first
 # Try to save time and memorize these continents
 vcsContinents = {}
@@ -922,6 +923,7 @@ def setProjectionParameters(pd, proj):
                 pd.SetCentralMeridian(proj4[k])
             elif k != "???":
                 pd.SetOptionalParameter(k, str(proj4[k]))
+
 
 # Vtk dump
 dumps = {}
@@ -1884,6 +1886,7 @@ def vtkWorld2Renderer(ren, x, y):
     ren.WorldToDisplay()
     renpts = ren.GetDisplayPoint()
     return renpts
+
 
 p = vtk.vtkGeoProjection()
 vtkProjections = [

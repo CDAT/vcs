@@ -407,6 +407,7 @@ class Bullseye(Pattern):
         ptIds2.append(pts.InsertNextPoint(-0.40, 0.05, 0.0))
         self.glyph.GetPolys().InsertNextCell(4, ptIds2)
 
+
 pattern_list = [Pattern, BottomLeftTri, TopRightTri, Dot, CheckerBoard,
                 HorizStripe, VertStripe, HorizDash, VertDash, DashStripe,
                 ThinDiagDownRight, ThickDiagDownRight, ThinDiagUpRight, ThickDiagUpRight,

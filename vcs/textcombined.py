@@ -2,7 +2,7 @@
 # Text Combined (Tc) module
 """
 import vcs
-from xmldocs import scriptdocs, listdoc
+from xmldocs import scriptdocs, listdoc  # noqa
 # Adapted for numpy/ma/cdms2 by convertcdms.py
 
 ###############################################################################

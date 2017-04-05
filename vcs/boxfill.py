@@ -838,7 +838,7 @@ class Gfb(object):
     def colors(self, color1=0, color2=255):
         self.color_1 = color1
         self.color_2 = color2
-    colors.__doc__ = xmldocs.colorsdoc  % {"name": "boxfill", "data": "array"}
+    colors.__doc__ = xmldocs.colorsdoc % {"name": "boxfill", "data": "array"}
 
     def exts(self, ext1='n', ext2='y'):
         self.ext_1 = ext1

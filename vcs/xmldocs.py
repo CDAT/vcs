@@ -280,7 +280,7 @@ mticsdoc = """
             >>> ex.{x_y}mtics("{axis}5") # minitick every 5 degrees
             >>> tmp=vcs.createtemplate() # custom template to plot minitics
             >>> tmp.{x_y}mintic1.priority = 1 # plotting shows {x_y}mtics
-            
+
     :param {x_y}mt1: Value for :py:attr:`{x_y}mtics1`.
         Must be a str, or a dictionary object with float:str mappings.
     :type {x_y}mt1: dict or str
@@ -370,10 +370,12 @@ ticlabelsdoc = """
         Must be a str, or a dictionary object with float:str mappings.
     :type %(x_y)stl2: dict or str
     """
-xticlabelsdoc = ticlabelsdoc % {"x_y": "x", "labels": '{0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"}',
-                                    "name": "%(name)s", "data": "%(data)s"}
+xticlabelsdoc = ticlabelsdoc % {"x_y": "x",
+                                "labels": '{0: "Prime Meridian", -121.7680: "Livermore", 37.6173: "Moscow"}',
+                                "name": "%(name)s", "data": "%(data)s"}
 yticlabelsdoc = ticlabelsdoc % {"x_y": "y", "labels": '{0: "Eq.", 37.6819: "L", 55.7558: "M"}', "name": "%(name)s",
-                                    "data": "%(data)s"}
+                                "data": "%(data)s"}
+
 
 def populate_docstrings(type_dict, target_dict, docstring, method):
     """
@@ -393,7 +395,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
     d = {}
     for obj_type in type_dict.keys():
         for obj_name in type_dict[obj_type].keys():
-        # default values. Change as necessary.
+            # default values. Change as necessary.
             example1 = ''
             example2 = ''
             d['type'] = obj_type
@@ -540,6 +542,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                 d['example'] = example % d
             target_dict[obj_name] = docstring % d
             d.clear()
+
 
 # obj_details contains VCS object details used to build Example doctests and fill in docstrings
 #   Keys:
@@ -946,7 +949,7 @@ toggle_vs = """
             .. py:attribute:: Toggle{v_s}Plot (vcs.on or vcs.off)
 
                 Toggles the visibility of the :ref:`dv3d-{v_s}` ({i_e}) plot constituent.
-                
+
                 **Interact Mode:** Toggle visibility with button click.
 """
 toggle_volume = toggle_vs.format(v_s="Volume", i_e="volume render")
@@ -956,7 +959,7 @@ axisslider = """
 
                 Sets the position and visibility of the {axis} :term:`Slice` plane.
                 The position is in {coord} coordinates.
-                
+
                 **Interact Mode:** Adjust position with the slider.
 """
 xslider = axisslider.format(axis="X", coord="longitude")
@@ -968,7 +971,7 @@ verticalscaling = """
                 Scales the vertical dimension of the plot.
 
                 Accepts values from ~ 0.1 -- 10.0
-                
+
                 **Interact Mode:** Adjust position with the slider.
 """
 scalecolormap = """
@@ -976,7 +979,7 @@ scalecolormap = """
 
                 Sets the value range of the current colormap.
                 Initialized to the max (full) range value of the data.
-                
+
                 **Interact Mode:** Adjust colormap range (min, max) with the pair of sliders.
 """
 scaletransferfunction = """
@@ -984,7 +987,7 @@ scaletransferfunction = """
 
                 Sets the value range of the :term:`Volume` plot constituent, which maps this range of variable
                 values to opacity. Initialized to the max (full) range value of the data.
-                
+
                 **Interact Mode:** Adjust TF range (min, max) with the pair of sliders.
 """
 toggleclipping = """

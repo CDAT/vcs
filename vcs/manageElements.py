@@ -122,7 +122,7 @@ def createtemplate(name=None, source='default'):
     name, source = check_name_source(name, source, 'template')
 
     return template.P(name, source)
-createtemplate.__doc__ = createtemplate.__doc__ % xmldocs.create_docs['template']
+createtemplate.__doc__ = createtemplate.__doc__ % xmldocs.create_docs['template']  # noqa
 
 
 def gettemplate(Pt_name_src='default'):
@@ -141,7 +141,7 @@ def gettemplate(Pt_name_src='default'):
     if Pt_name_src not in vcs.elements["template"].keys():
         raise ValueError("template '%s' does not exists" % Pt_name_src)
     return vcs.elements["template"][Pt_name_src]
-gettemplate.__doc__ = gettemplate.__doc__ % xmldocs.get_docs['template']
+gettemplate.__doc__ = gettemplate.__doc__ % xmldocs.get_docs['template']  # noqa
 
 
 def createprojection(name=None, source='default'):
@@ -160,7 +160,7 @@ def createprojection(name=None, source='default'):
 
     name, source = check_name_source(name, source, 'projection')
     return projection.Proj(name, source)
-createprojection.__doc__ = createprojection.__doc__ % xmldocs.create_docs['projection']
+createprojection.__doc__ = createprojection.__doc__ % xmldocs.create_docs['projection']  # noqa
 
 
 def getprojection(Proj_name_src='default'):
@@ -180,7 +180,7 @@ def getprojection(Proj_name_src='default'):
     if Proj_name_src not in vcs.elements["projection"]:
         raise vcsError("No such projection '%s'" % Proj_name_src)
     return vcs.elements["projection"][Proj_name_src]
-getprojection.__doc__ = getprojection.__doc__ % xmldocs.get_docs['projection']
+getprojection.__doc__ = getprojection.__doc__ % xmldocs.get_docs['projection']  # noqa
 
 
 def createboxfill(name=None, source='default'):
@@ -199,7 +199,7 @@ def createboxfill(name=None, source='default'):
 
     name, source = check_name_source(name, source, 'boxfill')
     return boxfill.Gfb(name, source)
-createboxfill.__doc__ = createboxfill.__doc__ % xmldocs.create_docs['boxfill']
+createboxfill.__doc__ = createboxfill.__doc__ % xmldocs.create_docs['boxfill']  # noqa
 
 
 def getboxfill(Gfb_name_src='default'):
@@ -218,7 +218,7 @@ def getboxfill(Gfb_name_src='default'):
     if Gfb_name_src not in vcs.elements["boxfill"].keys():
         raise "The boxfill method: '%s' does not seem to exist"
     return vcs.elements["boxfill"][Gfb_name_src]
-getboxfill.__doc__ = getboxfill.__doc__ % xmldocs.get_docs['boxfill']
+getboxfill.__doc__ = getboxfill.__doc__ % xmldocs.get_docs['boxfill']  # noqa
 
 
 def createtaylordiagram(name=None, source='default'):
@@ -248,7 +248,7 @@ def createtaylordiagram(name=None, source='default'):
             ' does not exist')
     n = vcs.taylor.Gtd(name, source)
     return n
-createtaylordiagram.__doc__ = createtaylordiagram.__doc__ % xmldocs.create_docs['taylordiagram']
+createtaylordiagram.__doc__ = createtaylordiagram.__doc__ % xmldocs.create_docs['taylordiagram']  # noqa
 
 
 def gettaylordiagram(Gtd_name_src='default'):
@@ -271,7 +271,7 @@ def gettaylordiagram(Gtd_name_src='default'):
             Gtd_name_src)
     else:
         return vcs.elements["taylordiagram"][Gtd_name_src]
-gettaylordiagram.__doc__ = gettaylordiagram.__doc__ % xmldocs.get_docs['taylordiagram']
+gettaylordiagram.__doc__ = gettaylordiagram.__doc__ % xmldocs.get_docs['taylordiagram']  # noqa
 
 
 def createmeshfill(name=None, source='default'):
@@ -289,7 +289,7 @@ def createmeshfill(name=None, source='default'):
     """
     name, source = check_name_source(name, source, 'meshfill')
     return meshfill.Gfm(name, source)
-createmeshfill.__doc__ = createmeshfill.__doc__ % xmldocs.create_docs['meshfill']
+createmeshfill.__doc__ = createmeshfill.__doc__ % xmldocs.create_docs['meshfill']  # noqa
 
 
 def getmeshfill(Gfm_name_src='default'):
@@ -310,7 +310,7 @@ def getmeshfill(Gfm_name_src='default'):
         raise ValueError("meshfill '%s' does not exists" % Gfm_name_src)
 
     return vcs.elements["meshfill"][Gfm_name_src]
-getmeshfill.__doc__ = getmeshfill.__doc__ % xmldocs.get_docs['meshfill']
+getmeshfill.__doc__ = getmeshfill.__doc__ % xmldocs.get_docs['meshfill']  # noqa
 
 
 def createisofill(name=None, source='default'):
@@ -329,7 +329,7 @@ def createisofill(name=None, source='default'):
 
     name, source = check_name_source(name, source, 'isofill')
     return isofill.Gfi(name, source)
-createisofill.__doc__ = createisofill.__doc__ % xmldocs.create_docs['isofill']
+createisofill.__doc__ = createisofill.__doc__ % xmldocs.create_docs['isofill']  # noqa
 
 
 def getisofill(Gfi_name_src='default'):
@@ -349,7 +349,7 @@ def getisofill(Gfi_name_src='default'):
     if Gfi_name_src not in vcs.elements["isofill"]:
         raise ValueError("The isofill '%s' does not exists" % Gfi_name_src)
     return vcs.elements["isofill"][Gfi_name_src]
-getisofill.__doc__ = getisofill.__doc__ % xmldocs.get_docs['isofill']
+getisofill.__doc__ = getisofill.__doc__ % xmldocs.get_docs['isofill']  # noqa
 
 
 def createisoline(name=None, source='default'):
@@ -368,8 +368,7 @@ def createisoline(name=None, source='default'):
 
     name, source = check_name_source(name, source, 'isoline')
     return isoline.Gi(name, source)
-createisoline.__doc__ = createisoline.__doc__ % xmldocs.create_docs['isoline']
-
+createisoline.__doc__ = createisoline.__doc__ % xmldocs.create_docs['isoline']  # noqa
 
 
 def getisoline(Gi_name_src='default'):
@@ -388,7 +387,7 @@ def getisoline(Gi_name_src='default'):
     if Gi_name_src not in vcs.elements["isoline"]:
         raise ValueError("The isoline '%s' does not exists" % Gi_name_src)
     return vcs.elements["isoline"][Gi_name_src]
-getisoline.__doc__ = getisoline.__doc__ % xmldocs.get_docs['isoline']
+getisoline.__doc__ = getisoline.__doc__ % xmldocs.get_docs['isoline']  # noqa
 
 
 def create1d(name=None, source='default'):
@@ -478,7 +477,7 @@ def createxyvsy(name=None, source='default'):
             raise ve
     gm.flip = True
     return gm
-createxyvsy.__doc__ = createxyvsy.__doc__ % xmldocs.create_docs['xyvsy']
+createxyvsy.__doc__ = createxyvsy.__doc__ % xmldocs.create_docs['xyvsy']  # noqa
 
 
 def getxyvsy(GXy_name_src='default'):
@@ -495,7 +494,7 @@ def getxyvsy(GXy_name_src='default'):
         # Already existed when name_src was created, most likely
         return vcs.get1d(GXy_name_src + "_xyvsy")
     return gm
-getxyvsy.__doc__ = getxyvsy.__doc__ % xmldocs.get_docs['xyvsy']
+getxyvsy.__doc__ = getxyvsy.__doc__ % xmldocs.get_docs['xyvsy']  # noqa
 
 
 def createyxvsx(name=None, source='default'):
@@ -522,8 +521,7 @@ def createyxvsx(name=None, source='default'):
         else:
             raise ve
     return gm
-createyxvsx.__doc__ = createyxvsx.__doc__ % xmldocs.create_docs['yxvsx']
-
+createyxvsx.__doc__ = createyxvsx.__doc__ % xmldocs.create_docs['yxvsx']  # noqa
 
 
 def getyxvsx(GYx_name_src='default'):
@@ -539,8 +537,7 @@ def getyxvsx(GYx_name_src='default'):
     if gm.g_type != "yxvsx":
         return vcs.get1d(GYx_name_src + "_yxvsx")
     return gm
-getyxvsx.__doc__ = getyxvsx.__doc__ % xmldocs.get_docs['yxvsx']
-    
+getyxvsx.__doc__ = getyxvsx.__doc__ % xmldocs.get_docs['yxvsx']  # noqa
 
 
 def createxvsy(name=None, source='default'):
@@ -567,8 +564,7 @@ def createxvsy(name=None, source='default'):
         else:
             raise ve
     return gm
-createxvsy.__doc__ = createxvsy.__doc__ % xmldocs.create_docs['xvsy']
-    
+createxvsy.__doc__ = createxvsy.__doc__ % xmldocs.create_docs['xvsy']  # noqa
 
 
 def getxvsy(GXY_name_src='default'):
@@ -585,8 +581,7 @@ def getxvsy(GXY_name_src='default'):
     if gm.g_type != "yxvsx":
         return vcs.get1d(GXY_name_src + "_xvsy")
     return gm
-getxvsy.__doc__ = getxvsy.__doc__ % xmldocs.get_docs['xvsy']
-    
+getxvsy.__doc__ = getxvsy.__doc__ % xmldocs.get_docs['xvsy']  # noqa
 
 
 def createvector(name=None, source='default'):
@@ -604,7 +599,7 @@ def createvector(name=None, source='default'):
     """
     name, source = check_name_source(name, source, 'vector')
     return vector.Gv(name, source)
-createvector.__doc__ = createvector.__doc__ % xmldocs.create_docs['vector']
+createvector.__doc__ = createvector.__doc__ % xmldocs.create_docs['vector']  # noqa
 
 
 def getvector(Gv_name_src='default'):
@@ -623,7 +618,7 @@ def getvector(Gv_name_src='default'):
     if Gv_name_src not in vcs.elements["vector"]:
         raise ValueError("The vector '%s' does not exist" % Gv_name_src)
     return vcs.elements["vector"][Gv_name_src]
-getvector.__doc__ = getvector.__doc__ % xmldocs.get_docs['vector']
+getvector.__doc__ = getvector.__doc__ % xmldocs.get_docs['vector']  # noqa
 
 
 def createstreamline(name=None, source='default'):
@@ -641,8 +636,7 @@ def createstreamline(name=None, source='default'):
     """
     name, source = check_name_source(name, source, 'streamline')
     return streamline.Gs(name, source)
-createstreamline.__doc__ =\
-  createstreamline.__doc__ % xmldocs.create_docs['streamline']
+createstreamline.__doc__ = createstreamline.__doc__ % xmldocs.create_docs['streamline']  # noqa
 
 
 def getstreamline(Gs_name_src='default'):
@@ -662,7 +656,7 @@ def getstreamline(Gs_name_src='default'):
     if Gs_name_src not in vcs.elements["streamline"]:
         raise ValueError("The streamline '%s' does not exist" % Gs_name_src)
     return vcs.elements["streamline"][Gs_name_src]
-getstreamline.__doc__ = getstreamline.__doc__ % xmldocs.get_docs['streamline']
+getstreamline.__doc__ = getstreamline.__doc__ % xmldocs.get_docs['streamline']  # noqa
 
 
 def createscatter(name=None, source='default'):
@@ -690,8 +684,7 @@ def createscatter(name=None, source='default'):
             raise ve
     gm.linewidth = 0
     return gm
-createscatter.__doc__ = createscatter.__doc__ % xmldocs.create_docs['scatter']
-    
+createscatter.__doc__ = createscatter.__doc__ % xmldocs.create_docs['scatter']  # noqa
 
 
 def getscatter(GSp_name_src='default'):
@@ -707,8 +700,7 @@ def getscatter(GSp_name_src='default'):
     if gm.g_type != "scatter":
         return vcs.get1d(GSp_name_src + "_scatter")
     return gm
-getscatter.__doc__ = getscatter.__doc__ % xmldocs.get_docs['scatter']
-    
+getscatter.__doc__ = getscatter.__doc__ % xmldocs.get_docs['scatter']  # noqa
 
 
 def createline(name=None, source='default', ltype=None,
@@ -776,7 +768,7 @@ def createline(name=None, source='default', ltype=None,
     if (projection is not None):
         ln.projection = projection
     return ln
-createline.__doc__ = createline.__doc__ % xmldocs.create_docs['line']
+createline.__doc__ = createline.__doc__ % xmldocs.create_docs['line']  # noqa
 
 
 def setLineAttributes(to, l):
@@ -888,7 +880,7 @@ def getline(name='default', ltype=None, width=None, color=None,
     if y is not None and ln.name != 'default':
         ln.y = y
     return ln
-getline.__doc__ = getline.__doc__ % xmldocs.get_docs['line']
+getline.__doc__ = getline.__doc__ % xmldocs.get_docs['line']  # noqa
 
 
 def createmarker(name=None, source='default', mtype=None,
@@ -953,7 +945,7 @@ def createmarker(name=None, source='default', mtype=None,
     if (projection is not None):
         mrk.projection = projection
     return mrk
-createmarker.__doc__ = createmarker.__doc__ % xmldocs.create_docs['marker']
+createmarker.__doc__ = createmarker.__doc__ % xmldocs.create_docs['marker']  # noqa
 
 
 def getmarker(name='default', mtype=None, size=None, color=None,
@@ -1021,7 +1013,7 @@ def getmarker(name='default', mtype=None, size=None, color=None,
     if (y is not None) and (mrk.name != "default"):
         mrk.y = y
     return mrk
-getmarker.__doc__ = getmarker.__doc__ % xmldocs.get_docs['marker']
+getmarker.__doc__ = getmarker.__doc__ % xmldocs.get_docs['marker']  # noqa
 
 
 def createfillarea(name=None, source='default', style=None,
@@ -1087,7 +1079,7 @@ def createfillarea(name=None, source='default', style=None,
     if (y is not None):
         fa.y = y
     return fa
-createfillarea.__doc__ = createfillarea.__doc__ % xmldocs.create_docs['fillarea']
+createfillarea.__doc__ = createfillarea.__doc__ % xmldocs.create_docs['fillarea']  # noqa
 
 
 def getfillarea(name='default', style=None,
@@ -1155,7 +1147,7 @@ def getfillarea(name='default', style=None,
     if (y is not None) and (fa.name != "default"):
         fa.y = y
     return fa
-getfillarea.__doc__ = getfillarea.__doc__ % xmldocs.get_docs['fillarea']
+getfillarea.__doc__ = getfillarea.__doc__ % xmldocs.get_docs['fillarea']  # noqa
 
 
 def createtexttable(name=None, source='default', font=None,
@@ -1227,7 +1219,7 @@ def createtexttable(name=None, source='default', font=None,
         return tt
     except:
         pass
-createtexttable.__doc__ = createtexttable.__doc__ % xmldocs.create_docs['texttable']
+createtexttable.__doc__ = createtexttable.__doc__ % xmldocs.create_docs['texttable']  # noqa
 
 
 def gettexttable(name='default', font=None,
@@ -1277,7 +1269,7 @@ def gettexttable(name='default', font=None,
     if name not in vcs.elements["texttable"]:
         raise ValueError("The texttable '%s' does not exists" % name)
     return vcs.elements["texttable"][name]
-gettexttable.__doc__ = gettexttable.__doc__ % xmldocs.get_docs['texttable']
+gettexttable.__doc__ = gettexttable.__doc__ % xmldocs.get_docs['texttable']  # noqa
 
 
 def createtextorientation(name=None, source='default'):
@@ -1297,7 +1289,7 @@ def createtextorientation(name=None, source='default'):
     name, source = check_name_source(name, source, 'textorientation')
 
     return textorientation.To(name, source)
-createtextorientation.__doc__ = createtextorientation.__doc__ % xmldocs.create_docs['textorientation']
+createtextorientation.__doc__ = createtextorientation.__doc__ % xmldocs.create_docs['textorientation']  # noqa
 
 
 def gettextorientation(To_name_src='default'):
@@ -1319,7 +1311,7 @@ def gettextorientation(To_name_src='default'):
             "The textorientation '%s' does not exists" %
             To_name_src)
     return vcs.elements["textorientation"][To_name_src]
-gettextorientation.__doc__ = gettextorientation.__doc__ % xmldocs.get_docs['textorientation']
+gettextorientation.__doc__ = gettextorientation.__doc__ % xmldocs.get_docs['textorientation']  # noqa
 
 
 def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_source='default',
@@ -1426,8 +1418,8 @@ def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_sourc
     return tc
 #
 # Set alias for the secondary createtextcombined.
-createtext = createtextcombined
-createtextcombined.__doc__ = createtextcombined.__doc__ % xmldocs.create_docs['textcombined']
+createtext = createtextcombined  # noqa
+createtextcombined.__doc__ = createtextcombined.__doc__ % xmldocs.create_docs['textcombined']  # noqa
 
 
 def gettextcombined(Tt_name_src='default', To_name_src=None, string=None, font=None, spacing=None,
@@ -1539,10 +1531,10 @@ def gettextcombined(Tt_name_src='default', To_name_src=None, string=None, font=N
     if (valign is not None) and (tc.To_name != "default"):
         tc.valign = valign
     return tc
-gettextcombined.__doc__ = gettextcombined.__doc__ % xmldocs.get_docs['textcombined']
+gettextcombined.__doc__ = gettextcombined.__doc__ % xmldocs.get_docs['textcombined']  # noqa
 #
 # Set alias for the secondary gettextcombined.
-gettext = gettextcombined
+gettext = gettextcombined  # noqa
 
 
 def get3d_scalar(Gfdv3d_name_src='default'):
@@ -1563,7 +1555,7 @@ def get3d_scalar(Gfdv3d_name_src='default'):
         raise ValueError("dv3d '%s' does not exists" % Gfdv3d_name_src)
 
     return vcs.elements["3d_scalar"][Gfdv3d_name_src]
-get3d_scalar.__doc__ = get3d_scalar.__doc__ % xmldocs.get_docs['3d_scalar']
+get3d_scalar.__doc__ = get3d_scalar.__doc__ % xmldocs.get_docs['3d_scalar']  # noqa
 
 
 def create3d_scalar(name=None, source='default'):
@@ -1581,7 +1573,7 @@ def create3d_scalar(name=None, source='default'):
     """
     name, source = check_name_source(name, source, '3d_scalar')
     return dv3d.Gf3Dscalar(name, source)
-create3d_scalar.__doc__ = create3d_scalar.__doc__ % xmldocs.create_docs['3d_scalar']
+create3d_scalar.__doc__ = create3d_scalar.__doc__ % xmldocs.create_docs['3d_scalar']  # noqa
 
 
 def get3d_dual_scalar(Gfdv3d_name_src='default'):
@@ -1601,7 +1593,7 @@ def get3d_dual_scalar(Gfdv3d_name_src='default'):
         raise ValueError("dv3d '%s' does not exists" % Gfdv3d_name_src)
 
     return vcs.elements["3d_dual_scalar"][Gfdv3d_name_src]
-get3d_dual_scalar.__doc__ = get3d_dual_scalar.__doc__ % xmldocs.get_docs['3d_dual_scalar']
+get3d_dual_scalar.__doc__ = get3d_dual_scalar.__doc__ % xmldocs.get_docs['3d_dual_scalar']  # noqa
 
 
 def create3d_dual_scalar(name=None, source='default'):
@@ -1620,7 +1612,7 @@ def create3d_dual_scalar(name=None, source='default'):
 
     name, source = check_name_source(name, source, '3d_dual_scalar')
     return dv3d.Gf3DDualScalar(name, source)
-create3d_dual_scalar.__doc__ = create3d_dual_scalar.__doc__ % xmldocs.create_docs['3d_dual_scalar']
+create3d_dual_scalar.__doc__ = create3d_dual_scalar.__doc__ % xmldocs.create_docs['3d_dual_scalar']  # noqa
 
 
 def get3d_vector(Gfdv3d_name_src='default'):
@@ -1641,7 +1633,7 @@ def get3d_vector(Gfdv3d_name_src='default'):
         raise ValueError("dv3d '%s' does not exists" % Gfdv3d_name_src)
 
     return vcs.elements["3d_vector"][Gfdv3d_name_src]
-get3d_vector.__doc__ = get3d_vector.__doc__ % xmldocs.get_docs['3d_vector']
+get3d_vector.__doc__ = get3d_vector.__doc__ % xmldocs.get_docs['3d_vector']  # noqa
 
 
 def create3d_vector(name=None, source='default'):
@@ -1660,7 +1652,7 @@ def create3d_vector(name=None, source='default'):
 
     name, source = check_name_source(name, source, '3d_vector')
     return dv3d.Gf3Dvector(name, source)
-create3d_vector.__doc__ = create3d_vector.__doc__ % xmldocs.create_docs['3d_vector']
+create3d_vector.__doc__ = create3d_vector.__doc__ % xmldocs.create_docs['3d_vector']  # noqa
 
 #############################################################################
 #                                                                           #
@@ -1685,7 +1677,7 @@ def createcolormap(Cp_name=None, Cp_name_src='default'):
 
     Cp_name, Cp_name_src = check_name_source(Cp_name, Cp_name_src, 'colormap')
     return colormap.Cp(Cp_name, Cp_name_src)
-createcolormap.__doc__ = createcolormap.__doc__ % xmldocs.create_docs['colormap']
+createcolormap.__doc__ = createcolormap.__doc__ % xmldocs.create_docs['colormap']  # noqa
 
 
 def getcolormap(Cp_name_src='default'):
@@ -1702,7 +1694,7 @@ def getcolormap(Cp_name_src='default'):
         raise ValueError('Error -  The argument must be a string.')
 
     return vcs.elements["colormap"][Cp_name_src]
-getcolormap.__doc__ = getcolormap.__doc__ % xmldocs.get_docs['colormap']
+getcolormap.__doc__ = getcolormap.__doc__ % xmldocs.get_docs['colormap']  # noqa
 
 # Function that deal with removing existing vcs elements
 

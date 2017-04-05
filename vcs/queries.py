@@ -214,7 +214,7 @@ def iscolormap(obj):
         return 1
     else:
         return 0
-iscolormap.__doc__ = xmldocs.is_docs['colormap']
+iscolormap.__doc__ = xmldocs.is_docs['colormap']  # noqa
 
 
 def istemplate(gobj):
@@ -222,7 +222,7 @@ def istemplate(gobj):
         return 1
     else:
         return 0
-istemplate.__doc__ = xmldocs.is_docs['template']
+istemplate.__doc__ = xmldocs.is_docs['template']  # noqa
 
 
 def issecondaryobject(sobj):
@@ -300,7 +300,7 @@ def isprojection(obj):
         return 1
     else:
         return 0
-isprojection.__doc__ = xmldocs.is_docs['projection']
+isprojection.__doc__ = xmldocs.is_docs['projection']  # noqa
 
 
 def istaylordiagram(obj):
@@ -308,7 +308,7 @@ def istaylordiagram(obj):
         return 1
     else:
         return 0
-istaylordiagram.__doc__ = xmldocs.is_docs['taylordiagram']
+istaylordiagram.__doc__ = xmldocs.is_docs['taylordiagram']  # noqa
 
 
 def ismeshfill(obj):
@@ -316,7 +316,7 @@ def ismeshfill(obj):
         return 1
     else:
         return 0
-ismeshfill.__doc__ = xmldocs.is_docs['meshfill']
+ismeshfill.__doc__ = xmldocs.is_docs['meshfill']  # noqa
 
 
 def isboxfill(obj):
@@ -324,7 +324,7 @@ def isboxfill(obj):
         return 1
     else:
         return 0
-isboxfill.__doc__ = xmldocs.is_docs['boxfill']
+isboxfill.__doc__ = xmldocs.is_docs['boxfill']  # noqa
 
 
 def is3d_scalar(obj):
@@ -332,7 +332,7 @@ def is3d_scalar(obj):
         return 1
     else:
         return 0
-is3d_scalar.__doc__ = xmldocs.is_docs['3d_scalar']
+is3d_scalar.__doc__ = xmldocs.is_docs['3d_scalar']  # noqa
 
 
 def is3d_dual_scalar(obj):
@@ -340,7 +340,7 @@ def is3d_dual_scalar(obj):
         return 1
     else:
         return 0
-is3d_dual_scalar.__doc__ = xmldocs.is_docs['3d_dual_scalar']
+is3d_dual_scalar.__doc__ = xmldocs.is_docs['3d_dual_scalar']  # noqa
 
 
 def is3d_vector(obj):
@@ -348,7 +348,7 @@ def is3d_vector(obj):
         return 1
     else:
         return 0
-is3d_vector.__doc__ = xmldocs.is_docs['3d_vector']
+is3d_vector.__doc__ = xmldocs.is_docs['3d_vector']  # noqa
 
 
 def isisofill(obj):
@@ -356,7 +356,7 @@ def isisofill(obj):
         return 1
     else:
         return 0
-isisofill.__doc__ = xmldocs.is_docs['isofill']
+isisofill.__doc__ = xmldocs.is_docs['isofill']  # noqa
 
 
 def isisoline(obj):
@@ -364,7 +364,7 @@ def isisoline(obj):
         return 1
     else:
         return 0
-isisoline.__doc__ = xmldocs.is_docs['isoline']
+isisoline.__doc__ = xmldocs.is_docs['isoline']  # noqa
 
 
 def isscatter(obj):
@@ -372,7 +372,7 @@ def isscatter(obj):
         return 1
     else:
         return 0
-isscatter.__doc__ = xmldocs.is_docs['scatter']
+isscatter.__doc__ = xmldocs.is_docs['scatter']  # noqa
 
 
 def isxyvsy(obj):
@@ -380,7 +380,7 @@ def isxyvsy(obj):
         return 1
     else:
         return 0
-isxyvsy.__doc__ = xmldocs.is_docs['xyvsy']
+isxyvsy.__doc__ = xmldocs.is_docs['xyvsy']  # noqa
 
 
 def isyxvsx(obj):
@@ -388,7 +388,7 @@ def isyxvsx(obj):
         return 1
     else:
         return 0
-isyxvsx.__doc__ = xmldocs.is_docs['yxvsx']
+isyxvsx.__doc__ = xmldocs.is_docs['yxvsx']  # noqa
 
 
 def isxvsy(obj):
@@ -396,7 +396,7 @@ def isxvsy(obj):
         return 1
     else:
         return 0
-isxvsy.__doc__ = xmldocs.is_docs['xvsy']
+isxvsy.__doc__ = xmldocs.is_docs['xvsy']  # noqa
 
 
 def is1d(obj):
@@ -404,7 +404,7 @@ def is1d(obj):
         return 1
     else:
         return 0
-is1d.__doc__ = xmldocs.is_docs['1d']
+is1d.__doc__ = xmldocs.is_docs['1d']  # noqa
 
 
 def isvector(obj):
@@ -412,7 +412,7 @@ def isvector(obj):
         return 1
     else:
         return 0
-isvector.__doc__ = xmldocs.is_docs['1d']
+isvector.__doc__ = xmldocs.is_docs['1d']  # noqa
 
 
 def isline(obj):
@@ -420,7 +420,7 @@ def isline(obj):
         return 1
     else:
         return 0
-isline.__doc__ = xmldocs.is_docs['line']
+isline.__doc__ = xmldocs.is_docs['line']  # noqa
 
 
 def ismarker(obj):
@@ -428,7 +428,7 @@ def ismarker(obj):
         return 1
     else:
         return 0
-ismarker.__doc__ = xmldocs.is_docs['marker']
+ismarker.__doc__ = xmldocs.is_docs['marker']  # noqa
 
 
 def isfillarea(obj):
@@ -436,7 +436,7 @@ def isfillarea(obj):
         return 1
     else:
         return 0
-isfillarea.__doc__ = xmldocs.is_docs['fillarea']
+isfillarea.__doc__ = xmldocs.is_docs['fillarea']  # noqa
 
 
 def istexttable(obj):
@@ -444,7 +444,7 @@ def istexttable(obj):
         return 1
     else:
         return 0
-istexttable.__doc__ = xmldocs.is_docs['texttable']
+istexttable.__doc__ = xmldocs.is_docs['texttable']  # noqa
 
 
 def istextorientation(obj):
@@ -452,7 +452,7 @@ def istextorientation(obj):
         return 1
     else:
         return 0
-istextorientation.__doc__ = xmldocs.is_docs['textorientation']
+istextorientation.__doc__ = xmldocs.is_docs['textorientation']  # noqa
 
 
 def istextcombined(obj):
@@ -460,7 +460,7 @@ def istextcombined(obj):
         return 1
     else:
         return 0
-istextcombined.__doc__ = xmldocs.is_docs['textcombined']
+istextcombined.__doc__ = xmldocs.is_docs['textcombined']  # noqa
 
 # Set an alias for the secondary text combined method in VCS.               #
 # This is much easier to type than 'textcombined'.                          #
