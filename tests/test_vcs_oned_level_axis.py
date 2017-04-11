@@ -10,5 +10,5 @@ class TestVCSOnedLevelAxis(basevcstest.VCSBaseTest):
         ta = f("ta",time=slice(0,1),squeeze=1)
         ta = cdutil.averager(ta,axis="yx")
         self.x.plot(ta,bg=self.bg)
-        fnm = os.path.split(__file__)[1][:-3] + ".png"
+        fnm = os.path.splitext(os.path.split(__file__)[1])[0] + ".png"
         self.checkImage(fnm)
