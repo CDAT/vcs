@@ -11,7 +11,7 @@ class TestVCSAnimateIsofill(basevcstest.VCSBaseTest):
         gm=self.x.createisofill()
         self.x.plot(s,gm,bg=self.bg)
         self.x.animate.create()
-        prefix= os.path.split(__file__)[1][:-3]
+        prefix= os.path.splitext(os.path.split(__file__)[1])[0]
         self.x.animate.save("%s.mp4"%prefix)
         pngs = self.x.animate.close(preserve_pngs = True) # so we can look at them again
         ret = 0
