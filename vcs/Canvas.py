@@ -4953,7 +4953,7 @@ class Canvas(object):
                 "units must be on of inches, in, cm, mm, pixel(s) or dot(s)")
 
         W, H = self._compute_width_height(
-            width, height, units)
+            width, height, units, background=True)
         return self.backend.png(
             file, W, H, units, draw_white_background, **args)
     png.__doc__ = png.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
@@ -4992,7 +4992,7 @@ class Canvas(object):
                 "units must be on of inches, in, cm, mm, pixel(s) or dot(s)")
 
         W, H = self._compute_width_height(
-            width, height, units)
+            width, height, units, background=True)
 
         if not file.split('.')[-1].lower() in ['pdf']:
             file += '.pdf'
@@ -5033,7 +5033,7 @@ class Canvas(object):
                 "units must be on of inches, in, cm, mm, pixel(s) or dot(s)")
 
         W, H = self._compute_width_height(
-            width, height, units)
+            width, height, units, background=True)
 
         if not file.split('.')[-1].lower() in ['svg']:
             file += '.svg'
@@ -5156,10 +5156,9 @@ class Canvas(object):
         :returns: A boolean value indicating whether the Canvas is opened (1), or closed (0)
         :rtype: bool
         """
-
         return self.backend.isopened()
 
-    def _compute_width_height(self, width, height, units, ps=False):
+    def _compute_width_height(self, width, height, units, ps=False, background=False):
         dpi = 72.  # dot per inches
         if units in ["in", "inches"]:
             factor = 1.
@@ -5171,7 +5170,7 @@ class Canvas(object):
             factor = 1. / 72
         sfactor = factor
         if width is None and height is None:
-            if self.isopened():
+            if self.isopened() and not background:
                 try:
                     ci = self.canvasinfo()
                     height = ci['height']
@@ -5280,7 +5279,7 @@ class Canvas(object):
 
         # figures out width/height
         W, H = self._compute_width_height(
-            width, height, units, ps=True)
+            width, height, units, ps=True, background=True)
 
         # orientation keyword is useless left for backward compatibility
         if not file.split('.')[-1].lower() in ['ps', 'eps']:
