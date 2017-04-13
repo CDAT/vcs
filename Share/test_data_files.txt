@@ -3,4 +3,4 @@ aa51aa896ead44019335cebec68e7955  clt.nc
 9f6d62ea4393522dccfa64e092d8af91  sampleCurveGrid4.nc
 6af2b2e8f8fe468c49d0324d69d83942  ta_ncep_87-6-88-4.nc
 4e4648ad9855cb71259926c9d4a1d361  tas_ccsr-95a_1979.01-1979.12.nc
-f05fd9a1a8026537d733dcea5b140f33  /var/www/cdat/sample_data/BlueMarble.ppm
+f05fd9a1a8026537d733dcea5b140f33  BlueMarble.ppm
