@@ -158,6 +158,7 @@ if args.git or not os.path.exists("uvcdat-testdata"):
         run_command("git clone git://github.com/uv-cdat/uvcdat-testdata")
     os.chdir("uvcdat-testdata")
     run_command("git pull")
+    print "BRANCH WE ARE TRYING TO CHECKOUT is (%s)" % b
     run_command("git checkout %s" % (b))
     os.chdir(root)
 

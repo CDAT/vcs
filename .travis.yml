@@ -9,7 +9,6 @@ before_install:
 - bash miniconda.sh -b -p $HOME/miniconda
 - conda config --set always_yes yes --set changeps1 no
 - conda update -y -q conda
-- conda install gcc
 script:
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then conda install -c uvcdat/label/nightly -c conda-forge -c uvcdat uvcdat-nox "mesalib<8" nose image-compare flake8; fi
 - if [ "$TRAVIS_OS_NAME" = "osx" ]; then conda install -c uvcdat/label/nightly -c conda-forge -c uvcdat "mesalib<8" uvcdat nose image-compare flake8; fi
@@ -20,12 +19,10 @@ script:
 - echo $TRAVIS_PULL_REQUEST
 - python setup.py install --old-and-unmanageable
 - git clone git://github.com/uv-cdat/uvcdat-testdata
+- cd uvcdat-testdata ; git checkout $TRAVIS_BRANCH ; cd ..
 - df -h
 - pip install dropbox
-- if [ "$TRAVIS_OS_NAME" = "osx" ]; then python run_tests.py -v2 -g --no-vtk-ui -c uvcdat" ; fi
+- if [ "$TRAVIS_OS_NAME" = "osx" ]; then python run_tests.py -v2 -g --no-vtk-ui --dropbox ; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then python run_tests.py -v2 -g --no-vtk-ui --dropbox ; fi
-env:
-  global:
-    secure: Z06idl4BP01QMhrocmfuYV4CcbLmb5ZJZoXXymDr5sLIIfqdMiSL/CfDCRkIwl44vKpTN5R9AAhQV6iNMdU0NOQQrftHJyT5YV4y966FuAA1v9ev7y/cgExJFv7M/4E37WAN6YIcO7E42KZReeNKOAodorpqoT87MW6FAImZbrM=
 after_success:
     - if [ "$TRAVIS_BRANCH" == "master" -a "$TRAVIS_PULL_REQUEST" == "false" ]; then conda install conda-build && conda install anaconda-client && bash scripts/conda_upload.sh ; fi
