@@ -12,7 +12,7 @@ import checkimage
 class VCSBaseTest(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
-        self.geometry = {"width": 1200, "height": 1091}
+        self.geometry = {"width": 1200, "height": 1090}
         if 'geometry' in kwargs:
             self.geometry = kwargs['geometry']
             del kwargs['geometry']

@@ -39,11 +39,16 @@ class TestVCSInit(unittest.TestCase):
                 print "List/Tuple", failing
                 sys.exit(1)
 
-        valid = [
-            (250, 125),
-            (1, 1),
-            (800, 1000)
-        ]
+        if sys.platform != "darwin":
+            valid = [
+                (250, 125),
+                (1, 1),
+                (800, 1000)
+            ]
+        else:  # mac cannot do odd sizes
+            valid = [
+                (800, 1000)
+            ]
 
 
         def test_canvas_size(c, size, via):
