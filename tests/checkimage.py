@@ -11,6 +11,7 @@ import os
 import os.path
 import sys
 import logging
+import shutil
 
 defaultThreshold=10.0
 
@@ -51,7 +52,7 @@ def find_alternates(fname):
     return results
 
 def check_result_image(fname, baselinefname, threshold = defaultThreshold,
-                       baseline = True, cleanup=True):
+                       baseline = True, cleanup=True, update_baseline=False):
     testImage = image_from_file(fname)
     if testImage is None:
         print "Testing image missing, test failed."
@@ -93,6 +94,11 @@ def check_result_image(fname, baselinefname, threshold = defaultThreshold,
     if bestImage is None:
       print "No baseline images found. Test failed."
       return -1
+    
+    if update_baseline is True:
+      print "UPDATE MODE updating %s with %s" % (bestFilename,fname)
+      shutil.copy(fname,bestFilename)
+      return 0
 
     if bestDiff < threshold:
         print "Baseline '%s' is the best match with a difference of %f."%(bestFilename, bestDiff)

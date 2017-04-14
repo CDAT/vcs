@@ -810,7 +810,7 @@ scriptdoc = """Saves out a copy of the %(name)s %(type)s,
 
 
 queries_is_doc = """
-    Check to see if this object is a VCS %(name)s %(method_type)s.
+    Check to see if this object is a VCS %(name)s %(type)s.
 
     :Example:
 
