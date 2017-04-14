@@ -540,7 +540,7 @@ class VTKVCSBackend(object):
     def isopened(self):
         if self.renWin is None:
             return False
-        elif self.renWin.GetOffScreenRendering():
+        elif self.renWin.GetOffScreenRendering() and self.bg:
             # IN bg mode
             return False
         else:
