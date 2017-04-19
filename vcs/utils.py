@@ -37,6 +37,11 @@ import cdms2
 import genutil
 import vtk
 import struct
+try:
+    import vcsaddons
+    hasVCSAddons = True
+except:
+    hasVCSAddons = False
 
 
 from colors import rgb2str, str2rgb, matplotlib2vcs  # noqa
@@ -2184,10 +2189,9 @@ def getgraphicsmethod(type, name):
         If such a graphics method doesn't exist, None will be returned.
     :rtype: VCS graphics method or `None`_
     """
-    import vcsaddons
     if type == "default":
         type = "boxfill"
-    if isinstance(type, vcsaddons.core.VCSaddon):
+    if hasVCSAddons and isinstance(type, vcsaddons.core.VCSaddon):
         func = type.getgm
         copy_mthd = func(name)
     else:
@@ -2227,7 +2231,6 @@ def creategraphicsmethod(gtype, gname='default', name=None):
     :return: A graphics method object
 
     """
-    import vcsaddons
     if gtype in ['isoline', 'Gi']:
         func = vcs.createisoline
     elif gtype in ['isofill', 'Gfi']:
@@ -2259,7 +2262,7 @@ def creategraphicsmethod(gtype, gname='default', name=None):
         func = vcs.create3d_dual_scalar
     elif gtype == '3d_vector':
         func = vcs.create3d_vector
-    elif isinstance(gtype, vcsaddons.core.VCSaddon):
+    elif hasVCSAddons and isinstance(gtype, vcsaddons.core.VCSaddon):
         func = gtype.creategm
     else:
         return None

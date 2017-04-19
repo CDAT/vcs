@@ -56,6 +56,12 @@ import xmldocs
 
 from error import vcsError
 
+try:
+    import vcsaddons
+    hasVCSAddons = True
+except:
+    hasVCSAddons = False
+
 
 def isgraphicsmethod(gobj):
     """Indicates if the entered argument is one of the following graphics
@@ -78,7 +84,6 @@ def isgraphicsmethod(gobj):
                 1 indicates true, 0 indicates false.
     :rtype: `int`_
     """
-    import vcsaddons
     if (isinstance(gobj, boxfill.Gfb)):
         return 1
     elif (isinstance(gobj, isofill.Gfi)):
@@ -101,7 +106,7 @@ def isgraphicsmethod(gobj):
         return 1
     elif (isinstance(gobj, meshfill.Gfm)):
         return 1
-    elif isinstance(gobj, vcsaddons.core.VCSaddon):
+    elif hasVCSAddons and isinstance(gobj, vcsaddons.core.VCSaddon):
         return 1
     else:
         return 0
@@ -155,7 +160,6 @@ def graphicsmethodtype(gobj):
         If gobj is not a graphics method object, raises an exception and prints a vcsError message.
     :rtype: `str`_ or `None`_
     """
-    import vcsaddons
     if (isinstance(gobj, boxfill.Gfb)):
         return 'boxfill'
     elif (isinstance(gobj, isofill.Gfi)):
@@ -178,7 +182,7 @@ def graphicsmethodtype(gobj):
         return 'taylordiagram'
     elif (isinstance(gobj, meshfill.Gfm)):
         return 'meshfill'
-    elif isinstance(gobj, vcsaddons.core.VCSaddon):
+    elif hasVCSAddons and isinstance(gobj, vcsaddons.core.VCSaddon):
         return gobj
     else:
         raise vcsError('The object passed is not a graphics method object.')
