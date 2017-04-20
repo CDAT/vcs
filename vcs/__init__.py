@@ -46,6 +46,14 @@ model for defining a plot, that is decomposed into three parts:
    customized them, you can also save them out for later use, and distribute
    them to other users.
 """
+import warnings
+
+class VCSDeprecationWarning(DeprecationWarning):
+    pass
+
+# Python < 3 DeprecationWarning ignored by default
+# warnings.simplefilter('default')
+warnings.simplefilter("default",VCSDeprecationWarning)#,".*",0)
 
 _doValidation = True
 next_canvas_id = 1

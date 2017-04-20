@@ -61,9 +61,6 @@ import vcs.manageElements  # noqa
 import configurator  # noqa
 from projection import no_deformation_projections  # noqa
 
-# Python < 3 DeprecationWarning ignored by default
-# warnings.simplefilter('default')
-
 
 class SIGNAL(object):
 
@@ -3793,7 +3790,7 @@ class Canvas(object):
                 if keyarg not in self.__class__._plot_keywords_ + self.backend._plot_keywords:
                     if keyarg in self.__class__._deprecated_plot_keywords_:
                         warnings.warn("Deprecation Warning: Keyword '%s' will be removed in the next version"
-                                      "of UV-CDAT." % keyarg)
+                                      "of UV-CDAT." % keyarg, vcs.VCSDeprecationWarning)
                     else:
                         warnings.warn(
                             'Unrecognized vcs plot keyword: %s, assuming backend (%s) keyword' %
@@ -5541,7 +5538,7 @@ class Canvas(object):
     def gs(self, filename='noname.gs', device='png256',
            orientation=None, resolution='792x612'):
 
-        warnings.warn("Export to GhostScript is no longer supported", DeprecationWarning)
+        warnings.warn("Export to GhostScript is no longer supported", vcs.VCSDeprecationWarning)
 
     def eps(self, file, mode='r', orientation=None, width=None, height=None, units='inches', textAsPaths=True):
         """In some cases, the user may want to save the plot out as an Encapsulated
