@@ -56,10 +56,14 @@ from xmldocs import plot_keywords_doc, graphics_method_core, axesconvert, xaxisc
     plot_1D_input, plot_2D_input, plot_output, plot_2_1D_input, plot_2_1D_options
 gui_canvas_closed = 0
 canvas_closed = 0
-import vcsaddons  # noqa
 import vcs.manageElements  # noqa
 import configurator  # noqa
 from projection import no_deformation_projections  # noqa
+try:
+    import vcsaddons  # noqa
+    hasVCSAddons = True
+except:
+    hasVCSAddons = False
 
 # Python < 3 DeprecationWarning ignored by default
 warnings.simplefilter('default')
@@ -204,7 +208,7 @@ def _determine_arg_list(g_name, actual_args):
             found_graphics_method = found_graphics_method + 1
         elif (isprojection(args[i])):
             arglist[5]['projection'] = args[i].name
-        elif isinstance(args[i], vcsaddons.core.VCSaddon):
+        elif hasVCSAddons and isinstance(args[i], vcsaddons.core.VCSaddon):
             if found_graphics_method:
                 raise vcsError('You can only specify one graphics method.')
             arglist[igraphics_method] = graphicsmethodtype(args[i])
@@ -239,7 +243,7 @@ def _determine_arg_list(g_name, actual_args):
                 "Error in argument list for vcs %s  command." %
                 g_name)
 
-    if isinstance(arglist[igraphics_method], vcsaddons.core.VCSaddon):
+    if hasVCSAddons and isinstance(arglist[igraphics_method], vcsaddons.core.VCSaddon):
         if found_slabs != arglist[igraphics_method].g_nslabs:
             raise vcsError(
                 "%s requires %i slab(s)" %
@@ -2762,7 +2766,7 @@ class Canvas(object):
         assert arglist[0] is None or cdms2.isVariable(arglist[0])
         assert arglist[1] is None or cdms2.isVariable(arglist[1])
         assert isinstance(arglist[2], str)
-        if not isinstance(arglist[3], vcsaddons.core.VCSaddon):
+        if hasVCSAddons and not isinstance(arglist[3], vcsaddons.core.VCSaddon):
             assert isinstance(arglist[3], str)
         assert isinstance(arglist[4], str)
 
@@ -3772,7 +3776,7 @@ class Canvas(object):
 
             return dn
         else:  # not taylor diagram
-            if isinstance(arglist[3], vcsaddons.core.VCSaddon):
+            if hasVCSAddons and isinstance(arglist[3], vcsaddons.core.VCSaddon):
                 gm = arglist[3]
             else:
                 tp = arglist[3]
@@ -3885,13 +3889,13 @@ class Canvas(object):
                 del(vcs.elements["template"][t.name])
             elif (arglist[3] in ['boxfill', 'isofill', 'isoline',
                                  'vector', 'meshfill'] or
-                  isinstance(arglist[3], vcsaddons.core.VCSaddon)) and \
+                  (hasVCSAddons and isinstance(arglist[3], vcsaddons.core.VCSaddon))) and \
                     doratio in ['auto', 'autot'] and not (doratio == 'auto' and arglist[2] == 'ASD'):
                 box_and_ticks = 0
                 if doratio[-1] == 't' or template_origin == 'default':
                     box_and_ticks = 1
 
-                if isinstance(arglist[3], vcsaddons.core.VCSaddon):
+                if hasVCSAddons and isinstance(arglist[3], vcsaddons.core.VCSaddon):
                     gm = arglist[3]
                 else:
                     tp = arglist[3]
@@ -3997,7 +4001,7 @@ class Canvas(object):
                         'Error - VECTOR components must be on the same grid.')
             if "bg" in keyargs:
                 del(keyargs["bg"])
-            if isinstance(arglist[3], vcsaddons.core.VCSaddon):
+            if hasVCSAddons and isinstance(arglist[3], vcsaddons.core.VCSaddon):
                 if arglist[1] is None:
                     dn = arglist[3].plot(
                         arglist[0],
