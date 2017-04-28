@@ -92,7 +92,7 @@ class VectorPipeline(Pipeline2D):
         if self._gm.scaletype == 'constant' or\
            self._gm.scaletype == 'constantNNormalize' or\
            self._gm.scaletype == 'constantNLinear':
-            scaleFactor = scale * 2.0 * self._gm.scale
+            scaleFactor = scale * self._gm.scale
         else:
             scaleFactor = 1.0
 
@@ -108,34 +108,20 @@ class VectorPipeline(Pipeline2D):
 
         glyphFilter.SetScaleModeToScaleByVector()
 
+        maxNormInVp = None
+        minNormInVp = None
+        # Find the min and max vector magnitudes
+        (minNorm, maxNorm) = vectors.GetRange(-1)
+        if maxNorm == 0:
+            maxNorm = 1.0
+
         if self._gm.scaletype == 'normalize' or self._gm.scaletype == 'linear' or\
            self._gm.scaletype == 'constantNNormalize' or self._gm.scaletype == 'constantNLinear':
-
-            # Find the min and max vector magnitudes
-            maxNorm = vectors.GetMaxNorm()
-
-            if maxNorm == 0:
-                maxNorm = 1.0
-
             if self._gm.scaletype == 'normalize' or self._gm.scaletype == 'constantNNormalize':
                 scaleFactor /= maxNorm
 
             if self._gm.scaletype == 'linear' or self._gm.scaletype == 'constantNLinear':
-                minNorm = None
-                maxNorm = None
-
                 noOfComponents = vectors.GetNumberOfComponents()
-                for i in range(0, vectors.GetNumberOfTuples()):
-                    norm = vtk.vtkMath.Norm(vectors.GetTuple(i), noOfComponents)
-
-                    if (minNorm is None or norm < minNorm):
-                        minNorm = norm
-                    if (maxNorm is None or norm > maxNorm):
-                        maxNorm = norm
-
-                if maxNorm == 0:
-                    maxNorm = 1.0
-
                 scalarArray = vtk.vtkDoubleArray()
                 scalarArray.SetNumberOfComponents(1)
                 scalarArray.SetNumberOfValues(vectors.GetNumberOfTuples())
@@ -152,6 +138,8 @@ class VectorPipeline(Pipeline2D):
                     newValue = (((norm - minNorm) * newRange) / oldRange) + newRangeValues[0]
                     scalarArray.SetValue(i, newValue)
                     polydata.GetPointData().SetScalars(scalarArray)
+                maxNormInVp = newRangeValues[1] * scaleFactor
+                minNormInVp = newRangeValues[0] * scaleFactor
 
                 # Scale to vector magnitude:
                 # NOTE: Currently we compute our own scaling factor since VTK does
@@ -160,6 +148,9 @@ class VectorPipeline(Pipeline2D):
                 glyphFilter.SetScaleModeToScaleByScalar()
 
         glyphFilter.SetScaleFactor(scaleFactor)
+        if (maxNormInVp is None):
+            maxNormInVp = maxNorm * scaleFactor
+            # minNormInVp is left None, as it is displayed only for linear scaling.
 
         mapper = vtk.vtkPolyDataMapper()
 
@@ -178,43 +169,15 @@ class VectorPipeline(Pipeline2D):
             r, g, b, a = cmap.index[lcolor]
         act.GetProperty().SetColor(r / 100., g / 100., b / 100.)
 
-        plotting_dataset_bounds = vcs2vtk.getPlottingBounds(
-            vcs.utils.getworldcoordinates(self._gm,
-                                          self._data1.getAxis(-1),
-                                          self._data1.getAxis(-2)),
-            self._vtkDataSetBounds, self._vtkGeoTransform)
-        x1, x2, y1, y2 = plotting_dataset_bounds
-        if self._vtkGeoTransform is None:
-            wc = plotting_dataset_bounds
-        else:
-            xrange = list(act.GetXRange())
-            yrange = list(act.GetYRange())
-            wc = [xrange[0], xrange[1], yrange[0], yrange[1]]
-
+        plotting_dataset_bounds = self.getPlottingBounds()
         vp = self._resultDict.get('ratio_autot_viewport',
                                   [self._template.data.x1, self._template.data.x2,
                                    self._template.data.y1, self._template.data.y2])
-        # look for previous dataset_bounds different than ours and
-        # modify the viewport so that the datasets are alligned
-        # Hack to fix the case when the user does not specify gm.datawc_...
-        # if geo is None:
-        #     for dp in vcs.elements['display'].values():
-        #         if (hasattr(dp, 'backend')):
-        #             prevWc = dp.backend.get('dataset_bounds', None)
-        #             if (prevWc):
-        #                 middleX = float(vp[0] + vp[1]) / 2.0
-        #                 middleY = float(vp[2] + vp[3]) / 2.0
-        #                 sideX = float(vp[1] - vp[0]) / 2.0
-        #                 sideY = float(vp[3] - vp[2]) / 2.0
-        #                 ratioX = float(prevWc[1] - prevWc[0]) / float(wc[1] - wc[0])
-        #                 ratioY = float(prevWc[3] - prevWc[2]) / float(wc[3] - wc[2])
-        #                 sideX = sideX / ratioX
-        #                 sideY = sideY / ratioY
-        #                 vp = [middleX - sideX, middleX + sideX, middleY - sideY, middleY + sideY]
-
         dataset_renderer, xScale, yScale = self._context().fitToViewport(
             act, vp,
-            wc=wc,
+            wc=plotting_dataset_bounds,
+            geoBounds=self._vtkDataSetBoundsNoMask,
+            geo=self._vtkGeoTransform,
             priority=self._template.data.priority,
             create_renderer=True)
         kwargs = {'vtk_backend_grid': self._vtkDataSet,
@@ -227,6 +190,19 @@ class VectorPipeline(Pipeline2D):
         self._resultDict.update(self._context().renderTemplate(
             self._template, self._data1,
             self._gm, taxis, zaxis, **kwargs))
+
+        # assume that self._data1.units has the proper vector units
+        unitString = None
+        if (hasattr(self._data1, 'units')):
+            unitString = self._data1.units
+
+        worldToViewportXScale = (vp[1] - vp[0]) / (plotting_dataset_bounds[1] - plotting_dataset_bounds[0])
+        maxNormInVp *= worldToViewportXScale
+        if (minNormInVp):
+            minNormInVp *= worldToViewportXScale
+        vcs.utils.drawVectorLegend(
+            self._context().canvas, self._template.legend, lcolor, lstyle, lwidth,
+            unitString, maxNormInVp, maxNorm, minNormInVp, minNorm)
 
         if self._context().canvas._continents is None:
             self._useContinents = False
