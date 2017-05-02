@@ -227,10 +227,14 @@ class Dp(object):
         return self._g_type
 
     def _setg_type(self, value):
-        import vcsaddons
+        try:
+            hasVCSAddons = True
+            import vcsaddons
+        except:
+            hasVCSAddons = False
         value = VCS_validation_functions.checkString(self, 'g_type', value)
         value = value.lower()
-        if value not in vcs.elements and value != "text" and value not in vcsaddons.gms:
+        if value not in vcs.elements and value != "text" and (hasVCSAddons and value not in vcsaddons.gms):
             raise ValueError(
                 "invalid g_type '%s' must be one of: %s " %
                 (value, vcs.elements.keys()))

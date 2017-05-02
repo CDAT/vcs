@@ -1,7 +1,6 @@
 import basevcstest
 import filecmp
 import os
-import EzTemplate
 import vcs
 
 class TestVCSContinents(basevcstest.VCSBaseTest):
@@ -26,19 +25,19 @@ class TestVCSContinents(basevcstest.VCSBaseTest):
         dataonly.blank()
         dataonly.data.priority = 1
 
-        multitemplate = EzTemplate.Multi(template=dataonly, rows=4, columns=3)
-
         line_styles = ['long-dash', 'dot', 'dash', 'dash-dot', 'solid']
 
+        self.x.scriptrun(os.path.join(os.path.dirname(__file__),"share","test_vcs_continents.json"))
 
         for i in range(12):
             cont_index = i % 6 + 1
             cont_line = self.x.createline()
             cont_line.width = i % 3 + 1
             cont_line.type = line_styles[i % 5]
-            print "Cont_line_rtype:",line_styles[i % 5]
             cont_line.color = i + 200
-            template = multitemplate.get(i)
+            col = i % 3
+            row = i / 3
+            template = self.x.gettemplate("%i_x_%i_1" % (col,row))
             if cont_index != 3 and i != 4 and i != 11:
                 self.x.plot(clt, template, boxfill, continents=cont_index, continents_line=cont_line, bg=self.bg)
             elif cont_index == 3:

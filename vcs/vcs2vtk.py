@@ -29,7 +29,7 @@ projNames = [
     "eqdc",
     "tmerc",
     "stere",
-    "lcca",
+    "laea",
     "azi",
     "gnom",
     "ortho",
