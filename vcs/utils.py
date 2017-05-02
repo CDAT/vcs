@@ -2772,12 +2772,6 @@ def drawVectorLegend(canvas, templateLegend,
     spcY = (dy - maxheight) / 2
     y1 = max(templateLegend.y1, templateLegend.y2)
 
-    # Box around legend area
-    ln = canvas.createline(source=templateLegend.line)
-    ln.x = [templateLegend.x1, templateLegend.x2, templateLegend.x2, templateLegend.x1, templateLegend.x1]
-    ln.y = [templateLegend.y1, templateLegend.y1, templateLegend.y2, templateLegend.y2, templateLegend.y1]
-    canvas.plot(ln, bg=bg, render=render)
-
     txs = []
     tys = []
     ts = []
