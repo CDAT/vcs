@@ -196,7 +196,8 @@ class VectorPipeline(Pipeline2D):
         if (hasattr(self._data1, 'units')):
             unitString = self._data1.units
 
-        worldToViewportXScale = (vp[1] - vp[0]) / (plotting_dataset_bounds[1] - plotting_dataset_bounds[0])
+        worldToViewportXScale = (vp[1] - vp[0]) /\
+            (self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0])
         maxNormInVp *= worldToViewportXScale
         if (minNormInVp):
             minNormInVp *= worldToViewportXScale
