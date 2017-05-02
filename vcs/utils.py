@@ -2648,3 +2648,171 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
     text.y = tys
     text.priority = templateLegend.priority
     canvas.plot(text, bg=bg, render=render)
+
+
+def _createLegendString(value, unit):
+    """
+    Creates a label "value unit"
+    """
+    legendString = "%.4g" % value
+    if (unit):
+        legendString += (" " + unit)
+    return legendString
+
+
+def drawVectorLegend(canvas, templateLegend,
+                     linecolor, linetype, linewidth,
+                     unitString, maxNormInVp, maxNorm,
+                     minNormInVp, minNorm, bg=False, render=True):
+    """Draws a legend with vector line/text inside a template legend box
+    Auto adjust text size to make it fit inside the box
+
+    :Example:
+
+        .. doctest:: utils_drawVectorLegend
+
+            >>> import vcs
+            >>> x = vcs.init()
+            >>> t = vcs.createtemplate()
+            >>> vcs.utils.drawVectorLegend(x,t.legend,
+            ...     "red", "solid", 1, "sample A", bg=True)
+            >>> x.png("sample")
+
+    :param canvas: a VCS canvas object onto which to draw the legend
+    :type canvas: vcs.Canvas.Canvas
+
+    :param templateLegend: a template legend object used to determine the
+        coordinates of the box and the box line type
+    :type legendTemplate: vcs.Plegend.Pls
+
+    :param linecolor: color of vector to draw.
+         The color must be specified as either integers, (r,g,b,opacity),
+         or string color name.
+    :type linecolor: `string`_
+
+    :param linetype: type of the vector line to draw.
+         values must be int or line type string
+    :type linetype: `string`_
+
+    :param linewidth: vector line width.
+        line width must be of type float.
+    :type linewidth: `string`_
+
+    :param unitString: unit for maxNorm
+    :type unitString: `string`_
+
+    : param maxNormInVp: maxNorm in viewport coordinates
+    : type maxNormInVp: `float`_
+
+    : param maxNorm: maxNorm in world coordinates
+    : type maxNorm: `float`_
+
+    : param minNormInVp: minNorm in viewport coordinates. If None, we don't
+                         to show minNorm legend
+    : type minNormInVp: `float`_
+
+    : param minNorm: minNorm in world coordinates
+    : type minNorm: `float`_
+
+    :param bg: Boolean value indicating to draw in background (True),
+        Or foreground (False).
+    :type bg: `bool`_
+
+    :param render: Boolean value indicating whether or not to render the new
+        lines.
+    :type render: `bool`_
+    """
+
+    # Figure out space length
+    text = vcs.createtext(To_source=templateLegend.textorientation,
+                          Tt_source=templateLegend.texttable)
+    text.x = .5
+    text.y = .5
+    maxLegendString = _createLegendString(maxNorm, unitString)
+    text.string = maxLegendString
+    maxExt = canvas.gettextextent(text)[0]
+
+    minLegendString = _createLegendString(minNorm, unitString)
+    text.string = minLegendString
+    minExt = canvas.gettextextent(text)[0]
+
+    # space between line and label - one character long
+    spaceLength = (maxExt[1] - maxExt[0]) / len(maxLegendString)
+    # line vector - min 2 and max 15 characters long
+    minMaxNormLineLength = 2 * spaceLength
+    maxMaxNormLineLength = 15 * spaceLength
+    # clamp lineLegth between 2 and 15 spaceLength
+    maxLineLength = maxNormInVp
+    minLineLength = minNormInVp
+    ratio = 1.0
+    if (maxLineLength < minMaxNormLineLength):
+        while (maxLineLength < minMaxNormLineLength):
+            maxLineLength *= 2
+            ratio *= 2
+    elif (maxLineLength > maxMaxNormLineLength):
+        while (maxLineLength > maxMaxNormLineLength):
+            maxLineLength /= 2
+            ratio /= 2
+
+    # update maxLegendString with the clamped value
+    if (ratio != 1):
+        maxLegendString = _createLegendString(maxNorm * ratio, unitString)
+        text.string = maxLegendString
+        maxExt = canvas.gettextextent(text)[0]
+
+    maxLegendLength = maxExt[1] - maxExt[0]
+    maxheight = maxExt[3] - maxExt[2]
+
+    maxLegendLength = maxLegendLength + maxLineLength + spaceLength
+    minLegendLength = minExt[1] - minExt[0]
+    if (minNormInVp):
+        minLegendLength = minLegendLength + minLineLength + spaceLength
+
+    dy = abs(templateLegend.y2 - templateLegend.y1)
+    spcY = (dy - maxheight) / 2
+    y1 = max(templateLegend.y1, templateLegend.y2)
+
+    txs = []
+    tys = []
+    ts = []
+    n = 1
+    if (minNormInVp):
+        n = 2
+    legendLength = [maxLegendLength, minLegendLength]
+    legendString = [maxLegendString, minLegendString]
+    lineLength = [maxLineLength, minLineLength]
+    for i in range(n):
+        # vector stem
+        ln = canvas.createline()
+        ln.color = [linecolor, ]
+        ln.type = linetype
+        ln.width = linewidth
+        ln.priority = templateLegend.priority
+        if (minNormInVp):
+            xs = (templateLegend.x1 + templateLegend.x2) * (2 - i) / 3 - legendLength[i] / 2
+        else:
+            xs = (templateLegend.x1 + templateLegend.x2) / 2 - legendLength[i] / 2
+        ln.x = [xs, xs + lineLength[i]]
+        ys = y1 - spcY - maxheight / 2.
+        ln.y = [ys, ys]
+        canvas.plot(ln, bg=bg, render=render)
+        # vector head
+        ln.x = [xs + lineLength[i] * 0.7, xs + lineLength[i]]
+        ln.y = [ys - lineLength[i] * 0.1, ys]
+        canvas.plot(ln, bg=bg, render=render)
+        ln.x = [xs + lineLength[i] * 0.7, xs + lineLength[i]]
+        ln.y = [ys + lineLength[i] * 0.1, ys]
+        canvas.plot(ln, bg=bg, render=render)
+
+        # string legend
+        text.halign = "left"
+        text.valign = "half"
+        ts.append(legendString[i])
+        text.string = ts
+        txs.append(xs + lineLength[i] + spaceLength)
+        tys.append(ys)
+        text.x = txs
+        text.y = tys
+        text.priority = templateLegend.priority
+
+    canvas.plot(text, bg=bg, render=render)
