@@ -816,7 +816,7 @@ class Gfi(object):
             fp.write("%s.xmtics1 = '%s'\n" % (unique_name, self.xmtics1))
             fp.write("%s.xmtics2 = '%s'\n" % (unique_name, self.xmtics2))
             fp.write("%s.yticlabels1 = '%s'\n" % (unique_name, self.yticlabels1))
-            fp.write( "%s.yticlabels2 = '%s'\n" % (unique_name, self.yticlabels2))
+            fp.write("%s.yticlabels2 = '%s'\n" % (unique_name, self.yticlabels2))
             fp.write("%s.ymtics1 = '%s'\n" % (unique_name, self.ymtics1))
             fp.write("%s.ymtics2 = '%s'\n" % (unique_name, self.ymtics2))
             if isinstance(self.datawc_x1, (int, long, float)):
