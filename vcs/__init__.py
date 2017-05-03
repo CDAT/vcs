@@ -48,12 +48,14 @@ model for defining a plot, that is decomposed into three parts:
 """
 import warnings
 
+
 class VCSDeprecationWarning(DeprecationWarning):
     pass
 
+
 # Python < 3 DeprecationWarning ignored by default
 # warnings.simplefilter('default')
-warnings.simplefilter("default",VCSDeprecationWarning)
+warnings.simplefilter("default", VCSDeprecationWarning)
 
 _doValidation = True
 next_canvas_id = 1
