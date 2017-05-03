@@ -25,6 +25,7 @@
 #
 import VCS_validation_functions
 import vcs
+from xmldocs import listdoc  # noqa
 
 
 class Dp(object):
@@ -78,6 +79,8 @@ class Dp(object):
             p1.g_name='quick'
             # List of all the array names
             p1.array=['a1']
+
+    .. pragma: skip-doctest
     """
     __slots__ = ["name",
                  "_name",
@@ -224,10 +227,14 @@ class Dp(object):
         return self._g_type
 
     def _setg_type(self, value):
-        import vcsaddons
+        try:
+            hasVCSAddons = True
+            import vcsaddons
+        except:
+            hasVCSAddons = False
         value = VCS_validation_functions.checkString(self, 'g_type', value)
         value = value.lower()
-        if value not in vcs.elements and value != "text" and value not in vcsaddons.gms:
+        if value not in vcs.elements and value != "text" and (hasVCSAddons and value not in vcsaddons.gms):
             raise ValueError(
                 "invalid g_type '%s' must be one of: %s " %
                 (value, vcs.elements.keys()))
@@ -298,9 +305,23 @@ class Dp(object):
     ##########################################################################
 
     def list(self):
+        """Lists the current values of object attributes
+
+            :Example:
+
+                .. doctest:: displayplot_listdoc
+
+                    >>> a=vcs.init()
+                    >>> array = [range(10) for _ in range(10)]
+                    >>> obj=a.getboxfill() # default boxfill
+                    >>> dsp = a.plot(obj,array) # store displayplot
+                    >>> dsp.list()
+                     ---------- ... ----------
+                    ...
+            """
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Display Plot (Dp) member (attribute) listings ----------"
+        print "---------- Display Plot (Dp) member (attribute) listings ----------"
         print "Display plot method =", self.s_name
         print "name =", self.name
         print "off =", self.off

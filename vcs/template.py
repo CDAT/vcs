@@ -1,6 +1,17 @@
-# Adapted for numpy/ma/cdms2 by convertcdms.py
 """
+# Adapted for numpy/ma/cdms2 by convertcdms.py
 # Template (P) module
+
+    .. _list: https://docs.python.org/2/library/functions.html#list
+    .. _tuple: https://docs.python.org/2/library/functions.html#tuple
+    .. _dict: https://docs.python.org/2/library/stdtypes.html#mapping-types-dict
+    .. _None: https://docs.python.org/2/library/constants.html?highlight=none#None
+    .. _str: https://docs.python.org/2/library/functions.html?highlight=str#str
+    .. _bool: https://docs.python.org/2/library/functions.html?highlight=bool#bool
+    .. _float: https://docs.python.org/2/library/functions.html?highlight=float#float
+    .. _int: https://docs.python.org/2/library/functions.html?highlight=float#int
+    .. _long: https://docs.python.org/2/library/functions.html?highlight=float#long
+    .. _file: https://docs.python.org/2/library/functions.html?highlight=open#file
 """
 ###############################################################################
 #                                                                             #
@@ -38,7 +49,7 @@ import inspect
 import cdutil
 from projection import round_projections
 from projection import elliptical_projections
-from xmldocs import scriptdocs
+from xmldocs import scriptdocs, listdoc
 
 # Following for class properties
 
@@ -138,8 +149,7 @@ def process_src(nm, code):
 #############################################################################
 class P(object):
 
-    """
-    The template primary method (P) determines the location of each picture
+    """The template primary method (P) determines the location of each picture
     segment, the space to be allocated to it, and related properties relevant
     to its display.
 
@@ -182,7 +192,8 @@ class P(object):
         .. code-block:: python
 
              temp=a.gettemplate('hovmuller')
-"""
+    .. pragma: skip-doctest TODO convert examples to working doctests
+    """
     __slots__ = ["name", "_name", "_p_name", "p_name",
                  "_orientation", "_orientation", "_file", "file",
                  "_function", "function",
@@ -524,11 +535,17 @@ class P(object):
         vcs.elements["template"][Pic_name] = self
 
     def list(self, single=None):
+        """
+        %s
+
+        :param single: String value indicating which properties to list
+        :type single: str
+        """
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
 
         if (single is None):
-            print "----------Template (P) member " +\
+            print "---------- Template (P) member " +\
                 "(attribute) listings ----------"
             print "method =", self.p_name
             print "name =", self.name
@@ -746,6 +763,7 @@ class P(object):
             self.legend.list()
         elif (single == 'data'):
             self.data.list()
+    list.__doc__ = list.__doc__ % (listdoc.format(name="template", parent=""))
 
     ###########################################################################
     #                                                                         #
@@ -772,7 +790,7 @@ class P(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[
@@ -1003,11 +1021,12 @@ class P(object):
     # Canvas
     def drawTicks(self, slab, gm, x, axis, number,
                   vp, wc, bg=False, X=None, Y=None, **kargs):
-        """
-        Draws the ticks for the axis x number number
+        """Draws the ticks for the axis x number number
         using the label passed by the graphic  method
         vp and wc are from the actual canvas, they have
         been reset when they get here...
+
+        .. pragma: skip-doctest TODO add example/doctest
         """
 
         kargs["donotstoredisplay"] = True
@@ -1221,13 +1240,14 @@ class P(object):
         return displays
 
     def blank(self, attribute=None):
-        """
-        This function turns off elements of a template object.
+        """This function turns off elements of a template object.
 
+        :param attribute: String or list, indicating the elements of a template
+            which should be turned off. If attribute is left blank, or is None,
+            all elements of the template will be turned off.
+        :type attribute: `None`_ or  `str`_ or `list`_
 
-    :param attribute: String or list, indicating the elements of a template which should be turned off.
-                      If attribute is left blank, or is None, all elements of the template will be turned off.
-    :type attribute: None, str, list
+        .. pragma: skip-doctest TODO add example/doctest
         """
         if attribute is None:
             attribute = self.__slots__
@@ -1245,25 +1265,26 @@ class P(object):
                 pass
 
     def reset(self, sub_name, v1, v2, ov1=None, ov2=None):
-        """
-        This function resets all the attributes having a
+        """This function resets all the attributes having a
         sub-attribute with the specified name.
 
         .. note::
+
             Respect how far from original position you are
-            i.e. you move to x1,x2 from old_x1, old_x2
+            i.e. if you move to x1,x2 from old_x1, old_x2
             if your current x1 value is not == to old_x1_value,
-            then respect how far from it you  were
+            then respect how far from it you were
 
         Example:
 
-            Create template 'example1' which inherits from 'default' template
-            t = vcs.createtemplate('example1', 'default')
-            Set x1 value to 0.15 and x2 value to 0.5
-            t.reset('x',0.15,0.5,t.data.x1,t.data.x2)
+            .. doctest:: template_reset
+
+                >>> t=vcs.createtemplate('t_reset') # inherits from 'default'
+                >>> data, data2 = t.data.x1, t.data.x2
+                >>> t.reset('x',0.15,0.5,data,data2) # Set x1 to 0.15, x2 to 0.5
 
         :param sub_name: String indicating the name of the sub-attribute to be reset.
-                         For example, sub-name='x' would cause the x1 ans x2 attributes to be set.
+            For example, sub_name='x' would cause the x1 ans x2 attributes to be set.
         :type sub_name: str
 
         :param v1: Float value to used to set the sub_name1 attribute.
@@ -1272,10 +1293,12 @@ class P(object):
         :param v2: Float value used to set the sub_name2 attribute.
         :type v2: float
 
-        :param ov1: Float value of the old sub-name1 attribute value. Used to compute an offset ratio.
+        :param ov1: Float value of the old sub-name1 attribute value.
+            Used to compute an offset ratio.
         :type ov1: float
 
-        :param ov2: Float value of the old sub-name1 attribute value. Used to compute an offset ratio.
+        :param ov2: Float value of the old sub-name1 attribute value.
+            Used to compute an offset ratio.
         :type ov2: float
         """
 
@@ -1324,8 +1347,7 @@ class P(object):
                     pass
 
     def move(self, p, axis):
-        """
-        Move a template by p% along the axis 'x' or 'y'.
+        """Move a template by p% along the axis 'x' or 'y'.
         Positive values of p mean movement toward right/top
         Negative values of p mean movement toward left/bottom
         The reference point is t.data.x1/y1
@@ -1334,14 +1356,16 @@ class P(object):
 
             .. doctest:: template_move
 
-                >>> t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+                >>> t=vcs.createtemplate('t_move') # inherits default template
                 >>> t.move(0.2,'x') # Move everything right by 20%
                 >>> t.move(0.2,'y') # Move everything up by 20%
 
-        :param p: Float indicating the percentage by which the template should move. i.e. 0.2 = 20%.
+        :param p: Float indicating the percentage by which the template should
+            move. i.e. 0.2 = 20%.
         :type p: float
 
-        :param axis: One of ['x', 'y']. The axis along which the template will move.
+        :param axis: The axis on which the template will move.
+            One of ['x', 'y'].
         :type axis: str
         """
         if axis not in ['x', 'y']:
@@ -1354,20 +1378,21 @@ class P(object):
         self.reset(axis, v1, v2, ov1, ov2)
 
     def moveto(self, x, y):
-        """
-        Move a template to point (x,y), adjusting all attributes so data.x1 = x, and data.y1 = y.
+        """Move a template to point (x,y), adjusting all attributes so data.x1 = x, and data.y1 = y.
 
         :Example:
 
             .. doctest:: template_moveto
 
-                >>> t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
-                >>> t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
+                >>> t=vcs.createtemplate('t_move2') # inherits default template
+                >>> t.moveto(0.2, 0.2) # Move template so x1 and y1 are 0.2
 
-        :param x: Float representing the new coordinate of the template's data.x1 attribute.
+        :param x: Float representing the new coordinate of the template's
+            data.x1 attribute.
         :type x: float
 
-        :param y: Float representing the new coordinate of the template's data.y1 attribute.
+        :param y: Float representing the new coordinate of the template's
+            data.y1 attribute.
         :type y: float
         """
         # p/=100.
@@ -1383,20 +1408,18 @@ class P(object):
         self.reset('y', v1, v2, ov1, ov2)
 
     def scale(self, scale, axis='xy', font=-1):
-        """
-        Scale a template along the axis 'x' or 'y' by scale
-        Positive values of scale mean increase
-        Negative values of scale mean decrease
-        The reference point is t.data.x1/y1
+        """Scale a template along the axis 'x' or 'y' by scale
+        Positive values of scale mean increase.
+        Negative values of scale mean decrease.
+        The reference point is the template's x1 and y1 data.
 
         :Example:
 
             .. doctest:: template_scale
 
-
-                >>> t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+                >>> t=vcs.createtemplate('t_scale') # inherits default template
                 >>> t.scale(0.5) # Halves the template size
-                >>> t.scale(1.2) # Upsize everything to 20% more than the original size
+                >>> t.scale(1.2) # Increases size by 20%
                 >>> t.scale(2,'x') # Double the x axis
 
         :param scale: Float representing the factor by which to scale the template.
@@ -1406,8 +1429,8 @@ class P(object):
         :type axis: str
 
         :param font: Integer flag indicating what should be done with the template's fonts. One of [-1, 0, 1].
-                    0: means do not scale the fonts. 1: means scale the fonts.
-                    -1: means do not scale the fonts unless axis='xy'
+            0: means do not scale the fonts. 1: means scale the fonts.
+            -1: means do not scale the fonts unless axis='xy'
         :type font: int
 
         """
@@ -1428,15 +1451,14 @@ class P(object):
             self.scalefont(scale)
 
     def scalefont(self, scale):
-        """
-        Scales the template font by scale.
+        """Scales the template font by scale.
 
-        Example:
+        :Example:
 
-            Create template 'example1' which inherits from 'default' template
-            t = vcs.createtemplate('example1', 'default')
-            reduces the fonts size by 2
-            t.scalefont(0.5)
+            .. doctest:: template_scalefont
+
+                >>> t=vcs.createtemplate('t_scfnt') # inherits default template
+                >>> t.scalefont(0.5) # reduces the fonts size by 2
 
         :param scale: Float representing the factor by which to scale the template's font size.
         :type scale: float
@@ -1460,57 +1482,84 @@ class P(object):
                                   linecolors, linetypes, linewidths,
                                   markercolors, markertypes, markersizes,
                                   strings, scratched=None, bg=False, render=True):
-        """
-        Draws a legend with line/marker/text inside a template legend box
-        Auto adjust text size to make it fit inside the box
-        Auto arrange the elements to fill the box nicely
+        """Draws a legend with line/marker/text inside a template legend box.
+        Auto adjusts text size to make it fit inside the box.
+        Auto arranges the elements to fill the box nicely.
 
         :Example:
 
             .. doctest:: template_drawLinesAndMarkersLegend
 
-                >>> import vcs
                 >>> x = vcs.init()
                 >>> t = vcs.createtemplate()
-                >>> t.drawLinesAndMarkersLegend(x,
-                ...     ["red","blue","green"], ["solid","dash","dot"],[1,4,8],
-                ...     ["blue","green","red"], ["cross","square","dot"],[3,4,5],
-                ...     ["sample A","type B","thing C"],True)
+                >>> l_colors=["red","blue","green"]
+                >>> l_types=["solid","dash","dot"]
+                >>> l_widths=[1,4,8]
+                >>> m_colors=["blue","green","red"]
+                >>> m_types=["cross","square","dot"]
+                >>> m_sizes=[3,4,5]
+                >>> strings=["sample A","type B","thing C"]
+                >>> scratch=[True,False,True]
+                >>> t.drawLinesAndMarkersLegend(x, l_colors, l_types, l_widths,
+                ...     m_colors, m_types, m_sizes, strings, scratch)
                 >>> x.png("sample")
 
         :param canvas: a VCS canvas object onto which to draw the legend
         :type canvas: vcs.Canvas.Canvas
 
-        :param linecolors: list containing the colors of each line to draw
-        :type linecolors: list of either colorInt, (r,g,b,opacity), or string color names
+        :param linecolors: A list containing the colors of each line to draw.
+            Colors are represented as either an int from 0-255, an rgba tuple,
+            or a string color name.
+        :type linecolors: `list`_
 
-        :param linetypes: list containing the type of each line to draw
-        :type linetypes: list on int of line stype strings
+        :param linetypes: A list containing the type of each line to draw.
+            Line types are represented as either integers or strings.
+            See :py:class:`vcs.line.Tl` for more information.
+        :type linetypes: `list`_
 
-        :param linewidths: list containing each line width
-        :type linewidths: list of float
+        :param linewidths: A list containing floats each representing the
+            width of each line.
+        :type linewidths: `list`_
 
-        :param markercolors: list of the markers colors to draw
-        :type markercolors: list of either colorInt, (r,g,b,opacity), or string color names
+        :param markercolors: A list of the markers colors to draw.
+            Colors are represented as either an int from 0-255, an rgba tuple,
+            or a string color name.
+        :type markercolors: `list`_
 
-        :param markertypes: list of the marker types to draw
-        :type markertypes: list of int or  string of marker names
+        :param markertypes: A list of the marker types to draw.
+            Marker types are represented as either integers or strings.
+            See :py:class:`vcs.marker.Tm` for more information.
+        :type markertypes: `list`_
 
-        :param markersizes: list of the size of each marker to draw
-        :type markersizes: list of float
+        :param markersizes: A list of floats representing marker sizes.
+        :type markersizes: `list`_
 
-        :param strings: list of the string to draw next to each line/marker
-        :type strings: list of string
+        :param strings: A list of strings to draw next to each line/marker.
+        :type strings: `list`_
 
-        :param scratched: None (off) or list. list contains False where no scratch is needed
-                      For scratched provide True or line type to use for scratch
-                      color will match that of text
-        :type scratched: None or list of bool
+        :param scratched: A list indicating which strings should be "scratched"
+            off in the template.
 
-        :param bg: do we draw in background or foreground
+            To "scratch" a string, the corresponding location in the scratched
+            list must contain either True or the line type to use for the
+            scratch. A value of False at a given index will leave the
+            corresponding index of strings untouched.
+
+            Size of the scratched list must be equal to the size of the strings
+            list.
+
+            Scratch color will match that of text.
+
+            If scratched is None, or is not provided, no strings will be
+            scratched.
+        :type scratched: `None`_ or `list`_
+
+        :param bg: Boolean value indicating whether or not to draw in the
+            background. Defaults to False.
         :type bg: bool
 
-        :param render: do we render or not (so it less flashy)
+        :param render: Boolean value indicating whether or not to render.
+            Defaults to True.
         :type render: bool
         """
         return vcs.utils.drawLinesAndMarkersLegend(canvas,
@@ -1520,13 +1569,26 @@ class P(object):
                                                    strings, scratched, bg, render)
 
     def drawAttributes(self, x, slab, gm, bg=False, **kargs):
-        """Draws attribtes of slab onto a canvas
+        """Draws attributes of slab onto a canvas
+
+        :Example:
+
+            .. doctest:: templates_drawAttributes
+
+                >>> a=vcs.init()
+                >>> import cdms2 # We need cdms2 to create a slab
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
+                >>> s = f('clt') # use the data file to create a slab
+                >>> t=a.gettemplate()
+                >>> b=a.getboxfill() # boxfill gm
+                >>> t.drawAttributes(a,s,b) # shows attributes of s on canvas
+                [...]
 
         :param x: vcs canvas onto which attributes will be drawn
         :type x: vcs.Canvas.Canvas
 
         :param slab: slab to get attributes from
-        :type slab: cdms2.tvariable.TransientVariable, numpy.ndarray
+        :type slab: cdms2.tvariable.TransientVariable or numpy.ndarray
         """
         displays = []
         # figures out the min and max and set them as atributes...
@@ -1601,12 +1663,10 @@ class P(object):
 
     def plot(self, x, slab, gm, bg=False, min=None,
              max=None, X=None, Y=None, **kargs):
-        """
-        This plots the template stuff on the Canvas.
+        """This plots the template stuff on the Canvas.
         It needs a slab and a graphic method.
 
-        :returns: A list containing all the displays used
-        :rtype: list
+        .. pragma: skip-doctest TODO add example/doctest
         """
 
         displays = []
@@ -1777,9 +1837,10 @@ class P(object):
     def drawColorBar(self, colors, levels, legend=None, ext_1='n',
                      ext_2='n', x=None, bg=False, priority=None,
                      cmap=None, style=['solid'], index=[1],
-                     opacity=[], **kargs):
+                     opacity=[], pixelspacing=[15, 15], pixelscale=12, **kargs):
         """
         This function, draws the colorbar, it needs:
+
         colors : The colors to be plotted
         levels : The levels that each color represent
         legend : To overwrite, saying just draw box at
@@ -1788,6 +1849,22 @@ class P(object):
         x : the canvas where to plot it
         bg: background mode ?
         returns a list of displays used
+        :param colors:
+        :param levels:
+        :param legend:
+        :param ext_1:
+        :param ext_2:
+        :param x:
+        :param bg:
+        :param priority:
+        :param cmap:
+        :param style:
+        :param index:
+        :param opacity:
+        :param kargs:
+        :return:
+
+        .. pragma: skip-doctest TODO add example/doctest. And more documentation...
         """
 
         kargs["donotstoredisplay"] = True
@@ -1923,6 +2000,8 @@ class P(object):
             opacity = [None, ] * len(colors)
         fa.opacity = opacity
         fa.priority = priority
+        fa.pixelspacing = pixelspacing
+        fa.pixelscale = pixelscale
         if cmap is not None:
             fa.colormap = cmap
         # assigning directly since we gen it we know it's good
@@ -2026,8 +2105,6 @@ class P(object):
         txt = x.createtext(
             To_source=self.legend.textorientation,
             Tt_source=self.legend.texttable)
-        ln._priority = priority + 1
-        txt.priority = priority + 1
         txt.string = St
         if isinstance(legend, list):
             if isHorizontal:
@@ -2060,30 +2137,43 @@ class P(object):
     def ratio_linear_projection(self, lon1, lon2, lat1, lat2,
                                 Rwished=None, Rout=None,
                                 box_and_ticks=0, x=None):
-        """
-        Computes ratio to shrink the data area of a template in order
-        that the overall area
-        has the least possible deformation in linear projection
+        """Computes ratio to shrink the data area of a template such that the
+        overall area has the least possible deformation in linear projection
 
-        Version: 1.1
-        Notes: Thanks to Karl Taylor for the equation of "optimal" ratio
+        .. note::
 
-        Necessary arguments:
-          lon1, lon2: in degrees_east  : Longitude spanned by plot
-          lat1, lat2: in degrees_north : Latitude  spanned by plot
+            lon1/lon2 must be specified in degrees east.
+            lat1/lat2 must be specified in degrees north.
 
-        Optional arguments:
-          Rwished: Ratio y/x wished, None=automagic
-          Rout: Ratio of output (default is US Letter=11./8.5)
-                Also you can pass a string: "A4","US LETTER", "X"/"SCREEN",
-                the latest uses the window information
-          box_and_ticks: Also redefine box and ticks to the new region
-        Returned:
-          vcs template object
+        :Example:
 
-        Usage example:
-          #USA
-          t.ratio_linear_projection(-135,-50,20,50)
+            .. doctest:: template_P_ratio_linear_projection
+
+                >>> t=vcs.gettemplate()
+                >>> t.ratio_linear_projection(-135,-50,20,50) # USA
+
+        :param lon1: Start longitude for plot.
+        :type lon1: `float`_ or `int`_
+
+        :param lon2: End longitude for plot
+        :type lon2: `float`_ or `int`_
+
+        :param lat1: Start latitude for plot.
+        :type lat1: `float`_ or `int`_
+
+        :param lat2: End latitude for plot
+        :type lat2: `float`_ or `int`_
+
+        :param Rwished: Ratio y/x wished.
+            If None, ratio will be determined automatically.
+        :type Rwished: `float`_ or `int`_
+
+        :param Rout: Ratio of output (default is US Letter=11./8.5)
+            Also you can pass a string: "A4","US LETTER", "X"/"SCREEN",
+            the latest uses the window information
+            box_and_ticks: Also redefine box and ticks to the new region.
+            If None, Rout will be determined automatically.
+        :type Rout: `float`_ or `int`_
         """
 
         # Converts lat/lon to rad
@@ -2113,26 +2203,29 @@ class P(object):
         return
 
     def ratio(self, Rwished, Rout=None, box_and_ticks=0, x=None):
-        """
-        Computes ratio to shrink the data area of a template
+        """Computes ratio to shrink the data area of a template
         to have an y/x ratio of Rwished
         has the least possible deformation in linear projection
 
-        Version: 1.1
+        :Example:
 
-        Necessary arguments:
-          Rwished: Ratio y/x wished
-        Optional arguments:
-          Rout: Ratio of output (default is US Letter=11./8.5)
-                Also you can pass a string: "A4","US LETTER",
-                "X"/"SCREEN", the latest uses the window information
-          box_and_ticks: Also redefine box and ticks to the new region
-        Returned:
-          vcs template object
+            .. doctest:: template_P_ratio
 
-        Usage example:
-          # y is twice x
-          t.ratio(2)
+                >>> t=vcs.gettemplate()
+                >>> t.ratio(2) # y is twice x
+
+        :param Rwished: Ratio y/x wished.
+            Rwished MUST be provided.
+        :type Rwished: `float`_ or `int`_
+
+        :param Rout: Ratio of output (default is US Letter=11./8.5).
+            Also you can pass a string: "A4","US LETTER",
+            "X"/"SCREEN", the latest uses the window information
+            box_and_ticks: Also redefine box and ticks to the new region
+        :type Rout: str or None
+
+        :returns: vcs template object
+        :rtype: vcs.template.P
         """
         if x is None:
             x = vcs.init()

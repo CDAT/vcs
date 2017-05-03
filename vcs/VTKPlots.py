@@ -72,7 +72,6 @@ class VTKVCSBackend(object):
         # Turn on anti-aliasing by default
         # Initially set to 16x Multi-Sampled Anti-Aliasing
         self.antialiasing = 8
-        self._rasterPropsInVectorFormats = False
         self._geometry = geometry
 
         if renWin is not None:
@@ -488,8 +487,9 @@ class VTKVCSBackend(object):
                 self.canvas.bgY = H
             else:
                 W = self.canvas.bgX
-                self.canvas.bgX = self.canvas.bgY
-                self.canvas.bgY = W
+            if self._geometry:
+                self._geometry["width"] = self.canvas.bgX
+                self._geometry["height"] = self.canvas.bgY
         else:
             self.renWin.SetSize(W, H)
             self.canvas.bgX = W
@@ -540,7 +540,7 @@ class VTKVCSBackend(object):
     def isopened(self):
         if self.renWin is None:
             return False
-        elif self.renWin.GetOffScreenRendering():
+        elif self.renWin.GetOffScreenRendering() and self.bg:
             # IN bg mode
             return False
         else:
@@ -670,39 +670,14 @@ class VTKVCSBackend(object):
 
         elif gtype == "fillarea":
             if gm.priority != 0:
-                actors = vcs2vtk.prepFillarea(self.renWin, gm,
+                actors = vcs2vtk.prepFillarea(self, self.renWin, gm,
                                               cmap=self.canvas.colormap)
                 returned["vtk_backend_fillarea_actors"] = actors
-                create_renderer = True
-                for act, geo in actors:
-                    ren = self.fitToViewport(
-                        act,
-                        gm.viewport,
-                        wc=gm.worldcoordinate,
-                        geoBounds=None,
-                        geo=None,
-                        priority=gm.priority,
-                        create_renderer=create_renderer)
-                    create_renderer = False
         else:
             raise Exception(
                 "Graphic type: '%s' not re-implemented yet" %
                 gtype)
         self.scaleLogo()
-
-        # Decide whether to rasterize background in vector outputs
-        # Current limitation to vectorize:
-        #       * if fillarea style is either pattern or hatch
-        try:
-            if gm.style and all(style != 'solid' for style in gm.style):
-                self._rasterPropsInVectorFormats = True
-        except:
-            pass
-        try:
-            if gm.fillareastyle in ['pattern', 'hatch']:
-                self._rasterPropsInVectorFormats = True
-        except:
-            pass
 
         if not kargs.get("donotstoredisplay", False) and kargs.get(
                 "render", True):
@@ -931,7 +906,8 @@ class VTKVCSBackend(object):
         return returned
 
     def renderColorBar(self, tmpl, levels, colors, legend, cmap,
-                       style=['solid'], index=[1], opacity=[]):
+                       style=['solid'], index=[1], opacity=[],
+                       pixelspacing=[15, 15], pixelscale=12):
         if tmpl.legend.priority > 0:
             tmpl.drawColorBar(
                 colors,
@@ -941,7 +917,9 @@ class VTKVCSBackend(object):
                 cmap=cmap,
                 style=style,
                 index=index,
-                opacity=opacity)
+                opacity=opacity,
+                pixelspacing=pixelspacing,
+                pixelscale=pixelscale)
         return {}
 
     def cleanupData(self, data):
@@ -991,6 +969,8 @@ class VTKVCSBackend(object):
     def put_img_on_canvas(
             self, filename, zoom=1, xOffset=0, yOffset=0,
             units="percent", fitToHeight=True, *args, **kargs):
+        self.createRenWin()
+        winSize = self.renWin.GetSize()
         self.hideGUI()
         readerFactory = vtk.vtkImageReader2Factory()
         reader = readerFactory.CreateImageReader2(filename)
@@ -1007,25 +987,28 @@ class VTKVCSBackend(object):
         cam.ParallelProjectionOn()
         width = (ext[1] - ext[0]) * spc[0]
         height = (ext[3] - ext[2]) * spc[1]
+        if fitToHeight:
+            yd = height
+        else:
+            yd = winSize[1]
+        d = cam.GetDistance()
+        heightInWorldCoord = yd / zoom
+        # window pixel in world (image) coordinates
+        pixelInWorldCoord = heightInWorldCoord / winSize[1]
         if units[:7].lower() == "percent":
-            xoff = width * xOffset / zoom / 200.
-            yoff = height * yOffset / zoom / 200.
+            xoff = winSize[0] * (xOffset / 100.) * pixelInWorldCoord
+            yoff = winSize[1] * (yOffset / 100.) * pixelInWorldCoord
         elif units[:6].lower() == "pixels":
-            xoff = xOffset / zoom
-            yoff = yOffset / zoom
+            xoff = xOffset * pixelInWorldCoord
+            yoff = yOffset * pixelInWorldCoord
         else:
             raise RuntimeError("vtk put image does not understand %s for offset units" % units)
-        xc = origin[0] + .5 * (ext[0] + ext[1]) * spc[0]
-        yc = origin[1] + .5 * (ext[2] + ext[3]) * spc[1]
-        if fitToHeight:
-            yd = (ext[3] - ext[2]) * spc[1]
-        else:
-            sz = self.renWin.GetSize()
-            yd = sz[1]
-        d = cam.GetDistance()
-        cam.SetParallelScale(.5 * yd / zoom)
-        cam.SetFocalPoint(xc + xoff, yc + yoff, 0.)
-        cam.SetPosition(xc + xoff, yc + yoff, d)
+        xc = origin[0] + .5 * width
+        yc = origin[1] + .5 * height
+        cam.SetParallelScale(heightInWorldCoord * 0.5)
+        cam.SetFocalPoint(xc - xoff, yc - yoff, 0.)
+        cam.SetPosition(xc - xoff, yc - yoff, d)
+
         ren.AddActor(a)
         layer = max(self.renWin.GetNumberOfLayers() - 2, 0)
         ren.SetLayer(layer)
@@ -1116,15 +1099,12 @@ class VTKVCSBackend(object):
         # Since the vcs layer stacks renderers to manually order primitives, sorting
         # is not needed and will only slow things down and introduce artifacts.
         gl.SetSortToOff()
-
-        # Since the patterns are applied as textures on vtkPolyData, enabling
-        # background rasterization is required to write them out
-
-        if self._rasterPropsInVectorFormats:
-            gl.Write3DPropsAsRasterImageOn()
-
+        gl.DrawBackgroundOff()
         gl.SetInput(self.renWin)
-        gl.SetCompress(0)  # Do not compress
+        if (output_type == "pdf"):
+            gl.SetCompress(1)
+        else:
+            gl.SetCompress(0)
         gl.SetFilePrefix(".".join(file.split(".")[:-1]))
 
         if textAsPaths:
@@ -1334,7 +1314,7 @@ class VTKVCSBackend(object):
                 self.renWin.AddRenderer(self.logoRenderer)
 
     def fitToViewport(self, Actor, vp, wc=None, geoBounds=None, geo=None, priority=None,
-                      create_renderer=False):
+                      create_renderer=False, add_actor=True):
 
         # Data range in World Coordinates
         if priority == 0:
@@ -1456,7 +1436,8 @@ class VTKVCSBackend(object):
                 plane.SetNormal(outNormal[0], outNormal[1], outNormal[2])
                 plane = planeCollection.GetNextItem()
 
-        Renderer.AddActor(Actor)
+        if add_actor:
+            Renderer.AddActor(Actor)
         return (Renderer, xScale, yScale)
 
     def update_input(self, vtkobjects, array1, array2=None, update=True):

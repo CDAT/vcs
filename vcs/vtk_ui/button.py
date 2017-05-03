@@ -29,6 +29,7 @@ class ButtonState(object):
             return super(ButtonState, self).__getattribute__(attr)
         return result
 
+
 LEFT_ALIGN = "LEFT"
 RIGHT_ALIGN = "RIGHT"
 CENTER_ALIGN = "CENTER"

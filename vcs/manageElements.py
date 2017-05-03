@@ -1,8 +1,17 @@
-# This file aims at removing elets creation from dpeending on a Canvas, we will try to simply have
-# b = vcs.createboxfill()
-# rather than
-# x=vcs.init()
-# b=x.createboxfill()
+"""
+    .. _list: https://docs.python.org/2/library/functions.html#list
+    .. _tuple: https://docs.python.org/2/library/functions.html#tuple
+    .. _dict: https://docs.python.org/2/library/stdtypes.html#mapping-types-dict
+    .. _None: https://docs.python.org/2/library/constants.html?highlight=none#None
+    .. _str: https://docs.python.org/2/library/functions.html?highlight=str#str
+    .. _bool: https://docs.python.org/2/library/functions.html?highlight=bool#bool
+    .. _float: https://docs.python.org/2/library/functions.html?highlight=float#float
+    .. _int: https://docs.python.org/2/library/functions.html?highlight=float#int
+    .. _long: https://docs.python.org/2/library/functions.html?highlight=float#long
+    .. _file: https://docs.python.org/2/library/functions.html?highlight=open#file
+
+    .. pragma: skip-doctest
+"""
 import vcs
 import boxfill
 import meshfill
@@ -19,6 +28,7 @@ import texttable
 import textorientation
 import textcombined
 import vector
+import streamline
 import xmldocs
 import random
 from error import vcsError
@@ -27,7 +37,40 @@ import dv3d
 
 
 def check_name_source(name, source, typ):
-    """make sure it is a unique name for this type or generates a name for user"""
+    """Make sure it is a unique name for this type or generates a name for user.
+
+    :Example:
+
+        .. doctest:: manageElements_check_name_source
+
+            >>> cns=vcs.check_name_source # alias for long function name
+            >>> vcs.show('boxfill')
+            *******************Boxfill Names List**********************
+            ...
+            *******************End Boxfill Names List**********************
+            >>> cns('NEW', 'quick', 'boxfill') # name 'NEW' should be available
+            ('NEW', 'quick')
+            >>> cns(None, 'default', 'boxfill') # generate unique boxfill name
+            ('__boxfill_...', 'default')
+
+    :param name: Desired string name for an object of type *typ*,
+        inheriting from source object *source*.
+        If name is None, a unique name will be generated.
+    :type name: `str`_ or None
+
+    :param source: Source from which the new object is meant to inherit.
+        Can be a VCS object or a string name of a VCS object.
+    :type source: `str`_ or VCS Object
+
+    :param typ: String name of a VCS object type.
+        (e.g. 'boxfill', 'isofill', 'marker', etc.)
+    :type typ: str
+
+    :returns: A tuple containing two strings: a unique name and a source name.
+        If *name* was provided and an object of type *typ* with that name
+        already exists, an error is raised.
+    :rtype: `tuple`_
+    """
     elts = vcs.listelements(typ)
     if name is None:
         rnd = random.randint(0, 1000000000000000)
@@ -63,14 +106,14 @@ def check_name_source(name, source, typ):
 
 
 def createtemplate(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
-    :type name: str
+    :type name: `str`_
 
-    :param source: The object to inherit from
-    :type source: a template or a string name of a template
+    :param source: The object to inherit from.
+        Can be a template, or a string name of a template
+    :type source: `str`_ or :class:`vcs.template.P`
 
     :returns: A template
     :rtype: vcs.template.P
@@ -79,15 +122,14 @@ def createtemplate(name=None, source='default'):
     name, source = check_name_source(name, source, 'template')
 
     return template.P(name, source)
-createtemplate.__doc__ = createtemplate.__doc__ % xmldocs.create_docs['template']
+createtemplate.__doc__ = createtemplate.__doc__ % xmldocs.create_docs['template']  # noqa
 
 
 def gettemplate(Pt_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Pt_name_src: String name of an existing template VCS object
-    :type Pt_name_src:
+    :type Pt_name_src: `str`_
 
     :returns: A VCS template object
     :rtype: vcs.template.P
@@ -99,18 +141,18 @@ def gettemplate(Pt_name_src='default'):
     if Pt_name_src not in vcs.elements["template"].keys():
         raise ValueError("template '%s' does not exists" % Pt_name_src)
     return vcs.elements["template"][Pt_name_src]
-gettemplate.__doc__ = gettemplate.__doc__ % xmldocs.get_docs['template']
+gettemplate.__doc__ = gettemplate.__doc__ % xmldocs.get_docs['template']  # noqa
 
 
 def createprojection(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
-    :type name: str
+    :type name: `str`_
 
-    :param source: The object to inherit from
-    :type source: a projection or a string name of a projection
+    :param source: The object to inherit from.
+        Can be a projection, or a string name of a projection.
+    :type source: `str`_ or :class:`vcs.projection.Proj`
 
     :returns: A projection graphics method object
     :rtype: vcs.projection.Proj
@@ -118,15 +160,14 @@ def createprojection(name=None, source='default'):
 
     name, source = check_name_source(name, source, 'projection')
     return projection.Proj(name, source)
-createprojection.__doc__ = createprojection.__doc__ % xmldocs.create_docs['projection']
+createprojection.__doc__ = createprojection.__doc__ % xmldocs.create_docs['projection']  # noqa
 
 
 def getprojection(Proj_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Proj_name_src: String name of an existing VCS projection object
-    :type Proj_name_src: str
+    :type Proj_name_src: `str`_
 
     :returns: A VCS projection object
     :rtype: vcs.projection.Proj
@@ -139,52 +180,36 @@ def getprojection(Proj_name_src='default'):
     if Proj_name_src not in vcs.elements["projection"]:
         raise vcsError("No such projection '%s'" % Proj_name_src)
     return vcs.elements["projection"][Proj_name_src]
-getprojection.__doc__ = getprojection.__doc__ % xmldocs.get_docs['projection']
+getprojection.__doc__ = getprojection.__doc__ % xmldocs.get_docs['projection']  # noqa
 
 
 def createboxfill(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
-    :type name: str
+    :type name: `str`_
 
-    :param source: The object to inherit from
-    :type source: a boxfill or a string name of a boxfill
+    :param source: The object to inherit from.
+        can be a boxfill, or a string name of a boxfill.
+    :type source: `str`_ or :class:`vcs.boxfill.Gfb`
 
     :return: A boxfill graphics method object
     :rtype: vcs.boxfill.Gfb
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
 
     name, source = check_name_source(name, source, 'boxfill')
     return boxfill.Gfb(name, source)
-createboxfill.__doc__ = createboxfill.__doc__ % (
-    xmldocs.create_docs['boxfill'],
-    xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.create_GM_input, xmldocs.boxfill_output)
+createboxfill.__doc__ = createboxfill.__doc__ % xmldocs.create_docs['boxfill']  # noqa
 
 
 def getboxfill(Gfb_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gfb_name_src: String name of an existing boxfill VCS object
-    :type Gfb_name_src: str
+    :type Gfb_name_src: `str`_
 
     :return: A pre-existing boxfill graphics method
     :rtype: vcs.boxfill.Gfb
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     # Check to make sure the argument passed in is a STRING
     if not isinstance(Gfb_name_src, str):
@@ -193,20 +218,18 @@ def getboxfill(Gfb_name_src='default'):
     if Gfb_name_src not in vcs.elements["boxfill"].keys():
         raise "The boxfill method: '%s' does not seem to exist"
     return vcs.elements["boxfill"][Gfb_name_src]
-getboxfill.__doc__ = getboxfill.__doc__ % (
-    xmldocs.get_docs['boxfill'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.get_GM_input, xmldocs.boxfill_output)
+getboxfill.__doc__ = getboxfill.__doc__ % xmldocs.get_docs['boxfill']  # noqa
 
 
 def createtaylordiagram(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
-    :type name: str
+    :type name: `str`_
 
-    :param source: The object to inherit from
-    :type source: a taylordiagram or a string name of a
+    :param source: The object to inherit from.
+        Can be a a taylordiagram, or a string name of a taylordiagram.
+    :type source: `str`_ or :class:`vcs.taylor.Gtd`
 
     :returns: A taylordiagram graphics method object
     :rtype: vcs.taylor.Gtd
@@ -225,15 +248,14 @@ def createtaylordiagram(name=None, source='default'):
             ' does not exist')
     n = vcs.taylor.Gtd(name, source)
     return n
-createtaylordiagram.__doc__ = createtaylordiagram.__doc__ % xmldocs.create_docs['taylordiagram']
+createtaylordiagram.__doc__ = createtaylordiagram.__doc__ % xmldocs.create_docs['taylordiagram']  # noqa
 
 
 def gettaylordiagram(Gtd_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gtd_name_src: String name of an existing taylordiagram VCS object
-    :type Gtd_name_src: str
+    :type Gtd_name_src: `str`_
 
     :returns: A taylordiagram VCS object
     :rtype: vcs.taylor.Gtd
@@ -249,33 +271,32 @@ def gettaylordiagram(Gtd_name_src='default'):
             Gtd_name_src)
     else:
         return vcs.elements["taylordiagram"][Gtd_name_src]
-gettaylordiagram.__doc__ = gettaylordiagram.__doc__ % xmldocs.get_docs['taylordiagram']
+gettaylordiagram.__doc__ = gettaylordiagram.__doc__ % xmldocs.get_docs['taylordiagram']  # noqa
 
 
 def createmeshfill(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
-    :type name: str
+    :type name: `str`_
 
-    :param source: The object to inherit from
-    :type source: a meshfill or a string name of a meshfill
+    :param source: The object to inherit from.
+        Can be a meshfill, or a string name of a meshfill.
+    :type source: `str`_ or :class:`vcs.meshfill.Gfm`
 
     :returns: A meshfill graphics method object
     :rtype: vcs.meshfill.Gfm
     """
     name, source = check_name_source(name, source, 'meshfill')
     return meshfill.Gfm(name, source)
-createmeshfill.__doc__ = createmeshfill.__doc__ % xmldocs.create_docs['meshfill']
+createmeshfill.__doc__ = createmeshfill.__doc__ % xmldocs.create_docs['meshfill']  # noqa
 
 
 def getmeshfill(Gfm_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gfm_name_src: String name of an existing meshfill VCS object
-    :type Gfm_name_src: str
+    :type Gfm_name_src: `str`_
 
     :returns: A meshfill VCS object
     :rtype: vcs.meshfill.Gfm
@@ -289,51 +310,36 @@ def getmeshfill(Gfm_name_src='default'):
         raise ValueError("meshfill '%s' does not exists" % Gfm_name_src)
 
     return vcs.elements["meshfill"][Gfm_name_src]
-getmeshfill.__doc__ = getmeshfill.__doc__ % xmldocs.get_docs['meshfill']
+getmeshfill.__doc__ = getmeshfill.__doc__ % xmldocs.get_docs['meshfill']  # noqa
 
 
 def createisofill(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
-    :type name: str
+    :type name: `str`_
 
-    :param source: The object to inherit from
-    :type source: an isofill object, or string name of an isofill object
+    :param source: The object to inherit from.
+        Can be an isofill object, or string name of an isofill object.
+    :type source: `str`_ or :class:`vcs.isofill.Gfi`
 
     :returns: An isofill graphics method
     :rtype: vcs.isofill.Gfi
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
 
     name, source = check_name_source(name, source, 'isofill')
     return isofill.Gfi(name, source)
-createisofill.__doc__ = createisofill.__doc__ % (
-    xmldocs.create_docs['isofill'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core,
-    xmldocs.axesconvert, xmldocs.create_GM_input, xmldocs.isofill_output)
+createisofill.__doc__ = createisofill.__doc__ % xmldocs.create_docs['isofill']  # noqa
 
 
 def getisofill(Gfi_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gfi_name_src: String name of an existing isofill VCS object
-    :type Gfi_name_src: str
+    :type Gfi_name_src: `str`_
 
     :returns: The specified isofill VCS object
     :rtype: vcs.isofill.Gfi
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
 
     # Check to make sure the argument passed in is a STRING
@@ -343,53 +349,36 @@ def getisofill(Gfi_name_src='default'):
     if Gfi_name_src not in vcs.elements["isofill"]:
         raise ValueError("The isofill '%s' does not exists" % Gfi_name_src)
     return vcs.elements["isofill"][Gfi_name_src]
-getisofill.__doc__ = getisofill.__doc__ % (
-    xmldocs.get_docs['isofill'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.get_GM_input, xmldocs.isofill_output)
+getisofill.__doc__ = getisofill.__doc__ % xmldocs.get_docs['isofill']  # noqa
 
 
 def createisoline(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
-    :type name: str
+    :type name: `str`_
 
-    :param source: The object to inherit from
-    :type source: an isoline object, or string name of an isoline object
+    :param source: The object to inherit from.
+        Can be an isoline object, or string name of an isoline object.
+    :type source: `str`_ or :class:`vcs.isoline.Gi`
 
     :returns: An isoline graphics method object
     :rtype: vcs.isoline.Gi
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
 
     name, source = check_name_source(name, source, 'isoline')
     return isoline.Gi(name, source)
-createisoline.__doc__ = createisoline.__doc__ % (
-    xmldocs.create_docs['isoline'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.create_GM_input, xmldocs.isoline_output)
+createisoline.__doc__ = createisoline.__doc__ % xmldocs.create_docs['isoline']  # noqa
 
 
 def getisoline(Gi_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gi_name_src: String name of an existing isoline VCS object
-    :type Gi_name_src: str
+    :type Gi_name_src: `str`_
 
     :returns: The requested isoline VCS object
     :rtype: vcs.isoline.Gi
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
 
     # Check to make sure the argument passed in is a STRING
@@ -398,17 +387,61 @@ def getisoline(Gi_name_src='default'):
     if Gi_name_src not in vcs.elements["isoline"]:
         raise ValueError("The isoline '%s' does not exists" % Gi_name_src)
     return vcs.elements["isoline"][Gi_name_src]
-getisoline.__doc__ = getisoline.__doc__ % (
-    xmldocs.get_docs['isoline'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.get_GM_input, xmldocs.isoline_output)
+getisoline.__doc__ = getisoline.__doc__ % xmldocs.get_docs['isoline']  # noqa
 
 
 def create1d(name=None, source='default'):
+    """Creates a new :py:class:`vcs.unified1d.G1d` object called name, and inheriting from source.
+
+    :Example:
+
+        .. doctest:: manageElements_create1d
+
+            >>> vcs.show('1d')
+            *******************1d Names List**********************
+            ...
+            *******************End 1d Names List**********************
+            >>> vcs.create1d() # inherits default, name generated
+            <vcs.unified1D.G1d ...>
+            >>> vcs.create1d("one_D") # inherits default, name "one_D"
+            <vcs.unified1D.G1d ...>
+            >>> vcs.create1d(source="one_D") # inherits from "one_D"
+            <vcs.unified1D.G1d ...>
+
+    :param name: A string name for the 1d to be created. If None, a unique name will be created.
+    :type name: `str`_
+
+    :param source: A 1d object or string name of a 1d object from which the new 1d will inherit.
+    :type source: `str`_ or :py:class:`vcs.unified1D.G1d`
+
+    :return: A new 1d object, inheriting from source.
+    :rtype: :py:class:`vcs.unified1D.G1d`
+    """
     name, source = check_name_source(name, source, '1d')
     return unified1D.G1d(name, source)
 
 
 def get1d(name):
+    """Given name, returns a :py:class:`vcs.unified1d.G1d` from vcs with that name.
+    Unlike other VCS 'get' functions, name cannot be None when calling get1d().
+
+    :Example:
+
+        .. doctest:: manageElements_get_1d
+
+            >>> vcs.show('1d')
+            *******************1d Names List**********************
+            ...
+            *******************End 1d Names List**********************
+            >>> vcs.get1d('blue_yxvsx')
+            <vcs.unified1D.G1d ...>
+
+    :param name: String name of a 1d in vcs. If there is no 1d with that name, an error will be raised.
+    :type name: `str`_
+
+    :return: A 1d from vcs with the given name.
+    :rtype: :py:class:`vcs.unified1d.G1d`
+    """
     # Check to make sure the argument passed in is a STRING
     if not isinstance(name, str):
         raise vcsError('The argument must be a string.')
@@ -419,24 +452,18 @@ def get1d(name):
 
 
 def createxyvsy(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
-    :type name: str
+    :type name: `str`_
 
 
-    :param source: The object to inherit from
-    :type source: a xyvsy or a string name of a xyvsy
+    :param source: The object to inherit from.
+        Can be a xyvsy, or a string name of a xyvsy.
+    :type source: `str`_ or :class:`vcs.unified1D.G1d`
 
     :returns: A XYvsY graphics method object
     :rtype: vcs.unified1D.G1d
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     try:
         gm = vcs.create1d(name, source)
@@ -450,55 +477,38 @@ def createxyvsy(name=None, source='default'):
             raise ve
     gm.flip = True
     return gm
-createxyvsy.__doc__ = createxyvsy.__doc__ % (
-    xmldocs.create_docs['xyvsy'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.create_GM_input, xmldocs.xyvsy_output)
+createxyvsy.__doc__ = createxyvsy.__doc__ % xmldocs.create_docs['xyvsy']  # noqa
 
 
 def getxyvsy(GXy_name_src='default'):
-    """
-    %s
+    """%s
 
     :param GXy_name_src: String name of an existing Xyvsy graphics method
-    :type GXy_name_src: str
+    :type GXy_name_src: `str`_
 
     :returns: An XYvsY graphics method object
     :rtype: vcs.unified1D.G1d
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     gm = vcs.get1d(GXy_name_src)
     if gm.g_type != "xyvsy":
         # Already existed when name_src was created, most likely
         return vcs.get1d(GXy_name_src + "_xyvsy")
     return gm
-getxyvsy.__doc__ = getxyvsy.__doc__ % (
-    xmldocs.get_docs['xyvsy'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.get_GM_input, xmldocs.xyvsy_output)
+getxyvsy.__doc__ = getxyvsy.__doc__ % xmldocs.get_docs['xyvsy']  # noqa
 
 
 def createyxvsx(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
-    :type name: str
+    :type name: `str`_
 
-    :param source: The object to inherit from
-    :type source: a yxvsy or a string name of a yxvsy
+    :param source: The object to inherit from.
+        Can be a yxvsy, or a string name of a yxvsy.
+    :type source: `str`_ or :class:`vcs.unified1D.G1d`
 
     :returns: A YXvsX graphics method object
     :rtype: vcs.unified1D.G1d
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     try:
         gm = vcs.create1d(name, source)
@@ -511,54 +521,37 @@ def createyxvsx(name=None, source='default'):
         else:
             raise ve
     return gm
-createyxvsx.__doc__ = createyxvsx.__doc__ % (
-    xmldocs.create_docs['yxvsx'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.create_GM_input, xmldocs.yxvsx_output)
+createyxvsx.__doc__ = createyxvsx.__doc__ % xmldocs.create_docs['yxvsx']  # noqa
 
 
 def getyxvsx(GYx_name_src='default'):
-    """
-    %s
+    """%s
 
     :param GYx_name_src: String name of an existing Yxvsx graphics method
     :type GYx_name_src: str
 
     :return: A Yxvsx graphics method object
     :rtype: vcs.unified1D.G1d
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     gm = vcs.get1d(GYx_name_src)
     if gm.g_type != "yxvsx":
         return vcs.get1d(GYx_name_src + "_yxvsx")
     return gm
-getyxvsx.__doc__ = getyxvsx.__doc__ % (
-    xmldocs.get_docs['yxvsx'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.get_GM_input, xmldocs.yxvsx_output)
+getyxvsx.__doc__ = getyxvsx.__doc__ % xmldocs.get_docs['yxvsx']  # noqa
 
 
 def createxvsy(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
-    :type name: str
+    :type name: `str`_
 
-    :param source: The object to inherit from
-    :type source: a xvsy or a string name of a xvsy
+    :param source: The object to inherit from.
+        Can be a xvsy, or a string name of a xvsy.
+    :type source: `str`_ or :class:`vcs.unified1D.G1d`
 
     :returns: A XvsY graphics method object
     :rtype: vcs.unified1D.G1d
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     try:
         gm = vcs.create1d(name, source)
@@ -571,60 +564,49 @@ def createxvsy(name=None, source='default'):
         else:
             raise ve
     return gm
-createxvsy.__doc__ = createxvsy.__doc__ % (
-    xmldocs.create_docs['xvsy'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.create_GM_input, xmldocs.xvsy_output)
+createxvsy.__doc__ = createxvsy.__doc__ % xmldocs.create_docs['xvsy']  # noqa
 
 
 def getxvsy(GXY_name_src='default'):
-    """
-    %s
+    """%s
 
     :param GXY_name_src: String name of a 1d graphics method
-    :type GXY_name_src: str
+    :type GXY_name_src: `str`_
 
     :returns: A XvsY graphics method object
     :rtype: vcs.unified1D.G1d
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     gm = vcs.get1d(GXY_name_src)
     # Deliberately yxvsx here; xvsy is just an alias
     if gm.g_type != "yxvsx":
         return vcs.get1d(GXY_name_src + "_xvsy")
     return gm
-getxvsy.__doc__ = getxvsy.__doc__ % (
-    xmldocs.get_docs['xvsy'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.get_GM_input, xmldocs.xvsy_output)
+getxvsy.__doc__ = getxvsy.__doc__ % xmldocs.get_docs['xvsy']  # noqa
 
 
 def createvector(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
-    :type name: str
+    :type name: `str`_
 
-    :param source: The object to inherit from
-    :type source: a vector or a string name of a vector
+    :param source: The object to inherit from.
+        Can be a vector, or a string name of a vector.
+    :type source: `str`_ or :class:`vcs.vector.Gv`
 
     :returns: A vector graphics method object
     :rtype: vcs.vector.Gv
     """
     name, source = check_name_source(name, source, 'vector')
     return vector.Gv(name, source)
-createvector.__doc__ = createvector.__doc__ % xmldocs.create_docs['vector']
+createvector.__doc__ = createvector.__doc__ % xmldocs.create_docs['vector']  # noqa
 
 
 def getvector(Gv_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gv_name_src: String name of an existing vector VCS object
-    :type Gv_name_src: str
+    :type Gv_name_src: `str`_
 
     :returns: A vector graphics method object
     :rtype: vcs.vector.Gv
@@ -636,10 +618,10 @@ def getvector(Gv_name_src='default'):
     if Gv_name_src not in vcs.elements["vector"]:
         raise ValueError("The vector '%s' does not exist" % Gv_name_src)
     return vcs.elements["vector"][Gv_name_src]
-getvector.__doc__ = getvector.__doc__ % xmldocs.get_docs['vector']
+getvector.__doc__ = getvector.__doc__ % xmldocs.get_docs['vector']  # noqa
 
 
-def createscatter(name=None, source='default'):
+def createstreamline(name=None, source='default'):
     """
     %s
 
@@ -647,16 +629,48 @@ def createscatter(name=None, source='default'):
     :type name: str
 
     :param source: The object to inherit from
-    :type source: a scatter or a string name of a scatter
+    :type source: a streamline or a string name of a streamline
+
+    :returns: A streamline graphics method object
+    :rtype: vcs.streamline.Gs
+    """
+    name, source = check_name_source(name, source, 'streamline')
+    return streamline.Gs(name, source)
+createstreamline.__doc__ = createstreamline.__doc__ % xmldocs.create_docs['streamline']  # noqa
+
+
+def getstreamline(Gs_name_src='default'):
+    """
+    %s
+
+    :param Gs_name_src: String name of an existing streamline VCS object
+    :type Gs_name_src: str
+
+    :returns: A streamline graphics method object
+    :rtype: vcs.streamline.Gs
+    """
+
+    # Check to make sure the argument passed in is a STRING
+    if not isinstance(Gs_name_src, str):
+        raise vcsError('The argument must be a string.')
+    if Gs_name_src not in vcs.elements["streamline"]:
+        raise ValueError("The streamline '%s' does not exist" % Gs_name_src)
+    return vcs.elements["streamline"][Gs_name_src]
+getstreamline.__doc__ = getstreamline.__doc__ % xmldocs.get_docs['streamline']  # noqa
+
+
+def createscatter(name=None, source='default'):
+    """%s
+
+    :param name: The name of the created object
+    :type name: `str`_
+
+    :param source: The object to inherit from.
+        Can be a scatter or, a string name of a scatter.
+    :type source: `str`_ or :class:`vcs.unified1D.G1d`
 
     :return: A scatter graphics method
     :rtype: vcs.unified1D.G1d
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     try:
         gm = vcs.create1d(name, source)
@@ -670,80 +684,67 @@ def createscatter(name=None, source='default'):
             raise ve
     gm.linewidth = 0
     return gm
-createscatter.__doc__ = createscatter.__doc__ % (
-    xmldocs.create_docs['scatter'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.create_GM_input, xmldocs.scatter_output)
+createscatter.__doc__ = createscatter.__doc__ % xmldocs.create_docs['scatter']  # noqa
 
 
 def getscatter(GSp_name_src='default'):
-    """
-    %s
+    """%s
 
     :param GSp_name_src: String name of an existing scatter VCS object.
-    :type GSp_name_src: str
+    :type GSp_name_src: `str`_
 
     :returns: A scatter graphics method object
     :rtype: vcs.unified1D.G1d
-
-    %s
-    %s
-    %s
-    %s
-    %s
     """
     gm = vcs.get1d(GSp_name_src)
     if gm.g_type != "scatter":
         return vcs.get1d(GSp_name_src + "_scatter")
     return gm
-getscatter.__doc__ = getscatter.__doc__ % (
-    xmldocs.get_docs['scatter'], xmldocs.plot_keywords_doc, xmldocs.graphics_method_core, xmldocs.axesconvert,
-    xmldocs.get_GM_input, xmldocs.scatter_output)
+getscatter.__doc__ = getscatter.__doc__ % xmldocs.get_docs['scatter']  # noqa
 
 
 def createline(name=None, source='default', ltype=None,
                width=None, color=None, priority=None,
                viewport=None, worldcoordinate=None,
                x=None, y=None, projection=None):
-    """
-    %s
+    """%s
 
     :param name: Name of created object
-    :type name: str
+    :type name: `str`_
 
     :param source: a line, or string name of a line
-    :type source: str
+    :type source: `str`_
 
     :param ltype: One of "dash", "dash-dot", "solid", "dot", or "long-dash".
-    :type ltype: str
+    :type ltype: `str`_
 
     :param width: Thickness of the line to be created
-    :type width: int
+    :type width: `int`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: str or int
+    :type color: `str`_ or `int`_
 
     :param priority: The layer on which the line will be drawn.
-    :type priority: int
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :param projection: Specify a geographic projection used to convert x/y from spherical coordinates to 2D coordinates.
-    :type projection: str or projection object
+    :type projection: `str`_ or projection object
 
     :returns: A VCS line secondary method object
     :rtype: vcs.line.Tl
-
     """
     name, source = check_name_source(name, source, 'line')
 
@@ -767,14 +768,34 @@ def createline(name=None, source='default', ltype=None,
     if (projection is not None):
         ln.projection = projection
     return ln
-createline.__doc__ = createline.__doc__ % xmldocs.create_docs['line']
+createline.__doc__ = createline.__doc__ % xmldocs.create_docs['line']  # noqa
 
 
 def setLineAttributes(to, l):
-    '''
-    Set attributes linecolor, linewidth and linetype from line l.
-    l can be a line name defined in vcs.elements or a line object
-    '''
+    """Set attributes linecolor, linewidth and linetype from line l on object to.
+
+    :Example:
+
+        .. doctest:: manageElements_setLineAttributes
+
+            >>> vcs.show('line')
+            *******************Line Names List**********************
+            ...
+            *******************End Line Names List**********************
+            >>> new_isoline = vcs.createisoline('new_iso')
+            >>> vcs.setLineAttributes(new_isoline, 'continents')
+            >>> new_vector = vcs.createvector('new_vec')
+            >>> vcs.setLineAttributes(new_vector, 'continents')
+            >>> new_1d = vcs.create1d('new_1d', 'blue_yxvsx')
+            >>> vcs.setLineAttributes(new_1d, 'continents')
+
+    :param to: A vector, 1d, or isoline object to set the properties of.
+    :type to: :class:`vcs.vector.Gv`, :class:`vcs.unified1d.G1d`
+
+    :param l: l can be a line name defined in vcs.elements or a line object.
+        l will be used to set the properties of to.
+    :type l: :py:class:`vcs.line.Tl` or str
+    """
     import queries
     line = None
     if (queries.isline(l)):
@@ -785,45 +806,49 @@ def setLineAttributes(to, l):
         raise ValueError("Expecting a line object or a " +
                          "line name defined in vcs.elements, got type " +
                          type(l).__name__)
-    to.linecolor = line.color[0]
-    to.linewidth = line.width[0]
-    to.linetype = line.type[0]
+    if queries.isisoline(to):
+        to.linecolors = line.color
+        to.linewidths = line.width
+        to.linetypes = line.type
+    else:
+        to.linecolor = line.color[0]
+        to.linewidth = line.width[0]
+        to.linetype = line.type[0]
 
 
 def getline(name='default', ltype=None, width=None, color=None,
             priority=None, viewport=None,
             worldcoordinate=None,
             x=None, y=None):
-    """
-    %s
+    """%s
 
     :param name: Name of created object
-    :type name: str
+    :type name: `str`_
 
     :param ltype: One of "dash", "dash-dot", "solid", "dot", or "long-dash".
-    :type ltype: str
+    :type ltype: `str`_
 
     :param width: Thickness of the line to be created
-    :type width: int
+    :type width: `int`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-                  or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: str or int
+        or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+    :type color: `str`_ or int
 
     :param priority: The layer on which the marker will be drawn.
-    :type priority: int
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :returns: A VCS line object
     :rtype: vcs.line.Tl
@@ -855,47 +880,45 @@ def getline(name='default', ltype=None, width=None, color=None,
     if y is not None and ln.name != 'default':
         ln.y = y
     return ln
-getline.__doc__ = getline.__doc__ % xmldocs.get_docs['line']
+getline.__doc__ = getline.__doc__ % xmldocs.get_docs['line']  # noqa
 
 
 def createmarker(name=None, source='default', mtype=None,
                  size=None, color=None, priority=None,
                  viewport=None, worldcoordinate=None,
                  x=None, y=None, projection=None):
-    """
-    %s
-
+    """%s
 
     :param name: Name of created object
-    :type name: str
+    :type name: `str`_
 
     :param source: A marker, or string name of a marker
-    :type source: str
+    :type source: `str`_
 
     :param mtype: Specifies the type of marker, i.e. "dot", "circle"
-    :type mtype: str
+    :type mtype: `str`_
 
     :param size:
-    :type size: int
+    :type size: `int`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-                  or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: str or int
+        or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+    :type color: `str`_ or int
 
     :param priority: The layer on which the marker will be drawn.
-    :type priority: int
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :returns: A secondary marker method
     :rtype: vcs.marker.Tm
@@ -922,46 +945,45 @@ def createmarker(name=None, source='default', mtype=None,
     if (projection is not None):
         mrk.projection = projection
     return mrk
-createmarker.__doc__ = createmarker.__doc__ % xmldocs.create_docs['marker']
+createmarker.__doc__ = createmarker.__doc__ % xmldocs.create_docs['marker']  # noqa
 
 
 def getmarker(name='default', mtype=None, size=None, color=None,
               priority=None, viewport=None,
               worldcoordinate=None,
               x=None, y=None):
-    """
-    %s
+    """%s
 
     :param name: Name of created object
-    :type name: str
+    :type name: `str`_
 
     :param source: A marker, or string name of a marker
-    :type source: str
+    :type source: `str`_
 
     :param mtype: Specifies the type of marker, i.e. "dot", "circle"
-    :type mtype: str
+    :type mtype: `str`_
 
     :param size: Size of the marker
-    :type size: int
+    :type size: `int`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-                  or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: str or int
+        or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+    :type color: `str`_ or int
 
     :param priority: The layer on which the marker will be drawn.
-    :type priority: int
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :returns: A marker graphics method object
     :rtype: vcs.marker.Tm
@@ -991,49 +1013,47 @@ def getmarker(name='default', mtype=None, size=None, color=None,
     if (y is not None) and (mrk.name != "default"):
         mrk.y = y
     return mrk
-getmarker.__doc__ = getmarker.__doc__ % xmldocs.get_docs['marker']
+getmarker.__doc__ = getmarker.__doc__ % xmldocs.get_docs['marker']  # noqa
 
 
 def createfillarea(name=None, source='default', style=None,
                    index=None, color=None, priority=None,
                    viewport=None, worldcoordinate=None,
                    x=None, y=None):
-    """
-    %s
+    """%s
 
     :param name: Name of created object
-    :type name: str
+    :type name: `str`_
 
     :param source: a fillarea, or string name of a fillarea
-    :type source: str
+    :type source: `str`_
 
     :param style: One of "hatch", "solid", or "pattern".
-    :type style: str
+    :type style: `str`_
 
     :param index: Specifies which `pattern <http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png>`_ to fill with.
-    Accepts ints from 1-20.
-
-    :type index: int
+        Accepts ints from 1-20.
+    :type index: `int`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-    or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+        or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
 
-    :type color: str or int
+    :type color: `str`_ or int
 
     :param priority: The layer on which the fillarea will be drawn.
-    :type priority: int
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :returns: A fillarea object
     :rtype: vcs.fillarea.Tf
@@ -1059,7 +1079,7 @@ def createfillarea(name=None, source='default', style=None,
     if (y is not None):
         fa.y = y
     return fa
-createfillarea.__doc__ = createfillarea.__doc__ % xmldocs.create_docs['fillarea']
+createfillarea.__doc__ = createfillarea.__doc__ % xmldocs.create_docs['fillarea']  # noqa
 
 
 def getfillarea(name='default', style=None,
@@ -1067,41 +1087,40 @@ def getfillarea(name='default', style=None,
                 priority=None, viewport=None,
                 worldcoordinate=None,
                 x=None, y=None):
-    """
-    %s
+    """%s
 
     :param name: String name of an existing fillarea VCS object
-    :type name: str
+    :type name: `str`_
 
     :param style: One of "hatch", "solid", or "pattern".
-    :type style: str
+    :type style: `str`_
 
     :param index: Specifies which `pattern <http://uvcdat.llnl.gov/gallery/fullsize/pattern_chart.png>`_ to fill with.
                   Accepts ints from 1-20.
-    :type index: int
+    :type index: `int`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: str or int
+    :type color: `str`_ or int
 
     :param priority: The layer on which the texttable will be drawn.
-    :type priority: int
+    :type priority: `int`_
 
-    :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :param viewport: 4 floats between 0 and 1 which specify the area that X/Y
+        values are mapped to inside of the canvas.
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :returns: A fillarea secondary object
     :rtype: vcs.fillarea.Tf
-
     """
 
     # Check to make sure the argument passed in is a STRING
@@ -1128,49 +1147,51 @@ def getfillarea(name='default', style=None,
     if (y is not None) and (fa.name != "default"):
         fa.y = y
     return fa
-getfillarea.__doc__ = getfillarea.__doc__ % xmldocs.get_docs['fillarea']
+getfillarea.__doc__ = getfillarea.__doc__ % xmldocs.get_docs['fillarea']  # noqa
 
 
 def createtexttable(name=None, source='default', font=None,
                     spacing=None, expansion=None, color=None, priority=None,
                     viewport=None, worldcoordinate=None,
                     x=None, y=None):
-    """
-    %s
+    """%s
 
     :param name: Name of created object
-    :type name: str
+    :type name: `str`_
 
     :param source: a texttable, or string name of a texttable
-    :type source: str
+    :type source: `str`_
 
     :param font: Which font to use (index or name).
-    :type font: int or string
-
-    :param expansion: DEPRECATED
-    :type expansion: DEPRECATED
+    :type font: `int`_ or `str`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: str or int
+    :type color: `str`_ or int
 
     :param priority: The layer on which the texttable will be drawn.
-    :type priority: int
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
-    :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :param x: List of lists of x coordinates.
+        Values must be between worldcoordinate[0] and worldcoordinate[1].
+    :type x: `list`_
 
-    :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :param y: List of lists of y coordinates.
+        Values must be between worldcoordinate[2] and worldcoordinate[3].
+    :type y: `list`_
 
     :returns: A texttable graphics method object
     :rtype: vcs.texttable.Tt
+
+    .. note::
+
+        The expansion parameter is no longer used
     """
 
     name, source = check_name_source(name, source, 'texttable')
@@ -1198,7 +1219,7 @@ def createtexttable(name=None, source='default', font=None,
         return tt
     except:
         pass
-createtexttable.__doc__ = createtexttable.__doc__ % xmldocs.create_docs['texttable']
+createtexttable.__doc__ = createtexttable.__doc__ % xmldocs.create_docs['texttable']  # noqa
 
 
 def gettexttable(name='default', font=None,
@@ -1206,39 +1227,39 @@ def gettexttable(name='default', font=None,
                  priority=None, viewport=None,
                  worldcoordinate=None,
                  x=None, y=None):
-    """
-    %s
+    """%s
 
     :param name: String name of an existing VCS texttable object
-    :type name: str
+    :type name: `str`_
 
-    :param font: ???
-    :type font: ???
-
-    :param expansion: ???
-    :type expansion: ???
+    :param font: Which font to use (index or name).
+    :type font: `int`_ or `str`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: str or int
+    :type color: `str`_ or int
 
     :param priority: The layer on which the texttable will be drawn.
-    :type priority: int
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :returns: A texttable graphics method object
     :rtype: vcs.texttable.Tt
+
+    .. note::
+
+        The expansion parameter is no longer used
     """
 
     # Check to make sure the argument passed in is a STRING
@@ -1248,18 +1269,18 @@ def gettexttable(name='default', font=None,
     if name not in vcs.elements["texttable"]:
         raise ValueError("The texttable '%s' does not exists" % name)
     return vcs.elements["texttable"][name]
-gettexttable.__doc__ = gettexttable.__doc__ % xmldocs.get_docs['texttable']
+gettexttable.__doc__ = gettexttable.__doc__ % xmldocs.get_docs['texttable']  # noqa
 
 
 def createtextorientation(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
-    :type name: str
+    :type name: `str`_
 
-    :param source: The object to inherit from
-    :type source: a textorientation or a string name of a textorientation
+    :param source: The object to inherit from.
+        Can be a textorientation, or a string name of a textorientation.
+    :type source: `str`_ or :class:`vcs.textorientation.To`
 
     :returns: A textorientation secondary method
     :rtype: vcs.textorientation.To
@@ -1268,15 +1289,14 @@ def createtextorientation(name=None, source='default'):
     name, source = check_name_source(name, source, 'textorientation')
 
     return textorientation.To(name, source)
-createtextorientation.__doc__ = createtextorientation.__doc__ % xmldocs.create_docs['textorientation']
+createtextorientation.__doc__ = createtextorientation.__doc__ % xmldocs.create_docs['textorientation']  # noqa
 
 
 def gettextorientation(To_name_src='default'):
-    """
-    %s
+    """%s
 
     :param To_name_src: String name of an existing textorientation VCS object
-    :type To_name_src: str
+    :type To_name_src: `str`_
 
     :returns: A textorientation VCS object
     :rtype: vcs.textorientation.To
@@ -1291,77 +1311,71 @@ def gettextorientation(To_name_src='default'):
             "The textorientation '%s' does not exists" %
             To_name_src)
     return vcs.elements["textorientation"][To_name_src]
-gettextorientation.__doc__ = gettextorientation.__doc__ % xmldocs.get_docs['textorientation']
+gettextorientation.__doc__ = gettextorientation.__doc__ % xmldocs.get_docs['textorientation']  # noqa
 
 
 def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_source='default',
                        font=None, spacing=None, expansion=None, color=None,
                        priority=None, viewport=None, worldcoordinate=None, x=None, y=None,
                        height=None, angle=None, path=None, halign=None, valign=None, projection=None):
-    """
-    %s
+    """%s
 
     :param Tt_name: Name of created object
-    :type Tt_name: str
+    :type Tt_name: `str`_
 
     :param Tt_source: Texttable object to inherit from. Can be a texttable, or a string name of a texttable.
-    :type Tt_source: str or vcs.texttable.Tt
+    :type Tt_source: `str`_ or :class:`vcs.texttable.Tt`
 
     :param To_name: Name of the textcombined's text orientation  (to be created)
-    :type To_name: str
+    :type To_name: `str`_
 
     :param To_source: Name of the textorientation to inherit.
             Can be a textorientation, or a string name of a textorientation.
-    :type To_source: str or vcs.textorientation.To
+    :type To_source: `str`_ or :class:`vcs.textorientation.To`
 
     :param font: Which font to use (index or name).
-    :type font: int or str
-
-    :param spacing: DEPRECATED
-    :type spacing: DEPRECATED
-
-    :param expansion: DEPRECATED
-    :type expansion: DEPRECATED
+    :type font: `int`_ or `str`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
                   or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: str or int
+    :type color: `str`_ or int
 
     :param priority: The layer on which the object will be drawn.
-    :type priority: int
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
     :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :param height: Size of the font
-    :type height: int
+    :type height: `int`_
 
     :param angle: Angle of the text, in degrees
-    :type angle: int
-
-    :param path: DEPRECATED
-    :type path: DEPRECATED
+    :type angle: `int`_
 
     :param halign: Horizontal alignment of the text. One of ["left", "center", "right"].
-    :type halign: str
+    :type halign: `str`_
 
     :param valign: Vertical alignment of the text. One of ["top", "center", "botom"].
-    :type valign: str
+    :type valign: `str`_
 
     :param projection: Specify a geographic projection used to convert x/y from spherical coordinates to 2D coordinates.
-    :type projection: str or projection object
+    :type projection: `str`_ or projection object
 
     :returns: A VCS text object
     :rtype: vcs.textcombined.Tc
+
+    .. note::
+
+        The spacing, path, and expansion parameters are no longer used
     """
     # Check if to is defined
     if To_name is None:
@@ -1404,71 +1418,67 @@ def createtextcombined(Tt_name=None, Tt_source='default', To_name=None, To_sourc
     return tc
 #
 # Set alias for the secondary createtextcombined.
-createtext = createtextcombined
-createtextcombined.__doc__ = createtextcombined.__doc__ % xmldocs.create_docs['textcombined']
+createtext = createtextcombined  # noqa
+createtextcombined.__doc__ = createtextcombined.__doc__ % xmldocs.create_docs['textcombined']  # noqa
 
 
 def gettextcombined(Tt_name_src='default', To_name_src=None, string=None, font=None, spacing=None,
                     expansion=None, color=None,
                     priority=None, viewport=None, worldcoordinate=None, x=None, y=None,
                     height=None, angle=None, path=None, halign=None, valign=None):
-    """
-    %s
+    """%s
 
     :param Tt_name_src: Name of parent texttable object
-    :type Tt_name_src: str
+    :type Tt_name_src: `str`_
 
     :param To_name_src: Name of parent textorientation object
-    :type To_name_src: str
+    :type To_name_src: `str`_
 
     :param string: Text to render
-    :param string: list of str
+    :type string: `list`_
 
     :param font: Which font to use (index or name)
-    :type font: int or str
-
-    :param spacing: DEPRECATED
-    :type spacing: DEPRECATED
-
-    :param expansion: DEPRECATED
-    :type expansion: DEPRECATED
+    :type font: `int`_ or `str`_
 
     :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
-                  or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
-    :type color: str or int
+        or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+    :type color: `str`_ or int
 
     :param priority: The layer on which the object will be drawn.
-    :type priority: int
+    :type priority: `int`_
 
     :param viewport: 4 floats between 0 and 1 which specify the area that X/Y values are mapped to inside of the canvas.
-    :type viewport: list of floats
+    :type viewport: `list`_
 
     :param worldcoordinate: List of 4 floats (xmin, xmax, ymin, ymax)
-    :type worldcoordinate: list of floats
+    :type worldcoordinate: `list`_
 
-    :param x: List of lists of x coordinates. Values must be between worldcoordinate[0] and worldcoordinate[1].
-    :type x: list of floats
+    :param x: List of lists of x coordinates.
+        Values must be between worldcoordinate[0] and worldcoordinate[1].
+    :type x: `list`_
 
     :param y: List of lists of y coordinates. Values must be between worldcoordinate[2] and worldcoordinate[3].
-    :type y: list of floats
+    :type y: `list`_
 
     :param height: Size of the font
-    :type height: int
+    :type height: `int`_
 
-    :param angle: Angle of the rendered text, in degrees
-    :type angle: list of int
-
-    :param path: DEPRECATED
-    :type path: DEPRECATED
+    :param angle: Angle of the rendered text, in degrees.
+        Must be a list of integers.
+    :type angle: `list`_
 
     :param halign: Horizontal alignment of the text. One of ["left", "center", "right"]
-    :type halign: str
+    :type halign: `str`_
 
     :param valign: Vertical alignment of the text. One of ["top", "center", "bottom"]
-    :type valign: str
+    :type valign: `str`_
 
     :returns: A textcombined object
     :rtype: vcs.textcombined.Tc
+
+    .. note::
+
+        The spacing, path, and expansion parameters are no longer used
     """
 
     # Check to make sure the arguments passed in are a STRINGS
@@ -1521,15 +1531,14 @@ def gettextcombined(Tt_name_src='default', To_name_src=None, string=None, font=N
     if (valign is not None) and (tc.To_name != "default"):
         tc.valign = valign
     return tc
-gettextcombined.__doc__ = gettextcombined.__doc__ % xmldocs.get_docs['textcombined']
+gettextcombined.__doc__ = gettextcombined.__doc__ % xmldocs.get_docs['textcombined']  # noqa
 #
 # Set alias for the secondary gettextcombined.
-gettext = gettextcombined
+gettext = gettextcombined  # noqa
 
 
 def get3d_scalar(Gfdv3d_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gfdv3d_name_src: String name of an existing 3d_scalar VCS object.
     :type Gfdv3d_name_src: str
@@ -1546,33 +1555,32 @@ def get3d_scalar(Gfdv3d_name_src='default'):
         raise ValueError("dv3d '%s' does not exists" % Gfdv3d_name_src)
 
     return vcs.elements["3d_scalar"][Gfdv3d_name_src]
-get3d_scalar.__doc__ = get3d_scalar.__doc__ % xmldocs.get_docs['3d_scalar']
+get3d_scalar.__doc__ = get3d_scalar.__doc__ % xmldocs.get_docs['3d_scalar']  # noqa
 
 
 def create3d_scalar(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
-    :type name: str
+    :type name: `str`_
 
-    :param source: The object to inherit from
-    :type source: a 3d_scalar or a string name of a 3d_scalar
+    :param source: The object to inherit from.
+        Can be a 3d_scalar, or a string name of a 3d_scalar.
+    :type source: `str`_ or :class:`vcs.dv3d.Gf3Dscalar`
 
     :returns: A 3d_scalar graphics method object
     :rtype: vcs.dv3d.Gf3Dscalar
     """
     name, source = check_name_source(name, source, '3d_scalar')
     return dv3d.Gf3Dscalar(name, source)
-create3d_scalar.__doc__ = create3d_scalar.__doc__ % xmldocs.create_docs['3d_scalar']
+create3d_scalar.__doc__ = create3d_scalar.__doc__ % xmldocs.create_docs['3d_scalar']  # noqa
 
 
 def get3d_dual_scalar(Gfdv3d_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gfdv3d_name_src: String name of an existing 3d_dual_scalar VCS object
-    :type Gfdv3d_name_src: str
+    :type Gfdv3d_name_src: `str`_
 
     :returns: A pre-existing 3d_dual_scalar VCS object
     :rtype: vcs.dv3d.Gf3DDualScalar
@@ -1585,18 +1593,18 @@ def get3d_dual_scalar(Gfdv3d_name_src='default'):
         raise ValueError("dv3d '%s' does not exists" % Gfdv3d_name_src)
 
     return vcs.elements["3d_dual_scalar"][Gfdv3d_name_src]
-get3d_dual_scalar.__doc__ = get3d_dual_scalar.__doc__ % xmldocs.get_docs['3d_dual_scalar']
+get3d_dual_scalar.__doc__ = get3d_dual_scalar.__doc__ % xmldocs.get_docs['3d_dual_scalar']  # noqa
 
 
 def create3d_dual_scalar(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
-    :type name: str
+    :type name: `str`_
 
-    :param source: The object to inherit from
-    :type source: a 3d_dual_scalar or a string name of a 3d_dual_scalar
+    :param source: The object to inherit from.
+        Can be a 3d_dual_scalar, or a string name of a 3d_dual_scalar.
+    :type source: `str`_ or :class:`vcs.dv3d.Gf3DDualScalar`
 
     :returns: A 3d_dual_scalar graphics method object
     :rtype: vcs.dv3d.Gf3DDualScalar
@@ -1604,15 +1612,14 @@ def create3d_dual_scalar(name=None, source='default'):
 
     name, source = check_name_source(name, source, '3d_dual_scalar')
     return dv3d.Gf3DDualScalar(name, source)
-create3d_dual_scalar.__doc__ = create3d_dual_scalar.__doc__ % xmldocs.create_docs['3d_dual_scalar']
+create3d_dual_scalar.__doc__ = create3d_dual_scalar.__doc__ % xmldocs.create_docs['3d_dual_scalar']  # noqa
 
 
 def get3d_vector(Gfdv3d_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Gfdv3d_name_src: String name of an existing 3d_vector VCS object
-    :type Gfdv3d_name_src: str
+    :type Gfdv3d_name_src: `str`_
 
     :returns: A pre-existing 3d_vector VCS object
     :rtype: vcs.dv3d.Gf3Dvector
@@ -1626,18 +1633,18 @@ def get3d_vector(Gfdv3d_name_src='default'):
         raise ValueError("dv3d '%s' does not exists" % Gfdv3d_name_src)
 
     return vcs.elements["3d_vector"][Gfdv3d_name_src]
-get3d_vector.__doc__ = get3d_vector.__doc__ % xmldocs.get_docs['3d_vector']
+get3d_vector.__doc__ = get3d_vector.__doc__ % xmldocs.get_docs['3d_vector']  # noqa
 
 
 def create3d_vector(name=None, source='default'):
-    """
-    %s
+    """%s
 
     :param name: The name of the created object
-    :type name: str
+    :type name: `str`_
 
-    :param source: The object to inherit from
-    :type source: a 3d_vector or a string name of a 3d_vector
+    :param source: The object to inherit from.
+        Can be a 3d_vector, or a string name of a 3d_vector.
+    :type source: `str`_ or :class:`vcs.dv3d.Gf3Dvector`
 
     :returns: A 3d_vector graphics method object
     :rtype: vcs.dv3d.Gf3Dvector
@@ -1645,7 +1652,7 @@ def create3d_vector(name=None, source='default'):
 
     name, source = check_name_source(name, source, '3d_vector')
     return dv3d.Gf3Dvector(name, source)
-create3d_vector.__doc__ = create3d_vector.__doc__ % xmldocs.create_docs['3d_vector']
+create3d_vector.__doc__ = create3d_vector.__doc__ % xmldocs.create_docs['3d_vector']  # noqa
 
 #############################################################################
 #                                                                           #
@@ -1655,14 +1662,14 @@ create3d_vector.__doc__ = create3d_vector.__doc__ % xmldocs.create_docs['3d_vect
 
 
 def createcolormap(Cp_name=None, Cp_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Cp_name: The name of the created object
-    :type Cp_name: str
+    :type Cp_name: `str`_
 
-    :param Cp_name_src: The object to inherit
-    :type Cp_name_src: a colormap or a string name of a colormap
+    :param Cp_name_src: The object to inherit from.
+        Can be a colormap or a string name of a colormap.
+    :type Cp_name_src: `str`_ or :class:`vcs.colormap.Cp`
 
     :returns: A VCS colormap object
     :rtype: vcs.colormap.Cp
@@ -1670,15 +1677,14 @@ def createcolormap(Cp_name=None, Cp_name_src='default'):
 
     Cp_name, Cp_name_src = check_name_source(Cp_name, Cp_name_src, 'colormap')
     return colormap.Cp(Cp_name, Cp_name_src)
-createcolormap.__doc__ = createcolormap.__doc__ % xmldocs.create_docs['colormap']
+createcolormap.__doc__ = createcolormap.__doc__ % xmldocs.create_docs['colormap']  # noqa
 
 
 def getcolormap(Cp_name_src='default'):
-    """
-    %s
+    """%s
 
     :param Cp_name_src: String name of an existing colormap VCS object
-    :type Cp_name_src: str
+    :type Cp_name_src: `str`_
 
     :returns: A pre-existing VCS colormap object
     :rtype: vcs.colormap.Cp
@@ -1688,7 +1694,7 @@ def getcolormap(Cp_name_src='default'):
         raise ValueError('Error -  The argument must be a string.')
 
     return vcs.elements["colormap"][Cp_name_src]
-getcolormap.__doc__ = getcolormap.__doc__ % xmldocs.get_docs['colormap']
+getcolormap.__doc__ = getcolormap.__doc__ % xmldocs.get_docs['colormap']  # noqa
 
 # Function that deal with removing existing vcs elements
 
@@ -1738,6 +1744,10 @@ def removeG1d(obj):
 
 def removeGv(obj):
     return removeG(obj, "vector")
+
+
+def removeGs(obj):
+    return removeG(obj, "streamline")
 
 
 def removeGSp(obj):
@@ -1797,28 +1807,24 @@ def removeP(obj):
 
 
 def removeobject(obj):
-    """
-    The user has the ability to create primary and secondary class
+    """The user has the ability to create primary and secondary class
     objects. The function allows the user to remove these objects
     from the appropriate class list.
 
-    Note, To remove the object completely from Python, remember to
-    use the "del" function.
+    .. note::
 
-    Also note, The user is not allowed to remove a "default" class
-    object.
+        The user is not allowed to remove a "default" class
+        object.
 
     :Example:
 
         .. doctest:: manageElements_removeobject
 
             >>> a=vcs.init()
-            >>> line=a.getline('red') # To Modify an existing line object
             >>> iso=a.createisoline('dean') # Create an instance of an isoline object
-            >>> a.removeobject(line) # Removes line object from VCS list
-            'Removed line object red'
             >>> a.removeobject(iso) # Remove isoline object from VCS list
             'Removed isoline object dean'
+
     :param obj: Any VCS primary or secondary object
     :type obj: VCS object
 

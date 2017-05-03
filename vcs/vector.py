@@ -150,8 +150,9 @@ class Gv(object):
     """
     The vector graphics method displays a vector plot of a 2D vector field. Vectors
     are located at the coordinate locations and point in the direction of the data
-    vector field. Vector magnitudes are the product of data vector field lengths and
-    a scaling factor. The example below shows how to modify the vector's line, scale,
+    vector field. See scaletype for how the lengh of a vector on the screen is determined.
+
+    The example below shows how to modify the vector's line, scale,
     alignment, type, and reference.
 
     This class is used to define an vector table entry used in VCS, or it  can be
@@ -643,6 +644,15 @@ class Gv(object):
         self._alignment = value
     alignment = property(_getalignment, _setalignment)
 
+    """
+    One of the following strings:
+      off - No scaling is performed on the vector values
+      constant - vector value *  self.scale
+      normalize - vector value /  max_norm
+      constantNNormalize - vector value * self.scale / max_norm
+      linear - map [min_norm, max_norm] to self.scalerange
+      constantNLinear - map [min_norm, max_norm] to self.scalerange and then multiply by self.scale
+    """
     def _getscaletype(self):
         return self._scaletype
 
@@ -776,7 +786,7 @@ class Gv(object):
         self.yaxisconvert = yat
 
     def list(self):
-        print "", "----------Vector (Gv) member (attribute) listings ----------"
+        print "---------- Vector (Gv) member (attribute) listings ----------"
         print "graphics method =", self.g_name
         print "name =", self.name
         print "projection =", self.projection
@@ -831,7 +841,7 @@ class Gv(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[

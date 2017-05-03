@@ -27,21 +27,19 @@ import queries
 
 
 def objecthelp(*arg):
-    """
-    Print the documentation of each object in the argument list.
+    """Print the documentation of each object in the argument list.
     Prints a blank line if no documentation.
 
     :Example:
 
         .. doctest:: vcshelp_objecthelp
 
-            >>> objects = [ vcs.get3d_scalar(), vcs.getcolormap(), vcs.getboxfill() ]
-            >>> for object in objects:
-            ...     vcs.objecthelp(object)
-
+            >>> fa=vcs.getfillarea()
+            >>> vcs.objecthelp(fa) # print fillarea class documentation
+            The Fillarea class ...
 
     :param arg: Instance(s) of VCS object(s) to display the documentation for.
-                Multiple objects should be comma-delimited.
+        Multiple objects should be comma-delimited.
     :type arg: VCS object, or list of vcs objects
     """
     for x in arg:
@@ -49,7 +47,27 @@ def objecthelp(*arg):
 
 
 def help(*arg):
+    """Prints the documentation for named VCS class(es) and/or function(s).
 
+    :Example:
+
+        .. doctest:: vcs_vcshelp_help
+
+            >>> vcs.help('fillareaobject') # show fillarea help
+            The Fillarea class ...
+            >>> vcs.help('getboxfill')
+
+
+    :param arg: One or multiple strings containing the name(s) of object(s)
+        and/or function(s) to view the documentation for.
+
+        .. note::
+
+            To get help on a VCS object class, you must supply a string that
+            is the name of that class, plus the word "object".
+            (i.e. vcs.help("templateobject") will print the documentation for
+            the template class)
+    """
     if (len(arg) == 0):
         b = ['fillarea', 'line', 'marker', 'textcombined', 'textorientation',
              'texttable', 'projection']
@@ -178,6 +196,8 @@ def help(*arg):
                 print vcs.scatter.GSp.__doc__
             elif (arg[i] == 'vectorobject'):
                 print vcs.vector.Gv.__doc__
+            elif (arg[i] == 'streamlineobject'):
+                print vcs.streamline.Gs.__doc__
             elif (arg[i] == 'xvsyobject'):
                 print vcs.xvsy.GXY.__doc__
             elif (arg[i] == 'xyvsyobject'):
@@ -227,6 +247,8 @@ def help(*arg):
                 print vcs.Canvas.Canvas.scatter.__doc__
             elif (arg[i] == 'vector'):
                 print vcs.Canvas.Canvas.vector.__doc__
+            elif (arg[i] == 'streamline'):
+                print vcs.Canvas.Canvas.streamline.__doc__
             elif (arg[i] == 'xvsy'):
                 print vcs.Canvas.Canvas.xvsy.__doc__
             elif (arg[i] == 'xyvsy'):

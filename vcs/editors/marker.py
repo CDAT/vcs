@@ -278,6 +278,7 @@ class MarkerEditor(
         self.glyph.GetInput().Modified()
         self.render()
 
+
 __shape_cache = {}
 
 

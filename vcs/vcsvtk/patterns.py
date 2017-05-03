@@ -1,345 +1,414 @@
 import vtk
+import math
 
 
 class Pattern(object):
-    def __init__(self, width, height, num_pixels, colors, style, opacity):
-        self.width = width
-        self.height = height
-        self.colors = [int(c / 100. * 255) for c in colors]
-        self.num_pixels = num_pixels
+    def __init__(self, patternPolyData, scale, style):
+        self.patternPolyData = patternPolyData
+        self.scale = scale
         self.style = style
-        if self.style != "hatch":
-            self.colors = [0, 0, 0]
-        if self.style in ["hatch", "pattern"]:
-            self.opacity = int(opacity / 100. * 255)
-        else:
-            self.opacity = 255
+        self.glyph = None
+        self.rotation = 0.0
 
     def render(self):
         """
-        Returns vtkImageData for pattern
+        Glyphs the input polydata points with the requested shape and
+        replaces the input polydata with glyphed output polydata with
+        colored cells
         """
-        patternSource = vtk.vtkImageCanvasSource2D()
-        patternSource.SetScalarTypeToUnsignedChar()
-        patternSource.SetExtent(0, self.width, 0, self.height, 0, 0)
-        patternSource.SetNumberOfScalarComponents(4)
-        patternSource.SetDrawColor(255, 255, 255, 0)
-        patternSource.FillBox(0, self.width, 0, self.height)
-        patternSource.SetDrawColor(self.colors[0],
-                                   self.colors[1],
-                                   self.colors[2],
-                                   self.opacity)
-        self.paint(patternSource)
-        patternSource.Update()
-        return patternSource.GetOutput()
 
-    def paint(self, pattern):
+        self.glyph = vtk.vtkPolyData()
+        pts = vtk.vtkPoints()
+        pts.Allocate(6, 6)
+        self.glyph.SetPoints(pts)
+        verts = vtk.vtkCellArray()
+        verts.Allocate(verts.EstimateSize(1, 1), 1)
+        self.glyph.SetVerts(verts)
+        lines = vtk.vtkCellArray()
+        lines.Allocate(lines.EstimateSize(4, 2), 2)
+        self.glyph.SetLines(lines)
+        polys = vtk.vtkCellArray()
+        polys.Allocate(polys.EstimateSize(1, 4), 4)
+        self.glyph.SetPolys(polys)
+
+        self.paint()
+        self.transform_glyph()
+
+        self.glyph2D = vtk.vtkGlyph2D()
+        self.glyph2D.OrientOff()
+        self.glyph2D.ScalingOff()
+        self.glyph2D.SetScaleModeToDataScalingOff()
+        self.glyph2D.SetInputData(self.patternPolyData)
+        self.glyph2D.SetSourceData(self.glyph)
+        self.glyph2D.Update()
+        self.patternPolyData.DeepCopy(self.glyph2D.GetOutput())
+
+    def paint(self):
         raise NotImplementedError(
             "paint() not implemented for %s" % str(
                 type(self)))
 
+    def transform_glyph(self):
+        pts = self.glyph.GetPoints()
+        npts = pts.GetNumberOfPoints()
+        if self.rotation == 0.0:
+            pass
+            for i in range(npts):
+                x = pts.GetPoint(i)
+                y = [c * d for c, d in zip(x, self.scale)]
+                y.append(0.0)
+                pts.SetPoint(i, y)
+        else:
+            a = math.radians(self.rotation)
+            for i in range(npts):
+                x = pts.GetPoint(i)
+                xt = x[0] * math.cos(a) - x[1] * math.sin(a)
+                yt = x[0] * math.sin(a) + x[1] * math.cos(a)
+                y = [xt, yt, 0]
+                y = [c * d for c, d in zip(y, self.scale)]
+                y.append(0.0)
+                pts.SetPoint(i, y)
+
 
 class BottomLeftTri(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        for x in xrange(0, self.width, self.num_pixels):
-            for y in xrange(0, self.height, self.num_pixels):
-                patternSource.FillTriangle(x, y,
-                                           x + self.num_pixels * 3 / 4, y,
-                                           x, y + self.num_pixels * 3 / 4)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(-0.5, -0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.5, 0.25, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.25, -0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(3, ptIds)
 
 
 class TopRightTri(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        for x in xrange(0, self.width, self.num_pixels):
-            for y in xrange(0, self.height, self.num_pixels):
-                patternSource.FillTriangle(x + self.num_pixels, y + self.num_pixels,
-                                           x + self.num_pixels / 4, y + self.num_pixels,
-                                           x + self.num_pixels, y + self.num_pixels * 1 / 4)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(-0.25, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, -0.25, 0.0))
+        self.glyph.GetPolys().InsertNextCell(3, ptIds)
 
 
-class SmallRectDot(Pattern):
+class Dot(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        for x in xrange(0, self.width, self.num_pixels):
-            for y in xrange(0, self.height, self.num_pixels):
-                patternSource.FillBox(x + self.num_pixels / 4, x + self.num_pixels * 3 / 4,
-                                      y + self.num_pixels / 4, y + self.num_pixels * 3 / 4)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        res = 10
+        ptIds = vtk.vtkIdList()
+        ptIds.SetNumberOfIds(res)
+        x = [0, 0, 0]
+        theta = 2.0 * math.pi / res
+        for i in range(res):
+            x[0] = 0.35 * math.cos(i * theta)
+            x[1] = 0.35 * math.sin(i * theta)
+            ptIds.SetId(i, pts.InsertNextPoint(x))
+        self.glyph.GetPolys().InsertNextCell(ptIds)
 
 
 class CheckerBoard(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        for x in xrange(0, self.width, self.num_pixels):
-            for y in xrange(0, self.height, self.num_pixels):
-                patternSource.FillBox(x, x + self.num_pixels / 2,
-                                      y, y + self.num_pixels / 2)
-                patternSource.FillBox(x + self.num_pixels / 2, x + self.num_pixels,
-                                      y + self.num_pixels / 2, y + self.num_pixels)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(-0.5, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.0, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.0, 0.0, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.5, 0.0, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds)
+
+        ptIds1 = []
+        ptIds1.append(pts.InsertNextPoint(0.0, 0.0, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.5, 0.0, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.5, -0.5, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.0, -0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds1)
 
 
 class HorizStripe(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        patternLevels = range(0, self.height, self.num_pixels)
-        for lev in patternLevels:
-            patternSource.FillBox(0, self.width, lev + self.num_pixels / 4, lev + self.num_pixels * 3 / 4)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(-0.5, -0.25, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, -0.25, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, 0.25, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.5, 0.25, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds)
 
 
-class VertStripe(Pattern):
+class VertStripe(HorizStripe):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        patternLevels = range(0, self.width, self.num_pixels)
-        for lev in patternLevels:
-            patternSource.FillBox(lev + self.num_pixels / 4, lev + self.num_pixels * 3 / 4, 0, self.height)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(-0.25, -0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.25, -0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.25, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.25, 0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds)
 
 
 class HorizDash(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        for x in xrange(0, self.width, self.num_pixels):
-            for y in xrange(0, self.height, self.num_pixels):
-                patternSource.FillBox(x, x + self.num_pixels * 3 / 4,
-                                      y, y + self.num_pixels / 4)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(-0.35, -0.10, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.35, -0.10, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.35, 0.10, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.35, 0.10, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds)
 
 
-class VertDash(Pattern):
+class VertDash(HorizDash):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        for x in xrange(0, self.width, self.num_pixels):
-            for y in xrange(0, self.height, self.num_pixels):
-                patternSource.FillBox(x + self.num_pixels / 4, x + self.num_pixels / 2,
-                                      y, y + self.num_pixels * 3 / 4)
-                patternSource.FillBox(x + self.num_pixels * 3 / 4, x + self.num_pixels,
-                                      y, y + self.num_pixels * 3 / 4)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(-0.10, -0.35, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.10, -0.35, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.10, 0.35, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.10, 0.35, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds)
 
 
-class XDash(Pattern):
+class DashStripe(Pattern):
 
-    def render(self):
-        """
-        Returns vtkImageData for pattern
-        """
-        # XDash is drawn and then rotated (for the sake of performance)
-        rot_square = int(((self.width + self.height) * 2 ** .5) / 2)
-
-        o_width, o_height = self.width, self.height
-        self.width, self.height = rot_square, rot_square
-
-        image = super(XDash, self).render()
-
-        slicer = vtk.vtkImageReslice()
-        slicer.SetInputData(image)
-
-        raw_bounds = image.GetBounds()
-        raw_center = ((raw_bounds[0] + raw_bounds[1]) / 2.,
-                      (raw_bounds[2] + raw_bounds[3]) / 2.,
-                      (raw_bounds[4] + raw_bounds[5]) / 2.)
-
-        transform = vtk.vtkTransform()
-        transform.Translate(*raw_center)
-        transform.RotateWXYZ(45., 0, 0, 1)
-        transform.Translate(*[-1 * p for p in raw_center])
-
-        slicer.SetResliceTransform(transform)
-        slicer.SetInterpolationModeToCubic()
-        slicer.SetOutputSpacing(image.GetSpacing())
-        slicer.SetOutputExtent(0, o_width, 0, o_height, 0, 0)
-
-        x_origin = (rot_square - o_width) / 2
-        y_origin = (rot_square - o_height) / 2
-
-        slicer.SetOutputOrigin(x_origin, y_origin, 0)
-        slicer.Update()
-
-        self.width, self.height = o_width, o_height
-        return slicer.GetOutput()
-
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-
-        thickness = self.num_pixels / 8
-        for x in range(thickness, self.width, self.num_pixels):
-            patternSource.FillBox(x - thickness, x + thickness, 0, self.height)
-
-        for y in range(thickness, self.height, self.num_pixels):
-            patternSource.FillBox(0, self.width, y - thickness, y + thickness)
-            patternSource.SetDrawColor(255, 255, 255, 0)
-            for x in range(thickness, self.width, self.num_pixels):
-                patternSource.FillBox(x - thickness, x + thickness, y - thickness, y + thickness)
-            patternSource.SetDrawColor(self.colors[0], self.colors[1], self.colors[2], self.opacity)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(-0.35, -0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.15, -0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.15, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.35, 0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds)
+        ptIds1 = []
+        ptIds1.append(pts.InsertNextPoint(0.35, -0.5, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.35, 0.5, 0.0))
+        self.glyph.GetLines().InsertNextCell(2, ptIds1)
 
 
 class ThinDiagDownRight(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        patternLevels = range(0, max(self.width, self.height) + min(self.width, self.height), self.num_pixels)
-        for lev in patternLevels:
-            patternSource.FillTube(0, lev, lev, 0, self.num_pixels / 8)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(-0.5, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, -0.5, 0.0))
+        self.glyph.GetLines().InsertNextCell(2, ptIds)
 
 
-class ThickDiagRownRight(Pattern):
+class ThickDiagDownRight(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        patternLevels = range(0, max(self.width, self.height) + min(self.width, self.height), self.num_pixels)
-        for lev in patternLevels:
-            patternSource.FillTube(0, lev, lev, 0, self.num_pixels / 4)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(-0.5, 0.30, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.5, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.30, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, -0.30, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, -0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.30, -0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(6, ptIds)
+        ptIds1 = []
+        ptIds1.append(pts.InsertNextPoint(-0.5, -0.5, 0.0))
+        ptIds1.append(pts.InsertNextPoint(-0.5, -0.25, 0.0))
+        ptIds1.append(pts.InsertNextPoint(-0.25, -0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(3, ptIds1)
+        ptIds2 = []
+        ptIds2.append(pts.InsertNextPoint(0.5, 0.5, 0.0))
+        ptIds2.append(pts.InsertNextPoint(0.5, 0.25, 0.0))
+        ptIds2.append(pts.InsertNextPoint(0.25, 0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(3, ptIds2)
 
 
 class ThinDiagUpRight(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        patternLevels = range(0, max(self.width, self.height) + min(self.width, self.height), self.num_pixels)
-        for lev in patternLevels:
-            patternSource.FillTube(lev, self.height, 0, self.height - lev, self.num_pixels / 8)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(0.5, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.5, -0.5, 0.0))
+        self.glyph.GetLines().InsertNextCell(2, ptIds)
 
 
 class ThickDiagUpRight(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        patternLevels = range(0, max(self.width, self.height) + min(self.width, self.height), self.num_pixels)
-        for lev in patternLevels:
-            patternSource.FillTube(lev, self.height, 0, self.height - lev, self.num_pixels / 4)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(-0.5, -0.30, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.5, -0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.30, -0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, 0.30, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.30, 0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(6, ptIds)
+        ptIds1 = []
+        ptIds1.append(pts.InsertNextPoint(0.5, -0.5, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.5, -0.25, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.25, -0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(3, ptIds1)
+        ptIds2 = []
+        ptIds2.append(pts.InsertNextPoint(-0.5, 0.5, 0.0))
+        ptIds2.append(pts.InsertNextPoint(-0.5, 0.25, 0.0))
+        ptIds2.append(pts.InsertNextPoint(-0.25, 0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(3, ptIds2)
 
 
-class ThickThinVertStripe(Pattern):
+class XCross(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        patternLevels = range(0, self.width, self.num_pixels)
-        for lev in patternLevels:
-            patternSource.FillBox(lev + self.num_pixels / 8, lev + self.num_pixels * 1 / 2, 0, self.height)
-            patternSource.FillBox(lev + self.num_pixels * 3 / 4, lev + self.num_pixels * 7 / 8, 0, self.height)
-
-
-class ThickThinHorizStripe(Pattern):
-
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        patternLevels = range(0, self.height, self.num_pixels)
-        for lev in patternLevels:
-            patternSource.FillBox(0, self.width, lev + self.num_pixels / 8, lev + self.num_pixels * 1 / 2)
-            patternSource.FillBox(0, self.width, lev + self.num_pixels * 3 / 4, lev + self.num_pixels * 7 / 8)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(-0.5, 0.35, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.5, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, -0.35, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, -0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds)
+        ptIds1 = []
+        ptIds1.append(pts.InsertNextPoint(-0.5, -0.35, 0.0))
+        ptIds1.append(pts.InsertNextPoint(-0.5, -0.5, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.5, 0.35, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.5, 0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds1)
 
 
-class LargeRectDot(Pattern):
+class DoubleCross(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        for x in xrange(0, self.width, self.num_pixels):
-            for y in xrange(0, self.height, self.num_pixels):
-                patternSource.FillBox(x + self.num_pixels * 1 / 8, x + self.num_pixels * 7 / 8,
-                                      y + self.num_pixels * 1 / 8, y + self.num_pixels * 7 / 8)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = vtk.vtkIdList()
+        ptIds.SetNumberOfIds(13)
+        ptIds.SetId(0, pts.InsertNextPoint(-0.5, -0.1, 0.0))
+        ptIds.SetId(1, pts.InsertNextPoint(-0.1, -0.1, 0.0))
+        ptIds.SetId(2, pts.InsertNextPoint(-0.1, -0.5, 0.0))
+        ptIds.SetId(3, pts.InsertNextPoint(0.1, -0.5, 0.0))
+        ptIds.SetId(4, pts.InsertNextPoint(0.1, -0.1, 0.0))
+        ptIds.SetId(5, pts.InsertNextPoint(0.5, -0.1, 0.0))
+        ptIds.SetId(6, pts.InsertNextPoint(0.5, 0.1, 0.0))
+        ptIds.SetId(7, pts.InsertNextPoint(0.1, 0.1, 0.0))
+        ptIds.SetId(8, pts.InsertNextPoint(0.1, 0.5, 0.0))
+        ptIds.SetId(9, pts.InsertNextPoint(-0.1, 0.5, 0.0))
+        ptIds.SetId(10, pts.InsertNextPoint(-0.1, 0.1, 0.0))
+        ptIds.SetId(11, pts.InsertNextPoint(-0.5, 0.1, 0.0))
+        ptIds.SetId(12, ptIds.GetId(0))
+        self.glyph.GetLines().InsertNextCell(ptIds)
 
 
 class Diamond(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        for x in xrange(0, self.width, self.num_pixels):
-            for y in xrange(0, self.height, self.num_pixels):
-                patternSource.FillTriangle(x, y,
-                                           x + self.num_pixels / 4, y,
-                                           x, y + self.num_pixels / 4)
-                patternSource.FillTriangle(x, y + self.num_pixels,
-                                           x + self.num_pixels / 4, y + self.num_pixels,
-                                           x, y + self.num_pixels * 3 / 4)
-                patternSource.FillTriangle(x + self.num_pixels, y + self.num_pixels,
-                                           x + self.num_pixels * 3 / 4, y + self.num_pixels,
-                                           x + self.num_pixels, y + self.num_pixels * 3 / 4)
-                patternSource.FillTriangle(x + self.num_pixels, y,
-                                           x + self.num_pixels * 3 / 4, y,
-                                           x + self.num_pixels, y + self.num_pixels / 4)
-                patternSource.FillTriangle(x, y + self.num_pixels / 2,
-                                           x + self.num_pixels / 2, y + self.num_pixels,
-                                           x + self.num_pixels / 2, y)
-                patternSource.FillTriangle(x + self.num_pixels, y + self.num_pixels / 2,
-                                           x + self.num_pixels / 2, y + self.num_pixels,
-                                           x + self.num_pixels / 2, y)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(0.0, -0.45, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.45, 0.0, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.0, 0.45, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.45, 0.0, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds)
+
+
+class DoubleDiamond(Pattern):
+
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(-0.5, 0.0, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.0, 0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.5, 0.0, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.0, -0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds)
+        t1PtId = []
+        t1PtId.append(pts.InsertNextPoint(-0.5, -0.5, 0.0))
+        t1PtId.append(pts.InsertNextPoint(-0.5, -0.25, 0.0))
+        t1PtId.append(pts.InsertNextPoint(-0.25, -0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(3, t1PtId)
+        t2PtId = []
+        t2PtId.append(pts.InsertNextPoint(0.5, -0.5, 0.0))
+        t2PtId.append(pts.InsertNextPoint(0.5, -0.25, 0.0))
+        t2PtId.append(pts.InsertNextPoint(0.25, -0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(3, t2PtId)
+        t3PtId = []
+        t3PtId.append(pts.InsertNextPoint(0.5, 0.5, 0.0))
+        t3PtId.append(pts.InsertNextPoint(0.5, 0.25, 0.0))
+        t3PtId.append(pts.InsertNextPoint(0.25, 0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(3, t3PtId)
+        t4PtId = []
+        t4PtId.append(pts.InsertNextPoint(-0.5, 0.5, 0.0))
+        t4PtId.append(pts.InsertNextPoint(-0.5, 0.25, 0.0))
+        t4PtId.append(pts.InsertNextPoint(-0.25, 0.5, 0.0))
+        self.glyph.GetPolys().InsertNextCell(3, t4PtId)
 
 
 class Bubble(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        for x in xrange(0, self.width, self.num_pixels):
-            for y in xrange(0, self.height, self.num_pixels):
-                patternSource.FillBox(x, x + self.num_pixels / 8,
-                                      y, y + self.num_pixels / 8)
-                patternSource.FillBox(x + self.num_pixels / 2, x + self.num_pixels * 5 / 8,
-                                      y, y + self.num_pixels / 8)
-                patternSource.FillBox(x, x + self.num_pixels / 8,
-                                      y + self.num_pixels / 2, y + self.num_pixels * 5 / 8)
-                patternSource.FillBox(x + self.num_pixels / 8, x + self.num_pixels / 2,
-                                      y + self.num_pixels / 8, y + self.num_pixels / 2)
-                patternSource.FillBox(x + self.num_pixels * 5 / 8, x + self.num_pixels,
-                                      y + self.num_pixels * 5 / 8, y + self.num_pixels)
-                patternSource.FillBox(x + self.num_pixels / 8, x + self.num_pixels * 3 / 8,
-                                      y + self.num_pixels * 5 / 8, y + self.num_pixels * 3/4)
-                patternSource.FillBox(x + self.num_pixels * 5 / 8, x + self.num_pixels * 7 / 8,
-                                      y + self.num_pixels / 8, y + self.num_pixels * 1 / 4)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(-0.40, -0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.0, -0.5, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.0, -0.10, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.40, -0.10, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds)
+        ptIds1 = []
+        ptIds1.append(pts.InsertNextPoint(-0.40, 0.0, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.40, 0.0, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.40, 0.40, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.0, 0.40, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds1)
 
 
 class Snake(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        for x in xrange(0, self.width, self.num_pixels):
-            for y in xrange(0, self.height, self.num_pixels):
-                patternSource.FillBox(x, x + self.num_pixels / 3,
-                                      y, y + self.num_pixels / 3)
-                patternSource.FillBox(x + self.num_pixels * 2 / 3, x + self.num_pixels,
-                                      y, y + self.num_pixels / 3)
-                patternSource.FillBox(x + self.num_pixels / 6, x + self.num_pixels * 5 / 6,
-                                      y + self.num_pixels / 3, y + self.num_pixels * 2 / 3)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        ptIds = []
+        ptIds.append(pts.InsertNextPoint(-0.45, -0.25, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.0, -0.25, 0.0))
+        ptIds.append(pts.InsertNextPoint(0.0, 0.25, 0.0))
+        ptIds.append(pts.InsertNextPoint(-0.45, 0.25, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds)
+        ptIds1 = []
+        ptIds1.append(pts.InsertNextPoint(0.25, 0.40, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.25, -0.25, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.45, -0.25, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.45, 0.40, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds1)
 
 
-class EmptyCircle(Pattern):
+class Bullseye(Pattern):
 
-    def paint(self, patternSource):
-        if patternSource is None:
-            return None
-        for x in xrange(0, self.width, self.num_pixels):
-            for y in xrange(0, self.height, self.num_pixels):
-                # Draw 1/3 or the radius as border by making several smaller circles
-                for r in range(self.num_pixels / 8):
-                    patternSource.DrawCircle(x + self.num_pixels / 2, y + self.num_pixels / 2, self.num_pixels / 4. - r)
+    def paint(self):
+        pts = self.glyph.GetPoints()
+        res = 10
+        ptIds = vtk.vtkIdList()
+        ptIds.SetNumberOfIds(res + 1)
+        x = [0, 0, 0]
+        theta = 2.0 * math.pi / res
+        for i in range(res):
+            x[0] = 0.30 * math.cos(i * theta)
+            x[1] = 0.30 * math.sin(i * theta)
+            ptIds.SetId(i, pts.InsertNextPoint(x))
+        ptIds.SetId(res, ptIds.GetId(0))
+        self.glyph.GetLines().InsertNextCell(ptIds)
+        ptIds1 = []
+        ptIds1.append(pts.InsertNextPoint(-0.05, -0.40, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.05, -0.40, 0.0))
+        ptIds1.append(pts.InsertNextPoint(0.05, 0.40, 0.0))
+        ptIds1.append(pts.InsertNextPoint(-0.05, 0.40, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds1)
+        ptIds2 = []
+        ptIds2.append(pts.InsertNextPoint(-0.40, -0.05, 0.0))
+        ptIds2.append(pts.InsertNextPoint(0.40, -0.05, 0.0))
+        ptIds2.append(pts.InsertNextPoint(0.40, 0.05, 0.0))
+        ptIds2.append(pts.InsertNextPoint(-0.40, 0.05, 0.0))
+        self.glyph.GetPolys().InsertNextCell(4, ptIds2)
 
 
-# Patterns are 1-indexed, so we always skip the 0th element in this list
-pattern_list = [Pattern, BottomLeftTri, TopRightTri, SmallRectDot, CheckerBoard,
-                HorizStripe, VertStripe, HorizDash, VertDash, XDash, ThinDiagDownRight,
-                ThickDiagRownRight, ThinDiagUpRight, ThickDiagUpRight, ThickThinVertStripe,
-                ThickThinHorizStripe, LargeRectDot, Diamond, Bubble, Snake, EmptyCircle]
+pattern_list = [Pattern, BottomLeftTri, TopRightTri, Dot, CheckerBoard,
+                HorizStripe, VertStripe, HorizDash, VertDash, DashStripe,
+                ThinDiagDownRight, ThickDiagDownRight, ThinDiagUpRight, ThickDiagUpRight,
+                XCross, DoubleCross, Diamond, DoubleDiamond, Bubble, Snake, Bullseye]

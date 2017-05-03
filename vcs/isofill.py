@@ -306,7 +306,10 @@ class Gfi(object):
     .. describe:: Attribute descriptions:
 
         %s
-        %s""" % (xmldocs.graphics_method_core, xmldocs.isofill_doc)
+        %s
+
+    .. pragma: skip-doctest
+    """ % (xmldocs.graphics_method_core, xmldocs.isofill_doc)
 
     colormap = VCS_validation_functions.colormap
     __slots__ = [
@@ -322,6 +325,8 @@ class Gfi(object):
         'fillareastyle',
         'fillareaindices',
         'fillareaopacity',
+        'fillareapixelspacing',
+        'fillareapixelscale',
         'ext_1',
         'ext_2',
         'missing',
@@ -349,6 +354,8 @@ class Gfi(object):
         '_fillareastyle',
         '_fillareaindices',
         '_fillareaopacity',
+        '_fillareapixelspacing',
+        '_fillareapixelscale',
         '_ext_1',
         '_ext_2',
         '_missing',
@@ -456,6 +463,8 @@ class Gfi(object):
     fillareastyle = property(_getfillareastyle, _setfillareastyle)
 
     fillareaopacity = VCS_validation_functions.fillareaopacity
+    fillareapixelspacing = VCS_validation_functions.fillareapixelspacing
+    fillareapixelscale = VCS_validation_functions.fillareapixelscale
 
     ext_1 = VCS_validation_functions.ext_1
     ext_2 = VCS_validation_functions.ext_2
@@ -635,6 +644,8 @@ class Gfi(object):
             self._fillareaindices = [1, ]
             self._fillareacolors = [1, ]
             self._fillareaopacity = []
+            self._fillareapixelspacing = None
+            self._fillareapixelscale = None
             self._levels = ([1.0000000200408773e+20, 1.0000000200408773e+20],)
             self._legend = None
             self._datawc_timeunits = "days since 2000"
@@ -653,8 +664,9 @@ class Gfi(object):
             for att in ['projection', 'colormap', 'xticlabels1', 'xticlabels2', 'xmtics1', 'xmtics2',
                         'yticlabels1', 'yticlabels2', 'ymtics1', 'ymtics2', 'datawc_y1', 'datawc_y2', 'datawc_x1',
                         'datawc_x2', 'levels', 'xaxisconvert', 'yaxisconvert', 'missing', 'ext_1', 'ext_2',
-                        'fillareastyle', 'fillareaindices', 'fillareacolors', 'fillareaopacity', 'legend',
-                        'datawc_timeunits', 'datawc_calendar']:
+                        'fillareastyle', 'fillareaindices', 'fillareacolors', 'fillareaopacity',
+                        'fillareapixelspacing', 'fillareapixelscale',
+                        'legend', 'datawc_timeunits', 'datawc_calendar']:
                 setattr(self, "_" + att, getattr(src, "_" + att))
 
         vcs.elements["isofill"][self.name] = self
@@ -668,12 +680,12 @@ class Gfi(object):
 
     def colors(self, color1=16, color2=239):
         self.fillareacolors = range(color1, color2)
-    colors.__doc__ = xmldocs.colorsdoc
+    colors.__doc__ = xmldocs.colorsdoc % {"name": "isofill", "data": "array"}
 
     def exts(self, ext1='n', ext2='y'):
         self.ext_1 = ext1
         self.ext_2 = ext2
-    exts.__doc__ = xmldocs.extsdoc
+    exts.__doc__ = xmldocs.extsdoc.format(name="isofill", data="array")
 #
 # Doesn't make sense to inherit. This would mean more coding in C.
 # I put this code back.
@@ -682,37 +694,37 @@ class Gfi(object):
     def xticlabels(self, xtl1='', xtl2=''):
         self.xticlabels1 = xtl1
         self.xticlabels2 = xtl2
-    xticlabels.__doc__ = xmldocs.xticlabelsdoc
+    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name": "isofill", "data": "f('u')"}
 
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
         self.xmtics2 = xmt2
-    xmtics.__doc__ = xmldocs.xmticsdoc
+    xmtics.__doc__ = xmldocs.xmticsdoc.format(name="isofill")
 
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
         self.yticlabels2 = ytl2
-    yticlabels.__doc__ = xmldocs.yticlabelsdoc
+    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name": "isofill", "data": "f('u')"}
 
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1
         self.ymtics2 = ymt2
-    ymtics.__doc__ = xmldocs.ymticsdoc
+    ymtics.__doc__ = xmldocs.xmticsdoc.format(name="isofill")
 
     def datawc(self, dsp1=1e20, dsp2=1e20, dsp3=1e20, dsp4=1e20):
         self.datawc_y1 = dsp1
         self.datawc_y2 = dsp2
         self.datawc_x1 = dsp3
         self.datawc_x2 = dsp4
-    datawc.__doc__ = xmldocs.datawcdoc
+    datawc.__doc__ = xmldocs.datawcdoc.format(name="isofill")
 
     def xyscale(self, xat='', yat=''):
         self.xaxisconvert = xat
         self.yaxisconvert = yat
-    xyscale.__doc__ = xmldocs.xyscaledoc % (('isofill',) * 2)
+    xyscale.__doc__ = xmldocs.xyscaledoc.format(name='isofill')
 
     def list(self):
-        print "", "----------Isofill (Gfi) member (attribute) listings ----------"
+        print "---------- Isofill (Gfi) member (attribute) listings ----------"
         print "graphics method =", self.g_name
         print "name =", self.name
         print "projection =", self.projection
@@ -739,9 +751,11 @@ class Gfi(object):
         print "fillareaindices = ", self.fillareaindices
         print "fillareacolors = ", self.fillareacolors
         print "fillareaopacity = ", self.fillareaopacity
+        print "fillareapixelspacing = ", self.fillareapixelspacing
+        print "fillareapixelscale = ", self.fillareapixelscale
         print "levels = ", self.levels
         print "legend = ", self.legend
-    list.__doc__ = xmldocs.listdoc
+    list.__doc__ = xmldocs.listdoc.format(name="isofill", parent="")
 
     #
     #
@@ -768,7 +782,7 @@ class Gfi(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[
@@ -826,13 +840,27 @@ class Gfi(object):
             fp.write("%s.xaxisconvert = '%s'\n" % (unique_name, self.xaxisconvert))
             fp.write("%s.yaxisconvert = '%s'\n" % (unique_name, self.yaxisconvert))
             # Unique attribute for isofill
-            fp.write("%s.missing = %s\n" % (unique_name, repr(self.missing)))
-            fp.write("%s.ext_1 = %s\n" % (unique_name, self.ext_1))
-            fp.write("%s.ext_2 = %s\n" % (unique_name, self.ext_2))
-            fp.write("%s.fillareastyle = '%s'\n" % (unique_name, self.fillareastyle))
-            fp.write("%s.fillareaindices = %s\n" % (unique_name, self.fillareaindices))
-            fp.write("%s.fillareacolors = %s\n" % (unique_name, self.fillareacolors))
-            fp.write("%s.fillareaopacity = %s\n" %(unique_name, self.fillareaopacity))
+            fp.write("%s.missing = %g\n" % (unique_name, self.missing))
+            fp.write("%s.ext_1 = '%s'\n" % (unique_name, self.ext_1))
+            fp.write("%s.ext_2 = '%s'\n" % (unique_name, self.ext_2))
+            fp.write(
+                "%s.fillareastyle = '%s'\n" %
+                (unique_name, self.fillareastyle))
+            fp.write(
+                "%s.fillareaindices = %s\n" %
+                (unique_name, self.fillareaindices))
+            fp.write(
+                "%s.fillareacolors = %s\n" %
+                (unique_name, self.fillareacolors))
+            fp.write(
+                "%s.fillareaopacity = '%s'\n" %
+                (unique_name, self.fillareaopacity))
+            fp.write(
+                "%s.fillareapixelspacing = '%s'\n" %
+                (unique_name, self.fillareapixelspacing))
+            fp.write(
+                "%s.fillareapixelscale = '%s'\n" %
+                (unique_name, self.fillareapixelscale))
             fp.write("%s.levels = %s\n" % (unique_name, self.levels))
             fp.write("%s.legend = %s\n" % (unique_name, self.legend))
             if self.colormap is not None:

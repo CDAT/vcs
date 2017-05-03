@@ -388,37 +388,48 @@ class Gi(object):
         * Attribute descriptions:
 
             .. py:attribute:: label (str)
-            Turn on/off labels on isolines
+
+                Turn on/off labels on isolines
 
             .. py:attribute:: labelskipdistance (float)
-            Minimum distance between isoline labels
+
+                Minimum distance between isoline labels
 
             .. py:attribute:: labelbackgroundcolors ([float])
-            Background color for isoline labels
+
+                Background color for isoline labels
 
             .. py:attribute:: labelbackgroundopacities ([float])
-            Background opacity for isoline labels
+
+                Background opacity for isoline labels
 
             .. py:attribute:: level ([float,...])
-            Isocountours to display
+
+                Isocountours to display
 
             .. py:attribute:: clockwise ([int,...])
-            Draw directional arrows
-            +-(0,1,2) Indicate none/clockwise/clokwise on y axis >0.
-            Clockwise on x axis positive negative value invert behaviour
+
+                Draw directional arrows
+                +-(0,1,2) Indicate none/clockwise/clokwise on y axis >0.
+                Clockwise on x axis positive negative value invert behaviour
 
             .. py:attribute:: scale ([float,...])
-            Scales the directional arrow lengths
+
+                Scales the directional arrow lengths
 
             .. py:attribute:: angle ([float,...])
-            Directional arrows head angle
+
+                Directional arrows head angle
 
             .. py:attribute:: spacing ([float,...])
-            Scales spacing between directional arrows
+
+                Scales spacing between directional arrows
 
             %s
             %s
             %s
+
+            .. pragma: skip-doctest
             """ % (xmldocs.graphics_method_core, xmldocs.linesdoc, xmldocs.textsdoc)
 
     colormap = VCS_validation_functions.colormap
@@ -740,10 +751,12 @@ class Gi(object):
     line = property(_getline, _setline)
 
     def setLineAttributes(self, mixed):
-        '''
+        """
         Add either a (linetype, 1, 1) or (linetype, linecolor, linewidth)
         based on if mixed[i] is a linetype or a line object name.
-        '''
+
+        .. pragma: skip-doctest TODO: add a setLineAttributes example
+        """
         import queries
         types = []
         colors = []
@@ -981,39 +994,39 @@ class Gi(object):
         # specific_options_doc
         self.xticlabels1 = xtl1
         self.xticlabels2 = xtl2
-    xticlabels.__doc__ = xmldocs.xticlabelsdoc
+    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name": "isoline", "data": "f('u')"}
 
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
         self.xmtics2 = xmt2
-    xmtics.__doc__ = xmldocs.xmticsdoc
+    xmtics.__doc__ = xmldocs.xmticsdoc.format(name="isoline")
 
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
         self.yticlabels2 = ytl2
-    yticlabels.__doc__ = xmldocs.yticlabelsdoc
+    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name": "isoline", "data": "f('u')"}
 
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1
         self.ymtics2 = ymt2
-    ymtics.__doc__ = xmldocs.ymticsdoc
+    ymtics.__doc__ = xmldocs.xmticsdoc.format(name="isoline")
 
     def datawc(self, dsp1=1e20, dsp2=1e20, dsp3=1e20, dsp4=1e20):
         self.datawc_y1 = dsp1
         self.datawc_y2 = dsp2
         self.datawc_x1 = dsp3
         self.datawc_x2 = dsp4
-    datawc.__doc__ = xmldocs.datawcdoc
+    datawc.__doc__ = xmldocs.datawcdoc.format(name="isoline")
 
     def xyscale(self, xat='', yat=''):
         self.xaxisconvert = xat
         self.yaxisconvert = yat
-    xyscale.__doc__ = xmldocs.xyscaledoc % (('isoline',) * 2)
+    xyscale.__doc__ = xmldocs.xyscaledoc.format(name='isoline')
 
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Isoline (Gi) member (attribute) listings ----------"
+        print "---------- Isoline (Gi) member (attribute) listings ----------"
         print "graphics method =", self.g_name
         print "name =", self.name
         print "projection =", self.projection
@@ -1047,7 +1060,7 @@ class Gi(object):
         print "scale = ", self.scale
         print "angle = ", self.angle
         print "spacing = ", self.spacing
-    list.__doc__ = xmldocs.listdoc
+    list.__doc__ = xmldocs.listdoc.format(name="isoline", parent="")
 
     ##########################################################################
     #                                                                           #
@@ -1074,7 +1087,7 @@ class Gi(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[

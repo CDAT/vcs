@@ -14,7 +14,7 @@ from vcsvtk import fillareautils
 import sys
 import numbers
 
-f = open(os.path.join(vcs.prefix, "share", "vcs", "wmo_symbols.json"))
+f = open(os.path.join(sys.prefix, "share", "vcs", "wmo_symbols.json"))
 wmo = json.load(f)
 
 projNames = [
@@ -29,7 +29,7 @@ projNames = [
     "eqdc",
     "tmerc",
     "stere",
-    "lcca",
+    "laea",
     "azi",
     "gnom",
     "ortho",
@@ -139,12 +139,14 @@ def putMaskOnVTKGrid(data, grid, actorColor=None, cellData=True, deep=True):
             else:
                 lut.SetNumberOfTableValues(2)
                 lut.SetTableValue(0, r / 100., g / 100., b / 100., 0.)
-                lut.SetTableValue(1, r / 100., g / 100., b / 100., 1.)
+                lut.SetTableValue(1, r / 100., g / 100., b / 100., a / 100.)
             geoFilter.Update()
             mapper = vtk.vtkPolyDataMapper()
-            mapper.SetInputData(geoFilter.GetOutput())
+            mapper.SetInputConnection(geoFilter.GetOutputPort())
             mapper.SetLookupTable(lut)
             mapper.SetScalarRange(0, 1)
+            if cellData:
+                mapper.SetScalarModeToUseCellData()
 
         # The ghost array now stores information about hidden (blanked)
         # points/cells. Setting an array entry to the bitwise value
@@ -167,10 +169,7 @@ def putMaskOnVTKGrid(data, grid, actorColor=None, cellData=True, deep=True):
         setArray(grid, ghost, vtk.vtkDataSetAttributes.GhostArrayName(),
                  cellData, isScalars=False)
         if (grid.GetExtentType() == vtk.VTK_PIECES_EXTENT):
-            if (cellData):
-                pass
-            else:
-                removeHiddenPoints(grid)
+            removeHiddenPointsOrCells(grid, celldata=cellData)
 
     return mapper
 
@@ -243,20 +242,40 @@ def setInfToValid(geoPoints, ghost):
     return anyInfinity
 
 
-def removeHiddenPoints(grid):
-    ghost = grid.GetPointGhostArray()
+def removeHiddenPointsOrCells(grid, celldata=False):
+    """Remove hidden points or cells from the input VTK polydata.
+
+    Note that, at a time, this method removes only one hidden entity - either
+    points or cells from the input dataset. To remove both, hidden points and
+    cells, call the function twice, toggling the celldata flag for each call.
+
+    Keyword arguments:
+    grid     -- The input dataset
+    celldata -- If True, this method will remove cells, else points
+    """
+
+    # Since this method involves deleting points or cells from the polydata, the
+    # first step is to build "upward" links from points to cells.
+    grid.BuildLinks()
+
+    ghost = grid.GetCellGhostArray() if celldata else grid.GetPointGhostArray()
     if (not ghost):
         return
-    pts = grid.GetPoints()
     minScalar = sys.float_info.max
     minVector = [0, 0, 0]
     minVectorNorm = sys.float_info.max
-    scalars = grid.GetPointData().GetScalars()
-    vectors = grid.GetPointData().GetVectors()
+    num = grid.GetNumberOfCells() if celldata else grid.GetNumberOfPoints()
+    hidden = vtk.vtkDataSetAttributes.HIDDENCELL if celldata else vtk.vtkDataSetAttributes.HIDDENPOINT
+    if not celldata:
+        scalars = grid.GetPointData().GetScalars()
+        vectors = grid.GetPointData().GetVectors()
+    else:
+        scalars = grid.GetCellData().GetScalars()
+        vectors = grid.GetCellData().GetVectors()
     if (scalars or vectors):
         vector = [0, 0, 0]
-        for i in range(pts.GetNumberOfPoints()):
-            if (not (ghost.GetValue(i) & vtk.vtkDataSetAttributes.HIDDENPOINT)):
+        for i in range(num):
+            if (not (ghost.GetValue(i) & hidden)):
                 if (scalars):
                     scalar = scalars.GetValue(i)
                     if (scalar < minScalar):
@@ -269,21 +288,24 @@ def removeHiddenPoints(grid):
                         minVectorNorm = vectorNorm
     hiddenScalars = False
     hiddenVectors = False
-    for i in range(pts.GetNumberOfPoints()):
-        if (ghost.GetValue(i) & vtk.vtkDataSetAttributes.HIDDENPOINT):
-            cells = vtk.vtkIdList()
-            # point hidden, remove all cells used by this point
-            grid.GetPointCells(i, cells)
-            for j in range(cells.GetNumberOfIds()):
-                grid.DeleteCell(cells.GetId(j))
-            # hidden points are not removed. This causes problems
-            # because it changes the scalar range.
-            if(scalars):
-                hiddenScalars = True
-                scalars.SetValue(i, minScalar)
-            if(vectors):
-                hiddenVectors = True
-                vectors.SetTypedTuple(i, minVector)
+    for i in range(num):
+        if (ghost.GetValue(i) & hidden):
+            if not celldata:
+                cells = vtk.vtkIdList()
+                # point hidden, remove all cells used by this point
+                grid.GetPointCells(i, cells)
+                for j in range(cells.GetNumberOfIds()):
+                    grid.DeleteCell(cells.GetId(j))
+                # hidden points are not removed. This causes problems
+                # because it changes the scalar range.
+                if(scalars):
+                    hiddenScalars = True
+                    scalars.SetValue(i, minScalar)
+                if(vectors):
+                    hiddenVectors = True
+                    vectors.SetTypedTuple(i, minVector)
+            else:
+                grid.DeleteCell(i)
     # SetValue does not call modified - we'll have to call it after all calls.
     if (hiddenScalars):
         scalars.Modified()
@@ -545,7 +567,7 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
             # hidden point don't work for polys or unstructured grids.
             # We remove the cells in this case.
             if (vg.GetExtentType() == vtk.VTK_PIECES_EXTENT):
-                removeHiddenPoints(vg)
+                removeHiddenPointsOrCells(vg, celldata=False)
 
         # Sets the vertics into the grid
         vg.SetPoints(geopts)
@@ -569,6 +591,7 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
            "data2": data2
            }
     return out
+
 
 # Continents first
 # Try to save time and memorize these continents
@@ -900,6 +923,7 @@ def setProjectionParameters(pd, proj):
                 pd.SetCentralMeridian(proj4[k])
             elif k != "???":
                 pd.SetOptionalParameter(k, str(proj4[k]))
+
 
 # Vtk dump
 dumps = {}
@@ -1307,7 +1331,7 @@ def __build_pd__():
     return pts, polygons, polygonPolyData
 
 
-def prepFillarea(renWin, farea, cmap=None):
+def prepFillarea(context, renWin, farea, cmap=None):
     n = prepPrimitive(farea)
     if n == 0:
         return []
@@ -1326,7 +1350,10 @@ def prepFillarea(renWin, farea, cmap=None):
     colors = vtk.vtkUnsignedCharArray()
     colors.SetNumberOfComponents(4)
     colors.SetNumberOfTuples(n)
+    colors.SetName("Colors")
     polygonPolyData.GetCellData().SetScalars(colors)
+
+    pattern_polydatas = []
 
     # Iterate through polygons:
     for i in range(n):
@@ -1345,10 +1372,10 @@ def prepFillarea(renWin, farea, cmap=None):
             color_arr = vtk.vtkUnsignedCharArray()
             color_arr.SetNumberOfComponents(4)
             color_arr.SetNumberOfTuples(1)
-            colors.SetNumberOfTuples(colors.GetNumberOfTuples() - 1)
+            color_arr.SetName("BackgroundColors")
             pd.GetCellData().SetScalars(color_arr)
+            pattern_polydatas.append([i, pd])
 
-        idx = farea.index[i]
         N = max(len(x), len(y))
 
         for a in [x, y]:
@@ -1375,34 +1402,21 @@ def prepFillarea(renWin, farea, cmap=None):
             opacity = None
         # Draw colored background for solid
         # transparent/white background for hatches/patterns
+        # Add the color to the color array:
+        if opacity is not None:
+            color[-1] = opacity
+        color = [int(C / 100. * 255) for C in color]
         if st == 'solid':
-            # Add the color to the color array:
-            if opacity is not None:
-                color[-1] = opacity
-            color = [int(C / 100. * 255) for C in color]
-            colors.SetTypedTuple(cellId, color)
+            # In this case, colors is our scalar array
+            # so, add the color at the cell index
+            color_arr.SetTypedTuple(cellId, color)
         else:
+            # In this case, colors is a backup array that represents colors
+            # for the pattern in each polygon. Each tuple in the colors array
+            # should represent the pattern color for the indexed polygon
+            colors.SetTypedTuple(i, color)
+            # color_arr is our scalar array
             color_arr.SetTypedTuple(cellId, [255, 255, 255, 0])
-
-        if st != "solid":
-            # Patterns/hatches support
-            geo, proj_points = project(
-                points, farea.projection, farea.worldcoordinate)
-            pd.SetPoints(proj_points)
-            act = fillareautils.make_patterned_polydata(pd,
-                                                        st,
-                                                        idx,
-                                                        color,
-                                                        opacity,
-                                                        renWin.GetSize())
-            if act is not None:
-                if (st == "pattern" and opacity > 0) or st == "hatch":
-                    m = vtk.vtkPolyDataMapper()
-                    m.SetInputData(pd)
-                    a = vtk.vtkActor()
-                    a.SetMapper(m)
-                    actors.append((a, geo))
-                actors.append((act, geo))
 
     # Transform points
     geo, pts = project(pts, farea.projection, farea.worldcoordinate)
@@ -1412,7 +1426,42 @@ def prepFillarea(renWin, farea, cmap=None):
     m.SetInputData(polygonPolyData)
     a = vtk.vtkActor()
     a.SetMapper(m)
+    ren, xscale, yscale = context.fitToViewport(a,
+                                                farea.viewport,
+                                                wc=farea.worldcoordinate,
+                                                geoBounds=None,
+                                                geo=None,
+                                                priority=farea.priority,
+                                                create_renderer=True)
     actors.append((a, geo))
+    transform = a.GetUserTransform()
+
+    # Patterns/hatches support
+    for i, pd in pattern_polydatas:
+        st = farea.style[i]
+        if st != "solid":
+            geo, proj_points = project(
+                pd.GetPoints(), farea.projection, farea.worldcoordinate)
+            pd.SetPoints(proj_points)
+            transformFilter = vtk.vtkTransformFilter()
+            transformFilter.SetInputData(pd)
+            transformFilter.SetTransform(transform)
+            transformFilter.Update()
+            cellcolor = [0, 0, 0, 0]
+            colors.GetTypedTuple(i, cellcolor)
+            pcolor = [indC * 100. / 255.0 for indC in cellcolor]
+            act = fillareautils.make_patterned_polydata(transformFilter.GetOutput(),
+                                                        st,
+                                                        fillareaindex=farea.index[i],
+                                                        fillareacolors=pcolor,
+                                                        fillareaopacity=pcolor[3],
+                                                        fillareapixelspacing=farea.pixelspacing,
+                                                        fillareapixelscale=farea.pixelscale,
+                                                        size=renWin.GetSize(),
+                                                        renderer=ren)
+            if act is not None:
+                ren.AddActor(act)
+                actors.append((act, geo))
 
     return actors
 
@@ -1837,6 +1886,7 @@ def vtkWorld2Renderer(ren, x, y):
     ren.WorldToDisplay()
     renpts = ren.GetDisplayPoint()
     return renpts
+
 
 p = vtk.vtkGeoProjection()
 vtkProjections = [

@@ -56,6 +56,7 @@ class IPipeline2D(Pipeline):
             the plot needs point scalars
         - _needsVectors: True if the plot needs vectors, false if it needs scalars
         - _scalarRange: The range of _data1 as tuple(float min, float max)
+        - _vectorRange: The range of the vector magnitude formed from _data1, _data2
         - _maskedDataMapper: The mapper used to render masked data.
     """
 
@@ -86,6 +87,7 @@ class IPipeline2D(Pipeline):
         self._needsCellData = None
         self._needsVectors = False
         self._scalarRange = None
+        self._vectorRange = [0.0, 0.0]
         self._maskedDataMapper = None
 
     def _updateScalarData(self):
@@ -106,10 +108,13 @@ class IPipeline2D(Pipeline):
     def _updateContourLevelsAndColorsGeneric(self):
         # Contour values:
         self._contourLevels = self._gm.levels
+        if (self._needsVectors):
+            valueRange = self._vectorRange
+        else:
+            valueRange = self._scalarRange
         if numpy.allclose(self._contourLevels[0], [0., 1.e20]) or \
                 numpy.allclose(self._contourLevels, 1.e20):
-            levs2 = vcs.mkscale(self._scalarRange[0],
-                                self._scalarRange[1])
+            levs2 = vcs.mkscale(valueRange[0], valueRange[1])
             if len(levs2) == 1:  # constant value ?
                 levs2 = [levs2[0], levs2[0] + .00001]
             self._contourLevels = []
@@ -290,6 +295,10 @@ class Pipeline2D(IPipeline2D):
         plotBasedDualGrid = kargs.get('plot_based_dual_grid', True)
         self._updateVTKDataSet(plotBasedDualGrid)
 
+        if (self._needsVectors):
+            vectors = self._vtkDataSet.GetPointData().GetVectors()
+            vectors.GetRange(self._vectorRange, -1)
+
         # Update the results:
         self._resultDict["vtk_backend_grid"] = self._vtkDataSet
         self._resultDict["vtk_backend_geo"] = self._vtkGeoTransform
@@ -420,3 +429,16 @@ class Pipeline2D(IPipeline2D):
                                               self._data1.getAxis(-1),
                                               self._data1.getAxis(-2)),
                 self._vtkDataSetBounds, self._vtkGeoTransform)
+
+    def _patternSpacingAndScale(self):
+        """Return the pattern pixel spacing and scale if specified or compute
+        new values based on the render window size"""
+        pixelspacing = self._gm.fillareapixelspacing
+        if pixelspacing is None:
+            size = self._context().renWin.GetSize()
+            sp = int(0.015 * min(size[0], size[1]))
+            pixelspacing = 2 * [sp if sp > 1 else 1]
+        pixelscale = self._gm.fillareapixelscale
+        if pixelscale is None:
+            pixelscale = 1.0 * min(pixelspacing[0], pixelspacing[1])
+        return pixelspacing, pixelscale

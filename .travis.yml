@@ -1,27 +1,27 @@
 os:
-    - osx
+    #    - osx
     - linux
+dist: trusty
 sudo: false
 before_install:
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh; fi
-- if [ "$TRAVIS_OS_NAME" = "osx" ]; then wget https://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -O miniconda.sh; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh; fi
+- if [ "$TRAVIS_OS_NAME" = "osx" ]; then wget https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O miniconda.sh; fi
 - export PATH="$HOME/miniconda/bin:$PATH"
 - bash miniconda.sh -b -p $HOME/miniconda
 - conda config --set always_yes yes --set changeps1 no
 - conda update -y -q conda
-- conda install gcc
 script:
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then conda install -c conda-forge -c uvcdat uvcdat-nox; fi
-- if [ "$TRAVIS_OS_NAME" = "osx" ]; then conda install -c conda-forge -c uvcdat uvcdat; fi
+- conda install -c uvcdat/label/nightly -c conda-forge -c uvcdat cdutil genutil dv3d-nox "mesalib>17" nose image-compare flake8 matplotlib
 - export UVCDAT_ANONYMOUS_LOG=False
-- vcs_download_sample_data
 - echo $TRAVIS_BRANCH
 - export TRAVIS_PR_BRANCH=$TRAVIS_BRANCH
 - echo $TRAVIS_EVENT_TYPE
 - echo $TRAVIS_PULL_REQUEST
 - python setup.py install --old-and-unmanageable
-env:
-  global:
-    secure: Z06idl4BP01QMhrocmfuYV4CcbLmb5ZJZoXXymDr5sLIIfqdMiSL/CfDCRkIwl44vKpTN5R9AAhQV6iNMdU0NOQQrftHJyT5YV4y966FuAA1v9ev7y/cgExJFv7M/4E37WAN6YIcO7E42KZReeNKOAodorpqoT87MW6FAImZbrM=
+- git clone git://github.com/uv-cdat/uvcdat-testdata
+- cd uvcdat-testdata ; git checkout $TRAVIS_BRANCH ; cd ..
+- df -h
+- pip install dropbox
+- python run_tests.py -n 3 -v2 -g --no-vtk-ui --dropbox
 after_success:
-    - test $TRAVIS_BRANCH = "master" && conda install conda-build && conda install anaconda-client && bash conda_upload.sh
+    - if [ "$TRAVIS_BRANCH" == "master" -a "$TRAVIS_PULL_REQUEST" == "false" ]; then conda install conda-build && conda install anaconda-client && bash scripts/conda_upload.sh ; fi

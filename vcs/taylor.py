@@ -548,6 +548,8 @@ class Gtd(object):
     `Taylor diagrams`_ provide a way of graphically summarizing how closely a pattern matches observations.
 
     .. _Taylor diagrams: http://www-pcmdi.llnl.gov/about/staff/Taylor/CV/Taylor_diagram_primer.pdf
+
+    .. pragma: skip-doctest
     """
     __slots__ = [
         'template',
@@ -919,6 +921,8 @@ class Gtd(object):
         :rtype: float
 
         .. _`skill`: https://en.wikipedia.org/wiki/Forecast_skill
+
+        .. pragma: skip-doctest TODO: add an example/doctest
         """
         alpha = self.skillCoefficient[0]  # default is 1.
         beta = self.skillCoefficient[1]  # default is 1.
@@ -938,11 +942,13 @@ class Gtd(object):
     def drawSkill(self, canvas, values, function=None):
         """
         Draw a skill score. Default skill score provided in :py:func:`defaultSkillFunction`
-        from Karl taylor, see `PCMDI report series 55`_ for more information on `Taylor diagrams`_ and `skill`_s.
+        from Karl taylor, see `PCMDI report series 55`_ for more information on
+        `Taylor diagrams`_ and `skill`_ .
 
-        .. _PCMDI report series 55 : http://www-pcmdi.llnl.gov/publications/pdf/55.pdf
+        .. _`PCMDI report series 55` : http://www-pcmdi.llnl.gov/publications/pdf/55.pdf
 
         .. note::
+
             The function parameter must be provided for drawSkill to work.
             The :py:func:`defaultSkillFunction` provided in this module can be used to provide a default skill score.
             Be aware that, as stated in `PCMDI report series 55`_ section 5, it is not possible to define
@@ -953,11 +959,13 @@ class Gtd(object):
         :type canvas: vcs.Canvas.Canvas
 
         :param values: A list/tuple used to specify the :py:attr:`levels <vcs.isoline.Gi.level>`
-                        of an :py:class:`isoline <vcs.isoline.Gi>` object.
+            of an :py:class:`isoline <vcs.isoline.Gi>` object.
         :type values: list/tuple
 
         :param function: A function for determining the skill score of a model.
-        :type function:
+        :type function: function
+
+        .. pragma: skip-doctest TODO add an example/doctest
         """
         if function is None:
             return
@@ -1017,7 +1025,7 @@ class Gtd(object):
         return canvas.plot(a, iso, tmpl, bg=self.bg)
 
     def list(self):
-        print ' ----------Taylordiagram (Gtd) member (attribute) listings ----------'
+        print '---------- Taylordiagram (Gtd) member (attribute) listings ----------'
         print 'graphic method = Gtd'
         print 'name =', self.name
         print 'detail =', self.detail
@@ -1064,7 +1072,7 @@ class Gtd(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[
@@ -1402,6 +1410,8 @@ class Gtd(object):
 
         :returns: The coordinates for the calculated arc.
         :rtype: tuple
+
+        .. pragma: skip-doctest TODO add an example/doctest
         """
         xs = []
         ys = []
@@ -1927,6 +1937,8 @@ class Gtd(object):
 
         :param canvas: A VCS Canvas object on which the diagram will be plotted.
         :type canvas: vcs.Canvas.Canvas
+
+        .. pragma: skip-doctest TODO add an example/doctest
         """
         self.bg = bg
         self.displays = []

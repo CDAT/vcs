@@ -24,7 +24,7 @@
 #
 import VCS_validation_functions
 import vcs
-from xmldocs import scriptdocs
+from xmldocs import scriptdocs, listdoc
 
 
 def process_src(nm, code):
@@ -151,6 +151,8 @@ class To(object):
                 to.valign='base'
                 # Same as tovalign=4
                 to.valign='bottom'
+
+    .. pragma: skip-doctest TODO: convert examples to doctests
     """
     __slots__ = [
         's_name',
@@ -285,7 +287,7 @@ class To(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Text Orientation (To) member (attribute) listings ----------"
+        print "---------- Text Orientation (To) member (attribute) listings ----------"
         print "secondary method =", self.s_name
         print "name =", self.name
         print "height =", self.height
@@ -293,6 +295,7 @@ class To(object):
         print "path =", self.path
         print "halign =", self.halign
         print "valign =", self.valign
+    list.__doc__ = listdoc.format(name="textorientation", parent="")
 
     ##########################################################################
     #                                                                           #
@@ -319,7 +322,7 @@ class To(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[

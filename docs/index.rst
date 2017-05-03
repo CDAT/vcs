@@ -1,8 +1,8 @@
 VCS: Visualization Control System
-==================================
+=================================
 
 What is VCS?
----------------
+------------
 
 The PCMDI Visualization Control System (VCS) is expressly designed to meet the needs of scientific community. VCS allows wide-ranging changes to be made to the data display, provides for hardcopy output, and includes a means for recovery of a previous display.
 
@@ -56,6 +56,6 @@ API index
 ---------
 
 .. toctree::
-    :maxdepth: 3
+   :maxdepth: 4
 
-    API/vcs
+   API/vcs
