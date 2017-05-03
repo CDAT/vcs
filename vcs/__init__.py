@@ -53,7 +53,7 @@ class VCSDeprecationWarning(DeprecationWarning):
 
 # Python < 3 DeprecationWarning ignored by default
 # warnings.simplefilter('default')
-warnings.simplefilter("default",VCSDeprecationWarning)#,".*",0)
+warnings.simplefilter("default",VCSDeprecationWarning)
 
 _doValidation = True
 next_canvas_id = 1
