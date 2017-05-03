@@ -12,14 +12,8 @@
 # Description:	Python command wrapper for VCS's boxfill graphics method.     #
 # Version:      5.0							      #
 ###############################################################################
-#
-#
-#
-###############################################################################
-#                                                                             #
-# Import: VCS C extension module.                                             #
-#                                                                             #
-###############################################################################
+
+
 import vcs
 import cdtime
 import VCS_validation_functions
