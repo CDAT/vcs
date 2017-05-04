@@ -487,30 +487,25 @@ class Tm(object):
                 fp.write("v=vcs.init()\n\n")
 
             unique_name = '__Tm__' + self.name
-            fp.write(
-                "#----------Marker (Tm) member (attribute) listings ----------\n")
+            fp.write("#----------Marker (Tm) member (attribute) listings ----------\n")
             fp.write("tm_list=v.listelements('marker')\n")
             fp.write("if ('%s' in tm_list):\n" % self.name)
             fp.write("   %s = v.getmarker('%s')\n" % (unique_name, self.name))
             fp.write("else:\n")
-            fp.write(
-                "   %s = v.createmarker('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.createmarker('%s')\n" % (unique_name, self.name))
             fp.write("%s.type = %s\n" % (unique_name, self.type))
             fp.write("%s.size = %s\n" % (unique_name, self.size))
             fp.write("%s.color = %s\n\n" % (unique_name, self.color))
             fp.write("%s.priority = %d\n" % (unique_name, self.priority))
             fp.write("%s.viewport = %s\n" % (unique_name, self.viewport))
-            fp.write(
-                "%s.worldcoordinate = %s\n" %
-                (unique_name, self.worldcoordinate))
+            fp.write("%s.worldcoordinate = %s\n" % (unique_name, self.worldcoordinate))
             fp.write("%s.x = %s\n" % (unique_name, self.x))
             fp.write("%s.y = %s\n" % (unique_name, self.y))
-            fp.write("%s.projection = %s\n" % (unique_name, self.projection))
-            fp.write(
-                "%s.colormap = '%s'\n\n" %
-                (unique_name, repr(
-                    self.colormap)))
+            fp.write("%s.projection = '%s'\n" % (unique_name, self.projection))
+            if self.colormap is not None:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, repr(self.colormap)))
+            else:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, self.colormap))
         else:
             # Json type
             mode += "+"

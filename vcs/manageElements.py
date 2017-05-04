@@ -1428,7 +1428,7 @@ def gettextcombined(Tt_name_src='default', To_name_src=None, string=None, font=N
                     height=None, angle=None, path=None, halign=None, valign=None):
     """%s
 
-    :param Tt_name_src: Name of created object
+    :param Tt_name_src: Name of parent texttable object
     :type Tt_name_src: `str`_
 
     :param To_name_src: Name of parent textorientation object

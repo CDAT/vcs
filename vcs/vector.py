@@ -617,10 +617,12 @@ class Gv(object):
     line = property(_getline, _setline)
 
     def setLineAttributes(self, line):
-        '''
+        """
         Set attributes linecolor, linewidth and linetype from line l.
         l can be a line name defined in vcs.elements or a line object
-        '''
+        :param line:
+        :return:
+        """
         vcs.setLineAttributes(self, line)
 
     def _gettype(self):
@@ -924,20 +926,19 @@ class Gv(object):
                 "%s.yaxisconvert = '%s'\n" %
                 (unique_name, self.yaxisconvert))
             # Unique attribute for vector
-            fp.write("%s.line = %s\n" % (unique_name, self.line))
+            fp.write("%s.linetype = %s\n" % (unique_name, self.linetype))
             fp.write("%s.linecolor = %s\n" % (unique_name, self.linecolor))
             fp.write("%s.linewidth = %s\n" % (unique_name, self.linewidth))
             fp.write("%s.scale = %s\n" % (unique_name, self.scale))
-            fp.write("%s.scaletype = %s\n" % (unique_name, self.scaletype))
+            fp.write("%s.scaletype = %s\n" % (unique_name, repr(self.scaletype)))
             fp.write("%s.scalerange = %s\n" % (unique_name, self.scalerange))
-            fp.write("%s.scaleoptions = %s\n" % (unique_name, self.scaleoptions))
             fp.write("%s.alignment = '%s'\n" % (unique_name, self.alignment))
             fp.write("%s.type = '%s'\n" % (unique_name, self.type))
-            fp.write("%s.reference = %s\n\n" % (unique_name, self.reference))
-            fp.write(
-                "%s.colormap = '%s'\n\n" %
-                (unique_name, repr(
-                    self.colormap)))
+            fp.write("%s.reference = %g\n\n" % (unique_name, self.reference))
+            if self.colormap is not None:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, repr(self.colormap)))
+            else:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, self.colormap))
         else:
             # Json type
             mode += "+"

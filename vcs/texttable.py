@@ -543,38 +543,29 @@ class Tt(object):
                 fp.write("v=vcs.init()\n\n")
 
             unique_name = '__Tt__' + self.name
-            fp.write(
-                "#----------Text Table (Tt) member (attribute) listings ----------\n")
+            fp.write("#----------Text Table (Tt) member (attribute) listings ----------\n")
             fp.write("tt_list=v.listelements('texttable')\n")
             fp.write("if ('%s' in tt_list):\n" % self.name)
-            fp.write(
-                "   %s = v.gettexttable('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.gettexttable('%s')\n" % (unique_name, self.name))
             fp.write("else:\n")
-            fp.write(
-                "   %s = v.createtexttable('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.createtexttable('%s')\n" % (unique_name, self.name))
             fp.write("%s.font = %g\n" % (unique_name, self.font))
             fp.write("%s.spacing = %g\n" % (unique_name, self.spacing))
             fp.write("%s.expansion = %g\n" % (unique_name, self.expansion))
-            fp.write("%s.color = %g\n\n" % (unique_name, self.color))
-            fp.write("%s.backgroundcolor = %g\n\n" % (unique_name, self.backgroundcolor))
+            fp.write("%s.color = %s\n\n" % (unique_name, repr(self.color)))
+            fp.write("%s.backgroundcolor = %s\n\n" % (unique_name, repr(self.backgroundcolor)))
             fp.write("%s.backgroundopacity = %g\n\n" % (unique_name, self.backgroundopacity))
-            fp.write(
-                "%s.fillincolor = %g\n\n" %
-                (unique_name, self.fillincolor))
+            fp.write("%s.fillincolor = %g\n\n" % (unique_name, self.fillincolor))
             fp.write("%s.priority = %d\n" % (unique_name, self.priority))
             fp.write("%s.viewport = %s\n" % (unique_name, self.viewport))
-            fp.write(
-                "%s.worldcoordinate = %s\n" %
-                (unique_name, self.worldcoordinate))
+            fp.write("%s.worldcoordinate = %s\n" % (unique_name, self.worldcoordinate))
             fp.write("%s.x = %s\n" % (unique_name, self.x))
             fp.write("%s.y = %s\n\n" % (unique_name, self.y))
-            fp.write("%s.projection = %s\n\n" % (unique_name, self.projection))
-            fp.write(
-                "%s.colormap = '%s'\n\n" %
-                (unique_name, repr(
-                    self.colormap)))
+            fp.write("%s.projection = '%s'\n\n" % (unique_name, self.projection))
+            if self.colormap is not None:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, repr(self.colormap)))
+            else:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, self.colormap))
         else:
             # Json type
             mode += "+"

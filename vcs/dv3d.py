@@ -114,24 +114,9 @@ class Gfdv3d(object):
 
             gtype = 'xyt' if (self._axes == "Hovmoller3D") else 'default'
             unique_name = 'gm3d_%s' % str(time.time() % 1)[2:]
-            if self.g_name == '3d_scalar':
-                fp.write(
-                    '%s = vcs.get3d_scalar( %s )\n' %
-                    (unique_name, gtype))
-            if self.g_name == '3d_vector':
-                fp.write(
-                    '%s = vcs.get3d_vector( %s )\n' %
-                    (unique_name, gtype))
-            if self.g_name == '3d_dual_scalar':
-                fp.write(
-                    '%s = vcs.get3d_dual_scalar( %s )\n' %
-                    (unique_name, gtype))
+            fp.write('%s = vcs.get%s("%s")\n' % (unique_name, self.g_name, gtype))
             for param_name in self.parameter_names:
-                fp.write(
-                    '%s.%s = %s\n' %
-                    (unique_name,
-                     param_name,
-                     self.cfgManager.getParameterValue(param_name)))
+                fp.write('%s.%s = %s\n' % (unique_name, param_name, self.cfgManager.getParameterValue(param_name)))
         else:
             # Json type
             mode += "+"
