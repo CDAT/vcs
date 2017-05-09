@@ -19,6 +19,7 @@ def _makeEven(val):
         val -= 1
     return val
 
+
 class VCSInteractorStyle(vtk.vtkInteractorStyleUser):
 
     def __init__(self, parent):
