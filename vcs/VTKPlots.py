@@ -14,6 +14,12 @@ import VTKAnimate
 import vcsvtk
 
 
+def _makeEven(val):
+    if (val & 0x1):
+        val -= 1
+    return val
+
+
 class VCSInteractorStyle(vtk.vtkInteractorStyleUser):
 
     def __init__(self, parent):
@@ -524,7 +530,12 @@ class VTKVCSBackend(object):
         # Respect user chosen aspect ratio
         bgY = int(bgX / self.canvas.size)
         # Sets renWin dimensions
+        # make the dimensions even for Macs
+        bgX = _makeEven(bgX)
+        bgY = _makeEven(bgY)
         self.renWin.SetSize(bgX, bgY)
+        self.canvas.bgX = bgX
+        self.canvas.bgY = bgY
         self._lastSize = (bgX, bgY)
 
     def open(self, width=None, height=None, **kargs):
