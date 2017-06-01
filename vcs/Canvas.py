@@ -66,7 +66,7 @@ except:
     hasVCSAddons = False
 
 
-class SIGNAL(object):
+class SIGNAL(vcs.bestMatch):
 
     def __init__(self, name=None):
         self._functions = WeakSet()
@@ -299,7 +299,7 @@ def _process_keyword(obj, target, source, keyargs, default=None):
     return arg
 
 
-class Canvas(object):
+class Canvas(vcs.bestMatch):
     """Usually created using :py:func:`vcs.init`, this object provides easy access
     to the functionality of the entire VCS module:
 
@@ -354,7 +354,6 @@ class Canvas(object):
         '_continents',
         '_continents_line',
         '_savedcontinentstype',
-        '__weakref__',
     ]
 
 #     def applicationFocusChanged(self, old, current ):

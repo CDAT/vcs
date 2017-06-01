@@ -104,7 +104,7 @@ def process_src(nm, code):
 #
 
 
-class Tf(object):
+class Tf(vcs.bestMatch):
     """The Fillarea class allows the user to edit fillarea attributes, including
     fillarea interior style, style index, and color index.
 

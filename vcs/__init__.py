@@ -47,6 +47,23 @@ model for defining a plot, that is decomposed into three parts:
    them to other users.
 """
 import warnings
+import difflib
+
+
+class bestMatch(object):
+    def __setattr__(self,a,v):
+        if a in self.__slots__:
+            super(bestMatch,self).__setattr__(a,v)
+        else:
+          matches = difflib.get_close_matches(a,self.__slots__)
+          real_matches = []
+          for m in matches:
+            if m[0] != "_":
+              real_matches.append(m)
+          if len(real_matches)>0:
+            raise AttributeError("'%s' object has no attribute '%s' did you mean one of %s" % (self.__class__.__name__,a,repr(real_matches)))
+          else:
+            raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__,a))
 
 
 class VCSDeprecationWarning(DeprecationWarning):

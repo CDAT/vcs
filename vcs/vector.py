@@ -145,7 +145,7 @@ def process_src(nm, code):
                     gm.datawc_calendar)
 
 
-class Gv(object):
+class Gv(vcs.bestMatch):
 
     """
     The vector graphics method displays a vector plot of a 2D vector field. Vectors

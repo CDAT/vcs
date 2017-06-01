@@ -28,7 +28,7 @@ import vcs
 from xmldocs import listdoc  # noqa
 
 
-class Dp(object):
+class Dp(vcs.bestMatch):
 
     """
     The Display plot object allows the manipulation of the plot name, off,
@@ -101,6 +101,7 @@ class Dp(object):
                  "_priority",
                  "_template",
                  "__template_origin",
+                 "_Dp__template_origin",
                  "_g_type",
                  "_g_name",
                  "_array",

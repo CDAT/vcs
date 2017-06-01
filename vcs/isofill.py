@@ -125,7 +125,7 @@ def process_src(nm, code):
     vcs.utils.process_range_from_old_scr(code, g)
 
 
-class Gfi(object):
+class Gfi(vcs.bestMatch):
 
     __doc__ = """
     The Isofill graphics method fills the area between selected isolevels

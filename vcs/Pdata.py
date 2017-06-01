@@ -23,9 +23,10 @@
 #
 #
 import VCS_validation_functions
+import vcs
 
 
-class Pds(object):
+class Pds(vcs.bestMatch):
 
     """
     The Template text object allows the manipulation of line type, width, and color index.

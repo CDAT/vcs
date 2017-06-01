@@ -147,7 +147,7 @@ def process_src(nm, code):
 # Template (P) graphics method Class.                                       #
 #                                                                           #
 #############################################################################
-class P(object):
+class P(vcs.bestMatch):
 
     """The template primary method (P) determines the location of each picture
     segment, the space to be allocated to it, and related properties relevant
@@ -195,7 +195,7 @@ class P(object):
     .. pragma: skip-doctest TODO convert examples to working doctests
     """
     __slots__ = ["name", "_name", "_p_name", "p_name",
-                 "_orientation", "_orientation", "_file", "file",
+                 "_orientation", "orientation", "_file", "file",
                  "_function", "function",
                  "_logicalmask", "logicalmask",
                  "_transformation", "transformation",

@@ -179,7 +179,7 @@ class RGB_Table(UserDict):
 #############################################################################
 
 
-class Cp(object):
+class Cp(vcs.bestMatch):
 
     """
     The Colormap object allows the manipulation of the colormap index R,G,B values.

@@ -48,7 +48,7 @@ def process_src(nm, code):
 # Text Orientation (To) Class.                                              #
 #                                                                           #
 #############################################################################
-class To(object):
+class To(vcs.bestMatch):
 
     """
     The (To) Text Orientation lists text attribute set names that define the font, spacing,

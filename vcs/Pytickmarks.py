@@ -23,6 +23,7 @@
 #
 #
 import VCS_validation_functions
+import vcs
 #############################################################################
 #                                                                           #
 # Template text (Pyt) Class.                                                #
@@ -30,7 +31,7 @@ import VCS_validation_functions
 #############################################################################
 
 
-class Pyt(object):
+class Pyt(vcs.bestMatch):
 
     """
     The Template text object allows the manipulation of line type, width, and color index.
