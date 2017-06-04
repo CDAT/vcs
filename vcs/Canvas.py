@@ -66,7 +66,7 @@ except:
     hasVCSAddons = False
 
 
-class SIGNAL(vcs.bestMatch):
+class SIGNAL(object):
 
     def __init__(self, name=None):
         self._functions = WeakSet()
@@ -349,6 +349,8 @@ class Canvas(vcs.bestMatch):
         'enableLogo',
         'backend',
         'configurator',
+        '_Canvas__last_plot_actual_args',
+        '_Canvas__last_plot_keyargs',
         '__last_plot_actual_args',
         '__last_plot_keyargs',
         '_continents',

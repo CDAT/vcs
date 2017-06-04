@@ -127,7 +127,8 @@ class Logo(vcs.bestMatch):
             >>> logo2.plot(x)
     """
 
-    __slots__ = [ "x", "y", "width", "height", "source"]
+    __slots__ = ["x", "y", "width", "height", "source", "source_width", "source_height"]
+
     def __init__(self, source=None, x=.93, y=.95, width=None, height=None):
         """Initialize a new "logo" object to be plotted later on a canvas
 

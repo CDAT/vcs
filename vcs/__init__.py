@@ -51,19 +51,24 @@ import difflib
 
 
 class bestMatch(object):
-    def __setattr__(self,a,v):
-        if a in self.__slots__:
-            super(bestMatch,self).__setattr__(a,v)
+    def __setattr__(self, a, v):
+        if not hasattr(self, "__slots__") or a in self.__slots__:
+            super(bestMatch, self).__setattr__(a, v)
         else:
-          matches = difflib.get_close_matches(a,self.__slots__)
-          real_matches = []
-          for m in matches:
-            if m[0] != "_":
-              real_matches.append(m)
-          if len(real_matches)>0:
-            raise AttributeError("'%s' object has no attribute '%s' did you mean one of %s" % (self.__class__.__name__,a,repr(real_matches)))
-          else:
-            raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__,a))
+            matches = difflib.get_close_matches(a, self.__slots__)
+            real_matches = []
+            for m in matches:
+                if m[0] != "_":
+                    real_matches.append(m)
+            if len(real_matches) > 0:
+                raise AttributeError(
+                    "'%s' object has no attribute '%s' did you mean one of %s" %
+                    (self.__class__.__name__, a, repr(real_matches)))
+            else:
+                raise AttributeError(
+                    "'%s' object has no attribute '%s' valid attributes are: %s" %
+                    (self.__class__.__name__, a, repr(
+                        self.__slots__)))
 
 
 class VCSDeprecationWarning(DeprecationWarning):
@@ -259,7 +264,7 @@ t = taylor.Gtd("default")
 pth = [vcs.prefix, 'share', 'vcs', 'initial.attributes']
 try:
     vcs.scriptrun(os.path.join(*pth))
-except:
+except BaseException:
     pass
 
 for typ in elements.keys():
