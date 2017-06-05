@@ -60,9 +60,13 @@ class bestMatch(object):
             for m in matches:
                 if m[0] != "_":
                     real_matches.append(m)
-            if len(real_matches) > 0:
+            if len(real_matches) == 1:
                 raise AttributeError(
-                    "'%s' object has no attribute '%s' did you mean one of %s" %
+                    "'%s' object has no attribute '%s' did you mean %s ?" %
+                    (self.__class__.__name__, a, repr(real_matches[0])))
+            elif len(real_matches) > 1:
+                raise AttributeError(
+                    "'%s' object has no attribute '%s' did you mean one of %s ?" %
                     (self.__class__.__name__, a, repr(real_matches)))
             else:
                 raise AttributeError(

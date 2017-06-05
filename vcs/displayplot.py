@@ -101,6 +101,7 @@ class Dp(vcs.bestMatch):
                  "_priority",
                  "_template",
                  "__template_origin",
+                 "_template_origin",
                  "_Dp__template_origin",
                  "_g_type",
                  "_g_name",

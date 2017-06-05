@@ -33,7 +33,7 @@ class VCSInteractorStyle(vtk.vtkInteractorStyleUser):
             self.AddObserver("RenderEvent", parent.renderEvent)
 
 
-class VTKVCSBackend(vcs.bestMatch):
+class VTKVCSBackend(object):
 
     def __init__(self, canvas, renWin=None, debug=False, bg=None, geometry=None):
         self._lastSize = None
