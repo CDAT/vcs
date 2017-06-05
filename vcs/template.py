@@ -1316,35 +1316,32 @@ class P(vcs.bestMatch):
         for a in attr:
             v = getattr(self, a)
             try:
-                subattr = vars(v).keys()
-            except:
-                try:
-                    subattr = v.__slots__
-                    delta = 0.
-                    if sub_name + '1' in subattr:
-                        ov = getattr(v, sub_name + '1')
-                        if ov1 is not None:
-                            delta = (ov - ov1) * ratio
-                        setattr(v, sub_name + '1', min(1, max(0, v1 + delta)))
-                    delta = 0.
-                    if sub_name + '2' in subattr:
+                subattr = v.__slots__
+                delta = 0.
+                if sub_name + '1' in subattr:
+                    ov = getattr(v, sub_name + '1')
+                    if ov1 is not None:
+                        delta = (ov - ov1) * ratio
+                    setattr(v, sub_name + '1', min(1, max(0, v1 + delta)))
+                delta = 0.
+                if sub_name + '2' in subattr:
+                    ov = getattr(v, sub_name + '2')
+                    if ov2 is not None:
+                        delta = (ov - ov2) * ratio
+                    setattr(v, sub_name + '2', min(1, max(0, v2 + delta)))
+                delta = 0.
+                if sub_name in subattr:
+                    ov = getattr(v, sub_name)
+                    if ov1 is not None:
+                        delta = (ov - ov1) * ratio
+                    setattr(v, sub_name, min(1, max(0, v1 + delta)))
+                    if a[-1] == '2':
                         ov = getattr(v, sub_name + '2')
                         if ov2 is not None:
                             delta = (ov - ov2) * ratio
-                        setattr(v, sub_name + '2', min(1, max(0, v2 + delta)))
-                    delta = 0.
-                    if sub_name in subattr:
-                        ov = getattr(v, sub_name)
-                        if ov1 is not None:
-                            delta = (ov - ov1) * ratio
-                        setattr(v, sub_name, min(1, max(0, v1 + delta)))
-                        if a[-1] == '2':
-                            ov = getattr(v, sub_name + '2')
-                            if ov2 is not None:
-                                delta = (ov - ov2) * ratio
-                            setattr(v, sub_name, min(1, max(0, v2 + delta)))
-                except:
-                    pass
+                        setattr(v, sub_name, min(1, max(0, v2 + delta)))
+            except:
+                pass
 
     def move(self, p, axis):
         """Move a template by p% along the axis 'x' or 'y'.
