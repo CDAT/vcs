@@ -929,6 +929,8 @@ class Gfb(object):
             high_end += .00001
             return [low_end, high_end]
         float_epsilon = numpy.finfo(numpy.float32).eps
+        if float_epsilon > (high_end-low_end):
+            float_epsilon = numpy.finfo(numpy.float64).eps
         contourLevels = numpy.arange(low_end, high_end + float_epsilon, dx)
 
         return contourLevels
