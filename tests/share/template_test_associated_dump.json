@@ -179,6 +179,7 @@
     "x": 0.449999988079, 
     "y": 0.899999976158
    }, 
+   "orientation": 0, 
    "source": {
     "priority": 1, 
     "textorientation": "default", 

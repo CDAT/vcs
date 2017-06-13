@@ -147,7 +147,7 @@ def process_src(nm, code):
 # Template (P) graphics method Class.                                       #
 #                                                                           #
 #############################################################################
-class P(object):
+class P(vcs.bestMatch):
 
     """The template primary method (P) determines the location of each picture
     segment, the space to be allocated to it, and related properties relevant
@@ -195,7 +195,7 @@ class P(object):
     .. pragma: skip-doctest TODO convert examples to working doctests
     """
     __slots__ = ["name", "_name", "_p_name", "p_name",
-                 "_orientation", "_orientation", "_file", "file",
+                 "_orientation", "orientation", "_file", "file",
                  "_function", "function",
                  "_logicalmask", "logicalmask",
                  "_transformation", "transformation",
@@ -1316,35 +1316,32 @@ class P(object):
         for a in attr:
             v = getattr(self, a)
             try:
-                subattr = vars(v).keys()
-            except:
-                try:
-                    subattr = v.__slots__
-                    delta = 0.
-                    if sub_name + '1' in subattr:
-                        ov = getattr(v, sub_name + '1')
-                        if ov1 is not None:
-                            delta = (ov - ov1) * ratio
-                        setattr(v, sub_name + '1', min(1, max(0, v1 + delta)))
-                    delta = 0.
-                    if sub_name + '2' in subattr:
+                subattr = v.__slots__
+                delta = 0.
+                if sub_name + '1' in subattr:
+                    ov = getattr(v, sub_name + '1')
+                    if ov1 is not None:
+                        delta = (ov - ov1) * ratio
+                    setattr(v, sub_name + '1', min(1, max(0, v1 + delta)))
+                delta = 0.
+                if sub_name + '2' in subattr:
+                    ov = getattr(v, sub_name + '2')
+                    if ov2 is not None:
+                        delta = (ov - ov2) * ratio
+                    setattr(v, sub_name + '2', min(1, max(0, v2 + delta)))
+                delta = 0.
+                if sub_name in subattr:
+                    ov = getattr(v, sub_name)
+                    if ov1 is not None:
+                        delta = (ov - ov1) * ratio
+                    setattr(v, sub_name, min(1, max(0, v1 + delta)))
+                    if a[-1] == '2':
                         ov = getattr(v, sub_name + '2')
                         if ov2 is not None:
                             delta = (ov - ov2) * ratio
-                        setattr(v, sub_name + '2', min(1, max(0, v2 + delta)))
-                    delta = 0.
-                    if sub_name in subattr:
-                        ov = getattr(v, sub_name)
-                        if ov1 is not None:
-                            delta = (ov - ov1) * ratio
-                        setattr(v, sub_name, min(1, max(0, v1 + delta)))
-                        if a[-1] == '2':
-                            ov = getattr(v, sub_name + '2')
-                            if ov2 is not None:
-                                delta = (ov - ov2) * ratio
-                            setattr(v, sub_name, min(1, max(0, v2 + delta)))
-                except:
-                    pass
+                        setattr(v, sub_name, min(1, max(0, v2 + delta)))
+            except:
+                pass
 
     def move(self, p, axis):
         """Move a template by p% along the axis 'x' or 'y'.

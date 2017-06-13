@@ -81,7 +81,7 @@ def createnewvcsobj(canvas, type, basenm, src='default', src2='default'):
     return out
 
 
-class TDMarker(object):
+class TDMarker(vcs.bestMatch):
 
     """class"""
     __slots__ = [
@@ -542,7 +542,7 @@ class TDMarker(object):
             self._number = n
 
 
-class Gtd(object):
+class Gtd(vcs.bestMatch):
     """
     The Taylor Diagram graphics method (Gtd) is used to plot `Taylor diagrams`_ on a VCS Canvas.
     `Taylor diagrams`_ provide a way of graphically summarizing how closely a pattern matches observations.

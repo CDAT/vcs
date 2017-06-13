@@ -123,7 +123,7 @@ def process_src(nm, code):
 # class Gfb(graphics_method_core):
 
 
-class Gfb(object):
+class Gfb(vcs.bestMatch):
 
     __doc__ = """The boxfill graphics method (Gfb) displays a two-dimensional
     data array by surrounding each data value by a colored grid box.

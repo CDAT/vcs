@@ -26,7 +26,7 @@ import VCS_validation_functions
 from xmldocs import scriptdocs
 
 
-class Gs(object):
+class Gs(vcs.bestMatch):
 
     """
     The streamline graphics method displays a streamline plot of a 2D

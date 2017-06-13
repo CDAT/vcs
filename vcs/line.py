@@ -70,7 +70,7 @@ def process_src(nm, code):
         f.projection = code[i + 11:j]
 
 
-class Tl(object):
+class Tl(vcs.bestMatch):
 
     """The Line object allows the manipulation of line type, width, color index,
     view port, world coordinates, and (x,y) points.

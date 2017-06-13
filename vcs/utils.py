@@ -103,7 +103,7 @@ def get_png_dims(fnm):
     return width, height
 
 
-class Logo(object):
+class Logo(vcs.bestMatch):
     """Creates a 'logo' object
 
     This also to draw a logo either from a text string or a picture (png) file.
@@ -126,6 +126,8 @@ class Logo(object):
             >>> logo1.plot(x)
             >>> logo2.plot(x)
     """
+
+    __slots__ = ["x", "y", "width", "height", "source", "source_width", "source_height"]
 
     def __init__(self, source=None, x=.93, y=.95, width=None, height=None):
         """Initialize a new "logo" object to be plotted later on a canvas
