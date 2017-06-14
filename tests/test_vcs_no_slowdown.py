@@ -16,8 +16,9 @@ class TestVCSSlowDown(basevcstest.VCSBaseTest):
                 "isoline": (data2d,),
                 "vector": (data2d, data2d_b),
                 "meshfill": (data_mesh,mesh),
+                "streamline": (data2d, data2d_b),
                 }
-        kwargs['geometry'] = {"width": 400, "height": 200}
+        kwargs['geometry'] = {"width": 500, "height": 250}
         super(TestVCSSlowDown, self).__init__(*args, **kwargs)
     def isSlowingDown(self,gmtype):
         n = 100

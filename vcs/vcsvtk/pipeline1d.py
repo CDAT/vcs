@@ -65,7 +65,7 @@ class Pipeline1D(Pipeline):
         l._x = xs
         l._y = ys
         l.color = [self._gm.linecolor, ]
-        l.priority = tmp.data.priority
+        l.priority = tmpl.data.priority
         if self._gm.linewidth > 0:
             l.width = self._gm.linewidth
         else:
