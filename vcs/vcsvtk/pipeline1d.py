@@ -65,6 +65,7 @@ class Pipeline1D(Pipeline):
         l._x = xs
         l._y = ys
         l.color = [self._gm.linecolor, ]
+        l.priority = tmp.data.priority
         if self._gm.linewidth > 0:
             l.width = self._gm.linewidth
         else:
@@ -103,7 +104,7 @@ class Pipeline1D(Pipeline):
                 self._context().canvas.plot(m, donotstoredisplay=True)
 
         ren2 = self._context().createRenderer()
-        ren2.SetLayer(1)
+        self._context().setLayer(ren2,l.priority)
         self._context().renWin.AddRenderer(ren2)
         tmpl.plot(self._context().canvas, data1, self._gm, bg=self._context().bg,
                   renderer=ren2, X=X, Y=Y)
