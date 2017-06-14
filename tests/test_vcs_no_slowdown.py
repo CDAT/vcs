@@ -1,6 +1,7 @@
 import basevcstest
 import vcs
 import time
+import numpy
 
 class TestVCSSlowDown(basevcstest.VCSBaseTest):
     def __init__(self, *args, **kwargs):
@@ -18,7 +19,7 @@ class TestVCSSlowDown(basevcstest.VCSBaseTest):
                 "meshfill": (data_mesh,mesh),
                 "streamline": (data2d, data2d_b),
                 }
-        kwargs['geometry'] = {"width": 500, "height": 250}
+        kwargs['geometry'] = {"width": 300, "height": 150}
         super(TestVCSSlowDown, self).__init__(*args, **kwargs)
     def isSlowingDown(self,gmtype):
         n = 100
@@ -26,8 +27,8 @@ class TestVCSSlowDown(basevcstest.VCSBaseTest):
         maxpct = 100.
         fastest = 100000.
         avg = 0.
+        times = []
         for i in range(n):
-            print i,
             start = time.time()
             gm = vcs.creategraphicsmethod(gmtype)
             gm.datawc_x1 = 0.
@@ -40,16 +41,18 @@ class TestVCSSlowDown(basevcstest.VCSBaseTest):
             if elapsed < fastest:
                 fastest = elapsed
             pct = (elapsed/fastest*100.)
-            print "Time:", elapsed, "%.2i" % pct
+            times.append(elapsed)
             if i>5 and pct>maxpct: # skip the first 5 times to make sure system gets in groovy mode
                 maxpct = pct
             avg += elapsed
             self.x.clear()
             self.x.removeobject(gm)
+        a, b = numpy.polyfit(numpy.arange(n-5),times[5:],1)
         print "\tMax percentage",maxpct
         print "\tFastest time:",fastest
         print "\tAvg time:",avg/n
-        if maxpct>150.:
+        print "\tFit coeff:",a,b
+        if abs(a)>1.E-3:
             return True
         return False
     def testSlowingDown(self):
