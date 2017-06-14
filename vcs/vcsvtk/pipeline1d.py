@@ -104,7 +104,7 @@ class Pipeline1D(Pipeline):
                 self._context().canvas.plot(m, donotstoredisplay=True)
 
         ren2 = self._context().createRenderer()
-        self._context().setLayer(ren2,l.priority)
+        self._context().setLayer(ren2, l.priority)
         self._context().renWin.AddRenderer(ren2)
         tmpl.plot(self._context().canvas, data1, self._gm, bg=self._context().bg,
                   renderer=ren2, X=X, Y=Y)
