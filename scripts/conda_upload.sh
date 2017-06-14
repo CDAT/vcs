@@ -23,9 +23,4 @@ cd conda-recipes
 rm -rf uvcdat
 python ./prep_for_build.py
 conda build vcs -c conda-forge -c uvcdat 
-anaconda -t $CONDA_UPLOAD_TOKEN upload -u $USER -l nightly $CONDA_BLD_PATH/$OS/$PKG_NAME-`date +%Y*`-py27_0.tar.bz2 --force
-if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-    python ./prep_for_build.py -v `date +%Y.%m.%d` -f nox
-    conda build vcs -c conda-forge -c uvcdat 
-    anaconda -t $CONDA_UPLOAD_TOKEN upload -u $USER -l nightly $CONDA_BLD_PATH/$OS/$PKG_NAME-nox-`date +%Y*`-py27_0.tar.bz2 --force
-fi
+anaconda -t $CONDA_UPLOAD_TOKEN upload -u $USER -l nightly $CONDA_BLD_PATH/$OS/$PKG_NAME-`date +%Y*`-0.tar.bz2 --force
