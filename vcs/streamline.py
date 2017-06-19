@@ -32,7 +32,7 @@ class Gs(vcs.bestMatch):
     The streamline graphics method displays a streamline plot of a 2D
     streamline field. A streamline is a path that a massless particle
     takes in a vector field. Streamlines are computed through numerical
-    integration.
+    integration. Vcs can draw regular streamlines or evenly spaced streamlines.
 
     This class is used to define an streamline table entry used in VCS, or it
     can be used to change some or all of the streamline attributes in an
@@ -183,7 +183,12 @@ class Gs(vcs.bestMatch):
         'datawc_calendar',
         'reference',
         'colormap',
+        'evenlyspaced',
         'numberofseeds',
+        'startseed',
+        'separatingdistance',
+        'separatingdistanceratio',
+        'closedloopmaximumdistance',
         'integratortype',
         'integrationdirection',
         'integrationstepunit',
@@ -228,7 +233,12 @@ class Gs(vcs.bestMatch):
         '_datawc_calendar',
         '_reference',
         '_colormap',
+        '_evenlyspaced',
         '_numberofseeds',
+        '_startseed',
+        '_separatingdistance',
+        '_separatingdistanceratio',
+        '_closedloopmaximumdistance',
         '_integratortype',
         '_integrationdirection',
         '_integrationstepunit',
@@ -449,7 +459,22 @@ class Gs(vcs.bestMatch):
         self._reference = value
     reference = property(_getreference, _setreference)
 
+    """Display evenly spaced streamlines.
+
+    """
+    def _getevenlyspaced(self):
+        return self._evenlyspaced
+
+    def _setevenlyspaced(self, value):
+        value = VCS_validation_functions.checkBoolean(self,
+                                                     'evenlyspaced', value)
+        self._evenlyspaced = value
+        if (self._integratortype == 2):
+            self._integratortype = 1
+    evenlyspaced = property(_getevenlyspaced, _setevenlyspaced)
+
     """Number of random seeds for starting streamlines. Default is 500.
+       Not used for evenly spaced streamlines.
 
     """
     def _getnumberofseeds(self):
@@ -461,8 +486,63 @@ class Gs(vcs.bestMatch):
         self._numberofseeds = value
     numberofseeds = property(_getnumberofseeds, _setnumberofseeds)
 
+    """
+       Position of the start seed. Used only for evenly spaced streamlines.
+
+    """
+    def _getstartseed(self):
+        return self._startseed
+
+    def _setstartseed(self, value):
+        value = VCS_validation_functions.checkListOfNumbers(self,
+                                                     'startseed', value)
+        self._startseed = value
+    startseed = property(_getstartseed, _setstartseed)
+
+    """Separating distance between equaly spaced streamlines at seeding time.
+       It is expressed in integrationstepunit.
+
+    """
+    def _getseparatingdistance(self):
+        return self._separatingdistance
+
+    def _setseparatingdistance(self, value):
+        value = VCS_validation_functions.checkNumber(self,
+                                                     'separatingdistance', value)
+        self._separatingdistance = value
+    separatingdistance = property(_getseparatingdistance, _setseparatingdistance)
+
+    """If the current streamline gets closer than
+       separatingdistance * separatingdistanceratio to other streamlines the
+       current streamline is terminated.
+
+    """
+    def _getseparatingdistanceratio(self):
+        return self._separatingdistanceratio
+
+    def _setseparatingdistanceratio(self, value):
+        value = VCS_validation_functions.checkNumber(self,
+                                                     'separatingdistanceratio', value)
+        self._separatingdistanceratio = value
+    separatingdistanceratio = property(_getseparatingdistanceratio, _setseparatingdistanceratio)
+
+    """Maximum distance between two points that form a closed loop.
+       Used only for evenly spaced streamlines. Should be set about the same as
+       self.initialsteplength. Expressed in integrationstepunit.
+
+    """
+    def _getclosedloopmaximumdistance(self):
+        return self._closedloopmaximumdistance
+
+    def _setclosedloopmaximumdistance(self, value):
+        value = VCS_validation_functions.checkNumber(self,
+                                                     'closedloopmaximumdistance', value)
+        self._closedloopmaximumdistance = value
+    closedloopmaximumdistance = property(_getclosedloopmaximumdistance, _setclosedloopmaximumdistance)
+
     """Integrator type. Can be 0 for Runge-Kutta 2, 1 for Runge-Kutta 4
-        and 2 for Runge-Kutta 4-5. Default is 2 - Runge-Kutta 4-5.
+        and 2 for Runge-Kutta 4-5. Default is 1 - Runge-Kutta 4 for evenly
+        spaced streamlines and 2 - Runge-Kutta 4-5 for regular streamlines.
 
     """
     def _getintegratortype(self):
@@ -476,6 +556,7 @@ class Gs(vcs.bestMatch):
 
     """Integration direction. Can be 0 - forward, 1 - backward or 2 -
         both. Default is 2 - both.
+        For evenly spaced streamlines integration direction is always 2.
 
     """
     def _getintegrationdirection(self):
@@ -488,8 +569,7 @@ class Gs(vcs.bestMatch):
     integrationdirection = property(_getintegrationdirection, _setintegrationdirection)
 
     """Integration stepunit. Can be 1 - length or 2 - cell
-        length. Default is 2 - cell length. Length is the length of a
-        streamline in one time step.
+        length. Default is 2 - cell length.
 
     """
     def _getintegrationstepunit(self):
@@ -502,7 +582,7 @@ class Gs(vcs.bestMatch):
     integrationstepunit = property(_getintegrationstepunit, _setintegrationstepunit)
 
     """This property specifies the initial integration step size
-        expressed as percent of the integrationstepunit.  For
+        expressed in integrationstepunit.  For
         non-adaptive integrators (Runge-Kutta 2 and Runge-Kutta 4), it
         is fixed (always equal to this initial value) throughout the
         integration.  For an adaptive integrator (Runge-Kutta 4-5),
@@ -521,6 +601,7 @@ class Gs(vcs.bestMatch):
 
     """When using the Runge-Kutta 4-5 integrator, this property specifies
        the minimum integration step size. Default is 0.1
+       Not used for evenly spaced streamlines. Expressed in integrationstepunit.
 
     """
     def _getminimumsteplength(self):
@@ -534,6 +615,7 @@ class Gs(vcs.bestMatch):
 
     """When using the Runge-Kutta 4-5 integrator, this property specifies
        the maximum integration step size. Default is 0.5
+       Not used for evenly spaced streamlines.  Expressed in integrationstepunit.
 
     """
     def _getmaximumsteplength(self):
@@ -590,6 +672,7 @@ class Gs(vcs.bestMatch):
        tolerated throughout streamline integration. The Runge-Kutta
        4-5 integrator tries to adjust the step size such that the
        estimated error is less than this threshold.
+       Not used for evenly spaced streamlines.
 
     """
     def _getmaximumerror(self):
@@ -752,8 +835,13 @@ class Gs(vcs.bestMatch):
             self._ext_2 = False
             self._fillareacolors = [1, ]
             self._fillareastyle = 'solid'
+            self._evenlyspaced = True
             self._numberofseeds = 500
-            self._integratortype = 2        # runge-kutta45
+            self._startseed = [0., 0., 0.]
+            self._separatingdistance = 1
+            self._separatingdistanceratio = 0.4
+            self._closedloopmaximumdistance = 0.2
+            self._integratortype = 1        # runge-kutta4
             self._integrationdirection = 2  # both
             self._integrationstepunit = 2   # cell length
             self._initialsteplength = 0.2
@@ -784,8 +872,10 @@ class Gs(vcs.bestMatch):
                  'datawc_x2', 'xaxisconvert', 'yaxisconvert', 'levels',
                  'ext_1', 'ext_2', 'fillareacolors',
                  'linetype', 'linecolor', 'linewidth', 'datawc_timeunits',
-                 'datawc_calendar', 'colormap', 'numberofseeds',
-                 'integratortype', 'integrationdirection',
+                 'datawc_calendar', 'colormap', 'integratortype', 'evenlyspaced',
+                 'numberofseeds',
+                 'startseed', 'separatingdistance', 'separatingdistanceratio',
+                 'closedloopmaximumdistance', 'integrationdirection',
                  'integrationstepunit', 'initialsteplength', 'minimumsteplength',
                  'maximumsteplength', 'maximumsteps', 'maximumstreamlinelength',
                  'terminalspeed', 'maximumerror', 'glyphscalefactor',
@@ -875,7 +965,12 @@ class Gs(vcs.bestMatch):
         print "linecolor = ", self.linecolor
         print "linewidth = ", self.linewidth
         print "reference = ", self.reference
+        print "evenlyspaced = ", self.evenlyspaced
         print "numberofseeds = ", self.numberofseeds
+        print "startseed = ", self.startseed
+        print "separatingdistance = ", self.separatingdistance
+        print "separatingdistanceratio = ", self.separatingdistanceratio
+        print "closedloopmaximumdistance = ", self.closedloopmaximumdistance
         print "integratortype = ", self.integratortype
         print "integrationdirection = ", self.integrationdirection
         print "integrationstepunit = ", self.integrationstepunit
@@ -1019,7 +1114,14 @@ class Gs(vcs.bestMatch):
                 "%s.colormap = '%s'\n\n" %
                 (unique_name, repr(
                     self.colormap)))
+            fp.write("%s.evenlyspaced = %r\n" % (unique_name, self.evenlyspaced))
             fp.write("%s.numberofseeds = %d\n" % (unique_name, self.numberofseeds))
+            fp.write("%s.startseed = [%d,%d,%d]\n" %
+                         (unique_name, self.startseed[0], self.startseed[1],
+                          self.startseed[2]))
+            fp.write("%s.separatingdistance = %d\n" % (unique_name, self.separatingdistance))
+            fp.write("%s.separatingdistanceratio = %d\n" % (unique_name, self.separatingdistanceratio))
+            fp.write("%s.closedloopmaximumdistance = %d\n" % (unique_name, self.closedloopmaximumdistance))
             fp.write("%s.integratortype = %d\n" % (unique_name, self.integratortype))
             fp.write("%s.integrationdirection = %d\n" % (unique_name, self.integrationdirection))
             fp.write("%s.integrationstepunit = %d\n" % (unique_name, self.integrationstepunit))

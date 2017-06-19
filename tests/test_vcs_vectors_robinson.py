@@ -9,6 +9,8 @@ class AllTests(basevcstest.VCSBaseTest):
         fnm = "test_vcs_" + params[0]
         if (params[0] == 'streamline'):
             V = self.x.createstreamline()
+            V.evenlyspaced = False
+            V.integratortype = 2 # rk45
             if (len(params) >= 2 and params[1] == 'colored'):
                 fnm += "_colored"
                 V.coloredbyvector = True
@@ -19,6 +21,10 @@ class AllTests(basevcstest.VCSBaseTest):
                 V.numberofglyphs = 10
                 V.numberofseeds = 3
                 V.filledglyph = False
+            if (len(params) >= 3 and params[2] == 'evenlyspaced'):
+                fnm += "_evenlyspaced"
+                V.evenlyspaced = True
+                V.integratortype = 1 # rk4
         else:
             V = self.x.createvector()
         p = self.x.createprojection()
@@ -33,3 +39,4 @@ class AllTests(basevcstest.VCSBaseTest):
         self.allTests(params=['streamline'])
         self.allTests(params=['streamline', 'colored'])
         self.allTests(params=['streamline', 'colored', 'count'])
+        self.allTests(params=['streamline', 'colored', 'evenlyspaced'])

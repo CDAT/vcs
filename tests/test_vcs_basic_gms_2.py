@@ -3,9 +3,12 @@ import vcs
 import MV2
 import cdms2
 import os
+import vtk
 
 class TestVCSBasicGms(basevcstest.VCSBaseTest):
-    def basicGm(self,gm_type,projtype="default",lat1=0,lat2=0,lon1=0,lon2=0,rg=False,flip=False,zero=False,transparent=False,mask=False,bigvalues=False,color=False):
+    def basicGm(self,gm_type,projtype="default",lat1=0,lat2=0,lon1=0,lon2=0,
+                rg=False,flip=False,zero=False,transparent=False,mask=False,
+                bigvalues=False,color=False,evenlySpaced=False):
 
         self.x.clear()
         self.x.setcolormap(None)
@@ -96,14 +99,20 @@ class TestVCSBasicGms(basevcstest.VCSBaseTest):
                 gm.scale = 4.
             elif gm_type == "streamline":
                 gm.coloredbyvector = color
+                gm.evenlyspaced = evenlySpaced
+                if (not evenlySpaced):
+                    gm.integratortype = vtk.vtkStreamTracer.RUNGE_KUTTA4
             self.x.plot(u,v,gm,bg=self.bg)
         elif gm_type in ["scatter","xvsy"]:
             self.x.plot(s,s2,gm,bg=self.bg)
         else:
             self.x.plot(s,gm,bg=self.bg)
         fnm = "test_vcs_basic_%s" % gm_type.lower()
-        if color and gm_type == 'streamline':
-            fnm += "_colored"
+        if gm_type == 'streamline':
+            if (color):
+                fnm += "_colored"
+            if (evenlySpaced):
+                fnm += "_evenlyspaced"
         if mask:
             fnm+="_masked"
         elif bigvalues:
@@ -117,14 +126,19 @@ class TestVCSBasicGms(basevcstest.VCSBaseTest):
         fnm+=nm_xtra
         self.checkImage(fnm+'.png',threshold=20)
     def testBasicGms(self):
-        for gm in "boxfill isofill isoline vector streamline streamline_colored meshfill yxvsx xvsy xyvsy 1d scatter".split():
+        for gm in ("boxfill isofill isoline vector " +
+                   "streamline streamline_colored streamline_evenlyspaced " +
+                   "meshfill yxvsx xvsy xyvsy 1d scatter").split():
+            color = False
             if gm.find("_colored")>-1:
                 gm = gm.split("_colored")[0]
                 color=True
-            else:
-                color = False
-            self.basicGm(gm,color=color)
-            self.basicGm(gm,transparent=True,color=color)
-            self.basicGm(gm,zero=True,color=color)
-            self.basicGm(gm,color=color)
-            self.basicGm(gm,mask=True,color=color)
+            evenlySpaced = False
+            if gm.find("_evenlyspaced")>-1:
+                gm = gm.replace("_evenlyspaced", "")
+                color=True
+                evenlySpaced = True
+            self.basicGm(gm,color=color, evenlySpaced=evenlySpaced)
+            self.basicGm(gm,transparent=True,color=color, evenlySpaced=evenlySpaced)
+            self.basicGm(gm,zero=True,color=color, evenlySpaced=evenlySpaced)
+            self.basicGm(gm,mask=True,color=color, evenlySpaced=evenlySpaced)
