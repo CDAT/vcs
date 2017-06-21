@@ -163,16 +163,7 @@ if args.git or not os.path.exists("uvcdat-testdata"):
     os.chdir(root)
 
 if args.vtk is not None:
-    P, installed_vtk = run_command("conda list vtk-cdat")
-    print installed_vtk
-    while installed_vtk[-1] == "":
-        installed_vtk.pop(-1)
-    installed_vtk = installed_vtk[-1]
-    installed_vtk = installed_vtk.split()
-    vtk_name = installed_vtk[0]
-    vtk_channel = installed_vtk[-1]
-    if args.verbosity > 1:
-        print "%s installed from: %s" % (vtk_name, vtk_channel)
+    vtk_name = "vtk-cdat"
     run_command("conda install -f -y -c %s %s" % (args.vtk, vtk_name))
 
 sys.path.append(
