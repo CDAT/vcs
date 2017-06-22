@@ -466,8 +466,7 @@ class Gs(vcs.bestMatch):
         return self._evenlyspaced
 
     def _setevenlyspaced(self, value):
-        value = VCS_validation_functions.checkBoolean(self,
-                                                     'evenlyspaced', value)
+        value = VCS_validation_functions.checkBoolean(self, 'evenlyspaced', value)
         self._evenlyspaced = value
         if (self._integratortype == 2):
             self._integratortype = 1
@@ -494,8 +493,7 @@ class Gs(vcs.bestMatch):
         return self._startseed
 
     def _setstartseed(self, value):
-        value = VCS_validation_functions.checkListOfNumbers(self,
-                                                     'startseed', value)
+        value = VCS_validation_functions.checkListOfNumbers(self, 'startseed', value)
         self._startseed = value
     startseed = property(_getstartseed, _setstartseed)
 
@@ -1116,9 +1114,8 @@ class Gs(vcs.bestMatch):
                     self.colormap)))
             fp.write("%s.evenlyspaced = %r\n" % (unique_name, self.evenlyspaced))
             fp.write("%s.numberofseeds = %d\n" % (unique_name, self.numberofseeds))
-            fp.write("%s.startseed = [%d,%d,%d]\n" %
-                         (unique_name, self.startseed[0], self.startseed[1],
-                          self.startseed[2]))
+            fp.write("%s.startseed = [%d,%d,%d]\n" % (
+                unique_name, self.startseed[0], self.startseed[1], self.startseed[2]))
             fp.write("%s.separatingdistance = %d\n" % (unique_name, self.separatingdistance))
             fp.write("%s.separatingdistanceratio = %d\n" % (unique_name, self.separatingdistanceratio))
             fp.write("%s.closedloopmaximumdistance = %d\n" % (unique_name, self.closedloopmaximumdistance))

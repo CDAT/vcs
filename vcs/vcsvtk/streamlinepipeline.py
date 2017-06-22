@@ -4,6 +4,7 @@ import numpy
 import vtk
 import warnings
 
+
 class StreamlinePipeline(Pipeline2D):
 
     """Implementation of the Pipeline interface for VCS streamline plots."""
