@@ -2,6 +2,7 @@ from .pipeline2d import Pipeline2D
 import vcs
 import numpy
 import vtk
+import warnings
 
 
 class StreamlinePipeline(Pipeline2D):
@@ -51,53 +52,69 @@ class StreamlinePipeline(Pipeline2D):
         self._vtkPolyDataFilter.Update()
         polydata = self._vtkPolyDataFilter.GetOutput()
 
-        # generate random seeds in a circle centered in the center of
-        # the bounding box for the data.
         dataLength = polydata.GetLength()
 
-        # by default vtkPointSource uses a global random source in vtkMath which is
-        # seeded only once. It makes more sense to seed a random sequence each time you draw
-        # the streamline plot.
-        pointSequence = vtk.vtkMinimalStandardRandomSequence()
-        pointSequence.SetSeedOnly(1177)  # replicate the seed from vtkMath
+        if (not self._gm.evenlyspaced):
+            # generate random seeds in a circle centered in the center of
+            # the bounding box for the data.
 
-        seed = vtk.vtkPointSource()
-        seed.SetNumberOfPoints(self._gm.numberofseeds)
-        seed.SetCenter(polydata.GetCenter())
-        seed.SetRadius(dataLength / 2.0)
-        seed.SetRandomSequence(pointSequence)
-        seed.Update()
-        seedData = seed.GetOutput()
+            # by default vtkPointSource uses a global random source in vtkMath which is
+            # seeded only once. It makes more sense to seed a random sequence each time you draw
+            # the streamline plot.
+            pointSequence = vtk.vtkMinimalStandardRandomSequence()
+            pointSequence.SetSeedOnly(1177)  # replicate the seed from vtkMath
 
-        # project all points to Z = 0 plane
-        points = seedData.GetPoints()
-        for i in range(0, points.GetNumberOfPoints()):
-            p = list(points.GetPoint(i))
-            p[2] = 0
-            points.SetPoint(i, p)
+            seed = vtk.vtkPointSource()
+            seed.SetNumberOfPoints(self._gm.numberofseeds)
+            seed.SetCenter(polydata.GetCenter())
+            seed.SetRadius(dataLength / 2.0)
+            seed.SetRandomSequence(pointSequence)
+            seed.Update()
+            seedData = seed.GetOutput()
+
+            # project all points to Z = 0 plane
+            points = seedData.GetPoints()
+            for i in range(0, points.GetNumberOfPoints()):
+                p = list(points.GetPoint(i))
+                p[2] = 0
+                points.SetPoint(i, p)
 
         if (self._gm.integratortype == 0):
             integrator = vtk.vtkRungeKutta2()
         elif (self._gm.integratortype == 1):
             integrator = vtk.vtkRungeKutta4()
         else:
-            integrator = vtk.vtkRungeKutta45()
+            if (self._gm.evenlyspaced):
+                warnings.warn(
+                    "You cannot use RungeKutta45 for evenly spaced streamlines."
+                    "Using RungeKutta4 instead")
+                integrator = vtk.vtkRungeKutta4()
+            else:
+                integrator = vtk.vtkRungeKutta45()
 
-        # integrate streamlines on normalized vector so that
-        # IntegrationTime stores distance
-        streamer = vtk.vtkStreamTracer()
+        if (self._gm.evenlyspaced):
+            streamer = vtk.vtkEvenlySpacedStreamlines2D()
+            streamer.SetStartPosition(self._gm.startseed)
+            streamer.SetSeparatingDistance(self._gm.separatingdistance)
+            streamer.SetSeparatingDistanceRatio(self._gm.separatingdistanceratio)
+            streamer.SetClosedLoopMaximumDistance(self._gm.closedloopmaximumdistance)
+        else:
+            # integrate streamlines on normalized vector so that
+            # IntegrationTime stores distance
+            streamer = vtk.vtkStreamTracer()
+            streamer.SetSourceData(seedData)
+            streamer.SetIntegrationDirection(self._gm.integrationdirection)
+            streamer.SetMinimumIntegrationStep(self._gm.minimumsteplength)
+            streamer.SetMaximumIntegrationStep(self._gm.maximumsteplength)
+            streamer.SetMaximumError(self._gm.maximumerror)
+            streamer.SetMaximumPropagation(dataLength * self._gm.maximumstreamlinelength)
+
         streamer.SetInputData(polydata)
         streamer.SetInputArrayToProcess(0, 0, 0, 0, "vector")
-        streamer.SetSourceData(seedData)
-        streamer.SetIntegrationDirection(self._gm.integrationdirection)
         streamer.SetIntegrationStepUnit(self._gm.integrationstepunit)
         streamer.SetInitialIntegrationStep(self._gm.initialsteplength)
-        streamer.SetMinimumIntegrationStep(self._gm.minimumsteplength)
-        streamer.SetMaximumIntegrationStep(self._gm.maximumsteplength)
         streamer.SetMaximumNumberOfSteps(self._gm.maximumsteps)
-        streamer.SetMaximumPropagation(dataLength * self._gm.maximumstreamlinelength)
         streamer.SetTerminalSpeed(self._gm.terminalspeed)
-        streamer.SetMaximumError(self._gm.maximumerror)
         streamer.SetIntegrator(integrator)
 
         # add arc_length to streamlines
