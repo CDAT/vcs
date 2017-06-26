@@ -47,12 +47,13 @@ class TestVCSSlowDown(basevcstest.VCSBaseTest):
             avg += elapsed
             self.x.clear()
             self.x.removeobject(gm)
+            print elapsed
         a, b = numpy.polyfit(numpy.arange(n-5),numpy.array(times[5:])/fastest,1)
         print "\tMax percentage",maxpct
         print "\tFastest time:",fastest
         print "\tAvg time:",avg/n
         print "\tFit coeff:",a,b
-        if abs(a)>1.E-4:
+        if abs(a)>2.E-3:
             return True
         return False
     def testSlowingDown(self):
