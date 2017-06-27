@@ -31,7 +31,7 @@ class VCSTestXtra(basevcstest.VCSBaseTest):
             print i,elapsed,elapsed/mn
             times.append(elapsed)
             for e in elements:
-                print "\t",e,len(vcs.elements[e]),len(cpy[e])
+                #print "\t",e,len(vcs.elements[e]),len(cpy[e])
                 if len(vcs.elements[e])!=len(cpy[e]):
                     print "\tMore elements in:",e,len(vcs.elements[e]),len(cpy[e]),len(vcs.elements[e])-len(cpy[e])
                 self.assertEqual(len(vcs.elements[e]),len(cpy[e]))

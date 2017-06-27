@@ -287,9 +287,14 @@ class VTKVCSBackend(object):
         plots_args = []
         key_args = []
 
+        new = {}
+        original_displays = list(self.canvas.display_names)
         for dnm in self.canvas.display_names:
             d = vcs.elements["display"][dnm]
+            new.update(getattr(d, "newelements", {}))
             parg = []
+            if d.g_type in ["text", "textcombined"] : #and d.g_name in new["textcombined"]:
+                continue
             for a in d.array:
                 if a is not None:
                     parg.append(a)
@@ -315,6 +320,23 @@ class VTKVCSBackend(object):
 
         for i, pargs in enumerate(plots_args):
             self.canvas.plot(*pargs, render=False, **key_args[i])
+
+        #new2 = {}
+        #for dnm in self.canvas.display_names:
+        #    d = vcs.elements["display"][dnm]
+        #    new2.update(getattr(d, "newelements", {}))
+        # Now clean the one we had created b4 resize
+        for e in new:
+            if e == "display":
+                continue
+            for k in new[e]:
+                if k in vcs.elements[e]:
+                    del(vcs.elements[e][k])
+
+        for dnm in self.canvas.display_names:
+            if not dnm in original_displays:
+                del(vcs.elements["display"][dnm])
+        self.canvas.display_names = original_displays
 
         if self.canvas.animate.created() and self.canvas.animate.frame_num != 0:
             self.canvas.animate.draw_frame(
