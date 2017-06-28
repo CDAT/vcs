@@ -2255,10 +2255,10 @@ def creategraphicsmethod(gtype, gname='default', name=None):
         func = vcs.createyxvsx
     elif gtype in ['1d', 'G1d']:
         func = vcs.create1d
-    elif gtype in ['streamline', 'Gs']:
-        func = vcs.createstreamline
     elif gtype in ['vector', 'Gv']:
         func = vcs.createvector
+    elif gtype in ['streamline', 'Gs']:
+        func = vcs.createstreamline
     elif gtype in ['taylordiagram', 'Gtd']:
         func = vcs.createtaylordiagram
     elif gtype == '3d_scalar':

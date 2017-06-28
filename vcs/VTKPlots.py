@@ -1233,6 +1233,16 @@ class VTKVCSBackend(object):
         sz = self.renWin.GetSize()
         if width is not None and height is not None:
             if sz != (width, height):
+                wrn = """You are saving to png of size different from the current canvas.
+It is recommended to set the windows size before plotting or at init time.
+This will lead to faster execution as well.
+e.g
+x=vcs.init(geometry=(1200,800))
+#or
+x=vcs.init()
+x.geometry(1200,800)
+"""
+                warnings.warn(warn)
                 user_dims = (self.canvas.bgX, self.canvas.bgY, sz[0], sz[1])
                 # We need to set canvas.bgX and canvas.bgY before we do renWin.SetSize
                 # otherwise, canvas.bgX,canvas.bgY will win
