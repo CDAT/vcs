@@ -20,6 +20,16 @@ def _makeEven(val):
     return val
 
 
+def updateNewElementsDict(display, master):
+    newelts = getattr(display, "newelements", {})
+    for key in newelts:
+        if key in master:
+            master[key] += newelts[key]
+        else:
+            master[key] = newelts[key]
+    return master
+
+
 class VCSInteractorStyle(vtk.vtkInteractorStyleUser):
 
     def __init__(self, parent):
@@ -291,9 +301,9 @@ class VTKVCSBackend(object):
         original_displays = list(self.canvas.display_names)
         for dnm in self.canvas.display_names:
             d = vcs.elements["display"][dnm]
-            new.update(getattr(d, "newelements", {}))
+            new = updateNewElementsDict(d, new)
             parg = []
-            if d.g_type in ["text", "textcombined"] : #and d.g_name in new["textcombined"]:
+            if d.g_type in ["text", "textcombined"]:
                 continue
             for a in d.array:
                 if a is not None:
@@ -321,20 +331,24 @@ class VTKVCSBackend(object):
         for i, pargs in enumerate(plots_args):
             self.canvas.plot(*pargs, render=False, **key_args[i])
 
-        #new2 = {}
-        #for dnm in self.canvas.display_names:
-        #    d = vcs.elements["display"][dnm]
-        #    new2.update(getattr(d, "newelements", {}))
+        for dnm in self.canvas.display_names:
+            d = vcs.elements["display"][dnm]
+            new = updateNewElementsDict(d, new)
         # Now clean the one we had created b4 resize
         for e in new:
             if e == "display":
                 continue
             for k in new[e]:
                 if k in vcs.elements[e]:
-                    del(vcs.elements[e][k])
+                    found = False
+                    for d in vcs.elements["display"].values():
+                        if d.g_type == e and d.g_name == k:
+                            found = True
+                    if not found:
+                        del(vcs.elements[e][k])
 
         for dnm in self.canvas.display_names:
-            if not dnm in original_displays:
+            if dnm not in original_displays:
                 del(vcs.elements["display"][dnm])
         self.canvas.display_names = original_displays
 
