@@ -349,7 +349,7 @@ class VTKVCSBackend(object):
             d = vcs.elements["display"][dnm]
             new = updateNewElementsDict(d, new)
 
-        # Now clean the object created internally that are no longer 
+        # Now clean the object created internally that are no longer
         # in use
         for e in new:
             if e == "display":

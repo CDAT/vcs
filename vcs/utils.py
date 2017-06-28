@@ -1839,7 +1839,7 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     # first create the dictionary to remember which ones are changed
     dic = {}
     for key in ('xticlabels1', 'xmtics1', 'xticlabels2', 'xmtics2',
-              'yticlabels1', 'ymtics1', 'yticlabels2', 'ymtics2'):
+                'yticlabels1', 'ymtics1', 'yticlabels2', 'ymtics2'):
         dic[key] = False
     # xticklabels1
     if gm.xticlabels1 is None or gm.xticlabels1 == '*':
