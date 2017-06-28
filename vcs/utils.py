@@ -979,6 +979,7 @@ def scriptrun(script):
                   "Gfi": 'isofill',
                   "Gi": 'isoline',
                   "Gvp": 'vector',
+                  "Gs": 'streamline',
                   "Gfm": 'meshfill',
                   "G1d": '1d',
                   "Tf": 'fillarea',
@@ -1837,9 +1838,9 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     # Now the template stuff
     # first create the dictionary to remember which ones are changed
     dic = {}
-    for i in ('xticlabels1', 'xmtics1', 'xticlabels2', 'xmtics2',
+    for key in ('xticlabels1', 'xmtics1', 'xticlabels2', 'xmtics2',
               'yticlabels1', 'ymtics1', 'yticlabels2', 'ymtics2'):
-        dic[i] = False
+        dic[key] = False
     # xticklabels1
     if gm.xticlabels1 is None or gm.xticlabels1 == '*':
         if copy_gm is None:
@@ -2254,6 +2255,8 @@ def creategraphicsmethod(gtype, gname='default', name=None):
         func = vcs.createyxvsx
     elif gtype in ['1d', 'G1d']:
         func = vcs.create1d
+    elif gtype in ['streamline', 'Gs']:
+        func = vcs.createstreamline
     elif gtype in ['vector', 'Gv']:
         func = vcs.createvector
     elif gtype in ['taylordiagram', 'Gtd']:
