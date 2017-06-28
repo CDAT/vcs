@@ -1242,7 +1242,7 @@ x=vcs.init(geometry=(1200,800))
 x=vcs.init()
 x.geometry(1200,800)
 """
-                warnings.warn(warn)
+                warnings.warn(wrn)
                 user_dims = (self.canvas.bgX, self.canvas.bgY, sz[0], sz[1])
                 # We need to set canvas.bgX and canvas.bgY before we do renWin.SetSize
                 # otherwise, canvas.bgX,canvas.bgY will win
