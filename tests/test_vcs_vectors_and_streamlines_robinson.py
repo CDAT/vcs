@@ -35,8 +35,8 @@ class AllTests(basevcstest.VCSBaseTest):
         self.checkImage(fnm)
 
     def testVCSVectorsRobinson(self):
-        self.allTests(params=['vectors'])
         self.allTests(params=['streamline'])
         self.allTests(params=['streamline', 'colored'])
         self.allTests(params=['streamline', 'colored', 'count'])
         self.allTests(params=['streamline', 'colored', 'evenlyspaced'])
+        self.allTests(params=['vectors'])

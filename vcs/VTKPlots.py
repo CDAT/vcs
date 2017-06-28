@@ -20,6 +20,16 @@ def _makeEven(val):
     return val
 
 
+def updateNewElementsDict(display, master):
+    newelts = getattr(display, "newelements", {})
+    for key in newelts:
+        if key in master:
+            master[key] += newelts[key]
+        else:
+            master[key] = newelts[key]
+    return master
+
+
 class VCSInteractorStyle(vtk.vtkInteractorStyleUser):
 
     def __init__(self, parent):
@@ -287,9 +297,22 @@ class VTKVCSBackend(object):
         plots_args = []
         key_args = []
 
+        new = {}
+        original_displays = list(self.canvas.display_names)
         for dnm in self.canvas.display_names:
             d = vcs.elements["display"][dnm]
+            # displays keep a reference of objects that were internally created
+            # so that we can clean them up
+            # it is stored in display.newelements
+            # here we compile the list of all these objects
+            new = updateNewElementsDict(d, new)
+
+            # Now we need to save all that was plotted so that we can replot
+            # on the new sized template
+            # that includes keywords passed
             parg = []
+            if d.g_type in ["text", "textcombined"]:
+                continue
             for a in d.array:
                 if a is not None:
                     parg.append(a)
@@ -297,6 +320,7 @@ class VTKVCSBackend(object):
             parg.append(d.g_type)
             parg.append(d.g_name)
             plots_args.append(parg)
+            # remember display used so we cna re-use
             key = {"display_name": dnm}
             if d.ratio is not None:
                 key["ratio"] = d.ratio
@@ -311,10 +335,47 @@ class VTKVCSBackend(object):
             restart_anim = self.canvas.configurator.animation_timer is not None
         else:
             restart_anim = False
+
+        # clear canvas no render and preserve display
+        # so that we can replot on same display object
         self.canvas.clear(render=False, preserve_display=True)
 
+        # replots on new sized canvas
         for i, pargs in enumerate(plots_args):
             self.canvas.plot(*pargs, render=False, **key_args[i])
+
+        # compiled updated list of all objects created internally
+        for dnm in self.canvas.display_names:
+            d = vcs.elements["display"][dnm]
+            new = updateNewElementsDict(d, new)
+
+        # Now clean the object created internally that are no longer
+        # in use
+        for e in new:
+            if e == "display":
+                continue
+            # Loop for all types
+            for k in new[e]:
+                # Loop through all elements created internally for that type
+                if k in vcs.elements[e]:
+                    found = False
+                    # Loop through all existing displays
+                    for d in vcs.elements["display"].values():
+                        if d.g_type == e and d.g_name == k:
+                            # Ok this is still in use on some display
+                            found = True
+                    # object is no longer associated with any display
+                    # and it was created internally
+                    # we can safely remove it
+                    if not found:
+                        del(vcs.elements[e][k])
+
+        # Only keep original displays since we replotted on them
+        for dnm in self.canvas.display_names:
+            if dnm not in original_displays:
+                del(vcs.elements["display"][dnm])
+        # restore original displays
+        self.canvas.display_names = original_displays
 
         if self.canvas.animate.created() and self.canvas.animate.frame_num != 0:
             self.canvas.animate.draw_frame(
@@ -1172,6 +1233,16 @@ class VTKVCSBackend(object):
         sz = self.renWin.GetSize()
         if width is not None and height is not None:
             if sz != (width, height):
+                wrn = """You are saving to png of size different from the current canvas.
+It is recommended to set the windows size before plotting or at init time.
+This will lead to faster execution as well.
+e.g
+x=vcs.init(geometry=(1200,800))
+#or
+x=vcs.init()
+x.geometry(1200,800)
+"""
+                warnings.warn(wrn)
                 user_dims = (self.canvas.bgX, self.canvas.bgY, sz[0], sz[1])
                 # We need to set canvas.bgX and canvas.bgY before we do renWin.SetSize
                 # otherwise, canvas.bgX,canvas.bgY will win

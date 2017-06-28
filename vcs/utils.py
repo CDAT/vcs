@@ -979,6 +979,7 @@ def scriptrun(script):
                   "Gfi": 'isofill',
                   "Gi": 'isoline',
                   "Gvp": 'vector',
+                  "Gs": 'streamline',
                   "Gfm": 'meshfill',
                   "G1d": '1d',
                   "Tf": 'fillarea',
@@ -1837,9 +1838,9 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     # Now the template stuff
     # first create the dictionary to remember which ones are changed
     dic = {}
-    for i in ('xticlabels1', 'xmtics1', 'xticlabels2', 'xmtics2',
-              'yticlabels1', 'ymtics1', 'yticlabels2', 'ymtics2'):
-        dic[i] = False
+    for key in ('xticlabels1', 'xmtics1', 'xticlabels2', 'xmtics2',
+                'yticlabels1', 'ymtics1', 'yticlabels2', 'ymtics2'):
+        dic[key] = False
     # xticklabels1
     if gm.xticlabels1 is None or gm.xticlabels1 == '*':
         if copy_gm is None:
