@@ -5,6 +5,7 @@ export PATH=${HOME}/miniconda/bin:${PATH}
 python run_tests.py --dropbox -v2 -g --no-vtk-ui
 RESULT=$?
 echo "test command exit result:",$RESULT
+if [ $RESULT -eq 0 -a $CIRCLE_BRANCH == "master" ]; then conda install conda-build anaconda-client ; fi
 if [ $RESULT -eq 0 -a $CIRCLE_BRANCH == "master" ]; then bash ./scripts/conda_upload.sh ; fi
 exit $RESULT
 
