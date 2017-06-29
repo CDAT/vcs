@@ -1464,16 +1464,19 @@ class P(vcs.bestMatch):
             attr = vars(self).keys()
         except:
             attr = self.__slots__
+
         if len(attr) == 0:
             attr = self.__slots__
 
         for a in attr:
+            if a[0] == "_":
+                continue
             try:
                 v = getattr(self, a)
                 to = getattr(v, 'textorientation')
                 if self._scaledFont is False:  # first time let's copy it
                     to = vcs.createtextorientation(source=to)
-                to.height = to.height * scale
+                    to.height = to.height * scale
                 setattr(v, 'textorientation', to)
             except:
                 pass
