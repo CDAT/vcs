@@ -1464,6 +1464,9 @@ class P(vcs.bestMatch):
             attr = vars(self).keys()
         except:
             attr = self.__slots__
+        if len(attr) == 0:
+            attr = self.__slots__
+
         for a in attr:
             try:
                 v = getattr(self, a)
