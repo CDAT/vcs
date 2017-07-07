@@ -134,9 +134,9 @@ class StreamlinePipeline(Pipeline2D):
             for i in range(1, numberofglyphsoneside):
                 contour.SetValue(i, r[1] / numberofglyphsoneside * i)
         else:
-            print ("WARNING: No streamlines created. "
-                   "The 'startseed' parameter needs to be inside the domain and "
-                   "not over masked data.")
+            warnings.warn("No streamlines created. "
+                          "The 'startseed' parameter needs to be inside the domain and "
+                          "not over masked data.")
         contour.SetInputArrayToProcess(0, 0, 0, 0, "arc_length")
 
         # arrow glyph source
