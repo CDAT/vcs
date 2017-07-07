@@ -128,10 +128,15 @@ class StreamlinePipeline(Pipeline2D):
         contour = vtk.vtkContourFilter()
         contour.SetInputConnection(arcLengthFilter.GetOutputPort())
         contour.SetValue(0, 0.001)
-        r = streamlines.GetPointData().GetArray("arc_length").GetRange()
-        numberofglyphsoneside = self._gm.numberofglyphs / 2
-        for i in range(1, numberofglyphsoneside):
-            contour.SetValue(i, r[1] / numberofglyphsoneside * i)
+        if (streamlines.GetNumberOfPoints()):
+            r = streamlines.GetPointData().GetArray("arc_length").GetRange()
+            numberofglyphsoneside = self._gm.numberofglyphs / 2
+            for i in range(1, numberofglyphsoneside):
+                contour.SetValue(i, r[1] / numberofglyphsoneside * i)
+        else:
+            print ("WARNING: No streamlines created. "
+                   "The 'startseed' parameter needs to be inside the domain and "
+                   "not over masked data.")
         contour.SetInputArrayToProcess(0, 0, 0, 0, "arc_length")
 
         # arrow glyph source
