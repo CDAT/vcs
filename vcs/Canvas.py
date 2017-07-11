@@ -3771,6 +3771,7 @@ class Canvas(vcs.bestMatch):
                 else:
                     setattr(arglist[0], p, tmp)
             dn.newelements = self.__new_elts(original_elts, new_elts)
+            dn._parent = self
 
             return dn
         else:  # not taylor diagram
