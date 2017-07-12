@@ -1484,7 +1484,8 @@ class P(vcs.bestMatch):
     def drawLinesAndMarkersLegend(self, canvas,
                                   linecolors, linetypes, linewidths,
                                   markercolors, markertypes, markersizes,
-                                  strings, scratched=None, stringscolors=None, stacking="horizontal", bg=False, render=True):
+                                  strings, scratched=None, stringscolors=None,
+                                  stacking="horizontal", bg=False, render=True):
         """Draws a legend with line/marker/text inside a template legend box.
         Auto adjusts text size to make it fit inside the box.
         Auto arranges the elements to fill the box nicely.
