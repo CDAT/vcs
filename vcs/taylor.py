@@ -514,6 +514,11 @@ class TDMarker(vcs.bestMatch):
         tmp = getattr(self, attr)
         if len(tmp) >= n:
             return
+        if len(tmp)==0:
+            m = TDMarker()
+            m.addMarker()
+            default = getattr(m,attr)[-1]
+            tmp.append(default)
         while (len(tmp)) < n:
             tmp.append(tmp[-1])
         else:
@@ -525,21 +530,11 @@ class TDMarker(vcs.bestMatch):
         usage self.equalize()
         Also updates self.number
         """
-        if self._number > 0:
-            n = max(len(self.status), len(self.line), len(self.id),
-                    len(
-                self.symbol), len(
-                self.color), len(
-                self.size), len(
-                self.id_size), len(
-                    self.id_color),
-                len(self.xoffset), len(self.yoffset), len(self.id_font),
-                len(self.line_color), len(self.line_size), len(self.line_type))
-
-            for attr in ['status', 'line', 'id', 'symbol', 'color', 'size', 'id_size', 'id_color',
-                         'xoffset', 'yoffset', 'id_font', 'line_color', 'line_size', 'line_type']:
-                self.eq(attr, n)
-            self._number = n
+        attrs = ['status', 'line', 'id', 'symbol', 'color', 'size', 'id_size', 'id_color', 'xoffset', 'yoffset', 'id_font', 'line_color', 'line_size', 'line_type']
+        n = max(map(len,[getattr(self,x) for x in attrs]))
+        for attr in attrs:
+            self.eq(attr, n)
+        self._number = n
 
 
 class Gtd(vcs.bestMatch):
@@ -1979,16 +1974,16 @@ class Gtd(vcs.bestMatch):
         self.draw(canvas, data)
         # Ok now draws the little comment/source, etc
         self.displays += self.template.plot(canvas, data, self, bg=bg)
-        self.template.drawLinesAndMarkersLegend(canvas, self.Marker.line_color, self.Marker.line_type, self.Marker.line_size,
-                self.Marker.color, self.Marker.symbol, self.Marker.size, self.Marker.id, scratched=None, stringscolors=self.Marker.id_color,
-                bg=False, render=True)
+        if not sum(map(len,self.Marker.id)) == 0 : # Not all empty string:
+            self.template.drawLinesAndMarkersLegend(canvas, self.Marker.line_color, self.Marker.line_type, self.Marker.line_size,
+                    self.Marker.color, self.Marker.symbol, self.Marker.size, self.Marker.id, scratched=None, stringscolors=self.Marker.id_color,
+                    bg=False, render=True)
         if resetoutter:
             self.outtervalue = None
         if savedstdmax is not None:
             self._stdmax = savedstdmax
         else:
             delattr(self, '_stdmax')
-        self.list()
         canvas.mode = savedmode
         return
 

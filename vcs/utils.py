@@ -2638,7 +2638,6 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
         ln.y = [ys, ys]
         mrk.y = [ys]
         tys.append(ys)
-        print "SCRATHED:",scratched
         if scratched is not None and scratched[i] is not False:
             scratch = canvas.createline(source=ln.name)
             scratch.width = scratch.width[0]*2.
