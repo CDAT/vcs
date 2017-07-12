@@ -1484,7 +1484,7 @@ class P(vcs.bestMatch):
     def drawLinesAndMarkersLegend(self, canvas,
                                   linecolors, linetypes, linewidths,
                                   markercolors, markertypes, markersizes,
-                                  strings, scratched=None, stringscolors=None, bg=False, render=True):
+                                  strings, scratched=None, stringscolors=None, stacking="horizontal", bg=False, render=True):
         """Draws a legend with line/marker/text inside a template legend box.
         Auto adjusts text size to make it fit inside the box.
         Auto arranges the elements to fill the box nicely.
@@ -1562,6 +1562,9 @@ class P(vcs.bestMatch):
             or a string color name.
         :type stringscolors: `list`_
 
+        :param stacking: Prefered direction to stack element ('horizontal' or 'vertical')
+        :type stringscolors: `string`_
+
         :param bg: Boolean value indicating whether or not to draw in the
             background. Defaults to False.
         :type bg: bool
@@ -1574,7 +1577,7 @@ class P(vcs.bestMatch):
                                                    self.legend,
                                                    linecolors, linetypes, linewidths,
                                                    markercolors, markertypes, markersizes,
-                                                   strings, scratched, stringscolors, bg, render)
+                                                   strings, scratched, stringscolors, stacking, bg, render)
 
     def drawAttributes(self, x, slab, gm, bg=False, **kargs):
         """Draws attributes of slab onto a canvas

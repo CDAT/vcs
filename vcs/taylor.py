@@ -1975,9 +1975,13 @@ class Gtd(vcs.bestMatch):
         # Ok now draws the little comment/source, etc
         self.displays += self.template.plot(canvas, data, self, bg=bg)
         if not sum(map(len,self.Marker.id)) == 0 : # Not all empty string:
-            self.template.drawLinesAndMarkersLegend(canvas, self.Marker.line_color, self.Marker.line_type, self.Marker.line_size,
+            if self.quadrans == 1:
+                stacking = "vertical"
+            else:
+                stacking = "horizontal"
+            self.template.drawLinesAndMarkersLegend(canvas, self.Marker.line_color, self.Marker.line_type, [0,]*len(self.Marker.line_size),
                     self.Marker.color, self.Marker.symbol, self.Marker.size, self.Marker.id, scratched=None, stringscolors=self.Marker.id_color,
-                    bg=False, render=True)
+                    stacking=stacking, bg=False, render=True)
         if resetoutter:
             self.outtervalue = None
         if savedstdmax is not None:

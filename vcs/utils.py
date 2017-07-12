@@ -2489,7 +2489,7 @@ def download_sample_data_files(path=None):
 def drawLinesAndMarkersLegend(canvas, templateLegend,
                               linecolors, linetypes, linewidths,
                               markercolors, markertypes, markersizes,
-                              strings, scratched=None, stringscolors=None, bg=False, render=True):
+                              strings, scratched=None, stringscolors=None, stacking="horizontal", bg=False, render=True):
     """Draws a legend with line/marker/text inside a template legend box
     Auto adjust text size to make it fit inside the box
     Auto arrange the elements to fill the box nicely
@@ -2553,6 +2553,9 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
         or a string color name.
     :type stringscolors: `list`_
 
+    :param stacking: Prefered direction to stack element ('horizontal' or 'vertical')
+    :type stringscolors: `string`_
+
     :param bg: Boolean value indicating to draw in background (True),
         Or foreground (False).
     :type bg: `bool`_
@@ -2582,7 +2585,10 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
             ext = canvas.gettextextent(text)[0]
             maxwidth = max(maxwidth, ext[1] - ext[0])
             maxheight = max(maxheight, ext[3] - ext[2])
-        leg_lines = maxwidth / 3.
+        if len(strings[i])>4:
+            leg_lines = maxwidth / 3.
+        else:
+            leg_lines = maxwidth
         leg_spc = leg_lines / 3.
         maxwidth = maxwidth + leg_lines + leg_spc
         maxx = int(dx / maxwidth)
@@ -2596,8 +2602,12 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
             text.height = 1
             break
 
-    nH = min(maxx, len(strings))  # How many elts on horizontal direction
-    nV = numpy.ceil(nlines / float(nH))  # How many elts vertically
+    if stacking[:3].lower() == "hor":
+        nH = min(maxx, len(strings))  # How many elts on horizontal direction
+        nV = numpy.ceil(nlines / float(nH))  # How many elts vertically
+    else:
+        nV = min(maxy, len(strings))  # How many elts on horizontal direction
+        nH = numpy.ceil(nlines / float(nV))  # How many elts vertically
     spcX = (dx - maxwidth * nH) / (nH + 1)
     spcY = (dy - maxheight * nV) / (nV + 1)
     txs = []
@@ -2620,15 +2630,21 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
         ln = canvas.createline()
         ln.color = [linecolors[i], ]
         ln.type = linetypes[i]
-        ln.width = linewidths[i]
-        ln.priority = templateLegend.priority
+        if linewidths[i]>0:
+            ln.width = linewidths[i]
+            ln.priority = templateLegend.priority
+        else:
+            ln.priority = 0
         # TODO check if previous marker was identical
         # so that we create less objet/renderers
         mrk = canvas.createmarker()
         mrk.color = [markercolors[i]]
         mrk.type = markertypes[i]
-        mrk.size = markersizes[i]
-        mrk.priority = templateLegend.priority
+        if markersizes[i]>0:
+            mrk.size = markersizes[i]
+            mrk.priority = templateLegend.priority
+        else:
+            mrk.priority = 0
         xs = x1 + spcX + col * (maxwidth + spcX)
         ln.x = [xs, xs + leg_lines]
         mrk.x = [xs + leg_lines / 2.]
