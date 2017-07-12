@@ -734,7 +734,7 @@ def checkColor(self, name, value, NoneOk=False):
     checkName(self, name, value)
     if isinstance(value, unicode):
         value = str(value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         # Ok it is a string let's see if that is a valid color name
         r, g, b = vcs.str2rgb(value)
         if r is None:  # ok not a valid color

@@ -1298,10 +1298,12 @@ class Gtd(vcs.bestMatch):
                     l.y = [y1, y2]
                 l.type = self.Marker.line_type[i]
                 l.width = int(self.Marker.line_size[i])
-                l.color = VCS_validation_functions.color2vcs(
-                    self.Marker.line_color[i])
+                mycolor = VCS_validation_functions.color2vcs(
+                                            self.Marker.line_color[i])
+                l.color = [VCS_validation_functions.color2vcs(
+                    self.Marker.line_color[i])]
                 if self.Marker.line[i] == 'tail':
-                    self.drawarrow(canvas, x1, y1, x1, y1, x2, y2, l.color)
+                    self.drawarrow(canvas, x1, y1, x1, y1, x2, y2, l.color[0])
                 elif self.Marker.line[i] == 'head':
                     try:
                         dd1 = data[i - 1][1].astype('d')
@@ -1384,7 +1386,7 @@ class Gtd(vcs.bestMatch):
         ys.append(ys[0])
         f.x = xs
         f.y = ys
-        f.color = color
+        f.color = [color]
         f.style = 'solid'
         self.displays.append(canvas.plot(f, bg=self.bg))
 
