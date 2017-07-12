@@ -1979,12 +1979,16 @@ class Gtd(vcs.bestMatch):
         self.draw(canvas, data)
         # Ok now draws the little comment/source, etc
         self.displays += self.template.plot(canvas, data, self, bg=bg)
+        self.template.drawLinesAndMarkersLegend(canvas, self.Marker.line_color, self.Marker.line_type, self.Marker.line_size,
+                self.Marker.color, self.Marker.symbol, self.Marker.size, self.Marker.id, scratched=None, stringscolors=self.Marker.id_color,
+                bg=False, render=True)
         if resetoutter:
             self.outtervalue = None
         if savedstdmax is not None:
             self._stdmax = savedstdmax
         else:
             delattr(self, '_stdmax')
+        self.list()
         canvas.mode = savedmode
         return
 

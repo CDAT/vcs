@@ -2489,7 +2489,7 @@ def download_sample_data_files(path=None):
 def drawLinesAndMarkersLegend(canvas, templateLegend,
                               linecolors, linetypes, linewidths,
                               markercolors, markertypes, markersizes,
-                              strings, scratched=None, bg=False, render=True):
+                              strings, scratched=None, stringscolors=None, bg=False, render=True):
     """Draws a legend with line/marker/text inside a template legend box
     Auto adjust text size to make it fit inside the box
     Auto arrange the elements to fill the box nicely
@@ -2547,6 +2547,11 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
         needed. For scratched, provide True or line type to use for scratch.
         Color will match that of text.
     :type scratched: `None`_ or `list`_
+
+    :param stringscolors: A list of the strings colors to draw.
+        Colors are represented as either an int from 0-255, an rgba tuple,
+        or a string color name.
+    :type stringscolors: `list`_
 
     :param bg: Boolean value indicating to draw in background (True),
         Or foreground (False).
@@ -2633,6 +2638,7 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
         ln.y = [ys, ys]
         mrk.y = [ys]
         tys.append(ys)
+        print "SCRATHED:",scratched
         if scratched is not None and scratched[i] is not False:
             scratch = canvas.createline(source=ln.name)
             scratch.width = scratch.width[0]*2.
@@ -2649,10 +2655,20 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
     text.halign = "left"
     text.valign = "half"
     text.string = ts
-    text.x = txs
-    text.y = tys
     text.priority = templateLegend.priority
-    canvas.plot(text, bg=bg, render=render)
+    if stringscolors is None:
+        text.x = txs
+        text.y = tys
+        canvas.plot(text, bg=bg, render=render)
+    else:
+        for i in range(len(strings)):
+            txt = vcs.createtext(Tt_source= text.Tt_name,To_source=text.To_name)
+            txt.x = txs[i]
+            txt.y = tys[i]
+            txt.color = stringscolors[i]
+            txt.string = strings[i]
+            canvas.plot(txt, bg=bg, render=render)
+
 
 
 def _createLegendString(value, unit):
