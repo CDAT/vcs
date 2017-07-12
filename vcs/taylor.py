@@ -246,7 +246,7 @@ class TDMarker(vcs.bestMatch):
             'id_size',
             value,
             minvalue=1,
-            ints=True)
+            ints=False)
         if value is not None:
             self._id_size = value
 
@@ -298,7 +298,7 @@ class TDMarker(vcs.bestMatch):
             'size',
             value,
             minvalue=1,
-            ints=True)
+            ints=False)
         if value is not None:
             self._size = value
     size = property(_getsize, _setsize)
@@ -654,7 +654,7 @@ class Gtd(vcs.bestMatch):
             self.detail = src.detail
             self.referencevalue = src.referencevalue
 # self._referencecolor=src'black'
-            self.Marker = copy.copy(src.Marker)
+            self.Marker = copy.deepcopy(src.Marker)
             self.arrowlength = src.arrowlength
             self.arrowangle = src.arrowangle
             self.arrowbase = src.arrowbase
