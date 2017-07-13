@@ -14,4 +14,6 @@ class TestVCSVectorsMissing(basevcstest.VCSBaseTest):
         self.x.plot(u,v,gm,bg=self.bg)
         fnm = "test_vcs_vectors_missing.png" 
         self.checkImage(fnm)
+    testVCSVectorMissing.vectors = 1
+    testVCSVectorMissing.missing = 1
         

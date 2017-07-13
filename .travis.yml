@@ -10,8 +10,9 @@ before_install:
 - bash miniconda.sh -b -p $HOME/miniconda
 - conda config --set always_yes yes --set changeps1 no
 - conda update -y -q conda
+- conda install "conda=4.3.11"
 script:
-- conda install -c uvcdat/label/nightly -c conda-forge -c uvcdat "vtk-cdat" cdutil genutil dv3d "mesalib>17" nose image-compare flake8 matplotlib
+- conda install -c uvcdat/label/nightly -c conda-forge -c uvcdat "vtk-cdat" cdutil genutil dv3d "mesalib=17.1.4=3" nose image-compare flake8 matplotlib
 - export UVCDAT_ANONYMOUS_LOG=False
 - echo $TRAVIS_BRANCH
 - export TRAVIS_PR_BRANCH=$TRAVIS_BRANCH
@@ -21,7 +22,6 @@ script:
 - git clone git://github.com/uv-cdat/uvcdat-testdata
 - cd uvcdat-testdata ; git checkout $TRAVIS_BRANCH ; cd ..
 - df -h
-- pip install dropbox
 - python run_tests.py -n 2 -v2 -g --no-vtk-ui
 after_success:
     - if [ "$TRAVIS_BRANCH" == "master" -a "$TRAVIS_PULL_REQUEST" == "false" ]; then conda install conda-build && conda install anaconda-client && bash scripts/conda_upload.sh ; fi
