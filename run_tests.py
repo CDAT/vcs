@@ -141,6 +141,8 @@ def run_nose(test_name):
     opts = []
     if args.coverage:
         opts += ["--with-coverage"]
+    if args.no_vtk_ui:
+        opts += ["-A 'not vtk_ui'"]
     command = ["nosetests", ] + opts + ["-s", test_name]
     start = time.time()
     P, out = run_command(command)
@@ -173,8 +175,6 @@ sys.path.append(
         "tests"))
 if len(args.tests) == 0:
     names = glob.glob("tests/test_*.py")
-    if not args.no_vtk_ui:
-        names += glob.glob("tests/vtk_ui/test_*.py")
 else:
     names = set(args.tests)
 

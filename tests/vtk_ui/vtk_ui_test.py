@@ -1,7 +1,7 @@
 import os, sys, time, vtk, vcs.vtk_ui
 sys.path.append(os.path.join(os.path.dirname(__file__),".."))
 import basevcstest
-
+from nose.plugins.attrib import attr
 
 def init():
     win = vtk.vtkRenderWindow()
@@ -38,11 +38,13 @@ def generate_png(win, fnm):
     png_writer.SetInputConnection(out_filter.GetOutputPort())
     png_writer.Write()
 
+@attr("vtk_ui")
 def set_test_file(self,value):
     if value is None:
         self._test_file = None
     else:
         self._test_file = os.path.join(self.pngsdir,value)
+@attr("vtk_ui")
 def get_test_file(self):
     return self._test_file
 
@@ -129,6 +131,7 @@ class vtk_ui_test(basevcstest.VCSBaseTest):
         generate_png(self.win, self.test_file)
         return self.checkImage(self.test_file, src=compare_against, pngReady=True, pngPathSet=True)
 
+    @attr("vtk_ui")
     def test(self):
         self.do()
 
