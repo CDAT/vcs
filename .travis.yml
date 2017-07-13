@@ -23,6 +23,6 @@ script:
 - cd uvcdat-testdata ; git checkout $TRAVIS_BRANCH ; cd ..
 - df -h
 - pip install dropbox
-- python run_tests.py -n 1 -v2 -g --no-vtk-ui
+- python run_tests.py -n 1 -v2 -g --no-vtk-ui --dropbox
 after_success:
     - if [ "$TRAVIS_BRANCH" == "master" -a "$TRAVIS_PULL_REQUEST" == "false" ]; then conda install conda-build && conda install anaconda-client && bash scripts/conda_upload.sh ; fi
