@@ -148,7 +148,6 @@ def run_nose(test_name):
         opts += ["--with-coverage"]
     if args.no_vtk_ui:
         opts += ["-A", 'not vtk_ui']
-    print "ARGS:",args.attributes
     for att in args.attributes:
         opts += ["-A", att]
     command = ["nosetests", ] + opts + ["-s", test_name]
