@@ -48,3 +48,4 @@ class TestVCSVectorScale(basevcstest.VCSBaseTest):
         # test clamping
         self.coreTest("constant", scale=0.1)
         self.coreTest("constant", scale=2)
+    testVCSVectorScalingOptions.vectors = 1

@@ -1,7 +1,8 @@
 import basevcstest
 
-class AllTests(basevcstest.VCSBaseTest):
-    def allTests(self, params):
+
+class VCSRobinson(basevcstest.VCSBaseTest):
+    def runOne(self, params):
         f = self.clt
         self.x.clear()
         u = f("u")
@@ -35,8 +36,12 @@ class AllTests(basevcstest.VCSBaseTest):
         self.checkImage(fnm)
 
     def testVCSVectorsRobinson(self):
-        self.allTests(params=['streamline'])
-        self.allTests(params=['streamline', 'colored'])
-        self.allTests(params=['streamline', 'colored', 'count'])
-        self.allTests(params=['streamline', 'colored', 'evenlyspaced'])
-        self.allTests(params=['vectors'])
+        self.runOne(params=['streamline'])
+        self.runOne(params=['streamline', 'colored'])
+        self.runOne(params=['streamline', 'colored', 'count'])
+        self.runOne(params=['streamline', 'colored', 'evenlyspaced'])
+        self.runOne(params=['vectors'])
+    testVCSVectorsRobinson.vectors = 1  # Nose attribute
+    testVCSVectorsRobinson.projection = 1  # Nose attribute
+    testVCSVectorsRobinson.robinson = 1  # Nose attribute
+    testVCSVectorsRobinson.streamlines = 1  # Nose attribute

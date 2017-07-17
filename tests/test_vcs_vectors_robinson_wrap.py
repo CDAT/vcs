@@ -16,3 +16,6 @@ class TestVCSVectorsRobinsonWrap(basevcstest.VCSBaseTest):
 
         fnm = "test_vcs_vectors_robinson_wrap.png"
         self.checkImage(fnm)
+    testVCSVectorRobinsonWrap.projection = 1
+    testVCSVectorRobinsonWrap.robinson = 1
+    testVCSVectorRobinsonWrap.vectors = 1

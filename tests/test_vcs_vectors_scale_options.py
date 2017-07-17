@@ -22,3 +22,4 @@ class TestVCSVectorScale(basevcstest.VCSBaseTest):
         self.coreTest("normalize",1.)
         self.coreTest("constantNLinear",1.)
         self.coreTest("constantNNormalize",1.)
+    testVCSVectorScalingOptions.vectors = 1
