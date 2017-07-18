@@ -40,7 +40,7 @@ import struct
 try:
     import vcsaddons
     hasVCSAddons = True
-except:
+except BaseException:
     hasVCSAddons = False
 
 
@@ -309,7 +309,7 @@ def dumpToDict(obj, skipped=[], must=[]):
         if (a not in skipped) and (a[0] != "_" or a in must):
             try:
                 val = getattr(obj, a)
-            except:
+            except BaseException:
                 continue
             if a in associated_keys and val not in [
                     "default", "defup", "defcenter", "defright"]:
@@ -601,7 +601,7 @@ def show(*args):
         elts = vcs.listelements(args[0])
         try:
             m = max([len(e) for e in elts]) + 1
-        except:
+        except BaseException:
             m = 4
         print "*******************%s Names List**********************" % (
             args[0].capitalize())
@@ -654,7 +654,7 @@ def _scriptrun(script, canvas=None):
                     setattr(g, "linetypes", getattr(g, "linetypes"))
                 else:
                     setattr(g, att, getattr(g, att))
-            except:
+            except BaseException:
                 lst = []
                 if att == "line":
                     for e in g.line:
@@ -683,7 +683,7 @@ def _scriptrun(script, canvas=None):
                         g.setLineAttributes(lst)
                     else:
                         setattr(g, att, lst)
-                except:
+                except BaseException:
                     if (att == "line"):
                         setattr(g, "linetypes", getattr(gd, "linetypes"))
                     else:
@@ -807,7 +807,7 @@ def scriptrun_scr(*args):
             try:                 # only re-order on two or more dimensions
                 if (axis_ids[-1] != lon_name) and (axis_ids[-2] != lat_name):
                     re_order_dimension = 'yes'
-            except:
+            except BaseException:
                 pass
 
             # Must have the remaining dimension names in the Order list
@@ -1052,7 +1052,7 @@ def loadVCSItem(typ, nm, json_dict={}):
         for k, v in json_dict.iteritems():
             try:
                 d[eval(k)] = eval(v)
-            except:
+            except BaseException:
                 d[eval(k)] = v
         vcs.elements["list"][nm] = d
         return
@@ -1077,7 +1077,7 @@ def loadVCSItem(typ, nm, json_dict={}):
                     try:
                         v[eval(k)] = v[k]
                         del(v[k])
-                    except:
+                    except BaseException:
                         pass
         elif isinstance(v, unicode):
             v = str(v)
@@ -1152,7 +1152,7 @@ def minmax(*data):
                 return mx, mn
             mx = float(maximum(mx, float(maximum(d))))
             mn = float(minimum(mn, float(minimum(d))))
-        except:
+        except BaseException:
             for i in d:
                 mx, mn = myfunction(i, mx, mn)
         return mx, mn
@@ -2200,7 +2200,7 @@ def getgraphicsmethod(type, name):
     else:
         try:
             copy_mthd = vcs.elements[type][name]
-        except:
+        except BaseException:
             copy_mthd = None
     return copy_mthd
 
@@ -2327,10 +2327,10 @@ def getworldcoordinates(gm, X, Y):
                 try:
                     while X[:][i].count() == 0:
                         i += 1
-                except:
+                except BaseException:
                     pass
                 wc[0] = X[:][i]
-            except:
+            except BaseException:
                 wc[0] = X[:].min()
         else:
             wc[0] = datawc[0]
@@ -2340,14 +2340,14 @@ def getworldcoordinates(gm, X, Y):
                 try:
                     while X[:][i].count() == 0:
                         i -= 1
-                except:
+                except BaseException:
                     pass
                 wc[1] = X[:][i]
-            except:
+            except BaseException:
                 wc[1] = X[:].max()
         else:
             wc[1] = datawc[1]
-    except:
+    except BaseException:
         return wc
     if (((not isinstance(X, cdms2.axis.TransientAxis) and
           isinstance(Y, cdms2.axis.TransientAxis)) or
@@ -2363,7 +2363,7 @@ def getworldcoordinates(gm, X, Y):
             except Exception:
                 pass
             wc[2] = Y[:][i]
-        except:
+        except BaseException:
             wc[2] = Y[:].min()
     else:
         wc[2] = datawc[2]
@@ -2373,10 +2373,10 @@ def getworldcoordinates(gm, X, Y):
             try:
                 while Y[:][i].count() == 0:
                     i -= 1
-            except:
+            except BaseException:
                 pass
             wc[3] = Y[:][i]
-        except:
+        except BaseException:
             wc[3] = Y[:].max()
     else:
         wc[3] = datawc[3]
@@ -2430,7 +2430,7 @@ def rgba_color(color, colormap):
             for c in color:
                 try:
                     int(c)
-                except:
+                except BaseException:
                     break
             else:
                 if any((c > 100 for c in color)):
@@ -2489,7 +2489,8 @@ def download_sample_data_files(path=None):
 def drawLinesAndMarkersLegend(canvas, templateLegend,
                               linecolors, linetypes, linewidths,
                               markercolors, markertypes, markersizes,
-                              strings, scratched=None, bg=False, render=True):
+                              strings, scratched=None, stringscolors=None,
+                              stacking="horizontal", bg=False, render=True):
     """Draws a legend with line/marker/text inside a template legend box
     Auto adjust text size to make it fit inside the box
     Auto arrange the elements to fill the box nicely
@@ -2548,6 +2549,14 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
         Color will match that of text.
     :type scratched: `None`_ or `list`_
 
+    :param stringscolors: A list of the strings colors to draw.
+        Colors are represented as either an int from 0-255, an rgba tuple,
+        or a string color name.
+    :type stringscolors: `list`_
+
+    :param stacking: Prefered direction to stack element ('horizontal' or 'vertical')
+    :type stringscolors: `string`_
+
     :param bg: Boolean value indicating to draw in background (True),
         Or foreground (False).
     :type bg: `bool`_
@@ -2577,7 +2586,10 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
             ext = canvas.gettextextent(text)[0]
             maxwidth = max(maxwidth, ext[1] - ext[0])
             maxheight = max(maxheight, ext[3] - ext[2])
-        leg_lines = maxwidth / 3.
+        if len(strings[i]) > 4:
+            leg_lines = maxwidth / 3.
+        else:
+            leg_lines = maxwidth
         leg_spc = leg_lines / 3.
         maxwidth = maxwidth + leg_lines + leg_spc
         maxx = int(dx / maxwidth)
@@ -2591,8 +2603,12 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
             text.height = 1
             break
 
-    nH = min(maxx, len(strings))  # How many elts on horizontal direction
-    nV = numpy.ceil(nlines / float(nH))  # How many elts vertically
+    if stacking[:3].lower() == "hor":
+        nH = min(maxx, len(strings))  # How many elts on horizontal direction
+        nV = numpy.ceil(nlines / float(nH))  # How many elts vertically
+    else:
+        nV = min(maxy, len(strings))  # How many elts on horizontal direction
+        nH = numpy.ceil(nlines / float(nV))  # How many elts vertically
     spcX = (dx - maxwidth * nH) / (nH + 1)
     spcY = (dy - maxheight * nV) / (nV + 1)
     txs = []
@@ -2615,15 +2631,21 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
         ln = canvas.createline()
         ln.color = [linecolors[i], ]
         ln.type = linetypes[i]
-        ln.width = linewidths[i]
-        ln.priority = templateLegend.priority
+        if linewidths[i] > 0:
+            ln.width = linewidths[i]
+            ln.priority = templateLegend.priority
+        else:
+            ln.priority = 0
         # TODO check if previous marker was identical
         # so that we create less objet/renderers
         mrk = canvas.createmarker()
         mrk.color = [markercolors[i]]
         mrk.type = markertypes[i]
-        mrk.size = markersizes[i]
-        mrk.priority = templateLegend.priority
+        if markersizes[i] > 0:
+            mrk.size = markersizes[i]
+            mrk.priority = templateLegend.priority
+        else:
+            mrk.priority = 0
         xs = x1 + spcX + col * (maxwidth + spcX)
         ln.x = [xs, xs + leg_lines]
         mrk.x = [xs + leg_lines / 2.]
@@ -2635,7 +2657,7 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
         tys.append(ys)
         if scratched is not None and scratched[i] is not False:
             scratch = canvas.createline(source=ln.name)
-            scratch.width = scratch.width[0]*2.
+            scratch.width = scratch.width[0] * 2.
             scratch.color = [text.color]
             scratch.type = scratched[i]
             text.string = strings[i]
@@ -2649,10 +2671,19 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
     text.halign = "left"
     text.valign = "half"
     text.string = ts
-    text.x = txs
-    text.y = tys
     text.priority = templateLegend.priority
-    canvas.plot(text, bg=bg, render=render)
+    if stringscolors is None:
+        text.x = txs
+        text.y = tys
+        canvas.plot(text, bg=bg, render=render)
+    else:
+        for i in range(len(strings)):
+            txt = vcs.createtext(Tt_source=text.Tt_name, To_source=text.To_name)
+            txt.x = txs[i]
+            txt.y = tys[i]
+            txt.color = stringscolors[i]
+            txt.string = strings[i]
+            canvas.plot(txt, bg=bg, render=render)
 
 
 def _createLegendString(value, unit):

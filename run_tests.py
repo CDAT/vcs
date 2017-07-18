@@ -66,6 +66,11 @@ parser.add_argument(
     action="store_true",
     default=False,
     help="do not vtk_ui tests")
+parser.add_argument(
+    "-A","--attributes",
+    default=[],
+    action="append",
+    help="attribute-based runs")
 parser.add_argument("tests", nargs="*", help="tests to run")
 
 args = parser.parse_args()
@@ -142,7 +147,9 @@ def run_nose(test_name):
     if args.coverage:
         opts += ["--with-coverage"]
     if args.no_vtk_ui:
-        opts += ["-A 'not vtk_ui'"]
+        opts += ["-A", 'not vtk_ui']
+    for att in args.attributes:
+        opts += ["-A", att]
     command = ["nosetests", ] + opts + ["-s", test_name]
     start = time.time()
     P, out = run_command(command)
@@ -197,7 +204,6 @@ if len(names)==0:
 
 # Make sure we have sample data
 cdat_info.download_sample_data_files(os.path.join(sys.prefix,"share","vcs","test_data_files.txt"),cdat_info.get_sampledata_path())
-
 p = multiprocessing.Pool(args.cpus)
 outs = p.map(run_nose, names)
 results = {}

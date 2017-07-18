@@ -51,3 +51,5 @@ class TestVCSTaylor(basevcstest.VCSBaseTest):
 
         self.x.plot(data, t, td, bg=self.bg)
         self.checkImage("test_vcs_taylor_template_ctl.png")
+    testVCSTaylor.taylordiagrams = 1
+    testVCSTaylor.templates = 1

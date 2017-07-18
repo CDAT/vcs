@@ -246,7 +246,7 @@ class TDMarker(vcs.bestMatch):
             'id_size',
             value,
             minvalue=1,
-            ints=True)
+            ints=False)
         if value is not None:
             self._id_size = value
 
@@ -298,7 +298,7 @@ class TDMarker(vcs.bestMatch):
             'size',
             value,
             minvalue=1,
-            ints=True)
+            ints=False)
         if value is not None:
             self._size = value
     size = property(_getsize, _setsize)
@@ -514,6 +514,11 @@ class TDMarker(vcs.bestMatch):
         tmp = getattr(self, attr)
         if len(tmp) >= n:
             return
+        if len(tmp) == 0:
+            m = TDMarker()
+            m.addMarker()
+            default = getattr(m, attr)[-1]
+            tmp.append(default)
         while (len(tmp)) < n:
             tmp.append(tmp[-1])
         else:
@@ -525,21 +530,25 @@ class TDMarker(vcs.bestMatch):
         usage self.equalize()
         Also updates self.number
         """
-        if self._number > 0:
-            n = max(len(self.status), len(self.line), len(self.id),
-                    len(
-                self.symbol), len(
-                self.color), len(
-                self.size), len(
-                self.id_size), len(
-                    self.id_color),
-                len(self.xoffset), len(self.yoffset), len(self.id_font),
-                len(self.line_color), len(self.line_size), len(self.line_type))
-
-            for attr in ['status', 'line', 'id', 'symbol', 'color', 'size', 'id_size', 'id_color',
-                         'xoffset', 'yoffset', 'id_font', 'line_color', 'line_size', 'line_type']:
-                self.eq(attr, n)
-            self._number = n
+        attrs = [
+            'status',
+            'line',
+            'id',
+            'symbol',
+            'color',
+            'size',
+            'id_size',
+            'id_color',
+            'xoffset',
+            'yoffset',
+            'id_font',
+            'line_color',
+            'line_size',
+            'line_type']
+        n = max(map(len, [getattr(self, x) for x in attrs]))
+        for attr in attrs:
+            self.eq(attr, n)
+        self._number = n
 
 
 class Gtd(vcs.bestMatch):
@@ -654,7 +663,7 @@ class Gtd(vcs.bestMatch):
             self.detail = src.detail
             self.referencevalue = src.referencevalue
 # self._referencecolor=src'black'
-            self.Marker = copy.copy(src.Marker)
+            self.Marker = copy.deepcopy(src.Marker)
             self.arrowlength = src.arrowlength
             self.arrowangle = src.arrowangle
             self.arrowbase = src.arrowbase
@@ -932,7 +941,7 @@ class Gtd(vcs.bestMatch):
         try:
             return numpy.exp(-alpha * (R2 - R) - 0.5 *
                              beta * (sigma + 1.0 / sigma - 2.0))
-        except:
+        except BaseException:
             return 1.E20
 
     worldcoordinate = VCS_validation_functions.worldcoordinate
@@ -1234,11 +1243,11 @@ class Gtd(vcs.bestMatch):
         for i in range(n):
             try:
                 d0 = data[i][0].astype('d')
-            except:
+            except BaseException:
                 d0 = float(data[i][0])
             try:
                 d1 = data[i][1].astype('d')
-            except:
+            except BaseException:
                 d1 = float(data[i][1])
 
             if self.Marker.id[i] != '' and self.Marker.id[i] != 'None':
@@ -1285,12 +1294,12 @@ class Gtd(vcs.bestMatch):
                     try:
                         x2 = data[
                             i + 1][1].astype('d') * data[i + 1][0].astype('d')
-                    except:
+                    except BaseException:
                         x2 = float(data[i + 1][1] * data[i + 1][0])
                     try:
                         y2 = numpy.ma.sin(
                             numpy.ma.arccos(data[i + 1][1].astype('d'))) * data[i + 1][0].astype('d')
-                    except:
+                    except BaseException:
                         y2 = numpy.ma.sin(
                             numpy.ma.arccos(float(data[i + 1][1]))) * float(data[i + 1][0])
 
@@ -1298,18 +1307,18 @@ class Gtd(vcs.bestMatch):
                     l.y = [y1, y2]
                 l.type = self.Marker.line_type[i]
                 l.width = int(self.Marker.line_size[i])
-                l.color = VCS_validation_functions.color2vcs(
-                    self.Marker.line_color[i])
+                l.color = [VCS_validation_functions.color2vcs(
+                    self.Marker.line_color[i])]
                 if self.Marker.line[i] == 'tail':
-                    self.drawarrow(canvas, x1, y1, x1, y1, x2, y2, l.color)
+                    self.drawarrow(canvas, x1, y1, x1, y1, x2, y2, l.color[0])
                 elif self.Marker.line[i] == 'head':
                     try:
                         dd1 = data[i - 1][1].astype('d')
-                    except:
+                    except BaseException:
                         dd1 = float(data[i - 1][1])
                     try:
                         dd0 = data[i - 1][0].astype('d')
-                    except:
+                    except BaseException:
                         dd0 = float(data[i - 1][0])
 
                     self.drawarrow(
@@ -1384,7 +1393,7 @@ class Gtd(vcs.bestMatch):
         ys.append(ys[0])
         f.x = xs
         f.y = ys
-        f.color = color
+        f.color = [color]
         f.style = 'solid'
         self.displays.append(canvas.plot(f, bg=self.bg))
 
@@ -1450,7 +1459,7 @@ class Gtd(vcs.bestMatch):
             try:
                 canvasinfo = canvas.canvasinfo()
                 pr = float(canvasinfo['width']) / float(canvasinfo['height'])
-            except:
+            except BaseException:
                 if page == 'portrait':
                     pr = 1. / 1.29381443299
                 else:
@@ -1977,6 +1986,17 @@ class Gtd(vcs.bestMatch):
         self.draw(canvas, data)
         # Ok now draws the little comment/source, etc
         self.displays += self.template.plot(canvas, data, self, bg=bg)
+        if not sum(map(len, self.Marker.id)) == 0:  # Not all empty string:
+            if self.quadrans == 1:
+                stacking = "vertical"
+            else:
+                stacking = "horizontal"
+            self.template.drawLinesAndMarkersLegend(canvas, self.Marker.line_color,
+                                                    self.Marker.line_type, [0, ] * len(self.Marker.line_size),
+                                                    self.Marker.color, self.Marker.symbol, self.Marker.size,
+                                                    self.Marker.id,
+                                                    scratched=None, stringscolors=self.Marker.id_color,
+                                                    stacking=stacking, bg=False, render=True)
         if resetoutter:
             self.outtervalue = None
         if savedstdmax is not None:
