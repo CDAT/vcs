@@ -300,7 +300,8 @@ def checkMarker(self, name, value):
         'triangle_left_fill',
         'triangle_right_fill',
         'square_fill',
-        'hurricane']
+        'hurricane',
+        'error_horizontal']
     for i in range(103):
         oks.append('w%.2i' % i)
     for i in range(19):

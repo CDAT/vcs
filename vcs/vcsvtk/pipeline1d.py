@@ -95,13 +95,25 @@ class Pipeline1D(Pipeline):
             m._y = l.y
             m._viewport = l.viewport
             m._worldcoordinate = l.worldcoordinate
+        if kargs['error'] is not None:
+            err_marker = self._context().canvas.createmarker()
+            err_marker.type = 'error_horizontal'
+            err_marker.color = [self._gm.markercolor, ]
+            if self._gm.markersize > 0:
+                err_marker.size = self._gm.markersize
+            err_marker._x = l.x
+            err_marker._y = l.y
+            err_marker._viewport = l.viewport
+            err_marker._worldcoordinate = l.worldcoordinate
 
         if not (Y[:].min() > max(y1, y2) or Y[:].max() < min(y1, y2) or
                 X[:].min() > max(x1, x2) or X[:].max() < min(x1, x2)):
             if l.priority > 0:
                 self._context().canvas.plot(l, donotstoredisplay=True)
-            if self._gm.marker is not None and m.priority > 0:
-                self._context().canvas.plot(m, donotstoredisplay=True)
+            # if self._gm.marker is not None and m.priority > 0:
+                # self._context().canvas.plot(m, donotstoredisplay=True)
+            if err_marker is not None:
+                self._context().canvas.plot(err_marker, donotstoredisplay=True)
 
         ren2 = self._context().createRenderer()
         self._context().setLayer(ren2, l.priority)
