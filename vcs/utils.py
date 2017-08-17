@@ -37,6 +37,7 @@ import cdms2
 import genutil
 import vtk
 import struct
+from clickMap import mapPng, getPngDimensions, meshToCoords, vcsToHtml  # noqa
 try:
     import vcsaddons
     hasVCSAddons = True
