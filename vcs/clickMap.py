@@ -5,17 +5,21 @@ import struct
 import numpy
 
 
-def createAreaTags(area_and_target):
-    area, target = area_and_target
+def createAreaTags(area_and_target_and_tooltip):
+    area, target, tooltip = area_and_target_and_tooltip
     area = area.tolist()
-    tag = "<area class='noborder icolorff0000' href='%s' shape='poly' target='_blank'" % (
-        target)
+    if tooltip is None:
+        tooltip = ""
+    else:
+        tooltip = 'tooltip="%s" onmouseover="cvi_tip._show(event);" onmouseout="cvi_tip._hide(event);" onmousemove="cvi_tip._move(event);"' % tooltip
+    tag = "<area class='noborder iopacity35' %s href='%s' shape='poly' target='_blank'" % (
+        tooltip, target)
     tag += " coords='" + ",".join(["%i, %i" % (x, y)
                                    for (x, y) in zip(area[0], area[1])]) + "'>\n"
     return tag
 
 
-def mapPng(image, areas, targets=[], width=None, height=None, name=None):
+def mapPng(image, areas, targets=[], tooltips=[], width=None, height=None, name=None):
     """Return <map> and <img> code to map area of an image to various targets
 
     areas coords are assumed to be already mapped to witdth/height if passed
@@ -50,6 +54,9 @@ def mapPng(image, areas, targets=[], width=None, height=None, name=None):
     :param targets: list of target URL for each map area. List will be completed with '#'s to match length of areas
     :type targets: `list`_
 
+    :param tooltips: list of tooltips for each map area. List will be completed with '#'s to match length of areas
+    :type tooltips: `list`_
+
     :param width: width of image on html page
     :type width: `int`_
 
@@ -76,7 +83,9 @@ def mapPng(image, areas, targets=[], width=None, height=None, name=None):
     st = "<map id='%s' name='%s'>\n" % (name, name)
     while len(targets) < len(areas):
         targets.append("#")
-    area_tags = map(createAreaTags, zip(areas, targets))
+    while len(tooltips) < len(areas):
+        tooltips.append(None)
+    area_tags = map(createAreaTags, zip(areas, targets, tooltips))
     st += "".join(area_tags)
     st += "</map>\n"
     st += "<div><img class='mapper' src='%s' %s %s usemap='#%s'></div>" % (
@@ -289,6 +298,6 @@ def vcsToHtml(data, gm, template, targets=None,
         png=png)
     geometry = getPngDimensions(png)
     # Creating a list of target that will be the value of the cell
-    targets = data.asma().ravel().astype(str).tolist()
-    img = mapPng(png, areas, targets, width=geometry[0], height=geometry[1])
+    tooltips = targets = data.asma().ravel().astype(str).tolist()
+    img = mapPng(png, areas, targets, tooltips, width=geometry[0], height=geometry[1])
     return img
