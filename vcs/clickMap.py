@@ -11,7 +11,8 @@ def createAreaTags(area_and_target_and_tooltip):
     if tooltip is None:
         tooltip = ""
     else:
-        tooltip = 'tooltip="%s" onmouseover="cvi_tip._show(event);" onmouseout="cvi_tip._hide(event);" onmousemove="cvi_tip._move(event);"' % tooltip
+        tooltip = 'tooltip="%s" onmouseover="cvi_tip._show(event);"' % tooltip
+        tooltip += ' onmouseout="cvi_tip._hide(event);" onmousemove="cvi_tip._move(event);"'
     tag = "<area class='noborder iopacity35' %s href='%s' shape='poly' target='_blank'" % (
         tooltip, target)
     tag += " coords='" + ",".join(["%i, %i" % (x, y)
