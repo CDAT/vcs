@@ -1803,6 +1803,32 @@ def removeCp(obj):
 
 
 def removeP(obj):
+    # first we need to see if the template was scaled
+    # If so we need to remove the textorientation objects
+    # associated with this
+    if not vcs.istemplate(obj):
+        if obj not in vcs.elements["template"].keys():
+            raise RuntimeError("Cannot remove inexisting template %s" % obj)
+    if isinstance(obj, str):
+        obj = vcs.gettemplate(obj)
+    if obj._scaledFont:
+        try:
+            attr = vars(obj).keys()
+        except:
+            attr = obj.__slots__
+
+        if len(attr) == 0:
+            attr = obj.__slots__
+
+        for a in attr:
+            if a[0] == "_":
+                continue
+            try:
+                v = getattr(obj, a)
+                to = getattr(v, 'textorientation')
+                removeTo(to)
+            except:
+                pass
     return removeG(obj, "template")
 
 
@@ -1859,6 +1885,7 @@ def removeobject(obj):
             msg = vcs.removeGtd(obj.name)
         else:
             msg = 'Could not find the correct graphics class object.'
+            raise vcsError(msg)
     elif vcs.issecondaryobject(obj):
         if (obj.s_name == 'Tl'):
             msg = vcs.removeTl(obj.name)
@@ -1878,6 +1905,7 @@ def removeobject(obj):
             msg = vcs.removeCp(obj.name)
         else:
             msg = 'Could not find the correct secondary class object.'
+            raise vcsError(msg)
     else:
         msg = 'This is not a template, graphics method, or secondary method object.'
         raise vcsError(msg)
