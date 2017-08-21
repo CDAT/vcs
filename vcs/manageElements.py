@@ -1880,4 +1880,5 @@ def removeobject(obj):
             msg = 'Could not find the correct secondary class object.'
     else:
         msg = 'This is not a template, graphics method, or secondary method object.'
+        raise vcsError(msg)
     return msg
