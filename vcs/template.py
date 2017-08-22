@@ -1480,6 +1480,7 @@ class P(vcs.bestMatch):
                 setattr(v, 'textorientation', to)
             except:
                 pass
+        self._scaledFont = True
 
     def drawLinesAndMarkersLegend(self, canvas,
                                   linecolors, linetypes, linewidths,
