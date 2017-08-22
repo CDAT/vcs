@@ -1883,6 +1883,8 @@ def removeobject(obj):
             msg = vcs.removeG1d(obj.name)
         elif (obj.g_name == 'Gtd'):
             msg = vcs.removeGtd(obj.name)
+        elif (obj.g_name == 'Gs'):
+            msg = vcs.removeGs(obj.name)
         else:
             msg = 'Could not find the correct graphics class object.'
             raise vcsError(msg)

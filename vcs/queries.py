@@ -323,6 +323,14 @@ def ismeshfill(obj):
 ismeshfill.__doc__ = xmldocs.is_docs['meshfill']  # noqa
 
 
+def isstreamline(obj):
+    if (isinstance(obj, streamline.Gs)):
+        return 1
+    else:
+        return 0
+isstreamline.__doc__ = xmldocs.is_docs['streamline']  # noqa
+
+
 def isboxfill(obj):
     if (isinstance(obj, boxfill.Gfb)):
         return 1
