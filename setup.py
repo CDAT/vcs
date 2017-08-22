@@ -46,5 +46,8 @@ setup(name="vcs",
                                  'Fonts/hebrew.ttf',
                                  'Fonts/jsMath-msam10.ttf',
                                  'Fonts/jsMath-wasy10.ttf',
+                                 'Share/mapper.js',
+                                 'Share/cvi_tip_lib.js',
+                                 'Share/tooltip.css',
                                  )), ],
       )
