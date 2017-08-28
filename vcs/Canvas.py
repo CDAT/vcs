@@ -1995,6 +1995,14 @@ class Canvas(vcs.bestMatch):
     drawline.__doc__ = drawline.__doc__ % (xmldocs.name, xmldocs.color, xmldocs.priority, xmldocs.viewport,
                                            xmldocs.worldcoordinate, xmldocs.x_y_coords, xmldocs.projection)
 
+    def createerrorbars(self, name=None, source='default', etype=None, color=None):
+        return vcs.createerrorbars(name, source, etype, color)
+    createerrorbars.__doc__ = vcs.manageElements.createerrorbars.__doc__
+
+    def geterrorbars(self, name='default', etype=None, color=None):
+        return vcs.geterrorbars(name, etype, color)
+    geterrorbars.__doc__ = vcs.manageElements.geterrorbars.__doc__
+
     def createmarker(self, name=None, source='default', mtype=None,  # noqa
                      size=None, color=None, priority=1,
                      viewport=None, worldcoordinate=None,

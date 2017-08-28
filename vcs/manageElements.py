@@ -12,28 +12,29 @@
 
     .. pragma: skip-doctest
 """
-import vcs
+from error import vcsError
 import boxfill
-import meshfill
+import colormap
+import dv3d
+import errorbars
+import fillarea
 import isofill
 import isoline
-import unified1D
-import template
-import projection
-import colormap
-import fillarea
-import marker
 import line
-import texttable
-import textorientation
-import textcombined
-import vector
-import streamline
-import xmldocs
+import marker
+import meshfill
+import projection
 import random
-from error import vcsError
+import streamline
+import template
+import textcombined
+import textorientation
+import texttable
+import unified1D
+import vcs
+import vector
 import warnings
-import dv3d
+import xmldocs
 
 
 def check_name_source(name, source, typ):
@@ -1016,6 +1017,72 @@ def getmarker(name='default', mtype=None, size=None, color=None,
 getmarker.__doc__ = getmarker.__doc__ % xmldocs.get_docs['marker']  # noqa
 
 
+def createerrorbars(name=None, source='default',
+                    etype='y', color=None):
+    """%s
+
+    :param name: Name of created object
+    :type name: `str`_
+
+    :param source: An errorbars object, or string name of the errorbars
+    :type source: `str`_
+
+    :param mtype: Specifies the type of errorbars, i.e. "x", "y" or "xy"
+    :type mtype: `str`_
+
+    :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
+        or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+    :type color: `str`_ or int
+
+    :returns: A secondary errorbars method
+    :rtype: vcs.errorbars.Te
+    """
+    name, source = check_name_source(name, source, 'errorbars')
+
+    eb = errorbars.Te(name, source)
+    if (etype is not None):
+        eb.type = etype
+    if (color is not None):
+        eb.color = color
+    return eb
+createerrorbars.__doc__ = createerrorbars.__doc__ % xmldocs.create_docs['errorbars']  # noqa
+
+
+def geterrorbars(name='default', etype=None, color=None):
+    """%s
+
+    :param name: Name of created object
+    :type name: `str`_
+
+    :param source: An errorbars object, or string name of the errorbars
+    :type source: `str`_
+
+    :param mtype: Specifies the type of errorbars, i.e. "x", "y" or "xy"
+    :type mtype: `str`_
+
+    :param color: A color name from the `X11 Color Names list <https://en.wikipedia.org/wiki/X11_color_names>`_,
+        or an integer value from 0-255, or an RGB/RGBA tuple/list (e.g. (0,100,0), (100,100,0,50))
+    :type color: `str`_ or int
+
+    :returns: A secondary errorbars method
+    :rtype: vcs.errorbars.Te
+    """
+
+    # Check to make sure the argument passed in is a STRING
+    if not isinstance(name, str):
+        raise vcsError('The argument must be a string.')
+
+    if name not in vcs.elements["errorbars"]:
+        raise ValueError("The errorbars object '%s' does not exists")
+    eb = vcs.elements["errorbars"][name]
+    if (etype is not None) and (eb.name != "default"):
+        eb.type = etype
+    if (color is not None) and (eb.name != "default"):
+        eb.color = color
+    return eb
+geterrorbars.__doc__ = geterrorbars.__doc__ % xmldocs.get_docs['errorbars']  # noqa
+
+
 def createfillarea(name=None, source='default', style=None,
                    index=None, color=None, priority=None,
                    viewport=None, worldcoordinate=None,
@@ -1770,6 +1837,10 @@ def removeTm(obj):
     return removeG(obj, "marker")
 
 
+def remoteTe(obj):
+    return removeG(obj, "errorbars")
+
+
 def removeTf(obj):
     return removeG(obj, "fillarea")
 
@@ -1864,6 +1935,8 @@ def removeobject(obj):
             msg = vcs.removeTl(obj.name)
         elif (obj.s_name == 'Tm'):
             msg = vcs.removeTm(obj.name)
+        elif (obj.s_name == 'Te'):
+            msg = vcs.removeTe(obj.name)
         elif (obj.s_name == 'Tf'):
             msg = vcs.removeTf(obj.name)
         elif (obj.s_name == 'Tt'):

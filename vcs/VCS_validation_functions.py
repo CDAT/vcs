@@ -301,7 +301,8 @@ def checkMarker(self, name, value):
         'triangle_right_fill',
         'square_fill',
         'hurricane',
-        'error_horizontal']
+        'error_x',
+        'error_y']
     for i in range(103):
         oks.append('w%.2i' % i)
     for i in range(19):
@@ -347,6 +348,10 @@ def checkMarker(self, name, value):
             value = 'square_fill'
         elif value in ('hurricane', 18):
             value = 'hurricane'
+        elif value in ('error_x', 19):
+            value = 'error_x'
+        elif value in ('error_y', 20):
+            value = 'error_y'
         elif isinstance(value, str) and value[0] == "w" and int(value[1:]) in range(103):
             value = value
         elif value in range(100, 203):
@@ -375,6 +380,31 @@ def checkMarkersList(self, name, value):
     for v in value:
         hvalue.append(checkMarker(self, name, v))
     return hvalue
+
+
+def checkErrorBarsType(self, name, value):
+    checkName(self, name, value)
+    oks = [
+        'x',
+        'y',
+        'xy']
+    if ((value in oks) or (value in range(0, 3))):
+        if value in ('x', 0):
+            value = 'x'
+        elif value in ('y', 0):
+            value = 'y'
+        elif value in ('xy', 0):
+            value = 'xy'
+    else:
+        checkedRaise(
+            self,
+            value,
+            ValueError,
+            'The ' +
+            name +
+            ' value must be in : %s. Instead, it is %s' %
+            (oks, value))
+    return value
 
 
 def checkListElements(self, name, value, function):

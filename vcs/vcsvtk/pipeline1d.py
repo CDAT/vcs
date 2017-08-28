@@ -97,9 +97,12 @@ class Pipeline1D(Pipeline):
             m._worldcoordinate = l.worldcoordinate
         err_marker = None
         if 'error' in kargs and kargs['error'] is not None:
+            errorbars = self._gm.errorbars
+            if errorbars is None:
+                errorbars = self._context().canvas.createerrorbars()
             err_marker = self._context().canvas.createmarker()
-            err_marker.type = 'error_horizontal'
-            err_marker.color = [self._gm.markercolor, ]
+            err_marker.type = "error_%s" % errorbars.type
+            err_marker.color = [errorbars.color, ]
             if self._gm.markersize > 0:
                 err_marker.size = self._gm.markersize
             err_marker._x = l.x

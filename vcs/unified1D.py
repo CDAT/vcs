@@ -64,6 +64,8 @@ def process_src(nm, code, typ):
             nm = "marker"
         elif nm == "datawc_tunits":
             nm = "datawc_timeunits"
+        elif nm == "Te":
+            nm = "errorbars"
         try:
             # int will be converted
             setattr(gm, nm, int(sp[1]))
@@ -320,7 +322,9 @@ class G1d(vcs.bestMatch):
     %s
     %s
     %s
-    """ % (xmldocs.graphics_method_core, xmldocs.xaxisconvert, xmldocs.linedoc, xmldocs.markerdoc)
+    %s
+    """ % (xmldocs.graphics_method_core, xmldocs.xaxisconvert, xmldocs.linedoc,
+           xmldocs.markerdoc, xmldocs.errorbarsdoc)
     colormap = VCS_validation_functions.colormap
     __slots__ = [
         '__doc__',
@@ -334,6 +338,7 @@ class G1d(vcs.bestMatch):
         'linecolor',
         'linetype',
         'linewidth',
+        'errorbars',
         'marker',
         'markersize',
         'markercolor',
@@ -360,6 +365,7 @@ class G1d(vcs.bestMatch):
         '_linecolor',
         '_linetype',
         '_linewidth',
+        '_errorbars',
         '_marker',
         '_markersize',
         '_markercolor',
@@ -624,6 +630,15 @@ class G1d(vcs.bestMatch):
         '''
         vcs.setLineAttributes(self, line)
 
+    def _geterrorbars(self):
+        return self._errorbars
+
+    def _seterrorbars(self, value):
+        if value is not None:
+            value = VCS_validation_functions.checkerrorbars(self, 'errorbars', value)
+        self._errorbars = value
+    errorbars = property(_geterrorbars, _seterrorbars)
+
     def _getmarker(self):
         return self._marker
 
@@ -723,6 +738,7 @@ class G1d(vcs.bestMatch):
             self._linetype = 'solid'
             self._linecolor = (0.0, 0.0, 0.0, 100.0)
             self._linewidth = 1
+            self._errorbars = None
             self._marker = 'dot'
             self._markercolor = (0.0, 0.0, 0.0, 100.0)
             self._markersize = 1
@@ -739,7 +755,8 @@ class G1d(vcs.bestMatch):
             src = vcs.elements["1d"][name_src]
             for att in ['projection', 'colormap', 'xticlabels1', 'xticlabels2', 'xmtics1', 'xmtics2',
                         'yticlabels1', 'yticlabels2', 'ymtics1', 'ymtics2', 'datawc_y1', 'datawc_y2', 'datawc_x1',
-                        'datawc_x2', 'xaxisconvert', 'yaxisconvert', 'linetype', 'linecolor', 'linewidth', 'marker',
+                        'datawc_x2', 'xaxisconvert', 'yaxisconvert', 'linetype',
+                        'linecolor', 'linewidth', 'errorbars', 'marker',
                         'markercolor', 'markersize', 'datawc_timeunits', 'datawc_calendar', 'smooth', 'flip']:
                 setattr(self, att, getattr(src, att))
         # Ok now we need to stick in the elements
@@ -930,6 +947,10 @@ class G1d(vcs.bestMatch):
             fp.write("%s.markercolor = %s\n" % (unique_name, self.markercolor))
             fp.write("%s.markersize = %s\n\n" % (unique_name, self.markersize))
             fp.write("%s.flip = %s\n\n" % (unique_name, repr(self.flip)))
+            if self.errorbars is not None:
+                fp.write("%s.errorbars = %s\n\n" % (unique_name, repr(self.errorbars)))
+            else:
+                fp.write("%s.errorbars = %s\n\n" % (unique_name, self.errorbars))
             if self.colormap is not None:
                 fp.write("%s.colormap = %s\n\n" % (unique_name, repr(self.colormap)))
             else:

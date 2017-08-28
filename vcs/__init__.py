@@ -125,6 +125,7 @@ elements["textorientation"] = {}
 elements["textcombined"] = {}
 elements["line"] = {}
 elements["marker"] = {}
+elements["errorbars"] = {}
 elements["fillarea"] = {}
 elements["font"] = {}
 elements["fontNumber"] = {}
@@ -240,6 +241,7 @@ vcs.elements["xvsy"]["default"] = xvy
 vector.Gv("default")
 streamline.Gs("default")
 marker.Tm("default")
+errorbars.Te("default")
 meshfill.Gfm("default")
 colormap.Cp("default")
 displayplot.Dp("default")

@@ -1647,7 +1647,7 @@ def prepGlyph(g, marker, index=0):
         pd.SetPolys(polys)
         pd.SetLines(lines)
         g.SetSourceData(pd)
-    elif t == "error_horizontal":
+    elif t == "error_x":
         # Points
         pts = vtk.vtkPoints()
         pts.SetNumberOfPoints(6)
@@ -1657,6 +1657,29 @@ def prepGlyph(g, marker, index=0):
         pts.SetPoint(3, -0.5 * s, 0.1 * s, 0.0)
         pts.SetPoint(4, 0.5 * s, -0.1 * s, 0.0)
         pts.SetPoint(5, 0.5 * s, 0.1 * s, 0.0)
+        # Lines
+        lines = vtk.vtkCellArray()
+        for i in range(3):
+            line = vtk.vtkLine()
+            line.GetPointIds().SetId(0, 2 * i)
+            line.GetPointIds().SetId(1, 2 * i + 1)
+            lines.InsertNextCell(line)
+        geo, pts = project(pts, marker.projection, marker.worldcoordinate)
+        # Add them together to a polydata
+        pd = vtk.vtkPolyData()
+        pd.SetPoints(pts)
+        pd.SetLines(lines)
+        g.SetSourceData(pd)
+    elif t == "error_y":
+        # Points
+        pts = vtk.vtkPoints()
+        pts.SetNumberOfPoints(6)
+        pts.SetPoint(0, 0.0, -0.5 * s, 0.0)
+        pts.SetPoint(1, 0.0, 0.5 * s, 0.0)
+        pts.SetPoint(2, -0.1 * s, -0.5 * s, 0.0)
+        pts.SetPoint(3, 0.1 * s, -0.5 * s, 0.0)
+        pts.SetPoint(4, -0.1 * s, 0.5 * s, 0.0)
+        pts.SetPoint(5, 0.1 * s, 0.5 * s, 0.0)
         # Lines
         lines = vtk.vtkCellArray()
         for i in range(3):

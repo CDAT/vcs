@@ -422,7 +422,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                 elif obj_name == '1d':
                     d['sp_parent'] = "'default'"
                 else:
-                    sp_parent = 'default_'+obj_name+'_'
+                    sp_parent = 'default_' + obj_name + '_'
                     d['sp_parent'] = "'%s'" % sp_parent
                     d['parent'] = d['sp_parent']
         # From here to the end of the inner for loop is intended to be a section for specific use-cases for the template
@@ -722,6 +722,14 @@ obj_details = {
             "slabs": 0,
             "title": True,
         },
+        "errorbars": {
+            "callable": False,
+            "parent": "default",
+            "parent2": "y",
+            "rtype": "vcs.errorbars.Te",
+            "slabs": 0,
+            "title": True,
+        },
         "colormap": {
             "callable": False,
             "parent": "default",
@@ -772,8 +780,8 @@ docstrings = {}
 #       need this are the 1d family of objects and textcombined objects. If the object does have a sensible default,
 #       (e.g. getboxfill()) this key should be an empty string. When providing a string to 'sp_parent', it should be
 #       of format "'blah'" or '"blah"', and if multiple arguments are needed, they should be provided ('"blah", "blah"')
-#   'tc'    : no textcombined objects exist by default in VCS, so this key is for an entry that will create one when
-#       it is needed for an example. All other times, it will be an empty string.
+#   'tc'    : no textcombined objects exist by default in VCS, so this key is
+#   for an entry that will create one #       it is needed for an example. All other times, it will be an empty string.
 #   'example'   : this should be filled in with code examples in doctest format. Maintain indentation with the origin
 #       docstring. Most of the time, this means 3 indents (12 spaces) from the left side is where all your doctest
 #       lines should start. Look above, in populate_docstrings() to see what I'm tlaking about.
@@ -1100,6 +1108,14 @@ markerdoc = """
 
             size of markers
     """
+errorbarsdoc = """
+        Sets the error bar properties of the object.
+
+        .. py:attribute:: errorbars (vcs.errorbars.Te)
+
+            errorbars properties
+
+    """  # noqa
 color_one_two_doc = """
         .. py:attribute:: color_1 (float)
 

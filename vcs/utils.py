@@ -12,31 +12,32 @@
 .. _file: https://docs.python.org/2/library/functions.html?highlight=open#file
 """
 # Adapted for numpy/ma/cdms2 by convertcdms.py
-import numpy
-import cdtime
-import warnings
-import vcs
 import boxfill
+import cdms2
+import cdtime
+import colormap
+import errorbars
+import fillarea
+import genutil
 import isofill
 import isoline
-import taylor
-import projection
-import fillarea
-import template
-import texttable
-import textorientation
-import line
-import unified1D
-import vector
-import marker
-import colormap
 import json
+import line
+import marker
+import numpy
 import os
-import tempfile
-import cdms2
-import genutil
-import vtk
+import projection
 import struct
+import taylor
+import tempfile
+import template
+import textorientation
+import texttable
+import unified1D
+import vcs
+import vector
+import vtk
+import warnings
 try:
     import vcsaddons
     hasVCSAddons = True
@@ -508,6 +509,8 @@ def process_src_element(code):
             vector.process_src(nm, code)
         elif typ == "Tm":
             marker.process_src(nm, code)
+        elif typ == "Te":
+            errorbars.process_src(nm, code)
         elif typ == "C":
             colormap.process_src(nm, code)
     except Exception as err:
@@ -986,6 +989,7 @@ def scriptrun(script):
                   "Tt": "texttable",
                   "To": "textorientation",
                   "Tm": "marker",
+                  "Te": "errorbars",
                   "Tl": "line",
                   "Gf3Dscalar": "3d_scalar",
                   "Gf3DDualScalar": "3d_dual_scalar",
