@@ -382,6 +382,22 @@ def checkMarkersList(self, name, value):
     return hvalue
 
 
+def checkErrorBars(self, name, value):
+    import queries
+    checkName(self, name, value)
+    if (queries.iserrorbars(value) != 1):
+        checkedRaise(
+            self,
+            value,
+            ValueError,
+            'The ' +
+            name +
+            ' value must be of type \'vcs.errorbars.Te\'.' +
+            ' Instead it is %s' %
+            type(value))
+    return value
+
+
 def checkErrorBarsType(self, name, value):
     checkName(self, name, value)
     oks = [

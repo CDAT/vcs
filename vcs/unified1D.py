@@ -635,7 +635,7 @@ class G1d(vcs.bestMatch):
 
     def _seterrorbars(self, value):
         if value is not None:
-            value = VCS_validation_functions.checkerrorbars(self, 'errorbars', value)
+            value = VCS_validation_functions.checkErrorBars(self, 'errorbars', value)
         self._errorbars = value
     errorbars = property(_geterrorbars, _seterrorbars)
 

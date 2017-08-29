@@ -42,6 +42,7 @@ import unified1D
 import vector
 import streamline
 import line
+import errorbars
 import marker
 import fillarea
 import texttable
@@ -258,6 +259,8 @@ def issecondaryobject(sobj):
 
                 9.) projections
 
+                10.) errorbars: errorbars type, color
+
     :Example:
 
         .. doctest:: queries_issecondary
@@ -289,7 +292,7 @@ def issecondaryobject(sobj):
         return 1
     elif (isinstance(sobj, textcombined.Tc)):
         return 1
-    elif (isinstance(sobj, marker.Tm)):
+    elif (isinstance(sobj, errorbars.Te)):
         return 1
     elif (isinstance(sobj, projection.Proj)):
         return 1
@@ -433,6 +436,14 @@ def ismarker(obj):
     else:
         return 0
 ismarker.__doc__ = xmldocs.is_docs['marker']  # noqa
+
+
+def iserrorbars(obj):
+    if (isinstance(obj, errorbars.Te)):
+        return 1
+    else:
+        return 0
+iserrorbars.__doc__ = xmldocs.is_docs['errorbars']  # noqa
 
 
 def isfillarea(obj):
