@@ -1549,7 +1549,7 @@ def getcolors(levs, colors=None, split=1, white="white"):
             split = 1
     # Take care of argument white
     if isinstance(white, basestring):
-        white = genutil.colors.str2rgb(white)
+        white = [value/2.55 for value in genutil.colors.str2rgb(white)]
 
     # Gets first and last value, and adjust if extensions
     mn = levs[0]
