@@ -543,11 +543,8 @@ def listelements(typ=None):
         return sorted(vcs.elements.keys())
     if typ in ("xvsy", "yxvsx", "scatter", "xyvsy"):
         names = []
-        aliased = ("xvsy", "yxvsx")
         for name, gm in vcs.elements["1d"].iteritems():
-            if gm.g_type in aliased and typ in aliased:
-                names.append(name)
-            elif gm.g_type == typ:
+            if gm.g_type == typ:
                 names.append(name)
         return sorted(names)
     if typ not in vcs.elements.keys():
