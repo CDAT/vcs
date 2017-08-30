@@ -205,7 +205,10 @@ if len(names)==0:
 # Make sure we have sample data
 cdat_info.download_sample_data_files(os.path.join(sys.prefix,"share","vcs","test_data_files.txt"),cdat_info.get_sampledata_path())
 p = multiprocessing.Pool(args.cpus)
-outs = p.map(run_nose, names)
+try:
+    outs = p.map_async(run_nose, names).get(3600)
+except KeyboardInterupt:
+    sys.exit(1)
 results = {}
 failed = []
 for d in outs:
