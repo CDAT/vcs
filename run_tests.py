@@ -207,7 +207,7 @@ cdat_info.download_sample_data_files(os.path.join(sys.prefix,"share","vcs","test
 p = multiprocessing.Pool(args.cpus)
 try:
     outs = p.map_async(run_nose, names).get(3600)
-except KeyboardInterupt:
+except KeyboardInterrupt:
     sys.exit(1)
 results = {}
 failed = []
