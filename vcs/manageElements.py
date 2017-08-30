@@ -1710,6 +1710,11 @@ def removeG(obj, gtype="boxfill"):
         if not res:  # noqa
             raise RuntimeError("You are trying to remove a VCS %s but %s is not one" % (gtype, repr(obj)))
     msg = "Removed %s object %s" % (gtype, name)
+    if gtype == "1d":
+        obj = vcs.elements[gtype][name]
+        if obj.g_type == "GSp":
+            removeG(name, "scatter")
+
     del(vcs.elements[gtype][name])
     return msg
 
@@ -1885,8 +1890,11 @@ def removeobject(obj):
             msg = vcs.removeGtd(obj.name)
         elif (obj.g_name == 'Gs'):
             msg = vcs.removeGs(obj.name)
+        elif obj.g_name in ["3d_dual_scalar", "3d_scalar", "3d_vector"]:
+            del vcs.elements[obj.g_name][obj.name]
+            msg = None
         else:
-            msg = 'Could not find the correct graphics class object.'
+            msg = 'Could not find the correct graphics class object: %s.' % obj.g_name
             raise vcsError(msg)
     elif vcs.issecondaryobject(obj):
         if (obj.s_name == 'Tl'):
@@ -1912,3 +1920,33 @@ def removeobject(obj):
         msg = 'This is not a template, graphics method, or secondary method object.'
         raise vcsError(msg)
     return msg
+
+
+def reset(vcstypes=None):
+    """Resets all vcs objects created by user
+
+    :Example:
+
+        .. doctest:: manageElements_reset
+
+            >>> a=vcs.init()
+            >>> iso=a.createisoline('dean') # Create an instance of an isoline object
+            >>> vcs.reset()
+
+    :param vcstypes: Any VCS object type that you need to clean (or a list of such)
+    :type vcstypes: string
+
+    :returns: None
+    :rtype: None
+"""
+
+    if vcstypes is None:
+        vcstypes = vcs.listelements()
+    elif isinstance(vcstypes, basestring):
+        vcstypes = [vcstypes]
+
+    for typ in vcstypes:
+        elements = vcs.listelements(typ)
+        for elt in elements:
+            if elt not in vcs._protected_elements[typ]:
+                vcs.removeobject(vcs.elements[typ][elt])
