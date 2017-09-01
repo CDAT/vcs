@@ -1,5 +1,6 @@
 from genutil.colors import rgb2str, str2rgb  # noqa
 
+
 def matplotlib2vcs(cmap, vcs_name=None):
     """
     Convert a matplotlib colormap to a vcs colormap
