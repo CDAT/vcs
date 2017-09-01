@@ -10,7 +10,7 @@ general:
 
 checkout:
   post:
-    - ./scripts/checkout_merge_commit.sh
+    - ./ci-support/checkout_merge_commit.sh
 
 #machine:
 machine:
@@ -20,17 +20,17 @@ machine:
         - sudo -H pip install --upgrade virtualenv
         - ls
         - pwd
-        - bash vcs/scripts/circleci_mac_machine_pre.sh
+        - bash vcs/ci-support/circleci_mac_machine_pre.sh
     #services:
     #    - docker
 
 dependencies:
     override:
-        - bash ./scripts/circleci_mac_dep.sh
+        - bash ./ci-support/circleci_mac_dep.sh
           #   - docker pull cdat/conda:conda-forge-cdms2
   
 
 test:
   override:
-      - bash ./scripts/circleci_mac.sh
-        # - docker run -it -v `pwd`:/git_repo -a STDOUT -a STDERR -P cdat/conda:conda-forge-cdms2 /git_repo/scripts/circle.sh
+      - bash ./ci-support/circleci_mac.sh
+        # - docker run -it -v `pwd`:/git_repo -a STDOUT -a STDERR -P cdat/conda:conda-forge-cdms2 /git_repo/ci-support/circle.sh
