@@ -1,6 +1,5 @@
 from genutil.colors import rgb2str, str2rgb  # noqa
 
-
 def matplotlib2vcs(cmap, vcs_name=None):
     """
     Convert a matplotlib colormap to a vcs colormap
@@ -42,3 +41,13 @@ def matplotlib2vcs(cmap, vcs_name=None):
         vcs_cmap.setcolorcell(i, *([int(x * 100) for x in cmap_rgbs[i][:4]]))
 
     return vcs_cmap
+
+
+def loadmatplotlibcolormaps():
+    """
+    Convert all matplotlib colormaps to vcs colormaps
+    """
+    import matplotlib.pyplot as plt
+    mpl_cmaps = sorted(m for m in plt.cm.datad if not m.endswith("_r"))
+    for cmap in mpl_cmaps:
+        matplotlib2vcs(cmap)

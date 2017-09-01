@@ -45,7 +45,7 @@ except BaseException:
     hasVCSAddons = False
 
 
-from colors import rgb2str, str2rgb, matplotlib2vcs  # noqa
+from colors import rgb2str, str2rgb, matplotlib2vcs, loadmatplotlibcolormaps  # noqa
 
 indent = 1
 sort_keys = True
