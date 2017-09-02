@@ -45,7 +45,7 @@ except BaseException:
     hasVCSAddons = False
 
 
-from colors import rgb2str, str2rgb, matplotlib2vcs  # noqa
+from colors import rgb2str, str2rgb, matplotlib2vcs, loadmatplotlibcolormaps  # noqa
 
 indent = 1
 sort_keys = True
@@ -1148,6 +1148,8 @@ def minmax(*data):
         if d is None:
             return mx, mn
         from numpy.ma import maximum, minimum, count
+        if isinstance(d, (int, float)):
+            return maximum(d, mx), minimum(d, mn)
         try:
             if count(d) == 0:
                 return mx, mn

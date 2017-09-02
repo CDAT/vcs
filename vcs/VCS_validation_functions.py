@@ -1256,7 +1256,7 @@ def checkTimeUnits(self, name, value):
         checkedRaise(self, value, ValueError, value + ' is invalid time units')
     sp = value.split('since')[1]
     b = cdtime.s2c(sp)
-    if b == cdtime.comptime(0, 1):
+    if b.cmp(cdtime.comptime(0, 1)) == 0:
         checkedRaise(self, value, ValueError, sp + ' is invalid date')
     return value
 
@@ -1267,10 +1267,10 @@ def checkDatawc(self, name, value):
         value = float(value), 0
     elif isinstance(value, str):
         t = cdtime.s2c(value)
-        if t != cdtime.comptime(0, 1):
+        if t.cmp(cdtime.comptime(0, 1)) != 0:
             t = t.torel(self.datawc_timeunits, self.datawc_calendar)
             value = float(t.value), 1
-        else:
+        else:  # Bad string led to 0-1-1
             checkedRaise(
                 self,
                 value,

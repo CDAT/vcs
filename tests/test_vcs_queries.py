@@ -3,7 +3,7 @@ import vcs
 
 class TestVCSQueries(unittest.TestCase):
     def testVCSQueries(self):
-        gms = ["boxfill","isofill","isoline","meshfill","scatter","yxvsx","xvsy","xyvsy","vector"]
+        gms = ["boxfill","isofill","isoline","meshfill","scatter","yxvsx","xvsy","xyvsy","vector","streamline"]
         for gm in gms:
           print "testing query work for:",gm
           exec("g=vcs.create%s()" % gm)
