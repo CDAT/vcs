@@ -1148,8 +1148,8 @@ def minmax(*data):
         if d is None:
             return mx, mn
         from numpy.ma import maximum, minimum, count
-        if isinstance(d,(int,float)):
-            return maximum(d,mx),minimum(d,mn)
+        if isinstance(d, (int, float)):
+            return maximum(d, mx), minimum(d, mn)
         try:
             if count(d) == 0:
                 return mx, mn
