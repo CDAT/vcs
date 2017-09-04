@@ -423,7 +423,13 @@ class VTKVCSBackend(object):
     def createDefaultInteractor(self, ren=None):
         defaultInteractor = self.renWin.GetInteractor()
         if defaultInteractor is None:
-            defaultInteractor = vtk.vtkRenderWindowInteractor()
+            if self.bg:
+                # this is only used to pass event to vtk objects
+                # it does not listen to events form the window
+                # it is used in vtkweb
+                defaultInteractor = vtk.vtkGenericRenderWindowInteractor()
+            else:
+                defaultInteractor = vtk.vtkRenderWindowInteractor()
         self.vcsInteractorStyle = VCSInteractorStyle(self)
         if ren:
             self.vcsInteractorStyle.SetCurrentRenderer(ren)
@@ -456,8 +462,7 @@ class VTKVCSBackend(object):
 
         if self.renderer is None:
             self.renderer = self.createRenderer()
-            if not self.bg:
-                self.createDefaultInteractor(self.renderer)
+            self.createDefaultInteractor(self.renderer)
             self.renWin.AddRenderer(self.renderer)
             self.renWin.AddObserver("ModifiedEvent", self.configureEvent)
         if self.bg:
