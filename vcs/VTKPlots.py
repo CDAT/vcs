@@ -37,7 +37,6 @@ class VCSInteractorStyle(vtk.vtkInteractorStyleUser):
         self.AddObserver(
             "LeftButtonReleaseEvent",
             parent.leftButtonReleaseEvent)
-        self.AddObserver("ModifiedEvent", parent.configureEvent)
         self.AddObserver("ConfigureEvent", parent.configureEvent)
         if sys.platform == "darwin":
             self.AddObserver("RenderEvent", parent.renderEvent)
@@ -119,7 +118,6 @@ class VTKVCSBackend(object):
             self.renWin.AddObserver(
                 "LeftButtonReleaseEvent",
                 self.leftButtonReleaseEvent)
-            self.renWin.AddObserver("ModifiedEvent", self.configureEvent)
             self.renWin.AddObserver("ConfigureEvent", self.configureEvent)
             self.renWin.AddObserver("EndEvent", self.endEvent)
         if interactor is None:
@@ -276,12 +274,10 @@ class VTKVCSBackend(object):
             self.clickRenderer = None
 
     def configureEvent(self, obj, ev):
+        print ev
         if not self.renWin:
             return
         cursor = self.renWin.GetCurrentCursor()
-        if sys.platform == "darwin" and ev == "ModifiedEvent" and cursor != self.oldCursor:
-            self.oldCursor = cursor
-            return
 
         if self.get3DPlot() is not None:
             return
@@ -464,7 +460,6 @@ class VTKVCSBackend(object):
             self.renderer = self.createRenderer()
             self.createDefaultInteractor(self.renderer)
             self.renWin.AddRenderer(self.renderer)
-            self.renWin.AddObserver("ModifiedEvent", self.configureEvent)
         if self.bg:
             self.renWin.SetOffScreenRendering(True)
         if "open" in kargs and kargs["open"]:
