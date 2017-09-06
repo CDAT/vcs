@@ -81,6 +81,7 @@ class VTKVCSBackend(object):
             'vtk_backend_grid',
             # vtkGeoTransform used for geographic transformation
             'vtk_backend_geo',
+            'error'
         ]
         self.numberOfPlotCalls = 0
         self.renderWindowSize = None
@@ -722,9 +723,13 @@ class VTKVCSBackend(object):
                         create_renderer=create_renderer)
                     create_renderer = False
         elif gtype == "marker":
+            error = None
+            if kargs.get("error", None) is not None:
+                error = kargs["error"]
             if gm.priority != 0:
                 actors = vcs2vtk.prepMarker(self.renWin, gm,
-                                            cmap=self.canvas.colormap)
+                                            cmap=self.canvas.colormap,
+                                            error=error)
                 returned["vtk_backend_marker_actors"] = actors
                 create_renderer = True
                 for g, gs, pd, act, geo in actors:

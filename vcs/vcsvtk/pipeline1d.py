@@ -117,7 +117,8 @@ class Pipeline1D(Pipeline):
             # if self._gm.marker is not None and m.priority > 0:
                 # self._context().canvas.plot(m, donotstoredisplay=True)
             if err_marker is not None:
-                self._context().canvas.plot(err_marker, donotstoredisplay=True)
+                self._context().canvas.plot(err_marker, donotstoredisplay=True,
+                                            error=kargs['error'])
 
         ren2 = self._context().createRenderer()
         self._context().setLayer(ren2, l.priority)

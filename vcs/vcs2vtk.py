@@ -1746,7 +1746,7 @@ def scaleMarkerGlyph(g, gs, pd, a):
     g.SetSourceConnection(glyphFixer.GetOutputPort())
 
 
-def prepMarker(renWin, marker, cmap=None):
+def prepMarker(renWin, marker, cmap=None, error=None):
     n = prepPrimitive(marker)
     if n == 0:
         return []
@@ -1771,6 +1771,19 @@ def prepMarker(renWin, marker, cmap=None):
         # Ok at this point generates the source for glpyh
         gs, pd = prepGlyph(g, marker, index=i)
         g.SetInputData(markers)
+
+        # Set scalars if errorbars
+        if marker.type[i] in ['error_x', 'error_y'] and error is not None:
+            error += [0] * (N - len(error))
+            err = vtk.vtkFloatArray()
+            err.SetName("Error")
+            err.SetNumberOfComponents(1)
+            err.SetNumberOfTuples(N)
+            for x in range(0, N):
+                err.SetTuple1(x, error[x])
+            markers.GetPointData().SetScalars(err)
+            g.SetScaleModeToScaleByScalar()
+            g.SetColorModeToColorByScalar()
 
         a = vtk.vtkActor()
         m = vtk.vtkPolyDataMapper()
