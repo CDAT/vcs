@@ -274,7 +274,6 @@ class VTKVCSBackend(object):
             self.clickRenderer = None
 
     def configureEvent(self, obj, ev):
-        print ev
         if not self.renWin:
             return
         cursor = self.renWin.GetCurrentCursor()
