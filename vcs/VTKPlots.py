@@ -276,7 +276,6 @@ class VTKVCSBackend(object):
     def configureEvent(self, obj, ev):
         if not self.renWin:
             return
-        cursor = self.renWin.GetCurrentCursor()
 
         if self.get3DPlot() is not None:
             return
