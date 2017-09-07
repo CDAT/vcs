@@ -556,7 +556,7 @@ class VTKVCSBackend(object):
                 self._geometry["width"] = self.canvas.bgX
                 self._geometry["height"] = self.canvas.bgY
         else:
-            self.renWin.SetSize(W, H)
+            self.setsize(W, H)
             self.canvas.bgX = W
             self.canvas.bgY = H
 
@@ -569,7 +569,7 @@ class VTKVCSBackend(object):
     def initialSize(self, width=None, height=None):
         # Gets user physical screen dimensions
         if isinstance(width, int) and isinstance(height, int):
-            self.renWin.SetSize(width, height)
+            self.setsize(width, height)
             self._lastSize = (width, height)
             return
 
@@ -592,7 +592,7 @@ class VTKVCSBackend(object):
         # make the dimensions even for Macs
         bgX = _makeEven(bgX)
         bgY = _makeEven(bgY)
-        self.renWin.SetSize(bgX, bgY)
+        self.setsize(bgX, bgY)
         self.canvas.bgX = bgX
         self.canvas.bgY = bgY
         self._lastSize = (bgX, bgY)
@@ -626,9 +626,13 @@ class VTKVCSBackend(object):
         y = args[1]
 
         if self.renWin is not None:
-            self.renWin.SetSize(x, y)
+            self.setsize(x, y)
         self._geometry = {'width': x, 'height': y}
         self._lastSize = (x, y)
+
+    def setsize(self, x, y):
+        self.renWin.SetSize(x, y)
+        self.configureEvent(None, None)
 
     def flush(self):
         if self.renWin is not None:
@@ -646,7 +650,7 @@ class VTKVCSBackend(object):
         self.createRenWin(**kargs)
         if self.bg:
             self.renWin.SetOffScreenRendering(True)
-            self.renWin.SetSize(self.canvas.bgX, self.canvas.bgY)
+            self.setsize(self.canvas.bgX, self.canvas.bgY)
         self.cell_coordinates = kargs.get('cell_coordinates', None)
         self.canvas.initLogoDrawing()
         if gtype == "text":
@@ -1246,8 +1250,7 @@ x.geometry(1200,800)
                 # otherwise, canvas.bgX,canvas.bgY will win
                 self.canvas.bgX = width
                 self.canvas.bgY = height
-                self.renWin.SetSize(width, height)
-                self.configureEvent(None, None)
+                self.setsize(width, height)
             else:
                 user_dims = None
 
@@ -1260,9 +1263,8 @@ x.geometry(1200,800)
             imgfiltr.SetInputBufferTypeToRGBA()
 
         self.hideGUI()
-        imgfiltr.Update()
-        self.showGUI(render=False)
         self.renWin.Render()
+        self.showGUI(render=False)
 
         writer = vtk.vtkPNGWriter()
         compression = args.get('compression', 5)  # get compression from user
@@ -1276,8 +1278,8 @@ x.geometry(1200,800)
         writer.Write()
         if user_dims is not None:
             self.canvas.bgX, self.canvas.bgY, w, h = user_dims
-            self.renWin.SetSize(w, h)
-            self.configureEvent(None, None)
+            self.setsize(w, h)
+            self.renWin.Render()
 
     def cgm(self, file):
         if self.renWin is None:
