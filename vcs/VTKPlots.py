@@ -37,7 +37,6 @@ class VCSInteractorStyle(vtk.vtkInteractorStyleUser):
         self.AddObserver(
             "LeftButtonReleaseEvent",
             parent.leftButtonReleaseEvent)
-        self.AddObserver("ModifiedEvent", parent.configureEvent)
         self.AddObserver("ConfigureEvent", parent.configureEvent)
         if sys.platform == "darwin":
             self.AddObserver("RenderEvent", parent.renderEvent)
@@ -119,7 +118,6 @@ class VTKVCSBackend(object):
             self.renWin.AddObserver(
                 "LeftButtonReleaseEvent",
                 self.leftButtonReleaseEvent)
-            self.renWin.AddObserver("ModifiedEvent", self.configureEvent)
             self.renWin.AddObserver("ConfigureEvent", self.configureEvent)
             self.renWin.AddObserver("EndEvent", self.endEvent)
         if interactor is None:
@@ -278,10 +276,6 @@ class VTKVCSBackend(object):
     def configureEvent(self, obj, ev):
         if not self.renWin:
             return
-        cursor = self.renWin.GetCurrentCursor()
-        if sys.platform == "darwin" and ev == "ModifiedEvent" and cursor != self.oldCursor:
-            self.oldCursor = cursor
-            return
 
         if self.get3DPlot() is not None:
             return
@@ -423,7 +417,13 @@ class VTKVCSBackend(object):
     def createDefaultInteractor(self, ren=None):
         defaultInteractor = self.renWin.GetInteractor()
         if defaultInteractor is None:
-            defaultInteractor = vtk.vtkRenderWindowInteractor()
+            if self.bg:
+                # this is only used to pass event to vtk objects
+                # it does not listen to events form the window
+                # it is used in vtkweb
+                defaultInteractor = vtk.vtkGenericRenderWindowInteractor()
+            else:
+                defaultInteractor = vtk.vtkRenderWindowInteractor()
         self.vcsInteractorStyle = VCSInteractorStyle(self)
         if ren:
             self.vcsInteractorStyle.SetCurrentRenderer(ren)
@@ -456,10 +456,8 @@ class VTKVCSBackend(object):
 
         if self.renderer is None:
             self.renderer = self.createRenderer()
-            if not self.bg:
-                self.createDefaultInteractor(self.renderer)
+            self.createDefaultInteractor(self.renderer)
             self.renWin.AddRenderer(self.renderer)
-            self.renWin.AddObserver("ModifiedEvent", self.configureEvent)
         if self.bg:
             self.renWin.SetOffScreenRendering(True)
         if "open" in kargs and kargs["open"]:
