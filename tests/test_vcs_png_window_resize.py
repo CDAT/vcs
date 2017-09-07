@@ -5,6 +5,7 @@ import os
 class TestVCSPNG(basevcstest.VCSBaseTest):
     def __init__(self,*args,**kargs):
         kargs['bg']=0
+        kargs['geometry'] = {"width": 1200, "height": 790}
         super(TestVCSPNG,self).__init__(*args,**kargs)
 
     def testPngResizeWindow(self, *args, **kwargs):

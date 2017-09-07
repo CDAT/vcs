@@ -1260,9 +1260,8 @@ x.geometry(1200,800)
             imgfiltr.SetInputBufferTypeToRGBA()
 
         self.hideGUI()
-        imgfiltr.Update()
-        self.showGUI(render=False)
         self.renWin.Render()
+        self.showGUI(render=False)
 
         writer = vtk.vtkPNGWriter()
         compression = args.get('compression', 5)  # get compression from user
@@ -1278,6 +1277,7 @@ x.geometry(1200,800)
             self.canvas.bgX, self.canvas.bgY, w, h = user_dims
             self.renWin.SetSize(w, h)
             self.configureEvent(None, None)
+            self.renWin.Render()
 
     def cgm(self, file):
         if self.renWin is None:
