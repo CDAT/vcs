@@ -4080,7 +4080,7 @@ class Canvas(vcs.bestMatch):
                 delattr(arglist[0], p)
             else:
                 setattr(arglist[0], p, tmp)
-        if dn is not None and not isinstance(dn,(list,tuple)):
+        if dn is not None and not isinstance(dn, (list, tuple)):
             self.display_names.append(result.name)
             if result.g_type in (
                     "3d_scalar", "3d_vector") and self.configurator is not None:
