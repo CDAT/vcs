@@ -4034,12 +4034,12 @@ class Canvas(vcs.bestMatch):
                 else:
                     dn = None
 
-            if dn is not None:
-                dn._template_origin = template_origin
-                dn.ratio = keyargs.get("ratio", None)
-                dn.continents = self.getcontinentstype()
-                dn.continents_line = self.getcontinentsline()
-                dn.newelements = self.__new_elts(original_elts, new_elts)
+                if dn is not None:
+                    dn._template_origin = template_origin
+                    dn.ratio = keyargs.get("ratio", None)
+                    dn.continents = self.getcontinentstype()
+                    dn.continents_line = self.getcontinentsline()
+                    dn.newelements = self.__new_elts(original_elts, new_elts)
 
             if self.mode != 0:
                 # self.update()
@@ -4080,7 +4080,7 @@ class Canvas(vcs.bestMatch):
                 delattr(arglist[0], p)
             else:
                 setattr(arglist[0], p, tmp)
-        if dn is not None:
+        if dn is not None and not isinstance(dn,(list,tuple)):
             self.display_names.append(result.name)
             if result.g_type in (
                     "3d_scalar", "3d_vector") and self.configurator is not None:

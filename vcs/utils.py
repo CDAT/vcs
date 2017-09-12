@@ -1153,8 +1153,8 @@ def minmax(*data):
         try:
             if count(d) == 0:
                 return mx, mn
-            mx = float(maximum(mx, float(maximum(d))))
-            mn = float(minimum(mn, float(minimum(d))))
+            mx=float(maximum(mx,maximum.reduce(d,axis=None)))
+            mn=float(minimum(mn,minimum.reduce(d,axis=None)))
         except BaseException:
             for i in d:
                 mx, mn = myfunction(i, mx, mn)
