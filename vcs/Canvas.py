@@ -67,18 +67,20 @@ except:
 
 
 class JupyterFFMPEG(object):
-    def __init__(self,source,ffmpeg_result,width=640,height=420,controls=True):
+    def __init__(self, source, ffmpeg_result, width=640, height=420, controls=True):
         self.source = source
         self.width = width
         self.height = height
         self.controls = controls
         self.result = ffmpeg_result
+
     def _repr_html_(self):
-        html = "<video width='%i' height='%i'" % (self.width,self.height)
+        html = "<video width='%i' height='%i'" % (self.width, self.height)
         if self.controls:
             html += "controls"
         html += "><source src='%s' type='video/mp4'>" % (self.source)
-        return  html
+        return html
+
 
 class SIGNAL(object):
 
@@ -4822,7 +4824,7 @@ class Canvas(vcs.bestMatch):
             for f in Files:
                 os.remove(f)
 
-        return JupyterFFMPEG(movie,result)
+        return JupyterFFMPEG(movie, result)
 
     def getantialiasing(self):
         """Returns the current antialiasing rate for the canvas.
