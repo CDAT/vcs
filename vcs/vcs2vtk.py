@@ -1331,6 +1331,16 @@ def __build_pd__():
     return pts, polygons, polygonPolyData
 
 
+def polygon_area (x, y):
+    n = len(x)
+    area = 0.0
+    im1 = n - 1
+    for i in range ( 0, n ):
+        area = area + x[im1] * y[i] - x[i] * y[im1]
+        im1 = i
+    return area/2.
+
+
 def prepFillarea(context, renWin, farea, cmap=None):
     n = prepPrimitive(farea)
     if n == 0:
@@ -1359,6 +1369,10 @@ def prepFillarea(context, renWin, farea, cmap=None):
     for i in range(n):
         x = farea.x[i]
         y = farea.y[i]
+        area = polygon_area(x,y)
+        if area<0:  # need to flip this
+            x = x[::-1]
+            y = y[::-1]
         st = farea.style[i]
         if st == "pattern":
             c = (0., 0., 0., 100.)
