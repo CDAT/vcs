@@ -53,7 +53,7 @@ class TestVCSSlowDown(basevcstest.VCSBaseTest):
         print "\tFastest time:",fastest
         print "\tAvg time:",avg/n
         print "\tFit coeff:",a,b
-        if a>2.E-2:
+        if a>25.E-2:
             return True
         return False
     def testSlowingDown(self):
