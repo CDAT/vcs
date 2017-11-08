@@ -1,7 +1,7 @@
 from .pipeline import Pipeline
 from .. import vcs2vtk
 
-import fillareautils
+from . import fillareautils
 import numpy
 import vcs
 import vtk

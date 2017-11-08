@@ -107,12 +107,6 @@ class Pls(vcs.bestMatch):
     #                                                                           #
     ##########################################################################
     __slots__ = [
-        "priority",
-        "x1",
-        "x2",
-        "y1",
-        "y2",
-        "line",
         "member",
         "_priority",
         "_x1",
@@ -122,11 +116,7 @@ class Pls(vcs.bestMatch):
         "_line",
         "_texttable",
         "_textorientation",
-        "texttable",
-        "textorientation",
-        "offset",
         "_offset",
-        "arrow",
         "_arrow",
     ]
 

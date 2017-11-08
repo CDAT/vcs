@@ -1,4 +1,4 @@
-from box import BoxEditor
+from .box import BoxEditor
 from vcs.vtk_ui import Toolbar
 import vcs
 
@@ -24,7 +24,7 @@ class DataEditor(BoxEditor):
         self.toolbar = Toolbar(interactor, "Data Options")
         self.toolbar.show()
 
-        self.projections = vcs.elements["projection"].keys()
+        self.projections = list(vcs.elements["projection"].keys())
 
         proj_button = self.toolbar.add_button(
             self.projections,

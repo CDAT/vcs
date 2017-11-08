@@ -4,6 +4,11 @@ import cdtime
 import numpy
 import genutil
 
+try:
+    basestring
+except NameError:
+    basestring = str
+
 
 class PPE(Exception):
 
@@ -23,9 +28,9 @@ class PPE(Exception):
 
 
 def color2vcs(col):
-    if isinstance(col, str):
+    if isinstance(col, basestring):
         col = str(col)
-    if isinstance(col, str):
+    if isinstance(col, basestring):
         r, g, b = genutil.colors.str2rgb(col)
         if r is None:
             raise ValueError("Invalid color: %s" % col)
@@ -1339,9 +1344,9 @@ def checkProjType(self, name, value):
     checkName(self, name, value)
     if vcs.queries.isprojection(value):
         value = value.type
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = value.strip().lower()
         if value in ['utm', 'state plane']:
             checkedRaise(
@@ -1351,7 +1356,7 @@ def checkProjType(self, name, value):
                 "Projection Type: " +
                 value +
                 " not supported yet")
-    if -3 <= value < 0:
+    if isinstance(value,int) and (-3 <= value < 0):
         return value
 
     if self._type == - \

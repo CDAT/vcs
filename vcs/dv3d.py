@@ -7,7 +7,7 @@ from . import VCS_validation_functions
 import multiprocessing
 import vcs
 import time
-from .DV3D.ConfigurationFunctions import ConfigManager
+from DV3D.ConfigurationFunctions import ConfigManager
 from .xmldocs import toggle_surface, toggle_volume, xslider, yslider, zslider, verticalscaling, scalecolormap  # noqa
 from .xmldocs import scaletransferfunction, toggleclipping, isosurfacevalue, scaleopacity, basemapopacity, camera, scriptdocs  # noqa
 
@@ -39,9 +39,6 @@ class Gfdv3d(object):
     """ % (toggle_surface, toggle_volume, xslider, yslider, zslider, verticalscaling, scalecolormap,
            scaletransferfunction, toggleclipping, isosurfacevalue, scaleopacity, basemapopacity, camera)
     __slots__ = [
-        '__doc__',
-        'name',
-        'axes',
         'g_name',
         'ncores',
         'plot_attributes'
@@ -207,7 +204,7 @@ class Gfdv3d(object):
 
     @staticmethod
     def getParameterList():
-        from .DV3D.DV3DPlot import PlotButtonNames
+        from DV3D.DV3DPlot import PlotButtonNames
         cfgManager = ConfigManager()
         parameterList = cfgManager.getParameterList(extras=PlotButtonNames)
         return parameterList

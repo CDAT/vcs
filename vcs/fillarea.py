@@ -193,21 +193,7 @@ class Tf(vcs.bestMatch):
         .. pragma: skip-doctest
         """
     __slots__ = [
-        'name',
         's_name',
-        'color',
-        'opacity',
-        'pixelspacing',
-        'pixelscale',
-        'priority',
-        'style',
-        'index',
-        'viewport',
-        'worldcoordinate',
-        'x',
-        'y',
-        'projection',
-        'colormap',
         '_name',
         '_color',
         '_priority',

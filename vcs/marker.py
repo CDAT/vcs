@@ -216,17 +216,6 @@ class Tm(vcs.bestMatch):
         """
     __slots__ = [
         's_name',
-        'name',
-        'color',
-        'priority',
-        'type',
-        'size',
-        'viewport',
-        'worldcoordinate',
-        'x',
-        'y',
-        'projection',
-        'colormap',
         '_name',
         '_color',
         '_priority',

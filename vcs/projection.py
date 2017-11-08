@@ -432,8 +432,8 @@ class Proj(vcs.bestMatch):
             1e+20]
         if Proj_name != "default":
             src = vcs.elements["projection"][Proj_name_src]
-            self.type = src.type
-            self.parameters = copy.copy(src.parameters)
+            self._type = src._type
+            self._parameters = copy.copy(src._parameters)
         vcs.elements["projection"][Proj_name] = self
 
     ##########################################################################
@@ -670,42 +670,6 @@ class Proj(vcs.bestMatch):
 
     __slots__ = [
         's_name',
-        'smajor',
-        'sminor',
-        'centralmeridian',
-        'truescale',
-        'falseeasting',
-        'falsenorthing',
-        'factor',
-        'originlatitude',
-        'azimuthalangle',
-        'azimuthlongitude',
-        'longitude1',
-        'longitude2',
-        'latitude1',
-        'latitude2',
-        'subtype',
-        'orbitinclination',
-        'orbitlongitude',
-        'satelliterevolutionperiod',
-        'landsatcompensationratio',
-        'pathflag',
-        'path',
-        'satellite',
-        'sphere',
-        'centerlongitude',
-        'centerlatitude',
-        'standardparallel1',
-        'standardparallel2',
-        'standardparallel',
-        'height',
-        'angle',
-        'shapem',
-        'shapen',
-        'parent',
-        'name',
-        'type',
-        'parameters',
         '_smajor',
         '_sminor',
         '_centralmeridian',

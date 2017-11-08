@@ -1,5 +1,5 @@
 import vtk
-from patterns import pattern_list
+from .patterns import pattern_list
 
 
 def make_patterned_polydata(inputContours, fillareastyle=None,

@@ -103,19 +103,13 @@ class Pds(vcs.bestMatch):
     #                                                                           #
     ##########################################################################
     __slots__ = [
-        "priority",
-        "x1",
-        "x2",
-        "y1",
-        "y2",
-        "ratio",
         "member",
         "_priority",
         "_x1",
         "_x2",
         "_y1",
         "_y2",
-        "_ratio"]
+        "ratio"]
 
     def __init__(self, member):
         #    def __init__(self, template, member=None):

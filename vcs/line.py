@@ -150,17 +150,6 @@ class Tl(vcs.bestMatch):
     """
     __slots__ = [
         's_name',
-        'name',
-        'color',
-        'priority',
-        'type',
-        'width',
-        'viewport',
-        'worldcoordinate',
-        'x',
-        'y',
-        'projection',
-        'colormap',
         '_color',
         '_priority',
         '_type',
@@ -356,16 +345,16 @@ class Tl(vcs.bestMatch):
                     "The line source '%s' does not exists" %
                     Tl_name_src)
             src = vcs.elements["line"][Tl_name_src]
-            self.type = src.type
-            self.projection = src.projection
-            self.width = src.width
-            self.color = src.color
-            self.priority = src.priority
-            self.viewport = src.viewport
-            self.worldcoordinate = src.worldcoordinate
-            self.x = src.x
-            self.y = src.y
-            self.colormap = src.colormap
+            self._type = src._type
+            self._projection = src._projection
+            self._width = src._width
+            self._color = src._color
+            self._priority = src._priority
+            self._viewport = src._viewport
+            self._worldcoordinate = src._worldcoordinate
+            self._x = src._x
+            self._y = src._y
+            self._colormap = src._colormap
         vcs.elements["line"][Tl_name] = self
 
     ##########################################################################

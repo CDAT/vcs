@@ -176,7 +176,7 @@ class IsolinePipeline(Pipeline2D):
                         elif vcs.queries.istextorientation(tc):
                             to = tc.name
                             tt = "default"
-                        elif isinstance(tc, (str, unicode)):
+                        elif isinstance(tc, str):
                             sp = tc.split(":::")
                             if len(sp) == 2:
                                 tt = sp[0]

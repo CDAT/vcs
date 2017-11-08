@@ -33,7 +33,10 @@
 #
 #
 #############################################################################
-from UserDict import UserDict
+try:
+    from collections import UserDict
+except:
+    from UserDict import UserDict
 import vcs
 import copy
 from . import xmldocs
@@ -244,7 +247,7 @@ class Cp(vcs.bestMatch):
 
     .. pragma: skip-doctest
     """
-    __slots__ = ["s_name", "name", "_name", "index", "_index"]
+    __slots__ = ["s_name", "_name", "_index"]
 
     def getname(self):
         return self._name

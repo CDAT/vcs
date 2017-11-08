@@ -1,5 +1,5 @@
 from .pipeline2d import Pipeline2D
-import fillareautils
+from . import fillareautils
 
 import numpy
 import vcs

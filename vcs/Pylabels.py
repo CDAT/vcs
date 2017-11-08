@@ -108,10 +108,6 @@ class Pyl(vcs.bestMatch):
     #                                                                           #
     ##########################################################################
     __slots__ = [
-        "priority",
-        "x",
-        "texttable",
-        "textorientation",
         "member",
         "_priority",
         "_x",

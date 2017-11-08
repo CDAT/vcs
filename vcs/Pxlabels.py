@@ -108,10 +108,6 @@ class Pxl(vcs.bestMatch):
     #                                                                           #
     ##########################################################################
     __slots__ = [
-        "priority",
-        "y",
-        "texttable",
-        "textorientation",
         "member",
         "_priority",
         "_y",

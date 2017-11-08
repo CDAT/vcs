@@ -52,7 +52,12 @@ import difflib
 
 class bestMatch(object):
     def __setattr__(self, a, v):
-        if not hasattr(self, "__slots__") or a in self.__slots__:
+        try:
+            prop = getattr(self.__class__,a)
+            isprop = isinstance(prop,property)
+        except:
+            isprop = False
+        if isprop or not hasattr(self, "__slots__") or a in self.__slots__:
             super(bestMatch, self).__setattr__(a, v)
         else:
             matches = difflib.get_close_matches(a, self.__slots__)

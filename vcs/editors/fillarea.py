@@ -1,7 +1,7 @@
 from vcs import vtk_ui
 from vcs.vtk_ui import behaviors
 from vcs.colorpicker import ColorPicker
-import priority
+from . import priority
 
 
 class FillEditor(
@@ -100,7 +100,7 @@ class FillEditor(
 
         self.handles = []
 
-        points = zip(self.fill.x[self.index], self.fill.y[self.index])
+        points = list(zip(self.fill.x[self.index], self.fill.y[self.index]))
 
         for point in points:
             h = vtk_ui.Handle(
@@ -247,7 +247,7 @@ def inside_fillarea(fillarea, x, y, index=None):
             if ind != index:
                 continue
         # Points are stored as a list of lists, once the fill has been rendered
-        points = zip(xcoords, fillarea.y[ind])
+        points = list(zip(xcoords, fillarea.y[ind]))
 
         if len(points) == 1:
             if points[0][0] == x and points[0][1] == y:

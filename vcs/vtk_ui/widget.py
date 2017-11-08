@@ -1,4 +1,4 @@
-from manager import get_manager
+from .manager import get_manager
 
 
 class Widget(object):
@@ -17,7 +17,7 @@ class Widget(object):
         super(Widget, self).__init__()
 
     def log(self, message):
-        print repr(self), message
+        print(repr(self), message)
 
     def subscribe(self, event, action):
         if event in self.subscriptions:
@@ -67,7 +67,7 @@ class Widget(object):
 
         if render.HasViewProp(self.repr):
             render.RemoveViewProp(self.repr)
-        self.unsubscribe(*self.subscriptions.keys())
+        self.unsubscribe(*list(self.subscriptions.keys()))
         self.widget.SetCurrentRenderer(None)
         self.widget.SetInteractor(None)
         self.widget.Off()

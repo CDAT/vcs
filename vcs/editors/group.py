@@ -1,9 +1,9 @@
-import priority
+from . import priority
 import vcs
 from vcs.colorpicker import ColorPicker
-import text
-import label
-import marker
+from . import text
+from . import label
+from . import marker
 
 
 def extract_widgets(editor):

@@ -1,8 +1,8 @@
 import vtk
-from image_utils import *  # noqa
-from text import Label, text_dimensions
-from slider import Slider
-from widget import Widget
+from .image_utils import *  # noqa
+from .text import Label, text_dimensions
+from .slider import Slider
+from .widget import Widget
 
 BUTTON_MARGIN = 3
 

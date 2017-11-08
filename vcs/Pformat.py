@@ -101,12 +101,6 @@ class Pf(vcs.bestMatch):
                 ln.type='long-dash'
 """
     __slots__ = [
-        "format",
-        "priority",
-        "x",
-        "y",
-        "texttable",
-        "textorientation",
         "member",
         "_format",
         "_priority",

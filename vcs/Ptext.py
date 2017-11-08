@@ -107,15 +107,10 @@ class Pt(vcs.bestMatch):
     ##########################################################################
     __slots__ = [
         "_priority",
-        "priority",
         "_x",
-        "x",
         "_y",
-        "y",
         "_texttable",
-        "texttable",
         "_textorientation",
-        "textorientation",
         "member"]
 
     def __init__(self, member):

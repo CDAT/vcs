@@ -1,4 +1,4 @@
-from button import ToggleButton, SliderButton, ButtonState, Button
+from .button import ToggleButton, SliderButton, ButtonState, Button
 
 
 class Toolbar(object):

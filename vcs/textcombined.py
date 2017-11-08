@@ -208,28 +208,8 @@ class Tc(vcs.bestMatch):
     __slots__ = [
         's_name',
         'name',
-        'Tt_name',
-        'To_name',
         'To',
         'Tt',
-        'color',
-        'colormap',
-        'fillincolor',
-        'priority',
-        'font',
-        'string',
-        'spacing',
-        'expansion',
-        'viewport',
-        'worldcoordinate',
-        'x',
-        'y',
-        'projection',
-        'height',
-        'angle',
-        'path',
-        'halign',
-        'valign',
     ]
 
     def _getTtname(self):

@@ -104,10 +104,6 @@ class Pxt(vcs.bestMatch):
                 ln.type='long-dash'
     """
     __slots__ = [
-        "line",
-        "priority",
-        "y1",
-        "y2",
         "member",
         "_line",
         "_priority",
