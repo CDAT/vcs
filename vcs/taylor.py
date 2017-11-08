@@ -4,11 +4,11 @@ import numpy.ma
 import string
 import numpy
 import cdms2
-import VCS_validation_functions
+from . import VCS_validation_functions
 import MV2
 import copy
 import warnings
-from xmldocs import scriptdocs
+from .xmldocs import scriptdocs
 
 
 def process_src(name, code):
@@ -18,7 +18,7 @@ def process_src(name, code):
         try:
             td = Gtd(name)
         except Exception as err:
-            print "Err:", err
+            print("Err:", err)
             td = vcs.elements["taylordiagram"][name]
         sp = code.split(';')  # breaks the thing into different attributes
         imark = 0
@@ -138,7 +138,7 @@ class TDMarker(vcs.bestMatch):
             'number': self.number}
 
     def __setstate__(self, dict):
-        for k in dict.keys():
+        for k in list(dict.keys()):
             setattr(self, k, dict[k])
 
     def __init__(self):
@@ -386,20 +386,20 @@ class TDMarker(vcs.bestMatch):
         self.line_type.pop(i)
 
     def list(self):
-        print '    status = ', self.status
-        print '    line = ', self.line
-        print '    id = ', self.id
-        print '    id_size = ', self.id_size
-        print '    id_color = ', self.id_color
-        print '    id_font = ', self.id_font
-        print '    symbol = ', self.symbol
-        print '    color = ', self.color
-        print '    size = ', self.size
-        print '    xoffset = ', self.xoffset
-        print '    yoffset = ', self.yoffset
-        print '    line_color = ', self.line_color
-        print '    line_size = ', self.line_size
-        print '    line_type = ', self.line_type
+        print('    status = ', self.status)
+        print('    line = ', self.line)
+        print('    id = ', self.id)
+        print('    id_size = ', self.id_size)
+        print('    id_color = ', self.id_color)
+        print('    id_font = ', self.id_font)
+        print('    symbol = ', self.symbol)
+        print('    color = ', self.color)
+        print('    size = ', self.size)
+        print('    xoffset = ', self.xoffset)
+        print('    yoffset = ', self.yoffset)
+        print('    line_color = ', self.line_color)
+        print('    line_size = ', self.line_size)
+        print('    line_type = ', self.line_type)
 
     def insert(self, i):
         self.status.insert(i, self.status[i])
@@ -545,7 +545,7 @@ class TDMarker(vcs.bestMatch):
             'line_color',
             'line_size',
             'line_type']
-        n = max(map(len, [getattr(self, x) for x in attrs]))
+        n = max(list(map(len, [getattr(self, x) for x in attrs])))
         for attr in attrs:
             self.eq(attr, n)
         self._number = n
@@ -647,7 +647,7 @@ class Gtd(vcs.bestMatch):
             self._cmtics1 = '*'
             self.displays = []
         else:
-            if source not in vcs.elements["taylordiagram"].keys():
+            if source not in list(vcs.elements["taylordiagram"].keys()):
                 raise Exception(
                     "the source taylordiagram %s doe not exist" %
                     source)
@@ -1034,30 +1034,30 @@ class Gtd(vcs.bestMatch):
         return canvas.plot(a, iso, tmpl, bg=self.bg)
 
     def list(self):
-        print '---------- Taylordiagram (Gtd) member (attribute) listings ----------'
-        print 'graphic method = Gtd'
-        print 'name =', self.name
-        print 'detail =', self.detail
+        print('---------- Taylordiagram (Gtd) member (attribute) listings ----------')
+        print('graphic method = Gtd')
+        print('name =', self.name)
+        print('detail =', self.detail)
         # maximum value of the standard deviaton, copied to the value of the
         # outter circle
-        print 'max =', self.max
-        print 'quadrans =', self.quadrans
-        print 'skillValues =', self.skillValues
-        print 'skillColor =', self.skillColor
-        print 'skillDrawLabels =', self.skillDrawLabels
-        print 'skillCoefficient =', self.skillCoefficient
-        print 'referencevalue =', self.referencevalue
+        print('max =', self.max)
+        print('quadrans =', self.quadrans)
+        print('skillValues =', self.skillValues)
+        print('skillColor =', self.skillColor)
+        print('skillDrawLabels =', self.skillDrawLabels)
+        print('skillCoefficient =', self.skillCoefficient)
+        print('referencevalue =', self.referencevalue)
 # print 'referencecolor =',self.referencecolor
-        print 'arrowlength =', self.arrowlength
-        print 'arrowangle =', self.arrowangle
-        print 'arrowbase =', self.arrowbase
-        print "xticlabels1 =", self.xticlabels1
-        print "xmtics1 =", self.xmtics1
-        print "yticlabels1 =", self.yticlabels1
-        print "ymtics1 =", self.ymtics1
-        print "cticlabels1 =", self.cticlabels1
-        print "cmtics1 =", self.cmtics1
-        print 'Marker'
+        print('arrowlength =', self.arrowlength)
+        print('arrowangle =', self.arrowangle)
+        print('arrowbase =', self.arrowbase)
+        print("xticlabels1 =", self.xticlabels1)
+        print("xmtics1 =", self.xmtics1)
+        print("yticlabels1 =", self.yticlabels1)
+        print("ymtics1 =", self.ymtics1)
+        print("cticlabels1 =", self.cticlabels1)
+        print("cmtics1 =", self.cmtics1)
+        print('Marker')
         self.Marker.list()
 
     def script(self, script_filename, mode='a'):
@@ -1621,7 +1621,7 @@ class Gtd(vcs.bestMatch):
                 levs = vcs.mklabels(tmp)
             else:
                 levs = self.yticlabels1
-            for v in levs.keys():
+            for v in list(levs.keys()):
                 if wc[0] < v < min(wc[1], wc[3]):
                     ticxs2.append(self.template.ylabel1.x)
                     ticys2.append(self.convert(v, 'y'))
@@ -1639,7 +1639,7 @@ class Gtd(vcs.bestMatch):
                 levs = vcs.mklabels(vals)
             else:
                 levs = self.ymtics1
-            for v in levs.keys():
+            for v in list(levs.keys()):
                 if wc[0] < v < min(wc[1], wc[3]):
                     ymtic1x.append(
                         [self.template.ymintic1.x1, self.template.ymintic1.x2])
@@ -1661,7 +1661,7 @@ class Gtd(vcs.bestMatch):
                     vals.insert(0, -v)
             levs = vcs.mklabels(vals)
             # ok need to remove potential negative values, std is always >0
-            for k in levs.keys():
+            for k in list(levs.keys()):
                 if k < 0:
                     levs[k] = levs[k][1:]
                 if k < -wc[1]:
@@ -1674,7 +1674,7 @@ class Gtd(vcs.bestMatch):
             self.template.xmintic2.y1 - self.template.data.y1) / delta * 90.
         val2 = (
             self.template.xmintic2.y2 - self.template.data.y1) / delta * 90.
-        for v in levs.keys():
+        for v in list(levs.keys()):
             if wc[0] < v < min(wc[1], wc[3]):
                 tx, ty = self.getArc(v, val1=val1, val2=val2)
                 xmtic1x.append(
@@ -1705,7 +1705,7 @@ class Gtd(vcs.bestMatch):
                 tmp = vals
             levs = vcs.mklabels(tmp)
             # ok need to remove potential negative values, std is always >0
-            for k in levs.keys():
+            for k in list(levs.keys()):
                 if k < 0:
                     levs[k] = levs[k][1:]
                 if k < -wc[1]:
@@ -1716,7 +1716,7 @@ class Gtd(vcs.bestMatch):
         val1 = (self.template.xtic2.y1 - self.template.data.y1) / delta * 90.
         val2 = (self.template.xtic2.y2 - self.template.data.y1) / delta * 90
 
-        for v in levs.keys():
+        for v in list(levs.keys()):
             if wc[0] < v < min(wc[3], wc[1]):
                 V = self.convert(v, 'x')
                 if v >= 0:
@@ -1774,7 +1774,7 @@ class Gtd(vcs.bestMatch):
         dx2 = 1. + self.template.ytic2.x2 - self.template.data.x2
         dx1 = 1. - (self.template.ytic2.x2 - self.template.ytic2.x1) / \
             (self.template.data.x2 - self.template.data.x1)
-        for v in levs.keys():
+        for v in list(levs.keys()):
             if 0. <= v <= 1. or (-1. <= v and self.quadrans == 2):
                 x1 = v
                 y1 = numpy.sin(numpy.arccos(x1))
@@ -1829,7 +1829,7 @@ class Gtd(vcs.bestMatch):
             levs[.96] = ''
             levs[.97] = ''
             levs[.98] = ''
-            ks = levs.keys()
+            ks = list(levs.keys())
             for l in ks:
                 levs[-l] = ''
         else:
@@ -1838,7 +1838,7 @@ class Gtd(vcs.bestMatch):
         dx2 = 1. + self.template.ymintic2.x2 - self.template.data.x2
         dx1 = 1. - (self.template.ymintic2.x2 - self.template.ymintic2.x1) / \
             (self.template.data.x2 - self.template.data.x1)
-        for v in levs.keys():
+        for v in list(levs.keys()):
             if 0. <= v <= 1. or (-1. <= v and self.quadrans == 2):
                 x1 = v
                 y1 = numpy.sin(numpy.arccos(x1))
@@ -2010,7 +2010,7 @@ class Gtd(vcs.bestMatch):
         if newname == "default":
             raise Exception(
                 "You cannot overwrite the default taylordiagram graphic method")
-        if newname in vcs.elements["taylordiagram"].keys():
+        if newname in list(vcs.elements["taylordiagram"].keys()):
             raise Exception(
                 "Sorry %s taylordiagram graphic method already exists" %
                 newname)

@@ -19,7 +19,7 @@ def matplotlib2vcs(cmap, vcs_name=None):
     import vcs
     import matplotlib.cm
     import warnings
-    if isinstance(cmap, (str, unicode)):
+    if isinstance(cmap, str):
         try:
             cmap = matplotlib.cm.get_cmap(cmap)
         except:
@@ -37,7 +37,7 @@ def matplotlib2vcs(cmap, vcs_name=None):
             "%s colormap name was already existing, your colormap name will be: %s" %
             (vcs_name, vcs_name_final))
     vcs_cmap = vcs.createcolormap(vcs_name_final)
-    cmap_rgbs = cmap(range(0, cmap.N))
+    cmap_rgbs = cmap(list(range(0, cmap.N)))
     for i in range(0, min(cmap.N, 256)):
         vcs_cmap.setcolorcell(i, *([int(x * 100) for x in cmap_rgbs[i][:4]]))
 

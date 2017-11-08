@@ -12,10 +12,10 @@
 # Description:	Python command wrapper for VCS's projection secondary method. #
 # Version:      4.0							      #
 ###############################################################################
-import VCS_validation_functions
+from . import VCS_validation_functions
 import vcs
 import copy
-from xmldocs import scriptdocs, listdoc
+from .xmldocs import scriptdocs, listdoc
 
 # used to decide if we show longitude labels for round projections or
 # latitude labels for elliptical projections
@@ -394,13 +394,13 @@ class Proj(vcs.bestMatch):
 
         if isinstance(Proj_name_src, Proj):
             Proj_name_src = Proj_name_src.name
-        if Proj_name_src != "default" and Proj_name_src not in vcs.elements[
-                "projection"].keys():
+        if Proj_name_src != "default" and Proj_name_src not in list(vcs.elements[
+                "projection"].keys()):
             raise ValueError("Projection '%s' does not exists" % Proj_name_src)
         if (Proj_name is None):
             raise ValueError('Must provide a projection name.')
         else:
-            if Proj_name in vcs.elements["projection"].keys():
+            if Proj_name in list(vcs.elements["projection"].keys()):
                 raise ValueError(
                     "The projection '%s' already exists, use getprojection instead" %
                     Proj_name)
@@ -444,14 +444,14 @@ class Proj(vcs.bestMatch):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print '---------- Projection (Proj) member (attribute) listings ----------'
-        print 'secondary method =', self.s_name
-        print 'name =', self.name
-        print 'type =', self.type
+        print('---------- Projection (Proj) member (attribute) listings ----------')
+        print('secondary method =', self.s_name)
+        print('name =', self.name)
+        print('type =', self.type)
         # print 'parameters =',self.parameters
 
         for att in self.attributes:
-            print att, '=', getattr(self, att)
+            print(att, '=', getattr(self, att))
     list.__doc__ = listdoc.format(name="projection", parent="")
 
     @property

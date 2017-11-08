@@ -16,20 +16,20 @@ import numpy
 import cdtime
 import warnings
 import vcs
-import boxfill
-import isofill
-import isoline
-import taylor
-import projection
-import fillarea
-import template
-import texttable
-import textorientation
-import line
-import unified1D
-import vector
-import marker
-import colormap
+from . import boxfill
+from . import isofill
+from . import isoline
+from . import taylor
+from . import projection
+from . import fillarea
+from . import template
+from . import texttable
+from . import textorientation
+from . import line
+from . import unified1D
+from . import vector
+from . import marker
+from . import colormap
 import json
 import os
 import tempfile
@@ -37,7 +37,7 @@ import cdms2
 import genutil
 import vtk
 import struct
-from clickMap import mapPng, getPngDimensions, meshToCoords, vcsToHtml  # noqa
+from .clickMap import mapPng, getPngDimensions, meshToCoords, vcsToHtml  # noqa
 try:
     import vcsaddons
     hasVCSAddons = True
@@ -45,7 +45,7 @@ except BaseException:
     hasVCSAddons = False
 
 
-from colors import rgb2str, str2rgb, matplotlib2vcs, loadmatplotlibcolormaps  # noqa
+from .colors import rgb2str, str2rgb, matplotlib2vcs, loadmatplotlibcolormaps  # noqa
 
 indent = 1
 sort_keys = True
@@ -68,7 +68,7 @@ vcs_deprecated_colormap_names = {
     "white2yellow": "white_to_yellow",
 }
 
-defaultColorsRange = range(256)
+defaultColorsRange = list(range(256))
 
 
 def get_png_dims(fnm):
@@ -152,7 +152,7 @@ class Logo(vcs.bestMatch):
             self.source = None
         elif vcs.queries.istext(source):
             self.source = source
-        elif isinstance(source, basestring):
+        elif isinstance(source, str):
             self.source_width, self.source_height = get_png_dims(source)
             if self.source_width is not None:
                 self.source = source
@@ -200,7 +200,7 @@ class Logo(vcs.bestMatch):
         :param bg: do we plot in background (offscreen) mode or not? True/False
         :type bg: `bool`_
         """
-        if isinstance(self.source, basestring):
+        if isinstance(self.source, str):
             cnv_info = canvas.canvasinfo()
             if self.width is not None:
                 scale = float(self.width) / self.source_width
@@ -243,7 +243,7 @@ def process_range_from_old_scr(code, g):
             levs.append([float(sp[1][7:]), float(sp[2][7:])])
             fa = sp[-1][3:]
             fa = fa[:fa.find(")")]
-            if fa not in vcs.elements["fillarea"].keys():
+            if fa not in list(vcs.elements["fillarea"].keys()):
                 badfa = True
                 fai.append(fa)
             else:
@@ -305,7 +305,7 @@ def dumpToDict(obj, skipped=[], must=[]):
                   }
     if isinstance(obj, (vcs.taylor.TDMarker, vcs.taylor.Gtd)):
         del(associated["line"])
-    associated_keys = associated.keys()
+    associated_keys = list(associated.keys())
     for a in obj.__slots__:
         if (a not in skipped) and (a[0] != "_" or a in must):
             try:
@@ -319,7 +319,7 @@ def dumpToDict(obj, skipped=[], must=[]):
                     continue
                 associated[a].add(val)
             if not isinstance(val,
-                              (unicode, str, tuple, list, int, long, float, dict)) and \
+                              (str, tuple, list, int, float, dict)) and \
                     val is not None:
                 val, asso = dumpToDict(val, skipped, must)
                 for k in associated_keys:
@@ -391,8 +391,8 @@ def dumpToJson(obj, fileout, skipped=["info", "member"], must=[], indent=indent,
                     f.seek(0)
                     D = json.load(f)
                 except Exception as err:
-                    print "Error reading json file," +\
-                        "will be overwritten", fileout, err
+                    print("Error reading json file," +\
+                        "will be overwritten", fileout, err)
                     D = {}
             else:
                 D = {}
@@ -413,7 +413,7 @@ def dumpToJson(obj, fileout, skipped=["info", "member"], must=[], indent=indent,
         json.dump(D, f, sort_keys=sort_keys, indent=indent)
         if isinstance(fileout, str):
             f.close()
-            for etype in associated.keys():
+            for etype in list(associated.keys()):
                 for asso in associated[etype]:
                     if asso is not None and asso not in vcs._protected_elements[
                             etype]:
@@ -512,7 +512,7 @@ def process_src_element(code):
         elif typ == "C":
             colormap.process_src(nm, code)
     except Exception as err:
-        print "Processing error for %s,%s: %s" % (nm, typ, err)
+        print("Processing error for %s,%s: %s" % (nm, typ, err))
 
 
 def listelements(typ=None):
@@ -544,13 +544,13 @@ def listelements(typ=None):
     if typ in ("xvsy", "yxvsx", "scatter", "xyvsy"):
         names = []
         aliased = ("xvsy", "yxvsx")
-        for name, gm in vcs.elements["1d"].iteritems():
+        for name, gm in vcs.elements["1d"].items():
             if gm.g_type in aliased and typ in aliased:
                 names.append(name)
             elif gm.g_type == typ:
                 names.append(name)
         return sorted(names)
-    if typ not in vcs.elements.keys():
+    if typ not in list(vcs.elements.keys()):
         raise Exception(
             "Error: '%s' is not a valid vcs element\n"
             "Valid vcs elements are: %s" %
@@ -604,16 +604,16 @@ def show(*args):
             m = max([len(e) for e in elts]) + 1
         except BaseException:
             m = 4
-        print "*******************%s Names List**********************" % (
-            args[0].capitalize())
+        print("*******************%s Names List**********************" % (
+            args[0].capitalize()))
         for i, e in enumerate(elts):
-            print ("%s" % e).ljust(m),
+            print(("%s" % e).ljust(m), end=' ')
             if (i + 1) % 3 == 0:
-                print
+                print()
         if len(elts) > 0 and (i + 1) % 3 != 0:
-            print
-        print "*******************End %s Names List**********************" % (
-            args[0].capitalize())
+            print()
+        print("*******************End %s Names List**********************" % (
+            args[0].capitalize()))
         return
 
 
@@ -646,7 +646,7 @@ def _scriptrun(script, canvas=None):
     f.close()
     # Ok now we need to double check the isolines
     gd = vcs.elements["isoline"]["default"]
-    for g in vcs.elements["isoline"].values():
+    for g in list(vcs.elements["isoline"].values()):
         if g.name == "default":
             continue
         for att in ["line", "textcolors", "text"]:
@@ -928,28 +928,28 @@ def saveinitialfile():
     if os.path.exists(fnm):
         os.remove(fnm)
     Skip = {}
-    for k in vcs.elements.keys():
+    for k in list(vcs.elements.keys()):
         Skip[k] = []
-        for e in vcs.elements[k].keys():
+        for e in list(vcs.elements[k].keys()):
             if e in vcs._protected_elements[k] or e[
                     :2] == "__":  # temporary elt
                 Skip[k].append(e)
-    for k in vcs.elements.keys():
+    for k in list(vcs.elements.keys()):
         if k in ["display", "font", "fontNumber"]:
             continue
         elif k == "list":
             D2 = {}
             D2["L"] = {}
-            for l in vcs.elements["list"].keys():
+            for l in list(vcs.elements["list"].keys()):
                 if l not in Skip["list"]:
                     D2["L"][l] = vcs.elements["list"][l]
-            if len(D2["L"].keys()) != 0:
+            if len(list(D2["L"].keys())) != 0:
                 f = open(fnm + ".json", "w")
                 json.dump(D2, f)
                 f.close()
             continue
         e = vcs.elements[k]
-        for nm, g in e.iteritems():
+        for nm, g in e.items():
             if nm not in Skip[k]:
                 try:
                     g.script(fnm)
@@ -1002,23 +1002,23 @@ def scriptrun(script):
             keys = []
             for k in ["Tt", "To", "Tl",
                       "Tm", "Proj"]:  # always read these first
-                if k in jsn.keys():
+                if k in list(jsn.keys()):
                     keys.append(k)
-            for k in jsn.keys():
+            for k in list(jsn.keys()):
                 if k not in keys:
                     keys.append(k)
             for typ in keys:
-                for nm, v in jsn[typ].iteritems():
+                for nm, v in jsn[typ].items():
                     if typ == "P":
                         try:
                             loadTemplate(str(nm), v)
                         except Exception as err:
-                            print "could not load tmpl:", nm, err
+                            print("could not load tmpl:", nm, err)
                     else:
                         try:
                             loadVCSItem(loader[typ], nm, v)
                         except Exception as err:
-                            print "failed", typ, nm, err
+                            print("failed", typ, nm, err)
         # ok could not read json file maybe it is an old initial.attributes
         except Exception as err:
             if os.path.split(script)[-1] == "initial.attributes":
@@ -1034,23 +1034,23 @@ def loadTemplate(nm, vals):
         t = vcs.gettemplate(nm)
     except Exception:
         t = vcs.createtemplate(nm)
-    for k, v in vals.iteritems():
+    for k, v in vals.items():
         A = getattr(t, k)
-        for a, v in v.iteritems():
-            if isinstance(v, unicode):
+        for a, v in v.items():
+            if isinstance(v, str):
                 v = str(v)
             setattr(A, a, v)
 
 
 def loadVCSItem(typ, nm, json_dict={}):
-    if typ in vcs._protected_elements.keys(
-    ) and nm in vcs._protected_elements[typ]:
+    if typ in list(vcs._protected_elements.keys(
+    )) and nm in vcs._protected_elements[typ]:
         # protected element do not overload
         return
     tp = typ
     if typ == "L":
         d = {}
-        for k, v in json_dict.iteritems():
+        for k, v in json_dict.items():
             try:
                 d[eval(k)] = eval(v)
             except BaseException:
@@ -1066,21 +1066,21 @@ def loadVCSItem(typ, nm, json_dict={}):
     else:
         cmd = "gm = vcs.create%s('%s')" % (typ, nm)
         exec(cmd)
-    for a, v in json_dict.iteritems():
+    for a, v in json_dict.items():
         if isinstance(v, dict):
             if a == "Marker" and tp == "taylordiagram":
                 gm.addMarker()
-                for k in v.keys():
+                for k in list(v.keys()):
                     cmd = "gm.Marker.%s = %s" % (k, repr(v[k]))
                     exec(cmd)
             else:
-                for k in v.keys():
+                for k in list(v.keys()):
                     try:
                         v[eval(k)] = v[k]
                         del(v[k])
                     except BaseException:
                         pass
-        elif isinstance(v, unicode):
+        elif isinstance(v, str):
             v = str(v)
         if not(a == "Marker" and tp == "taylordiagram"):
             setattr(gm, a, v)
@@ -1550,7 +1550,7 @@ def getcolors(levs, colors=None, split=1, white="white"):
         else:
             split = 1
     # Take care of argument white
-    if isinstance(white, basestring):
+    if isinstance(white, str):
         white = [value/2.55 for value in genutil.colors.str2rgb(white)]
 
     # Gets first and last value, and adjust if extensions
@@ -1609,12 +1609,12 @@ def getcolors(levs, colors=None, split=1, white="white"):
     if np != 0 and np != 1:
         cincp = (ncols / 2. - 1.) / float(np - 1.)
     if sep != 1:
-        for i in xrange(nc):
+        for i in range(nc):
             cv = i * cinc
             col.append(colors[int(round(cv))])
     else:
         col = []
-        for i in xrange(nc):
+        for i in range(nc):
             if levs[i] < 0:
                 cv = i * cincn
             # if nn==1 : cv=len(colors)/4.   # if only 1 neg then use the
@@ -1675,9 +1675,9 @@ def generate_time_labels(d1, d2, units, calendar=cdtime.DefaultCalendar):
     :rtype: dict
 
     """
-    if isinstance(d1, (int, long, float)):
+    if isinstance(d1, (int, float)):
         d1 = cdtime.reltime(d1, units)
-    if isinstance(d2, (int, long, float)):
+    if isinstance(d2, (int, float)):
         d2 = cdtime.reltime(d2, units)
     d1r = d1.torel(units, calendar)
     d2r = d2.torel(units, calendar)
@@ -1762,7 +1762,7 @@ def generate_time_labels(d1, d2, units, calendar=cdtime.DefaultCalendar):
 
 
 def prettifyAxisLabels(ticks, axis):
-    for k in ticks.keys():
+    for k in list(ticks.keys()):
         if len(ticks[k]) == 0:
             continue
         if axis == "longitude":
@@ -1862,7 +1862,7 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
             copy_gm = creategraphicsmethod(gm.g_name, gm.name)
             gm = copy_gm
         if x == "longitude" and abs(datawc_x2 - datawc_x1) > 30:
-            ticks = gm.xticlabels1.keys()
+            ticks = list(gm.xticlabels1.keys())
         else:
             ticks = vcs.mkscale(datawc_x1, datawc_x2)
         tick2 = []
@@ -1890,7 +1890,7 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
             copy_gm = creategraphicsmethod(gm.g_name, gm.name)
             gm = copy_gm
         if x == "longitude" and abs(datawc_x2 - datawc_x1) > 30:
-            ticks = gm.xticlabels2.keys()
+            ticks = list(gm.xticlabels2.keys())
         else:
             ticks = vcs.mkscale(datawc_x1, datawc_x2)
         tick2 = []
@@ -1917,7 +1917,7 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
             copy_gm = creategraphicsmethod(gm.g_name, gm.name)
             gm = copy_gm
         if y == "latitude" and abs(datawc_y2 - datawc_y1) > 20:
-            ticks = gm.yticlabels1.keys()
+            ticks = list(gm.yticlabels1.keys())
         else:
             ticks = vcs.mkscale(datawc_y1, datawc_y2)
         tick2 = []
@@ -1945,7 +1945,7 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
             copy_gm = creategraphicsmethod(gm.g_name, gm.name)
             gm = copy_gm
         if y == "latitude" and abs(datawc_y2 - datawc_y1) > 20:
-            ticks = gm.yticlabels2.keys()
+            ticks = list(gm.yticlabels2.keys())
         else:
             ticks = vcs.mkscale(datawc_y1, datawc_y2)
         tick2 = []
@@ -2104,7 +2104,7 @@ def match_color(color, colormap=None):
     :rtype: int
     """
     # First gets the rgb values
-    if isinstance(color, basestring):
+    if isinstance(color, str):
         vals = genutil.colors.str2rgb(color)
         vals[0] /= 2.55
         vals[1] /= 2.55
@@ -2120,7 +2120,7 @@ def match_color(color, colormap=None):
     # Now tries determines the min rms diff
     rmsmin = 2.E40
     match = None
-    for i in cmap.index.keys():
+    for i in list(cmap.index.keys()):
         col = cmap.index[i]
         rms = numpy.sqrt((vals[0] - col[0]) ** 2 +
                          (vals[1] - col[1]) ** 2 +

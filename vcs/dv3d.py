@@ -3,13 +3,13 @@ If in interact mode (see :func:`vcs.Canvas.Canvas.interact`), these attributes c
 method described in the **Interact Mode** section of the attribute description.
 """
 # @author: tpmaxwel
-import VCS_validation_functions
+from . import VCS_validation_functions
 import multiprocessing
 import vcs
 import time
-from DV3D.ConfigurationFunctions import ConfigManager
-from xmldocs import toggle_surface, toggle_volume, xslider, yslider, zslider, verticalscaling, scalecolormap  # noqa
-from xmldocs import scaletransferfunction, toggleclipping, isosurfacevalue, scaleopacity, basemapopacity, camera, scriptdocs  # noqa
+from .DV3D.ConfigurationFunctions import ConfigManager
+from .xmldocs import toggle_surface, toggle_volume, xslider, yslider, zslider, verticalscaling, scalecolormap  # noqa
+from .xmldocs import scaletransferfunction, toggleclipping, isosurfacevalue, scaleopacity, basemapopacity, camera, scriptdocs  # noqa
 
 
 class Gfdv3d(object):
@@ -128,7 +128,7 @@ class Gfdv3d(object):
     def __init__(self, Gfdv3d_name, Gfdv3d_name_src='default'):
         if not isinstance(Gfdv3d_name, str):
             raise ValueError("DV3D name must be a string")
-        if Gfdv3d_name in vcs.elements[self.g_name].keys():
+        if Gfdv3d_name in list(vcs.elements[self.g_name].keys()):
             raise ValueError(
                 "DV3D graphic method '%s' already exists" %
                 Gfdv3d_name)
@@ -142,7 +142,7 @@ class Gfdv3d(object):
         self._axes = "xyz"
 
         # Use parent config values if possible
-        if isinstance(Gfdv3d_name_src, (unicode, str)):
+        if isinstance(Gfdv3d_name_src, str):
             # Make sure we aren't inheriting from ourself
             if Gfdv3d_name_src != Gfdv3d_name:
                 parent_cfg = vcs.elements[self.g_name][Gfdv3d_name_src].cfgManager
@@ -207,7 +207,7 @@ class Gfdv3d(object):
 
     @staticmethod
     def getParameterList():
-        from DV3D.DV3DPlot import PlotButtonNames
+        from .DV3D.DV3DPlot import PlotButtonNames
         cfgManager = ConfigManager()
         parameterList = cfgManager.getParameterList(extras=PlotButtonNames)
         return parameterList
@@ -232,12 +232,12 @@ class Gfdv3d(object):
         self.cfgManager.initDefaultState()
 
     def list(self):
-        print '---------- DV3D (Gfdv3d) member (attribute) listings ----------'
-        print 'name =', self.name
-        print 'axes =', self.axes
+        print('---------- DV3D (Gfdv3d) member (attribute) listings ----------')
+        print('name =', self.name)
+        print('axes =', self.axes)
         for pname in self.parameter_names:
             pval = self.getParameter(pname)
-            print pname, '=', repr(pval)
+            print(pname, '=', repr(pval))
 
 
 class Gf3Dvector(Gfdv3d):

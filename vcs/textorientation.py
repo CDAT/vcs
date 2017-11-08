@@ -22,9 +22,9 @@
 #
 #
 #
-import VCS_validation_functions
+from . import VCS_validation_functions
 import vcs
-from xmldocs import scriptdocs, listdoc
+from .xmldocs import scriptdocs, listdoc
 
 
 def process_src(nm, code):
@@ -252,7 +252,7 @@ class To(vcs.bestMatch):
         # back the appropriate Python Object.                       #
         #############################################################
         #                                                           #
-        if To_name in vcs.elements["textorientation"].keys():
+        if To_name in list(vcs.elements["textorientation"].keys()):
             raise ValueError(
                 "textorientation object '%' already exists" %
                 To_name)
@@ -267,7 +267,7 @@ class To(vcs.bestMatch):
             self._halign = "left"
             self._valign = "half"
         else:
-            if To_name_src not in vcs.elements["textorientation"].keys():
+            if To_name_src not in list(vcs.elements["textorientation"].keys()):
                 raise ValueError(
                     "source textorientation '%s' does not exists" %
                     To_name_src)
@@ -287,14 +287,14 @@ class To(vcs.bestMatch):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "---------- Text Orientation (To) member (attribute) listings ----------"
-        print "secondary method =", self.s_name
-        print "name =", self.name
-        print "height =", self.height
-        print "angle =", self.angle
-        print "path =", self.path
-        print "halign =", self.halign
-        print "valign =", self.valign
+        print("---------- Text Orientation (To) member (attribute) listings ----------")
+        print("secondary method =", self.s_name)
+        print("name =", self.name)
+        print("height =", self.height)
+        print("angle =", self.angle)
+        print("path =", self.path)
+        print("halign =", self.halign)
+        print("valign =", self.valign)
     list.__doc__ = listdoc.format(name="textorientation", parent="")
 
     ##########################################################################

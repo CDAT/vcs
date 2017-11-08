@@ -22,7 +22,7 @@
 #
 #
 #
-import VCS_validation_functions
+from . import VCS_validation_functions
 import vcs
 #############################################################################
 #                                                                           #
@@ -158,11 +158,11 @@ class Pyt(vcs.bestMatch):
     #                                                                           #
     ##########################################################################
     def list(self):
-        print "member = ", self.member
-        print "     priority =", self.priority
-        print "     x1 =", self.x1
-        print "     x2 =", self.x2
-        print "     line =", self.line
+        print("member = ", self.member)
+        print("     priority =", self.priority)
+        print("     x1 =", self.x1)
+        print("     x2 =", self.x2)
+        print("     line =", self.line)
 
 
 ##########################################################################

@@ -23,7 +23,7 @@ class PPE(Exception):
 
 
 def color2vcs(col):
-    if isinstance(col, unicode):
+    if isinstance(col, str):
         col = str(col)
     if isinstance(col, str):
         r, g, b = genutil.colors.str2rgb(col)
@@ -122,7 +122,7 @@ def checkContinents(self, value):
                                 "data_continent_other%d" % value)
             if not os.path.exists(path):
                 raise ValueError("Couldn't find continents file at %s" % path)
-    elif isinstance(value, (str, unicode)):
+    elif isinstance(value, str):
         if os.path.exists(os.path.expanduser(value)):
             path = value
         else:
@@ -140,7 +140,7 @@ def checkContType(self, name, value):
 
 def checkLine(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         value = str(value)
     if not isinstance(value, (str, vcs.line.Tl)):
         checkedRaise(
@@ -165,7 +165,7 @@ def checkLine(self, name, value):
 def isNumber(value, min=None, max=None):
     """ Checks if value is a Number, optionaly can check if min<value<max
     """
-    if not isinstance(value, (int, long, float, numpy.floating)):
+    if not isinstance(value, (int, float, numpy.floating)):
         return False
     if min is not None and value < min:
         return -1
@@ -278,7 +278,7 @@ def checkFont(self, name, value):
 
 
 def checkMarker(self, name, value):
-    import queries
+    from . import queries
     checkName(self, name, value)
     oks = [
         None,
@@ -435,7 +435,7 @@ def checkString(self, name, value):
     checkName(self, name, value)
     if isinstance(value, str):
         return value
-    elif isinstance(value, unicode):
+    elif isinstance(value, str):
         return str(value)
     else:
         checkedRaise(
@@ -462,7 +462,7 @@ def checkCallable(self, name, value):
 
 
 def checkFillAreaStyle(self, name, value):
-    import queries
+    from . import queries
     checkName(self, name, value)
     if ((value in ('solid', 'hatch', 'pattern', 'hallow', 0, 1, 2, 3)) or
             (queries.isfillarea(value) == 1)):
@@ -489,7 +489,7 @@ def checkFillAreaStyle(self, name, value):
 
 def checkAxisConvert(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         value = str(value)
     if isinstance(value, str) and (
             value.lower() in ('linear', 'log10', 'ln', 'exp', 'area_wt')):
@@ -506,7 +506,7 @@ def checkAxisConvert(self, name, value):
 
 def checkBoxfillType(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         value = str(value)
     if isinstance(value, str) and (
             value.lower() in ('linear', 'log10', 'custom')):
@@ -599,7 +599,7 @@ def checkOnOff(self, name, value, return_string=0):
     See also: checkFuzzyBoolean.
     """
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         value = str(value)
     if value is None:
         value = 0
@@ -655,7 +655,7 @@ def checkYesNo(self, name, value):
     See also: checkFuzzyBoolean.
     """
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         value = str(value)
     if value is None:
         value = 'n'
@@ -732,9 +732,9 @@ def checkListTuple(self, name, value):
 
 def checkColor(self, name, value, NoneOk=False):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         value = str(value)
-    if isinstance(value, basestring):
+    if isinstance(value, str):
         # Ok it is a string let's see if that is a valid color name
         r, g, b = vcs.str2rgb(value)
         if r is None:  # ok not a valid color
@@ -797,9 +797,9 @@ def checkIsolineLevels(self, name, value):
 
 
 def checkIndex(self, name, value):
-    import queries
+    from . import queries
     checkName(self, name, value)
-    if ((value not in range(1, 21)) and
+    if ((value not in list(range(1, 21))) and
             (queries.isfillarea(value) == 0)):
         checkedRaise(
             self,
@@ -923,7 +923,7 @@ def checkLineTypeList(self, name, value):
 
 def checkTextTable(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         value = str(value)
     if isinstance(value, str):
         if value not in vcs.listelements("texttable"):
@@ -945,7 +945,7 @@ def checkTextTable(self, name, value):
 
 def checkTextOrientation(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         value = str(value)
     if isinstance(value, str):
         if value not in vcs.listelements("textorientation"):
@@ -967,7 +967,7 @@ def checkTextOrientation(self, name, value):
 
 
 def checkTextsList(self, name, value, storeName=False):
-    import queries
+    from . import queries
     checkName(self, name, value)
     if isinstance(value, int):
         value = list(value)
@@ -1068,7 +1068,7 @@ def checkLegend(self, name, value):
 
 def checkExt(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         value = str(value)
     if isinstance(value, str):
         if value.strip().lower() in ('y', "yes",):
@@ -1104,9 +1104,9 @@ def checkProjection(self, name, value):
     checkName(self, name, value)
     if isinstance(value, vcs.projection.Proj):
         return value.name
-    elif isinstance(value, (str, unicode)):
+    elif isinstance(value, str):
         value = str(value)
-        if value not in vcs.elements["projection"].keys():
+        if value not in list(vcs.elements["projection"].keys()):
             checkedRaise(
                 self,
                 value,
@@ -1143,7 +1143,7 @@ def checkTicks(self, name, value):
 
 def checkStringDictionary(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         return str(value)
     elif isinstance(value, str) or isinstance(value, dict):
         return value
@@ -1190,7 +1190,7 @@ def DMS2deg(val):
 def checkProjParameters(self, name, value):
     if self._type > 200 and self._type < 400:
         try:
-            import vcs2vtk
+            from . import vcs2vtk
             return vcs2vtk.checkProjParameters(self, name, value)
         except:
             pass
@@ -1222,7 +1222,7 @@ def checkProjParameters(self, name, value):
 
 def checkCalendar(self, name, value):
     checkName(self, name, value)
-    if not isinstance(value, (int, long)):
+    if not isinstance(value, int):
         checkedRaise(
             self,
             value,
@@ -1245,7 +1245,7 @@ def checkCalendar(self, name, value):
 
 def checkTimeUnits(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         value = str(value)
     if not isinstance(value, str):
         checkedRaise(self, value, ValueError, 'time units must be a string')
@@ -1311,7 +1311,7 @@ def checkInStringsListInt(self, name, value, values):
                 str1 = str1 + "'" + v + "', "
             i = i + 1
     err = str1[:-2] + ')' + str2[:-2] + ')'
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         value = str(value)
     if isinstance(value, str):
         value = value.lower()
@@ -1339,7 +1339,7 @@ def checkProjType(self, name, value):
     checkName(self, name, value)
     if vcs.queries.isprojection(value):
         value = value.type
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         value = str(value)
     if isinstance(value, str):
         value = value.strip().lower()
@@ -1433,7 +1433,7 @@ def checkProjType(self, name, value):
         # VTK BACKEND
         checkedvalue = "THAT DID NOT WORK"
         try:
-            import vcs2vtk
+            from . import vcs2vtk
             checkedvalue = vcs2vtk.checkProjType(self, name, value)
         except:
             pass
@@ -1620,7 +1620,7 @@ def getProjType(self):
     elif value == -3:
         return "polar (non gctp)"
     elif 200 < value < 400:
-        import vcs2vtk
+        from . import vcs2vtk
         return vcs2vtk.getProjType(value)
 
 
@@ -1667,7 +1667,7 @@ def setProjParameter(self, name, value):
     checkName(self, name, value)
     param = self.parameters
     ok = proj_ok_parameters
-    for nm in ok.keys():
+    for nm in list(ok.keys()):
         vals = ok[nm]
         oktypes = vals[0]
         position = vals[1]
@@ -1835,7 +1835,7 @@ def _setcolormap(self, value):
         return
     if isinstance(value, vcs.colormap.Cp):
         value = value.name
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         value = str(value)
     if not isinstance(value, str):
         checkedRaise(

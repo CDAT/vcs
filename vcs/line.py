@@ -22,10 +22,10 @@
 #
 #
 #
-import VCS_validation_functions
+from . import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import scriptdocs, listdoc
+from .xmldocs import scriptdocs, listdoc
 
 
 def process_src(nm, code):
@@ -52,7 +52,7 @@ def process_src(nm, code):
                 except:
                     vals.append(float(V))
             atts[a] = vals
-    if "lci" not in atts.keys():
+    if "lci" not in list(atts.keys()):
         sp = code.split(",")
         atts["lci"] = int(sp[2])
         atts["ltyp"] = abs(int(sp[0])-1)
@@ -333,7 +333,7 @@ class Tl(vcs.bestMatch):
                 # appropriate Python Object.                              #
                 ###########################################################
                 #                                                         #
-        if Tl_name in vcs.elements["line"].keys():
+        if Tl_name in list(vcs.elements["line"].keys()):
             raise ValueError("lineobject '%' already exists" % Tl_name)
         self._name = Tl_name
         if isinstance(Tl_name_src, Tl):
@@ -351,7 +351,7 @@ class Tl(vcs.bestMatch):
             self._y = None
             self._colormap = None
         else:
-            if Tl_name_src not in vcs.elements["line"].keys():
+            if Tl_name_src not in list(vcs.elements["line"].keys()):
                 raise ValueError(
                     "The line source '%s' does not exists" %
                     Tl_name_src)
@@ -376,19 +376,19 @@ class Tl(vcs.bestMatch):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "---------- Line (Tl) member (attribute) listings ----------"
-        print "secondary method =", self.s_name
-        print "name =", self.name
-        print "type =", self.type
-        print "width =", self.width
-        print "color =", self.color
-        print "priority =", self.priority
-        print "viewport =", self.viewport
-        print "worldcoordinate =", self.worldcoordinate
-        print "x =", self.x
-        print "y =", self.y
-        print "projection =", self.projection
-        print "colormap =", self.colormap
+        print("---------- Line (Tl) member (attribute) listings ----------")
+        print("secondary method =", self.s_name)
+        print("name =", self.name)
+        print("type =", self.type)
+        print("width =", self.width)
+        print("color =", self.color)
+        print("priority =", self.priority)
+        print("viewport =", self.viewport)
+        print("worldcoordinate =", self.worldcoordinate)
+        print("x =", self.x)
+        print("y =", self.y)
+        print("projection =", self.projection)
+        print("colormap =", self.colormap)
     list.__doc__ = listdoc.format(name="line", parent="")
 
     ##########################################################################

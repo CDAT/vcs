@@ -20,13 +20,13 @@ def _files():
         try:
             fn = '%s/%s' % (os.path.expanduser("~"), dotdir)
         except:
-            print "Could not find the $HOME or the %s directory." % (dotdir)
-            print "Set your environment variable 'HOME' or '%s'" % (dotdirenv)
-            print "to your home directory. (e.g., 'export HOME=/home/username')."
+            print("Could not find the $HOME or the %s directory." % (dotdir))
+            print("Set your environment variable 'HOME' or '%s'" % (dotdirenv))
+            print("to your home directory. (e.g., 'export HOME=/home/username').")
             sys.exit()
     if os.access(fn, os.X_OK) == 0:
         try:
             os.mkdir(fn)
         except:
-            print "Do not have write permission for user's home directory. Must have write permissions."
+            print("Do not have write permission for user's home directory. Must have write permissions.")
             sys.exit()

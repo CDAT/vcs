@@ -22,8 +22,8 @@
 #
 #
 import vcs
-import VCS_validation_functions
-from xmldocs import scriptdocs
+from . import VCS_validation_functions
+from .xmldocs import scriptdocs
 
 
 class Gs(vcs.bestMatch):
@@ -929,61 +929,61 @@ class Gs(vcs.bestMatch):
         self.yaxisconvert = yat
 
     def colors(self, color1=16, color2=239):
-        self.fillareacolors = range(color1, color2)
+        self.fillareacolors = list(range(color1, color2))
 
     def exts(self, ext1='n', ext2='y'):
         self.ext_1 = ext1
         self.ext_2 = ext2
 
     def list(self):
-        print "", "--------Streamline (Gs) member (attribute) listings --------"
-        print "graphics method =", self.g_name
-        print "name =", self.name
-        print "projection =", self.projection
-        print "xticlabels1 =", self.xticlabels1
-        print "xticlabels2 =", self.xticlabels2
-        print "xmtics1 =", self.xmtics1
-        print "xmtics2 =", self.xmtics2
-        print "yticlabels1 =", self.yticlabels1
-        print "yticlabels2 =", self.yticlabels2
-        print "ymtics1 = ", self.ymtics1
-        print "ymtics2 = ", self.ymtics2
-        print "datawc_x1 =", self.datawc_x1
-        print "datawc_y1 = ", self.datawc_y1
-        print "datawc_x2 = ", self.datawc_x2
-        print "datawc_y2 = ", self.datawc_y2
-        print "datawc_timeunits = ", self.datawc_timeunits
-        print "datawc_calendar = ", self.datawc_calendar
-        print "xaxisconvert = ", self.xaxisconvert
-        print "yaxisconvert = ", self.yaxisconvert
-        print "levels = ", self.levels
-        print "ext_1 = ", self.ext_1
-        print "ext_2 = ", self.ext_2
-        print 'fillareacolors =', self.fillareacolors
-        print "linecolor = ", self.linecolor
-        print "linewidth = ", self.linewidth
-        print "reference = ", self.reference
-        print "evenlyspaced = ", self.evenlyspaced
-        print "numberofseeds = ", self.numberofseeds
-        print "startseed = ", self.startseed
-        print "separatingdistance = ", self.separatingdistance
-        print "separatingdistanceratio = ", self.separatingdistanceratio
-        print "closedloopmaximumdistance = ", self.closedloopmaximumdistance
-        print "integratortype = ", self.integratortype
-        print "integrationdirection = ", self.integrationdirection
-        print "integrationstepunit = ", self.integrationstepunit
-        print "initialsteplength = ", self.initialsteplength
-        print "minimumsteplength = ", self.minimumsteplength
-        print "maximumsteplength = ", self.maximumsteplength
-        print "maximumsteps = ", self.maximumsteps
-        print "maximumstreamlinelength = ", self.maximumstreamlinelength
-        print "terminalspeed = ", self.terminalspeed
-        print "maximumerror = ", self.maximumerror
-        print "glyphscalefactor = ", self.glyphscalefactor
-        print "glyphbasefactor = ", self.glyphbasefactor
-        print "filledglyph = ", self.filledglyph
-        print "coloredbyvector = ", self.coloredbyvector
-        print "numberofglyphs = ", self.numberofglyphs
+        print("", "--------Streamline (Gs) member (attribute) listings --------")
+        print("graphics method =", self.g_name)
+        print("name =", self.name)
+        print("projection =", self.projection)
+        print("xticlabels1 =", self.xticlabels1)
+        print("xticlabels2 =", self.xticlabels2)
+        print("xmtics1 =", self.xmtics1)
+        print("xmtics2 =", self.xmtics2)
+        print("yticlabels1 =", self.yticlabels1)
+        print("yticlabels2 =", self.yticlabels2)
+        print("ymtics1 = ", self.ymtics1)
+        print("ymtics2 = ", self.ymtics2)
+        print("datawc_x1 =", self.datawc_x1)
+        print("datawc_y1 = ", self.datawc_y1)
+        print("datawc_x2 = ", self.datawc_x2)
+        print("datawc_y2 = ", self.datawc_y2)
+        print("datawc_timeunits = ", self.datawc_timeunits)
+        print("datawc_calendar = ", self.datawc_calendar)
+        print("xaxisconvert = ", self.xaxisconvert)
+        print("yaxisconvert = ", self.yaxisconvert)
+        print("levels = ", self.levels)
+        print("ext_1 = ", self.ext_1)
+        print("ext_2 = ", self.ext_2)
+        print('fillareacolors =', self.fillareacolors)
+        print("linecolor = ", self.linecolor)
+        print("linewidth = ", self.linewidth)
+        print("reference = ", self.reference)
+        print("evenlyspaced = ", self.evenlyspaced)
+        print("numberofseeds = ", self.numberofseeds)
+        print("startseed = ", self.startseed)
+        print("separatingdistance = ", self.separatingdistance)
+        print("separatingdistanceratio = ", self.separatingdistanceratio)
+        print("closedloopmaximumdistance = ", self.closedloopmaximumdistance)
+        print("integratortype = ", self.integratortype)
+        print("integrationdirection = ", self.integrationdirection)
+        print("integrationstepunit = ", self.integrationstepunit)
+        print("initialsteplength = ", self.initialsteplength)
+        print("minimumsteplength = ", self.minimumsteplength)
+        print("maximumsteplength = ", self.maximumsteplength)
+        print("maximumsteps = ", self.maximumsteps)
+        print("maximumstreamlinelength = ", self.maximumstreamlinelength)
+        print("terminalspeed = ", self.terminalspeed)
+        print("maximumerror = ", self.maximumerror)
+        print("glyphscalefactor = ", self.glyphscalefactor)
+        print("glyphbasefactor = ", self.glyphbasefactor)
+        print("filledglyph = ", self.filledglyph)
+        print("coloredbyvector = ", self.coloredbyvector)
+        print("numberofglyphs = ", self.numberofglyphs)
 
     ##########################################################################
     #                                                                         #
@@ -1059,25 +1059,25 @@ class Gs(vcs.bestMatch):
                 (unique_name, self.yticlabels2))
             fp.write("%s.ymtics1 = '%s'\n" % (unique_name, self.ymtics1))
             fp.write("%s.ymtics2 = '%s'\n" % (unique_name, self.ymtics2))
-            if isinstance(self.datawc_x1, (int, long, float)):
+            if isinstance(self.datawc_x1, (int, float)):
                 fp.write("%s.datawc_x1 = %g\n" % (unique_name, self.datawc_x1))
             else:
                 fp.write(
                     "%s.datawc_x1 = '%s'\n" %
                     (unique_name, self.datawc_x1))
-            if isinstance(self.datawc_y1, (int, long, float)):
+            if isinstance(self.datawc_y1, (int, float)):
                 fp.write("%s.datawc_y1 = %g\n" % (unique_name, self.datawc_y1))
             else:
                 fp.write(
                     "%s.datawc_y1 = '%s'\n" %
                     (unique_name, self.datawc_y1))
-            if isinstance(self.datawc_x2, (int, long, float)):
+            if isinstance(self.datawc_x2, (int, float)):
                 fp.write("%s.datawc_x2 = %g\n" % (unique_name, self.datawc_x2))
             else:
                 fp.write(
                     "%s.datawc_x2 = '%s'\n" %
                     (unique_name, self.datawc_x2))
-            if isinstance(self.datawc_y2, (int, long, float)):
+            if isinstance(self.datawc_y2, (int, float)):
                 fp.write("%s.datawc_y2 = %g\n" % (unique_name, self.datawc_y2))
             else:
                 fp.write(

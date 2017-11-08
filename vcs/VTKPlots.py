@@ -2,7 +2,7 @@ import cdutil
 import warnings
 import vtk
 import vcs
-import vcs2vtk
+from . import vcs2vtk
 import numpy
 import os
 import traceback
@@ -10,8 +10,8 @@ import sys
 import cdms2
 import cdtime
 import inspect
-import VTKAnimate
-import vcsvtk
+from . import VTKAnimate
+from . import vcsvtk
 
 
 def _makeEven(val):
@@ -99,7 +99,7 @@ class VTKVCSBackend(object):
             self.oldCursor = None
 
     def setAnimationStepper(self, stepper):
-        for plot in self.plotApps.values():
+        for plot in list(self.plotApps.values()):
             plot.setAnimationStepper(stepper)
 
     def interact(self, *args, **kargs):
@@ -354,7 +354,7 @@ class VTKVCSBackend(object):
                 if k in vcs.elements[e]:
                     found = False
                     # Loop through all existing displays
-                    for d in vcs.elements["display"].values():
+                    for d in list(vcs.elements["display"].values()):
                         if d.g_type == e and d.g_name == k:
                             # Ok this is still in use on some display
                             found = True
@@ -765,7 +765,7 @@ class VTKVCSBackend(object):
         renderer.SetLayer(n)
 
     def plot3D(self, data1, data2, tmpl, gm, ren, **kargs):
-        from DV3D.Application import DV3DApp
+        from .DV3D.Application import DV3DApp
         requiresFileVariable = True
         self.canvas.drawLogo = False
         if (data1 is None) or (requiresFileVariable and not (isinstance(
@@ -798,7 +798,7 @@ class VTKVCSBackend(object):
         return {}
 
     def onClosing(self, cell):
-        for plot in self.plotApps.values():
+        for plot in list(self.plotApps.values()):
             if hasattr(plot, 'onClosing'):
                 plot.onClosing(cell)
 
@@ -903,7 +903,7 @@ class VTKVCSBackend(object):
                 crdate.string = tstr.split()[0].replace("-", "/")
                 crtime = vcs2vtk.applyAttributesFromVCStmpl(tmpl, "crtime")
                 crtime.string = tstr.split()[1]
-                if not (None, None, None) in self._renderers.keys():
+                if not (None, None, None) in list(self._renderers.keys()):
                     ren = self.createRenderer()
                     self.renWin.AddRenderer(ren)
                     self.setLayer(ren, 1)
@@ -940,7 +940,7 @@ class VTKVCSBackend(object):
                     zvalue.string = str(zaxis.asComponentTime()[0])
                 else:
                     zvalue.string = "%g" % zaxis[0]
-                if not (None, None, None) in self._renderers.keys():
+                if not (None, None, None) in list(self._renderers.keys()):
                     ren = self.createRenderer()
                     self.renWin.AddRenderer(ren)
                     self.setLayer(ren, 1)
@@ -1097,7 +1097,7 @@ class VTKVCSBackend(object):
         if plot:
             plot.hideWidgets()
         elif not self.bg:
-            from vtk_ui.manager import get_manager, manager_exists
+            from .vtk_ui.manager import get_manager, manager_exists
             if manager_exists(self.renWin.GetInteractor()):
                 manager = get_manager(self.renWin.GetInteractor())
                 manager.showing = False
@@ -1110,7 +1110,7 @@ class VTKVCSBackend(object):
         if plot:
             plot.showWidgets()
         elif not self.bg:
-            from vtk_ui.manager import get_manager, manager_exists
+            from .vtk_ui.manager import get_manager, manager_exists
             if manager_exists(self.renWin.GetInteractor()):
                 manager = get_manager(self.renWin.GetInteractor())
                 self.renWin.AddRenderer(manager.renderer)
@@ -1122,9 +1122,9 @@ class VTKVCSBackend(object):
                 self.renWin.Render()
 
     def get3DPlot(self):
-        from dv3d import Gfdv3d
+        from .dv3d import Gfdv3d
         plot = None
-        for key in self.plotApps.keys():
+        for key in list(self.plotApps.keys()):
             if isinstance(key, Gfdv3d):
                 plot = self.plotApps[key]
                 break
@@ -1273,7 +1273,7 @@ x.geometry(1200,800)
         writer.SetFileName(file)
         # add text chunks to the writer
         m = args.get('metadata', {})
-        for k, v in m.iteritems():
+        for k, v in m.items():
             writer.AddText(k, v)
         writer.Write()
         if user_dims is not None:
@@ -1322,12 +1322,12 @@ x.geometry(1200,800)
         # Ensure renwin exists
         self.createRenWin()
 
-        if isinstance(textorientation, (str, unicode)):
+        if isinstance(textorientation, str):
             textorientation = vcs.gettextorientation(textorientation)
-        if isinstance(texttable, (str, unicode)):
+        if isinstance(texttable, str):
             texttable = vcs.gettexttable(texttable)
 
-        from vtk_ui.text import text_dimensions
+        from .vtk_ui.text import text_dimensions
 
         text_property = vtk.vtkTextProperty()
         info = self.canvasinfo()
@@ -1342,7 +1342,7 @@ x.geometry(1200,800)
         xs = texttable.x + [texttable.x[-1]] * (length - len(texttable.x))
         ys = texttable.y + [texttable.y[-1]] * (length - len(texttable.y))
 
-        labels = zip(strings, xs, ys)
+        labels = list(zip(strings, xs, ys))
 
         extents = []
 
@@ -1416,7 +1416,7 @@ x.geometry(1200,800)
         # we can determine if it's a unique renderer or not
         # let's see if we did this already.
         if not create_renderer and\
-                (vp, wc_used, sc, priority) in self._renderers.keys():
+                (vp, wc_used, sc, priority) in list(self._renderers.keys()):
             # yep already have one, we will use this Renderer
             Renderer, xScale, yScale = self._renderers[
                 (vp, wc_used, sc, priority)]

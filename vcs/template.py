@@ -36,20 +36,20 @@
 import copy
 import vcs
 import numpy
-from Ptext import *  # noqa
-from Pformat import *  # noqa
-from Pxtickmarks import *  # noqa
-from Pytickmarks import *  # noqa
-from Pxlabels import *  # noqa
-from Pylabels import *  # noqa
-from Pboxeslines import *  # noqa
-from Plegend import *  # noqa
-from Pdata import *  # noqa
+from .Ptext import *  # noqa
+from .Pformat import *  # noqa
+from .Pxtickmarks import *  # noqa
+from .Pytickmarks import *  # noqa
+from .Pxlabels import *  # noqa
+from .Pylabels import *  # noqa
+from .Pboxeslines import *  # noqa
+from .Plegend import *  # noqa
+from .Pdata import *  # noqa
 import inspect
 import cdutil
-from projection import round_projections
-from projection import elliptical_projections
-from xmldocs import scriptdocs, listdoc
+from .projection import round_projections
+from .projection import elliptical_projections
+from .xmldocs import scriptdocs, listdoc
 
 # Following for class properties
 
@@ -258,7 +258,7 @@ class P(vcs.bestMatch):
             raise "Invalid source template: %s" % Pic_name_src
         if isinstance(Pic_name_src, P):
             Pic_name_src = Pic_name_src.name
-        if Pic_name in vcs.elements["template"].keys():
+        if Pic_name in list(vcs.elements["template"].keys()):
             raise ValueError("Template %s already exists" % Pic_name)
 
         self._name = Pic_name
@@ -450,7 +450,7 @@ class P(vcs.bestMatch):
         else:
             if isinstance(Pic_name_src, P):
                 Pic_name_src = P.name
-            if Pic_name_src not in vcs.elements["template"].keys():
+            if Pic_name_src not in list(vcs.elements["template"].keys()):
                 raise ValueError(
                     "The source template '%s' does not seem to exists" %
                     Pic_name_src)
@@ -545,11 +545,11 @@ class P(vcs.bestMatch):
             raise ValueError('This instance has been removed from VCS.')
 
         if (single is None):
-            print "---------- Template (P) member " +\
-                "(attribute) listings ----------"
-            print "method =", self.p_name
-            print "name =", self.name
-            print "orientation =", self.orientation
+            print("---------- Template (P) member " +\
+                "(attribute) listings ----------")
+            print("method =", self.p_name)
+            print("name =", self.name)
+            print("orientation =", self.orientation)
             self.file.list()
             self.function.list()
             self.logicalmask.list()
@@ -1053,7 +1053,7 @@ class P(vcs.bestMatch):
             loc = vcs.mkscale(x1, x2)
             loc = vcs.mklabels(loc)
             if number == '2':
-                for t in loc.keys():
+                for t in list(loc.keys()):
                     loc[t] = ''
         if isinstance(loc, str):
             loc = copy.copy(vcs.elements["list"].get(loc, {}))
@@ -1065,7 +1065,7 @@ class P(vcs.bestMatch):
             dw1, dw2 = wc[0], wc[1]
         else:
             dw1, dw2 = wc[2], wc[3]
-        for k in loc.keys():
+        for k in list(loc.keys()):
             if dw2 > dw1:
                 if not(dw1 <= k <= dw2):
                     del(loc[k])
@@ -1136,7 +1136,7 @@ class P(vcs.bestMatch):
         # set the x/y/text values
         xmn, xmx = vcs.minmax(wc[0], wc[1])
         ymn, ymx = vcs.minmax(wc[2], wc[3])
-        for l in loc.keys():
+        for l in list(loc.keys()):
             if axis == 'x':
                 if xmn <= l <= xmx:
                     if vcs.elements["projection"][
@@ -1193,7 +1193,7 @@ class P(vcs.bestMatch):
             if obj.priority > 0:
                 ynum = getattr(self._data, "_y%s" % number)
                 xnum = getattr(self._data, "_x%s" % number)
-                for l in mintics.keys():
+                for l in list(mintics.keys()):
                     if axis == 'x':
                         if xmn <= l <= xmx:
                             if vcs.elements["projection"][
@@ -1366,7 +1366,7 @@ class P(vcs.bestMatch):
         :type axis: str
         """
         if axis not in ['x', 'y']:
-            raise 'Error you can move the template only the x or y axis'
+            raise Exception('Error you can move the template only the x or y axis')
         # p/=100.
         ov1 = getattr(self.data, axis + '1')
         ov2 = getattr(self.data, axis + '2')
@@ -1432,7 +1432,7 @@ class P(vcs.bestMatch):
 
         """
         if axis not in ['x', 'y', 'xy']:
-            raise 'Error you can move the template only the x or y axis'
+            raise Exception('Error you can move the template only the x or y axis')
         # p/=100.
         if axis == 'xy':
             axis = ['x', 'y']
@@ -1461,7 +1461,7 @@ class P(vcs.bestMatch):
         :type scale: float
         """
         try:
-            attr = vars(self).keys()
+            attr = list(vars(self).keys())
         except:
             attr = self.__slots__
 

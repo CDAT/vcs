@@ -5,12 +5,12 @@ import numpy
 import json
 import os
 import math
-import meshfill
+from . import meshfill
 from vtk.util import numpy_support as VN
 import cdms2
 import warnings
-from projection import round_projections, no_over_proj4_parameter_projections
-from vcsvtk import fillareautils
+from .projection import round_projections, no_over_proj4_parameter_projections
+from .vcsvtk import fillareautils
 import sys
 import numbers
 
@@ -724,7 +724,7 @@ def apply_proj_parameters(pd, projection, x1, x2, y1, y2):
 
 def projectArray(w, projection, wc, geo=None):
     x1, x2, y1, y2 = wc
-    if isinstance(projection, (str, unicode)):
+    if isinstance(projection, str):
         projection = vcs.elements["projection"][projection]
     if projection.type == "linear":
         return None, w
@@ -749,7 +749,7 @@ def projectArray(w, projection, wc, geo=None):
 # Geo projection
 def project(pts, projection, wc, geo=None):
     x1, x2, y1, y2 = wc
-    if isinstance(projection, (str, unicode)):
+    if isinstance(projection, str):
         projection = vcs.elements["projection"][projection]
     if projection.type == "linear":
         return None, pts
@@ -1635,11 +1635,11 @@ def prepGlyph(g, marker, index=0):
         s *= 3
         # Lines first
         for l in params["line"]:
-            coords = numpy.array(zip(*l)) * s / 30.
+            coords = numpy.array(list(zip(*l))) * s / 30.
             line = genPoly(coords.tolist(), pts, filled=False)
             lines.InsertNextCell(line)
         for l in params["poly"]:
-            coords = numpy.array(zip(*l)) * s / 30.
+            coords = numpy.array(list(zip(*l))) * s / 30.
             line = genPoly(coords.tolist(), pts, filled=True)
             polys.InsertNextCell(line)
         geo, pts = project(pts, marker.projection, marker.worldcoordinate)

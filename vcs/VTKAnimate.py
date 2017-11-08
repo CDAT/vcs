@@ -1,6 +1,6 @@
 # VTK Backend Animation Module
 # Author:  Charles Doutriaux
-import animate_helper
+from . import animate_helper
 import time
 import random
 import hashlib
@@ -106,13 +106,13 @@ class VTKAnimationCreate(animate_helper.StoppableThread):
     def describe(self):
         for info in self.controller.animate_info:
             disp = info[0]
-            print "BACKEND:", disp.backend
-            print "TYPE:", disp.g_type
-            print "Name:", disp.g_name
+            print("BACKEND:", disp.backend)
+            print("TYPE:", disp.g_type)
+            print("Name:", disp.g_name)
             if info[1][0] is not None:
-                print "Array:", info[1][0].shape
+                print("Array:", info[1][0].shape)
             else:
-                print "No Array"
+                print("No Array")
 
     def close(self):
         self.canvas.close()

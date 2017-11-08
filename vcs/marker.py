@@ -21,10 +21,10 @@
 #
 #
 #
-import VCS_validation_functions
+from . import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import scriptdocs, listdoc
+from .xmldocs import scriptdocs, listdoc
 
 
 def process_src(nm, code):
@@ -432,19 +432,19 @@ class Tm(vcs.bestMatch):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "---------- Marker (Tm) member (attribute) listings ----------"
-        print "secondary method =", self.s_name
-        print "name =", self.name
-        print "type =", self.type
-        print "size =", self.size
-        print "color =", self.color
-        print "priority =", self.priority
-        print "viewport =", self.viewport
-        print "worldcoordinate =", self.worldcoordinate
-        print "x =", self.x
-        print "y =", self.y
-        print "projection =", self.projection
-        print "colormap =", self.colormap
+        print("---------- Marker (Tm) member (attribute) listings ----------")
+        print("secondary method =", self.s_name)
+        print("name =", self.name)
+        print("type =", self.type)
+        print("size =", self.size)
+        print("color =", self.color)
+        print("priority =", self.priority)
+        print("viewport =", self.viewport)
+        print("worldcoordinate =", self.worldcoordinate)
+        print("x =", self.x)
+        print("y =", self.y)
+        print("projection =", self.projection)
+        print("colormap =", self.colormap)
     list.__doc__ = listdoc.format(name="marker", parent="")
 
     def script(self, script_filename=None, mode=None):

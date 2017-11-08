@@ -27,9 +27,9 @@
 #                                                                               #
 ##########################################################################
 import vcs
-import VCS_validation_functions
+from . import VCS_validation_functions
 import cdtime
-import xmldocs
+from . import xmldocs
 import genutil
 
 
@@ -741,11 +741,11 @@ class Gi(vcs.bestMatch):
     linetypes = property(_getlinetypes, _setlinetypes)
 
     def _getline(self):
-        print 'DEPRECATED: Use linetypes or setLineAttributes instead.'
+        print('DEPRECATED: Use linetypes or setLineAttributes instead.')
         return self._linetypes
 
     def _setline(self, value):
-        print 'DEPRECATED: Use linetypes or setLineAttributes instead.'
+        print('DEPRECATED: Use linetypes or setLineAttributes instead.')
         self.setLineAttributes(value)
 
     line = property(_getline, _setline)
@@ -757,7 +757,7 @@ class Gi(vcs.bestMatch):
 
         .. pragma: skip-doctest TODO: add a setLineAttributes example
         """
-        import queries
+        from . import queries
         types = []
         colors = []
         widths = []
@@ -781,7 +781,7 @@ class Gi(vcs.bestMatch):
             # then try a line object or a line object name
             if (queries.isline(l)):
                 line = l
-            elif (isinstance(l, basestring) and l in vcs.elements["line"]):
+            elif (isinstance(l, str) and l in vcs.elements["line"]):
                 line = vcs.elements["line"][l]
             else:
                 raise ValueError("Expecting a line object or " +
@@ -930,7 +930,7 @@ class Gi(vcs.bestMatch):
                 #                                                         #
         if not isinstance(Gi_name, str):
             raise ValueError("Isoline name must be a string")
-        if Gi_name in vcs.elements["isoline"].keys():
+        if Gi_name in list(vcs.elements["isoline"].keys()):
             raise ValueError(
                 "isoline graphic method '%s' already exists" %
                 Gi_name)
@@ -972,7 +972,7 @@ class Gi(vcs.bestMatch):
         else:
             if isinstance(Gi_name_src, Gi):
                 Gi_name_src = Gi_name_src.name
-            if Gi_name_src not in vcs.elements["isoline"].keys():
+            if Gi_name_src not in list(vcs.elements["isoline"].keys()):
                 raise ValueError(
                     "Isoline method '%s' does not exists" %
                     Gi_name_src)
@@ -1026,40 +1026,40 @@ class Gi(vcs.bestMatch):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "---------- Isoline (Gi) member (attribute) listings ----------"
-        print "graphics method =", self.g_name
-        print "name =", self.name
-        print "projection =", self.projection
-        print "xticlabels1 =", self.xticlabels1
-        print "xticlabels2 =", self.xticlabels2
-        print "xmtics1 =", self.xmtics1
-        print "xmtics2 =", self.xmtics2
-        print "yticlabels1 =", self.yticlabels1
-        print "yticlabels2 =", self.yticlabels2
-        print "ymtics1 = ", self.ymtics1
-        print "ymtics2 = ", self.ymtics2
-        print "datawc_x1 =", self.datawc_x1
-        print "datawc_y1 = ", self.datawc_y1
-        print "datawc_x2 = ", self.datawc_x2
-        print "datawc_y2 = ", self.datawc_y2
-        print "datawc_timeunits = ", self.datawc_timeunits
-        print "datawc_calendar = ", self.datawc_calendar
-        print "xaxisconvert = ", self.xaxisconvert
-        print "yaxisconvert = ", self.yaxisconvert
-        print "label = ", self.label
-        print "labelskipdistance = ", self.labelskipdistance
-        print "labelbackgroundcolors = ", self.labelbackgroundcolors
-        print "labelbackgroundopacities = ", self.labelbackgroundopacities
-        print "linetypes = ", self.linetypes
-        print "linecolors = ", self.linecolors
-        print "linewidths = ", self.linewidths
-        print "text = ", self.text
-        print "textcolors = ", self.textcolors
-        print "level = ", self.level
-        print "clockwise = ", self.clockwise
-        print "scale = ", self.scale
-        print "angle = ", self.angle
-        print "spacing = ", self.spacing
+        print("---------- Isoline (Gi) member (attribute) listings ----------")
+        print("graphics method =", self.g_name)
+        print("name =", self.name)
+        print("projection =", self.projection)
+        print("xticlabels1 =", self.xticlabels1)
+        print("xticlabels2 =", self.xticlabels2)
+        print("xmtics1 =", self.xmtics1)
+        print("xmtics2 =", self.xmtics2)
+        print("yticlabels1 =", self.yticlabels1)
+        print("yticlabels2 =", self.yticlabels2)
+        print("ymtics1 = ", self.ymtics1)
+        print("ymtics2 = ", self.ymtics2)
+        print("datawc_x1 =", self.datawc_x1)
+        print("datawc_y1 = ", self.datawc_y1)
+        print("datawc_x2 = ", self.datawc_x2)
+        print("datawc_y2 = ", self.datawc_y2)
+        print("datawc_timeunits = ", self.datawc_timeunits)
+        print("datawc_calendar = ", self.datawc_calendar)
+        print("xaxisconvert = ", self.xaxisconvert)
+        print("yaxisconvert = ", self.yaxisconvert)
+        print("label = ", self.label)
+        print("labelskipdistance = ", self.labelskipdistance)
+        print("labelbackgroundcolors = ", self.labelbackgroundcolors)
+        print("labelbackgroundopacities = ", self.labelbackgroundopacities)
+        print("linetypes = ", self.linetypes)
+        print("linecolors = ", self.linecolors)
+        print("linewidths = ", self.linewidths)
+        print("text = ", self.text)
+        print("textcolors = ", self.textcolors)
+        print("level = ", self.level)
+        print("clockwise = ", self.clockwise)
+        print("scale = ", self.scale)
+        print("angle = ", self.angle)
+        print("spacing = ", self.spacing)
     list.__doc__ = xmldocs.listdoc.format(name="isoline", parent="")
 
     ##########################################################################
@@ -1124,19 +1124,19 @@ class Gi(vcs.bestMatch):
             fp.write("%s.yticlabels2 = '%s'\n" % (unique_name, self.yticlabels2))
             fp.write("%s.ymtics1 = '%s'\n" % (unique_name, self.ymtics1))
             fp.write("%s.ymtics2 = '%s'\n" % (unique_name, self.ymtics2))
-            if isinstance(self.datawc_x1, (int, long, float)):
+            if isinstance(self.datawc_x1, (int, float)):
                 fp.write("%s.datawc_x1 = %g\n" % (unique_name, self.datawc_x1))
             else:
                 fp.write("%s.datawc_x1 = '%s'\n" % (unique_name, self.datawc_x1))
-            if isinstance(self.datawc_y1, (int, long, float)):
+            if isinstance(self.datawc_y1, (int, float)):
                 fp.write("%s.datawc_y1 = %g\n" % (unique_name, self.datawc_y1))
             else:
                 fp.write("%s.datawc_y1 = '%s'\n" % (unique_name, self.datawc_y1))
-            if isinstance(self.datawc_x2, (int, long, float)):
+            if isinstance(self.datawc_x2, (int, float)):
                 fp.write("%s.datawc_x2 = %g\n" % (unique_name, self.datawc_x2))
             else:
                 fp.write("%s.datawc_x2 = '%s'\n" % (unique_name, self.datawc_x2))
-            if isinstance(self.datawc_y2, (int, long, float)):
+            if isinstance(self.datawc_y2, (int, float)):
                 fp.write("%s.datawc_y2 = %g\n" % (unique_name, self.datawc_y2))
             else:
                 fp.write("%s.datawc_y2 = '%s'\n" % (unique_name, self.datawc_y2))

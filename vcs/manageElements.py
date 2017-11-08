@@ -13,27 +13,27 @@
     .. pragma: skip-doctest
 """
 import vcs
-import boxfill
-import meshfill
-import isofill
-import isoline
-import unified1D
-import template
-import projection
-import colormap
-import fillarea
-import marker
-import line
-import texttable
-import textorientation
-import textcombined
-import vector
-import streamline
-import xmldocs
+from . import boxfill
+from . import meshfill
+from . import isofill
+from . import isoline
+from . import unified1D
+from . import template
+from . import projection
+from . import colormap
+from . import fillarea
+from . import marker
+from . import line
+from . import texttable
+from . import textorientation
+from . import textcombined
+from . import vector
+from . import streamline
+from . import xmldocs
 import random
-from error import vcsError
+from .error import vcsError
 import warnings
-import dv3d
+from . import dv3d
 
 
 def check_name_source(name, source, typ):
@@ -78,7 +78,7 @@ def check_name_source(name, source, typ):
         while name in elts:
             rnd = random.randint(0, 1000000000000000)
             name = '__%s_%i' % (typ, rnd)
-    if isinstance(name, unicode):
+    if isinstance(name, str):
         name = str(name)
     if not isinstance(name, str):
         raise vcsError(
@@ -138,7 +138,7 @@ def gettemplate(Pt_name_src='default'):
     if not isinstance(Pt_name_src, str):
         raise vcsError('The argument must be a string.')
 
-    if Pt_name_src not in vcs.elements["template"].keys():
+    if Pt_name_src not in list(vcs.elements["template"].keys()):
         raise ValueError("template '%s' does not exists" % Pt_name_src)
     return vcs.elements["template"][Pt_name_src]
 gettemplate.__doc__ = gettemplate.__doc__ % xmldocs.get_docs['template']  # noqa
@@ -215,8 +215,8 @@ def getboxfill(Gfb_name_src='default'):
     if not isinstance(Gfb_name_src, str):
         raise vcsError('The argument must be a string.')
 
-    if Gfb_name_src not in vcs.elements["boxfill"].keys():
-        raise "The boxfill method: '%s' does not seem to exist"
+    if Gfb_name_src not in list(vcs.elements["boxfill"].keys()):
+        raise Exception("The boxfill method: '%s' does not seem to exist")
     return vcs.elements["boxfill"][Gfb_name_src]
 getboxfill.__doc__ = getboxfill.__doc__ % xmldocs.get_docs['boxfill']  # noqa
 
@@ -236,12 +236,12 @@ def createtaylordiagram(name=None, source='default'):
     """
 
     name, source = check_name_source(name, source, 'taylordiagram')
-    if name in vcs.elements["taylordiagram"].keys():
+    if name in list(vcs.elements["taylordiagram"].keys()):
         raise vcsError(
             'Error creating taylordiagram graphic method: ' +
             name +
             ' already exist')
-    if source not in vcs.elements["taylordiagram"].keys():
+    if source not in list(vcs.elements["taylordiagram"].keys()):
         raise vcsError(
             'Error creating taylordiagram graphic method ' +
             source +
@@ -265,7 +265,7 @@ def gettaylordiagram(Gtd_name_src='default'):
     if not isinstance(Gtd_name_src, str):
         raise vcsError('The argument must be a string.')
 
-    if Gtd_name_src not in vcs.elements["taylordiagram"].keys():
+    if Gtd_name_src not in list(vcs.elements["taylordiagram"].keys()):
         raise vcsError(
             "The taylordiagram graphic method %s does not exists" %
             Gtd_name_src)
@@ -796,7 +796,7 @@ def setLineAttributes(to, l):
         l will be used to set the properties of to.
     :type l: :py:class:`vcs.line.Tl` or str
     """
-    import queries
+    from . import queries
     line = None
     if (queries.isline(l)):
         line = l
@@ -1126,7 +1126,7 @@ def getfillarea(name='default', style=None,
     # Check to make sure the argument passed in is a STRING
     if not isinstance(name, str):
         raise vcsError('The argument must be a string.')
-    if name not in vcs.elements["fillarea"].keys():
+    if name not in list(vcs.elements["fillarea"].keys()):
         raise vcsError("Fillarea '%s' does not exist" % (name))
 
     fa = vcs.elements["fillarea"][name]
@@ -1703,7 +1703,7 @@ def removeG(obj, gtype="boxfill"):
     exec("res = vcs.is%s(obj)" % gtype)
     if isinstance(obj, str):
         name = obj
-        if obj not in vcs.elements[gtype].keys():
+        if obj not in list(vcs.elements[gtype].keys()):
             raise RuntimeError("Cannot remove inexisting %s %s" % (gtype, obj))
     else:
         name = obj.name
@@ -1807,13 +1807,13 @@ def removeP(obj):
     # If so we need to remove the textorientation objects
     # associated with this
     if not vcs.istemplate(obj):
-        if obj not in vcs.elements["template"].keys():
+        if obj not in list(vcs.elements["template"].keys()):
             raise RuntimeError("Cannot remove inexisting template %s" % obj)
     if isinstance(obj, str):
         obj = vcs.gettemplate(obj)
     if obj._scaledFont:
         try:
-            attr = vars(obj).keys()
+            attr = list(vars(obj).keys())
         except:
             attr = obj.__slots__
 

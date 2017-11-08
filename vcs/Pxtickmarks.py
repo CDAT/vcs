@@ -22,7 +22,7 @@
 #
 #
 #
-import VCS_validation_functions
+from . import VCS_validation_functions
 import vcs
 
 #############################################################################
@@ -163,11 +163,11 @@ class Pxt(vcs.bestMatch):
     #                                                                           #
     ##########################################################################
     def list(self):
-        print "member = ", self.member
-        print "     priority =", self.priority
-        print "     y1 =", self.y1
-        print "     y2 =", self.y2
-        print "     line =", self.line
+        print("member = ", self.member)
+        print("     priority =", self.priority)
+        print("     y1 =", self.y1)
+        print("     y2 =", self.y2)
+        print("     line =", self.line)
 
 
 ##########################################################################

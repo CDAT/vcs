@@ -22,10 +22,10 @@
 #
 #
 #
-import VCS_validation_functions
+from . import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import scriptdocs, listdoc
+from .xmldocs import scriptdocs, listdoc
 
 
 def process_src(nm, code):
@@ -425,7 +425,7 @@ class Tt(vcs.bestMatch):
                 #                                                           #
         if (Tt_name is None):
             raise ValueError('Must provide a text table name.')
-        if Tt_name in vcs.elements["texttable"].keys():
+        if Tt_name in list(vcs.elements["texttable"].keys()):
             raise ValueError("texttable '%s' already exists" % Tt_name)
         self._name = Tt_name
         self.s_name = 'Tt'
@@ -448,7 +448,7 @@ class Tt(vcs.bestMatch):
         else:
             if isinstance(Tt_name_src, Tt):
                 Tt_name_src = Tt_name_src.name
-            if Tt_name_src not in vcs.elements["texttable"].keys():
+            if Tt_name_src not in list(vcs.elements["texttable"].keys()):
                 raise ValueError(
                     "Source texttable: '%s' does not exists" %
                     Tt_name_src)
@@ -478,23 +478,23 @@ class Tt(vcs.bestMatch):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "---------- Text Table (Tt) member (attribute) listings ----------"
-        print "secondary method =", self.s_name
-        print "name =", self.name
-        print "string =", self.string
-        print "font =", self.font
-        print "spacing =", self.spacing
-        print "expansion =", self.expansion
-        print "color =", self.color
-        print "backgroundcolor =", self.backgroundcolor
-        print "backgroundopacity =", self.backgroundopacity
-        print "fillincolor =", self.fillincolor
-        print "priority =", self.priority
-        print "viewport =", self.viewport
-        print "worldcoordinate =", self.worldcoordinate
-        print "x =", self.x
-        print "y =", self.y
-        print 'colormap =', self.colormap
+        print("---------- Text Table (Tt) member (attribute) listings ----------")
+        print("secondary method =", self.s_name)
+        print("name =", self.name)
+        print("string =", self.string)
+        print("font =", self.font)
+        print("spacing =", self.spacing)
+        print("expansion =", self.expansion)
+        print("color =", self.color)
+        print("backgroundcolor =", self.backgroundcolor)
+        print("backgroundopacity =", self.backgroundopacity)
+        print("fillincolor =", self.fillincolor)
+        print("priority =", self.priority)
+        print("viewport =", self.viewport)
+        print("worldcoordinate =", self.worldcoordinate)
+        print("x =", self.x)
+        print("y =", self.y)
+        print('colormap =', self.colormap)
     list.__doc__ = listdoc.format(name="texttable", parent="")
 
     ##########################################################################

@@ -4,10 +4,10 @@ import warnings
 import numpy
 import os
 import time
-import thread
+import _thread
 import threading
 import glob
-from error import vcsError
+from .error import vcsError
 
 
 def showerror(msg):
@@ -142,7 +142,7 @@ class animate_obj_old(vcs.bestMatch):
 
         if save_file is None or save_file.split('.')[-1].lower() == 'ras':
             if thread_it:
-                thread.start_new_thread(
+                _thread.start_new_thread(
                     self.vcs_self.canvas.animate_init, (save_file,))
             else:
                 self.vcs_self.canvas.animate_init(save_file)
@@ -384,7 +384,7 @@ class animate_obj_old(vcs.bestMatch):
             return
 
         if thread_it == 1:
-            thread.start_new_thread(
+            _thread.start_new_thread(
                 self.vcs_self.canvas.animate_load, (load_file,))
         else:
             self.vcs_self.canvas.animate_init(load_file)
@@ -449,7 +449,7 @@ class animate_obj_old(vcs.bestMatch):
     # Value ranges from 0 to 100                                                 #
     ##########################################################################
     def pause(self, value=1):
-        if (((not isinstance(value, int))) or (value not in range(0, 101))):
+        if (((not isinstance(value, int))) or (value not in list(range(0, 101)))):
             raise vcsError(
                 "Pause value must be between an integer between 0 and 100.")
 
@@ -461,7 +461,7 @@ class animate_obj_old(vcs.bestMatch):
     # Value ranges from 0 to 20                                                  #
     ##########################################################################
     def zoom(self, value=1):
-        if (((not isinstance(value, int))) or (value not in range(1, 21))):
+        if (((not isinstance(value, int))) or (value not in list(range(1, 21)))):
             raise vcsError(
                 "Zoom value must be between an integer between 1 and 20.")
 
@@ -476,7 +476,7 @@ class animate_obj_old(vcs.bestMatch):
     # Value ranges from -100 to 100						#
     ##########################################################################
     def horizontal(self, value=0):
-        if (((not isinstance(value, int))) or (value not in range(-100, 101))):
+        if (((not isinstance(value, int))) or (value not in list(range(-100, 101)))):
             raise vcsError(
                 "Horizontal pan value must be between an integer between -100 and 100.")
 
@@ -491,7 +491,7 @@ class animate_obj_old(vcs.bestMatch):
     # Value ranges from -100 to 100						#
     ##########################################################################
     def vertical(self, value=0):
-        if (((not isinstance(value, int))) or (value not in range(-100, 101))):
+        if (((not isinstance(value, int))) or (value not in list(range(-100, 101)))):
             raise vcsError(
                 "Vertical pan value must be between an integer between -100 and 100.")
 
@@ -506,7 +506,7 @@ class animate_obj_old(vcs.bestMatch):
     # Value 1 -> forward, 2 -> backward       	                                #
     ##########################################################################
     def direction(self, value=1):
-        if (((not isinstance(value, int))) or (value not in range(1, 3))):
+        if (((not isinstance(value, int))) or (value not in list(range(1, 3)))):
             raise vcsError(
                 "Direction value must be between either 1='forward' or 2='backward'.")
 
@@ -592,7 +592,7 @@ class RT:
     def start(self):
         self.runnnig = True
         while self.running:
-            self.next()
+            next(self)
             time.sleep(1. / self.parent.frames_per_second)
 
     def stop(self):
@@ -875,17 +875,17 @@ class AnimationController(animate_obj_old):
         maxv = []
         if (self.create_params.a_min is None or
                 self.create_params.a_max is None):
-            for i in xrange(len(self.animate_info)):
+            for i in range(len(self.animate_info)):
                 minv.append(1.0e77)
                 maxv.append(-1.0e77)
-            for i in xrange(len(self.animate_info)):
+            for i in range(len(self.animate_info)):
                 dpy, slab = self.animate_info[i]
                 mins, maxs = vcs.minmax(slab)
                 minv[i] = float(numpy.minimum(float(minv[i]), float(mins)))
                 maxv[i] = float(numpy.maximum(float(maxv[i]), float(maxs)))
         elif (isinstance(self.create_params.a_min, list) or
               isinstance(self.create_params.a_max, list)):
-            for i in xrange(len(self.animate_info)):
+            for i in range(len(self.animate_info)):
                 try:
                     minv.append(self.create_params.a_min[i])
                 except:
@@ -895,13 +895,13 @@ class AnimationController(animate_obj_old):
                 except:
                     maxv.append(self.create_params.a_max[-1])
         else:
-            for i in xrange(len(self.animate_info)):
+            for i in range(len(self.animate_info)):
                 minv.append(self.create_params.a_min)
                 maxv.append(self.create_params.a_max)
         # Set the min an max for each plot in the page. If the same graphics method is used
         # to display the plots, then the last min and max setting of the
         # data set will be used.
-        for i in xrange(len(self.animate_info)):
+        for i in range(len(self.animate_info)):
             try:
                 self.set_animation_min_max(minv[i], maxv[i], i)
             except:

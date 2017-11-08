@@ -36,7 +36,7 @@
 from UserDict import UserDict
 import vcs
 import copy
-import xmldocs
+from . import xmldocs
 
 
 def process_src(nm, code):
@@ -149,7 +149,7 @@ class RGB_Table(UserDict):
     def __setitem__(self, key, value):
         if (self.name == 'default'):
             raise ValueError('You cannot modify the default colormap.')
-        if (key not in range(0, 256)):
+        if (key not in list(range(0, 256))):
             raise ValueError('Cell index must be in the range 0 to 255.')
         if isinstance(value, (list, tuple)):
             value = list(value)
@@ -167,7 +167,7 @@ class RGB_Table(UserDict):
         self.data[key] = value
 
     def __getitem__(self, key):
-        if (key not in range(0, 256)):
+        if (key not in list(range(0, 256))):
             raise ValueError('Cell index must be in the range 0 to 255.')
         return self.data[key]
 #
@@ -265,12 +265,12 @@ class Cp(vcs.bestMatch):
     def setindex(self, value):
         # usually we cannot set index, but there is an exception for loading
         # from json files
-        if not(isinstance(value, dict) and value.keys() == [u'data', ]):
+        if not(isinstance(value, dict) and list(value.keys()) == ['data', ]):
             raise Exception("invalid")
         else:
             d2 = {}
-            d = value[u'data']
-            for k in d.keys():
+            d = value['data']
+            for k in list(d.keys()):
                 if len(d[k]) == 3:  # Old style only r,g,b no a
                     d[k] += [100.]
                 d2[int(k)] = d[k]
@@ -369,10 +369,10 @@ class Cp(vcs.bestMatch):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "---------- Colormap (Cp) member (attribute) listings ----------"
-        print "secondary method =", self.s_name
-        print "name =", self.name
-        print "index =", self.index
+        print("---------- Colormap (Cp) member (attribute) listings ----------")
+        print("secondary method =", self.s_name)
+        print("name =", self.name)
+        print("index =", self.index)
     list.__doc__ = xmldocs.listdoc.format(name="colormap", parent="")
 
     ##########################################################################

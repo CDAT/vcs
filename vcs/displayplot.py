@@ -23,9 +23,9 @@
 #
 #
 #
-import VCS_validation_functions
+from . import VCS_validation_functions
 import vcs
-from xmldocs import listdoc  # noqa
+from .xmldocs import listdoc  # noqa
 
 
 class Dp(vcs.bestMatch):
@@ -239,7 +239,7 @@ class Dp(vcs.bestMatch):
         if value not in vcs.elements and value != "text" and (hasVCSAddons and value not in vcsaddons.gms):
             raise ValueError(
                 "invalid g_type '%s' must be one of: %s " %
-                (value, vcs.elements.keys()))
+                (value, list(vcs.elements.keys())))
         self._g_type = value
     g_type = property(_getg_type, _setg_type)
 
@@ -323,16 +323,16 @@ class Dp(vcs.bestMatch):
             """
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "---------- Display Plot (Dp) member (attribute) listings ----------"
-        print "Display plot method =", self.s_name
-        print "name =", self.name
-        print "off =", self.off
-        print "priority =", self.priority
-        print "template =", self.template
-        print "template_origin =", self._template_origin
-        print "g_type =", self.g_type
-        print "g_name =", self.g_name
-        print "array =", self.array
-        print "continents =", self.continents
-        print "extradisplays =", self.extradisplays
-        print "ratio =", self.ratio
+        print("---------- Display Plot (Dp) member (attribute) listings ----------")
+        print("Display plot method =", self.s_name)
+        print("name =", self.name)
+        print("off =", self.off)
+        print("priority =", self.priority)
+        print("template =", self.template)
+        print("template_origin =", self._template_origin)
+        print("g_type =", self.g_type)
+        print("g_name =", self.g_name)
+        print("array =", self.array)
+        print("continents =", self.continents)
+        print("extradisplays =", self.extradisplays)
+        print("ratio =", self.ratio)

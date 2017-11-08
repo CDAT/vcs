@@ -22,7 +22,7 @@
 #
 #
 #
-import VCS_validation_functions
+from . import VCS_validation_functions
 import vcs
 #############################################################################
 #                                                                           #
@@ -185,13 +185,13 @@ class Pf(vcs.bestMatch):
     #                                                                           #
     ##########################################################################
     def list(self):
-        print "member = ", self.member
-        print "     priority =", self.priority
-        print "     x =", self.x
-        print "     y =", self.y
-        print "     format =", self.format
-        print "     texttable =", self.texttable
-        print "     textorientation =", self.textorientation
+        print("member = ", self.member)
+        print("     priority =", self.priority)
+        print("     x =", self.x)
+        print("     y =", self.y)
+        print("     format =", self.format)
+        print("     texttable =", self.texttable)
+        print("     textorientation =", self.textorientation)
 
 
 ##########################################################################
