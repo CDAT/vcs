@@ -487,7 +487,6 @@ class Gfb(vcs.bestMatch):
         '_level_2',
         '_datawc_timeunits',
         '_datawc_calendar',
-        'info',
     ]
     colormap = VCS_validation_functions.colormap
 # Removed from doc string

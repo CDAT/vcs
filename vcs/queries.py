@@ -129,7 +129,8 @@ def graphicsmethodlist():
     :rtype: `list`_
     """
     return ['boxfill', 'isofill', 'isoline', 'meshfill', 'scatter',
-            'vector', 'xvsy', 'xyvsy', 'yxvsx', 'taylordiagram', '1d', '3d_scalar', '3d_dual_scalar', '3d_vector']
+            'vector', 'streamline', 'xvsy', 'xyvsy', 'yxvsx', 'taylordiagram',
+            '1d', '3d_scalar', '3d_dual_scalar', '3d_vector']
 
 
 def graphicsmethodtype(gobj):
