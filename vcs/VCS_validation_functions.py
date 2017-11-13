@@ -170,7 +170,7 @@ def checkLine(self, name, value):
 def isNumber(value, min=None, max=None):
     """ Checks if value is a Number, optionaly can check if min<value<max
     """
-    if not isinstance(value, (int, float, numpy.floating)):
+    if not isinstance(value, (int, float, numpy.int_, numpy.floating)):
         return False
     if min is not None and value < min:
         return -1
@@ -181,6 +181,11 @@ def isNumber(value, min=None, max=None):
 
 def checkNumber(self, name, value, minvalue=None, maxvalue=None):
     checkName(self, name, value)
+    if isinstance(value, numpy.ndarray) and value.ndim == 0 and not numpy.ma.is_masked(value):
+        try:
+            value = float(value)
+        except Exception:
+            pass
     n = isNumber(value, min=minvalue, max=maxvalue)
     if n is False:
         checkedRaise(self, value, ValueError, name + ' must be a number')
@@ -240,11 +245,12 @@ def checkListOfNumbers(self, name, value, minvalue=None,
             ' must have at most ' +
             str(maxelements) +
             ' elements')
-    for v in value:
+    value = list(value)
+    for i,v in enumerate(value):
         if ints:
             checkInt(self, name, v, minvalue=minvalue, maxvalue=maxvalue)
         else:
-            checkNumber(self, name, v, minvalue=minvalue, maxvalue=maxvalue)
+            value[i] = checkNumber(self, name, v, minvalue=minvalue, maxvalue=maxvalue)
     return list(value)
 
 
@@ -1188,7 +1194,6 @@ def DMS2deg(val):
     mn = float(s[3:6])
     sec = float(s[6:9])
     r = val - ival
-# print deg,mn,sec,r
     return deg + mn / 60. + sec / 3600. + r / 3600.
 
 
@@ -1216,11 +1221,9 @@ def checkProjParameters(self, name, value):
             if (not(i == 3 and (self.type in [9, 15, 20, 22, 30])) and
                 (not(i == 4 and (self.type == 20 or (self.type == 22 and value[12] == 1) or
                                  self.type == 30)))):
-                # print i,value[i]
                 value[i] = deg2DMS(value[i])
     for i in range(8, 12):
         if self._type in [20, 30] and abs(value[i]) < 10000:
-            # print i,value[i]
             value[i] = deg2DMS(value[i])
     return value
 

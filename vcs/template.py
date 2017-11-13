@@ -33,6 +33,7 @@
 #
 #
 #
+from __future__ import print_function
 import copy
 import vcs
 import numpy
@@ -135,7 +136,6 @@ def process_src(nm, code):
                 try:
                     setattr(tatt, nm, val)  # strings here
                 except:
-                    # print "COULD NOT SET %s.%s.%s to %s" %
                     # (t.name,tnm,nm,val)
                     pass
     i = code.find("Orientation(")
@@ -1817,7 +1817,7 @@ class P(vcs.bestMatch):
                                 vcs.elements["projection"][l.projection].type in\
                                 round_projections:
                             l._x = [[wc2[0], wc2[1]], [wc2[0], wc2[1]]]
-                            l._y = [wc2[3], wc2[3]], [wc2[2], wc2[2]]
+                            l._y = [[wc2[3], wc2[3]], [wc2[2], wc2[2]]]
                         else:
                             l._x = [
                                 wc2[0],
@@ -1987,7 +1987,6 @@ class P(vcs.bestMatch):
                     ])
             else:
                 # Draws a normal box
-                # print i,boxLength,thick,startLength,startThick
                 L.append([startLength + boxLength * (i + adjust),
                           startLength + boxLength * (i + adjust + 1),
                           startLength + boxLength * (i + adjust + 1),
@@ -2350,9 +2349,9 @@ class P(vcs.bestMatch):
             # Axis Names
             self.xname.y = max(0, min(1, self.xlabel1._y - x_scale * x_label_name_diff))
             self.yname.x = max(0, min(1, self.ylabel1._x - y_scale * y_label_name_diff))
-            self.data._ratio = -Rwished
+            self.data.ratio = -Rwished
         else:
-            self.data._ratio = Rwished
+            self.data.ratio = Rwished
 
         del(vcs.elements["template"][t.name])
         return

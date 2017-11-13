@@ -1,4 +1,5 @@
 # This module contains some convenience function from vcs2vtk
+from __future__ import division
 import vcs
 import vtk
 import numpy
@@ -640,8 +641,8 @@ def prepContinents(fnm):
                     ln = ln[16:]
                     n += 2
         ln = vtk.vtkPolyLine()
-        ln.GetPointIds().SetNumberOfIds(N / 2)
-        for i in range(N / 2):
+        ln.GetPointIds().SetNumberOfIds(N // 2)
+        for i in range(N // 2):
             ln.GetPointIds().SetId(i, i + npts)
         cells.InsertNextCell(ln)
         ln = f.readline()

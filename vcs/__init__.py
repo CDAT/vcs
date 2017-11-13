@@ -60,7 +60,12 @@ class bestMatch(object):
         if isprop or not hasattr(self, "__slots__") or a in self.__slots__:
             super(bestMatch, self).__setattr__(a, v)
         else:
-            matches = difflib.get_close_matches(a, self.__slots__)
+            props = []
+            for attr in dir(self.__class__):
+                if isinstance(getattr(self.__class__, attr), property):
+                    props.append(attr)
+            possible = self.__slots__ + props
+            matches = difflib.get_close_matches(a, possible)
             real_matches = []
             for m in matches:
                 if m[0] != "_":
@@ -271,10 +276,11 @@ t = taylor.Gtd("default")
 
 
 pth = [vcs.prefix, 'share', 'vcs', 'initial.attributes']
-try:
+if 1:
+#try:
     vcs.scriptrun(os.path.join(*pth))
-except BaseException:
-    pass
+#except BaseException:
+#    pass
 
 for typ in list(elements.keys()):
     elts = elements[typ]

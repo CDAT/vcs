@@ -12,6 +12,7 @@
 .. _file: https://docs.python.org/2/library/functions.html?highlight=open#file
 """
 # Adapted for numpy/ma/cdms2 by convertcdms.py
+from __future__ import print_function
 import numpy
 import cdtime
 import warnings
@@ -44,6 +45,10 @@ try:
 except BaseException:
     hasVCSAddons = False
 
+try:
+    basestring
+except NameError:
+    basestring = str
 
 from .colors import rgb2str, str2rgb, matplotlib2vcs, loadmatplotlibcolormaps  # noqa
 
@@ -152,7 +157,7 @@ class Logo(vcs.bestMatch):
             self.source = None
         elif vcs.queries.istext(source):
             self.source = source
-        elif isinstance(source, str):
+        elif isinstance(source, basestring):
             self.source_width, self.source_height = get_png_dims(source)
             if self.source_width is not None:
                 self.source = source
@@ -200,7 +205,7 @@ class Logo(vcs.bestMatch):
         :param bg: do we plot in background (offscreen) mode or not? True/False
         :type bg: `bool`_
         """
-        if isinstance(self.source, str):
+        if isinstance(self.source, basestring):
             cnv_info = canvas.canvasinfo()
             if self.width is not None:
                 scale = float(self.width) / self.source_width
@@ -319,7 +324,7 @@ def dumpToDict(obj, skipped=[], must=[]):
                     continue
                 associated[a].add(val)
             if not isinstance(val,
-                              (str, tuple, list, int, float, dict)) and \
+                              (basestring, tuple, list, int, float, dict)) and \
                     val is not None:
                 val, asso = dumpToDict(val, skipped, must)
                 for k in associated_keys:
@@ -378,7 +383,7 @@ def dumpToJson(obj, fileout, skipped=["info", "member"], must=[], indent=indent,
     """
     dic, associated = dumpToDict(obj, skipped, must)
     if fileout is not None:
-        if isinstance(fileout, str):
+        if isinstance(fileout, basestring):
             f = open(fileout, "a+")
         else:
             f = fileout
@@ -411,7 +416,7 @@ def dumpToJson(obj, fileout, skipped=["info", "member"], must=[], indent=indent,
         d[nm2] = dic
         D[nm] = d
         json.dump(D, f, sort_keys=sort_keys, indent=indent)
-        if isinstance(fileout, str):
+        if isinstance(fileout, basestring):
             f.close()
             for etype in list(associated.keys()):
                 for asso in associated[etype]:
@@ -996,7 +1001,8 @@ def scriptrun(script):
                   "Cp": "colormap",
                   "L": "L",
                   }
-        try:
+        if 1:
+        #try:
             f = open(script)
             jsn = json.load(f)
             keys = []
@@ -1010,21 +1016,21 @@ def scriptrun(script):
             for typ in keys:
                 for nm, v in jsn[typ].items():
                     if typ == "P":
-                        try:
+                        #try:
                             loadTemplate(str(nm), v)
-                        except Exception as err:
-                            print("could not load tmpl:", nm, err)
+                        #except Exception as err:
+                        #    print("could not load tmpl:", nm, err)
                     else:
                         try:
                             loadVCSItem(loader[typ], nm, v)
                         except Exception as err:
                             print("failed", typ, nm, err)
         # ok could not read json file maybe it is an old initial.attributes
-        except Exception as err:
-            if os.path.split(script)[-1] == "initial.attributes":
-                _scriptrun(script)
-            else:
-                warnings.warn("unable to source file: %s %s" % (script, err))
+        #except Exception as err:
+        #    if os.path.split(script)[-1] == "initial.attributes":
+        #        _scriptrun(script)
+        #    else:
+        #        warnings.warn("unable to source file: %s %s" % (script, err))
     vcs._doValidation = True
     return
 
@@ -1037,7 +1043,7 @@ def loadTemplate(nm, vals):
     for k, v in vals.items():
         A = getattr(t, k)
         for a, v in v.items():
-            if isinstance(v, str):
+            if isinstance(v, basestring):
                 v = str(v)
             setattr(A, a, v)
 
@@ -1080,7 +1086,7 @@ def loadVCSItem(typ, nm, json_dict={}):
                         del(v[k])
                     except BaseException:
                         pass
-        elif isinstance(v, str):
+        elif isinstance(v, basestring):
             v = str(v)
         if not(a == "Marker" and tp == "taylordiagram"):
             setattr(gm, a, v)
@@ -1542,7 +1548,7 @@ def getcolors(levs, colors=None, split=1, white="white"):
             tmplevs.append(levs[i][1])
         levs = tmplevs
     # Take care of the input argument split
-    if isinstance(split, str):
+    if isinstance(split, basestring):
         if split.lower() == 'no':
             split = 0
         elif split.lower() == 'force':
@@ -1550,7 +1556,7 @@ def getcolors(levs, colors=None, split=1, white="white"):
         else:
             split = 1
     # Take care of argument white
-    if isinstance(white, str):
+    if isinstance(white, basestring):
         white = [value/2.55 for value in genutil.colors.str2rgb(white)]
 
     # Gets first and last value, and adjust if extensions
@@ -1988,7 +1994,7 @@ def getcolormap(Cp_name_src='default'):
     :rtype: vcs.colormap.Cp
     """
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(Cp_name_src, str):
+    if not isinstance(Cp_name_src, basestring):
         raise ValueError('Error -  The argument must be a string.')
 
     return vcs.elements["colormap"][Cp_name_src]
@@ -2069,7 +2075,7 @@ def setcolorcell(obj, num, r, g, b, a=100):
     :type a: `int`_
     """
 
-    if isinstance(obj, str):
+    if isinstance(obj, basestring):
         cmap = getcolormap(obj)
     else:
         cmap = getcolormap(obj.colormap)
@@ -2104,7 +2110,7 @@ def match_color(color, colormap=None):
     :rtype: int
     """
     # First gets the rgb values
-    if isinstance(color, str):
+    if isinstance(color, basestring):
         vals = genutil.colors.str2rgb(color)
         vals[0] /= 2.55
         vals[1] /= 2.55

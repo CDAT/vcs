@@ -2784,7 +2784,7 @@ class Canvas(vcs.bestMatch):
         # modifications.
         template_origin = arglist[2]
         tmptmpl = self.gettemplate(arglist[2])
-        tmptmpl.data._ratio = -999
+        tmptmpl.data.ratio = -999
 
         copy_mthd = None
         copy_tmpl = None
