@@ -31,7 +31,7 @@ no_over_proj4_parameter_projections = round_projections+["aeqd", "lambert confor
 def process_src(nm, code):
     try:
         gm = Proj(nm)
-    except:
+    except Exception:
         gm = vcs.elements["projection"][nm]
     i = code.find("(")
     j = code.find(")")

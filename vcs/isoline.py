@@ -46,10 +46,10 @@ def get_att_from_sub(code, att):
         sp = code[i:j].split("=")
         try:
             return int(sp[1])
-        except:
+        except Exception:
             try:
                 return float(sp[1])
-            except:
+            except Exception:
                 return sp[1]
 
 
@@ -58,7 +58,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates isoline gm from it
     try:
         g = Gi(nm)
-    except:
+    except Exception:
         g = vcs.elements["isoline"][nm]
     # process attributes with = as assignement
     for att in ["projection",
@@ -90,15 +90,15 @@ def process_src(nm, code):
         try:
             # int will be converted
             setattr(g, nm, int(sp[1]))
-        except:
+        except Exception:
             try:
                 # int and floats will be converted
                 setattr(g, nm, eval(sp[1]))
-            except:
+            except Exception:
                 # strings
                 try:
                     setattr(g, nm, sp[1])
-                except:
+                except Exception:
                     pass  # oh well we stick to default value
     # Datawc
     idwc = code.find(" datawc(")
@@ -171,25 +171,25 @@ def process_src(nm, code):
         pass
     try:
         g.text = to
-    except:
+    except Exception:
         g._text = to
     try:
         g.textcolors = tt
-    except:
+    except Exception:
         g._textcolors = tt
 
     gd = vcs.elements["isoline"]["default"]
     try:
         g.scale = scales
-    except:
+    except Exception:
         g.scale = gd.scale
     try:
         g.angle = angles
-    except:
+    except Exception:
         g.angle = gd.angle
     try:
         g.clockwise = clock
-    except:
+    except Exception:
         g.clockwise = gd.clockwise
 
 

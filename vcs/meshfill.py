@@ -28,7 +28,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates meshfill gm from it
     try:
         g = Gfm(nm)
-    except:
+    except Exception:
         g = vcs.elements["meshfill"][nm]
     # process attributes with = as assignement
     for att in ["projection",
@@ -62,15 +62,15 @@ def process_src(nm, code):
         try:
             # int will be converted
             setattr(g, nm, int(sp[1]))
-        except:
+        except Exception:
             try:
                 # int and floats will be converted
                 setattr(g, nm, eval(sp[1]))
-            except:
+            except Exception:
                 # strings
                 try:
                     setattr(g, nm, sp[1])
-                except:
+                except Exception:
                     pass  # oh well we stick to default value
         # Datawc
         idwc = code.find(" datawc(")

@@ -28,7 +28,7 @@ def process_src(nm, code):
 
     try:
         gm = Gfb(nm)
-    except:
+    except Exception:
         gm = vcs.elements["boxfill"][nm]
     # process attributes with = as assignement
     for att in ["projection",
@@ -68,15 +68,15 @@ def process_src(nm, code):
         try:
             # int will be converted
             setattr(gm, nm, int(sp[1]))
-        except:
+        except Exception:
             try:
                 # int and floats will be converted
                 setattr(gm, nm, eval(sp[1]))
-            except:
+            except Exception:
                 # strings
                 try:
                     setattr(gm, nm, sp[1])
-                except:
+                except Exception:
                     pass  # oh well we stick to default value
     # Datawc
     idwc = code.find("datawc(")

@@ -311,7 +311,14 @@ def dumpToDict(obj, skipped=[], must=[]):
     if isinstance(obj, (vcs.taylor.TDMarker, vcs.taylor.Gtd)):
         del(associated["line"])
     associated_keys = list(associated.keys())
-    for a in obj.__slots__:
+    mylist = list(obj.__slots__)
+    props = []
+    for attr in dir(obj.__class__):
+        if isinstance(getattr(obj.__class__, attr), property):
+            props.append(attr)
+    mylist += props
+
+    for a in mylist:
         if (a not in skipped) and (a[0] != "_" or a in must):
             try:
                 val = getattr(obj, a)
@@ -324,7 +331,7 @@ def dumpToDict(obj, skipped=[], must=[]):
                     continue
                 associated[a].add(val)
             if not isinstance(val,
-                              (basestring, tuple, list, int, float, dict)) and \
+                              (basestring, tuple, list, long, int, float, dict)) and \
                     val is not None:
                 val, asso = dumpToDict(val, skipped, must)
                 for k in associated_keys:
@@ -334,7 +341,7 @@ def dumpToDict(obj, skipped=[], must=[]):
     return dic, associated
 
 
-def dumpToJson(obj, fileout, skipped=["info", "member"], must=[], indent=indent, sort_keys=sort_keys):
+def dumpToJson(obj, fileout, skipped=["info", "member", "attributes"], must=[], indent=indent, sort_keys=sort_keys):
     """Uses :py:func:`vcs.utils.dumpToDict` and `json.dumps`_ to construct a
     JSON representation of a VCS object's property values.
 
@@ -396,8 +403,8 @@ def dumpToJson(obj, fileout, skipped=["info", "member"], must=[], indent=indent,
                     f.seek(0)
                     D = json.load(f)
                 except Exception as err:
-                    print("Error reading json file," +\
-                        "will be overwritten", fileout, err)
+                    print("Error reading json file," +
+                          "will be overwritten", fileout, err)
                     D = {}
             else:
                 D = {}
@@ -707,18 +714,18 @@ def scriptrun_scr(*args):
 
     # Open VCS script file for reading and read all lines into a Python list
     fin = open(args[0], 'r')
-    l = fin.readlines()
-    line_ct = len(l)
+    lns = fin.readlines()
+    line_ct = len(lns)
     i = 0
 
     # Check to see if it is a VCS generated Python script file.
     # If it is, then simply
     # call the execfile function to execute the script and close the file.
-    if ((l[0][0:37] == "#####################################") and
-            (l[1][0:35] == "#                                 #") and
-            (l[2][0:33] == "# Import and Initialize VCS     #") and
-            (l[3][0:31] == "#                             #") and
-            (l[4][0:29] == "#############################")):
+    if ((lns[0][0:37] == "#####################################") and
+            (lns[1][0:35] == "#                                 #") and
+            (lns[2][0:33] == "# Import and Initialize VCS     #") and
+            (lns[3][0:31] == "#                             #") and
+            (lns[4][0:29] == "#############################")):
         fin.close()
         exec(compile(open(args[0]).read(), args[0], 'exec'), __main__.__dict__)
         return
@@ -726,14 +733,14 @@ def scriptrun_scr(*args):
     while i < line_ct:
         # Loop through all lines and determine when a VCS command line
         # begins and ends. That is, get only one VCS command at a time
-        scr_str = l[i]
-        lt_paren_ct = l[i].count('(')
-        rt_paren_ct = l[i].count(')')
+        scr_str = lns[i]
+        lt_paren_ct = lns[i].count('(')
+        rt_paren_ct = lns[i].count(')')
         while lt_paren_ct > rt_paren_ct:
             i += 1
-            scr_str += l[i]
-            lt_paren_ct += l[i].count('(')
-            rt_paren_ct += l[i].count(')')
+            scr_str += lns[i]
+            lt_paren_ct += lns[i].count('(')
+            rt_paren_ct += lns[i].count(')')
         i += 1
         scr_str = scr_str.strip()
 
@@ -1001,8 +1008,7 @@ def scriptrun(script):
                   "Cp": "colormap",
                   "L": "L",
                   }
-        if 1:
-        #try:
+        try:
             f = open(script)
             jsn = json.load(f)
             keys = []
@@ -1016,21 +1022,21 @@ def scriptrun(script):
             for typ in keys:
                 for nm, v in jsn[typ].items():
                     if typ == "P":
-                        #try:
+                        try:
                             loadTemplate(str(nm), v)
-                        #except Exception as err:
-                        #    print("could not load tmpl:", nm, err)
+                        except Exception as err:
+                            print("could not load tmpl:", nm, err)
                     else:
                         try:
                             loadVCSItem(loader[typ], nm, v)
                         except Exception as err:
                             print("failed", typ, nm, err)
         # ok could not read json file maybe it is an old initial.attributes
-        #except Exception as err:
-        #    if os.path.split(script)[-1] == "initial.attributes":
-        #        _scriptrun(script)
-        #    else:
-        #        warnings.warn("unable to source file: %s %s" % (script, err))
+        except Exception as err:
+            if os.path.split(script)[-1] == "initial.attributes":
+                _scriptrun(script)
+            else:
+                warnings.warn("unable to source file: %s %s" % (script, err))
     vcs._doValidation = True
     return
 

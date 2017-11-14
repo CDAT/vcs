@@ -310,7 +310,7 @@ class Button(Widget):
             self.tooltip_label.detach()
             self.tooltip_label = None
             self.interactor.RemoveObserver(self.hover_handler)
-        except:
+        except Exception:
             pass
         self.action = None
         super(Button, self).detach()

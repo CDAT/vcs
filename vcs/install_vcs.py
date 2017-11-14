@@ -16,10 +16,10 @@ def _files():
     # Create .uvcdat directory if it does not exist
     try:
         fn = os.environ[dotdirenv]
-    except:
+    except Exception:
         try:
             fn = '%s/%s' % (os.path.expanduser("~"), dotdir)
-        except:
+        except Exception:
             print("Could not find the $HOME or the %s directory." % (dotdir))
             print("Set your environment variable 'HOME' or '%s'" % (dotdirenv))
             print("to your home directory. (e.g., 'export HOME=/home/username').")
@@ -27,6 +27,6 @@ def _files():
     if os.access(fn, os.X_OK) == 0:
         try:
             os.mkdir(fn)
-        except:
+        except Exception:
             print("Do not have write permission for user's home directory. Must have write permissions.")
             sys.exit()

@@ -87,7 +87,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates boxfill gm from it
     try:
         t = P(nm)
-    except:
+    except Exception:
         t = vcs.elements["template"][nm]
     for sub in ["File", "Function", "LogicalMask", "Transform", "name", "title", "units",
                 "crdate", "crtime", "comment#1",
@@ -132,10 +132,10 @@ def process_src(nm, code):
             tatt = getattr(t, tnm)
             try:
                 setattr(tatt, nm, eval(val))  # int float should be ok here
-            except:
+            except Exception:
                 try:
                     setattr(tatt, nm, val)  # strings here
-                except:
+                except Exception:
                     # (t.name,tnm,nm,val)
                     pass
     i = code.find("Orientation(")
@@ -539,8 +539,8 @@ class P(vcs.bestMatch):
             raise ValueError('This instance has been removed from VCS.')
 
         if (single is None):
-            print("---------- Template (P) member " +\
-                "(attribute) listings ----------")
+            print("---------- Template (P) member " +
+                  "(attribute) listings ----------")
             print("method =", self.p_name)
             print("name =", self.name)
             print("orientation =", self.orientation)
@@ -1130,42 +1130,42 @@ class P(vcs.bestMatch):
         # set the x/y/text values
         xmn, xmx = vcs.minmax(wc[0], wc[1])
         ymn, ymx = vcs.minmax(wc[2], wc[3])
-        for l in list(loc.keys()):
+        for l_tmp in list(loc.keys()):
             if axis == 'x':
-                if xmn <= l <= xmx:
+                if xmn <= l_tmp <= xmx:
                     if vcs.elements["projection"][
                             gm.projection].type == "linear":
                         xs.append(
-                            [(l - wc[0]) / dx +
-                                vp[0], (l - wc[0]) / dx +
+                            [(l_tmp - wc[0]) / dx +
+                                vp[0], (l_tmp - wc[0]) / dx +
                                 vp[0]])
                         ys.append([obj.y1, obj.y2])
-                        txs.append((l - wc[0]) / dx + vp[0])
+                        txs.append((l_tmp - wc[0]) / dx + vp[0])
                         tys.append(objlabl.y)
                     elif vcs.elements["projection"][gm.projection].type in elliptical_projections:
                         pass
                     else:
-                        xs.append([l, l])
+                        xs.append([l_tmp, l_tmp])
                         end = wc[
                             2] + (wc[3] - wc[2]) *\
                             (obj.y2 - obj.y1) /\
                             (self.data._y2 - self._data.y1)
                         ys.append([wc[2], end])
-                        txs.append(l)
+                        txs.append(l_tmp)
                         tys.append(wc[3])
-                    tstring.append(loc[l])
+                    tstring.append(loc[l_tmp])
             elif axis == 'y':
-                if ymn <= l <= ymx:
+                if ymn <= l_tmp <= ymx:
                     if vcs.elements["projection"][
                             gm.projection].type == "linear":
                         ys.append(
-                            [(l - wc[2]) / dy +
-                                vp[2], (l - wc[2]) / dy + vp[2]])
+                            [(l_tmp - wc[2]) / dy +
+                                vp[2], (l_tmp - wc[2]) / dy + vp[2]])
                         xs.append([obj.x1, obj.x2])
-                        tys.append((l - wc[2]) / dy + vp[2])
+                        tys.append((l_tmp - wc[2]) / dy + vp[2])
                         txs.append(objlabl.x)
                     else:
-                        ys.append([l, l])
+                        ys.append([l_tmp, l_tmp])
                         end = wc[
                             0] + (wc[1] - wc[0]) *\
                             (obj._x2 - obj._x1) /\
@@ -1175,9 +1175,9 @@ class P(vcs.bestMatch):
                                 end < -180.:
                             end = wc[0]
                         xs.append([wc[0], end])
-                        tys.append(l)
+                        tys.append(l_tmp)
                         txs.append(wc[0])
-                    tstring.append(loc[l])
+                    tstring.append(loc[l_tmp])
         # now does the mini ticks
         mintics = getattr(gm, axis + 'mtics' + number)
         if mintics != '':
@@ -1187,31 +1187,31 @@ class P(vcs.bestMatch):
             if obj.priority > 0:
                 ynum = getattr(self._data, "_y%s" % number)
                 xnum = getattr(self._data, "_x%s" % number)
-                for l in list(mintics.keys()):
+                for l_tmp in list(mintics.keys()):
                     if axis == 'x':
-                        if xmn <= l <= xmx:
+                        if xmn <= l_tmp <= xmx:
                             if vcs.elements["projection"][
                                     gm.projection].type == "linear":
                                 xs.append(
-                                    [(l - wc[0]) / dx +
-                                        vp[0], (l - wc[0]) / dx + vp[0]])
+                                    [(l_tmp - wc[0]) / dx +
+                                        vp[0], (l_tmp - wc[0]) / dx + vp[0]])
                                 ys.append([obj.y1, obj.y2])
                             else:
-                                xs.append([l, l])
+                                xs.append([l_tmp, l_tmp])
                                 ys.append([wc[2],
                                            wc[2] + (wc[3] - wc[2]) *
                                            (obj._y - ynum) /
                                            (self._data._y2 - self._data._y1)])
                     elif axis == 'y':
-                        if ymn <= l <= ymx:
+                        if ymn <= l_tmp <= ymx:
                             if vcs.elements["projection"][
                                     gm.projection].type == "linear":
                                 ys.append(
-                                    [(l - wc[2]) / dy +
-                                        vp[2], (l - wc[2]) / dy + vp[2]])
+                                    [(l_tmp - wc[2]) / dy +
+                                        vp[2], (l_tmp - wc[2]) / dy + vp[2]])
                                 xs.append([obj.x1, obj.x2])
                             else:
-                                ys.append([l, l])
+                                ys.append([l_tmp, l_tmp])
                                 xs.append([wc[0],
                                            wc[0] +
                                            (wc[1] - wc[0]) * (obj._x - xnum) /
@@ -1244,7 +1244,12 @@ class P(vcs.bestMatch):
         .. pragma: skip-doctest TODO add example/doctest
         """
         if attribute is None:
-            attribute = self.__slots__
+            attribute = list(self.__slots__)
+            props = []
+            for attr in dir(self.__class__):
+                if isinstance(getattr(self.__class__, attr), property):
+                    props.append(attr)
+            attribute += props
         elif isinstance(attribute, str):
             attribute = [attribute, ]
         elif not isinstance(attribute, (list, tuple)):
@@ -1255,7 +1260,7 @@ class P(vcs.bestMatch):
                 elt = getattr(self, a)
                 if hasattr(elt, "priority"):
                     elt.priority = 0
-            except:
+            except Exception:
                 pass
 
     def reset(self, sub_name, v1, v2, ov1=None, ov2=None):
@@ -1310,7 +1315,12 @@ class P(vcs.bestMatch):
         for a in attr:
             v = getattr(self, a)
             try:
-                subattr = v.__slots__
+                subattr = list(v.__slots__)
+                props = []
+                for attr in dir(v.__class__):
+                    if isinstance(getattr(v.__class__, attr), property):
+                        props.append(attr)
+                subattr += props
                 delta = 0.
                 if sub_name + '1' in subattr:
                     ov = getattr(v, sub_name + '1')
@@ -1334,7 +1344,7 @@ class P(vcs.bestMatch):
                         if ov2 is not None:
                             delta = (ov - ov2) * ratio
                         setattr(v, sub_name, min(1, max(0, v2 + delta)))
-            except:
+            except Exception:
                 pass
 
     def move(self, p, axis):
@@ -1454,13 +1464,18 @@ class P(vcs.bestMatch):
         :param scale: Float representing the factor by which to scale the template's font size.
         :type scale: float
         """
+        props = []
+        for attr in dir(self.__class__):
+            if isinstance(getattr(self.__class__, attr), property):
+                props.append(attr)
         try:
             attr = list(vars(self).keys())
-        except:
+        except Exception:
             attr = self.__slots__
+            attr = list(attr)+props
 
         if len(attr) == 0:
-            attr = self.__slots__
+            attr = list(self.__slots__)+props
 
         for a in attr:
             if a[0] == "_":
@@ -1472,7 +1487,7 @@ class P(vcs.bestMatch):
                     to = vcs.createtextorientation(source=to)
                     to.height = to.height * scale
                 setattr(v, 'textorientation', to)
-            except:
+            except Exception:
                 pass
         self._scaledFont = True
 
@@ -1639,10 +1654,10 @@ class P(vcs.bestMatch):
                                 float(cdutil.averager(slab,
                                                       axis=" ".join(["(%s)" %
                                                                      S for S in slab.getAxisIds()])))
-                        except:
+                        except Exception:
                             try:
                                 meanstring = 'Mean %.4g' % slab.mean()
-                            except:
+                            except Exception:
                                 meanstring = 'Mean %.4g' % numpy.mean(slab.filled())
                     tt.string = meanstring
                 else:
@@ -1798,40 +1813,40 @@ class P(vcs.bestMatch):
             for num in ["1", "2"]:
                 e = getattr(self, tp + num)
                 if e.priority != 0:
-                    l = x.createline(source=e.line)
+                    ln_tmp = x.createline(source=e.line)
                     if hasattr(gm, "projection"):
-                        l.projection = gm.projection
+                        ln_tmp.projection = gm.projection
                     if vcs.elements["projection"][
-                            l.projection].type != "linear":
-                        l.worldcoordinate = wc2[:4]
-                        l.viewport = kargs.get("ratio_autot_viewport",
-                                               [e._x1, e._x2, e._y1, e._y2])
+                            ln_tmp.projection].type != "linear":
+                        ln_tmp.worldcoordinate = wc2[:4]
+                        ln_tmp.viewport = kargs.get("ratio_autot_viewport",
+                                                    [e._x1, e._x2, e._y1, e._y2])
                         dx = (e._x2 - e._x1) / \
                             (self.data.x2 - self.data.x1) * (wc2[1] - wc2[0])
                         dy = (e._y2 - e._y1) / \
                             (self.data.y2 - self.data.y1) * (wc2[3] - wc2[2])
                         if tp == "line":
-                            l._x = [wc2[0], wc2[0] + dx]
-                            l._y = [wc2[2], wc2[2] + dy]
+                            ln_tmp._x = [wc2[0], wc2[0] + dx]
+                            ln_tmp._y = [wc2[2], wc2[2] + dy]
                         elif tp == "box" and \
-                                vcs.elements["projection"][l.projection].type in\
+                                vcs.elements["projection"][ln_tmp.projection].type in\
                                 round_projections:
-                            l._x = [[wc2[0], wc2[1]], [wc2[0], wc2[1]]]
-                            l._y = [[wc2[3], wc2[3]], [wc2[2], wc2[2]]]
+                            ln_tmp._x = [[wc2[0], wc2[1]], [wc2[0], wc2[1]]]
+                            ln_tmp._y = [[wc2[3], wc2[3]], [wc2[2], wc2[2]]]
                         else:
-                            l._x = [
+                            ln_tmp._x = [
                                 wc2[0],
                                 wc2[0] + dx,
                                 wc2[0] + dx,
                                 wc2[0],
                                 wc2[0]]
-                            l._y = [wc2[2], wc2[2], wc2[3], wc2[3], wc2[2]]
+                            ln_tmp._y = [wc2[2], wc2[2], wc2[3], wc2[3], wc2[2]]
                     else:
-                        l._x = [e._x1, e._x2, e._x2, e._x1, e._x1]
-                        l._y = [e._y1, e._y1, e._y2, e._y2, e._y1]
-                    l._priority = e._priority
-                    displays.append(x.plot(l, bg=bg, ratio="none", **kargs))
-                    del(vcs.elements["line"][l.name])
+                        ln_tmp._x = [e._x1, e._x2, e._x2, e._x1, e._x1]
+                        ln_tmp._y = [e._y1, e._y1, e._y2, e._y2, e._y1]
+                    ln_tmp._priority = e._priority
+                    displays.append(x.plot(ln_tmp, bg=bg, ratio="none", **kargs))
+                    del(vcs.elements["line"][ln_tmp.name])
 
         # x.mode=m
         # I think i have to use dict here because it's a valid value
@@ -2257,7 +2272,7 @@ class P(vcs.bestMatch):
             try:
                 info = x.canvasinfo()
                 Rout = float(info['width']) / float(info['height'])
-            except:
+            except Exception:
                 Rout = 1. / .758800507
                 if x.isportrait():
                     Rout = 1. / Rout

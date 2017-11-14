@@ -102,7 +102,7 @@ def checkContinents(self, value):
         "river",
         "other7"]
     path = None
-    if isinstance(value, int):
+    if isinstance(value, (int, long)):
         if value == 0:
             path = None
         elif 0 < value < 7:
@@ -127,7 +127,7 @@ def checkContinents(self, value):
                                 "data_continent_other%d" % value)
             if not os.path.exists(path):
                 raise ValueError("Couldn't find continents file at %s" % path)
-    elif isinstance(value, str):
+    elif isinstance(value, basestring):
         if os.path.exists(os.path.expanduser(value)):
             path = value
         else:
@@ -145,16 +145,16 @@ def checkContType(self, name, value):
 
 def checkLine(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = str(value)
-    if not isinstance(value, (str, vcs.line.Tl)):
+    if not isinstance(value, (basestring, vcs.line.Tl)):
         checkedRaise(
             self,
             value,
             ValueError,
             name +
             ' must be an line primitive or the name of an exiting one.')
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         if value not in vcs.listelements('line'):
             checkedRaise(
                 self,
@@ -170,7 +170,7 @@ def checkLine(self, name, value):
 def isNumber(value, min=None, max=None):
     """ Checks if value is a Number, optionaly can check if min<value<max
     """
-    if not isinstance(value, (int, float, numpy.int_, numpy.floating)):
+    if not isinstance(value, (int, float, long, numpy.int_, numpy.floating)):
         return False
     if min is not None and value < min:
         return -1
@@ -211,7 +211,7 @@ def checkNumber(self, name, value, minvalue=None, maxvalue=None):
 def checkInt(self, name, value, minvalue=None, maxvalue=None):
     checkName(self, name, value)
     n = checkNumber(self, name, value, minvalue=minvalue, maxvalue=maxvalue)
-    if not isinstance(n, int):
+    if not isinstance(n, (int, long)):
         checkedRaise(self, value, ValueError, name + ' must be an integer')
     return n
 
@@ -246,7 +246,7 @@ def checkListOfNumbers(self, name, value, minvalue=None,
             str(maxelements) +
             ' elements')
     value = list(value)
-    for i,v in enumerate(value):
+    for i, v in enumerate(value):
         if ints:
             checkInt(self, name, v, minvalue=minvalue, maxvalue=maxvalue)
         else:
@@ -273,7 +273,7 @@ def checkFont(self, name, value):
         value = int(value)
         # try to see if font exists
         vcs.getfontname(value)
-    elif isinstance(value, str):
+    elif isinstance(value, basestring):
         value = vcs.getfontnumber(value)
     else:
         nms = vcs.listelements("font")
@@ -357,7 +357,7 @@ def checkMarker(self, name, value):
             value = 'square_fill'
         elif value in ('hurricane', 18):
             value = 'hurricane'
-        elif isinstance(value, str) and value[0] == "w" and int(value[1:]) in range(103):
+        elif isinstance(value, basestring) and value[0] == "w" and int(value[1:]) in range(103):
             value = value
         elif value in range(100, 203):
             value = "w%.2i" % (value - 100)
@@ -378,7 +378,7 @@ def checkMarker(self, name, value):
 
 def checkMarkersList(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, int):
+    if isinstance(value, (int, long)):
         value = list(value)
     value = checkListTuple(self, name, value)
     hvalue = []
@@ -431,7 +431,7 @@ def checkName(self, name, value):
 
 def checkname(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         if value != '__removed_from_VCS__':
             self.rename(self.name, value)
             return value
@@ -444,9 +444,9 @@ def checkname(self, name, value):
 
 def checkString(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         return value
-    elif isinstance(value, str):
+    elif isinstance(value, basestring):
         return str(value)
     else:
         checkedRaise(
@@ -500,9 +500,9 @@ def checkFillAreaStyle(self, name, value):
 
 def checkAxisConvert(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str) and (
+    if isinstance(value, basestring) and (
             value.lower() in ('linear', 'log10', 'ln', 'exp', 'area_wt')):
         return value.lower()
     else:
@@ -517,9 +517,9 @@ def checkAxisConvert(self, name, value):
 
 def checkBoxfillType(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str) and (
+    if isinstance(value, basestring) and (
             value.lower() in ('linear', 'log10', 'custom')):
         return value.lower()
     elif value in [0, 1, 2]:
@@ -537,9 +537,9 @@ def checkBoxfillType(self, name, value):
 def checkIntFloat(self, name, value):
     try:
         value = value.tolist()  # converts MA/MV/numpy
-    except:
+    except Exception:
         pass
-    if isinstance(value, (int, float, numpy.floating)):
+    if isinstance(value, (int, long, float, numpy.int_, numpy.floating)):
         return float(value)
     else:
         checkedRaise(
@@ -573,12 +573,12 @@ def checkFuzzyBoolean(self, name, value):
     Accepted values are %s.
     """ % fuzzy_boolean_valid_value_string
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         if value.lower() in fuzzy_boolean_true_strings:
             return True
         elif value.lower() in fuzzy_boolean_false_strings:
             return False
-    elif isinstance(value, int):
+    elif isinstance(value, (int, long)):
         if value == 1:
             return True
         elif value == 0:
@@ -610,11 +610,11 @@ def checkOnOff(self, name, value, return_string=0):
     See also: checkFuzzyBoolean.
     """
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = str(value)
     if value is None:
         value = 0
-    elif isinstance(value, str):
+    elif isinstance(value, basestring):
         if value.lower() in ['on', '1', 'y', 'yes']:
             value = 1
         elif value.lower() in ['off', '0', 'n', 'no']:
@@ -666,11 +666,11 @@ def checkYesNo(self, name, value):
     See also: checkFuzzyBoolean.
     """
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = str(value)
     if value is None:
         value = 'n'
-    elif isinstance(value, str):
+    elif isinstance(value, basestring):
         if value.lower() in ['on', '1', 'y', 'yes']:
             value = 'y'
         elif value.lower() in ['off', '0', 'n', 'no']:
@@ -743,9 +743,9 @@ def checkListTuple(self, name, value):
 
 def checkColor(self, name, value, NoneOk=False):
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         # Ok it is a string let's see if that is a valid color name
         r, g, b = vcs.str2rgb(value)
         if r is None:  # ok not a valid color
@@ -754,7 +754,7 @@ def checkColor(self, name, value, NoneOk=False):
         return r / 2.55, g / 2.55, b / 2.55, 100.
     if value is None and NoneOk:
         return value
-    if isinstance(value, int) and value in range(0, 256):
+    if isinstance(value, (int, long)) and value in range(0, 256):
         return value
     elif isinstance(value, (list, tuple)):  # for r,g,b,a tuples
         value = checkListOfNumbers(self, name, value,
@@ -923,7 +923,7 @@ def checkLineType(self, name, value):
 
 def checkLineTypeList(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, int):
+    if isinstance(value, (int, long)):
         value = list(value)
     value = checkListTuple(self, name, value)
     hvalue = []
@@ -934,9 +934,9 @@ def checkLineTypeList(self, name, value):
 
 def checkTextTable(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         if value not in vcs.listelements("texttable"):
             checkedRaise(
                 self,
@@ -956,9 +956,9 @@ def checkTextTable(self, name, value):
 
 def checkTextOrientation(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         if value not in vcs.listelements("textorientation"):
             checkedRaise(
                 self,
@@ -980,7 +980,7 @@ def checkTextOrientation(self, name, value):
 def checkTextsList(self, name, value, storeName=False):
     from . import queries
     checkName(self, name, value)
-    if isinstance(value, int):
+    if isinstance(value, (int, long)):
         value = list(value)
     value = checkListTuple(self, name, value)
     hvalue = []
@@ -993,7 +993,7 @@ def checkTextsList(self, name, value, storeName=False):
             hvalue.append(v)
         elif queries.istextcombined(v):
             hvalue.append(v)
-        elif isinstance(v, str):
+        elif isinstance(v, basestring):
             if v in vcs.listelements("textcombined"):
                 if storeName:
                     hvalue.append(vcs.gettextcombined(v).name)
@@ -1027,7 +1027,7 @@ def checkLegend(self, name, value):
     elif isNumber(value):
         try:
             value = value.tolist()
-        except:
+        except Exception:
             pass
         return {value: repr(value)}
     elif isinstance(value, (list, tuple)):
@@ -1044,7 +1044,7 @@ def checkLegend(self, name, value):
         return ret
     elif value is None:
         return None
-    elif isinstance(value, str):  # ok maybe a vcs list
+    elif isinstance(value, basestring):  # ok maybe a vcs list
         return value
     else:
         checkedRaise(
@@ -1055,33 +1055,12 @@ def checkLegend(self, name, value):
             name +
             ' attribute should be a dictionary, a list of number or the name of a vcs list')
 
-# def checkListTupleDictionaryNone(self,name,value):
-# checkName(self,name,value)
-# if isinstance(value,int) or isinstance(value,float) \
-# or isinstance(value,list) or isinstance(value,tuple) or isinstance(value,dict):
-# if isinstance(value,int) or isinstance(value,float):
-# value=list((value,))
-# elif isinstance(value,list) or isinstance(value,tuple):
-# value=list(value)
-# if isinstance(value,list):
-# d={}
-# for i in range(len(value)):
-# d[value[i]]=repr(value[i])
-# else:
-# d=value
-# return d
-# elif value is None:
-# return value
-# else:
-# checkedRaise(self,value,ValueError, 'The '+name+' attribute must be a
-# List, Tuple, Dictionary, or None'
-
 
 def checkExt(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         if value.strip().lower() in ('y', "yes",):
             return True
         elif value.strip().lower() in ('n', "no",):
@@ -1115,7 +1094,7 @@ def checkProjection(self, name, value):
     checkName(self, name, value)
     if isinstance(value, vcs.projection.Proj):
         return value.name
-    elif isinstance(value, str):
+    elif isinstance(value, basestring):
         value = str(value)
         if value not in list(vcs.elements["projection"].keys()):
             checkedRaise(
@@ -1139,7 +1118,7 @@ def checkTicks(self, name, value):
     if value is None:
         value = ""
     value = checkStringDictionary(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         if value.strip() in ["", "*"]:
             return value.strip()
         if value not in vcs.elements["list"]:
@@ -1154,9 +1133,9 @@ def checkTicks(self, name, value):
 
 def checkStringDictionary(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         return str(value)
-    elif isinstance(value, str) or isinstance(value, dict):
+    elif isinstance(value, basestring) or isinstance(value, dict):
         return value
     else:
         checkedRaise(
@@ -1202,7 +1181,7 @@ def checkProjParameters(self, name, value):
         try:
             from . import vcs2vtk
             return vcs2vtk.checkProjParameters(self, name, value)
-        except:
+        except Exception:
             pass
     if not (isinstance(value, list) or isinstance(value, tuple)):
         checkedRaise(
@@ -1230,7 +1209,7 @@ def checkProjParameters(self, name, value):
 
 def checkCalendar(self, name, value):
     checkName(self, name, value)
-    if not isinstance(value, int):
+    if not isinstance(value, (int, long)):
         checkedRaise(
             self,
             value,
@@ -1253,14 +1232,14 @@ def checkCalendar(self, name, value):
 
 def checkTimeUnits(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = str(value)
-    if not isinstance(value, str):
+    if not isinstance(value, basestring):
         checkedRaise(self, value, ValueError, 'time units must be a string')
     a = cdtime.reltime(1, 'days since 1900')
     try:
         a.torel(value)
-    except:
+    except Exception:
         checkedRaise(self, value, ValueError, value + ' is invalid time units')
     sp = value.split('since')[1]
     b = cdtime.s2c(sp)
@@ -1273,7 +1252,7 @@ def checkDatawc(self, name, value):
     checkName(self, name, value)
     if isNumber(value):
         value = float(value), 0
-    elif isinstance(value, str):
+    elif isinstance(value, basestring):
         t = cdtime.s2c(value)
         if t.cmp(cdtime.comptime(0, 1)) != 0:
             t = t.torel(self.datawc_timeunits, self.datawc_calendar)
@@ -1319,9 +1298,9 @@ def checkInStringsListInt(self, name, value, values):
                 str1 = str1 + "'" + v + "', "
             i = i + 1
     err = str1[:-2] + ')' + str2[:-2] + ')'
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = value.lower()
         if value not in val:
             checkedRaise(self, value, ValueError, err)
@@ -1359,7 +1338,7 @@ def checkProjType(self, name, value):
                 "Projection Type: " +
                 value +
                 " not supported yet")
-    if isinstance(value,int) and (-3 <= value < 0):
+    if isinstance(value, (int, long)) and (-3 <= value < 0):
         return value
 
     if self._type == - \
@@ -1443,7 +1422,7 @@ def checkProjType(self, name, value):
         try:
             from . import vcs2vtk
             checkedvalue = vcs2vtk.checkProjType(self, name, value)
-        except:
+        except Exception:
             pass
         if checkedvalue == "THAT DID NOT WORK":
             checkedRaise(self, value, Exception, err)
@@ -1843,9 +1822,9 @@ def _setcolormap(self, value):
         return
     if isinstance(value, vcs.colormap.Cp):
         value = value.name
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = str(value)
-    if not isinstance(value, str):
+    if not isinstance(value, basestring):
         checkedRaise(
             self,
             value,
@@ -1918,7 +1897,7 @@ def levels(self, value):
 
 
 def _getlegend(self):
-    if isinstance(self._legend, str):
+    if isinstance(self._legend, basestring):
         return vcs.elements["list"].get(self._legend, None)
     else:
         return self._legend

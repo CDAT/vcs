@@ -32,7 +32,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates oneD gm from it
     try:
         gm = Tm(nm)
-    except:
+    except Exception:
         gm = vcs.elements["marker"][nm]
     # process attributes with = as assignement
     for att in ["projection", ]:
@@ -49,15 +49,15 @@ def process_src(nm, code):
         try:
             # int will be converted
             setattr(gm, nm, int(sp[1]))
-        except:
+        except Exception:
             try:
                 # int and floats will be converted
                 setattr(gm, nm, eval(sp[1]))
-            except:
+            except Exception:
                 # strings
                 try:
                     setattr(gm, nm, sp[1])
-                except:
+                except Exception:
                     pass  # oh well we stick to default value
         # Datawc
         for att in ["mtyp", "msize", "mci", "vp", "wc"]:
@@ -71,10 +71,10 @@ def process_src(nm, code):
                 for v in vals:
                     try:  # int first
                         values.append(int(v))
-                    except:
+                    except Exception:
                         try:
                             values.append(float(v))
-                        except:
+                        except Exception:
                             values.append(v)
                 try:
                     if att == "mtyp":
@@ -89,7 +89,7 @@ def process_src(nm, code):
                         gm.worldcoordinate = values
                     else:
                         raise Exception("Unkwnow marker attribute: %s" % att)
-                except:
+                except Exception:
                     pass
         for att in ["x", "y"]:
             i = code.find(" %s(" % att)
@@ -349,7 +349,7 @@ class Tm(vcs.bestMatch):
                 self,
                 'x',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:
@@ -377,7 +377,7 @@ class Tm(vcs.bestMatch):
                 self,
                 'y',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:

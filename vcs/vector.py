@@ -26,6 +26,11 @@ from . import VCS_validation_functions
 import cdtime
 from .xmldocs import scriptdocs
 
+try:
+    basestring
+except NameError:
+    basestring = str
+
 
 def load(nm, json_dict={}):
     return
@@ -36,7 +41,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates vector gm from it
     try:
         gm = Gv(nm)
-    except:
+    except Exception:
         gm = vcs.elements["vector"][nm]
     # process attributes with = as assignement
     for att in ["projection",
@@ -80,15 +85,15 @@ def process_src(nm, code):
         try:
             # int will be converted
             setattr(gm, nm, int(sp[1]))
-        except:
+        except Exception:
             try:
                 # int and floats will be converted
                 setattr(gm, nm, eval(sp[1]))
-            except:
+            except Exception:
                 # strings
                 try:
                     setattr(gm, nm, sp[1])
-                except:
+                except Exception:
                     pass  # oh well we stick to default value
     # Tl
     i = code.find("Tl")
@@ -105,7 +110,7 @@ def process_src(nm, code):
             except ValueError:
                 try:
                     gm.setLineAttributes(tlValue)
-                except:
+                except Exception:
                     pass
         # Datawc
         idwc = code.find(" datawc(")
@@ -575,15 +580,15 @@ class Gv(vcs.bestMatch):
         print('DEPRECATED: Use linetype or setLineAttributes instead.')
         return self._linetype
 
-    def _setline(self, l):
+    def _setline(self, ln):
         from . import queries
         print('DEPRECATED: Use linetype or setLineAttributes instead.')
-        if (queries.isline(l) or
-                (isinstance(l, str) and l in vcs.elements["line"])):
-            l = vcs.elements["line"][l]
-            self.setLineAttributes(l)
+        if (queries.isline(ln) or
+                (isinstance(ln, basestring) and ln in vcs.elements["line"])):
+            ln = vcs.elements["line"][ln]
+            self.setLineAttributes(ln)
         else:
-            self._linetype = l
+            self._linetype = ln
 
     line = property(_getline, _setline)
 
@@ -860,25 +865,25 @@ class Gv(vcs.bestMatch):
                 (unique_name, self.yticlabels2))
             fp.write("%s.ymtics1 = '%s'\n" % (unique_name, self.ymtics1))
             fp.write("%s.ymtics2 = '%s'\n" % (unique_name, self.ymtics2))
-            if isinstance(self.datawc_x1, (int, float)):
+            if isinstance(self.datawc_x1, (int, long, float)):
                 fp.write("%s.datawc_x1 = %g\n" % (unique_name, self.datawc_x1))
             else:
                 fp.write(
                     "%s.datawc_x1 = '%s'\n" %
                     (unique_name, self.datawc_x1))
-            if isinstance(self.datawc_y1, (int, float)):
+            if isinstance(self.datawc_y1, (int, long, float)):
                 fp.write("%s.datawc_y1 = %g\n" % (unique_name, self.datawc_y1))
             else:
                 fp.write(
                     "%s.datawc_y1 = '%s'\n" %
                     (unique_name, self.datawc_y1))
-            if isinstance(self.datawc_x2, (int, float)):
+            if isinstance(self.datawc_x2, (int, long, float)):
                 fp.write("%s.datawc_x2 = %g\n" % (unique_name, self.datawc_x2))
             else:
                 fp.write(
                     "%s.datawc_x2 = '%s'\n" %
                     (unique_name, self.datawc_x2))
-            if isinstance(self.datawc_y2, (int, float)):
+            if isinstance(self.datawc_y2, (int, long, float)):
                 fp.write("%s.datawc_y2 = %g\n" % (unique_name, self.datawc_y2))
             else:
                 fp.write(

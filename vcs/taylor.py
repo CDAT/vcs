@@ -1243,13 +1243,13 @@ class Gtd(vcs.bestMatch):
                 self.displays.append(canvas.plot(t, bg=self.bg))
 
             if not self.Marker.line[i] is None:
-                l = createnewvcsobj(canvas, 'line', 'TD_li')
-                l.worldcoordinate = self.worldcoordinate
-                l.viewport = self.viewport
+                l_tmp = createnewvcsobj(canvas, 'line', 'TD_li')
+                l_tmp.worldcoordinate = self.worldcoordinate
+                l_tmp.viewport = self.viewport
                 x1 = d1 * d0
                 y1 = numpy.ma.sin(numpy.ma.arccos(d1)) * d0
-                l.x = [x1, x1]
-                l.y = [y1, y1]
+                l_tmp.x = [x1, x1]
+                l_tmp.y = [y1, y1]
                 if i != self.Marker.number - \
                         1 and self.Marker.line[i] != 'head':
                     try:
@@ -1264,14 +1264,14 @@ class Gtd(vcs.bestMatch):
                         y2 = numpy.ma.sin(
                             numpy.ma.arccos(float(data[i + 1][1]))) * float(data[i + 1][0])
 
-                    l.x = [x1, x2]
-                    l.y = [y1, y2]
-                l.type = self.Marker.line_type[i]
-                l.width = int(self.Marker.line_size[i])
-                l.color = [VCS_validation_functions.color2vcs(
+                    l_tmp.x = [x1, x2]
+                    l_tmp.y = [y1, y2]
+                l_tmp.type = self.Marker.line_type[i]
+                l_tmp.width = int(self.Marker.line_size[i])
+                l_tmp.color = [VCS_validation_functions.color2vcs(
                     self.Marker.line_color[i])]
                 if self.Marker.line[i] == 'tail':
-                    self.drawarrow(canvas, x1, y1, x1, y1, x2, y2, l.color[0])
+                    self.drawarrow(canvas, x1, y1, x1, y1, x2, y2, l_tmp.color[0])
                 elif self.Marker.line[i] == 'head':
                     try:
                         dd1 = data[i - 1][1].astype('d')
@@ -1294,7 +1294,7 @@ class Gtd(vcs.bestMatch):
                         VCS_validation_functions.color2vcs(
                             self.Marker.line_color[
                                 i - 1]))
-                self.displays.append(canvas.plot(l, bg=self.bg))
+                self.displays.append(canvas.plot(l_tmp, bg=self.bg))
 
     def drawarrow(self, canvas, xloc, yloc, x1, y1, x2, y2, color):
         # The head
@@ -1441,7 +1441,7 @@ class Gtd(vcs.bestMatch):
         return wc
 
     def drawFrame(self, canvas, data, wc):
-        O = createnewvcsobj(canvas, 'line', 'tdiag_', self.template.line2.line)
+        Outter = createnewvcsobj(canvas, 'line', 'tdiag_', self.template.line2.line)
         frame = createnewvcsobj(
             canvas,
             'line',
@@ -1500,7 +1500,7 @@ class Gtd(vcs.bestMatch):
             self.template.ylabel1.texttable,
             self.template.ylabel1.textorientation)
 
-        O.priority = self.template.line1.priority
+        Outter.priority = self.template.line1.priority
         frame.priority = self.template.line2.priority
         xtic1.priority = self.template.xtic1.priority
         xtic2.priority = self.template.xtic2.priority
@@ -1513,21 +1513,9 @@ class Gtd(vcs.bestMatch):
         stdticks.priority = self.template.xlabel1.priority
         stdticks2.priority = self.template.ylabel1.priority
 
-
-# if type(self.referencecolor) == types.StringType:
-# O.color=self.color2vcs(canvas,self.referencecolor)
-# else:
-# O.color=self.referencecolor
-# else:
-# O=canvas.getline('tdiag_O')
-# frame=canvas.getline('tdiag_frame')
-# stdticks=canvas.gettext('stdtic','stdtic')
-# stdticks2=canvas.gettext('stdtic2','stdtic2')
-
-# O.list()
-        O.worldcoordinate = self.worldcoordinate
+        Outter.worldcoordinate = self.worldcoordinate
         frame.worldcoordinate = self.worldcoordinate
-        O.viewport = self.viewport
+        Outter.viewport = self.viewport
         frame.viewport = self.viewport
 
         if self.quadrans == 1:
@@ -1564,8 +1552,8 @@ class Gtd(vcs.bestMatch):
             self.outtervalue, val2=90. * self.quadrans, convert=False)
         fx.append(Cx)
         fy.append(Cy)
-        O.x = Ox
-        O.y = Oy
+        Outter.x = Ox
+        Outter.y = Oy
         ticstr = []
         ticxs = []
         ticys = []
@@ -1875,7 +1863,7 @@ class Gtd(vcs.bestMatch):
         self.displays.append(canvas.plot(xstdaxis, bg=self.bg))
         self.displays.append(canvas.plot(frame, bg=self.bg))
         if self.referencevalue / self.outtervalue > .05:
-            self.displays.append(canvas.plot(O, bg=self.bg))
+            self.displays.append(canvas.plot(Outter, bg=self.bg))
         self.displays.append(canvas.plot(stdticks, bg=self.bg))
         self.displays.append(canvas.plot(stdticks2, bg=self.bg))
 

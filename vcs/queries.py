@@ -59,7 +59,7 @@ from .error import vcsError
 try:
     import vcsaddons
     hasVCSAddons = True
-except:
+except Exception:
     hasVCSAddons = False
 
 

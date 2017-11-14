@@ -474,7 +474,7 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
                     xM = lon[-1]
                     ym = lat[0]
                     yM = lat[-1]
-                except:
+                except Exception:
                     xm = lon.min()
                     xM = lon.max()
                     ym = lat.min()
@@ -618,21 +618,21 @@ def prepContinents(fnm):
         n = 0
         npts = pts.GetNumberOfPoints()
         while n < N:
-            ln = f.readline()
+            ln = str(f.readline())
             sp = ln.split()
             sn = len(sp)
             didIt = False
             if sn % 2 == 0:
                 try:
                     spts = []
-                    for i in range(sn / 2):
+                    for i in range(sn // 2):
                         l, L = float(sp[i * 2]), float(sp[i * 2 + 1])
                         spts.append([l, L])
                     for p in spts:
                         pts.InsertNextPoint(p[1], p[0], 0.)
                     n += sn
                     didIt = True
-                except:
+                except Exception:
                     didIt = False
             if didIt is False:
                 while len(ln) > 2:
@@ -945,7 +945,7 @@ def dump2VTK(obj, fnm=None):
     dsw.SetFileName(fnm)
     try:
         dsw.SetInputData(obj)
-    except:
+    except Exception:
         dsw.SetInputConnection(obj.GetOutputPort())
 
     dsw.Write()
@@ -1841,10 +1841,10 @@ def prepLine(renWin, line, cmap=None):
                     n2 += 1
         for j in range(n2):
             colors.InsertNextTypedTuple(vtk_color)
-            l = vtk.vtkLine()
-            l.GetPointIds().SetId(0, j + point_offset)
-            l.GetPointIds().SetId(1, j + point_offset + 1)
-            lines.InsertNextCell(l)
+            ln_tmp = vtk.vtkLine()
+            ln_tmp.GetPointIds().SetId(0, j + point_offset)
+            ln_tmp.GetPointIds().SetId(1, j + point_offset + 1)
+            lines.InsertNextCell(ln_tmp)
 
     for t, w in line_data:
         pts, _, linesPoly, colors = line_data[(t, w)]

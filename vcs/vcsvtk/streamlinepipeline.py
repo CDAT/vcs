@@ -32,15 +32,15 @@ class StreamlinePipeline(Pipeline2D):
 
         # Streamline color
         if (not self._gm.coloredbyvector):
-            l = self._gm.linetype
-            if l is None:
-                l = "default"
+            ln_tmp = self._gm.linetype
+            if ln_tmp is None:
+                ln_tmp = "default"
             try:
-                l = vcs.getline(l)
-                lwidth = l.width[0]  # noqa
-                lcolor = l.color[0]
-                lstyle = l.type[0]  # noqa
-            except:
+                ln_tmp = vcs.getline(ln_tmp)
+                lwidth = ln_tmp.width[0]  # noqa
+                lcolor = ln_tmp.color[0]
+                lstyle = ln_tmp.type[0]  # noqa
+            except Exception:
                 lstyle = "solid"  # noqa
                 lwidth = 1.  # noqa
                 lcolor = [0., 0., 0., 100.]

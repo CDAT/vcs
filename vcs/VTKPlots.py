@@ -513,13 +513,13 @@ class VTKVCSBackend(object):
         else:
             try:  # mac but not linux
                 mapstate = self.renWin.GetWindowCreated()
-            except:
+            except Exception:
                 mapstate = True
             width, height = self.renWin.GetSize()
             depth = self.renWin.GetDepthBufferSize()
             try:  # mac not linux
                 x, y = self.renWin.GetPosition()
-            except:
+            except Exception:
                 x, y = 0, 0
         info = {
             "mapstate": mapstate,
@@ -584,7 +584,7 @@ class VTKVCSBackend(object):
                 # typical case: @doutriaux1 screens
                 bgY = int(screenSize[1] * .6)
                 bgX = int(bgY * self.canvas.size)
-        except:
+        except Exception:
             bgX = self.canvas.bgX
         # Respect user chosen aspect ratio
         bgY = int(bgX / self.canvas.size)
@@ -928,7 +928,7 @@ class VTKVCSBackend(object):
                 del(vcs.elements["texttable"][tt.name])
                 del(vcs.elements["textorientation"][to.name])
                 del(vcs.elements["textcombined"][crtime.name])
-            except:
+            except:  # noqa
                 pass
         if zaxis is not None:
             try:
@@ -975,7 +975,7 @@ class VTKVCSBackend(object):
                 del(vcs.elements["texttable"][tt.name])
                 del(vcs.elements["textorientation"][to.name])
                 del(vcs.elements["textcombined"][zvalue.name])
-            except:
+            except:  # noqa
                 pass
         return returned
 
@@ -1023,7 +1023,7 @@ class VTKVCSBackend(object):
                 # Ok just return the last two dims
                 return self.cleanupData(
                     data(*(slice(0, 1),) * (len(daxes) - 2), squeeze=1))
-        except:
+        except Exception:
             daxes = list(data.getAxisList())
             if cdms2.isVariable(data):
                 return self.cleanupData(
@@ -1167,7 +1167,7 @@ class VTKVCSBackend(object):
         # in case it is a ParaView build
         try:
             gl.SetBufferSize(50 * 1024 * 1024)  # 50MB
-        except:
+        except Exception:
             pass
 
         # Since the vcs layer stacks renderers to manually order primitives, sorting
@@ -1229,7 +1229,7 @@ class VTKVCSBackend(object):
 
         try:
             os.remove(file)
-        except:
+        except Exception:
             pass
 
         sz = self.renWin.GetSize()
@@ -1292,7 +1292,7 @@ x.geometry(1200,800)
 
         try:
             os.remove(file)
-        except:
+        except Exception:
             pass
 
         plot = self.get3DPlot()
@@ -1628,10 +1628,10 @@ x.geometry(1200,800)
                             meanstring = 'Mean %.4g' % \
                                 float(cdutil.averager(array1, axis=" ".join(["(%s)" %
                                                                              S for S in array1.getAxisIds()])))
-                        except:
+                        except Exception:
                             try:
                                 meanstring = 'Mean %.4g' % array1.mean()
-                            except:
+                            except Exception:
                                 meanstring = 'Mean %.4g' % numpy.mean(array1.filled())
                     t.SetInput(meanstring)
                 elif att == "crdate" and tstr is not None:
@@ -1640,11 +1640,11 @@ x.geometry(1200,800)
                     t.SetInput(tstr.split()[1])
                 elif att == "zvalue":
                     if len(array1.shape) > 2:
-                        l = array1.getAxis(-3)
-                        if l.isTime():
-                            t.SetInput(str(l.asComponentTime()[0]))
+                        tmp_l = array1.getAxis(-3)
+                        if tmp_l.isTime():
+                            t.SetInput(str(tmp_l.asComponentTime()[0]))
                         else:
-                            t.SetInput("%g" % l[0])
+                            t.SetInput("%g" % tmp_l[0])
 
         if update:
             self.renWin.Render()

@@ -39,7 +39,7 @@ class Pipeline1D(Pipeline):
         if self._gm.smooth is not None:
             Y = smooth(Y, self._gm.smooth)
 
-        l = self._context().canvas.createline()
+        ln_tmp = self._context().canvas.createline()
         Xs = X[:].tolist()
         Ys = Y[:].tolist()
         xs = []
@@ -62,17 +62,17 @@ class Pipeline1D(Pipeline):
             xs.append(prev)
             ys.append(prev2)
 
-        l._x = xs
-        l._y = ys
-        l.color = [self._gm.linecolor, ]
-        l.priority = tmpl.data.priority
+        ln_tmp._x = xs
+        ln_tmp._y = ys
+        ln_tmp.color = [self._gm.linecolor, ]
+        ln_tmp.priority = tmpl.data.priority
         if self._gm.linewidth > 0:
-            l.width = self._gm.linewidth
+            ln_tmp.width = self._gm.linewidth
         else:
-            l.priority = 0
-        l.type = self._gm.linetype
-        l._viewport = [tmpl.data.x1, tmpl.data.x2,
-                       tmpl.data.y1, tmpl.data.y2]
+            ln_tmp.priority = 0
+        ln_tmp.type = self._gm.linetype
+        ln_tmp._viewport = [tmpl.data.x1, tmpl.data.x2,
+                            tmpl.data.y1, tmpl.data.y2]
 
         # Also need to make sure it fills the whole space
         x1, x2, y1, y2 = vcs.utils.getworldcoordinates(self._gm, X, Y)
@@ -82,7 +82,7 @@ class Pipeline1D(Pipeline):
         if numpy.allclose(x1, x2):
             x1 -= .0001
             x2 += .0001
-        l._worldcoordinate = [x1, x2, y1, y2]
+        ln_tmp._worldcoordinate = [x1, x2, y1, y2]
         if self._gm.marker is not None:
             m = self._context().canvas.createmarker()
             m.type = self._gm.marker
@@ -91,26 +91,26 @@ class Pipeline1D(Pipeline):
                 m.size = self._gm.markersize
             else:
                 m.priority = 0
-            m._x = l.x
-            m._y = l.y
-            m._viewport = l.viewport
-            m._worldcoordinate = l.worldcoordinate
+            m._x = ln_tmp.x
+            m._y = ln_tmp.y
+            m._viewport = ln_tmp.viewport
+            m._worldcoordinate = ln_tmp.worldcoordinate
 
         if not (Y[:].min() > max(y1, y2) or Y[:].max() < min(y1, y2) or
                 X[:].min() > max(x1, x2) or X[:].max() < min(x1, x2)):
-            if l.priority > 0:
-                self._context().canvas.plot(l, donotstoredisplay=True)
+            if ln_tmp.priority > 0:
+                self._context().canvas.plot(ln_tmp, donotstoredisplay=True)
             if self._gm.marker is not None and m.priority > 0:
                 self._context().canvas.plot(m, donotstoredisplay=True)
 
         ren2 = self._context().createRenderer()
-        self._context().setLayer(ren2, l.priority)
+        self._context().setLayer(ren2, ln_tmp.priority)
         self._context().renWin.AddRenderer(ren2)
         tmpl.plot(self._context().canvas, data1, self._gm, bg=self._context().bg,
                   renderer=ren2, X=X, Y=Y)
         if hasattr(data1, "_yname"):
             del(data1._yname)
-        del(vcs.elements["line"][l.name])
+        del(vcs.elements["line"][ln_tmp.name])
         if self._gm.marker is not None:
             del(vcs.elements["marker"][m.name])
 
@@ -118,9 +118,9 @@ class Pipeline1D(Pipeline):
             legd = self._context().canvas.createline()
             legd.x = [tmpl.legend.x1, tmpl.legend.x2]
             legd.y = [tmpl.legend.y1, tmpl.legend.y1]  # [y1, y1] intentional.
-            legd.color = l.color
-            legd.width = l.width
-            legd.type = l.type
+            legd.color = ln_tmp.color
+            legd.width = ln_tmp.width
+            legd.type = ln_tmp.type
             t = self._context().canvas.createtext(
                 To_source=tmpl.legend.textorientation,
                 Tt_source=tmpl.legend.texttable)

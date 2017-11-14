@@ -31,7 +31,7 @@ from .xmldocs import scriptdocs, listdoc
 def process_src(nm, code):
     try:
         f = Tl(nm)
-    except:
+    except Exception:
         f = vcs.elements["line"][nm]
     atts = {}
     # ltyp: line type
@@ -49,7 +49,7 @@ def process_src(nm, code):
             for V in v.split(","):
                 try:
                     vals.append(int(V))
-                except:
+                except Exception:
                     vals.append(float(V))
             atts[a] = vals
     if "lci" not in list(atts.keys()):
@@ -271,7 +271,7 @@ class Tl(vcs.bestMatch):
                 self,
                 'x',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:
@@ -297,7 +297,7 @@ class Tl(vcs.bestMatch):
                 self,
                 'y',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:

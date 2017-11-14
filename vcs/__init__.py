@@ -53,9 +53,9 @@ import difflib
 class bestMatch(object):
     def __setattr__(self, a, v):
         try:
-            prop = getattr(self.__class__,a)
-            isprop = isinstance(prop,property)
-        except:
+            prop = getattr(self.__class__, a)
+            isprop = isinstance(prop, property)
+        except Exception:
             isprop = False
         if isprop or not hasattr(self, "__slots__") or a in self.__slots__:
             super(bestMatch, self).__setattr__(a, v)
@@ -276,11 +276,10 @@ t = taylor.Gtd("default")
 
 
 pth = [vcs.prefix, 'share', 'vcs', 'initial.attributes']
-if 1:
-#try:
+try:
     vcs.scriptrun(os.path.join(*pth))
-#except BaseException:
-#    pass
+except BaseException:
+    pass
 
 for typ in list(elements.keys()):
     elts = elements[typ]

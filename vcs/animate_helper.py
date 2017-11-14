@@ -95,7 +95,7 @@ class animate_obj_old(vcs.bestMatch):
         try:
             if (parent is not None) and (parent.iso_spacing == 'Log'):
                 do_min_max = 'no'
-        except:
+        except Exception:
             pass
 
         # Draw specified continental outlines if needed.
@@ -118,11 +118,11 @@ class animate_obj_old(vcs.bestMatch):
                 for i in range(len(self.vcs_self.animate_info)):
                     try:
                         minv.append(min[i])
-                    except:
+                    except Exception:
                         minv.append(min[-1])
                     try:
                         maxv.append(max[i])
-                    except:
+                    except Exception:
                         maxv.append(max[-1])
             else:
                 for i in range(len(self.vcs_self.animate_info)):
@@ -135,7 +135,7 @@ class animate_obj_old(vcs.bestMatch):
             for i in range(len(self.vcs_self.animate_info)):
                 try:
                     self.set_animation_min_max(minv[i], maxv[i], i)
-                except:
+                except Exception:
                     # if it is default, then you cannot set the min and max, so
                     # pass.
                     pass
@@ -296,7 +296,7 @@ class animate_obj_old(vcs.bestMatch):
                 elif (gtype == "vector"):
                     gm = self.vcs_self.getvector(animation_info['gname'][i])
                     gm.reference = self.save_mean_veloc[i]
-        except:
+        except Exception:
             pass
 
     ##########################################################################
@@ -888,11 +888,11 @@ class AnimationController(animate_obj_old):
             for i in range(len(self.animate_info)):
                 try:
                     minv.append(self.create_params.a_min[i])
-                except:
+                except Exception:
                     minv.append(self.create_params.a_min[-1])
                 try:
                     maxv.append(self.create_params.a_max[i])
-                except:
+                except Exception:
                     maxv.append(self.create_params.a_max[-1])
         else:
             for i in range(len(self.animate_info)):
@@ -904,7 +904,7 @@ class AnimationController(animate_obj_old):
         for i in range(len(self.animate_info)):
             try:
                 self.set_animation_min_max(minv[i], maxv[i], i)
-            except:
+            except Exception:
                 # if it is default, then you cannot set the min and max, so
                 # pass.
                 pass
@@ -922,7 +922,7 @@ class AnimationController(animate_obj_old):
                 try:
                     g = slabs[0].getGrid()
                     NXY = len(g.shape)
-                except:
+                except Exception:
                     # No grid so slab1 rnk will tell us
                     NXY = slabs[1].ndim - 2  # lat/lon/vertices
             elif disp.g_type in ["G1D"]:
@@ -948,9 +948,9 @@ class AnimationController(animate_obj_old):
             if alen is None:
                 alen = I[1][0].shape[self.create_params.axis]
             else:
-                l = I[1][0].shape[self.create_params.axis]
-                if l != alen:
-                    alen = numpy.minimum(alen, l)
+                len_tmp = I[1][0].shape[self.create_params.axis]
+                if len_tmp != alen:
+                    alen = numpy.minimum(alen, len_tmp)
                     truncated = True
         if truncated:
             warnings.warn("Because of inconsistent shapes over axis: %i, the "

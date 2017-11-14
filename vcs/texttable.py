@@ -34,7 +34,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates boxfill gm from it
     try:
         tt = Tt(nm)
-    except:
+    except Exception:
         tt = vcs.elements["texttable"][nm]
     # process attributes with = as assignement
     atts = {}
@@ -47,7 +47,7 @@ def process_src(nm, code):
             for V in v.split(","):
                 try:
                     vals.append(int(V))
-                except:
+                except Exception:
                     vals.append(float(V))
             atts[a] = vals
         tt.viewport = atts.get("vp", tt.viewport)
@@ -356,7 +356,7 @@ class Tt(vcs.bestMatch):
                 self,
                 'x',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:
@@ -383,7 +383,7 @@ class Tt(vcs.bestMatch):
                 self,
                 'x',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:

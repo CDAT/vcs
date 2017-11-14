@@ -35,7 +35,7 @@
 #############################################################################
 try:
     from collections import UserDict
-except:
+except Exception:
     from UserDict import UserDict
 import vcs
 import copy

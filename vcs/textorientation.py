@@ -32,7 +32,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates boxfill gm from it
     try:
         to = To(nm)
-    except:
+    except Exception:
         to = vcs.elements["textorientation"][nm]
     # process attributes with = as assignement
     sp = code.split(",")

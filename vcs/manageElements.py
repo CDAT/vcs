@@ -35,6 +35,11 @@ from .error import vcsError
 import warnings
 from . import dv3d
 
+try:
+    basestring
+except NameError:
+    basestring = str
+
 
 def check_name_source(name, source, typ):
     """Make sure it is a unique name for this type or generates a name for user.
@@ -78,18 +83,18 @@ def check_name_source(name, source, typ):
         while name in elts:
             rnd = random.randint(0, 1000000000000000)
             name = '__%s_%i' % (typ, rnd)
-    if isinstance(name, str):
+    if isinstance(name, basestring):
         name = str(name)
-    if not isinstance(name, str):
+    if not isinstance(name, basestring):
         raise vcsError(
             '%s object name must be a string or %s name' %
             (typ, typ))
 
-    if not isinstance(source, str):
+    if not isinstance(source, basestring):
         exec("ok = vcs.is%s(source)" % (typ,))
     else:
         ok = 0
-    if (not isinstance(source, str)) and ok == 0:
+    if (not isinstance(source, basestring)) and ok == 0:
         raise vcsError(
             'Error %s object source must be a string or a %s object' %
             (typ, typ))
@@ -135,7 +140,7 @@ def gettemplate(Pt_name_src='default'):
     :rtype: vcs.template.P
     """
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(Pt_name_src, str):
+    if not isinstance(Pt_name_src, basestring):
         raise vcsError('The argument must be a string.')
 
     if Pt_name_src not in list(vcs.elements["template"].keys()):
@@ -174,7 +179,7 @@ def getprojection(Proj_name_src='default'):
     """
 
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(Proj_name_src, str):
+    if not isinstance(Proj_name_src, basestring):
         raise vcsError('The argument must be a string.')
 
     if Proj_name_src not in vcs.elements["projection"]:
@@ -212,7 +217,7 @@ def getboxfill(Gfb_name_src='default'):
     :rtype: vcs.boxfill.Gfb
     """
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(Gfb_name_src, str):
+    if not isinstance(Gfb_name_src, basestring):
         raise vcsError('The argument must be a string.')
 
     if Gfb_name_src not in list(vcs.elements["boxfill"].keys()):
@@ -262,7 +267,7 @@ def gettaylordiagram(Gtd_name_src='default'):
     """
 
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(Gtd_name_src, str):
+    if not isinstance(Gtd_name_src, basestring):
         raise vcsError('The argument must be a string.')
 
     if Gtd_name_src not in list(vcs.elements["taylordiagram"].keys()):
@@ -303,7 +308,7 @@ def getmeshfill(Gfm_name_src='default'):
     """
 
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(Gfm_name_src, str):
+    if not isinstance(Gfm_name_src, basestring):
         raise vcsError('The argument must be a string.')
 
     if Gfm_name_src not in vcs.elements["meshfill"]:
@@ -343,7 +348,7 @@ def getisofill(Gfi_name_src='default'):
     """
 
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(Gfi_name_src, str):
+    if not isinstance(Gfi_name_src, basestring):
         raise vcsError('The argument must be a string.')
 
     if Gfi_name_src not in vcs.elements["isofill"]:
@@ -382,7 +387,7 @@ def getisoline(Gi_name_src='default'):
     """
 
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(Gi_name_src, str):
+    if not isinstance(Gi_name_src, basestring):
         raise vcsError('The argument must be a string.')
     if Gi_name_src not in vcs.elements["isoline"]:
         raise ValueError("The isoline '%s' does not exists" % Gi_name_src)
@@ -443,7 +448,7 @@ def get1d(name):
     :rtype: :py:class:`vcs.unified1d.G1d`
     """
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(name, str):
+    if not isinstance(name, basestring):
         raise vcsError('The argument must be a string.')
 
     if name not in vcs.elements["1d"]:
@@ -613,7 +618,7 @@ def getvector(Gv_name_src='default'):
     """
 
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(Gv_name_src, str):
+    if not isinstance(Gv_name_src, basestring):
         raise vcsError('The argument must be a string.')
     if Gv_name_src not in vcs.elements["vector"]:
         raise ValueError("The vector '%s' does not exist" % Gv_name_src)
@@ -651,7 +656,7 @@ def getstreamline(Gs_name_src='default'):
     """
 
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(Gs_name_src, str):
+    if not isinstance(Gs_name_src, basestring):
         raise vcsError('The argument must be a string.')
     if Gs_name_src not in vcs.elements["streamline"]:
         raise ValueError("The streamline '%s' does not exist" % Gs_name_src)
@@ -855,7 +860,7 @@ def getline(name='default', ltype=None, width=None, color=None,
     """
 
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(name, str):
+    if not isinstance(name, basestring):
         raise vcsError('The argument must be a string.')
 
     if name not in vcs.elements["line"]:
@@ -990,7 +995,7 @@ def getmarker(name='default', mtype=None, size=None, color=None,
     """
 
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(name, str):
+    if not isinstance(name, basestring):
         raise vcsError('The argument must be a string.')
 
     if name not in vcs.elements["marker"]:
@@ -1124,7 +1129,7 @@ def getfillarea(name='default', style=None,
     """
 
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(name, str):
+    if not isinstance(name, basestring):
         raise vcsError('The argument must be a string.')
     if name not in list(vcs.elements["fillarea"].keys()):
         raise vcsError("Fillarea '%s' does not exist" % (name))
@@ -1217,7 +1222,7 @@ def createtexttable(name=None, source='default', font=None,
         if (y is not None):
             tt.y = y
         return tt
-    except:
+    except Exception:
         pass
 createtexttable.__doc__ = createtexttable.__doc__ % xmldocs.create_docs['texttable']  # noqa
 
@@ -1263,7 +1268,7 @@ def gettexttable(name='default', font=None,
     """
 
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(name, str):
+    if not isinstance(name, basestring):
         raise vcsError('The argument must be a string.')
 
     if name not in vcs.elements["texttable"]:
@@ -1303,7 +1308,7 @@ def gettextorientation(To_name_src='default'):
     """
 
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(To_name_src, str):
+    if not isinstance(To_name_src, basestring):
         raise vcsError('The argument must be a string.')
 
     if To_name_src not in vcs.elements["textorientation"]:
@@ -1482,14 +1487,14 @@ def gettextcombined(Tt_name_src='default', To_name_src=None, string=None, font=N
     """
 
     # Check to make sure the arguments passed in are a STRINGS
-    if not isinstance(Tt_name_src, str):
+    if not isinstance(Tt_name_src, basestring):
         raise vcsError('The first argument must be a string.')
     if To_name_src is None:
         sp = Tt_name_src.split(":::")
         if len(sp) == 2:
             Tt_name_src = sp[0]
             To_name_src = sp[1]
-    if not isinstance(To_name_src, str):
+    if not isinstance(To_name_src, basestring):
         raise vcsError('The second argument must be a string.')
 
     tc = vcs.elements["textcombined"].get(
@@ -1548,7 +1553,7 @@ def get3d_scalar(Gfdv3d_name_src='default'):
     """
 
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(Gfdv3d_name_src, str):
+    if not isinstance(Gfdv3d_name_src, basestring):
         raise vcsError('The argument must be a string.')
 
     if Gfdv3d_name_src not in vcs.elements["3d_scalar"]:
@@ -1586,7 +1591,7 @@ def get3d_dual_scalar(Gfdv3d_name_src='default'):
     :rtype: vcs.dv3d.Gf3DDualScalar
     """
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(Gfdv3d_name_src, str):
+    if not isinstance(Gfdv3d_name_src, basestring):
         raise vcsError('The argument must be a string.')
 
     if Gfdv3d_name_src not in vcs.elements["3d_dual_scalar"]:
@@ -1626,7 +1631,7 @@ def get3d_vector(Gfdv3d_name_src='default'):
     """
 
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(Gfdv3d_name_src, str):
+    if not isinstance(Gfdv3d_name_src, basestring):
         raise vcsError('The argument must be a string.')
 
     if Gfdv3d_name_src not in vcs.elements["3d_vector"]:
@@ -1690,7 +1695,7 @@ def getcolormap(Cp_name_src='default'):
     :rtype: vcs.colormap.Cp
     """
     # Check to make sure the argument passed in is a STRING
-    if not isinstance(Cp_name_src, str):
+    if not isinstance(Cp_name_src, basestring):
         raise ValueError('Error -  The argument must be a string.')
 
     return vcs.elements["colormap"][Cp_name_src]
@@ -1701,7 +1706,7 @@ getcolormap.__doc__ = getcolormap.__doc__ % xmldocs.get_docs['colormap']  # noqa
 
 def removeG(obj, gtype="boxfill"):
     exec("res = vcs.is%s(obj)" % gtype)
-    if isinstance(obj, str):
+    if isinstance(obj, basestring):
         name = obj
         if obj not in list(vcs.elements[gtype].keys()):
             raise RuntimeError("Cannot remove inexisting %s %s" % (gtype, obj))
@@ -1783,7 +1788,7 @@ def removeTo(obj):
 
 
 def removeTc(obj):
-    if isinstance(obj, str):
+    if isinstance(obj, basestring):
         Tt, To = obj.split(":::")
     else:
         To = obj.To_name
@@ -1809,16 +1814,20 @@ def removeP(obj):
     if not vcs.istemplate(obj):
         if obj not in list(vcs.elements["template"].keys()):
             raise RuntimeError("Cannot remove inexisting template %s" % obj)
-    if isinstance(obj, str):
+    if isinstance(obj, basestring):
         obj = vcs.gettemplate(obj)
     if obj._scaledFont:
+        props = []
+        for attr in dir(obj.__class__):
+            if isinstance(getattr(obj.__class__, attr), property):
+                props.append(attr)
         try:
             attr = list(vars(obj).keys())
-        except:
-            attr = obj.__slots__
+        except Exception:
+            attr = list(obj.__slots__)+props
 
         if len(attr) == 0:
-            attr = obj.__slots__
+            attr = list(obj.__slots__)+props
 
         for a in attr:
             if a[0] == "_":
@@ -1827,7 +1836,7 @@ def removeP(obj):
                 v = getattr(obj, a)
                 to = getattr(v, 'textorientation')
                 removeTo(to)
-            except:
+            except Exception:
                 pass
     return removeG(obj, "template")
 

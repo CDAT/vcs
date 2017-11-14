@@ -440,9 +440,9 @@ class Configurator(object):
 
         self.toolbar.hide()
         if display.g_type == "marker":
-            l = display.backend[key]
+            l_tmp = display.backend[key]
             # Actor is actually a group of VTK objects
-            index = l.index(actor)
+            index = l_tmp.index(actor)
             editor = editors.marker.MarkerEditor(
                 self.interactor,
                 vcs.getmarker(
@@ -451,8 +451,8 @@ class Configurator(object):
                 display,
                 self)
         elif display.g_type == "text":
-            l = display.backend[key]
-            index = l.index(actor)
+            l_tmp = display.backend[key]
+            index = l_tmp.index(actor)
             editor = editors.text.TextEditor(
                 self.interactor,
                 vcs.gettext(

@@ -58,26 +58,26 @@ class IsolinePipeline(Pipeline2D):
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
 
-        for i, l in enumerate(self._contourLevels):
+        for i, lv_tmp in enumerate(self._contourLevels):
             if i == 0:
                 W = linewidth[i]
                 S = linetype[i]
                 C = [self._contourColors[i]]
-                if l == 1.e20:
+                if lv_tmp == 1.e20:
                     L = [-1.e20]
                 else:
-                    L = [l]
+                    L = [lv_tmp]
             else:
                 if W == linewidth[i] and S == linetype[i]:
                     # Ok same style and width, lets keep going
-                    L.append(l)
+                    L.append(lv_tmp)
                     C.append(self._contourColors[i])
                 else:
                     tmpLevels.append(L)
                     tmpColors.append(C)
                     tmpLineWidths.append(W)
                     tmpLineTypes.append(S)
-                    L = [l]
+                    L = [lv_tmp]
                     C = [self._contourColors[i]]
                     W = linewidth[i]
                     S = linetype[i]

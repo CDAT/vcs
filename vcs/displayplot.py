@@ -82,7 +82,7 @@ class Dp(vcs.bestMatch):
 
     .. pragma: skip-doctest
     """
-    __slots__ = [ "_name",
+    __slots__ = ["_name",
                  "s_name",
                  "_parent",
                  "_off",
@@ -218,7 +218,7 @@ class Dp(vcs.bestMatch):
         try:
             hasVCSAddons = True
             import vcsaddons
-        except:
+        except Exception:
             hasVCSAddons = False
         value = VCS_validation_functions.checkString(self, 'g_type', value)
         value = value.lower()
