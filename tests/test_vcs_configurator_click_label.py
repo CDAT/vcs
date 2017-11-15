@@ -1,10 +1,11 @@
 import basevcstest
 
+
 class TestVSConfigurator(basevcstest.VCSBaseTest):
-    def __init__(self,*a,**k):
-        k["bg"]=False
-        k["geometry"] = {"width":800,"height":606}
-        super(TestVSConfigurator,self).__init__(*a,**k)
+    def __init__(self, *a, **k):
+        k["bg"] = False
+        k["geometry"] = {"width": 800, "height": 606}
+        super(TestVSConfigurator, self).__init__(*a, **k)
 
     def testConfiguratorClickTest(self):
         clt = self.clt("clt")
@@ -18,7 +19,7 @@ class TestVSConfigurator(basevcstest.VCSBaseTest):
                 a = getattr(t, attr)
                 if "priority" in dir(a):
                     a.priority = 0
-            except AttributeError, TypeError:
+            except AttributeError as TypeError:
                 pass
 
         t.dataname.priority = 1
@@ -49,9 +50,13 @@ class TestVSConfigurator(basevcstest.VCSBaseTest):
         # Retrieve the actor at the specified point
         actor = c.actor_at_point(.1 * w + 5, .9 * h + 5)
 
-        self.assertIsNotNone(actor, "Couldn't find text actor at (%f, %f)" % (.1 * w + 5, .9 * h + 5))
+        self.assertIsNotNone(
+            actor, "Couldn't find text actor at (%f, %f)" %
+            (.1 * w + 5, .9 * h + 5))
 
         display, key = c.display_and_key_for_actor(actor)
         self.assertEqual(display, dp, "Found wrong display")
 
-        self.assertFalse(actor!=display.backend[key] and actor not in display.backend[key], "Found wrong key for actor")
+        self.assertFalse(
+            actor != display.backend[key] and actor not in display.backend[key],
+            "Found wrong key for actor")

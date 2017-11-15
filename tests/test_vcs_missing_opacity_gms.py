@@ -2,10 +2,11 @@ import basevcstest
 import cdms2
 import vcs
 
+
 class TestVCSPatterns(basevcstest.VCSBaseTest):
     def testOpacity(self):
         clt = self.clt("clt")
-        for gm_type in ["boxfill","isofill","meshfill"]:
+        for gm_type in ["boxfill", "isofill", "meshfill"]:
 
             # Plot the dataset
             self.x.clear()
@@ -25,5 +26,3 @@ class TestVCSPatterns(basevcstest.VCSBaseTest):
             # Write to png file
             fnm = "test_vcs_missing_opacity_%s.png" % gm_type.lower()
             self.checkImage(fnm)
-
-

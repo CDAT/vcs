@@ -1,6 +1,7 @@
 import vcs
 import unittest
 
+
 class TestVCSGeometry(unittest.TestCase):
     def testGeometry(self):
 

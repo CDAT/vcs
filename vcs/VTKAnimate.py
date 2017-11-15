@@ -61,7 +61,7 @@ class VTKAnimationCreate(animate_helper.StoppableThread):
 
     def create_prefix(self):
         self.controller._unique_prefix = hashlib.sha1(
-            time.asctime() + str(random.randint(0, 10000))).hexdigest()
+            time.asctime() + str(random.randint(0, 10000))).encode("utf8").hexdigest()
 
     def run(self):
         pass

@@ -4,6 +4,7 @@ import sys
 import vtk
 import unittest
 
+
 class TestVCSFontEditor(unittest.TestCase):
     def testFontEditor(self):
         w = vtk.vtkRenderWindow()
@@ -16,7 +17,6 @@ class TestVCSFontEditor(unittest.TestCase):
 
         font_set_to = [initial_font]
 
-
         def set_font(f):
             font_set_to.append(f)
 
@@ -28,9 +28,11 @@ class TestVCSFontEditor(unittest.TestCase):
         # Create the font editor
         fe = editors.font.FontEditor(tb, set_font, current_font=initial_font)
 
-        self.assertTrue( len(tb.widgets) > 0, "FontEditor not added to toolbar")
-        self.assertEqual( len(tb.widgets), 1, "FontEditor added to wrong toolbar")
-        self.assertEqual( len(tb.bars), 1, "FontEditor didn't set up toolbar correctly")
+        self.assertTrue(len(tb.widgets) > 0, "FontEditor not added to toolbar")
+        self.assertEqual(len(tb.widgets), 1,
+                         "FontEditor added to wrong toolbar")
+        self.assertEqual(
+            len(tb.bars), 1, "FontEditor didn't set up toolbar correctly")
 
         f_tb = tb.bars["Fonts"]
         previous_buttons = []
@@ -44,14 +46,16 @@ class TestVCSFontEditor(unittest.TestCase):
                 new_font = fe.fonts[ind]
 
             button.__advance__(None)
-            print new_font, fe.fonts[ind], font_set_to[-1]
-            self.assertTrue( new_font == font_set_to[-1], "Did not set font correctly")
+            print(new_font, fe.fonts[ind], font_set_to[-1])
+            self.assertTrue(
+                new_font == font_set_to[-1], "Did not set font correctly")
 
             for i, b in enumerate(previous_buttons):
                 if new_font == fe.fonts[i]:
-                    self.assertEqual( b.get_state(), 1, "FontEditor didn't toggle on correct font button")
+                    self.assertEqual(
+                        b.get_state(), 1, "FontEditor didn't toggle on correct font button")
                 else:
-                    self.assertEqual( b.get_state(), 0, "FontEditor didn't toggle off disabled fonts")
+                    self.assertEqual(
+                        b.get_state(), 0, "FontEditor didn't toggle off disabled fonts")
 
             previous_buttons.append(button)
-

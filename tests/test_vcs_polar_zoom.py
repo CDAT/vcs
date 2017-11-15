@@ -1,16 +1,18 @@
 import basevcstest
 
+
 class TestVCSProjectionBasics(basevcstest.VCSBaseTest):
     def testProjectionBasics(self):
-        s = self.clt("clt",slice(0,1),squeeze=1)
+        s = self.clt("clt", slice(0, 1), squeeze=1)
         i = self.x.createisofill()
         p = self.x.getprojection("polar")
-        i.projection=p
+        i.projection = p
         for zoom in ['none', 'subset', 'datawc0', 'datawc1', 'datawc2']:
             if (zoom == 'none'):
-                self.x.plot(s,i,bg=self.bg)
+                self.x.plot(s, i, bg=self.bg)
             elif (zoom == 'subset'):
-                self.x.plot(s(latitude=(-50,90), longitude=(30, -30)), i, bg=self.bg)
+                self.x.plot(
+                    s(latitude=(-50, 90), longitude=(30, -30)), i, bg=self.bg)
             else:
                 i.datawc_x1 = 30
                 i.datawc_x2 = -30

@@ -105,7 +105,7 @@ class Dp(vcs.bestMatch):
         import tempfile
         tmp = tempfile.mktemp() + ".png"
         self._parent.png(tmp)
-        f = open(tmp)
+        f = open(tmp,"rb")
         st = f.read()
         f.close()
         return st

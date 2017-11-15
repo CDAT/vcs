@@ -2,6 +2,7 @@ import unittest
 import vcs
 import sys
 
+
 class TestVCSInteract(unittest.TestCase):
     def testInteract(self):
 
@@ -11,9 +12,8 @@ class TestVCSInteract(unittest.TestCase):
 
         inter = x.backend.renWin.GetInteractor()
 
-
         def end_interact(obj, event):
-            print "Interaction began"
+            print("Interaction began")
             inter.TerminateApp()
             sys.exit(0)
 
@@ -21,5 +21,5 @@ class TestVCSInteract(unittest.TestCase):
         x.interact()
 
         # Should not reach this point
-        print "Did not start interact."
+        print("Did not start interact.")
         sys.exit(1)

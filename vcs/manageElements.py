@@ -91,7 +91,9 @@ def check_name_source(name, source, typ):
             (typ, typ))
 
     if not isinstance(source, basestring):
+        loc = locals()
         exec("ok = vcs.is%s(source)" % (typ,))
+        ok = loc["ok"]
     else:
         ok = 0
     if (not isinstance(source, basestring)) and ok == 0:
@@ -1705,7 +1707,9 @@ getcolormap.__doc__ = getcolormap.__doc__ % xmldocs.get_docs['colormap']  # noqa
 
 
 def removeG(obj, gtype="boxfill"):
+    loc = locals()
     exec("res = vcs.is%s(obj)" % gtype)
+    res = loc["res"]
     if isinstance(obj, basestring):
         name = obj
         if obj not in list(vcs.elements[gtype].keys()):

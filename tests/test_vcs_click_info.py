@@ -3,13 +3,14 @@ import vcs
 import cdms2
 import os
 
-class TestVCSClickInfo(basevcstest.VCSBaseTest):
-    def __init__(self,*a,**k):
-        k["bg"]=False
-        k["geometry"]={"width":800,"height":600}
-        super(TestVCSClickInfo,self).__init__(*a,**k)
 
-    def clickInfo(self,plot):
+class TestVCSClickInfo(basevcstest.VCSBaseTest):
+    def __init__(self, *a, **k):
+        k["bg"] = False
+        k["geometry"] = {"width": 800, "height": 600}
+        super(TestVCSClickInfo, self).__init__(*a, **k)
+
+    def clickInfo(self, plot):
 
         self.x.clear()
         # graphics method
@@ -24,9 +25,9 @@ class TestVCSClickInfo(basevcstest.VCSBaseTest):
             gm = self.x.getisoline(plot)
         elif (plot.find('vector') != -1):
             gm = self.x.getvector(plot[plot.index('_') + 1:])
-            typ="vector"
+            typ = "vector"
         else:
-            print "Invalid plot"
+            print("Invalid plot")
             sys.exit(13)
 
         # data
@@ -50,11 +51,12 @@ class TestVCSClickInfo(basevcstest.VCSBaseTest):
 
     def testClickInfo(self):
         self.testConfig = {'a_boxfill': ('clt.nc', 'clt', (200, 200)),
-                      'a_mollweide_boxfill': ('clt.nc', 'clt', (222, 322)),
-                      'a_isofill': ('clt.nc', 'clt', (200, 200)),
-                      'a_isoline': ('clt.nc', 'clt', (200, 200)),
-                      'vector_default': ('clt.nc', ('u', 'v'), (200, 200)),
-                      'a_meshfill': ('sampleCurveGrid4.nc', 'sample', (222, 322)),
-                      'a_robinson_meshfill': ('sampleCurveGrid4.nc', 'sample', (222, 322))}
-        for src in ["a_boxfill", "a_mollweide_boxfill", "a_meshfill", "a_robinson_meshfill", "a_isofill", "a_isoline", "vector_default"]:
+                           'a_mollweide_boxfill': ('clt.nc', 'clt', (222, 322)),
+                           'a_isofill': ('clt.nc', 'clt', (200, 200)),
+                           'a_isoline': ('clt.nc', 'clt', (200, 200)),
+                           'vector_default': ('clt.nc', ('u', 'v'), (200, 200)),
+                           'a_meshfill': ('sampleCurveGrid4.nc', 'sample', (222, 322)),
+                           'a_robinson_meshfill': ('sampleCurveGrid4.nc', 'sample', (222, 322))}
+        for src in ["a_boxfill", "a_mollweide_boxfill", "a_meshfill",
+                    "a_robinson_meshfill", "a_isofill", "a_isoline", "vector_default"]:
             self.clickInfo(src)

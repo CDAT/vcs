@@ -1,8 +1,9 @@
 import basevcstest
 import vcs
 
+
 class TestVCSBoxfill(basevcstest.VCSBaseTest):
-    def boxfillOrthographic(self,centerlatitude):
+    def boxfillOrthographic(self, centerlatitude):
 
         a = self.clt("clt")
 
@@ -10,10 +11,10 @@ class TestVCSBoxfill(basevcstest.VCSBaseTest):
         p.centerlatitude = centerlatitude
         b = self.x.createboxfill()
         b.projection = p
-        self.x.plot(a(latitude=(90,-90)), b, bg=self.bg)
+        self.x.plot(a(latitude=(90, -90)), b, bg=self.bg)
         fnm = "test_vcs_boxfill_orthographic_%i.png" % centerlatitude
         self.checkImage(fnm)
 
     def testBoxfill(self):
-        for lat in [45,90]:
+        for lat in [45, 90]:
             self.boxfillOrthographic(lat)

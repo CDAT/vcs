@@ -46,8 +46,11 @@ def createnewvcsobj(canvas, type, basenm, src='default', src2='default'):
     else:
         out = None  # so that flake8 is happy
         if type != 'text':
+            loc = locals()
             exec('out=canvas.create' + type + '("' + nm + '","' + src + '")')
+            out = loc["out"]
         else:
+            loc = locals()
             exec(
                 'out=canvas.create' +
                 type +
@@ -60,6 +63,7 @@ def createnewvcsobj(canvas, type, basenm, src='default', src2='default'):
                 '","' +
                 src2 +
                 '")')
+            out = loc["out"]
 
     if type == 'text':
         tmptt = canvas.gettexttable(src)

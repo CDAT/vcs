@@ -1196,7 +1196,9 @@ class Canvas(vcs.bestMatch):
             for obj in self.listelements(objtype):
                 if obj[:2] == "__":
                     try:
+                        loc = locals()
                         exec("o = self.get%s(obj)" % objtype)
+                        o = loc["o"]
                         destroy = True
                         if objtype == 'template':
                             # print o.name

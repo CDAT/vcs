@@ -5,6 +5,7 @@
 import basevcstest
 import numpy
 
+
 class TestVCSRemoveMarker(basevcstest.VCSBaseTest):
     def test_vcs_remove_marker(self):
 
@@ -12,5 +13,5 @@ class TestVCSRemoveMarker(basevcstest.VCSBaseTest):
         gm = self.x.createyxvsx('test_yxvsx')
 
         gm.marker = None
-        self.x.plot(gm, dummy_data,bg=self.bg)
+        self.x.plot(gm, dummy_data, bg=self.bg)
         self.checkImage("test_vcs_remove_marker_none_1d.png")

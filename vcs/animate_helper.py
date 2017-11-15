@@ -197,7 +197,9 @@ class animate_obj_old(vcs.bestMatch):
                     gtype = animation_info["gtype"][i].lower()
                     gname = animation_info["gname"][i]
                     gm = None  # for flake8 to be happy
+                    loc = locals()
                     exec("gm = new_vcs.get%s('%s')" % (gtype, gname))
+                    gm = loc["gm"]
                     for j in index:
                         slab = slab[j]
                     new_vcs.plot(slab, gm, new_vcs.gettemplate(template), bg=1)

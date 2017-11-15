@@ -1,5 +1,6 @@
 import basevcstest
 
+
 class TestVCSColors(basevcstest.VCSBaseTest):
     def testFewerColorsThanLevels(self):
         data = self.clt("clt")

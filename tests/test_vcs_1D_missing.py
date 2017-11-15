@@ -5,11 +5,12 @@ import numpy
 import MV2
 import os
 
+
 class TestVCS1DMissing(basevcstest.VCSBaseTest):
     def test1DMissing(self):
         yx = self.x.createyxvsx()
 
-        data = """-11.14902417  -9.17390922  -7.29515002  
+        data = """-11.14902417  -9.17390922  -7.29515002
         -7.51774549  -8.63608171
           -10.4827395   -9.93859485  -7.3394366   -5.39241468  -5.74825567
              -6.74967902  -7.09622319  -5.93836983  -4.04592997  -2.65591499
@@ -23,13 +24,11 @@ class TestVCS1DMissing(basevcstest.VCSBaseTest):
                                       -0.54267951  -0.16472441  -0.52871418  -0.83520848  -0.90315403
                                          -0.21747426   0.01922666   0.89621996   1.75691927   3.12657503
                                              4.55749531   6.04921304   7.20744489   7.65294958""".split()
-        data = numpy.array(data,dtype=numpy.float)
+        data = numpy.array(data, dtype=numpy.float)
         data = MV2.array(data)
 
-        data=MV2.masked_where(MV2.logical_and(data>-4,data<-2),data)
+        data = MV2.masked_where(MV2.logical_and(data > -4, data < -2), data)
 
-
-        self.x.plot(data,yx,bg=self.bg)
+        self.x.plot(data, yx, bg=self.bg)
         fnm = "test_vcs_1d_missing.png"
         self.checkImage(fnm)
-

@@ -9,6 +9,10 @@ try:
 except NameError:
     basestring = str
 
+try:
+    long
+except:
+    long = int
 
 class PPE(Exception):
 

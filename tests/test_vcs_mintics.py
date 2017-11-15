@@ -1,13 +1,14 @@
 import basevcstest
 
+
 class TestVCSMinTics(basevcstest.VCSBaseTest):
     def testVCSMinTics(self):
         s = self.clt("clt")
         box = self.x.createboxfill()
 
         # Should ignore the string here
-        box.xmtics1 = {i:"Test" for i in range(-180, 180, 15) if i % 30 != 0}
-        box.ymtics1 = {i:"Test" for i in range(-90, 90, 5) if i % 10 != 0}
+        box.xmtics1 = {i: "Test" for i in range(-180, 180, 15) if i % 30 != 0}
+        box.ymtics1 = {i: "Test" for i in range(-90, 90, 5) if i % 10 != 0}
         box.xmtics2 = "lon15"
         box.ymtics2 = "lat5"
         template = self.x.createtemplate()

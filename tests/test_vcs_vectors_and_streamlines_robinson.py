@@ -11,7 +11,7 @@ class VCSRobinson(basevcstest.VCSBaseTest):
         if (params[0] == 'streamline'):
             V = self.x.createstreamline()
             V.evenlyspaced = False
-            V.integratortype = 2 # rk45
+            V.integratortype = 2  # rk45
             if (len(params) >= 2 and params[1] == 'colored'):
                 fnm += "_colored"
                 V.coloredbyvector = True
@@ -25,13 +25,13 @@ class VCSRobinson(basevcstest.VCSBaseTest):
             if (len(params) >= 3 and params[2] == 'evenlyspaced'):
                 fnm += "_evenlyspaced"
                 V.evenlyspaced = True
-                V.integratortype = 1 # rk4
+                V.integratortype = 1  # rk4
         else:
             V = self.x.createvector()
         p = self.x.createprojection()
         p.type = "robinson"
         V.projection = p
-        self.x.plot(u,v,V, bg=1)
+        self.x.plot(u, v, V, bg=1)
         fnm += "_robinson.png"
         self.checkImage(fnm)
 

@@ -46,6 +46,11 @@ except BaseException:
     hasVCSAddons = False
 
 try:
+    long
+except:
+    long = int
+    
+try:
     basestring
 except NameError:
     basestring = str
@@ -1077,14 +1082,18 @@ def loadVCSItem(typ, nm, json_dict={}):
             gm = vcs.elements[tp][nm]
     else:
         cmd = "gm = vcs.create%s('%s')" % (typ, nm)
+        loc = locals()
         exec(cmd)
+        gm = loc["gm"]
     for a, v in json_dict.items():
         if isinstance(v, dict):
             if a == "Marker" and tp == "taylordiagram":
                 gm.addMarker()
                 for k in list(v.keys()):
                     cmd = "gm.Marker.%s = %s" % (k, repr(v[k]))
+                    loc = locals()
                     exec(cmd)
+                    gm = loc["gm"]
             else:
                 for k in list(v.keys()):
                     try:
@@ -1100,7 +1109,9 @@ def loadVCSItem(typ, nm, json_dict={}):
             if nm in vcs_deprecated_colormap_names:
                 cmd = "gm = vcs.create%s('%s')" % (
                     typ, vcs_deprecated_colormap_names[nm])
+                loc = locals()
                 exec(cmd)
+                gm = loc["gm"]
                 setattr(gm, a, v)
 
     return gm
@@ -1435,7 +1446,7 @@ def mklabels(vals, output='dict'):
     idig = 0
     for i in range(nvals):
         aa = numpy.ma.power(10., -idigleft)
-        while abs(round(aa * vals[i]) - aa * vals[i]) > .000001:
+        while abs(round(aa * float(vals[i])) - aa * vals[i]) > .000001:
             aa = aa * 10.
         idig = numpy.ma.maximum(
             idig,
@@ -1453,7 +1464,7 @@ def mklabels(vals, output='dict'):
     if idigleft > 5 or idigleft < -2:
         if idig == 1:
             for i in range(nvals):
-                aa = int(round(vals[i] / numpy.ma.power(10., idigleft - 1)))
+                aa = int(round(float(vals[i]) / numpy.ma.power(10., idigleft - 1)))
                 lbls.append(str(aa) + 'E' + str(idigleft - 1))
         else:
             for i in range(nvals):
@@ -1466,7 +1477,7 @@ def mklabels(vals, output='dict'):
                 lbls.append(aa + 'E' + str(idigleft - 1))
     elif idigleft > 0 and idigleft >= idig:  # F format
         for i in range(nvals):
-            lbls.append(str(int(round(vals[i]))))
+            lbls.append(str(int(round(float(vals[i])))))
     else:
         for i in range(nvals):
             ii = 1
@@ -1847,7 +1858,12 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     for a in ["x1", "x2", "y1", "y2"]:
         nm = "datawc_%s" % a
         if not numpy.allclose(getattr(gm, nm), 1.e20):
+            loc =locals()
             exec("%s = gm.%s" % (nm, nm))
+            if nm == "datawc_x1": datawc_x1 = loc[nm]
+            elif nm == "datawc_x2": datawc_x2 = loc[nm]
+            elif nm == "datawc_y1": datawc_y1 = loc[nm]
+            elif nm == "datawc_y2": datawc_y2 = loc[nm]
     if isinstance(gm, vcs.taylor.Gtd):
         return
     # Now the template stuff
