@@ -1,5 +1,6 @@
 # VTK Backend Animation Module
 # Author:  Charles Doutriaux
+from __future__ import division, print_function
 from . import animate_helper
 import time
 import random
@@ -22,7 +23,7 @@ def update_input(canvas, dimensions, frame_num, update=True):
         args = []
         Ntot = 1
         for a in slab.getAxisList()[:-dimensions][::-1]:
-            n = frame_num / Ntot % len(a)
+            n = frame_num // Ntot % len(a)
             Ntot *= len(a)
             args.append(slice(n, n + 1))
         args = args[::-1]
@@ -61,7 +62,7 @@ class VTKAnimationCreate(animate_helper.StoppableThread):
 
     def create_prefix(self):
         self.controller._unique_prefix = hashlib.sha1(
-            time.asctime() + str(random.randint(0, 10000))).encode("utf8").hexdigest()
+            time.asctime().encode("utf-8") + str(random.randint(0, 10000)).encode("utf8")).hexdigest()
 
     def run(self):
         pass

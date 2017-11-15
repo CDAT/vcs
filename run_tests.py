@@ -232,7 +232,7 @@ if args.html or args.package or args.dropbox:
         os.makedirs("tests_html")
     os.chdir("tests_html")
 
-    js = "" # iimage_compare.script_data()
+    js = image_compare.script_data()
 
     fi = open("index.html", "w")
     print("<!DOCTYPE html>", file=fi)
