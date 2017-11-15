@@ -12,6 +12,7 @@
 
     .. pragma: skip-doctest
 """
+from __future__ import print_function
 import vcs
 from . import boxfill
 from . import meshfill

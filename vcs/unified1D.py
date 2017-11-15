@@ -21,6 +21,7 @@
 #
 #
 #
+from __future__ import print_function
 from . import VCS_validation_functions
 import cdtime
 from . import xmldocs

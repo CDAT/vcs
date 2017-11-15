@@ -793,9 +793,6 @@ class Canvas(vcs.bestMatch):
             else:
                 contout = 0
 
-        print("CONTOUT:",contout, type(contout))
-        print("xdim:",xdim,type(xdim))
-        print("ydim:",ydim,type(ydim))
         if (isinstance(arglist[GRAPHICS_METHOD], str) and (arglist[GRAPHICS_METHOD]) == 'meshfill') or (
                 (xdim >= 0 and ydim >= 0 and (isinstance(contout, str) or contout >= 1))):
             self.setcontinentstype(contout)

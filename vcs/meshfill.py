@@ -13,6 +13,7 @@
 # Version:      4.0							      #
 ###############################################################################
 
+from __future__ import print_function
 from . import VCS_validation_functions
 from . import xmldocs
 import cdtime

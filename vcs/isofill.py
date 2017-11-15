@@ -26,6 +26,7 @@
 # Import: VCS C extension module.                                             #
 #
 #
+from __future__ import print_function
 import vcs
 from . import VCS_validation_functions
 import cdtime

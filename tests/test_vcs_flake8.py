@@ -30,4 +30,4 @@ class TestFlake8(unittest.TestCase):
         out = P.stdout.read()
         if out != "":
             print(out)
-        self.assertEqual(out, "")
+        self.assertEqual(len(out),0)

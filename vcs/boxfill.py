@@ -14,6 +14,7 @@
 ###############################################################################
 
 
+from __future__ import print_function
 import vcs
 import cdtime
 from . import VCS_validation_functions

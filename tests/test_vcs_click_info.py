@@ -19,6 +19,8 @@ class TestVCSClickInfo(basevcstest.VCSBaseTest):
             gm = self.x.getboxfill(plot)
         elif (plot.find('meshfill') != -1):
             gm = self.x.getmeshfill(plot)
+            gm.ext_2 = False
+            gm.list()
         elif (plot.find('isofill') != -1):
             gm = self.x.getisofill(plot)
         elif (plot.find('isoline') != -1):

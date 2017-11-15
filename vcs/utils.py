@@ -46,10 +46,10 @@ except BaseException:
     hasVCSAddons = False
 
 try:
-    long
-except:
+    long  # noqa
+except Exception:
     long = int
-    
+
 try:
     basestring
 except NameError:
@@ -138,7 +138,14 @@ class Logo(vcs.bestMatch):
             >>> logo2.plot(x)
     """
 
-    __slots__ = ["x", "y", "width", "height", "source", "source_width", "source_height"]
+    __slots__ = [
+        "x",
+        "y",
+        "width",
+        "height",
+        "source",
+        "source_width",
+        "source_height"]
 
     def __init__(self, source=None, x=.93, y=.95, width=None, height=None):
         """Initialize a new "logo" object to be plotted later on a canvas
@@ -346,7 +353,8 @@ def dumpToDict(obj, skipped=[], must=[]):
     return dic, associated
 
 
-def dumpToJson(obj, fileout, skipped=["info", "member", "attributes"], must=[], indent=indent, sort_keys=sort_keys):
+def dumpToJson(obj, fileout, skipped=["info", "member", "attributes"], must=[
+], indent=indent, sort_keys=sort_keys):
     """Uses :py:func:`vcs.utils.dumpToDict` and `json.dumps`_ to construct a
     JSON representation of a VCS object's property values.
 
@@ -427,7 +435,14 @@ def dumpToJson(obj, fileout, skipped=["info", "member", "attributes"], must=[], 
         del(dic["name"])
         d[nm2] = dic
         D[nm] = d
-        json.dump(D, f, sort_keys=sort_keys, indent=indent)
+        json.dump(
+            D,
+            f,
+            sort_keys=sort_keys,
+            indent=indent,
+            separators=(
+                ', ',
+                ': '))
         if isinstance(fileout, basestring):
             f.close()
             for etype in list(associated.keys()):
@@ -1406,7 +1421,7 @@ def mklabels(vals, output='dict'):
     :rtype: `dict`_ or `list`_
     """
     import numpy.ma
-    if isinstance(vals[0], list) or isinstance(vals[0], tuple):
+    if isinstance(vals[0], (list, tuple)):
         vals = __split2contiguous(vals)
     vals = numpy.ma.asarray(vals)
     nvals = len(vals)
@@ -1464,11 +1479,30 @@ def mklabels(vals, output='dict'):
     if idigleft > 5 or idigleft < -2:
         if idig == 1:
             for i in range(nvals):
-                aa = int(round(float(vals[i]) / numpy.ma.power(10., idigleft - 1)))
+                aa = int(
+                    round(
+                        float(
+                            vals[i]) /
+                        numpy.ma.power(
+                            10.,
+                            idigleft -
+                            1)))
                 lbls.append(str(aa) + 'E' + str(idigleft - 1))
         else:
             for i in range(nvals):
-                aa = str(vals[i] / numpy.ma.power(10., idigleft - 1))
+                aa = str(
+                    round(
+                        ((vals[i] /
+                          numpy.ma.power(
+                            10.,
+                            idigleft -
+                            1)) *
+                            numpy.power(
+                            10,
+                            idig))) /
+                    numpy.power(
+                        10,
+                        idig))
                 ii = 1
                 if vals[i] < 0.:
                     ii = 2
@@ -1574,7 +1608,7 @@ def getcolors(levs, colors=None, split=1, white="white"):
             split = 1
     # Take care of argument white
     if isinstance(white, basestring):
-        white = [value/2.55 for value in genutil.colors.str2rgb(white)]
+        white = [value / 2.55 for value in genutil.colors.str2rgb(white)]
 
     # Gets first and last value, and adjust if extensions
     mn = levs[0]
@@ -1858,12 +1892,16 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     for a in ["x1", "x2", "y1", "y2"]:
         nm = "datawc_%s" % a
         if not numpy.allclose(getattr(gm, nm), 1.e20):
-            loc =locals()
+            loc = locals()
             exec("%s = gm.%s" % (nm, nm))
-            if nm == "datawc_x1": datawc_x1 = loc[nm]
-            elif nm == "datawc_x2": datawc_x2 = loc[nm]
-            elif nm == "datawc_y1": datawc_y1 = loc[nm]
-            elif nm == "datawc_y2": datawc_y2 = loc[nm]
+            if nm == "datawc_x1":
+                datawc_x1 = loc[nm]
+            elif nm == "datawc_x2":
+                datawc_x2 = loc[nm]
+            elif nm == "datawc_y1":
+                datawc_y1 = loc[nm]
+            elif nm == "datawc_y2":
+                datawc_y2 = loc[nm]
     if isinstance(gm, vcs.taylor.Gtd):
         return
     # Now the template stuff
@@ -2514,7 +2552,13 @@ def download_sample_data_files(path=None):
         path = vcs.sample_data
     import cdat_info
     import sys
-    cdat_info.download_sample_data_files(os.path.join(sys.prefix, "share", "vcs", "sample_files.txt"), path)
+    cdat_info.download_sample_data_files(
+        os.path.join(
+            sys.prefix,
+            "share",
+            "vcs",
+            "sample_files.txt"),
+        path)
 
 
 def drawLinesAndMarkersLegend(canvas, templateLegend,
@@ -2649,8 +2693,18 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
     y1 = max(templateLegend.y1, templateLegend.y2)
     # Box around legend area
     ln = canvas.createline(source=templateLegend.line)
-    ln.x = [templateLegend.x1, templateLegend.x2, templateLegend.x2, templateLegend.x1, templateLegend.x1]
-    ln.y = [templateLegend.y1, templateLegend.y1, templateLegend.y2, templateLegend.y2, templateLegend.y1]
+    ln.x = [
+        templateLegend.x1,
+        templateLegend.x2,
+        templateLegend.x2,
+        templateLegend.x1,
+        templateLegend.x1]
+    ln.y = [
+        templateLegend.y1,
+        templateLegend.y1,
+        templateLegend.y2,
+        templateLegend.y2,
+        templateLegend.y1]
     canvas.plot(ln, bg=bg, render=render)
 
     # Create the objects
@@ -2709,7 +2763,9 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
         canvas.plot(text, bg=bg, render=render)
     else:
         for i in range(len(strings)):
-            txt = vcs.createtext(Tt_source=text.Tt_name, To_source=text.To_name)
+            txt = vcs.createtext(
+                Tt_source=text.Tt_name,
+                To_source=text.To_name)
             txt.x = txs[i]
             txt.y = tys[i]
             txt.color = stringscolors[i]
@@ -2856,9 +2912,11 @@ def drawVectorLegend(canvas, templateLegend,
         ln.width = linewidth
         ln.priority = templateLegend.priority
         if (minNormInVp):
-            xs = (templateLegend.x1 + templateLegend.x2) * (2 - i) / 3 - legendLength[i] / 2
+            xs = (templateLegend.x1 + templateLegend.x2) * \
+                (2 - i) / 3 - legendLength[i] / 2
         else:
-            xs = (templateLegend.x1 + templateLegend.x2) / 2 - legendLength[i] / 2
+            xs = (templateLegend.x1 + templateLegend.x2) / \
+                2 - legendLength[i] / 2
         ln.x = [xs, xs + lineLength[i]]
         ys = y1 - spcY - maxheight / 2.
         ln.y = [ys, ys]

@@ -21,6 +21,7 @@
 #
 #
 #
+from __future__ import print_function
 import vcs
 from . import VCS_validation_functions
 import cdtime
@@ -30,6 +31,11 @@ try:
     basestring
 except NameError:
     basestring = str
+
+try:
+    long  # noqa
+except Exception:
+    long = int
 
 
 def load(nm, json_dict={}):

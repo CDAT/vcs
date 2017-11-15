@@ -946,7 +946,8 @@ class Proj(vcs.bestMatch):
 
     def _setname(self, value):
         value = VCS_validation_functions.checkname(self, 'name', value)
-        self._name = value
+        if value is not None:
+            self._name = value
     name = property(_getname, _setname)
 
     def _settype(self, value):

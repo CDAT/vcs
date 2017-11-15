@@ -1,7 +1,7 @@
 # Adapted for numpy/ma/cdms2 by convertcdms.py
+from __future__ import print_function
 import vcs
 import numpy.ma
-import string
 import numpy
 import cdms2
 from . import VCS_validation_functions
@@ -160,7 +160,7 @@ class TDMarker(vcs.bestMatch):
                     v +
                     'is not valid')
             else:
-                v = string.lower(v)
+                v = v.lower()
                 if v == 'none':
                     return None
                 else:
@@ -1846,7 +1846,7 @@ class Gtd(vcs.bestMatch):
         stdaxis.y = [abs(self.template.data.y2 + self.template.data.y1) / 2.]
         stdstring = 'Standard Deviation'
         if hasattr(data, 'units'):
-            if string.strip(data.units) != '':
+            if data.units.strip() != '':
                 stdstring = stdstring + ' ( ' + str(data.units) + ' )'
         stdaxis.string = [stdstring]
         stdaxis.angle = stdaxis.angle + 270

@@ -604,19 +604,19 @@ class RT:
 # http://stackoverflow.com/questions/323972/is-there-any-way-to-kill-a-thread-in-python
 
 
-class StoppableThread(threading.Thread, vcs.bestMatch):
+class StoppableThread(threading.Thread):
 
     def __init__(self):
-        threading.Thread.__init__(self)
-        self._stop = threading.Event()
+        super(StoppableThread, self).__init__()
+        self._stopper = threading.Event()
         self._running = threading.Event()
         self._running.set()
 
     def stop(self):
-        self._stop.set()
+        self._stopper.set()
 
     def is_stopped(self):
-        return self._stop.isSet()
+        return self._stopper.isSet()
 
     def pause(self):
         self._running.clear()

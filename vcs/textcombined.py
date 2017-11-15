@@ -1,6 +1,7 @@
 """
 # Text Combined (Tc) module
 """
+from __future__ import print_function
 import vcs
 from .xmldocs import scriptdocs, listdoc  # noqa
 # Adapted for numpy/ma/cdms2 by convertcdms.py

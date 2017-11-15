@@ -29,6 +29,7 @@ class TestVCSUpdateArray(basevcstest.VCSBaseTest):
         gm = self.x.createboxfill()
         gm.level_1 = -.8
         gm.level_2 = .8
+        a.id = "variable_10"
         d = self.x.plot(a, gm, bg=self.bg)
         fnm = "test_vcs_update_array_step_1.png"
         self.checkImage(fnm)

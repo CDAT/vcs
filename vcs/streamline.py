@@ -21,6 +21,7 @@
 #
 #
 #
+from __future__ import print_function
 import vcs
 from . import VCS_validation_functions
 from .xmldocs import scriptdocs
