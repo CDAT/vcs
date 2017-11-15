@@ -1943,10 +1943,12 @@ projection = property(_getprojection, _setprojection)  # noqa
 def add_level_ext_1(self, ext_value):
     if self.levels == [] or numpy.allclose(self.levels, 1.e20):
         return self.levels  # nothing to do
+    print("LEVELS:",self.levels)
     if ((ext_value == 'n') and self.ext_1):  # remove extension
         if isinstance(self.levels[0], list) and self.levels[0][
                 0] < -9.E19:  # remove from tuple of lists
             self.levels.pop(0)
+            return self.levels
         if isinstance(self.levels, (tuple, list)):       # remove from list
             ret_tup = []
             for i in range(len(self.levels)):
@@ -2003,7 +2005,7 @@ def add_level_ext_2(self, ext_value):
         if isinstance(self.levels[-1], list):  # remove from tuple of lists
             if self.levels[-1][1] > 9.e19:
                 self.levels.pop(-1)
-                return
+                return self.levels
         if isinstance(self.levels, (tuple, list)):       # remove from list
             ret_tup = []
             for i in range(len(self.levels) - 1):

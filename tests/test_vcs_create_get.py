@@ -15,12 +15,12 @@ class TestVSCreateGet(unittest.TestCase):
             Ocr = loc["Ocr"]
             loc = locals()
             exec("Ogt = x.get%s(Ocr.name)" % obj)
-            Ocr = loc["Ogt"]
+            Ogt = loc["Ogt"]
             loc = locals()
             self.assertEqual(Ocr.name, Ogt.name)
             exec("Ocr = vcs.create%s()" % obj)
             Ocr = loc["Ocr"]
             loc = locals()
             exec("Ogt = vcs.get%s(Ocr.name)" % obj)
-            Ocr = loc["Ogt"]
+            Ogt = loc["Ogt"]
             self.assertEqual(Ocr.name, Ogt.name)

@@ -1,3 +1,4 @@
+from __future__ import division
 from .pipeline2d import Pipeline2D
 import vcs
 import numpy
@@ -130,7 +131,7 @@ class StreamlinePipeline(Pipeline2D):
         contour.SetValue(0, 0.001)
         if (streamlines.GetNumberOfPoints()):
             r = streamlines.GetPointData().GetArray("arc_length").GetRange()
-            numberofglyphsoneside = self._gm.numberofglyphs / 2
+            numberofglyphsoneside = self._gm.numberofglyphs // 2
             for i in range(1, numberofglyphsoneside):
                 contour.SetValue(i, r[1] / numberofglyphsoneside * i)
         else:
