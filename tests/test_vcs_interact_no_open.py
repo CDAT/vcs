@@ -1,8 +1,7 @@
 import unittest
 import vcs
 import warnings
-warnings.filterwarnings("error")
-
+#warnings.filterwarnings("error")
 
 class TestVCSInteract(unittest.TestCase):
     def testInteractNoOpen(self):
@@ -10,8 +9,9 @@ class TestVCSInteract(unittest.TestCase):
         x = vcs.init()
         x.drawlogooff()
         # x.interact()
-        with self.assertRaises(Exception) as context:
+        with warnings.catch_warnings(record=True) as w:
             x.interact()
+            self.assertEqual(len(w),1)
 
         self.assertTrue(
-            'Cannot interact if you did not open the canvas yet' in context.exception)
+            'Cannot interact if you did not open the canvas yet' in str(w[-1]))
