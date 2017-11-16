@@ -2,16 +2,9 @@
 ls
 pwd
 export PATH=${HOME}/miniconda/bin:${PATH}
-conda create -q -n py3 -c uvcdat/label/nightly -c nadeau1  -c conda-forge -c uvcdat cdms2 nose flake8 "python>3" cdat_info udunits2 mesalib nose image-compare flake8 "matplotlib<2.1" numpy=1.13 image-compare genutil netcdf-fortran=4.4.4=3 vtk-cdat
-conda create -q -n py2 -c uvcdat/label/nightly -c conda-forge -c uvcdat cdms2 cdat_info udunits2 nose flake8 mesalib nose image-compare flake8 "matplotlib<2.1" numpy=1.13 image-compare genutil netcdf-fortran=4.4.4=3 vtk-cdat
+conda create -q -n py3 -c uvcdat/label/nightly -c nadeau1  -c conda-forge -c uvcdat "cdms2>2.12.2017.12" nose flake8 "python>3" cdat_info udunits2 mesalib nose image-compare flake8 "matplotlib<2.1" numpy=1.13 image-compare genutil netcdf-fortran=4.4.4=3 vtk-cdat "dv3d>2.12.2017" "cdutil>2.12.2017"
+conda create -q -n py2 -c uvcdat/label/nightly -c conda-forge -c uvcdat "cdms2>2.12.2017.12" cdat_info udunits2 nose flake8 mesalib nose image-compare flake8 "matplotlib<2.1" numpy=1.13 image-compare genutil netcdf-fortran=4.4.4=3 vtk-cdat "dv3d>2.12.2017" "cdutil>2.12.2017"
 export UVCDAT_ANONYMOUS_LOG=False
-source activate py2
-mkdir gits
-cd gits ; git clone git://github.com/uv-cdat/cdutil ; cd cdutil ; git checkout py3 ; python setup.py install; cd ../..
-cd gits ; git clone git://github.com/uv-cdat/dv3d ; cd dv3d ; git checkout py3 ; python setup.py install; cd ../..
-source activate py3
-cd gits ; cd cdutil ; rm -rf build ; python setup.py install; cd ../..
-cd gits ; cd dv3d ; rm -rf build ; python setup.py install; cd ../..
 source activate py2
 python setup.py install --old-and-unmanageable
 source activate py3
