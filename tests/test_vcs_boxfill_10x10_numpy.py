@@ -3,6 +3,7 @@ import vcs
 
 import numpy
 
+
 class TestVCSBoxfill10x10Numpy(basevcstest.VCSBaseTest):
     def testBoxfill10x10Numpy(self):
         s = numpy.sin(numpy.arange(100))

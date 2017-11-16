@@ -1,4 +1,4 @@
-from box import BoxEditor
+from .box import BoxEditor
 from vcs.vtk_ui import Toolbar
 import vcs
 
@@ -24,7 +24,7 @@ class LegendEditor(BoxEditor):
         self.toolbar.show()
 
         maps = vcs.elements["colormap"]
-        self.maps = maps.keys()
+        self.maps = list(maps.keys())
         colormaps = []
 
         for ind, cm in enumerate(self.maps):

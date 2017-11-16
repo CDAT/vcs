@@ -22,9 +22,10 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
 import vcs
-from xmldocs import scriptdocs, listdoc
+from .xmldocs import scriptdocs, listdoc
 
 
 def process_src(nm, code):
@@ -32,7 +33,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates boxfill gm from it
     try:
         to = To(nm)
-    except:
+    except Exception:
         to = vcs.elements["textorientation"][nm]
     # process attributes with = as assignement
     sp = code.split(",")
@@ -156,12 +157,6 @@ class To(vcs.bestMatch):
     """
     __slots__ = [
         's_name',
-        'name',
-        'height',
-        'angle',
-        'path',
-        'halign',
-        'valign',
         '_name',
         '_height',
         '_angle',
@@ -213,17 +208,18 @@ class To(vcs.bestMatch):
             vals)
     path = property(_getpath, _setpath)
 
-    def _gethalign(self):
+    @property
+    def halign(self):
         return self._halign
 
-    def _sethalign(self, value):
+    @halign.setter
+    def halign(self, value):
         vals = ["left", "center", "right"]
         self._halign = VCS_validation_functions.checkInStringsListInt(
             self,
             'halign',
             value,
             vals)
-    halign = property(_gethalign, _sethalign)
 
     def _getvalign(self):
         return self._valign
@@ -252,7 +248,7 @@ class To(vcs.bestMatch):
         # back the appropriate Python Object.                       #
         #############################################################
         #                                                           #
-        if To_name in vcs.elements["textorientation"].keys():
+        if To_name in list(vcs.elements["textorientation"].keys()):
             raise ValueError(
                 "textorientation object '%' already exists" %
                 To_name)
@@ -267,16 +263,16 @@ class To(vcs.bestMatch):
             self._halign = "left"
             self._valign = "half"
         else:
-            if To_name_src not in vcs.elements["textorientation"].keys():
+            if To_name_src not in list(vcs.elements["textorientation"].keys()):
                 raise ValueError(
                     "source textorientation '%s' does not exists" %
                     To_name_src)
             src = vcs.elements["textorientation"][To_name_src]
-            self.height = src.height
-            self.angle = src.angle
-            self.path = src.path
-            self.halign = src.halign
-            self.valign = src.valign
+            self._height = src._height
+            self._angle = src._angle
+            self._path = src._path
+            self._halign = src._halign
+            self._valign = src._valign
         vcs.elements["textorientation"][To_name] = self
 
     ##########################################################################
@@ -287,14 +283,14 @@ class To(vcs.bestMatch):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "---------- Text Orientation (To) member (attribute) listings ----------"
-        print "secondary method =", self.s_name
-        print "name =", self.name
-        print "height =", self.height
-        print "angle =", self.angle
-        print "path =", self.path
-        print "halign =", self.halign
-        print "valign =", self.valign
+        print("---------- Text Orientation (To) member (attribute) listings ----------")
+        print("secondary method =", self.s_name)
+        print("name =", self.name)
+        print("height =", self.height)
+        print("angle =", self.angle)
+        print("path =", self.path)
+        print("halign =", self.halign)
+        print("valign =", self.valign)
     list.__doc__ = listdoc.format(name="textorientation", parent="")
 
     ##########################################################################

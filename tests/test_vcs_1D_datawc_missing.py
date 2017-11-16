@@ -2,12 +2,13 @@ import basevcstest
 import numpy
 import MV2
 
+
 class TestVCS1DDatawcMissing(basevcstest.VCSBaseTest):
     def test1DMissingDatawc(self):
-        yx =self.x.createyxvsx()
+        yx = self.x.createyxvsx()
 
         data = """
-        -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. 
+        -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999.
         0.059503571833625334
         0.059503571833625334 0.05664014775641405 0.05193557222118004
         0.04777129850801233 0.0407139313814465 0.029382624830271705
@@ -34,8 +35,8 @@ class TestVCS1DDatawcMissing(basevcstest.VCSBaseTest):
         -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999. -999.
         -999. -999. -999.
         """.split()
-        data = numpy.array(data,dtype=numpy.float)
-        data = MV2.masked_less(data,-900)
-        self.x.plot(data,yx,bg=self.bg)
+        data = numpy.array(data, dtype=numpy.float)
+        data = MV2.masked_less(data, -900)
+        self.x.plot(data, yx, bg=self.bg)
         fnm = "test_vcs_1D_datawc_missing.png"
         self.checkImage(fnm)

@@ -1,6 +1,6 @@
 from vcs import vtk_ui
 from vcs.vtk_ui import behaviors
-import priority
+from . import priority
 
 
 class BoxEditor(behaviors.DraggableMixin, priority.PriorityEditor):

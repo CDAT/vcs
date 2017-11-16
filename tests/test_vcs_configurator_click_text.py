@@ -1,5 +1,6 @@
 import basevcstest
 
+
 class TestVSConfigurator(basevcstest.VCSBaseTest):
     def testConfiguratorClickTest(self):
 
@@ -33,4 +34,6 @@ class TestVSConfigurator(basevcstest.VCSBaseTest):
 
         self.assertEqual(display, dp, "Found wrong display")
 
-        self.assertFalse(actor!=display.backend[key] and actor not in display.backend[key], "Found wrong key for actor")
+        self.assertFalse(
+            actor != display.backend[key] and actor not in display.backend[key],
+            "Found wrong key for actor")

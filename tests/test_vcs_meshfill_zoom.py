@@ -3,13 +3,17 @@ import cdms2
 import os
 import vcs
 
+
 class TestVCSMeshfillZoom(basevcstest.VCSBaseTest):
     def testVCSMeshfillZoom(self):
 
-        for flip in [True,False]:
+        for flip in [True, False]:
             flip = False
 
-            f = cdms2.open(os.path.join(vcs.sample_data, "sampleCurveGrid4.nc"))
+            f = cdms2.open(
+                os.path.join(
+                    vcs.sample_data,
+                    "sampleCurveGrid4.nc"))
             s = f("sample")
             m = self.x.createmeshfill()
             m.datawc_x1 = -20
@@ -19,7 +23,7 @@ class TestVCSMeshfillZoom(basevcstest.VCSBaseTest):
             m.datawc_y1 = -20
             m.datawc_y2 = 20
             self.x.clear()
-            self.x.plot(s,m, bg=self.bg)
+            self.x.plot(s, m, bg=self.bg)
 
             fileName = "test_vcs_meshfill_zoom"
             if (flip):

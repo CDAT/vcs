@@ -22,7 +22,8 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
 import vcs
 #############################################################################
 #                                                                           #
@@ -108,10 +109,6 @@ class Pxl(vcs.bestMatch):
     #                                                                           #
     ##########################################################################
     __slots__ = [
-        "priority",
-        "y",
-        "texttable",
-        "textorientation",
         "member",
         "_priority",
         "_y",
@@ -154,11 +151,11 @@ class Pxl(vcs.bestMatch):
     #                                                                           #
     ##########################################################################
     def list(self):
-        print "member = ", self.member
-        print "     priority =", self.priority
-        print "     y =", self.y
-        print "     texttable =", self.texttable
-        print "     textorientation =", self.textorientation
+        print("member = ", self.member)
+        print("     priority =", self.priority)
+        print("     y =", self.y)
+        print("     texttable =", self.texttable)
+        print("     textorientation =", self.textorientation)
 
 
 ##########################################################################

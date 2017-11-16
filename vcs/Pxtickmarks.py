@@ -22,7 +22,8 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
 import vcs
 
 #############################################################################
@@ -104,10 +105,6 @@ class Pxt(vcs.bestMatch):
                 ln.type='long-dash'
     """
     __slots__ = [
-        "line",
-        "priority",
-        "y1",
-        "y2",
         "member",
         "_line",
         "_priority",
@@ -163,11 +160,11 @@ class Pxt(vcs.bestMatch):
     #                                                                           #
     ##########################################################################
     def list(self):
-        print "member = ", self.member
-        print "     priority =", self.priority
-        print "     y1 =", self.y1
-        print "     y2 =", self.y2
-        print "     line =", self.line
+        print("member = ", self.member)
+        print("     priority =", self.priority)
+        print("     y1 =", self.y1)
+        print("     y2 =", self.y2)
+        print("     line =", self.line)
 
 
 ##########################################################################

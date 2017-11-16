@@ -2,10 +2,11 @@ import basevcstest
 import vtk
 import os
 
+
 class TestVSConfigurator(basevcstest.VCSBaseTest):
-    def __init__(self,*a,**k):
-        k["bg"]=False
-        super(TestVSConfigurator,self).__init__(*a,**k)
+    def __init__(self, *a, **k):
+        k["bg"] = False
+        super(TestVSConfigurator, self).__init__(*a, **k)
 
     def testConfiguratorResize(self):
         self.x.open()
@@ -22,8 +23,8 @@ class TestVSConfigurator(basevcstest.VCSBaseTest):
         win.Render()
 
         png_writer = vtk.vtkPNGWriter()
-        png_writer.SetFileName(os.path.join("tests_png",fnm))
+        png_writer.SetFileName(os.path.join("tests_png", fnm))
         png_writer.SetInputConnection(out_filter.GetOutputPort())
         png_writer.Write()
 
-        self.checkImage(fnm,pngReady=True)
+        self.checkImage(fnm, pngReady=True)

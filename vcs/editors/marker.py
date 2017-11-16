@@ -4,7 +4,7 @@ from vcs.vtk_ui import behaviors
 from vcs.VCS_validation_functions import checkMarker
 import vtk
 import vcs.vcs2vtk
-import priority
+from . import priority
 import sys
 
 
@@ -209,7 +209,7 @@ class MarkerEditor(
     def right_release(self):
         x, y = self.event_position()
         if self.in_bounds(x, y):
-            points = zip(self.marker.x[self.index], self.marker.y[self.index])
+            points = list(zip(self.marker.x[self.index], self.marker.y[self.index]))
 
             size = self.marker.size[self.index]
             screen_width, screen_height = self.interactor.GetRenderWindow(
@@ -286,7 +286,7 @@ def marker_shapes():
     # Returns all shapes that are supported (skips star for now), indexed
     # numerically
     shapes = []
-    for i in xrange(1, 20):
+    for i in range(1, 20):
         if i in __shape_cache:
             shapes.append(__shape_cache[i])
         else:
@@ -301,7 +301,7 @@ def marker_shapes():
 
 def wmo_shapes():
     wmo = []
-    for i in xrange(100, 203):
+    for i in range(100, 203):
         if i in __shape_cache:
             wmo.append(__shape_cache[i])
         else:
@@ -316,13 +316,13 @@ def wmo_shapes():
 
 def inside_marker(marker, x, y, screen_width, screen_height, index=None):
     if index is None:
-        index = range(len(marker.x))
+        index = list(range(len(marker.x)))
     else:
         index = [index]
 
     for ind in index:
         marker_x, marker_y = marker.x[ind], marker.y[ind]
-        coords = zip(marker_x, marker_y)
+        coords = list(zip(marker_x, marker_y))
         size = marker.size[ind]
         w, h = float(size) / screen_width, float(size) / screen_height
 

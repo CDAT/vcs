@@ -1,5 +1,6 @@
 import basevcstest
 
+
 class TestVCSHatch(basevcstest.VCSBaseTest):
     def testHatchPattern(self):
         self.x.setcolormap("classic")
@@ -7,7 +8,20 @@ class TestVCSHatch(basevcstest.VCSBaseTest):
         # Create a test plot for listing all the hatches and patterns
         style_list = []
         index_list = []
-        col_cycle = [40, 220, 115, 201, 160, 80, 233, 20, 141, 243, 248, 252, 255]
+        col_cycle = [
+            40,
+            220,
+            115,
+            201,
+            160,
+            80,
+            233,
+            20,
+            141,
+            243,
+            248,
+            252,
+            255]
         nb_cols = len(col_cycle)
         color_list = []
         x_list = []
@@ -31,7 +45,7 @@ class TestVCSHatch(basevcstest.VCSBaseTest):
 
                 style_list.append(style)
                 # Hatches/Patterns indices have to be in 1-20 range
-                index_list.append(i+1)
+                index_list.append(i + 1)
                 col_idx = col_cycle[i % nb_cols]
                 color_list.append(col_idx)
 
@@ -39,7 +53,7 @@ class TestVCSHatch(basevcstest.VCSBaseTest):
                 txt_x_list.append(x1 + 0.015)
                 txt_y_list.append(y1 - 0.015)
                 txt_str_list.append('%s = %i  -  Color = %i' %
-                                    (style, i+1, col_idx))
+                                    (style, i + 1, col_idx))
 
         # Create the fill area and the text annotations
         fill_test = self.x.createfillarea('fill_hatches_patterns')

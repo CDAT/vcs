@@ -1,10 +1,10 @@
 from vcs.vtk_ui import Textbox, Toolbar, Label
 import vcs.vtk_ui.text
-from font import FontEditor
+from .font import FontEditor
 from vcs.colorpicker import ColorPicker
 from vtk import vtkTextProperty
 from vcs.vtk_ui.behaviors import ClickableMixin
-import priority
+from . import priority
 import vcs
 from vcs.vcs2vtk import genTextActor
 import sys

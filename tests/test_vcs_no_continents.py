@@ -1,5 +1,6 @@
 import basevcstest
 
+
 class TestVCSNoContinents(basevcstest.VCSBaseTest):
     def testNoContinents(self):
 

@@ -22,7 +22,8 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
 import vcs
 #############################################################################
 #                                                                           #
@@ -91,12 +92,6 @@ class Pbl(vcs.bestMatch):
     #                                                                           #
     ##########################################################################
     __slots__ = [
-        "priority",
-        "x1",
-        "x2",
-        "y1",
-        "y2",
-        "line",
         "member",
         "_priority",
         "_x1",
@@ -178,13 +173,13 @@ class Pbl(vcs.bestMatch):
     #                                                                           #
     ##########################################################################
     def list(self):
-        print "member = ", self.member
-        print "     priority =", self.priority
-        print "     x1 =", self.x1
-        print "     y1 =", self.y1
-        print "     x2 =", self.x2
-        print "     y2 =", self.y2
-        print "     line =", self.line
+        print("member = ", self.member)
+        print("     priority =", self.priority)
+        print("     x1 =", self.x1)
+        print("     y1 =", self.y1)
+        print("     x2 =", self.x2)
+        print("     y2 =", self.y2)
+        print("     line =", self.line)
 
 
 ##########################################################################

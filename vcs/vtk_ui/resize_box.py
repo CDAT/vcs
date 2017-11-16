@@ -1,4 +1,4 @@
-from handle import Handle
+from .handle import Handle
 
 
 class ResizeBox(object):

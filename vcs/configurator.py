@@ -1,11 +1,11 @@
 import vcs
 import datetime
-import editors
-import vtk_ui
+from . import editors
+from . import vtk_ui
 import os
 import sys
 import vtk
-from vcs2vtk import vtkIterate
+from .vcs2vtk import vtkIterate
 import copy
 
 CREATING_FILL = "fill"
@@ -136,7 +136,7 @@ class Configurator(object):
                 str(p_index) +
                 extension)
             p_index += 1
-        print "Saving to " + path
+        print("Saving to " + path)
 
         return path
 
@@ -440,9 +440,9 @@ class Configurator(object):
 
         self.toolbar.hide()
         if display.g_type == "marker":
-            l = display.backend[key]
+            l_tmp = display.backend[key]
             # Actor is actually a group of VTK objects
-            index = l.index(actor)
+            index = l_tmp.index(actor)
             editor = editors.marker.MarkerEditor(
                 self.interactor,
                 vcs.getmarker(
@@ -451,8 +451,8 @@ class Configurator(object):
                 display,
                 self)
         elif display.g_type == "text":
-            l = display.backend[key]
-            index = l.index(actor)
+            l_tmp = display.backend[key]
+            index = l_tmp.index(actor)
             editor = editors.text.TextEditor(
                 self.interactor,
                 vcs.gettext(
@@ -520,7 +520,7 @@ class Configurator(object):
             self.canvas.update()
 
         def save_template_changes(state):
-            for new, source in self.templates.iteritems():
+            for new, source in self.templates.items():
                 if source != "default":
                     sync_template(
                         vcs.gettemplate(new),
@@ -539,7 +539,7 @@ class Configurator(object):
             self.canvas.update()
 
         def reset_template_changes(state):
-            for new, source in self.templates.iteritems():
+            for new, source in self.templates.items():
                 sync_template(vcs.gettemplate(source), vcs.gettemplate(new))
             self.canvas.update()
 

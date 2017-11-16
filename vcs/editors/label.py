@@ -1,8 +1,8 @@
-import point
+from . import point
 import vcs
 import vtk
 import vcs.vcs2vtk
-from font import FontEditor
+from .font import FontEditor
 from vcs.vtk_ui.text import contrasting_color
 
 __valign_map__ = {

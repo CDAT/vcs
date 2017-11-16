@@ -21,10 +21,21 @@
 #
 #
 #
+from __future__ import print_function
 import vcs
-import VCS_validation_functions
+from . import VCS_validation_functions
 import cdtime
-from xmldocs import scriptdocs
+from .xmldocs import scriptdocs
+
+try:
+    basestring
+except NameError:
+    basestring = str
+
+try:
+    long  # noqa
+except Exception:
+    long = int
 
 
 def load(nm, json_dict={}):
@@ -36,7 +47,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates vector gm from it
     try:
         gm = Gv(nm)
-    except:
+    except Exception:
         gm = vcs.elements["vector"][nm]
     # process attributes with = as assignement
     for att in ["projection",
@@ -80,15 +91,15 @@ def process_src(nm, code):
         try:
             # int will be converted
             setattr(gm, nm, int(sp[1]))
-        except:
+        except Exception:
             try:
                 # int and floats will be converted
                 setattr(gm, nm, eval(sp[1]))
-            except:
+            except Exception:
                 # strings
                 try:
                     setattr(gm, nm, sp[1])
-                except:
+                except Exception:
                     pass  # oh well we stick to default value
     # Tl
     i = code.find("Tl")
@@ -105,7 +116,7 @@ def process_src(nm, code):
             except ValueError:
                 try:
                     gm.setLineAttributes(tlValue)
-                except:
+                except Exception:
                     pass
         # Datawc
         idwc = code.find(" datawc(")
@@ -301,36 +312,7 @@ class Gv(vcs.bestMatch):
                 vc.reference=4
     """
     __slots__ = [
-        'name',
         'g_name',
-        'xaxisconvert',
-        'yaxisconvert',
-        'linecolor',
-        'linetype',
-        'linewidth',
-        'projection',
-        'xticlabels1',
-        'xticlabels2',
-        'yticlabels1',
-        'yticlabels2',
-        'xmtics1',
-        'xmtics2',
-        'ymtics1',
-        'ymtics2',
-        'datawc_x1',
-        'datawc_x2',
-        'datawc_y1',
-        'datawc_y2',
-        'datawc_timeunits',
-        'datawc_calendar',
-        'scale',
-        'alignment',
-        'type',
-        'reference',
-        'colormap',
-        'scaleoptions',
-        'scaletype',
-        'scalerange',
         '_name',
         '_xaxisconvert',
         '_yaxisconvert',
@@ -601,18 +583,18 @@ class Gv(vcs.bestMatch):
     linetype = property(_getlinetype, _setlinetype)
 
     def _getline(self):
-        print 'DEPRECATED: Use linetype or setLineAttributes instead.'
+        print('DEPRECATED: Use linetype or setLineAttributes instead.')
         return self._linetype
 
-    def _setline(self, l):
-        import queries
-        print 'DEPRECATED: Use linetype or setLineAttributes instead.'
-        if (queries.isline(l) or
-                (isinstance(l, basestring) and l in vcs.elements["line"])):
-            l = vcs.elements["line"][l]
-            self.setLineAttributes(l)
+    def _setline(self, ln):
+        from . import queries
+        print('DEPRECATED: Use linetype or setLineAttributes instead.')
+        if (queries.isline(ln) or
+                (isinstance(ln, basestring) and ln in vcs.elements["line"])):
+            ln = vcs.elements["line"][ln]
+            self.setLineAttributes(ln)
         else:
-            self._linetype = l
+            self._linetype = ln
 
     line = property(_getline, _setline)
 
@@ -786,35 +768,35 @@ class Gv(vcs.bestMatch):
         self.yaxisconvert = yat
 
     def list(self):
-        print "---------- Vector (Gv) member (attribute) listings ----------"
-        print "graphics method =", self.g_name
-        print "name =", self.name
-        print "projection =", self.projection
-        print "xticlabels1 =", self.xticlabels1
-        print "xticlabels2 =", self.xticlabels2
-        print "xmtics1 =", self.xmtics1
-        print "xmtics2 =", self.xmtics2
-        print "yticlabels1 =", self.yticlabels1
-        print "yticlabels2 =", self.yticlabels2
-        print "ymtics1 = ", self.ymtics1
-        print "ymtics2 = ", self.ymtics2
-        print "datawc_x1 =", self.datawc_x1
-        print "datawc_y1 = ", self.datawc_y1
-        print "datawc_x2 = ", self.datawc_x2
-        print "datawc_y2 = ", self.datawc_y2
-        print "datawc_timeunits = ", self.datawc_timeunits
-        print "datawc_calendar = ", self.datawc_calendar
-        print "xaxisconvert = ", self.xaxisconvert
-        print "yaxisconvert = ", self.yaxisconvert
-        print "line = ", self.line
-        print "linecolor = ", self.linecolor
-        print "linewidth = ", self.linewidth
-        print "scale = ", self.scale
-        print "alignment = ", self.alignment
-        print "type = ", self.type
-        print "reference = ", self.reference
-        print "scaletype = ", self.scaletype
-        print "scalerange = ", self.scalerange
+        print("---------- Vector (Gv) member (attribute) listings ----------")
+        print("graphics method =", self.g_name)
+        print("name =", self.name)
+        print("projection =", self.projection)
+        print("xticlabels1 =", self.xticlabels1)
+        print("xticlabels2 =", self.xticlabels2)
+        print("xmtics1 =", self.xmtics1)
+        print("xmtics2 =", self.xmtics2)
+        print("yticlabels1 =", self.yticlabels1)
+        print("yticlabels2 =", self.yticlabels2)
+        print("ymtics1 = ", self.ymtics1)
+        print("ymtics2 = ", self.ymtics2)
+        print("datawc_x1 =", self.datawc_x1)
+        print("datawc_y1 = ", self.datawc_y1)
+        print("datawc_x2 = ", self.datawc_x2)
+        print("datawc_y2 = ", self.datawc_y2)
+        print("datawc_timeunits = ", self.datawc_timeunits)
+        print("datawc_calendar = ", self.datawc_calendar)
+        print("xaxisconvert = ", self.xaxisconvert)
+        print("yaxisconvert = ", self.yaxisconvert)
+        print("line = ", self.line)
+        print("linecolor = ", self.linecolor)
+        print("linewidth = ", self.linewidth)
+        print("scale = ", self.scale)
+        print("alignment = ", self.alignment)
+        print("type = ", self.type)
+        print("reference = ", self.reference)
+        print("scaletype = ", self.scaletype)
+        print("scalerange = ", self.scalerange)
 
     ##########################################################################
     #                                                                           #

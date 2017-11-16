@@ -1,5 +1,6 @@
 import basevcstest
 
+
 class TestVCSIsolines(basevcstest.VCSBaseTest):
     def testIsolineWidthStipple(self):
 
@@ -10,7 +11,7 @@ class TestVCSIsolines(basevcstest.VCSBaseTest):
         colors = []
         levels = []
         for i in range(7):
-            levels.append(i*10)
+            levels.append(i * 10)
             text = self.x.createtext()
             text.color = 255 - 20 * i
             text.height = 12
@@ -23,7 +24,14 @@ class TestVCSIsolines(basevcstest.VCSBaseTest):
         isoline.text = texts
         isoline.linecolors = colors
         isoline.linewidths = (1, 2, 3, 4, 1)
-        isoline.linetypes = ('dot', 'dash', 'solid', 'dash-dot', 'long-dash', 'dot', 'dash')
+        isoline.linetypes = (
+            'dot',
+            'dash',
+            'solid',
+            'dash-dot',
+            'long-dash',
+            'dot',
+            'dash')
         # Next plot the isolines with labels
         self.x.plot(data, isoline, bg=self.bg)
         self.checkImage("test_vcs_isoline_width_stipple.png")

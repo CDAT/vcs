@@ -4,8 +4,8 @@ import basevcstest
 class TestVCSLambertAzimuthal(basevcstest.VCSBaseTest):
     def main(self, centerlongitude, centerlatitude):
         s = self.clt("clt", time=slice(0, 1),
-                longitude=(centerlongitude - 40, centerlongitude + 30),
-                latitude=(centerlatitude-20,centerlatitude+30))
+                     longitude=(centerlongitude - 40, centerlongitude + 30),
+                     latitude=(centerlatitude - 20, centerlatitude + 30))
         gm = self.x.createboxfill()
         p = self.x.createprojection()
         p.type = "lambert azimuthal"

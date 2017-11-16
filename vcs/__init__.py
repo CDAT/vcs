@@ -52,10 +52,20 @@ import difflib
 
 class bestMatch(object):
     def __setattr__(self, a, v):
-        if not hasattr(self, "__slots__") or a in self.__slots__:
+        try:
+            prop = getattr(self.__class__, a)
+            isprop = isinstance(prop, property)
+        except Exception:
+            isprop = False
+        if isprop or not hasattr(self, "__slots__") or a in self.__slots__:
             super(bestMatch, self).__setattr__(a, v)
         else:
-            matches = difflib.get_close_matches(a, self.__slots__)
+            props = []
+            for attr in dir(self.__class__):
+                if isinstance(getattr(self.__class__, attr), property):
+                    props.append(attr)
+            possible = self.__slots__ + props
+            matches = difflib.get_close_matches(a, possible)
             real_matches = []
             for m in matches:
                 if m[0] != "_":
@@ -89,14 +99,14 @@ import cdat_info  # noqa
 prefix = cdat_info.get_prefix()
 sample_data = cdat_info.get_sampledata_path()
 cdat_info.pingPCMDIdb("cdat", "vcs")
-from utils import *  # noqa
-import colors  # noqa
-import Canvas  # noqa
-from vcshelp import *  # noqa
-from queries import *  # noqa
-import install_vcs  # noqa
+from .utils import *  # noqa
+from . import colors  # noqa
+from . import Canvas  # noqa
+from .vcshelp import *  # noqa
+from .queries import *  # noqa
+from . import install_vcs  # noqa
 import os  # noqa
-from manageElements import *  # noqa
+from .manageElements import *  # noqa
 import collections  # noqa
 
 _colorMap = "viridis"
@@ -148,7 +158,7 @@ elements["colormap"] = {}
 elements["display"] = {}
 
 _protected_elements = {}
-for k in elements.keys():
+for k in list(elements.keys()):
     _protected_elements[k] = set()
 
 dic = {}
@@ -271,9 +281,9 @@ try:
 except BaseException:
     pass
 
-for typ in elements.keys():
+for typ in list(elements.keys()):
     elts = elements[typ]
-    for k in elts.keys():  # let's save which elements should be saved and untouched
+    for k in list(elts.keys()):  # let's save which elements should be saved and untouched
         _protected_elements[typ].add(k)
 
 _dotdir, _dotdirenv = vcs.getdotdirectory()

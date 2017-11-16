@@ -1,5 +1,5 @@
 from .pipeline2d import Pipeline2D
-import fillareautils
+from . import fillareautils
 
 import numpy
 import vcs
@@ -50,7 +50,7 @@ class BoxfillPipeline(Pipeline2D):
         self._contourLevels = self._gm.getlevels(self._scalarRange[0], self._scalarRange[1])
         self._contourLabels = self._gm.getlegendlabels(self._contourLevels)
         # Use consecutive colors:
-        self._contourColors = range(self._gm.color_1, self._gm.color_2 + 1)
+        self._contourColors = list(range(self._gm.color_1, self._gm.color_2 + 1))
 
     def _plotInternal(self):
         """Overrides baseclass implementation."""

@@ -1,21 +1,22 @@
 import basevcstest
 
+
 class TestVCSIsolines(basevcstest.VCSBaseTest):
     def testIsolineLabel(self):
         data = self.clt("clt")
         isoline = self.x.createisoline()
-        isoline.label="y"
-        texts=[]
+        isoline.label = "y"
+        texts = []
         colors = []
         for i in range(10):
             text = self.x.createtext()
             text.color = 50 + 12 * i
             text.height = 12
             colors.append(100 + 12 * i)
-            if i%2 == 0:
-              texts.append(text.name)
+            if i % 2 == 0:
+                texts.append(text.name)
             else:
-              texts.append(text)
+                texts.append(text)
         isoline.text = texts
 
         # First test using isoline.text[...].color

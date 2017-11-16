@@ -26,10 +26,11 @@
 # Import: VCS C extension module.                                             #
 #
 #
+from __future__ import print_function
 import vcs
-import VCS_validation_functions
+from . import VCS_validation_functions
 import cdtime
-import xmldocs
+from . import xmldocs
 
 
 def load(nm, json_dict={}):
@@ -41,7 +42,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates isofill gm from it
     try:
         g = Gfi(nm)
-    except:
+    except Exception:
         g = vcs.elements["isofill"][nm]
     # process attributes with = as assignement
     for att in ["projection",
@@ -75,15 +76,15 @@ def process_src(nm, code):
         try:
             # int will be converted
             setattr(g, nm, int(sp[1]))
-        except:
+        except Exception:
             try:
                 # int and floats will be converted
                 setattr(g, nm, eval(sp[1]))
-            except:
+            except Exception:
                 # strings
                 try:
                     setattr(g, nm, sp[1])
-                except:
+                except Exception:
                     pass  # oh well we stick to default value
     # Datawc
     idwc = code.find(" datawc(")
@@ -313,39 +314,8 @@ class Gfi(vcs.bestMatch):
 
     colormap = VCS_validation_functions.colormap
     __slots__ = [
-        '__doc__',
-        'colormap',
-        '_colormap',
-        'name',
         'g_name',
-        'xaxisconvert',
-        'yaxisconvert',
-        'levels',
-        'fillareacolors',
-        'fillareastyle',
-        'fillareaindices',
-        'fillareaopacity',
-        'fillareapixelspacing',
-        'fillareapixelscale',
-        'ext_1',
-        'ext_2',
-        'missing',
-        'projection',
-        'xticlabels1',
-        'xticlabels2',
-        'yticlabels1',
-        'yticlabels2',
-        'xmtics1',
-        'xmtics2',
-        'ymtics1',
-        'ymtics2',
-        'datawc_x1',
-        'datawc_x2',
-        'datawc_y1',
-        'datawc_y2',
-        'legend',
-        'datawc_timeunits',
-        'datawc_calendar',
+        '_colormap',
         '_name',
         '_xaxisconvert',
         '_yaxisconvert',
@@ -614,7 +584,7 @@ class Gfi(vcs.bestMatch):
                 #
         if not isinstance(Gfi_name, str):
             raise ValueError("Isofill name must be a string")
-        if Gfi_name in vcs.elements["isofill"].keys():
+        if Gfi_name in list(vcs.elements["isofill"].keys()):
             raise ValueError(
                 "isofill graphic method '%s' already exists" %
                 Gfi_name)
@@ -654,7 +624,7 @@ class Gfi(vcs.bestMatch):
         else:
             if isinstance(Gfi_name_src, Gfi):
                 Gfi_name_src = Gfi_name_src.name
-            if Gfi_name_src not in vcs.elements["isofill"].keys():
+            if Gfi_name_src not in list(vcs.elements["isofill"].keys()):
                 raise ValueError(
                     "Isofill method '%s' does not exists" %
                     Gfi_name_src)
@@ -679,7 +649,7 @@ class Gfi(vcs.bestMatch):
         #
 
     def colors(self, color1=16, color2=239):
-        self.fillareacolors = range(color1, color2)
+        self.fillareacolors = list(range(color1, color2))
     colors.__doc__ = xmldocs.colorsdoc % {"name": "isofill", "data": "array"}
 
     def exts(self, ext1='n', ext2='y'):
@@ -724,37 +694,37 @@ class Gfi(vcs.bestMatch):
     xyscale.__doc__ = xmldocs.xyscaledoc.format(name='isofill')
 
     def list(self):
-        print "---------- Isofill (Gfi) member (attribute) listings ----------"
-        print "graphics method =", self.g_name
-        print "name =", self.name
-        print "projection =", self.projection
-        print "xticlabels1 =", self.xticlabels1
-        print "xticlabels2 =", self.xticlabels2
-        print "xmtics1 =", self.xmtics1
-        print "xmtics2 =", self.xmtics2
-        print "yticlabels1 =", self.yticlabels1
-        print "yticlabels2 =", self.yticlabels2
-        print "ymtics1 = ", self.ymtics1
-        print "ymtics2 = ", self.ymtics2
-        print "datawc_x1 =", self.datawc_x1
-        print "datawc_y1 = ", self.datawc_y1
-        print "datawc_x2 = ", self.datawc_x2
-        print "datawc_y2 = ", self.datawc_y2
-        print "datawc_timeunits = ", self.datawc_timeunits
-        print "datawc_calendar = ", self.datawc_calendar
-        print "xaxisconvert = ", self.xaxisconvert
-        print "yaxisconvert = ", self.yaxisconvert
-        print "missing = ", self.missing
-        print "ext_1 = ", self.ext_1
-        print "ext_2 = ", self.ext_2
-        print "fillareastyle = ", self.fillareastyle
-        print "fillareaindices = ", self.fillareaindices
-        print "fillareacolors = ", self.fillareacolors
-        print "fillareaopacity = ", self.fillareaopacity
-        print "fillareapixelspacing = ", self.fillareapixelspacing
-        print "fillareapixelscale = ", self.fillareapixelscale
-        print "levels = ", self.levels
-        print "legend = ", self.legend
+        print("---------- Isofill (Gfi) member (attribute) listings ----------")
+        print("graphics method =", self.g_name)
+        print("name =", self.name)
+        print("projection =", self.projection)
+        print("xticlabels1 =", self.xticlabels1)
+        print("xticlabels2 =", self.xticlabels2)
+        print("xmtics1 =", self.xmtics1)
+        print("xmtics2 =", self.xmtics2)
+        print("yticlabels1 =", self.yticlabels1)
+        print("yticlabels2 =", self.yticlabels2)
+        print("ymtics1 = ", self.ymtics1)
+        print("ymtics2 = ", self.ymtics2)
+        print("datawc_x1 =", self.datawc_x1)
+        print("datawc_y1 = ", self.datawc_y1)
+        print("datawc_x2 = ", self.datawc_x2)
+        print("datawc_y2 = ", self.datawc_y2)
+        print("datawc_timeunits = ", self.datawc_timeunits)
+        print("datawc_calendar = ", self.datawc_calendar)
+        print("xaxisconvert = ", self.xaxisconvert)
+        print("yaxisconvert = ", self.yaxisconvert)
+        print("missing = ", self.missing)
+        print("ext_1 = ", self.ext_1)
+        print("ext_2 = ", self.ext_2)
+        print("fillareastyle = ", self.fillareastyle)
+        print("fillareaindices = ", self.fillareaindices)
+        print("fillareacolors = ", self.fillareacolors)
+        print("fillareaopacity = ", self.fillareaopacity)
+        print("fillareapixelspacing = ", self.fillareapixelspacing)
+        print("fillareapixelscale = ", self.fillareapixelscale)
+        print("levels = ", self.levels)
+        print("legend = ", self.legend)
     list.__doc__ = xmldocs.listdoc.format(name="isofill", parent="")
 
     #
@@ -819,19 +789,19 @@ class Gfi(vcs.bestMatch):
             fp.write("%s.yticlabels2 = '%s'\n" % (unique_name, self.yticlabels2))
             fp.write("%s.ymtics1 = '%s'\n" % (unique_name, self.ymtics1))
             fp.write("%s.ymtics2 = '%s'\n" % (unique_name, self.ymtics2))
-            if isinstance(self.datawc_x1, (int, long, float)):
+            if isinstance(self.datawc_x1, (int, float)):
                 fp.write("%s.datawc_x1 = %g\n" % (unique_name, self.datawc_x1))
             else:
                 fp.write("%s.datawc_x1 = '%s'\n" % (unique_name, self.datawc_x1))
-            if isinstance(self.datawc_y1, (int, long, float)):
+            if isinstance(self.datawc_y1, (int, float)):
                 fp.write("%s.datawc_y1 = %g\n" % (unique_name, self.datawc_y1))
             else:
                 fp.write("%s.datawc_y1 = '%s'\n" % (unique_name, self.datawc_y1))
-            if isinstance(self.datawc_x2, (int, long, float)):
+            if isinstance(self.datawc_x2, (int, float)):
                 fp.write("%s.datawc_x2 = %g\n" % (unique_name, self.datawc_x2))
             else:
                 fp.write("%s.datawc_x2 = '%s'\n" % (unique_name, self.datawc_x2))
-            if isinstance(self.datawc_y2, (int, long, float)):
+            if isinstance(self.datawc_y2, (int, float)):
                 fp.write("%s.datawc_y2 = %g\n" % (unique_name, self.datawc_y2))
             else:
                 fp.write("%s.datawc_y2 = '%s'\n" % (unique_name, self.datawc_y2))

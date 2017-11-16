@@ -393,8 +393,8 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
     :return: Has no return, but at the end target_dict should be full of formatted docstrings
     """
     d = {}
-    for obj_type in type_dict.keys():
-        for obj_name in type_dict[obj_type].keys():
+    for obj_type in list(type_dict.keys()):
+        for obj_name in list(type_dict[obj_type].keys()):
             # default values. Change as necessary.
             example1 = ''
             example2 = ''
@@ -880,7 +880,7 @@ create_docs = {}
 docstrings['create'] = [create_docs, create_methods_doc]
 
 # populate all the docstrings
-for method in docstrings.keys():
+for method in list(docstrings.keys()):
     populate_docstrings(obj_details, docstrings[method][0], docstrings[method][1], method)
 
 #############################################################################

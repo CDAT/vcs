@@ -22,7 +22,8 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
 import vcs
 #############################################################################
 #                                                                           #
@@ -107,15 +108,10 @@ class Pt(vcs.bestMatch):
     ##########################################################################
     __slots__ = [
         "_priority",
-        "priority",
         "_x",
-        "x",
         "_y",
-        "y",
         "_texttable",
-        "texttable",
         "_textorientation",
-        "textorientation",
         "member"]
 
     def __init__(self, member):
@@ -220,12 +216,12 @@ class Pt(vcs.bestMatch):
     ##########################################################################
 
     def list(self):
-        print "member = ", self.member
-        print "     priority =", self.priority
-        print "     x =", self.x
-        print "     y =", self.y
-        print "     texttable =", self.texttable
-        print "     textorientation =", self.textorientation
+        print("member = ", self.member)
+        print("     priority =", self.priority)
+        print("     x =", self.x)
+        print("     y =", self.y)
+        print("     texttable =", self.texttable)
+        print("     textorientation =", self.textorientation)
 
 
 ##########################################################################

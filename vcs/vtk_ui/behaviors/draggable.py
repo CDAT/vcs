@@ -1,4 +1,4 @@
-from behavior import Behavior
+from .behavior import Behavior
 import datetime
 
 

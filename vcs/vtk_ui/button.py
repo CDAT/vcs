@@ -1,8 +1,8 @@
 import vtk
-from image_utils import *  # noqa
-from text import Label, text_dimensions
-from slider import Slider
-from widget import Widget
+from .image_utils import *  # noqa
+from .text import Label, text_dimensions
+from .slider import Slider
+from .widget import Widget
 
 BUTTON_MARGIN = 3
 
@@ -310,7 +310,7 @@ class Button(Widget):
             self.tooltip_label.detach()
             self.tooltip_label = None
             self.interactor.RemoveObserver(self.hover_handler)
-        except:
+        except Exception:
             pass
         self.action = None
         super(Button, self).detach()
