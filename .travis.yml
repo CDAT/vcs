@@ -4,7 +4,7 @@ os:
 dist: trusty
 sudo: false
 before_install:
-    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget -q https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget -q https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh; fi
 - if [ "$TRAVIS_OS_NAME" = "osx" ]; then wget -q https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O miniconda.sh; fi
 - export PATH="$HOME/miniconda/bin:$PATH"
 - bash miniconda.sh -b -p $HOME/miniconda
