@@ -7,11 +7,9 @@ conda create -q -n py2 -c uvcdat/label/nightly -c conda-forge -c uvcdat cdms2 cd
 export UVCDAT_ANONYMOUS_LOG=False
 source activate py2
 mkdir gits
-cd gits ; git clone git://github.com/uv-cdat/cdms ; cd cdms ; git checkout remove_string_module ; python setup.py install; cd ../..
 cd gits ; git clone git://github.com/uv-cdat/cdutil ; cd cdutil ; git checkout py3 ; python setup.py install; cd ../..
 cd gits ; git clone git://github.com/uv-cdat/dv3d ; cd dv3d ; git checkout py3 ; python setup.py install; cd ../..
 source activate py3
-cd gits ; cd cdms ; rm -rf build ; python setup.py install; cd ../..
 cd gits ; cd cdutil ; rm -rf build ; python setup.py install; cd ../..
 cd gits ; cd dv3d ; rm -rf build ; python setup.py install; cd ../..
 source activate py2
