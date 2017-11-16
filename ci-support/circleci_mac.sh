@@ -2,11 +2,11 @@ export UVCDAT_ANONYMOUS_LOG=False
 export PATH=${HOME}/miniconda/bin:${PATH}
 #export VCS_BACKGROUND=0  # circleci seg faults on bg=1
 source activate py2
-python run_tests.py -n 2 -v2 -g --no-vtk-ui
+python run_tests.py -n 2 -g --no-vtk-ui
 RESULT=$?
 echo "py2 test command exit result:",$RESULT
 source activate py3
-python run_tests.py -n 2 -v2 -g --no-vtk-ui
+python run_tests.py -n 2 -g --no-vtk-ui
 RESULT=$RESULT + $?
 echo "py3 test command exit result:",$RESULT
 if [ $RESULT -eq 0 -a $CIRCLE_BRANCH == "master" ]; then conda install conda-build anaconda-client ; fi

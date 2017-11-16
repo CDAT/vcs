@@ -12,13 +12,13 @@ before_install:
 - conda update -y -q conda
 script:
 - export UVCDAT_ANONYMOUS_LOG=False
-- conda create -n py2 -c uvcdat/label/nightly -c conda-forge -c uvcdat cdms2 cdat_info udunits2 nose flake8 genutil "matplotlib<2.1" vtk-cdat mesalib image-compare netcdf-fortran=4.4.4=3
+- conda create -q -n py2 -c uvcdat/label/nightly -c conda-forge -c uvcdat cdms2 cdat_info udunits2 nose flake8 genutil "matplotlib<2.1" vtk-cdat mesalib image-compare netcdf-fortran=4.4.4=3
 - mkdir gits
 - source activate py2
 - cd gits ; git clone git://github.com/uv-cdat/cdms ; cd cdms ; git checkout remove_string_module ; python setup.py install; cd ../..
 - cd gits ; git clone git://github.com/uv-cdat/cdutil ; cd cdutil ; git checkout py3 ; python setup.py install; cd ../..
 - cd gits ; git clone git://github.com/uv-cdat/dv3d ; cd dv3d ; git checkout py3 ; python setup.py install; cd ../..
-- conda create -n py3 -c nesii/channel/dev-esmf  -c uvcdat/label/nightly -c conda-forge -c uvcdat "python>3" cdms2 cdat_info udunits2 nose flake8 genutil "matplotlib<2.1" vtk-cdat mesalib image-compare netcdf-fortran=4.4.4=3
+- conda create -q -n py3 -c nesii/channel/dev-esmf  -c uvcdat/label/nightly -c conda-forge -c uvcdat "python>3" cdms2 cdat_info udunits2 nose flake8 genutil "matplotlib<2.1" vtk-cdat mesalib image-compare netcdf-fortran=4.4.4=3
 - source activate py3
 - cd gits ; cd cdms ; rm -rf build ; python setup.py install; cd ../..
 - cd gits ; cd cdutil ; rm -rf build ; python setup.py install; cd ../..
@@ -32,10 +32,10 @@ script:
 - git clone git://github.com/uv-cdat/uvcdat-testdata
 - cd uvcdat-testdata ; git checkout $TRAVIS_BRANCH ; cd ..
 - df -h
-- python run_tests.py -v2 -n2 -g --no-vtk-ui
+- python run_tests.py -n2 -g --no-vtk-ui
 - source activate py3
 - rm -rf build
 - python setup.py install --old-and-unmanageable
-- python run_tests.py -v2 -n2 -g --no-vtk-ui
+- python run_tests.py -n2 -g --no-vtk-ui
 after_success:
     - if [ "$TRAVIS_BRANCH" == "master" -a "$TRAVIS_PULL_REQUEST" == "false" ]; then conda install conda-build && conda install anaconda-client && bash ci-support/conda_upload.sh ; fi
