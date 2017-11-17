@@ -37,7 +37,10 @@ class VCSBaseTest(unittest.TestCase):
         self.orig_cwd = os.getcwd()
         self.pngsdir = "tests_png"
         if not os.path.exists(self.pngsdir):
-            os.makedirs(self.pngsdir)
+            try:
+                os.makedirs(self.pngsdir)
+            except:
+                pass
         self.basedir = os.path.join("uvcdat-testdata", "baselines", "vcs")
         self.basedatadir = os.path.join("uvcdat-testdata", "data")
         self.clt = cdms2.open(os.path.join(vcs.sample_data, "clt.nc"))
