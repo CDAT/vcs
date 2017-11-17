@@ -9,7 +9,7 @@ source activate py3
 python run_tests.py -n 2 -g --no-vtk-ui
 RESULT=$RESULT + $?
 echo "py3 test command exit result:",$RESULT
-if [ $RESULT -eq 0 -a $CIRCLE_BRANCH == "master" ]; then conda install conda-build anaconda-client ; fi
+if [ $RESULT -eq 0 -a $CIRCLE_BRANCH == "master" ]; then conda install -n root conda-build anaconda-client ; fi
 if [ $RESULT -eq 0 -a $CIRCLE_BRANCH == "master" ]; then bash ./ci-support/conda_upload.sh ; fi
 exit $RESULT
 
