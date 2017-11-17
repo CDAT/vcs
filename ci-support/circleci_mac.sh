@@ -1,4 +1,5 @@
 export UVCDAT_ANONYMOUS_LOG=False
+export UVCDAT_SETUP_PATH=${HOME}
 export PATH=${HOME}/miniconda/bin:${PATH}
 #export VCS_BACKGROUND=0  # circleci seg faults on bg=1
 source activate py2
