@@ -273,9 +273,6 @@ def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[ 0, 360, -90
 
     ticlabels = getattr(gm,"{}ticlabels{}".format(direction,location))
 
-    print("START END:",start,end, width, height)
-    print("TWC:",text.worldcoordinate)
-
     if ticlabels == "*":
         lbls = vcs.mklabels(vcs.mkscale(start,end))
     else:
@@ -286,14 +283,12 @@ def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[ 0, 360, -90
             text.string = l
             setattr(text,direction,v)
             exts = x.gettextextent(text)[0]
-            print(text.string,text.x,text.y,exts)
             if direction == "x":
                 xs = worldToPixel(exts[:2], start, end, c1, c2).tolist()
                 ys = [ height * yRatio * (1 - ext) for ext in exts[2:] ]
             else:
                 xs = [ width * xRatio * ext for ext in exts[:2] ]
                 ys = heigth * yRatio - worldToPixel(exts[2:], start, end, c1, c2).tolist()
-            print("Adding: ",xs+ys)
             mapped.append(xs + ys)
     return mapped
 
@@ -368,7 +363,6 @@ def meshToCoords(mesh, template, worldCoordinates=[
     x2 = int(width * template.data.x2 * xRatio)
     y1 = int(height * template.data.y1 * yRatio)
     y2 = int(height * template.data.y2 * yRatio)
-    print("LOCATION:", x1, x2, y1, y2)
     # html (0,0) is top/left vcs is bottom/left
     mesh[:, 0] = height * yRatio - \
         worldToPixel(mesh[:, 0], worldCoordinates[2],
