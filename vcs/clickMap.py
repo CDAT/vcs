@@ -273,7 +273,7 @@ def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[ 0, 360, -90
 
     ticlabels = getattr(gm,"{}ticlabels{}".format(direction,location))
 
-    print("START END:",start,end)
+    print("START END:",start,end, width, height)
     print("TWC:",text.worldcoordinate)
 
     if ticlabels == "*":
@@ -287,8 +287,12 @@ def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[ 0, 360, -90
             setattr(text,direction,v)
             exts = x.gettextextent(text)[0]
             print(text.string,text.x,text.y,exts)
-            xs = [ width * xRatio * ext for ext in exts[:2] ]
-            ys = [ height * yRatio * (1 - ext) for ext in exts[2:] ]
+            if direction == "x":
+                xs = worldToPixel(exts[:2], start, end, c1, c2).tolist()
+                ys = [ height * yRatio * (1 - ext) for ext in exts[2:] ]
+            else:
+                xs = [ width * xRatio * ext for ext in exts[:2] ]
+                ys = heigth * yRatio - worldToPixel(exts[2:], start, end, c1, c2).tolist()
             print("Adding: ",xs+ys)
             mapped.append(xs + ys)
     return mapped
