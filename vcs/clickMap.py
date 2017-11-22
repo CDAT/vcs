@@ -5,22 +5,35 @@ import struct
 import numpy
 
 
-def createAreaTags(area_and_target_and_tooltip):
-    area, target, tooltip = area_and_target_and_tooltip
-    area = area.tolist()
-    if tooltip is None:
-        tooltip = ""
-    else:
+class Param(object):
+    def __init__(self, area, target):
+        self.area = area
+        self.target = target
+
+
+def createAreaTag(parameters):
+    """Create an area tag to go along with an html map tag
+    input: parameters object
+    At the minimum parameter object needs thew followin g two attributes:
+    "area": which describe the area polygon to be mapped
+    "target":  
+    """
+    area = parameters.area
+    target  = paramters.target
+    tooltip = getattr(parameter, "tooltip", "")
+    extras = getattr(parameters, "extras", "")
+    clss = getattr(parameters, "classes", "")
+    if tooltip.strip() != "":
         tooltip = 'tooltip="%s" onmouseover="cvi_tip._show(event);"' % tooltip
         tooltip += ' onmouseout="cvi_tip._hide(event);" onmousemove="cvi_tip._move(event);"'
-    tag = "<area class='noborder iopacity35' %s href='%s' shape='poly' target='_blank'" % (
-        tooltip, target)
+    tag = "<area class='noborder iopacity35 {}' {} href='{}' shape='poly' ".format(
+        clss, tooltip, target, extras)
     tag += " coords='" + ",".join(["%i, %i" % (x, y)
                                    for (x, y) in zip(area[0], area[1])]) + "'>\n"
     return tag
 
 
-def mapPng(image, areas, targets=[], tooltips=[], width=None, height=None, name=None):
+def mapPng(image, areas, targets=[], tooltips=[], classes=[], extras=[], width=None, height=None, name=None):
     """Return <map> and <img> code to map area of an image to various targets
 
     areas coords are assumed to be already mapped to witdth/height if passed
@@ -52,10 +65,16 @@ def mapPng(image, areas, targets=[], tooltips=[], width=None, height=None, name=
     :param areas: list of each polygon coordinate on the image
     :type areas: `list`_
 
-    :param targets: list of target URL for each map area. List will be completed with '#'s to match length of areas
+    :param targets: list of target URL for each area tag.List will be completed with '#'s to match length of areas
     :type targets: `list`_
 
-    :param tooltips: list of tooltips for each map area. List will be completed with '#'s to match length of areas
+    :param tooltips: list of tooltips html code for each area tag. List will be completed with ''s to match length of areas
+    :type tooltips: `list`_
+
+    :param classes: list of classes for each area tag. List will be completed with ''s to match length of areas
+    :type tooltips: `list`_
+
+    :param extras: list of extras attributes to add to the area tag. List will be completed with ''s to match length of areas
     :type tooltips: `list`_
 
     :param width: width of image on html page
@@ -82,11 +101,36 @@ def mapPng(image, areas, targets=[], tooltips=[], width=None, height=None, name=
         name = "map_%i" % random.randint(0, 999999)
     # HTML5 requires both to be identical
     st = "<map id='%s' name='%s'>\n" % (name, name)
-    while len(targets) < len(areas):
-        targets.append("#")
-    while len(tooltips) < len(areas):
-        tooltips.append(None)
-    area_tags = list(map(createAreaTags, list(zip(areas, targets, tooltips))))
+
+    params = []
+
+    nTarget = len(target)
+    nTips = len(tooltips)
+    nExtras = len(extras)
+    for i, a in enumerate(areas):
+        try:
+            target = targets[i]
+        except Exception:
+            target = "#"
+        p = Param(a,target)
+        try:
+            tip = tooltips[i]
+            p.tooltip = tip
+        except Exception:
+            pass
+        try:
+            xtra = extras[i]
+            p.extras = xtra
+        except Exception:
+            pass
+        try:
+            clss = classes[i]
+            p.classes = clss
+        except Exception:
+            pass
+        params.append(p)
+
+    area_tags = list(map(createAreaTag, params))
     st += "".join(area_tags)
     st += "</map>\n"
     st += "<div><img class='mapper' src='%s' %s %s usemap='#%s'></div>" % (
@@ -143,10 +187,117 @@ def worldToPixel(coords, mn, mx, p1, p2):
     return pixels
 
 
+def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[ 0, 360, -90, 90], png=None, geometry=None):
+    """
+    Given a set of axis values/labels, a graphic method and a template, maps each label to an area on pmg
+    Warning does not handle projections yet.
+    :Example:
+
+        .. doctest:: utils_meshToCoords
+
+            >>> a=vcs.init(bg=True)
+            >>> box=vcs.createboxfill()
+            >>> array=[range(10) for _ in range(10)]
+            >>> a.plot(box,array) # plot something on canvas
+            <vcs.displayplot.Dp ...>
+            >>> a.png('box.png', width=1536, height=1186) # make a png
+            >>> fnm = cdat_info.get_sampledata_path()+"/clt.nc"
+            >>> f=cdms2.open(fnm)
+            >>> clt=f("clt",time=slice(0,1),squeeze=1)
+            >>> box = vcs.createboxfill()
+            >>> template = vcs.createtemplate()
+            >>> areas = axisToCoords(clt.getLongitude(), box, template)
+    """
+    if png is None and geometry is None:
+        x = vcs.init()
+        x.open()
+        ci = x.canvasinfo()
+        x.close()
+        del(x)
+        pwidth = width = ci["width"]
+        pheight = height = ci["height"]
+    if png is not None:
+        pwidth, pheight = getPngDimensions(png)
+        if geometry is None:
+            width, height = pwidth, pheight
+    if geometry is not None:
+        width, height = geometry
+    if isinstance(template, str):
+        template = vcs.gettemplate(template)
+    x = vcs.init(geometry=(width,height), bg=True)
+
+    # print("WC:",worldCoordinates)
+    # x/y ratio to original png
+    xRatio = float(width) / pwidth
+    yRatio = float(height) / pheight
+
+    ## Prepare dictionary of values, labels pairs
+
+    mapped = []
+    direction = axis[0]
+    if direction == "x":
+        other_direction = "y"
+        c1 = int(width * template.data.x1 * xRatio)
+        c2 = int(width * template.data.x2 * xRatio)
+        wc1 = worldCoordinates[0]
+        wc2 = worldCoordinates[1]
+    else:
+        other_direction = "x"
+        c1 = int(height * template.data.y1 * yRatio)
+        c2 = int(height * template.data.y2 * yRatio)
+        wc1 = worldCoordinates[2]
+        wc2 = worldCoordinates[3]
+
+    location = axis[-1]
+
+    datawc1 = getattr(gm,"datawc_{}1".format(direction))
+
+    if datawc1 == 1.e20:
+        start = values[0]
+        end = values[-1]
+    else:
+        start = datawc1
+        end = getattr(gm, "datawc_{}2".format(direction))
+
+    label = getattr(template,"{}label{}".format(direction,location))
+    Tt_source = label.texttable
+    To_source = label.textorientation
+
+    text = vcs.createtext(Tt_source=Tt_source, To_source=To_source)
+    setattr(text,other_direction,getattr(label,other_direction))
+
+    if direction == "x":
+        text.worldcoordinate = [start, end, 0, 1]
+    else:
+        text.worldcoordinate = [0, 1, start, end]
+
+    ticlabels = getattr(gm,"{}ticlabels{}".format(direction,location))
+
+    print("START END:",start,end)
+    print("TWC:",text.worldcoordinate)
+
+    if ticlabels == "*":
+        lbls = vcs.mklabels(vcs.mkscale(start,end))
+    else:
+        lbls = ticlabels
+    # now loops thru all labels and get extents
+    for v,l in lbls.items():
+        if start <= v and v <= end:
+            text.string = l
+            setattr(text,direction,v)
+            exts = x.gettextextent(text)[0]
+            print(text.string,text.x,text.y,exts)
+            xs = [ width * xRatio * ext for ext in exts[:2] ]
+            ys = [ height * yRatio * (1 - ext) for ext in exts[2:] ]
+            print("Adding: ",xs+ys)
+            mapped.append(xs + ys)
+    return mapped
+
+
 def meshToCoords(mesh, template, worldCoordinates=[
                  0, 360, -90, 90], png=None, geometry=None):
     """
-    Given a mesh object, a vcs template and a graphic methods woorldcoordinate, maps area of png to each 'box'
+    Given a mesh object, a vcs template and a graphic methods woorldcoordinate, maps each 'box' to an area on png
     Warning does not handle projections yet.
     Would only work for boxfill and meshfill. May be adapted in the future to isofill as well.
     :Example:
