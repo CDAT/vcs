@@ -1346,9 +1346,7 @@ x.geometry(1200,800)
 
         extents = []
 
-        textorientation.list()
         for s, x, y in labels:
-            print("X:",s,x,y)
             width, height = text_dimensions(s, text_property, dpi)
             coords = []
             width = (texttable.worldcoordinate[1]-texttable.worldcoordinate[0])*float(width) / win_size[0]

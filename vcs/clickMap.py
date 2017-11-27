@@ -265,7 +265,6 @@ def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[ 0, 360, -90
 
     text = vcs.createtext(Tt_source=Tt_source, To_source=To_source)
     setattr(text,other_direction,getattr(label,other_direction))
-    print("WC:",start,end)
 
     if direction == "x":
         text.worldcoordinate = [start, end, 0, 1]
@@ -281,11 +280,9 @@ def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[ 0, 360, -90
     # now loops thru all labels and get extents
     for v,l in lbls.items():
         if start <= v and v <= end:
-            print("STRUNGL:",l)
             text.string = str(l)
             setattr(text,direction,v)
             exts = x.gettextextent(text)[0]
-            print("EXTDS:",exts)
             if direction == "x":
                 xs = worldToPixel(exts[:2], start, end, c1, c2).tolist()
                 xs += xs[::-1]
