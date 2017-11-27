@@ -179,6 +179,8 @@ def text_dimensions(text, text_prop, dpi, at_angle=0):
     bounds = [0, 0, 0, 0]
     p = vtkTextProperty()
     p.ShallowCopy(text_prop)
+    print("JUSTIFI:",p.GetJustificationAsString())
+    print("JUSTIFI2:",text_prop.GetJustificationAsString())
     p.SetOrientation(at_angle)
     ren.GetBoundingBox(p, text, bounds, dpi)
     return bounds[1] - bounds[0] + 1, bounds[3] - bounds[2] + 1

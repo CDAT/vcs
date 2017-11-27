@@ -19,8 +19,8 @@ def createAreaTag(parameters):
     "target":  
     """
     area = parameters.area
-    target  = paramters.target
-    tooltip = getattr(parameter, "tooltip", "")
+    target  = parameters.target
+    tooltip = getattr(parameters, "tooltip", "")
     extras = getattr(parameters, "extras", "")
     clss = getattr(parameters, "classes", "")
     if tooltip.strip() != "":
@@ -104,7 +104,7 @@ def mapPng(image, areas, targets=[], tooltips=[], classes=[], extras=[], width=N
 
     params = []
 
-    nTarget = len(target)
+    nTarget = len(targets)
     nTips = len(tooltips)
     nExtras = len(extras)
     for i, a in enumerate(areas):
@@ -265,6 +265,7 @@ def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[ 0, 360, -90
 
     text = vcs.createtext(Tt_source=Tt_source, To_source=To_source)
     setattr(text,other_direction,getattr(label,other_direction))
+    print("WC:",start,end)
 
     if direction == "x":
         text.worldcoordinate = [start, end, 0, 1]
@@ -280,16 +281,20 @@ def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[ 0, 360, -90
     # now loops thru all labels and get extents
     for v,l in lbls.items():
         if start <= v and v <= end:
-            text.string = l
+            print("STRUNGL:",l)
+            text.string = str(l)
             setattr(text,direction,v)
             exts = x.gettextextent(text)[0]
+            print("EXTDS:",exts)
             if direction == "x":
                 xs = worldToPixel(exts[:2], start, end, c1, c2).tolist()
+                xs += xs[::-1]
                 ys = [ height * yRatio * (1 - ext) for ext in exts[2:] ]
+                ys = [ys[0],ys[0],ys[1],ys[1]]
             else:
                 xs = [ width * xRatio * ext for ext in exts[:2] ]
                 ys = heigth * yRatio - worldToPixel(exts[2:], start, end, c1, c2).tolist()
-            mapped.append(xs + ys)
+            mapped.append([xs, ys])
     return mapped
 
 
