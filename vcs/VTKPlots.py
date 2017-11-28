@@ -1380,16 +1380,16 @@ x.geometry(1200,800)
                 texttable.worldcoordinate[1] - texttable.worldcoordinate[0]) * float(width) / win_size[0]
             height = (
                 texttable.worldcoordinate[3] - texttable.worldcoordinate[2]) * float(height) / win_size[1]
-            if textorientation.halign == 0:
+            if textorientation.halign in [0, "left"]:
                 coords += [x, x + width]
-            elif textorientation.halign == 1:
+            elif textorientation.halign in [1, "center"]:
                 coords += [x - width / 2, x + width / 2.]
 
             else:
                 coords += [x - width, x]
-            if textorientation.valign in [3, 4]:
+            if textorientation.valign in [3, 4, "base", "bottom"]:
                 coords += [y, y + height]
-            elif textorientation.valign == 2:
+            elif textorientation.valign in [2, "half"]:
                 coords += [y - height / 2., y + height / 2.]
             else:
                 coords += [y - height, y]

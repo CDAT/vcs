@@ -54,7 +54,7 @@ def mapPng(image, areas, targets=[], tooltips=[], classes=[],
             >>> clt=f("clt",time=slice(0,1),squeeze=1)
             >>> mesh = clt.getGrid().getMesh()
             >>> template = vcs.createtemplate()
-            >>> areas = meshToCoords(mesh, template,
+            >>> areas = meshToPngCoords(mesh, template,
                                      worldCoordinates=[gm.datawc_x1, gm.datawc_x2, gm.datawc_y1, gm.datawc_y2],
                                      png='box.png')
             >>> targets = clt.asma().ravel().astype(str).tolist()
@@ -188,14 +188,14 @@ def worldToPixel(coords, mn, mx, p1, p2):
     return pixels
 
 
-def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[
+def axisToPngCoords(values, gm, template, axis='x1', worldCoordinates=[
                  0, 360, -90, 90], png=None, geometry=None):
     """
     Given a set of axis values/labels, a graphic method and a template, maps each label to an area on pmg
     Warning does not handle projections yet.
     :Example:
 
-        .. doctest:: utils_meshToCoords
+        .. doctest:: utils_axisToPngCoords
 
             >>> a=vcs.init(bg=True)
             >>> box=vcs.createboxfill()
@@ -208,7 +208,7 @@ def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[
             >>> clt=f("clt",time=slice(0,1),squeeze=1)
             >>> box = vcs.createboxfill()
             >>> template = vcs.createtemplate()
-            >>> areas = axisToCoords(clt.getLongitude(), box, template)
+            >>> areas = axisToPngCoords(clt.getLongitude(), box, template)
     """
     if png is None and geometry is None:
         x = vcs.init()
@@ -228,7 +228,6 @@ def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[
         template = vcs.gettemplate(template)
     x = vcs.init(geometry=(width, height), bg=True)
 
-    # print("WC:",worldCoordinates)
     # x/y ratio to original png
     xRatio = float(width) / pwidth
     yRatio = float(height) / pheight
@@ -288,15 +287,17 @@ def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[
                 ys = [ys[0], ys[0], ys[1], ys[1]]
             else:
                 xs = [width * xRatio * ext for ext in exts[:2]]
-                ys = height * yRatio - worldToPixel(exts[2:],
-                                                    start,
-                                                    end,
-                                                    c1, c2).tolist()
+                xs += xs[::-1]
+                ys = (height * yRatio - worldToPixel(exts[2:],
+                                                     start,
+                                                     end,
+                                                     c1, c2)).tolist()
+                ys = [ys[0], ys[0], ys[1], ys[1]]
             mapped.append([xs, ys])
     return mapped
 
 
-def meshToCoords(mesh, template, worldCoordinates=[
+def meshToPngCoords(mesh, template, worldCoordinates=[
                  0, 360, -90, 90], png=None, geometry=None):
     """
     Given a mesh object, a vcs template and a graphic methods woorldcoordinate, maps each 'box' to an area on png
@@ -304,7 +305,7 @@ def meshToCoords(mesh, template, worldCoordinates=[
     Would only work for boxfill and meshfill. May be adapted in the future to isofill as well.
     :Example:
 
-        .. doctest:: utils_meshToCoords
+        .. doctest:: utils_meshToPngCoords
 
             >>> a=vcs.init(bg=True)
             >>> box=vcs.createboxfill()
@@ -317,7 +318,7 @@ def meshToCoords(mesh, template, worldCoordinates=[
             >>> clt=f("clt",time=slice(0,1),squeeze=1)
             >>> mesh = clt.getGrid().getMesh()
             >>> template = vcs.createtemplate()
-            >>> areas = meshToCoords(mesh, template,
+            >>> areas = meshToPngCoords(mesh, template,
                                      worldCoordinates=[gm.datawc_x1, gm.datawc_x2, gm.datawc_y1, gm.datawc_y2],
                                      png='box.png')
 
@@ -440,7 +441,7 @@ def vcsToHtml(data, gm, template, targets=None,
         canvas.png(png)
     g = data.getGrid()
     m = g.getMesh()
-    areas = meshToCoords(
+    areas = meshToPngCoords(
         m,
         template,
         worldCoordinates=[
