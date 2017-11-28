@@ -16,10 +16,10 @@ def createAreaTag(parameters):
     input: parameters object
     At the minimum parameter object needs thew followin g two attributes:
     "area": which describe the area polygon to be mapped
-    "target":  
+    "target":
     """
     area = parameters.area
-    target  = parameters.target
+    target = parameters.target
     tooltip = getattr(parameters, "tooltip", "")
     extras = getattr(parameters, "extras", "")
     clss = getattr(parameters, "classes", "")
@@ -33,7 +33,8 @@ def createAreaTag(parameters):
     return tag
 
 
-def mapPng(image, areas, targets=[], tooltips=[], classes=[], extras=[], width=None, height=None, name=None):
+def mapPng(image, areas, targets=[], tooltips=[], classes=[],
+           extras=[], width=None, height=None, name=None):
     """Return <map> and <img> code to map area of an image to various targets
 
     areas coords are assumed to be already mapped to witdth/height if passed
@@ -68,13 +69,16 @@ def mapPng(image, areas, targets=[], tooltips=[], classes=[], extras=[], width=N
     :param targets: list of target URL for each area tag.List will be completed with '#'s to match length of areas
     :type targets: `list`_
 
-    :param tooltips: list of tooltips html code for each area tag. List will be completed with ''s to match length of areas
+    :param tooltips: list of tooltips html code for each area tag. List will be completed with ''s
+                     to match length of areas
     :type tooltips: `list`_
 
-    :param classes: list of classes for each area tag. List will be completed with ''s to match length of areas
+    :param classes: list of classes for each area tag. List will be completed with ''s
+                    to match length of areas
     :type tooltips: `list`_
 
-    :param extras: list of extras attributes to add to the area tag. List will be completed with ''s to match length of areas
+    :param extras: list of extras attributes to add to the area tag. List will be completed with ''s
+                   to match length of areas
     :type tooltips: `list`_
 
     :param width: width of image on html page
@@ -104,15 +108,12 @@ def mapPng(image, areas, targets=[], tooltips=[], classes=[], extras=[], width=N
 
     params = []
 
-    nTarget = len(targets)
-    nTips = len(tooltips)
-    nExtras = len(extras)
     for i, a in enumerate(areas):
         try:
             target = targets[i]
         except Exception:
             target = "#"
-        p = Param(a,target)
+        p = Param(a, target)
         try:
             tip = tooltips[i]
             p.tooltip = tip
@@ -187,7 +188,8 @@ def worldToPixel(coords, mn, mx, p1, p2):
     return pixels
 
 
-def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[ 0, 360, -90, 90], png=None, geometry=None):
+def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[
+                 0, 360, -90, 90], png=None, geometry=None):
     """
     Given a set of axis values/labels, a graphic method and a template, maps each label to an area on pmg
     Warning does not handle projections yet.
@@ -224,14 +226,14 @@ def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[ 0, 360, -90
         width, height = geometry
     if isinstance(template, str):
         template = vcs.gettemplate(template)
-    x = vcs.init(geometry=(width,height), bg=True)
+    x = vcs.init(geometry=(width, height), bg=True)
 
     # print("WC:",worldCoordinates)
     # x/y ratio to original png
     xRatio = float(width) / pwidth
     yRatio = float(height) / pheight
 
-    ## Prepare dictionary of values, labels pairs
+    # Prepare dictionary of values, labels pairs
 
     mapped = []
     direction = axis[0]
@@ -239,18 +241,14 @@ def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[ 0, 360, -90
         other_direction = "y"
         c1 = int(width * template.data.x1 * xRatio)
         c2 = int(width * template.data.x2 * xRatio)
-        wc1 = worldCoordinates[0]
-        wc2 = worldCoordinates[1]
     else:
         other_direction = "x"
         c1 = int(height * template.data.y1 * yRatio)
         c2 = int(height * template.data.y2 * yRatio)
-        wc1 = worldCoordinates[2]
-        wc2 = worldCoordinates[3]
 
     location = axis[-1]
 
-    datawc1 = getattr(gm,"datawc_{}1".format(direction))
+    datawc1 = getattr(gm, "datawc_{}1".format(direction))
 
     if datawc1 == 1.e20:
         start = values[0]
@@ -259,38 +257,41 @@ def axisToCoords(values, gm, template, axis='x1', worldCoordinates=[ 0, 360, -90
         start = datawc1
         end = getattr(gm, "datawc_{}2".format(direction))
 
-    label = getattr(template,"{}label{}".format(direction,location))
+    label = getattr(template, "{}label{}".format(direction, location))
     Tt_source = label.texttable
     To_source = label.textorientation
 
     text = vcs.createtext(Tt_source=Tt_source, To_source=To_source)
-    setattr(text,other_direction,getattr(label,other_direction))
+    setattr(text, other_direction, getattr(label, other_direction))
 
     if direction == "x":
         text.worldcoordinate = [start, end, 0, 1]
     else:
         text.worldcoordinate = [0, 1, start, end]
 
-    ticlabels = getattr(gm,"{}ticlabels{}".format(direction,location))
+    ticlabels = getattr(gm, "{}ticlabels{}".format(direction, location))
 
     if ticlabels == "*":
-        lbls = vcs.mklabels(vcs.mkscale(start,end))
+        lbls = vcs.mklabels(vcs.mkscale(start, end))
     else:
         lbls = ticlabels
     # now loops thru all labels and get extents
-    for v,l in lbls.items():
+    for v, l in lbls.items():
         if start <= v and v <= end:
             text.string = str(l)
-            setattr(text,direction,v)
+            setattr(text, direction, v)
             exts = x.gettextextent(text)[0]
             if direction == "x":
                 xs = worldToPixel(exts[:2], start, end, c1, c2).tolist()
                 xs += xs[::-1]
-                ys = [ height * yRatio * (1 - ext) for ext in exts[2:] ]
-                ys = [ys[0],ys[0],ys[1],ys[1]]
+                ys = [height * yRatio * (1 - ext) for ext in exts[2:]]
+                ys = [ys[0], ys[0], ys[1], ys[1]]
             else:
-                xs = [ width * xRatio * ext for ext in exts[:2] ]
-                ys = heigth * yRatio - worldToPixel(exts[2:], start, end, c1, c2).tolist()
+                xs = [width * xRatio * ext for ext in exts[:2]]
+                ys = height * yRatio - worldToPixel(exts[2:],
+                                                    start,
+                                                    end,
+                                                    c1, c2).tolist()
             mapped.append([xs, ys])
     return mapped
 
@@ -451,5 +452,11 @@ def vcsToHtml(data, gm, template, targets=None,
     geometry = getPngDimensions(png)
     # Creating a list of target that will be the value of the cell
     tooltips = targets = data.asma().ravel().astype(str).tolist()
-    img = mapPng(png, areas, targets, tooltips, width=geometry[0], height=geometry[1])
+    img = mapPng(
+        png,
+        areas,
+        targets,
+        tooltips,
+        width=geometry[0],
+        height=geometry[1])
     return img
