@@ -179,6 +179,8 @@ def worldToPixel(coords, mn, mx, p1, p2):
     :return: An array with pixels corresponding to the value passed in
     :rtype: `numpy.ndarray`_
     """
+    if isinstance(coords, (list, tuple)):
+        coords = numpy.array(coords)
     span = mx - mn
     length = p2 - p1
     pixels = ((coords - mn) / span * length) + p1
