@@ -1349,7 +1349,7 @@ x.geometry(1200,800)
         if isinstance(texttable, str):
             texttable = vcs.gettexttable(texttable)
 
-        from .vtk_ui.text import text_dimensions
+        from .vtk_ui.text import text_box
 
         text_property = vtk.vtkTextProperty()
         info = self.canvasinfo()
@@ -1374,26 +1374,59 @@ x.geometry(1200,800)
         extents = []
 
         for s, x, y in labels:
-            width, height = text_dimensions(s, text_property, dpi)
-            coords = []
-            width = (
-                texttable.worldcoordinate[1] - texttable.worldcoordinate[0]) * float(width) / win_size[0]
-            height = (
-                texttable.worldcoordinate[3] - texttable.worldcoordinate[2]) * float(height) / win_size[1]
+            coords = text_box(s, text_property, dpi, -textorientation.angle)
+            vp = texttable.viewport
+            coords[0] = x + (
+                    texttable.worldcoordinate[1] - texttable.worldcoordinate[0]) * float(coords[0]) / win_size[0] / abs(vp[1]-vp[0])
+            coords[1] = x + (
+                    texttable.worldcoordinate[1] - texttable.worldcoordinate[0]) * float(coords[1]) / win_size[0] / abs(vp[1]-vp[0])
+            coords[2] = y + (
+                    texttable.worldcoordinate[3] - texttable.worldcoordinate[2]) * float(coords[2]) / win_size[1] / abs(vp[3]-vp[2])
+            coords[3] = y + (
+                    texttable.worldcoordinate[3] - texttable.worldcoordinate[2]) * float(coords[3]) / win_size[1] / abs(vp[3]-vp[2])
+            """
+            if abs(textorientation.angle)<45 and abs(textorientation.angle)>-45:
+                rotated = False
+            else:
+                rotated = width
+                width = height
+                height = rotated
+                rotated = True
+                sign = textorientation.angle/abs(textorientation.angle)
             if textorientation.halign in [0, "left"]:
-                coords += [x, x + width]
+                if rotated:
+                    ys = [y, y-width*sign]
+                else:
+                    xs = [x, x + width]
             elif textorientation.halign in [1, "center"]:
-                coords += [x - width / 2, x + width / 2.]
+                if rotated:
+                    ys = [y - width/2, y + width /2.]
+                else:
+                    xs = [x - width / 2, x + width / 2.]
 
             else:
-                coords += [x - width, x]
+                if rotated:
+                    ys = [y + width*sign, y]
+                else:
+                    xs = [x - width, x]
             if textorientation.valign in [3, 4, "base", "bottom"]:
-                coords += [y, y + height]
+                if rotated:
+                    xs = [x, x + height*sign]
+                else:
+                    ys = [y, y + height]
             elif textorientation.valign in [2, "half"]:
-                coords += [y - height / 2., y + height / 2.]
+                if rotated:
+                    xs = [x - height / 2., x + height / 2.]
+                else:
+                    ys = [y - height / 2., y + height / 2.]
             else:
-                coords += [y - height, y]
+                if rotated:
+                    xs = [x - height*sign, x]
+                else:
+                    ys = [y - height, y]
 
+            extents.append(xs+ys)
+            """
             extents.append(coords)
 
         return extents
