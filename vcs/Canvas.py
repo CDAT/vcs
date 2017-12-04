@@ -2408,27 +2408,27 @@ class Canvas(vcs.bestMatch):
 
         bounding = self.gettextextent(textobject)[0]
         bxmid = (bounding[0] + bounding[1])/2.
-        bymid = (bounding[2] + bounding[3]) /2.
+        bymid = (bounding[2] + bounding[3]) / 2.
 
         noangle = self.gettextextent(textobject, 0.)[0]
         xmid = (noangle[0] + noangle[1])/2.
         ymid = (noangle[2] + noangle[3])/2.
-        
+
         slim = []
         # first corner
-        slim.append(rotate(noangle[0],noangle[2], xmid, ymid, -textobject.angle))
+        slim.append(rotate(noangle[0], noangle[2], xmid, ymid, -textobject.angle))
         # second corner
-        slim.append(rotate(noangle[1],noangle[2], xmid, ymid, -textobject.angle))
+        slim.append(rotate(noangle[1], noangle[2], xmid, ymid, -textobject.angle))
         # third corner
-        slim.append(rotate(noangle[1],noangle[3], xmid, ymid, -textobject.angle))
+        slim.append(rotate(noangle[1], noangle[3], xmid, ymid, -textobject.angle))
         # fourth corner
-        slim.append(rotate(noangle[0],noangle[3], xmid, ymid, -textobject.angle))
+        slim.append(rotate(noangle[0], noangle[3], xmid, ymid, -textobject.angle))
         # Ok now we need to translte in the middle of the bounding box
 
         xs = [p[0] for p in slim]
         ys = [p[1] for p in slim]
-        outx =[ bxmid + (x - xmid) for x in xs]
-        outy =[ bymid + (y - ymid) for y in ys]
+        outx = [bxmid + (x - xmid) for x in xs]
+        outy = [bymid + (y - ymid) for y in ys]
         return [[outx, outy]]
 
     def match_color(self, color, colormap=None):  # noqa
