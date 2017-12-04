@@ -66,6 +66,19 @@ except Exception:
     hasVCSAddons = False
 
 
+def rotate(x, y, xorigin, yorigin, angle):
+    # translate
+    xtr = x - xorigin
+    ytr = y - yorigin
+    angle = angle/180.*numpy.pi
+    xout = xtr * numpy.cos(angle) - ytr * numpy.sin(angle)
+    yout = xtr * numpy.sin(angle) + ytr * numpy.cos(angle)
+
+    xout += xorigin
+    yout += yorigin
+    return xout, yout
+
+
 class JupyterFFMPEG(object):
     def __init__(self, source, ffmpeg_result, width=640, height=420, controls=True):
         self.source = source
@@ -2339,7 +2352,7 @@ class Canvas(vcs.bestMatch):
     # Set alias for the secondary textcombined.
     text = textcombined
 
-    def gettextextent(self, textobject):
+    def gettextextent(self, textobject, angle=None):
         """Returns the coordinate of the box surrounding a text object once printed
 
         :Example:
@@ -2355,16 +2368,68 @@ class Canvas(vcs.bestMatch):
                 [[...]]
 
         :param textobject: A VCS text object
+        :param angle: If not None overwrites the textobject's angle (in degree)
         :type textobject: vcs.textcombined.Tc
 
         :returns: list of floats containing the coordinates of the text object's bounding box.
+        coordinates are appropriate within the same viewport and worldcoordinate as the input textobject
         :rtype: `list`_
         """
         if not vcs.istext(textobject):
             raise vcsError('You must pass a text object')
         To = textobject.To_name
         Tt = textobject.Tt_name
-        return self.backend.gettextextent(To, Tt)
+        return self.backend.gettextextent(To, Tt, angle)
+
+    def gettextbox(self, textobject):
+        """Returns the coordinate of the exact and rotated box surrounding a text object once printed
+
+        :Example:
+
+            .. doctest:: canvas_gettextbox
+
+                >>> a=vcs.init()
+                >>> t=a.createtext()
+                >>> t.x=[.5]
+                >>> t.y=[.5]
+                >>> t.string=['Hello World']
+                >>> a.gettextbox(t)
+                [[...]]
+
+        :param textobject: A VCS text object
+        :type textobject: vcs.textcombined.Tc
+
+        :returns: 2 list of floats containing the coordinates of the text object's box. One for xs one for ys
+        coordinates are appropriate within the same viewport and worldcoordinate as the input textobject
+        :rtype: `list`_
+        """
+        if not vcs.istext(textobject):
+            raise vcsError('You must pass a text object')
+
+        bounding = self.gettextextent(textobject)[0]
+        bxmid = (bounding[0] + bounding[1])/2.
+        bymid = (bounding[2] + bounding[3]) /2.
+
+        noangle = self.gettextextent(textobject, 0.)[0]
+        xmid = (noangle[0] + noangle[1])/2.
+        ymid = (noangle[2] + noangle[3])/2.
+        
+        slim = []
+        # first corner
+        slim.append(rotate(noangle[0],noangle[2], xmid, ymid, -textobject.angle))
+        # second corner
+        slim.append(rotate(noangle[1],noangle[2], xmid, ymid, -textobject.angle))
+        # third corner
+        slim.append(rotate(noangle[1],noangle[3], xmid, ymid, -textobject.angle))
+        # fourth corner
+        slim.append(rotate(noangle[0],noangle[3], xmid, ymid, -textobject.angle))
+        # Ok now we need to translte in the middle of the bounding box
+
+        xs = [p[0] for p in slim]
+        ys = [p[1] for p in slim]
+        outx =[ bxmid + (x - xmid) for x in xs]
+        outy =[ bymid + (y - ymid) for y in ys]
+        return [[outx, outy]]
 
     def match_color(self, color, colormap=None):  # noqa
         return vcs.match_color(color, colormap)

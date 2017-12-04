@@ -1340,7 +1340,10 @@ x.geometry(1200,800)
     def Animate(self, *args, **kargs):
         return VTKAnimate.VTKAnimate(*args, **kargs)
 
-    def gettextextent(self, textorientation, texttable):
+            
+        
+
+    def gettextextent(self, textorientation, texttable, angle=None):
         # Ensure renwin exists
         self.createRenWin()
 
@@ -1374,7 +1377,10 @@ x.geometry(1200,800)
         extents = []
 
         for s, x, y in labels:
-            coords = text_box(s, text_property, dpi, -textorientation.angle)
+            if angle is None:
+                coords = text_box(s, text_property, dpi, -textorientation.angle)
+            else:
+                coords = text_box(s, text_property, dpi, -angle)
             vp = texttable.viewport
             coords[0] = x +\
                 (texttable.worldcoordinate[1] - texttable.worldcoordinate[0]) *\
