@@ -765,7 +765,7 @@ class VTKVCSBackend(object):
         renderer.SetLayer(n)
 
     def plot3D(self, data1, data2, tmpl, gm, ren, **kargs):
-        from .DV3D.Application import DV3DApp
+        from DV3D.Application import DV3DApp
         requiresFileVariable = True
         self.canvas.drawLogo = False
         if (data1 is None) or (requiresFileVariable and not (isinstance(
