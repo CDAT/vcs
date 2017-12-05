@@ -2406,30 +2406,40 @@ class Canvas(vcs.bestMatch):
         if not vcs.istext(textobject):
             raise vcsError('You must pass a text object')
 
-        bounding = self.gettextextent(textobject)[0]
-        bxmid = (bounding[0] + bounding[1])/2.
-        bymid = (bounding[2] + bounding[3]) / 2.
+        # for rotation we need to normalize coordinates
+        text2 = vcs.createtext(Tt_source=textobject.Tt_name,To_source=textobject.To_name)
+        xs = numpy.array(textobject.x)/(text2.worldcoordinate[1]-text2.worldcoordinate[0])
+        ys = numpy.array(textobject.y)/(text2.worldcoordinate[3]-text2.worldcoordinate[2])
+        text2.x = xs.tolist()
+        text2.y = ys.tolist()
+        text2.worldcoordinate = [0,1,0,1]
 
-        noangle = self.gettextextent(textobject, 0.)[0]
-        xmid = (noangle[0] + noangle[1])/2.
-        ymid = (noangle[2] + noangle[3])/2.
+        boundings = self.gettextextent(textobject)
+        noangles = self.gettextextent(text2, 0.)
+        out = []
+        for bounding, noangle in zip(boundings, noangles):
+            bxmid = (bounding[0] + bounding[1])/2.
+            bymid = (bounding[2] + bounding[3]) / 2.
 
-        slim = []
-        # first corner
-        slim.append(rotate(noangle[0], noangle[2], xmid, ymid, -textobject.angle))
-        # second corner
-        slim.append(rotate(noangle[1], noangle[2], xmid, ymid, -textobject.angle))
-        # third corner
-        slim.append(rotate(noangle[1], noangle[3], xmid, ymid, -textobject.angle))
-        # fourth corner
-        slim.append(rotate(noangle[0], noangle[3], xmid, ymid, -textobject.angle))
-        # Ok now we need to translte in the middle of the bounding box
+            xmid = (noangle[0] + noangle[1])/2.
+            ymid = (noangle[2] + noangle[3])/2.
 
-        xs = [p[0] for p in slim]
-        ys = [p[1] for p in slim]
-        outx = [bxmid + (x - xmid) for x in xs]
-        outy = [bymid + (y - ymid) for y in ys]
-        return [[outx, outy]]
+            slim = []
+            # first corner
+            slim.append(rotate(noangle[0], noangle[2], xmid, ymid, -textobject.angle))
+            # second corner
+            slim.append(rotate(noangle[1], noangle[2], xmid, ymid, -textobject.angle))
+            # third corner
+            slim.append(rotate(noangle[1], noangle[3], xmid, ymid, -textobject.angle))
+            # fourth corner
+            slim.append(rotate(noangle[0], noangle[3], xmid, ymid, -textobject.angle))
+            # Ok now we need to translte in the middle of the bounding box
+            xs = [p[0] for p in slim]
+            ys = [p[1] for p in slim]
+            outx = [bxmid + (x - xmid)*(textobject.worldcoordinate[1]-textobject.worldcoordinate[0]) for x in xs]
+            outy = [bymid + (y - ymid)*(textobject.worldcoordinate[3]-textobject.worldcoordinate[2]) for y in ys]
+            out.append([outx, outy])
+        return out
 
     def match_color(self, color, colormap=None):  # noqa
         return vcs.match_color(color, colormap)

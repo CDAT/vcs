@@ -44,20 +44,20 @@ class TestVCSTextsExtents(basevcstest.VCSBaseTest):
                 self.drawBox(t)
     def testBoxAlignments(self):
         t = self.x.createtext()
-        #self.alignments(t,[.2,.6,.8],[.2,.35,.46,.6,.8])
-        #self.checkImage("test_vcs_textbox_reg.png")
+        self.alignments(t,[.2,.6,.8],[.2,.35,.46,.6,.8])
+        self.checkImage("test_vcs_textbox_reg.png")
         t.viewport = [.2,.6,.3,.8]
         t.height = 9
-        #self.alignments(t,[.2,.6,.8],[.2,.35,.46,.6,.8])
-        #self.checkImage("test_vcs_textbox_vp.png")
+        self.alignments(t,[.2,.6,.8],[.2,.35,.46,.6,.8])
+        self.checkImage("test_vcs_textbox_vp.png")
         t.height = 14
         t.viewport = [0,1,0,1]
         t.worldcoordinate = [0.,360.,0.,1.]
-        #self.alignments(t,[50, 150,300],[.2,.35,.46,.6,.8])
-        #self.checkImage("test_vcs_textbox_xwc.png")
+        self.alignments(t,[50, 150,300],[.2,.35,.46,.6,.8])
+        self.checkImage("test_vcs_textbox_xwc.png")
         t.worldcoordinate = [0.,360.,-20,10.]
-        #self.alignments(t,[50, 150,300],[-17,-12,-2,5,8])
-        #self.checkImage("test_vcs_textbox_xywc.png")
+        self.alignments(t,[50, 150,300],[-17,-12,-2,5,8])
+        self.checkImage("test_vcs_textbox_xywc.png")
         t.worldcoordinate=[0,1,0,1]
         t.angle = 90 
         self.alignments(t,[.2,.6,.8],[.2,.35,.46,.6,.8])
@@ -83,4 +83,10 @@ class TestVCSTextsExtents(basevcstest.VCSBaseTest):
         t.angle = -120
         self.alignments(t,[.2,.6,.8],[.2,.35,.46,.6,.8])
         self.checkImage("test_vcs_textbox_neg120angle.png")
+        t.viewport=[0,1,0,1]
+        t.worldcoordinate = [-180, 180, 0,1]
+        t.string="45N"
+        t.angle =90
+        self.alignments(t,[45,],[.2349999999404])
+        self.checkImage("test_vcs_textbox_usecase.png")
 

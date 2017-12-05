@@ -281,22 +281,22 @@ def axisToPngCoords(values, gm, template, axis='x1', worldCoordinates=[
         if start <= v and v <= end:
             text.string = str(l)
             setattr(text, direction, v)
-            exts = x.gettextextent(text)[0]
+            box = x.gettextbox(text)[0]
+            text.list()
+            print("BOX:",box)
             if direction == "x":
-                xs = worldToPixel(exts[:2], start, end, c1, c2).tolist()
-                xs += xs[::-1]
-                ys = [height * yRatio * (1 - ext) for ext in exts[2:]]
-                ys = [ys[0], ys[0], ys[1], ys[1]]
+                xs = worldToPixel(box[0], start, end, c1, c2).tolist()
+                ys = [height * yRatio * (1 - c) for c in box[1]]
             else:
-                xs = [width * xRatio * ext for ext in exts[:2]]
-                xs += xs[::-1]
-                ys = (height * yRatio - worldToPixel(exts[2:],
+                xs = [width * xRatio * c for c in box[0]]
+                ys = (height * yRatio - worldToPixel(box[1],
                                                      start,
                                                      end,
                                                      c1, c2)).tolist()
-                ys = [ys[0], ys[0], ys[1], ys[1]]
+            xs += [xs[-1]]
+            ys += [ys[-1]]
             mapped.append([xs, ys])
-    return mapped
+    return numpy.array(mapped)
 
 
 def meshToPngCoords(mesh, template, worldCoordinates=[
