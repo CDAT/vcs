@@ -2407,12 +2407,13 @@ class Canvas(vcs.bestMatch):
             raise vcsError('You must pass a text object')
 
         # for rotation we need to normalize coordinates
-        text2 = vcs.createtext(Tt_source=textobject.Tt_name,To_source=textobject.To_name)
-        xs = numpy.array(textobject.x)/(text2.worldcoordinate[1]-text2.worldcoordinate[0])
-        ys = numpy.array(textobject.y)/(text2.worldcoordinate[3]-text2.worldcoordinate[2])
+        text2 = vcs.createtext(Tt_source=textobject.Tt_name, To_source=textobject.To_name)
+        xs = numpy.array(textobject.x) / (text2.worldcoordinate[1] - text2.worldcoordinate[0])
+        ys = numpy.array(textobject.y) / (text2.worldcoordinate[3] - text2.worldcoordinate[2])
         text2.x = xs.tolist()
         text2.y = ys.tolist()
-        text2.worldcoordinate = [0,1,0,1]
+
+        text2.worldcoordinate = [0, 1, 0, 1]
 
         boundings = self.gettextextent(textobject)
         noangles = self.gettextextent(text2, 0.)

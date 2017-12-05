@@ -282,8 +282,6 @@ def axisToPngCoords(values, gm, template, axis='x1', worldCoordinates=[
             text.string = str(l)
             setattr(text, direction, v)
             box = x.gettextbox(text)[0]
-            text.list()
-            print("BOX:",box)
             if direction == "x":
                 xs = worldToPixel(box[0], start, end, c1, c2).tolist()
                 ys = [height * yRatio * (1 - c) for c in box[1]]
