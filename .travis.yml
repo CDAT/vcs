@@ -23,10 +23,10 @@ script:
 - git clone git://github.com/uv-cdat/uvcdat-testdata
 - cd uvcdat-testdata ; git checkout $TRAVIS_BRANCH ; cd ..
 - df -h
-- python run_tests.py -v2 -n2 -g --no-vtk-ui
+- python run_tests.py -n2 -g --no-vtk-ui
 - source activate py3
 - rm -rf build
 - python setup.py install --old-and-unmanageable
-- python run_tests.py -n2 --no-vtk-ui
+- python run_tests.py -v2 -n2 --no-vtk-ui
 after_success:
     - if [ "$TRAVIS_BRANCH" == "master" -a "$TRAVIS_PULL_REQUEST" == "false" ]; then conda install -n root conda-build anaconda-client && bash ci-support/conda_upload.sh ; fi
