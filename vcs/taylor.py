@@ -553,6 +553,7 @@ class Gtd(vcs.bestMatch):
         'g_name',
         'displays',
         'bg',
+        '_standard_deviation_label',
         '_stdmax',
         '_x',
         'template',
@@ -610,6 +611,7 @@ class Gtd(vcs.bestMatch):
             self._ymtics1 = '*'
             self._xmtics1 = '*'
             self._cmtics1 = '*'
+            self._standard_deviation_label = "Standard Deviation"
             self.displays = []
         else:
             if source not in list(vcs.elements["taylordiagram"].keys()):
@@ -638,6 +640,7 @@ class Gtd(vcs.bestMatch):
             self.ymtics1 = src.ymtics1
             self.xmtics1 = src.xmtics1
             self.cmtics1 = src.cmtics1
+            self.standard_deviation_label = src.standard_deviation_label
         self.displays = []
         self.Marker.equalize()
         vcs.elements["taylordiagram"][name] = self
