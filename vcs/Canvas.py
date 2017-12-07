@@ -2942,7 +2942,7 @@ class Canvas(vcs.bestMatch):
                         copy_mthd = vcs.creategraphicsmethod(
                             arglist[3],
                             arglist[4])
-                    except:
+                    except Exception:
                         pass
                 copy_mthd.legend = k
                 del(keyargs['legend'])
@@ -3027,7 +3027,7 @@ class Canvas(vcs.bestMatch):
                             copy_mthd = vcs.creategraphicsmethod(
                                 arglist[3],
                                 arglist[4])
-                        except:
+                        except Exception:
                             pass
                         check_mthd = copy_mthd
                     setattr(copy_mthd, p, keyargs[p])
@@ -3037,7 +3037,7 @@ class Canvas(vcs.bestMatch):
                             copy_mthd = vcs.creategraphicsmethod(
                                 arglist[3],
                                 arglist[4])
-                        except:
+                        except Exception:
                             pass
                         check_mthd = copy_mthd
                     setattr(copy_mthd, 'datawc_x1', keyargs[p][0])
@@ -3342,7 +3342,7 @@ class Canvas(vcs.bestMatch):
                                 copy_mthd = vcs.creategraphicsmethod(
                                     arglist[3],
                                     arglist[4])
-                            except:
+                            except Exception:
                                 pass
                             check_mthd = copy_mthd
                         if check_mthd.datawc_x1 > 9.E19:
@@ -3375,7 +3375,7 @@ class Canvas(vcs.bestMatch):
                             copy_mthd = vcs.creategraphicsmethod(
                                 arglist[3],
                                 arglist[4])
-                        except:
+                        except Exception:
                             pass
                         check_mthd = copy_mthd
                     copy_mthd.xticlabels1 = vcs.generate_time_labels(
@@ -3389,7 +3389,7 @@ class Canvas(vcs.bestMatch):
                             copy_mthd = vcs.creategraphicsmethod(
                                 arglist[3],
                                 arglist[4])
-                        except:
+                        except Exception:
                             pass
                         check_mthd = copy_mthd
                     copy_mthd.xticlabels2 = vcs.generate_time_labels(
@@ -3409,7 +3409,7 @@ class Canvas(vcs.bestMatch):
                                 copy_mthd = vcs.creategraphicsmethod(
                                     arglist[3],
                                     arglist[4])
-                            except:
+                            except Exception:
                                 pass
                             check_mthd = copy_mthd
                         t = arglist[0].getAxis(-1).clone()
@@ -3479,7 +3479,7 @@ class Canvas(vcs.bestMatch):
                             copy_mthd = vcs.creategraphicsmethod(
                                 arglist[3],
                                 arglist[4])
-                        except:
+                        except Exception:
                             pass
                         check_mthd = copy_mthd
                     if copy_mthd.datawc_y1 > 9.E19:
@@ -3512,7 +3512,7 @@ class Canvas(vcs.bestMatch):
                             copy_mthd = vcs.creategraphicsmethod(
                                 arglist[3],
                                 arglist[4])
-                        except:
+                        except Exception:
                             pass
                         check_mthd = copy_mthd
                     copy_mthd.yticlabels1 = vcs.generate_time_labels(
@@ -3526,7 +3526,7 @@ class Canvas(vcs.bestMatch):
                             copy_mthd = vcs.creategraphicsmethod(
                                 arglist[3],
                                 arglist[4])
-                        except:
+                        except Exception:
                             pass
                         check_mthd = copy_mthd
                     copy_mthd.yticlabels2 = vcs.generate_time_labels(
@@ -3547,7 +3547,7 @@ class Canvas(vcs.bestMatch):
                                 copy_mthd = vcs.creategraphicsmethod(
                                     arglist[3],
                                     arglist[4])
-                            except:
+                            except Exception:
                                 pass
                             check_mthd = copy_mthd
                         t = arglist[0].getAxis(-2).clone()
@@ -3653,14 +3653,14 @@ class Canvas(vcs.bestMatch):
             if copy_mthd is None:
                 try:
                     copy_mthd = vcs.creategraphicsmethod(arglist[3], arglist[4])
-                except:
+                except Exception:
                     pass
                 check_mthd = copy_mthd
                 set_convert_labels(copy_mthd)
         if copy_mthd is None:
             try:
                 copy_mthd = vcs.creategraphicsmethod(arglist[3], arglist[4])
-            except:
+            except Exception:
                 pass
             check_mthd = copy_mthd
 
@@ -6054,5 +6054,5 @@ def change_date_time(tv, number):
             cobj = tobj.tocomp(timeaxis.getCalendar())
             tv.date = '%s/%s/%s\0' % (cobj.year, cobj.month, cobj.day)
             tv.time = '%s:%s:%s\0' % (cobj.hour, cobj.minute, cobj.second)
-        except:  # noqa
+        except Exception:  # noqa
             pass
