@@ -611,7 +611,7 @@ class Gtd(vcs.bestMatch):
             self._ymtics1 = '*'
             self._xmtics1 = '*'
             self._cmtics1 = '*'
-            self._standard_deviation_label = "Standard Deviation"
+            self._standard_deviation_label = "Standard... Deviation"
             self.displays = []
         else:
             if source not in list(vcs.elements["taylordiagram"].keys()):
@@ -680,6 +680,17 @@ class Gtd(vcs.bestMatch):
         if value is not None:
             self._quadrans = value
     quadrans = property(_getquadrans, _setquadrans)
+
+    def _getstdname(self):
+        return self._standard_deviation_label
+
+    def _setstdname(self, value):
+        value = VCS_validation_functions.checkString(
+            self,
+            'standard_deviation_label',
+            value)
+        self._standard_deviation_label = value
+    standard_deviation_label = property(_getstdname, _setstdname)
 
     def _getskillvalues(self):
         return self._skillValues
@@ -1407,6 +1418,18 @@ class Gtd(vcs.bestMatch):
 # Cx.append(self.outtervalue*numpy.cos(self.quadrans/2.*numpy.pi))
 # Cy.append(self.outtervalue*numpy.sin(self.quadrans/2.*numpy.pi))
 
+    def pageratio(self, canvas):
+        page = canvas.orientation()
+        try:
+            canvasinfo = canvas.canvasinfo()
+            pr = float(canvasinfo['width']) / float(canvasinfo['height'])
+        except BaseException:
+            if page == 'portrait':
+                pr = 1. / 1.29381443299
+            else:
+                pr = 1.29381443299
+        return pr
+
     def setWorldCoordinate(self, canvas):
         viewport = [self.template.data.x1, self.template.data.x2,
                     self.template.data.y1, self.template.data.y2]
@@ -1423,15 +1446,7 @@ class Gtd(vcs.bestMatch):
             wc = [-max - X * 5, max, 0, max]
         self.worldcoordinate = wc
         if self.preserveaspectratio == 'y':
-            page = canvas.orientation()
-            try:
-                canvasinfo = canvas.canvasinfo()
-                pr = float(canvasinfo['width']) / float(canvasinfo['height'])
-            except BaseException:
-                if page == 'portrait':
-                    pr = 1. / 1.29381443299
-                else:
-                    pr = 1.29381443299
+            pr = self.pageratio(canvas)
             xr = self.viewport[1] - self.viewport[0]
             yr = self.viewport[3] - self.viewport[2]
             vr = xr / yr
@@ -1846,8 +1861,11 @@ class Gtd(vcs.bestMatch):
 
         stdaxis.x = [
             self.template.data.x1 - (self.template.data.y1 - self.template.xname.y)]
-        stdaxis.y = [abs(self.template.data.y2 + self.template.data.y1) / 2.]
-        stdstring = 'Standard Deviation'
+        stdaxis.viewport = [0, 1] + self.viewport[2:]
+        stdaxis.worldcoordinate = [0, 1] + self.worldcoordinate[2:]
+        stdaxis.y = [min(self.worldcoordinate[0], self.worldcoordinate[2]) / 2. +
+                     min(self.worldcoordinate[1], self.worldcoordinate[3]) / 2.]
+        stdstring = self.standard_deviation_label
         if hasattr(data, 'units'):
             if data.units.strip() != '':
                 stdstring = stdstring + ' ( ' + str(data.units) + ' )'
@@ -1861,8 +1879,11 @@ class Gtd(vcs.bestMatch):
             'xstax',
             self.template.xname.texttable,
             self.template.xname.textorientation)
+        xstdaxis.x = [min(self.worldcoordinate[0], self.worldcoordinate[2]) / 2. +
+                      min(self.worldcoordinate[1], self.worldcoordinate[3]) / 2.]
         xstdaxis.y = [self.template.xname.y]
-        xstdaxis.x = [abs(self.template.data.x2 + self.template.data.x1) / 2.]
+        xstdaxis.viewport = self.viewport[:2] + [0, 1]
+        xstdaxis.worldcoordinate = self.worldcoordinate[:2] + [0, 1]
         xstdaxis.string = [stdstring]
         xstdaxis.priority = self.template.xname.priority
 
