@@ -611,7 +611,7 @@ class Gtd(vcs.bestMatch):
             self._ymtics1 = '*'
             self._xmtics1 = '*'
             self._cmtics1 = '*'
-            self._standard_deviation_label = "Standard... Deviation"
+            self._standard_deviation_label = "Standard Deviation"
             self.displays = []
         else:
             if source not in list(vcs.elements["taylordiagram"].keys()):
@@ -1863,8 +1863,7 @@ class Gtd(vcs.bestMatch):
             self.template.data.x1 - (self.template.data.y1 - self.template.xname.y)]
         stdaxis.viewport = [0, 1] + self.viewport[2:]
         stdaxis.worldcoordinate = [0, 1] + self.worldcoordinate[2:]
-        stdaxis.y = [min(self.worldcoordinate[0], self.worldcoordinate[2]) / 2. +
-                     min(self.worldcoordinate[1], self.worldcoordinate[3]) / 2.]
+        stdaxis.y = [min(self.worldcoordinate[1], self.worldcoordinate[3]) / 2.]
         stdstring = self.standard_deviation_label
         if hasattr(data, 'units'):
             if data.units.strip() != '':

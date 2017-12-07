@@ -159,6 +159,7 @@
     0.9, 
     0.95
    ], 
+   "standard_deviation_label": "Standard Deviation", 
    "template": null, 
    "xmtics1": "*", 
    "xticlabels1": "*", 
