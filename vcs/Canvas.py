@@ -2938,9 +2938,12 @@ class Canvas(vcs.bestMatch):
             # ok it is for the boxfill let's do it
             if isboxfilllegend:
                 if copy_mthd is None:
-                    copy_mthd = vcs.creategraphicsmethod(
-                        arglist[3],
-                        arglist[4])
+                    try:
+                        copy_mthd = vcs.creategraphicsmethod(
+                            arglist[3],
+                            arglist[4])
+                    except:
+                        pass
                 copy_mthd.legend = k
                 del(keyargs['legend'])
                 check_mthd = copy_mthd
@@ -3020,16 +3023,22 @@ class Canvas(vcs.bestMatch):
             ]:
                 if p not in ['worldcoordinate', ]:  # not a special keywords
                     if copy_mthd is None:
-                        copy_mthd = vcs.creategraphicsmethod(
-                            arglist[3],
-                            arglist[4])
+                        try:
+                            copy_mthd = vcs.creategraphicsmethod(
+                                arglist[3],
+                                arglist[4])
+                        except:
+                            pass
                         check_mthd = copy_mthd
                     setattr(copy_mthd, p, keyargs[p])
                 elif p == 'worldcoordinate':
                     if copy_mthd is None:
-                        copy_mthd = vcs.creategraphicsmethod(
-                            arglist[3],
-                            arglist[4])
+                        try:
+                            copy_mthd = vcs.creategraphicsmethod(
+                                arglist[3],
+                                arglist[4])
+                        except:
+                            pass
                         check_mthd = copy_mthd
                     setattr(copy_mthd, 'datawc_x1', keyargs[p][0])
                     setattr(copy_mthd, 'datawc_x2', keyargs[p][1])
@@ -3329,9 +3338,12 @@ class Canvas(vcs.bestMatch):
                     if t not in [type(cdtime.reltime(0, 'months since 1900')), type(
                             cdtime.comptime(1900))]:
                         if copy_mthd is None:
-                            copy_mthd = vcs.creategraphicsmethod(
-                                arglist[3],
-                                arglist[4])
+                            try:
+                                copy_mthd = vcs.creategraphicsmethod(
+                                    arglist[3],
+                                    arglist[4])
+                            except:
+                                pass
                             check_mthd = copy_mthd
                         if check_mthd.datawc_x1 > 9.E19:
                             copy_mthd.datawc_x1 = cdtime.reltime(
@@ -3359,9 +3371,12 @@ class Canvas(vcs.bestMatch):
                                 copy_mthd.datawc_calendar)
                 if copy_mthd.xticlabels1 == '*':
                     if copy_mthd is None:
-                        copy_mthd = vcs.creategraphicsmethod(
-                            arglist[3],
-                            arglist[4])
+                        try:
+                            copy_mthd = vcs.creategraphicsmethod(
+                                arglist[3],
+                                arglist[4])
+                        except:
+                            pass
                         check_mthd = copy_mthd
                     copy_mthd.xticlabels1 = vcs.generate_time_labels(
                         copy_mthd.datawc_x1,
@@ -3370,9 +3385,12 @@ class Canvas(vcs.bestMatch):
                         copy_mthd.datawc_calendar)
                 if copy_mthd.xticlabels2 == '*':
                     if copy_mthd is None:
-                        copy_mthd = vcs.creategraphicsmethod(
-                            arglist[3],
-                            arglist[4])
+                        try:
+                            copy_mthd = vcs.creategraphicsmethod(
+                                arglist[3],
+                                arglist[4])
+                        except:
+                            pass
                         check_mthd = copy_mthd
                     copy_mthd.xticlabels2 = vcs.generate_time_labels(
                         copy_mthd.datawc_x1,
@@ -3387,9 +3405,12 @@ class Canvas(vcs.bestMatch):
                             not (check_mthd.g_name == 'G1d' and check_mthd.flip) and\
                             check_mthd.g_name not in ['G1d']:  # used to be GSp
                         if copy_mthd is None:
-                            copy_mthd = vcs.creategraphicsmethod(
-                                arglist[3],
-                                arglist[4])
+                            try:
+                                copy_mthd = vcs.creategraphicsmethod(
+                                    arglist[3],
+                                    arglist[4])
+                            except:
+                                pass
                             check_mthd = copy_mthd
                         t = arglist[0].getAxis(-1).clone()
                         timeunits = t.units
@@ -3454,9 +3475,12 @@ class Canvas(vcs.bestMatch):
                 if convert_datawc:
                     oax = arglist[0].getAxis(cax).clone()
                     if copy_mthd is None:
-                        copy_mthd = vcs.creategraphicsmethod(
-                            arglist[3],
-                            arglist[4])
+                        try:
+                            copy_mthd = vcs.creategraphicsmethod(
+                                arglist[3],
+                                arglist[4])
+                        except:
+                            pass
                         check_mthd = copy_mthd
                     if copy_mthd.datawc_y1 > 9.E19:
                         copy_mthd.datawc_y1 = cdtime.reltime(
@@ -3484,9 +3508,12 @@ class Canvas(vcs.bestMatch):
                             copy_mthd.datawc_calendar)
                 if check_mthd.yticlabels1 == '*':
                     if copy_mthd is None:
-                        copy_mthd = vcs.creategraphicsmethod(
-                            arglist[3],
-                            arglist[4])
+                        try:
+                            copy_mthd = vcs.creategraphicsmethod(
+                                arglist[3],
+                                arglist[4])
+                        except:
+                            pass
                         check_mthd = copy_mthd
                     copy_mthd.yticlabels1 = vcs.generate_time_labels(
                         copy_mthd.datawc_y1,
@@ -3495,9 +3522,12 @@ class Canvas(vcs.bestMatch):
                         copy_mthd.datawc_calendar)
                 if check_mthd.yticlabels2 == '*':
                     if copy_mthd is None:
-                        copy_mthd = vcs.creategraphicsmethod(
-                            arglist[3],
-                            arglist[4])
+                        try:
+                            copy_mthd = vcs.creategraphicsmethod(
+                                arglist[3],
+                                arglist[4])
+                        except:
+                            pass
                         check_mthd = copy_mthd
                     copy_mthd.yticlabels2 = vcs.generate_time_labels(
                         copy_mthd.datawc_y1,
@@ -3513,9 +3543,12 @@ class Canvas(vcs.bestMatch):
                         0].getAxis(-2).isTime() and arglist[0].ndim > 1 and copy_mthd.g_name not in ["G1d", ]:
                     if check_mthd.yticlabels1 == '*' and check_mthd.yticlabels2 == '*':
                         if copy_mthd is None:
-                            copy_mthd = vcs.creategraphicsmethod(
-                                arglist[3],
-                                arglist[4])
+                            try:
+                                copy_mthd = vcs.creategraphicsmethod(
+                                    arglist[3],
+                                    arglist[4])
+                            except:
+                                pass
                             check_mthd = copy_mthd
                         t = arglist[0].getAxis(-2).clone()
                         timeunits = t.units
@@ -3618,11 +3651,17 @@ class Canvas(vcs.bestMatch):
 
         if set_convert_labels(check_mthd, test=1):
             if copy_mthd is None:
-                copy_mthd = vcs.creategraphicsmethod(arglist[3], arglist[4])
+                try:
+                    copy_mthd = vcs.creategraphicsmethod(arglist[3], arglist[4])
+                except:
+                    pass
                 check_mthd = copy_mthd
                 set_convert_labels(copy_mthd)
         if copy_mthd is None:
-            copy_mthd = vcs.creategraphicsmethod(arglist[3], arglist[4])
+            try:
+                copy_mthd = vcs.creategraphicsmethod(arglist[3], arglist[4])
+            except:
+                pass
             check_mthd = copy_mthd
 
         x = None
