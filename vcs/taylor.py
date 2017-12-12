@@ -116,6 +116,7 @@ class TDMarker(vcs.bestMatch):
             'id': self.id,
             'id_size': self.id_size,
             'id_color': self.id_color,
+            'id_location': self.id_color,
             'id_font': self.id_font,
             'symbol': self.symbol,
             'color': self.color,
@@ -139,6 +140,7 @@ class TDMarker(vcs.bestMatch):
         self._id_size = []
         self._id_color = []
         self._id_font = []
+        print("ID LOCATION")
         self._id_location = []
         self._symbol = []
         self._color = []
@@ -218,6 +220,10 @@ class TDMarker(vcs.bestMatch):
     id = property(_getid, _setid)
 
     def _getidlocation(self):
+        if not("_id_location" in dir(self)):
+            print("OOOPSY")
+        else:
+            print("OK ALL GODD ITS IN HERE")
         return self._id_location
 
     def _setidlocation(self, values):
@@ -228,7 +234,9 @@ class TDMarker(vcs.bestMatch):
                 value = VCS_validation_functions.checkInStringsListInt(self,
                                                                        "id_location", value, ["both", "plot", "legend"])
             good.append(value)
+        print("reset id_locto:",good)
         self._id_location = good
+    id_location = property(_getidlocation, _setidlocation)
 
     def _getid_color(self):
         return self._id_color
@@ -610,6 +618,7 @@ class Gtd(vcs.bestMatch):
         self.g_name = 'Gtd'
         self._x = None
         if name == "default":
+            print("CREATING DEFAULT")
             # maximum value of the standard deviaton, copied to the value of
             # the outter circle
             self._max = None
@@ -636,6 +645,7 @@ class Gtd(vcs.bestMatch):
             self._cmtics1 = '*'
             self.displays = []
         else:
+            print("FROM SOURCE", source)
             if source not in list(vcs.elements["taylordiagram"].keys()):
                 raise Exception(
                     "the source taylordiagram %s doe not exist" %
@@ -652,8 +662,9 @@ class Gtd(vcs.bestMatch):
             self.idsLocation = src.idsLocation
             self.detail = src.detail
             self.referencevalue = src.referencevalue
-# self._referencecolor=src'black'
+            print("B4 COPY:",src.Marker._id_location)
             self.Marker = copy.deepcopy(src.Marker)
+            print("AFTER COPY:",self.Marker._id_font)
             self.arrowlength = src.arrowlength
             self.arrowangle = src.arrowangle
             self.arrowbase = src.arrowbase
