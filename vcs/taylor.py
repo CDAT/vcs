@@ -222,11 +222,11 @@ class TDMarker(vcs.bestMatch):
 
     def _setidlocation(self, values):
         good = []
-        VCS_validation_functions.checkListTuple(self, "id_location",values)
+        VCS_validation_functions.checkListTuple(self, "id_location", values)
         for value in values:
             if value is not None:
                 value = VCS_validation_functions.checkInStringsListInt(self,
-                        "id_location", value, ["both","plot","legend"])
+                                                                       "id_location", value, ["both", "plot", "legend"])
             good.append(value)
         self._id_location = good
 
@@ -742,9 +742,9 @@ class Gtd(vcs.bestMatch):
     def _get_idsLocation(self):
         return self._idsLocation
 
-    def _set_idsLocation(self,value):
+    def _set_idsLocation(self, value):
         value = VCS_validation_functions.checkInStringsListInt(self,
-                "idsLocation", value, ["both","plot","legend"])
+                                                               "idsLocation", value, ["both", "plot", "legend"])
         self._idsLocation = value
     idsLocation = property(_get_idsLocation, _set_idsLocation)
 
@@ -1081,7 +1081,8 @@ class Gtd(vcs.bestMatch):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning(
+                "scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[
@@ -1158,7 +1159,10 @@ class Gtd(vcs.bestMatch):
                 f.write('    id_size = %s,\n' % repr(self.Marker.id_size[i]))
                 f.write('    id_color = %s,\n' % repr(self.Marker.id_color[i]))
                 f.write('    id_font = %s,\n' % repr(self.Marker.id_font[i]))
-                f.write('    id_location = %s,\n' % repr(self.Marker.id_location[i]))
+                f.write(
+                    '    id_location = %s,\n' %
+                    repr(
+                        self.Marker.id_location[i]))
                 f.write('    symbol = %s,\n' % repr(self.Marker.symbol[i]))
                 f.write('    color = %s,\n' % repr(self.Marker.color[i]))
                 f.write('    size = %s,\n' % repr(self.Marker.size[i]))
@@ -1259,7 +1263,8 @@ class Gtd(vcs.bestMatch):
                 t.string = self.Marker.id[i]
                 t.height = int(self.Marker.id_size[i])
                 t.halign = 'center'
-                if self.Marker.id_location[i] in [0,1] or (self.Marker.id_location[i] is None eand self.idsLocation in [0,1]):
+                if self.Marker.id_location[i] in [0, 1] or\
+                        (self.Marker.id_location[i] is None and self.idsLocation in [0, 1]):
                     t.priority = 4
                 else:
                     t.priority = 0  # Do not draw on plot
@@ -1315,7 +1320,8 @@ class Gtd(vcs.bestMatch):
                 l_tmp.color = [VCS_validation_functions.color2vcs(
                     self.Marker.line_color[i])]
                 if self.Marker.line[i] == 'tail':
-                    self.drawarrow(canvas, x1, y1, x1, y1, x2, y2, l_tmp.color[0])
+                    self.drawarrow(
+                        canvas, x1, y1, x1, y1, x2, y2, l_tmp.color[0])
                 elif self.Marker.line[i] == 'head':
                     try:
                         dd1 = data[i - 1][1].astype('d')
@@ -1485,7 +1491,8 @@ class Gtd(vcs.bestMatch):
         return wc
 
     def drawFrame(self, canvas, data, wc):
-        Outter = createnewvcsobj(canvas, 'line', 'tdiag_', self.template.line2.line)
+        Outter = createnewvcsobj(
+            canvas, 'line', 'tdiag_', self.template.line2.line)
         frame = createnewvcsobj(
             canvas,
             'line',
@@ -1987,12 +1994,14 @@ class Gtd(vcs.bestMatch):
             ids = []
             for i, marker_id in enumerate(self.Marker.id):
                 id_loc = self.Marker.id_location[i]
-                if id_loc in [0, 2] or (id_loc is None and self.idsLocation in [0, 2]):
+                if id_loc in [0, 2] or (
+                        id_loc is None and self.idsLocation in [0, 2]):
                     ids.append(marker_id)
                 else:
                     ids.append(None)
             self.template.drawLinesAndMarkersLegend(canvas, self.Marker.line_color,
-                                                    self.Marker.line_type, [0, ] * len(self.Marker.line_size),
+                                                    self.Marker.line_type, [
+                                                        0, ] * len(self.Marker.line_size),
                                                     self.Marker.color, self.Marker.symbol, self.Marker.size,
                                                     ids,
                                                     scratched=None, stringscolors=self.Marker.id_color,
