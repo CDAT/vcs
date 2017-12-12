@@ -95,6 +95,7 @@ class TDMarker(vcs.bestMatch):
         '_id_size',
         '_id_color',
         '_id_font',
+        '_id_location',
         '_symbol',
         '_color',
         '_size',
@@ -138,6 +139,7 @@ class TDMarker(vcs.bestMatch):
         self._id_size = []
         self._id_color = []
         self._id_font = []
+        self._id_location = []
         self._symbol = []
         self._color = []
         self._size = []
@@ -214,6 +216,19 @@ class TDMarker(vcs.bestMatch):
             value,
             VCS_validation_functions.checkString)
     id = property(_getid, _setid)
+
+    def _getidlocation(self):
+        return self._id_location
+
+    def _setidlocation(self, values):
+        good = []
+        VCS_validation_functions.checkListTuple(self, "id_location",values)
+        for value in values:
+            if value is not None:
+                value = VCS_validation_functions.checkInStringsListInt(self,
+                        "id_location", value, ["both","plot","legend"])
+            good.append(value)
+        self._id_location = good
 
     def _getid_color(self):
         return self._id_color
@@ -381,6 +396,7 @@ class TDMarker(vcs.bestMatch):
         print('    id_size = ', self.id_size)
         print('    id_color = ', self.id_color)
         print('    id_font = ', self.id_font)
+        print('    id_location = ', self.id_location)
         print('    symbol = ', self.symbol)
         print('    color = ', self.color)
         print('    size = ', self.size)
@@ -409,7 +425,7 @@ class TDMarker(vcs.bestMatch):
     def addMarker(self, status='on', line=None,
                   id='', id_size=None, id_color=None, id_font=None, symbol=None,
                   color=None, size=None, xoffset=0., yoffset=0.,
-                  line_color=None, line_size=None, line_type=None):
+                  line_color=None, line_size=None, line_type=None, id_location=None):
 
         if self._number == 0:  # first marker ever !
             if symbol is None:
@@ -451,6 +467,8 @@ class TDMarker(vcs.bestMatch):
                 id_color = color
             if id_font is None:
                 id_font = self.id_font[-1]
+            if id_location is None:
+                id_location = self.id_location[-1]
 
         a = self.status
         a.append(status)
@@ -494,6 +512,9 @@ class TDMarker(vcs.bestMatch):
         a = self.id_font
         a.append(id_font)
         self.id_font = a
+        a = self.id_location
+        a.append(id_location)
+        self.id_location = a
         self._number += 1
         if self._number != 0:
             self.equalize()
@@ -531,6 +552,7 @@ class TDMarker(vcs.bestMatch):
             'xoffset',
             'yoffset',
             'id_font',
+            'id_location',
             'line_color',
             'line_size',
             'line_type']
@@ -563,6 +585,7 @@ class Gtd(vcs.bestMatch):
         '_skillDrawLabels',
         '_skillColor',
         '_skillCoefficient',
+        '_idsLocation',
         'outtervalue',
         '_detail',
         '_referencevalue',
@@ -596,6 +619,7 @@ class Gtd(vcs.bestMatch):
             self._skillDrawLabels = 'y'
             self._skillColor = 'grey'
             self._skillCoefficient = [1., 1., 1., ]
+            self._idsLocation = 0
             self.outtervalue = None  # where to draw the outter circle
             self._detail = 75  # for precision of skill dots
             self._referencevalue = 1.  # inner circle
@@ -625,6 +649,7 @@ class Gtd(vcs.bestMatch):
             self.skillColor = src.skillColor
             self.skillCoefficient = src.skillCoefficient
             self.outtervalue = src.outtervalue
+            self.idsLocation = src.idsLocation
             self.detail = src.detail
             self.referencevalue = src.referencevalue
 # self._referencecolor=src'black'
@@ -713,6 +738,15 @@ class Gtd(vcs.bestMatch):
         if value is not None:
             self._skillCoefficient = value
     skillCoefficient = property(_getskillcoefficient, _setskillcoefficient)
+
+    def _get_idsLocation(self):
+        return self._idsLocation
+
+    def _set_idsLocation(self,value):
+        value = VCS_validation_functions.checkInStringsListInt(self,
+                "idsLocation", value, ["both","plot","legend"])
+        self._idsLocation = value
+    idsLocation = property(_get_idsLocation, _set_idsLocation)
 
     def _getdetail(self):
         return self._detail
@@ -1011,6 +1045,7 @@ class Gtd(vcs.bestMatch):
         print('skillColor =', self.skillColor)
         print('skillDrawLabels =', self.skillDrawLabels)
         print('skillCoefficient =', self.skillCoefficient)
+        print('idsLocation =', self.idsLocation)
         print('referencevalue =', self.referencevalue)
 # print 'referencecolor =',self.referencecolor
         print('arrowlength =', self.arrowlength)
@@ -1123,6 +1158,7 @@ class Gtd(vcs.bestMatch):
                 f.write('    id_size = %s,\n' % repr(self.Marker.id_size[i]))
                 f.write('    id_color = %s,\n' % repr(self.Marker.id_color[i]))
                 f.write('    id_font = %s,\n' % repr(self.Marker.id_font[i]))
+                f.write('    id_location = %s,\n' % repr(self.Marker.id_location[i]))
                 f.write('    symbol = %s,\n' % repr(self.Marker.symbol[i]))
                 f.write('    color = %s,\n' % repr(self.Marker.color[i]))
                 f.write('    size = %s,\n' % repr(self.Marker.size[i]))
@@ -1153,7 +1189,7 @@ class Gtd(vcs.bestMatch):
     def addMarker(self, status='on', line=None,
                   id='', id_size=None, id_color=None, id_font=None, symbol=None,
                   color=None, size=None, xoffset=0., yoffset=0.,
-                  line_color=None, line_size=None, line_type=None):
+                  line_color=None, line_size=None, line_type=None, id_location=None):
         M = self.Marker
         M.addMarker(
             status,
@@ -1169,7 +1205,8 @@ class Gtd(vcs.bestMatch):
             yoffset,
             line_color,
             line_size,
-            line_type)
+            line_type,
+            id_location)
         return
 
     def draw(self, canvas, data):
@@ -1222,7 +1259,10 @@ class Gtd(vcs.bestMatch):
                 t.string = self.Marker.id[i]
                 t.height = int(self.Marker.id_size[i])
                 t.halign = 'center'
-                t.priority = 4
+                if self.Marker.id_location[i] in [0,1] or (self.Marker.id_location[i] is None eand self.idsLocation in [0,1]):
+                    t.priority = 4
+                else:
+                    t.priority = 0  # Do not draw on plot
                 t.color = VCS_validation_functions.color2vcs(
                     self.Marker.id_color[i])
                 t.font = self.Marker.id_font[i]
@@ -1944,10 +1984,17 @@ class Gtd(vcs.bestMatch):
                 stacking = "vertical"
             else:
                 stacking = "horizontal"
+            ids = []
+            for i, marker_id in enumerate(self.Marker.id):
+                id_loc = self.Marker.id_location[i]
+                if id_loc in [0, 2] or (id_loc is None and self.idsLocation in [0, 2]):
+                    ids.append(marker_id)
+                else:
+                    ids.append(None)
             self.template.drawLinesAndMarkersLegend(canvas, self.Marker.line_color,
                                                     self.Marker.line_type, [0, ] * len(self.Marker.line_size),
                                                     self.Marker.color, self.Marker.symbol, self.Marker.size,
-                                                    self.Marker.id,
+                                                    ids,
                                                     scratched=None, stringscolors=self.Marker.id_color,
                                                     stacking=stacking, bg=False, render=True)
         if resetoutter:
