@@ -567,6 +567,11 @@ class VTKVCSBackend(object):
         self.resize_or_rotate_window(W, H, x, y, clear)
 
     def initialSize(self, width=None, height=None):
+        if hasattr(vtk.vtkRenderingOpenGLPython, "vtkXOpenGLRenderWindow") and\
+                isinstance(self.renWin, vtk.vtkRenderingOpenGLPython.vtkXOpenGLRenderWindow):
+            if os.environ.get("DISPLAY", None) is None:
+                raise RuntimeError("No DISPLAY set. Set your DISPLAY env variable or install mesalib conda package")
+
         # Gets user physical screen dimensions
         if isinstance(width, int) and isinstance(height, int):
             self.setsize(width, height)
