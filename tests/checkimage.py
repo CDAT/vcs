@@ -4,6 +4,7 @@ the known good baseline given in the third. Alternate known good images
 (with _number.png in the filename) are also compared against.
 """
 
+from __future__ import print_function
 import math
 import numpy
 import vtk
