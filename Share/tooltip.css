@@ -32,7 +32,8 @@
     border-color: orange; 
     background-color: orange; 
 }
-#thumbnail
-{  margin: 0 auto;
+#thumbnail {
+    margin: 0 auto;
     width: 200px; 
+    min-height: 150px;
 }
