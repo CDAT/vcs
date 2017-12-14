@@ -38,6 +38,29 @@ class TestVCSTaylor(basetaylortest.VCSTaylorBaseTest):
         self.x.clear()
         self.x.plot(self.data, taylor)
         self.checkImage("test_vcs_taylor_markers_offset.png")
+        # Ids not on legend
+        taylor.idsLocation = "plot"
+        self.x.clear()
+        self.x.plot(self.data, taylor)
+        self.checkImage("test_vcs_taylor_markers_offset_plot_only.png")
+        # Ids on legend only
+        taylor.idsLocation = "legend"
+        self.x.clear()
+        self.x.plot(self.data, taylor)
+        self.checkImage("test_vcs_taylor_markers_offset_legend_only.png")
+        # Ids alternative
+        taylor.Marker.id_location = [0, 1, 2, 0, 1, 2, None]
+        self.x.clear()
+        self.x.plot(self.data, taylor)
+        self.checkImage("test_vcs_taylor_markers_offset_onoff_legend.png")
+        taylor.idsLocation = "plot"
+        self.x.clear()
+        self.x.plot(self.data, taylor)
+        self.checkImage("test_vcs_taylor_markers_offset_onoff_plot.png")
+        taylor.idsLocation = "both"
+        self.x.clear()
+        self.x.plot(self.data, taylor)
+        self.checkImage("test_vcs_taylor_markers_offset_onoff_both.png")
 
     testVCSTaylor.taylordiagrams = 1
     testVCSTaylor.taylordiagramsMarkers = 1

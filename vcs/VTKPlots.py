@@ -574,6 +574,11 @@ class VTKVCSBackend(object):
         self.resize_or_rotate_window(W, H, x, y, clear)
 
     def initialSize(self, width=None, height=None):
+        if hasattr(vtk.vtkRenderingOpenGLPython, "vtkXOpenGLRenderWindow") and\
+                isinstance(self.renWin, vtk.vtkRenderingOpenGLPython.vtkXOpenGLRenderWindow):
+            if os.environ.get("DISPLAY", None) is None:
+                raise RuntimeError("No DISPLAY set. Set your DISPLAY env variable or install mesalib conda package")
+
         # Gets user physical screen dimensions
         if isinstance(width, int) and isinstance(height, int):
             self.setsize(width, height)
@@ -776,7 +781,7 @@ class VTKVCSBackend(object):
         renderer.SetLayer(n)
 
     def plot3D(self, data1, data2, tmpl, gm, ren, **kargs):
-        from .DV3D.Application import DV3DApp
+        from DV3D.Application import DV3DApp
         requiresFileVariable = True
         self.canvas.drawLogo = False
         if (data1 is None) or (requiresFileVariable and not (isinstance(

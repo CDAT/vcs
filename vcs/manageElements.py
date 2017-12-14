@@ -35,11 +35,57 @@ import random
 from .error import vcsError
 import warnings
 from . import dv3d
+import os
 
 try:
     basestring
 except NameError:
     basestring = str
+
+
+def reset(gtype=None):
+    """Remove all user generated objects
+
+    :Example:
+
+        .. doctest:: manageElements_reset
+
+            >>> vcs.reset()
+            >>> vcs.reset("boxfill")
+            >>> vcs.reset(["isofill", "template"])
+
+
+    :param gtype: String or list of stringsname of a VCS object type.
+        (e.g. 'boxfill', 'isofill', 'marker', etc.)
+    :type typ: str
+
+    :returns: None
+    :rtype: None
+    """
+
+    if gtype is None:
+        gtype = vcs.listelements()
+    elif isinstance(gtype, basestring):
+        if gtype not in vcs.listelements():
+            raise ValueError("invalid element type: {}".format(gtype))
+        gtype = [gtype, ]
+
+    for typ in gtype:
+        elements = vcs.listelements(typ)
+        for e in elements:
+            if e not in vcs._protected_elements[typ]:
+                if typ in ["scatter", "xvsy", "xyvsy", "yxvsx"]:
+                    vcs.removeG(e, "1d")
+                else:
+                    vcs.removeobject(vcs.elements[typ][e])
+
+    _dotdir, _dotdirenv = vcs.getdotdirectory()
+    user_init = os.path.join(
+        os.path.expanduser("~"),
+        _dotdir,
+        'initial.attributes')
+    if os.path.exists(user_init):
+        vcs.scriptrun(user_init)
 
 
 def check_name_source(name, source, typ):
@@ -1708,15 +1754,15 @@ getcolormap.__doc__ = getcolormap.__doc__ % xmldocs.get_docs['colormap']  # noqa
 
 
 def removeG(obj, gtype="boxfill"):
-    loc = locals()
-    exec("res = vcs.is%s(obj)" % gtype)
-    res = loc["res"]
     if isinstance(obj, basestring):
         name = obj
         if obj not in list(vcs.elements[gtype].keys()):
             raise RuntimeError("Cannot remove inexisting %s %s" % (gtype, obj))
     else:
         name = obj.name
+        loc = locals()
+        exec("res = vcs.is%s(obj)" % gtype)
+        res = loc["res"]
         if not res:  # noqa
             raise RuntimeError("You are trying to remove a VCS %s but %s is not one" % (gtype, repr(obj)))
     msg = "Removed %s object %s" % (gtype, name)
@@ -1846,6 +1892,10 @@ def removeP(obj):
     return removeG(obj, "template")
 
 
+def remove3d_dual_scalar(obj):
+    return removeG(obj, '3d_dual_scalar')
+
+
 def removeobject(obj):
     """The user has the ability to create primary and secondary class
     objects. The function allows the user to remove these objects
@@ -1900,8 +1950,7 @@ def removeobject(obj):
         elif (obj.g_name == 'Gs'):
             msg = vcs.removeGs(obj.name)
         else:
-            msg = 'Could not find the correct graphics class object.'
-            raise vcsError(msg)
+            msg = vcs.removeG(obj.name, obj.g_name)
     elif vcs.issecondaryobject(obj):
         if (obj.s_name == 'Tl'):
             msg = vcs.removeTl(obj.name)

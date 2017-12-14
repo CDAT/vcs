@@ -283,7 +283,7 @@ except BaseException:
 
 for typ in list(elements.keys()):
     elts = elements[typ]
-    for k in list(elts.keys()):  # let's save which elements should be saved and untouched
+    for k in vcs.listelements(typ):  # let's save which elements should be saved and untouched
         _protected_elements[typ].add(k)
 
 _dotdir, _dotdirenv = vcs.getdotdirectory()

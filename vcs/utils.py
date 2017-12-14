@@ -2339,7 +2339,7 @@ def creategraphicsmethod(gtype, gname='default', name=None):
     elif hasVCSAddons and isinstance(gtype, vcsaddons.core.VCSaddon):
         func = gtype.creategm
     else:
-        return None
+        raise ValueError("Invalid graphic method type: {}".format(gtype))
     copy_mthd = func(name=name, source=gname)
     return copy_mthd
 
