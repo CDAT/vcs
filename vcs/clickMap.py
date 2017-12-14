@@ -291,8 +291,6 @@ def axisToPngCoords(values, gm, template, axis='x1', worldCoordinates=[
                                                      start,
                                                      end,
                                                      c1, c2)).tolist()
-            xs += [xs[-1]]
-            ys += [ys[-1]]
             mapped.append([xs, ys])
     return numpy.array(mapped)
 

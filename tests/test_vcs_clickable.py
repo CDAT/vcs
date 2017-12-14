@@ -25,8 +25,8 @@ class ClickTests(unittest.TestCase):
         self.s = s
     def testClickLabels(self):
         click_labels_x = vcs.utils.axisToPngCoords([],self.b,self.t,'x1',[self.b.datawc_x1,self.b.datawc_x2,self.b.datawc_y1,self.b.datawc_y2],png="testClick.png")
-        self.assertTrue(numpy.allclose(click_labels_x,[[[ 483.38333333,  483.38333333,  495.36666667,  495.36666667,  495.36666667],
-              [ 461.37500036,  475.62500036,  475.62500036,  461.37500036,  461.37500036]]]))
+        self.assertTrue(numpy.allclose(click_labels_x,[[[ 483.38333333,  483.38333333,  495.36666667,  495.36666667],
+              [ 461.37500036,  475.62500036,  475.62500036,  461.37500036]]]))
     def testClickMap(self):
             click_areas = vcs.utils.meshToPngCoords(self.s,self.t,[self.b.datawc_x1,self.b.datawc_x2,self.b.datawc_y1,self.b.datawc_y2],png="testClick.png")
             self.assertEqual(click_areas.shape,(1,46,72))
