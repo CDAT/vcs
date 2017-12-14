@@ -26,7 +26,7 @@ def createAreaTag(parameters):
     if tooltip.strip() != "":
         tooltip = 'tooltip="%s" onmouseover="cvi_tip._show(event);"' % tooltip
         tooltip += ' onmouseout="cvi_tip._hide(event);" onmousemove="cvi_tip._move(event);"'
-    tag = "<area class='noborder iopacity35 {}' {} href='{}' shape='poly' ".format(
+    tag = "<area class='noborder iopacity35 {}' {} href='{}' {} shape='poly' ".format(
         clss, tooltip, target, extras)
     tag += " coords='" + ",".join(["%i, %i" % (x, y)
                                    for (x, y) in zip(area[0], area[1])]) + "'>\n"
