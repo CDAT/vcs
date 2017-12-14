@@ -49,5 +49,6 @@ setup(name="vcs",
                                  'Share/mapper.js',
                                  'Share/cvi_tip_lib.js',
                                  'Share/tooltip.css',
+                                 'Share/modal.js'
                                  )), ],
       )
