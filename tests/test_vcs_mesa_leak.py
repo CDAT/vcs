@@ -108,9 +108,9 @@ class VCSTestMesaLeak(basevcstest.VCSBaseTest):
                 memStr = 'Max mem: %05.3f GB' % ( mem )
                 counterStr = '%05d' % counter
                 pyObj = 'PyObj#: %07d;' % (len(gc.get_objects()))
-                print counterStr, printStr, timeStr, memStr, pyObj
+                print(counterStr, printStr, timeStr, memStr, pyObj)
                 counter = counter + 1
                 gc.collect()  # Attempt to force a memory flush
         a, b = numpy.polyfit(numpy.arange(NITER),numpy.array(mems),1)
-        print a,b
+        print(a,b)
         self.assertTrue(abs(a)<1.e-3)
