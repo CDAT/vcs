@@ -30,6 +30,13 @@
      1, 
      1
     ], 
+    "id_location": [
+     null, 
+     null, 
+     null, 
+     null, 
+     null
+    ], 
     "id_size": [
      20, 
      20, 
@@ -135,6 +142,7 @@
    "cticlabels1": "*", 
    "detail": 75, 
    "displays": [], 
+   "idsLocation": 0, 
    "max": null, 
    "outtervalue": null, 
    "preserveaspectratio": "y", 
@@ -159,6 +167,7 @@
     0.9, 
     0.95
    ], 
+   "standard_deviation_label": "Standard Deviation", 
    "template": null, 
    "xmtics1": "*", 
    "xticlabels1": "*", 

@@ -1,8 +1,9 @@
 import basevcstest
 
+
 class TestVCSBoxfill(basevcstest.VCSBaseTest):
     def testBoxfillLev1Lev2Ext1(self):
-        s = self.clt("clt",slice(0,1),squeeze=1)
+        s = self.clt("clt", slice(0, 1), squeeze=1)
         b = self.x.createboxfill()
         b.level_1 = 20
         b.level_2 = 80

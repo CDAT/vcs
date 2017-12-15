@@ -1,5 +1,6 @@
 import basevcstest
 
+
 class TestVCSLine(basevcstest.VCSBaseTest):
     def testVCSLinePintExtensions(self):
         line = self.x.createline()

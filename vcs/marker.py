@@ -21,10 +21,11 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import scriptdocs, listdoc
+from .xmldocs import scriptdocs, listdoc
 
 
 def process_src(nm, code):
@@ -32,7 +33,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates oneD gm from it
     try:
         gm = Tm(nm)
-    except:
+    except Exception:
         gm = vcs.elements["marker"][nm]
     # process attributes with = as assignement
     for att in ["projection", ]:
@@ -49,15 +50,15 @@ def process_src(nm, code):
         try:
             # int will be converted
             setattr(gm, nm, int(sp[1]))
-        except:
+        except Exception:
             try:
                 # int and floats will be converted
                 setattr(gm, nm, eval(sp[1]))
-            except:
+            except Exception:
                 # strings
                 try:
                     setattr(gm, nm, sp[1])
-                except:
+                except Exception:
                     pass  # oh well we stick to default value
         # Datawc
         for att in ["mtyp", "msize", "mci", "vp", "wc"]:
@@ -71,10 +72,10 @@ def process_src(nm, code):
                 for v in vals:
                     try:  # int first
                         values.append(int(v))
-                    except:
+                    except Exception:
                         try:
                             values.append(float(v))
-                        except:
+                        except Exception:
                             values.append(v)
                 try:
                     if att == "mtyp":
@@ -89,7 +90,7 @@ def process_src(nm, code):
                         gm.worldcoordinate = values
                     else:
                         raise Exception("Unkwnow marker attribute: %s" % att)
-                except:
+                except Exception:
                     pass
         for att in ["x", "y"]:
             i = code.find(" %s(" % att)
@@ -216,17 +217,6 @@ class Tm(vcs.bestMatch):
         """
     __slots__ = [
         's_name',
-        'name',
-        'color',
-        'priority',
-        'type',
-        'size',
-        'viewport',
-        'worldcoordinate',
-        'x',
-        'y',
-        'projection',
-        'colormap',
         '_name',
         '_color',
         '_priority',
@@ -360,7 +350,7 @@ class Tm(vcs.bestMatch):
                 self,
                 'x',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:
@@ -388,7 +378,7 @@ class Tm(vcs.bestMatch):
                 self,
                 'y',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:
@@ -432,19 +422,19 @@ class Tm(vcs.bestMatch):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "---------- Marker (Tm) member (attribute) listings ----------"
-        print "secondary method =", self.s_name
-        print "name =", self.name
-        print "type =", self.type
-        print "size =", self.size
-        print "color =", self.color
-        print "priority =", self.priority
-        print "viewport =", self.viewport
-        print "worldcoordinate =", self.worldcoordinate
-        print "x =", self.x
-        print "y =", self.y
-        print "projection =", self.projection
-        print "colormap =", self.colormap
+        print("---------- Marker (Tm) member (attribute) listings ----------")
+        print("secondary method =", self.s_name)
+        print("name =", self.name)
+        print("type =", self.type)
+        print("size =", self.size)
+        print("color =", self.color)
+        print("priority =", self.priority)
+        print("viewport =", self.viewport)
+        print("worldcoordinate =", self.worldcoordinate)
+        print("x =", self.x)
+        print("y =", self.y)
+        print("projection =", self.projection)
+        print("colormap =", self.colormap)
     list.__doc__ = listdoc.format(name="marker", parent="")
 
     def script(self, script_filename=None, mode=None):

@@ -1,5 +1,6 @@
 import basevcstest
 
+
 class TestVCSPatterns(basevcstest.VCSBaseTest):
     def testLargePatterns(self):
         fillarea = self.x.createfillarea()

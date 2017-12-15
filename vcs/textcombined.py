@@ -1,8 +1,9 @@
 """
 # Text Combined (Tc) module
 """
+from __future__ import print_function
 import vcs
-from xmldocs import scriptdocs, listdoc  # noqa
+from .xmldocs import scriptdocs, listdoc  # noqa
 # Adapted for numpy/ma/cdms2 by convertcdms.py
 
 ###############################################################################
@@ -32,8 +33,8 @@ from xmldocs import scriptdocs, listdoc  # noqa
 # Import: Text table (Tt), and  Text orientation  (To)                        #
 #                                                                             #
 ###############################################################################
-import texttable
-import textorientation
+from . import texttable
+from . import textorientation
 
 #############################################################################
 #                                                                           #
@@ -208,28 +209,8 @@ class Tc(vcs.bestMatch):
     __slots__ = [
         's_name',
         'name',
-        'Tt_name',
-        'To_name',
         'To',
         'Tt',
-        'color',
-        'colormap',
-        'fillincolor',
-        'priority',
-        'font',
-        'string',
-        'spacing',
-        'expansion',
-        'viewport',
-        'worldcoordinate',
-        'x',
-        'y',
-        'projection',
-        'height',
-        'angle',
-        'path',
-        'halign',
-        'valign',
     ]
 
     def _getTtname(self):
@@ -431,29 +412,29 @@ class Tc(vcs.bestMatch):
         if ((self.Tt_name == '__removed_from_VCS__') or
                 (self.To_name == '__removed_from_VCS__')):
             raise ValueError('This instance has been removed from VCS.')
-        print "---------- Text combined (Tc) member (attribute) listings ----------"
-        print "secondary method =", self.s_name
-        print "", "---------- Text Table (Tt) member (attribute) listings ----------"
-        print "Tt_name =", self.Tt_name
-        print "font =", self.font
-        print "spacing =", self.spacing
-        print "expansion =", self.expansion
-        print "color =", self.color
-        print "fillincolor =", self.fillincolor
-        print "priority =", self.priority
-        print "string =", self.string
-        print "viewport =", self.viewport
-        print "worldcoordinate =", self.worldcoordinate
-        print "x =", self.x
-        print "y =", self.y
-        print "projection =", self.projection
-        print "", "---------- Text Orientation (To) member (attribute) listings ----------"
-        print "To_name =", self.To_name
-        print "height =", self.height
-        print "angle =", self.angle
-        print "path =", self.path
-        print "halign =", self.halign
-        print "valign =", self.valign
+        print("---------- Text combined (Tc) member (attribute) listings ----------")
+        print("secondary method =", self.s_name)
+        print("", "---------- Text Table (Tt) member (attribute) listings ----------")
+        print("Tt_name =", self.Tt_name)
+        print("font =", self.font)
+        print("spacing =", self.spacing)
+        print("expansion =", self.expansion)
+        print("color =", self.color)
+        print("fillincolor =", self.fillincolor)
+        print("priority =", self.priority)
+        print("string =", self.string)
+        print("viewport =", self.viewport)
+        print("worldcoordinate =", self.worldcoordinate)
+        print("x =", self.x)
+        print("y =", self.y)
+        print("projection =", self.projection)
+        print("", "---------- Text Orientation (To) member (attribute) listings ----------")
+        print("To_name =", self.To_name)
+        print("height =", self.height)
+        print("angle =", self.angle)
+        print("path =", self.path)
+        print("halign =", self.halign)
+        print("valign =", self.valign)
 
     ##########################################################################
     #                                                                           #

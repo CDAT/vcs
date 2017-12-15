@@ -1,5 +1,6 @@
 import basevcstest
 
+
 class TestVCSFileVariable(basevcstest.VCSBaseTest):
     def testPlotFileVariable(self):
         V = self.clt["clt"]

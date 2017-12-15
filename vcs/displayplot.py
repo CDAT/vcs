@@ -23,9 +23,9 @@
 #
 #
 #
-import VCS_validation_functions
+from . import VCS_validation_functions
 import vcs
-from xmldocs import listdoc  # noqa
+from .xmldocs import listdoc  # noqa
 
 
 class Dp(vcs.bestMatch):
@@ -82,44 +82,30 @@ class Dp(vcs.bestMatch):
 
     .. pragma: skip-doctest
     """
-    __slots__ = ["name",
-                 "_name",
+    __slots__ = ["_name",
                  "s_name",
-                 "off",
-                 "priority",
-                 "template",
-                 "backend",
-                 "_template_origin",
-                 "g_type",
-                 "g_name",
-                 "array",
-                 "continents",
-                 "extradisplays",
-                 "parent",
                  "_parent",
                  "_off",
                  "_priority",
                  "_template",
                  "__template_origin",
-                 "_template_origin",
                  "_Dp__template_origin",
                  "_g_type",
                  "_g_name",
                  "_array",
                  "_continents",
                  "_continents_line",
-                 "continents_line",
                  "_backend",
-                 "ratio",
-                 "newelements",
                  "_newelements",
+                 "extradisplays",
+                 "ratio",
                  ]
 
     def _repr_png_(self):
         import tempfile
         tmp = tempfile.mktemp() + ".png"
         self._parent.png(tmp)
-        f = open(tmp)
+        f = open(tmp, "rb")
         st = f.read()
         f.close()
         return st
@@ -232,14 +218,14 @@ class Dp(vcs.bestMatch):
         try:
             hasVCSAddons = True
             import vcsaddons
-        except:
+        except Exception:
             hasVCSAddons = False
         value = VCS_validation_functions.checkString(self, 'g_type', value)
         value = value.lower()
         if value not in vcs.elements and value != "text" and (hasVCSAddons and value not in vcsaddons.gms):
             raise ValueError(
                 "invalid g_type '%s' must be one of: %s " %
-                (value, vcs.elements.keys()))
+                (value, list(vcs.elements.keys())))
         self._g_type = value
     g_type = property(_getg_type, _setg_type)
 
@@ -323,16 +309,16 @@ class Dp(vcs.bestMatch):
             """
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "---------- Display Plot (Dp) member (attribute) listings ----------"
-        print "Display plot method =", self.s_name
-        print "name =", self.name
-        print "off =", self.off
-        print "priority =", self.priority
-        print "template =", self.template
-        print "template_origin =", self._template_origin
-        print "g_type =", self.g_type
-        print "g_name =", self.g_name
-        print "array =", self.array
-        print "continents =", self.continents
-        print "extradisplays =", self.extradisplays
-        print "ratio =", self.ratio
+        print("---------- Display Plot (Dp) member (attribute) listings ----------")
+        print("Display plot method =", self.s_name)
+        print("name =", self.name)
+        print("off =", self.off)
+        print("priority =", self.priority)
+        print("template =", self.template)
+        print("template_origin =", self._template_origin)
+        print("g_type =", self.g_type)
+        print("g_name =", self.g_name)
+        print("array =", self.array)
+        print("continents =", self.continents)
+        print("extradisplays =", self.extradisplays)
+        print("ratio =", self.ratio)

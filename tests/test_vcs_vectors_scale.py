@@ -3,25 +3,27 @@ import numpy as np
 import cdms2
 
 # use syntetic data to test vector scaling and vector legend
+
+
 class TestVCSVectorScale(basevcstest.VCSBaseTest):
-    def coreTest(self,scalingType,scale=None, scalerange = None):
+    def coreTest(self, scalingType, scale=None, scalerange=None):
         u = cdms2.createAxis(np.array([[1, 1, 0, 1, 1, 1, 0, 1],
-                      [1, 1, 0, 1, 1, 1, 0, 1],
-                      [1, 1, 0, 1, 1, 1, 0, 1],
-                      [1, 1, 0, 1, 1, 1, 0, 1],
-                      [1, 1, 0, 1, 1, 1, 0, 1],
-                      [1, 1, 0, 1, 1, 1, 0, 1],
-                      [1, 1, 0, 1, 1, 1, 0, 1],
-                      [1, 1, 0, 1, 1, 1, 0, 1]]))
+                                       [1, 1, 0, 1, 1, 1, 0, 1],
+                                       [1, 1, 0, 1, 1, 1, 0, 1],
+                                       [1, 1, 0, 1, 1, 1, 0, 1],
+                                       [1, 1, 0, 1, 1, 1, 0, 1],
+                                       [1, 1, 0, 1, 1, 1, 0, 1],
+                                       [1, 1, 0, 1, 1, 1, 0, 1],
+                                       [1, 1, 0, 1, 1, 1, 0, 1]]))
         u.id = "u"
         v = cdms2.createAxis(np.array([[1, 0, 1, 0.5, 1, 0, 1, 0.5],
-                      [1, 0, 1, 0.5, 1, 0, 1, 0.5],
-                      [1, 0, 1, 0.5, 1, 0, 1, 0.5],
-                      [1, 0, 1, 0.5, 1, 0, 1, 0.5],
-                      [1, 0, 1, 0.5, 1, 0, 1, 0.5],
-                      [1, 0, 1, 0.5, 1, 0, 1, 0.5],
-                      [1, 0, 1, 0.5, 1, 0, 1, 0.5],
-                      [1, 0, 1, 0.5, 1, 0, 1, 0.5]]))
+                                       [1, 0, 1, 0.5, 1, 0, 1, 0.5],
+                                       [1, 0, 1, 0.5, 1, 0, 1, 0.5],
+                                       [1, 0, 1, 0.5, 1, 0, 1, 0.5],
+                                       [1, 0, 1, 0.5, 1, 0, 1, 0.5],
+                                       [1, 0, 1, 0.5, 1, 0, 1, 0.5],
+                                       [1, 0, 1, 0.5, 1, 0, 1, 0.5],
+                                       [1, 0, 1, 0.5, 1, 0, 1, 0.5]]))
         v.id = "v"
 
         gv = self.x.createvector()
@@ -43,7 +45,7 @@ class TestVCSVectorScale(basevcstest.VCSBaseTest):
         self.coreTest("constant", scale=0.5)
         self.coreTest("linear", scalerange=[0.5, 1])
         self.coreTest("normalize")
-        self.coreTest("constantNLinear", scale=0.5, scalerange=[0.5, 1])        
+        self.coreTest("constantNLinear", scale=0.5, scalerange=[0.5, 1])
         self.coreTest("constantNNormalize", scale=2)
         # test clamping
         self.coreTest("constant", scale=0.1)

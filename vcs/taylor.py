@@ -1,14 +1,14 @@
 # Adapted for numpy/ma/cdms2 by convertcdms.py
+from __future__ import print_function
 import vcs
 import numpy.ma
-import string
 import numpy
 import cdms2
-import VCS_validation_functions
+from . import VCS_validation_functions
 import MV2
 import copy
 import warnings
-from xmldocs import scriptdocs
+from .xmldocs import scriptdocs
 
 
 def process_src(name, code):
@@ -18,7 +18,7 @@ def process_src(name, code):
         try:
             td = Gtd(name)
         except Exception as err:
-            print "Err:", err
+            print("Err:", err)
             td = vcs.elements["taylordiagram"][name]
         sp = code.split(';')  # breaks the thing into different attributes
         imark = 0
@@ -46,8 +46,11 @@ def createnewvcsobj(canvas, type, basenm, src='default', src2='default'):
     else:
         out = None  # so that flake8 is happy
         if type != 'text':
+            loc = locals()
             exec('out=canvas.create' + type + '("' + nm + '","' + src + '")')
+            out = loc["out"]
         else:
+            loc = locals()
             exec(
                 'out=canvas.create' +
                 type +
@@ -60,6 +63,7 @@ def createnewvcsobj(canvas, type, basenm, src='default', src2='default'):
                 '","' +
                 src2 +
                 '")')
+            out = loc["out"]
 
     if type == 'text':
         tmptt = canvas.gettexttable(src)
@@ -91,6 +95,7 @@ class TDMarker(vcs.bestMatch):
         '_id_size',
         '_id_color',
         '_id_font',
+        '_id_location',
         '_symbol',
         '_color',
         '_size',
@@ -101,21 +106,6 @@ class TDMarker(vcs.bestMatch):
         '_line_type',
         '_number',
         'name',
-        'status',
-        'line',
-        'id',
-        'id_size',
-        'id_color',
-        'id_font',
-        'symbol',
-        'color',
-        'size',
-        'xoffset',
-        'yoffset',
-        'line_color',
-        'line_size',
-        'line_type',
-        'number'
     ]
 
     def __getstate__(self):
@@ -126,6 +116,7 @@ class TDMarker(vcs.bestMatch):
             'id': self.id,
             'id_size': self.id_size,
             'id_color': self.id_color,
+            'id_location': self.id_location,
             'id_font': self.id_font,
             'symbol': self.symbol,
             'color': self.color,
@@ -138,7 +129,7 @@ class TDMarker(vcs.bestMatch):
             'number': self.number}
 
     def __setstate__(self, dict):
-        for k in dict.keys():
+        for k in list(dict.keys()):
             setattr(self, k, dict[k])
 
     def __init__(self):
@@ -149,6 +140,7 @@ class TDMarker(vcs.bestMatch):
         self._id_size = []
         self._id_color = []
         self._id_font = []
+        self._id_location = []
         self._symbol = []
         self._color = []
         self._size = []
@@ -171,7 +163,7 @@ class TDMarker(vcs.bestMatch):
                     v +
                     'is not valid')
             else:
-                v = string.lower(v)
+                v = v.lower()
                 if v == 'none':
                     return None
                 else:
@@ -225,6 +217,20 @@ class TDMarker(vcs.bestMatch):
             value,
             VCS_validation_functions.checkString)
     id = property(_getid, _setid)
+
+    def _getidlocation(self):
+        return self._id_location
+
+    def _setidlocation(self, values):
+        good = []
+        VCS_validation_functions.checkListTuple(self, "id_location", values)
+        for value in values:
+            if value is not None:
+                value = VCS_validation_functions.checkInStringsListInt(self,
+                                                                       "id_location", value, ["both", "plot", "legend"])
+            good.append(value)
+        self._id_location = good
+    id_location = property(_getidlocation, _setidlocation)
 
     def _getid_color(self):
         return self._id_color
@@ -386,20 +392,21 @@ class TDMarker(vcs.bestMatch):
         self.line_type.pop(i)
 
     def list(self):
-        print '    status = ', self.status
-        print '    line = ', self.line
-        print '    id = ', self.id
-        print '    id_size = ', self.id_size
-        print '    id_color = ', self.id_color
-        print '    id_font = ', self.id_font
-        print '    symbol = ', self.symbol
-        print '    color = ', self.color
-        print '    size = ', self.size
-        print '    xoffset = ', self.xoffset
-        print '    yoffset = ', self.yoffset
-        print '    line_color = ', self.line_color
-        print '    line_size = ', self.line_size
-        print '    line_type = ', self.line_type
+        print('    status = ', self.status)
+        print('    line = ', self.line)
+        print('    id = ', self.id)
+        print('    id_size = ', self.id_size)
+        print('    id_color = ', self.id_color)
+        print('    id_font = ', self.id_font)
+        print('    id_location = ', self.id_location)
+        print('    symbol = ', self.symbol)
+        print('    color = ', self.color)
+        print('    size = ', self.size)
+        print('    xoffset = ', self.xoffset)
+        print('    yoffset = ', self.yoffset)
+        print('    line_color = ', self.line_color)
+        print('    line_size = ', self.line_size)
+        print('    line_type = ', self.line_type)
 
     def insert(self, i):
         self.status.insert(i, self.status[i])
@@ -420,7 +427,7 @@ class TDMarker(vcs.bestMatch):
     def addMarker(self, status='on', line=None,
                   id='', id_size=None, id_color=None, id_font=None, symbol=None,
                   color=None, size=None, xoffset=0., yoffset=0.,
-                  line_color=None, line_size=None, line_type=None):
+                  line_color=None, line_size=None, line_type=None, id_location=None):
 
         if self._number == 0:  # first marker ever !
             if symbol is None:
@@ -462,6 +469,8 @@ class TDMarker(vcs.bestMatch):
                 id_color = color
             if id_font is None:
                 id_font = self.id_font[-1]
+            if id_location is None:
+                id_location = self.id_location[-1]
 
         a = self.status
         a.append(status)
@@ -505,6 +514,9 @@ class TDMarker(vcs.bestMatch):
         a = self.id_font
         a.append(id_font)
         self.id_font = a
+        a = self.id_location
+        a.append(id_location)
+        self.id_location = a
         self._number += 1
         if self._number != 0:
             self.equalize()
@@ -542,10 +554,11 @@ class TDMarker(vcs.bestMatch):
             'xoffset',
             'yoffset',
             'id_font',
+            'id_location',
             'line_color',
             'line_size',
             'line_type']
-        n = max(map(len, [getattr(self, x) for x in attrs]))
+        n = max(list(map(len, [getattr(self, x) for x in attrs])))
         for attr in attrs:
             self.eq(attr, n)
         self._number = n
@@ -561,44 +574,22 @@ class Gtd(vcs.bestMatch):
     .. pragma: skip-doctest
     """
     __slots__ = [
-        'template',
-        'max',
-        'quadrans',
-        'preserveaspectratio',
-        'skillValues',
-        'skillDrawLabels',
-        'skillColor',
-        'skillCoefficient',
-        'outtervalue',
-        'detail',
-        'referencevalue',
-        'Marker',
-        'arrowbase',
-        'arrowlength',
-        'arrowangle',
-        'name',
         'g_name',
         'displays',
         'bg',
-        'viewport',
-        'worldcoordinate',
+        '_standard_deviation_label',
         '_stdmax',
         '_x',
-        'yticlabels1',
-        'xticlabels1',
-        'cticlabels1',
-        'ymtics1',
-        'xmtics1',
-        'cmtics1',
-        '_template',
+        'template',
         '_max',
         '_quadrans',
-        '_preserveaspectratio',
+        'preserveaspectratio',
         '_skillValues',
         '_skillDrawLabels',
         '_skillColor',
         '_skillCoefficient',
-        '_outtervalue',
+        '_idsLocation',
+        'outtervalue',
         '_detail',
         '_referencevalue',
         '_Marker',
@@ -631,6 +622,7 @@ class Gtd(vcs.bestMatch):
             self._skillDrawLabels = 'y'
             self._skillColor = 'grey'
             self._skillCoefficient = [1., 1., 1., ]
+            self._idsLocation = 0
             self.outtervalue = None  # where to draw the outter circle
             self._detail = 75  # for precision of skill dots
             self._referencevalue = 1.  # inner circle
@@ -645,9 +637,10 @@ class Gtd(vcs.bestMatch):
             self._ymtics1 = '*'
             self._xmtics1 = '*'
             self._cmtics1 = '*'
+            self._standard_deviation_label = "Standard Deviation"
             self.displays = []
         else:
-            if source not in vcs.elements["taylordiagram"].keys():
+            if source not in list(vcs.elements["taylordiagram"].keys()):
                 raise Exception(
                     "the source taylordiagram %s doe not exist" %
                     source)
@@ -660,9 +653,9 @@ class Gtd(vcs.bestMatch):
             self.skillColor = src.skillColor
             self.skillCoefficient = src.skillCoefficient
             self.outtervalue = src.outtervalue
+            self.idsLocation = src.idsLocation
             self.detail = src.detail
             self.referencevalue = src.referencevalue
-# self._referencecolor=src'black'
             self.Marker = copy.deepcopy(src.Marker)
             self.arrowlength = src.arrowlength
             self.arrowangle = src.arrowangle
@@ -673,6 +666,7 @@ class Gtd(vcs.bestMatch):
             self.ymtics1 = src.ymtics1
             self.xmtics1 = src.xmtics1
             self.cmtics1 = src.cmtics1
+            self.standard_deviation_label = src.standard_deviation_label
         self.displays = []
         self.Marker.equalize()
         vcs.elements["taylordiagram"][name] = self
@@ -713,6 +707,17 @@ class Gtd(vcs.bestMatch):
             self._quadrans = value
     quadrans = property(_getquadrans, _setquadrans)
 
+    def _getstdname(self):
+        return self._standard_deviation_label
+
+    def _setstdname(self, value):
+        value = VCS_validation_functions.checkString(
+            self,
+            'standard_deviation_label',
+            value)
+        self._standard_deviation_label = value
+    standard_deviation_label = property(_getstdname, _setstdname)
+
     def _getskillvalues(self):
         return self._skillValues
 
@@ -748,6 +753,15 @@ class Gtd(vcs.bestMatch):
         if value is not None:
             self._skillCoefficient = value
     skillCoefficient = property(_getskillcoefficient, _setskillcoefficient)
+
+    def _get_idsLocation(self):
+        return self._idsLocation
+
+    def _set_idsLocation(self, value):
+        value = VCS_validation_functions.checkInStringsListInt(self,
+                                                               "idsLocation", value, ["both", "plot", "legend"])
+        self._idsLocation = value
+    idsLocation = property(_get_idsLocation, _set_idsLocation)
 
     def _getdetail(self):
         return self._detail
@@ -1034,30 +1048,31 @@ class Gtd(vcs.bestMatch):
         return canvas.plot(a, iso, tmpl, bg=self.bg)
 
     def list(self):
-        print '---------- Taylordiagram (Gtd) member (attribute) listings ----------'
-        print 'graphic method = Gtd'
-        print 'name =', self.name
-        print 'detail =', self.detail
+        print('---------- Taylordiagram (Gtd) member (attribute) listings ----------')
+        print('graphic method = Gtd')
+        print('name =', self.name)
+        print('detail =', self.detail)
         # maximum value of the standard deviaton, copied to the value of the
         # outter circle
-        print 'max =', self.max
-        print 'quadrans =', self.quadrans
-        print 'skillValues =', self.skillValues
-        print 'skillColor =', self.skillColor
-        print 'skillDrawLabels =', self.skillDrawLabels
-        print 'skillCoefficient =', self.skillCoefficient
-        print 'referencevalue =', self.referencevalue
+        print('max =', self.max)
+        print('quadrans =', self.quadrans)
+        print('skillValues =', self.skillValues)
+        print('skillColor =', self.skillColor)
+        print('skillDrawLabels =', self.skillDrawLabels)
+        print('skillCoefficient =', self.skillCoefficient)
+        print('idsLocation =', self.idsLocation)
+        print('referencevalue =', self.referencevalue)
 # print 'referencecolor =',self.referencecolor
-        print 'arrowlength =', self.arrowlength
-        print 'arrowangle =', self.arrowangle
-        print 'arrowbase =', self.arrowbase
-        print "xticlabels1 =", self.xticlabels1
-        print "xmtics1 =", self.xmtics1
-        print "yticlabels1 =", self.yticlabels1
-        print "ymtics1 =", self.ymtics1
-        print "cticlabels1 =", self.cticlabels1
-        print "cmtics1 =", self.cmtics1
-        print 'Marker'
+        print('arrowlength =', self.arrowlength)
+        print('arrowangle =', self.arrowangle)
+        print('arrowbase =', self.arrowbase)
+        print("xticlabels1 =", self.xticlabels1)
+        print("xmtics1 =", self.xmtics1)
+        print("yticlabels1 =", self.yticlabels1)
+        print("ymtics1 =", self.ymtics1)
+        print("cticlabels1 =", self.cticlabels1)
+        print("cmtics1 =", self.cmtics1)
+        print('Marker')
         self.Marker.list()
 
     def script(self, script_filename, mode='a'):
@@ -1081,7 +1096,8 @@ class Gtd(vcs.bestMatch):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning(
+                "scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[
@@ -1158,6 +1174,10 @@ class Gtd(vcs.bestMatch):
                 f.write('    id_size = %s,\n' % repr(self.Marker.id_size[i]))
                 f.write('    id_color = %s,\n' % repr(self.Marker.id_color[i]))
                 f.write('    id_font = %s,\n' % repr(self.Marker.id_font[i]))
+                f.write(
+                    '    id_location = %s,\n' %
+                    repr(
+                        self.Marker.id_location[i]))
                 f.write('    symbol = %s,\n' % repr(self.Marker.symbol[i]))
                 f.write('    color = %s,\n' % repr(self.Marker.color[i]))
                 f.write('    size = %s,\n' % repr(self.Marker.size[i]))
@@ -1188,7 +1208,7 @@ class Gtd(vcs.bestMatch):
     def addMarker(self, status='on', line=None,
                   id='', id_size=None, id_color=None, id_font=None, symbol=None,
                   color=None, size=None, xoffset=0., yoffset=0.,
-                  line_color=None, line_size=None, line_type=None):
+                  line_color=None, line_size=None, line_type=None, id_location=None):
         M = self.Marker
         M.addMarker(
             status,
@@ -1204,7 +1224,8 @@ class Gtd(vcs.bestMatch):
             yoffset,
             line_color,
             line_size,
-            line_type)
+            line_type,
+            id_location)
         return
 
     def draw(self, canvas, data):
@@ -1257,7 +1278,11 @@ class Gtd(vcs.bestMatch):
                 t.string = self.Marker.id[i]
                 t.height = int(self.Marker.id_size[i])
                 t.halign = 'center'
-                t.priority = 4
+                if self.Marker.id_location[i] in [0, 1] or\
+                        (self.Marker.id_location[i] is None and self.idsLocation in [0, 1]):
+                    t.priority = 4
+                else:
+                    t.priority = 0  # Do not draw on plot
                 t.color = VCS_validation_functions.color2vcs(
                     self.Marker.id_color[i])
                 t.font = self.Marker.id_font[i]
@@ -1282,13 +1307,13 @@ class Gtd(vcs.bestMatch):
                 self.displays.append(canvas.plot(t, bg=self.bg))
 
             if not self.Marker.line[i] is None:
-                l = createnewvcsobj(canvas, 'line', 'TD_li')
-                l.worldcoordinate = self.worldcoordinate
-                l.viewport = self.viewport
+                l_tmp = createnewvcsobj(canvas, 'line', 'TD_li')
+                l_tmp.worldcoordinate = self.worldcoordinate
+                l_tmp.viewport = self.viewport
                 x1 = d1 * d0
                 y1 = numpy.ma.sin(numpy.ma.arccos(d1)) * d0
-                l.x = [x1, x1]
-                l.y = [y1, y1]
+                l_tmp.x = [x1, x1]
+                l_tmp.y = [y1, y1]
                 if i != self.Marker.number - \
                         1 and self.Marker.line[i] != 'head':
                     try:
@@ -1303,14 +1328,15 @@ class Gtd(vcs.bestMatch):
                         y2 = numpy.ma.sin(
                             numpy.ma.arccos(float(data[i + 1][1]))) * float(data[i + 1][0])
 
-                    l.x = [x1, x2]
-                    l.y = [y1, y2]
-                l.type = self.Marker.line_type[i]
-                l.width = int(self.Marker.line_size[i])
-                l.color = [VCS_validation_functions.color2vcs(
+                    l_tmp.x = [x1, x2]
+                    l_tmp.y = [y1, y2]
+                l_tmp.type = self.Marker.line_type[i]
+                l_tmp.width = int(self.Marker.line_size[i])
+                l_tmp.color = [VCS_validation_functions.color2vcs(
                     self.Marker.line_color[i])]
                 if self.Marker.line[i] == 'tail':
-                    self.drawarrow(canvas, x1, y1, x1, y1, x2, y2, l.color[0])
+                    self.drawarrow(
+                        canvas, x1, y1, x1, y1, x2, y2, l_tmp.color[0])
                 elif self.Marker.line[i] == 'head':
                     try:
                         dd1 = data[i - 1][1].astype('d')
@@ -1333,7 +1359,7 @@ class Gtd(vcs.bestMatch):
                         VCS_validation_functions.color2vcs(
                             self.Marker.line_color[
                                 i - 1]))
-                self.displays.append(canvas.plot(l, bg=self.bg))
+                self.displays.append(canvas.plot(l_tmp, bg=self.bg))
 
     def drawarrow(self, canvas, xloc, yloc, x1, y1, x2, y2, color):
         # The head
@@ -1439,6 +1465,18 @@ class Gtd(vcs.bestMatch):
 # Cx.append(self.outtervalue*numpy.cos(self.quadrans/2.*numpy.pi))
 # Cy.append(self.outtervalue*numpy.sin(self.quadrans/2.*numpy.pi))
 
+    def pageratio(self, canvas):
+        page = canvas.orientation()
+        try:
+            canvasinfo = canvas.canvasinfo()
+            pr = float(canvasinfo['width']) / float(canvasinfo['height'])
+        except BaseException:
+            if page == 'portrait':
+                pr = 1. / 1.29381443299
+            else:
+                pr = 1.29381443299
+        return pr
+
     def setWorldCoordinate(self, canvas):
         viewport = [self.template.data.x1, self.template.data.x2,
                     self.template.data.y1, self.template.data.y2]
@@ -1455,15 +1493,7 @@ class Gtd(vcs.bestMatch):
             wc = [-max - X * 5, max, 0, max]
         self.worldcoordinate = wc
         if self.preserveaspectratio == 'y':
-            page = canvas.orientation()
-            try:
-                canvasinfo = canvas.canvasinfo()
-                pr = float(canvasinfo['width']) / float(canvasinfo['height'])
-            except BaseException:
-                if page == 'portrait':
-                    pr = 1. / 1.29381443299
-                else:
-                    pr = 1.29381443299
+            pr = self.pageratio(canvas)
             xr = self.viewport[1] - self.viewport[0]
             yr = self.viewport[3] - self.viewport[2]
             vr = xr / yr
@@ -1480,7 +1510,8 @@ class Gtd(vcs.bestMatch):
         return wc
 
     def drawFrame(self, canvas, data, wc):
-        O = createnewvcsobj(canvas, 'line', 'tdiag_', self.template.line2.line)
+        Outter = createnewvcsobj(
+            canvas, 'line', 'tdiag_', self.template.line2.line)
         frame = createnewvcsobj(
             canvas,
             'line',
@@ -1539,7 +1570,7 @@ class Gtd(vcs.bestMatch):
             self.template.ylabel1.texttable,
             self.template.ylabel1.textorientation)
 
-        O.priority = self.template.line1.priority
+        Outter.priority = self.template.line1.priority
         frame.priority = self.template.line2.priority
         xtic1.priority = self.template.xtic1.priority
         xtic2.priority = self.template.xtic2.priority
@@ -1552,21 +1583,9 @@ class Gtd(vcs.bestMatch):
         stdticks.priority = self.template.xlabel1.priority
         stdticks2.priority = self.template.ylabel1.priority
 
-
-# if type(self.referencecolor) == types.StringType:
-# O.color=self.color2vcs(canvas,self.referencecolor)
-# else:
-# O.color=self.referencecolor
-# else:
-# O=canvas.getline('tdiag_O')
-# frame=canvas.getline('tdiag_frame')
-# stdticks=canvas.gettext('stdtic','stdtic')
-# stdticks2=canvas.gettext('stdtic2','stdtic2')
-
-# O.list()
-        O.worldcoordinate = self.worldcoordinate
+        Outter.worldcoordinate = self.worldcoordinate
         frame.worldcoordinate = self.worldcoordinate
-        O.viewport = self.viewport
+        Outter.viewport = self.viewport
         frame.viewport = self.viewport
 
         if self.quadrans == 1:
@@ -1603,8 +1622,8 @@ class Gtd(vcs.bestMatch):
             self.outtervalue, val2=90. * self.quadrans, convert=False)
         fx.append(Cx)
         fy.append(Cy)
-        O.x = Ox
-        O.y = Oy
+        Outter.x = Ox
+        Outter.y = Oy
         ticstr = []
         ticxs = []
         ticys = []
@@ -1621,7 +1640,7 @@ class Gtd(vcs.bestMatch):
                 levs = vcs.mklabels(tmp)
             else:
                 levs = self.yticlabels1
-            for v in levs.keys():
+            for v in list(levs.keys()):
                 if wc[0] < v < min(wc[1], wc[3]):
                     ticxs2.append(self.template.ylabel1.x)
                     ticys2.append(self.convert(v, 'y'))
@@ -1639,7 +1658,7 @@ class Gtd(vcs.bestMatch):
                 levs = vcs.mklabels(vals)
             else:
                 levs = self.ymtics1
-            for v in levs.keys():
+            for v in list(levs.keys()):
                 if wc[0] < v < min(wc[1], wc[3]):
                     ymtic1x.append(
                         [self.template.ymintic1.x1, self.template.ymintic1.x2])
@@ -1661,7 +1680,7 @@ class Gtd(vcs.bestMatch):
                     vals.insert(0, -v)
             levs = vcs.mklabels(vals)
             # ok need to remove potential negative values, std is always >0
-            for k in levs.keys():
+            for k in list(levs.keys()):
                 if k < 0:
                     levs[k] = levs[k][1:]
                 if k < -wc[1]:
@@ -1674,7 +1693,7 @@ class Gtd(vcs.bestMatch):
             self.template.xmintic2.y1 - self.template.data.y1) / delta * 90.
         val2 = (
             self.template.xmintic2.y2 - self.template.data.y1) / delta * 90.
-        for v in levs.keys():
+        for v in list(levs.keys()):
             if wc[0] < v < min(wc[1], wc[3]):
                 tx, ty = self.getArc(v, val1=val1, val2=val2)
                 xmtic1x.append(
@@ -1705,7 +1724,7 @@ class Gtd(vcs.bestMatch):
                 tmp = vals
             levs = vcs.mklabels(tmp)
             # ok need to remove potential negative values, std is always >0
-            for k in levs.keys():
+            for k in list(levs.keys()):
                 if k < 0:
                     levs[k] = levs[k][1:]
                 if k < -wc[1]:
@@ -1716,7 +1735,7 @@ class Gtd(vcs.bestMatch):
         val1 = (self.template.xtic2.y1 - self.template.data.y1) / delta * 90.
         val2 = (self.template.xtic2.y2 - self.template.data.y1) / delta * 90
 
-        for v in levs.keys():
+        for v in list(levs.keys()):
             if wc[0] < v < min(wc[3], wc[1]):
                 V = self.convert(v, 'x')
                 if v >= 0:
@@ -1774,7 +1793,7 @@ class Gtd(vcs.bestMatch):
         dx2 = 1. + self.template.ytic2.x2 - self.template.data.x2
         dx1 = 1. - (self.template.ytic2.x2 - self.template.ytic2.x1) / \
             (self.template.data.x2 - self.template.data.x1)
-        for v in levs.keys():
+        for v in list(levs.keys()):
             if 0. <= v <= 1. or (-1. <= v and self.quadrans == 2):
                 x1 = v
                 y1 = numpy.sin(numpy.arccos(x1))
@@ -1829,7 +1848,7 @@ class Gtd(vcs.bestMatch):
             levs[.96] = ''
             levs[.97] = ''
             levs[.98] = ''
-            ks = levs.keys()
+            ks = list(levs.keys())
             for l in ks:
                 levs[-l] = ''
         else:
@@ -1838,7 +1857,7 @@ class Gtd(vcs.bestMatch):
         dx2 = 1. + self.template.ymintic2.x2 - self.template.data.x2
         dx1 = 1. - (self.template.ymintic2.x2 - self.template.ymintic2.x1) / \
             (self.template.data.x2 - self.template.data.x1)
-        for v in levs.keys():
+        for v in list(levs.keys()):
             if 0. <= v <= 1. or (-1. <= v and self.quadrans == 2):
                 x1 = v
                 y1 = numpy.sin(numpy.arccos(x1))
@@ -1890,10 +1909,12 @@ class Gtd(vcs.bestMatch):
 
         stdaxis.x = [
             self.template.data.x1 - (self.template.data.y1 - self.template.xname.y)]
-        stdaxis.y = [abs(self.template.data.y2 + self.template.data.y1) / 2.]
-        stdstring = 'Standard Deviation'
+        stdaxis.viewport = [0, 1] + self.viewport[2:]
+        stdaxis.worldcoordinate = [0, 1] + self.worldcoordinate[2:]
+        stdaxis.y = [min(self.worldcoordinate[1], self.worldcoordinate[3]) / 2.]
+        stdstring = self.standard_deviation_label
         if hasattr(data, 'units'):
-            if string.strip(data.units) != '':
+            if data.units.strip() != '':
                 stdstring = stdstring + ' ( ' + str(data.units) + ' )'
         stdaxis.string = [stdstring]
         stdaxis.angle = stdaxis.angle + 270
@@ -1905,8 +1926,11 @@ class Gtd(vcs.bestMatch):
             'xstax',
             self.template.xname.texttable,
             self.template.xname.textorientation)
+        xstdaxis.x = [min(self.worldcoordinate[0], self.worldcoordinate[2]) / 2. +
+                      min(self.worldcoordinate[1], self.worldcoordinate[3]) / 2.]
         xstdaxis.y = [self.template.xname.y]
-        xstdaxis.x = [abs(self.template.data.x2 + self.template.data.x1) / 2.]
+        xstdaxis.viewport = self.viewport[:2] + [0, 1]
+        xstdaxis.worldcoordinate = self.worldcoordinate[:2] + [0, 1]
         xstdaxis.string = [stdstring]
         xstdaxis.priority = self.template.xname.priority
 
@@ -1914,7 +1938,7 @@ class Gtd(vcs.bestMatch):
         self.displays.append(canvas.plot(xstdaxis, bg=self.bg))
         self.displays.append(canvas.plot(frame, bg=self.bg))
         if self.referencevalue / self.outtervalue > .05:
-            self.displays.append(canvas.plot(O, bg=self.bg))
+            self.displays.append(canvas.plot(Outter, bg=self.bg))
         self.displays.append(canvas.plot(stdticks, bg=self.bg))
         self.displays.append(canvas.plot(stdticks2, bg=self.bg))
 
@@ -1991,10 +2015,19 @@ class Gtd(vcs.bestMatch):
                 stacking = "vertical"
             else:
                 stacking = "horizontal"
+            ids = []
+            for i, marker_id in enumerate(self.Marker.id):
+                id_loc = self.Marker.id_location[i]
+                if id_loc in [0, 2] or (
+                        id_loc is None and self.idsLocation in [0, 2]):
+                    ids.append(marker_id)
+                else:
+                    ids.append(' ')
             self.template.drawLinesAndMarkersLegend(canvas, self.Marker.line_color,
-                                                    self.Marker.line_type, [0, ] * len(self.Marker.line_size),
+                                                    self.Marker.line_type, [
+                                                        0, ] * len(self.Marker.line_size),
                                                     self.Marker.color, self.Marker.symbol, self.Marker.size,
-                                                    self.Marker.id,
+                                                    ids,
                                                     scratched=None, stringscolors=self.Marker.id_color,
                                                     stacking=stacking, bg=False, render=True)
         if resetoutter:
@@ -2010,7 +2043,7 @@ class Gtd(vcs.bestMatch):
         if newname == "default":
             raise Exception(
                 "You cannot overwrite the default taylordiagram graphic method")
-        if newname in vcs.elements["taylordiagram"].keys():
+        if newname in list(vcs.elements["taylordiagram"].keys()):
             raise Exception(
                 "Sorry %s taylordiagram graphic method already exists" %
                 newname)

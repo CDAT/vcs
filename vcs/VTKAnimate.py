@@ -1,6 +1,7 @@
 # VTK Backend Animation Module
 # Author:  Charles Doutriaux
-import animate_helper
+from __future__ import division, print_function
+from . import animate_helper
 import time
 import random
 import hashlib
@@ -22,7 +23,7 @@ def update_input(canvas, dimensions, frame_num, update=True):
         args = []
         Ntot = 1
         for a in slab.getAxisList()[:-dimensions][::-1]:
-            n = frame_num / Ntot % len(a)
+            n = frame_num // Ntot % len(a)
             Ntot *= len(a)
             args.append(slice(n, n + 1))
         args = args[::-1]
@@ -61,7 +62,7 @@ class VTKAnimationCreate(animate_helper.StoppableThread):
 
     def create_prefix(self):
         self.controller._unique_prefix = hashlib.sha1(
-            time.asctime() + str(random.randint(0, 10000))).hexdigest()
+            time.asctime().encode("utf-8") + str(random.randint(0, 10000)).encode("utf8")).hexdigest()
 
     def run(self):
         pass
@@ -106,13 +107,13 @@ class VTKAnimationCreate(animate_helper.StoppableThread):
     def describe(self):
         for info in self.controller.animate_info:
             disp = info[0]
-            print "BACKEND:", disp.backend
-            print "TYPE:", disp.g_type
-            print "Name:", disp.g_name
+            print("BACKEND:", disp.backend)
+            print("TYPE:", disp.g_type)
+            print("Name:", disp.g_name)
             if info[1][0] is not None:
-                print "Array:", info[1][0].shape
+                print("Array:", info[1][0].shape)
             else:
-                print "No Array"
+                print("No Array")
 
     def close(self):
         self.canvas.close()

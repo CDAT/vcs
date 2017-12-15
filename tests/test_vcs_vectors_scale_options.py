@@ -1,9 +1,10 @@
 import basevcstest
 
+
 class TestVCSVectorScale(basevcstest.VCSBaseTest):
-    def coreTest(self,scalingType,scale=None,inc=1):
-        v = self.clt['v'][...,::inc,::inc]
-        u = self.clt['u'][...,::inc,::inc]
+    def coreTest(self, scalingType, scale=None, inc=1):
+        v = self.clt['v'][..., ::inc, ::inc]
+        u = self.clt['u'][..., ::inc, ::inc]
 
         gv = self.x.createvector()
 
@@ -16,10 +17,10 @@ class TestVCSVectorScale(basevcstest.VCSBaseTest):
         self.x.clear()
 
     def testVCSVectorScalingOptions(self):
-        self.coreTest("off",None,10)
-        self.coreTest("constant",.1,4)
-        self.coreTest("linear",1.)
-        self.coreTest("normalize",1.)
-        self.coreTest("constantNLinear",1.)
-        self.coreTest("constantNNormalize",1.)
+        self.coreTest("off", None, 10)
+        self.coreTest("constant", .1, 4)
+        self.coreTest("linear", 1.)
+        self.coreTest("normalize", 1.)
+        self.coreTest("constantNLinear", 1.)
+        self.coreTest("constantNNormalize", 1.)
     testVCSVectorScalingOptions.vectors = 1

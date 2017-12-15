@@ -1,10 +1,11 @@
 import unittest
 import vcs
 
+
 class TestVCSLineAttributes(unittest.TestCase):
     def test_setlineattributes(self):
         l = vcs.createline("vcs_test_set_line")
-        l.color=242
+        l.color = 242
         l.width = 5.6
         l.type = "dash"
 
@@ -12,7 +13,7 @@ class TestVCSLineAttributes(unittest.TestCase):
         self.assertEqual(l.width, [5.6])
         self.assertEqual(l.type, ["dash"])
 
-        v=vcs.createvector()
+        v = vcs.createvector()
         v.setLineAttributes("vcs_test_set_line")
 
         self.assertEqual(v.linecolor, 242)

@@ -1,6 +1,7 @@
 import vcs
 import basevcstest
 
+
 class TestVCSPNG64(basevcstest.VCSBaseTest):
     def testPng2Base64(self):
         m = self.x.createmarker()

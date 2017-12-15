@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 import random
 import vcs
 import struct
@@ -86,7 +86,7 @@ def mapPng(image, areas, targets=[], tooltips=[], width=None, height=None, name=
         targets.append("#")
     while len(tooltips) < len(areas):
         tooltips.append(None)
-    area_tags = map(createAreaTags, zip(areas, targets, tooltips))
+    area_tags = list(map(createAreaTags, list(zip(areas, targets, tooltips))))
     st += "".join(area_tags)
     st += "</map>\n"
     st += "<div><img class='mapper' src='%s' %s %s usemap='#%s'></div>" % (

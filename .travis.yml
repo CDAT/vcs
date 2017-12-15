@@ -4,24 +4,30 @@ os:
 dist: trusty
 sudo: false
 before_install:
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh; fi
-- if [ "$TRAVIS_OS_NAME" = "osx" ]; then wget https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O miniconda.sh; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget -q https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh; fi
+- if [ "$TRAVIS_OS_NAME" = "osx" ]; then wget -q https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O miniconda.sh; fi
 - export PATH="$HOME/miniconda/bin:$PATH"
 - bash miniconda.sh -b -p $HOME/miniconda
 - conda config --set always_yes yes --set changeps1 no
 - conda update -y -q conda
-- conda install "conda=4.3.11"
 script:
-- conda install -c uvcdat/label/nightly -c conda-forge -c uvcdat "vtk-cdat" cdutil genutil dv3d "mesalib=17.1.4=3" nose image-compare flake8 matplotlib
 - export UVCDAT_ANONYMOUS_LOG=False
+- export UVCDAT_SETUP_PATH=${HOME}
+- conda create -q -n py2 -c uvcdat/label/nightly -c conda-forge -c uvcdat "cdms2>2.12.2017" cdat_info udunits2 nose flake8 genutil "matplotlib<2.1" vtk-cdat mesalib image-compare "dv3d>2.12.2017" "cdutil>2.12.2017"
+- conda create -q -n py3 -c nesii/channel/dev-esmf  -c uvcdat/label/nightly -c conda-forge -c uvcdat "python>3" "cdms2>2.12.2017" cdat_info udunits2 nose flake8 genutil "matplotlib<2.1" vtk-cdat mesalib image-compare "dv3d>2.12.2017" "cdutil>2.12.2017"
 - echo $TRAVIS_BRANCH
 - export TRAVIS_PR_BRANCH=$TRAVIS_BRANCH
 - echo $TRAVIS_EVENT_TYPE
 - echo $TRAVIS_PULL_REQUEST
+- source activate py2
 - python setup.py install --old-and-unmanageable
 - git clone git://github.com/uv-cdat/uvcdat-testdata
 - cd uvcdat-testdata ; git checkout $TRAVIS_BRANCH ; cd ..
 - df -h
-- python run_tests.py -n 2 -v2 -g --no-vtk-ui
+- python run_tests.py -v2 -n2 -g --no-vtk-ui
+- source activate py3
+- rm -rf build
+- python setup.py install --old-and-unmanageable
+- travis_wait python run_tests.py -n2 -g --no-vtk-ui
 after_success:
-    - if [ "$TRAVIS_BRANCH" == "master" -a "$TRAVIS_PULL_REQUEST" == "false" ]; then conda install conda-build && conda install anaconda-client && bash scripts/conda_upload.sh ; fi
+    - if [ "$TRAVIS_BRANCH" == "master" -a "$TRAVIS_PULL_REQUEST" == "false" ]; then conda install -n root conda-build anaconda-client && bash ci-support/conda_upload.sh ; fi

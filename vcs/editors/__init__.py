@@ -1,11 +1,11 @@
-import box  # noqa
-import data  # noqa
-import fillarea  # noqa
-import label  # noqa
-import legend  # noqa
-import line  # noqa
-import marker  # noqa
-import point  # noqa
-import text  # noqa
-import group  # noqa
-import font  # noqa
+from . import box  # noqa
+from . import data  # noqa
+from . import fillarea  # noqa
+from . import label  # noqa
+from . import legend  # noqa
+from . import line  # noqa
+from . import marker  # noqa
+from . import point  # noqa
+from . import text  # noqa
+from . import group  # noqa
+from . import font  # noqa

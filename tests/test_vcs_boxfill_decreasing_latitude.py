@@ -3,16 +3,20 @@ import cdms2
 import os
 import vcs
 
+
 class TestVCSBoxfill(basevcstest.VCSBaseTest):
     def testboxfillDecreasingLatitude(self):
-        f = cdms2.open(os.path.join(self.basedatadir,"decreasing_latitude.nc"))
+        f = cdms2.open(
+            os.path.join(
+                self.basedatadir,
+                "decreasing_latitude.nc"))
         ice = f("variable_6")
 
         gm = self.x.createboxfill()
         gm.boxfill_type = "custom"
 
         tmpl = self.x.createtemplate()
-        #tmpl.blank()
+        # tmpl.blank()
         tmpl.data.priority = 1
         tmpl.data.x1 = .05
         tmpl.data.x2 = .95
@@ -50,7 +54,7 @@ class TestVCSBoxfill(basevcstest.VCSBaseTest):
 
         gm.levels = levs
         gm.fillareacolors = cols
-        #gm.projection="polar"
+        # gm.projection="polar"
         gm.datawc_y2 = 30
         gm.datawc_y1 = 90
 

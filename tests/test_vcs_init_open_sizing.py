@@ -2,9 +2,9 @@ import unittest
 import vcs
 import sys
 
+
 class TestVCSInit(unittest.TestCase):
     def testInitOpenSizing(self):
-
 
         failing = {
             "allowed negative value": (250, -1),
@@ -28,7 +28,7 @@ class TestVCSInit(unittest.TestCase):
             except ValueError:
                 pass
             else:
-                print "Dict", failing
+                print("Dict", failing)
                 sys.exit(1)
 
             try:
@@ -36,7 +36,7 @@ class TestVCSInit(unittest.TestCase):
             except ValueError:
                 pass
             else:
-                print "List/Tuple", failing
+                print("List/Tuple", failing)
                 sys.exit(1)
 
         if sys.platform != "darwin":
@@ -50,13 +50,14 @@ class TestVCSInit(unittest.TestCase):
                 (800, 1000)
             ]
 
-
         def test_canvas_size(c, size, via):
             info = c.canvasinfo()
             w, h = size
 
-            assert info["width"] == w, "Width via %s incorrect; expected %d, got %d" % (via, w, info["width"])
-            assert info["height"] == h, "Height via %s incorrect; expected %d, got %d" % (via, h, info["height"])
+            assert info["width"] == w, "Width via %s incorrect; expected %d, got %d" % (
+                via, w, info["width"])
+            assert info["height"] == h, "Height via %s incorrect; expected %d, got %d" % (
+                via, h, info["height"])
 
         for size in valid:
             w, h = size

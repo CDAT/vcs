@@ -1,7 +1,7 @@
 from vtk import vtkTextActor, vtkTextRenderer, vtkTextProperty, vtkPropPicker
 import math
-from widget import Widget, WidgetReprShim
-from behaviors import DraggableMixin, ClickableMixin
+from .widget import Widget, WidgetReprShim
+from .behaviors import DraggableMixin, ClickableMixin
 
 
 def __set_font(font, text_props):
@@ -61,7 +61,7 @@ def contrasting_color(red, green, blue):
     change_key_count = 5
 
     hsv = {"hue": hue, "value": value, "saturation": saturation}
-    var_keys = hsv.keys()
+    var_keys = list(hsv.keys())
     key = "value"
 
     best_color = None
@@ -384,7 +384,7 @@ class Label(Widget, DraggableMixin, ClickableMixin):
             self.move_action()
 
     def detach(self):
-        self.unsubscribe(*self.subscriptions.keys())
+        self.unsubscribe(*list(self.subscriptions.keys()))
         self.manager.remove_widget(self)
         self.repr.GetRenderer().RemoveActor(self.actor)
 

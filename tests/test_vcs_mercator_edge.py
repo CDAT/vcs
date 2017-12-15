@@ -1,5 +1,6 @@
 import basevcstest
 
+
 class TestVCSMercator(basevcstest.VCSBaseTest):
     def testVCSMercator(self):
         s = self.clt("clt")

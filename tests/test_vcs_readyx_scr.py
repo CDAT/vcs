@@ -2,10 +2,14 @@ import unittest
 import vcs
 import os
 
+
 class TestVCSReadSCR(unittest.TestCase):
     def test_vcs_read_yx_scr(self):
 
-        testfile = os.path.join(os.path.dirname(__file__),"share","read_yxvsx.scr")
+        testfile = os.path.join(
+            os.path.dirname(__file__),
+            "share",
+            "read_yxvsx.scr")
         vcs.scriptrun(testfile)
         self.assertTrue("testyx" in vcs.listelements("yxvsx"))
 
@@ -25,5 +29,3 @@ class TestVCSReadSCR(unittest.TestCase):
         self.assertEqual(y.markercolor, [0.0, 0.0, 0.0, 100.0])
         self.assertEqual(y.markersize, 1)
         self.assertEqual(y.flip, False)
-
-

@@ -3,10 +3,10 @@ import vcs
 import cdms2
 import os
 
-class TestVCSHatch(basevcstest.VCSBaseTest):
-    def gmPatternHatch(self,gm_type="isofill",fill_style="pattern",
-            projtype="default",lat1=-90,lat2=90,lon1=-180,lon2=180,contig=True):
 
+class TestVCSHatch(basevcstest.VCSBaseTest):
+    def gmPatternHatch(self, gm_type="isofill", fill_style="pattern",
+                       projtype="default", lat1=-90, lat2=90, lon1=-180, lon2=180, contig=True):
 
         self.x.setcolormap("classic")
 
@@ -15,7 +15,7 @@ class TestVCSHatch(basevcstest.VCSBaseTest):
             p = vcs.createprojection()
             try:
                 ptype = int(projtype)
-            except:
+            except BaseException:
                 ptype = projtype
             p.type = ptype
             gm.projection = p
@@ -23,8 +23,8 @@ class TestVCSHatch(basevcstest.VCSBaseTest):
         if contig:
             gm.levels = [220, 230, 240, 250, 260, 270, 280, 290, 300, 310, 320]
         else:
-            gm.levels = [[230,235],[240,245],[250,255],[260,265],[270,275],
-                         [280,285],[290,295],[300,305],[310,315],[320,325]]
+            gm.levels = [[230, 235], [240, 245], [250, 255], [260, 265], [270, 275],
+                         [280, 285], [290, 295], [300, 305], [310, 315], [320, 325]]
         gm.fillareastyle = fill_style
         gm.fillareacolors = [242, 244, 237, 248, 250, 252, 44, 243, 139, 247]
         if fill_style == "hatch":
@@ -58,7 +58,10 @@ class TestVCSHatch(basevcstest.VCSBaseTest):
 
         xtra["time"] = slice(0, 1)
         xtra["squeeze"] = 1
-        f = cdms2.open(os.path.join(vcs.sample_data, 'tas_ccsr-95a_1979.01-1979.12.nc'))
+        f = cdms2.open(
+            os.path.join(
+                vcs.sample_data,
+                'tas_ccsr-95a_1979.01-1979.12.nc'))
         s = f("tas", **xtra)
         f.close()
         self.x.clear()
@@ -67,13 +70,12 @@ class TestVCSHatch(basevcstest.VCSBaseTest):
         if projtype != "default":
             fnm += "_%s_proj" % projtype
         fnm += nm_xtra
-        self.checkImage(fnm+".png")
+        self.checkImage(fnm + ".png")
 
     def testHatchPatterns(self):
-        for gm in ["boxfill","isofill","meshfill"]:
-            for style in ["solid","pattern","hatch"]:
-                self.gmPatternHatch(gm_type=gm,fill_style=style,contig=False)
-                self.gmPatternHatch(gm_type=gm,fill_style=style,contig=True)
-                self.gmPatternHatch(gm_type=gm,fill_style=style,lon1=0,lon2=360)
-
-
+        for gm in ["boxfill", "isofill", "meshfill"]:
+            for style in ["solid", "pattern", "hatch"]:
+                self.gmPatternHatch(gm_type=gm, fill_style=style, contig=False)
+                self.gmPatternHatch(gm_type=gm, fill_style=style, contig=True)
+                self.gmPatternHatch(
+                    gm_type=gm, fill_style=style, lon1=0, lon2=360)

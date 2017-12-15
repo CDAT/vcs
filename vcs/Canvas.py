@@ -21,24 +21,24 @@ import numpy.ma
 import MV2
 import numpy
 import cdutil
-from queries import *  # noqa
-import boxfill
-import isofill
-import isoline
-import vector
-import line
-import marker
-import fillarea
-import texttable
-import textorientation
-import textcombined
-import template
-import displayplot
+from .queries import *  # noqa
+from . import boxfill
+from . import isofill
+from . import isoline
+from . import vector
+from . import line
+from . import marker
+from . import fillarea
+from . import texttable
+from . import textorientation
+from . import textcombined
+from . import template
+from . import displayplot
 import vtk
-from VTKPlots import VTKVCSBackend
+from .VTKPlots import VTKVCSBackend
 from weakref import WeakSet, WeakKeyDictionary
 
-from error import vcsError
+from .error import vcsError
 import cdms2
 import copy
 import cdtime
@@ -51,19 +51,35 @@ from cdms2.grid import AbstractRectGrid
 import shutil
 import subprocess
 import inspect
-import VCS_validation_functions
-from xmldocs import plot_keywords_doc, graphics_method_core, axesconvert, xaxisconvert, \
+from . import VCS_validation_functions
+from .xmldocs import plot_keywords_doc, graphics_method_core, axesconvert, xaxisconvert, \
     plot_1D_input, plot_2D_input, plot_output, plot_2_1D_input, plot_2_1D_options
 gui_canvas_closed = 0
 canvas_closed = 0
 import vcs.manageElements  # noqa
-import configurator  # noqa
-from projection import no_deformation_projections  # noqa
+from . import configurator  # noqa
+from .projection import no_deformation_projections  # noqa
 try:
     import vcsaddons  # noqa
     hasVCSAddons = True
-except:
+except Exception:
     hasVCSAddons = False
+
+
+class JupyterFFMPEG(object):
+    def __init__(self, source, ffmpeg_result, width=640, height=420, controls=True):
+        self.source = source
+        self.width = width
+        self.height = height
+        self.controls = controls
+        self.result = ffmpeg_result
+
+    def _repr_html_(self):
+        html = "<video width='%i' height='%i'" % (self.width, self.height)
+        if self.controls:
+            html += "controls"
+        html += "><source src='%s' type='video/mp4'>" % (self.source)
+        return html
 
 
 class SIGNAL(object):
@@ -79,7 +95,7 @@ class SIGNAL(object):
             func(*args, **kargs)
 
         # Call handler methods
-        for obj, funcs in self._methods.items():
+        for obj, funcs in list(self._methods.items()):
             for func in funcs:
                 func(obj, *args, **kargs)
 
@@ -107,8 +123,8 @@ class SIGNAL(object):
 
 
 def dictionarytovcslist(dictionary, name):
-    for k in dictionary.keys():
-        if not isinstance(k, (float, int, long)):
+    for k in list(dictionary.keys()):
+        if not isinstance(k, (float, int)):
             raise Exception('Error, vcs list must have numbers only as keys')
     dictionarytovcslist(dictionary, name)
     return None
@@ -322,20 +338,8 @@ class Canvas(vcs.bestMatch):
         '_animate',
         '_canvas',
         '_canvas_id',
-        'mode',
-        'pause_time',
-        'viewport',
-        'worldcoordinate',
-        'winfo_id',
-        'varglist',
-        'animate_info',
         'canvas_template_editor',
-        'isplottinggridded',
         'ratio',
-        'canvas',
-        'animate',
-        'user_actions_names',
-        'user_actions',
         'size',
         'ParameterChanged',
         'colormap',
@@ -580,7 +584,7 @@ class Canvas(vcs.bestMatch):
                         latitude=(
                             gm.datawc_y1, gm.datawc_y2), longitude=(
                             gm.datawc_x1, gm.datawc_x2))
-        except:
+        except Exception:
             pass
 
         return tv
@@ -614,12 +618,12 @@ class Canvas(vcs.bestMatch):
             origv = MV2.array(variable)
         tvdomain = origv.getDomain()
         attrs = copy.copy(origv.attributes)
-        axislist = list(map(lambda x: x[0].clone(), tvdomain))
+        axislist = list([x[0].clone() for x in tvdomain])
 
         # Map keywords to dimension indices
         try:
             rank = origv.ndim
-        except:
+        except Exception:
             rank = len(origv.shape)
 
         dimmap = {}
@@ -719,7 +723,7 @@ class Canvas(vcs.bestMatch):
                     # Get the mesh from the grid.
                     try:
                         gridindices = tv.getGridIndices()
-                    except:
+                    except Exception:
                         gridindices = None
                     mesh = grid.getMesh(transpose=gridindices)
 
@@ -737,7 +741,7 @@ class Canvas(vcs.bestMatch):
             try:
                 gridindices = tv.getGridIndices()
                 mesh = grid.getMesh(transpose=gridindices)
-            except:
+            except Exception:
                 gridindices = None
                 mesh = grid.getMesh()
 
@@ -767,7 +771,7 @@ class Canvas(vcs.bestMatch):
         _process_keyword(tv, 'name', 'name', keyargs, default=tv.id)
         tim = keyargs.get('time')
         if tim is not None:
-            if isinstance(tim, (str, unicode)):
+            if isinstance(tim, str):
                 ctime = cdtime.s2c(str(tim))
             else:
                 ctime = tim.tocomp()
@@ -790,7 +794,7 @@ class Canvas(vcs.bestMatch):
                 contout = 0
 
         if (isinstance(arglist[GRAPHICS_METHOD], str) and (arglist[GRAPHICS_METHOD]) == 'meshfill') or (
-                (xdim >= 0 and ydim >= 0 and (contout >= 1))):
+                (xdim >= 0 and ydim >= 0 and (isinstance(contout, str) or contout >= 1))):
             self.setcontinentstype(contout)
             self.savecontinentstype(contout)
         else:
@@ -829,7 +833,7 @@ class Canvas(vcs.bestMatch):
 
         """
         for x in arg:
-            print getattr(x, "__doc__", "")
+            print(getattr(x, "__doc__", ""))
 
     def __init__(self, mode=1, pause_time=0, call_from_gui=0, size=None,
                  backend="vtk", geometry=None, bg=None):
@@ -1119,7 +1123,7 @@ class Canvas(vcs.bestMatch):
             elif (obj.g_name == 'Gfm'):
                 obj.script(script_filename, mode)
             else:
-                print 'Could not find the correct graphics class object.'
+                print('Could not find the correct graphics class object.')
         elif issecondaryobject(obj):
             if (obj.s_name == 'Tl'):
                 line.Tl.script(obj, script_filename, mode)
@@ -1136,9 +1140,9 @@ class Canvas(vcs.bestMatch):
             elif (obj.s_name == 'Proj'):
                 obj.script(script_filename, mode)
             else:
-                print 'Could not find the correct secondary class object.'
+                print('Could not find the correct secondary class object.')
         else:
-            print 'This is not a template, graphics method or secondary method object.'
+            print('This is not a template, graphics method or secondary method object.')
 
     def removeobject(self, obj):
         return vcs.removeobject(obj)
@@ -1184,7 +1188,7 @@ class Canvas(vcs.bestMatch):
         if type is None:
             type = self.listelements()
             type.remove("fontNumber")
-        elif isinstance(type, (str, unicode)):
+        elif isinstance(type, str):
             type = [type, ]
         elif not isinstance(type, (list, tuple)):
             return
@@ -1192,7 +1196,9 @@ class Canvas(vcs.bestMatch):
             for obj in self.listelements(objtype):
                 if obj[:2] == "__":
                     try:
+                        loc = locals()
                         exec("o = self.get%s(obj)" % objtype)
+                        o = loc["o"]
                         destroy = True
                         if objtype == 'template':
                             # print o.name
@@ -1205,7 +1211,7 @@ class Canvas(vcs.bestMatch):
                                     break
                         if destroy:
                             self.removeobject(o)
-                    except:
+                    except Exception:
                         pass
 
         return
@@ -2303,7 +2309,7 @@ class Canvas(vcs.bestMatch):
         :rtype: vcs.displayplot.Dp
         """
         # First check if color is a string
-        if 'color' in parms.keys():
+        if 'color' in list(parms.keys()):
             if isinstance(parms['color'], type('')):
                 parms['color'] = self.match_color(parms['color'])
 
@@ -2316,14 +2322,14 @@ class Canvas(vcs.bestMatch):
 # try:
 # t=self.createtextcombined('__'+str(n),'default','__'+str(n),'default')
 # icont=0
-# except:
+# except Exception:
 # pass
             t = self.createtextcombined()
             t.string = [args.pop(0)]
             t.x = [args.pop(0)]
             t.y = [args.pop(0)]
             # t.list()
-            for k in parms.keys():
+            for k in list(parms.keys()):
                 setattr(t, k, parms[k])
                 del(parms[k])
             args.insert(0, t)
@@ -2678,7 +2684,7 @@ class Canvas(vcs.bestMatch):
             keyargs['cdmsfile'] = pfile.uri if hasattr(
                 pfile,
                 'uri') else pfile.id
-        except:
+        except Exception:
             pass
 
         if "continents_line" in keyargs:
@@ -2730,11 +2736,11 @@ class Canvas(vcs.bestMatch):
             self.gettemplate(template_name)
             cf.plot(x=self, template=template_name, ratio=ratio)
         except Exception as err:
-            print err
+            print(err)
 
     def __new_elts(self, original, new):
-        for e in vcs.elements.keys():
-            for k in vcs.elements[e].keys():
+        for e in list(vcs.elements.keys()):
+            for k in list(vcs.elements[e].keys()):
                 if k not in original[e]:
                     new[e].append(k)
         return new
@@ -2750,14 +2756,14 @@ class Canvas(vcs.bestMatch):
             # time
         original_elts = {}
         new_elts = {}
-        for k in vcs.elements.keys():
-            original_elts[k] = vcs.elements[k].keys()
+        for k in list(vcs.elements.keys()):
+            original_elts[k] = list(vcs.elements[k].keys())
             new_elts[k] = []
         # First of all try some cleanup
         assert len(arglist) == 6
         xtrakw = arglist.pop(5)
-        for k in xtrakw.keys():
-            if k in keyargs.keys():
+        for k in list(xtrakw.keys()):
+            if k in list(keyargs.keys()):
                 raise vcsError('Multiple Definition for ' + str(k))
             else:
                 keyargs[k] = xtrakw[k]
@@ -2780,7 +2786,7 @@ class Canvas(vcs.bestMatch):
         # modifications.
         template_origin = arglist[2]
         tmptmpl = self.gettemplate(arglist[2])
-        tmptmpl.data._ratio = -999
+        tmptmpl.data.ratio = -999
 
         copy_mthd = None
         copy_tmpl = None
@@ -2812,7 +2818,7 @@ class Canvas(vcs.bestMatch):
                 if 'wrap' not in keyargs and g.wrap == [0., 0.]:
                     keyargs['wrap'] = [0., 360.]
             else:
-                if arglist[0].rank < 2:
+                if arglist[0].ndim < 2:
                     arglist[3] = 'yxvsx'
                     arglist[4] = 'default'
                 else:
@@ -2867,7 +2873,7 @@ class Canvas(vcs.bestMatch):
             try:
                 tmp = self.getyxvsx(arglist[4])
                 # tmp.list()
-            except:
+            except Exception:
                 arglist[4] = 'default'
         elif inGrid is not None and arglist[0] is not None and\
                 isinstance(arglist[0], cdms2.avariable.AbstractVariable) and\
@@ -2886,7 +2892,7 @@ class Canvas(vcs.bestMatch):
         # preprocessing for extra keyword (at-plotting-time options)
         cmds = {}
         # First of all a little preprocessing for legend !
-        if 'legend' in keyargs.keys() and arglist[3] == 'boxfill':
+        if 'legend' in list(keyargs.keys()) and arglist[3] == 'boxfill':
             # we now have a possible problem since it can be legend for the
             # graphic method or the template!
             k = keyargs['legend']
@@ -2895,7 +2901,7 @@ class Canvas(vcs.bestMatch):
                 #                print k.keys()
                 # ok it's a dictionary if the key type is string then it's for
                 # template, else it's for boxfill
-                if not isinstance(k.keys()[0], type('')):
+                if not isinstance(list(k.keys())[0], type('')):
                     # not a string, therefore it's boxfill !
                     isboxfilllegend = 1
             elif type(k) in [type([]), type(())]:
@@ -2932,9 +2938,12 @@ class Canvas(vcs.bestMatch):
             # ok it is for the boxfill let's do it
             if isboxfilllegend:
                 if copy_mthd is None:
-                    copy_mthd = vcs.creategraphicsmethod(
-                        arglist[3],
-                        arglist[4])
+                    try:
+                        copy_mthd = vcs.creategraphicsmethod(
+                            arglist[3],
+                            arglist[4])
+                    except Exception:
+                        pass
                 copy_mthd.legend = k
                 del(keyargs['legend'])
                 check_mthd = copy_mthd
@@ -2944,7 +2953,7 @@ class Canvas(vcs.bestMatch):
         # normalized, then no change will to the template.
         try:
             self.gettemplate(template_origin)
-        except:
+        except Exception:
             pass
 
         # Creates dictionary/list to remember what we changed
@@ -2953,7 +2962,7 @@ class Canvas(vcs.bestMatch):
         axes_changed2 = {}
 
         # loops through possible keywords for graphic method
-        for p in keyargs.keys():
+        for p in list(keyargs.keys()):
             if p in [
                 'projection',
                 'xticlabels1',
@@ -3014,16 +3023,22 @@ class Canvas(vcs.bestMatch):
             ]:
                 if p not in ['worldcoordinate', ]:  # not a special keywords
                     if copy_mthd is None:
-                        copy_mthd = vcs.creategraphicsmethod(
-                            arglist[3],
-                            arglist[4])
+                        try:
+                            copy_mthd = vcs.creategraphicsmethod(
+                                arglist[3],
+                                arglist[4])
+                        except Exception:
+                            pass
                         check_mthd = copy_mthd
                     setattr(copy_mthd, p, keyargs[p])
                 elif p == 'worldcoordinate':
                     if copy_mthd is None:
-                        copy_mthd = vcs.creategraphicsmethod(
-                            arglist[3],
-                            arglist[4])
+                        try:
+                            copy_mthd = vcs.creategraphicsmethod(
+                                arglist[3],
+                                arglist[4])
+                        except Exception:
+                            pass
                         check_mthd = copy_mthd
                     setattr(copy_mthd, 'datawc_x1', keyargs[p][0])
                     setattr(copy_mthd, 'datawc_x2', keyargs[p][1])
@@ -3064,7 +3079,7 @@ class Canvas(vcs.bestMatch):
                     if not isinstance(k, type({})):
                         setattr(getattr(copy_tmpl, p), 'priority', k)
                     elif isinstance(k, type({})):
-                        for kk in k.keys():
+                        for kk in list(k.keys()):
                             setattr(getattr(copy_tmpl, p), kk, k[kk])
                 else:
                     if p[0] == 'x':
@@ -3072,7 +3087,7 @@ class Canvas(vcs.bestMatch):
                     else:
                         setattr(getattr(copy_tmpl, p), 'x', k[0])
                     if isinstance(k[-1], type({})):
-                        for kk in k[-1].keys():
+                        for kk in list(k[-1].keys()):
                             setattr(getattr(copy_tmpl, p), kk, k[-1][kk])
 
                 del(keyargs[p])
@@ -3093,7 +3108,7 @@ class Canvas(vcs.bestMatch):
                     if not isinstance(k, type({})):
                         setattr(getattr(copy_tmpl, p), 'priority', k)
                     elif isinstance(k, type({})):
-                        for kk in k.keys():
+                        for kk in list(k.keys()):
                             setattr(getattr(copy_tmpl, p), kk, k[kk])
                 else:
                     if p[0] == 'x':
@@ -3103,7 +3118,7 @@ class Canvas(vcs.bestMatch):
                         setattr(getattr(copy_tmpl, p), 'x1', k[0])
                         setattr(getattr(copy_tmpl, p), 'x2', k[1])
                     if isinstance(k[-1], type({})):
-                        for kk in k[-1].keys():
+                        for kk in list(k[-1].keys()):
                             setattr(getattr(copy_tmpl, p), kk, k[-1][kk])
 
                 del(keyargs[p])
@@ -3122,7 +3137,7 @@ class Canvas(vcs.bestMatch):
                     if not isinstance(k, type({})):
                         setattr(getattr(copy_tmpl, p), 'priority', k)
                     elif isinstance(k, type({})):
-                        for kk in k.keys():
+                        for kk in list(k.keys()):
                             setattr(getattr(copy_tmpl, p), kk, k[kk])
                 else:
                     setattr(getattr(copy_tmpl, p), 'x1', k[0])
@@ -3130,7 +3145,7 @@ class Canvas(vcs.bestMatch):
                     setattr(getattr(copy_tmpl, p), 'y1', k[2])
                     setattr(getattr(copy_tmpl, p), 'y2', k[3])
                     if isinstance(k[-1], type({})):
-                        for kk in k[-1].keys():
+                        for kk in list(k[-1].keys()):
                             setattr(getattr(copy_tmpl, p), kk, k[-1][kk])
 
                 del(keyargs[p])
@@ -3162,17 +3177,12 @@ class Canvas(vcs.bestMatch):
                 if not isinstance(
                         k, list):  # not a list means only priority set
                     if isinstance(k, dict):
-                        for kk in k.keys():
+                        for kk in list(k.keys()):
                             setattr(getattr(copy_tmpl, p), kk, k[kk])
                     elif isinstance(k, int):
                         setattr(getattr(copy_tmpl, p), 'priority', k)
                     elif isinstance(k, str):
                         slab_changed_attributes[p] = k
-# if hasattr(arglist[0],p):
-# slab_changed_attributes[p]=getattr(arglist[0],p)
-# else:
-# slab_created_attributes.append(p)
-# setattr(arglist[0],p,k)
                 else:
                     # if hasattr(arglist[0],p):
                     # slab_changed_attributes[p]=getattr(arglist[0],p)
@@ -3183,7 +3193,7 @@ class Canvas(vcs.bestMatch):
                     setattr(getattr(copy_tmpl, p), 'x', k[1])
                     setattr(getattr(copy_tmpl, p), 'y', k[2])
                     if isinstance(k[-1], type({})):
-                        for kk in k[-1].keys():
+                        for kk in list(k[-1].keys()):
                             setattr(getattr(copy_tmpl, p), kk, k[-1][kk])
 
                 del(keyargs[p])
@@ -3246,7 +3256,7 @@ class Canvas(vcs.bestMatch):
                 # not a list means only priority set
                 if not isinstance(k, type([])):
                     if isinstance(k, type({})):
-                        for kk in k.keys():
+                        for kk in list(k.keys()):
                             setattr(getattr(copy_tmpl, p), kk, k[kk])
                     elif isinstance(k, type(0)):
                         setattr(getattr(copy_tmpl, p), 'priority', k)
@@ -3256,7 +3266,7 @@ class Canvas(vcs.bestMatch):
                         else:
                             try:
                                 setattr(ax, 'id', k)
-                            except:
+                            except Exception:
                                 # print err
                                 pass
                     elif k is None:
@@ -3273,7 +3283,7 @@ class Canvas(vcs.bestMatch):
                     setattr(getattr(copy_tmpl, p), 'x', k[1])
                     setattr(getattr(copy_tmpl, p), 'y', k[2])
                     if isinstance(k[-1], type({})):
-                        for kk in k[-1].keys():
+                        for kk in list(k[-1].keys()):
                             setattr(getattr(copy_tmpl, p), kk, k[-1][kk])
 
                 del(keyargs[p])
@@ -3283,20 +3293,6 @@ class Canvas(vcs.bestMatch):
             ]:
                 cmds[p] = keyargs[p]
                 del(keyargs[p])
-
-        # Check if datawc has time setting in it
-        # if copy_mthd is None:
-        #     if arglist[3]!='default':
-        #         copy_mthd=vcs.creategraphicsmethod(arglist[3],arglist[4])
-        #         print "5555555"
-        #     else:
-        #         copy_mthd=vcs.creategraphicsmethod('boxfill',arglist[4])
-        #         print "5555555bbbbbbbb"
-        #     wasnone=1
-# and (type(copy_mthd.datawc_x1) in [type(cdtime.comptime(1900)),type(cdtime.reltime(0,'days since 1900'))] or \
-# type(copy_mthd.datawc_x2) in
-# [type(cdtime.comptime(1900)),type(cdtime.reltime(0,'days since 1900'))])
-# \
 
         if (hasattr(check_mthd, 'datawc_x1') and hasattr(check_mthd, 'datawc_x2')) \
                 and arglist[0].getAxis(-1).isTime() \
@@ -3326,13 +3322,13 @@ class Canvas(vcs.bestMatch):
                     check_mthd.datawc_timeunits,
                     check_mthd.datawc_calendar)
                 convertedok = True
-            except:
+            except Exception:
                 convertedok = False
             # and check_mthd.g_name not in ["G1d",]: #used to be Gsp
             if (check_mthd.xticlabels1 ==
                     '*' or check_mthd.xticlabels2 == '*') and convertedok:
                 convert_datawc = False
-                for cax in axes_changed.keys():
+                for cax in list(axes_changed.keys()):
                     if axes_changed[cax] == ax:
                         convert_datawc = True
                         break
@@ -3342,9 +3338,12 @@ class Canvas(vcs.bestMatch):
                     if t not in [type(cdtime.reltime(0, 'months since 1900')), type(
                             cdtime.comptime(1900))]:
                         if copy_mthd is None:
-                            copy_mthd = vcs.creategraphicsmethod(
-                                arglist[3],
-                                arglist[4])
+                            try:
+                                copy_mthd = vcs.creategraphicsmethod(
+                                    arglist[3],
+                                    arglist[4])
+                            except Exception:
+                                pass
                             check_mthd = copy_mthd
                         if check_mthd.datawc_x1 > 9.E19:
                             copy_mthd.datawc_x1 = cdtime.reltime(
@@ -3372,9 +3371,12 @@ class Canvas(vcs.bestMatch):
                                 copy_mthd.datawc_calendar)
                 if copy_mthd.xticlabels1 == '*':
                     if copy_mthd is None:
-                        copy_mthd = vcs.creategraphicsmethod(
-                            arglist[3],
-                            arglist[4])
+                        try:
+                            copy_mthd = vcs.creategraphicsmethod(
+                                arglist[3],
+                                arglist[4])
+                        except Exception:
+                            pass
                         check_mthd = copy_mthd
                     copy_mthd.xticlabels1 = vcs.generate_time_labels(
                         copy_mthd.datawc_x1,
@@ -3383,9 +3385,12 @@ class Canvas(vcs.bestMatch):
                         copy_mthd.datawc_calendar)
                 if copy_mthd.xticlabels2 == '*':
                     if copy_mthd is None:
-                        copy_mthd = vcs.creategraphicsmethod(
-                            arglist[3],
-                            arglist[4])
+                        try:
+                            copy_mthd = vcs.creategraphicsmethod(
+                                arglist[3],
+                                arglist[4])
+                        except Exception:
+                            pass
                         check_mthd = copy_mthd
                     copy_mthd.xticlabels2 = vcs.generate_time_labels(
                         copy_mthd.datawc_x1,
@@ -3400,9 +3405,12 @@ class Canvas(vcs.bestMatch):
                             not (check_mthd.g_name == 'G1d' and check_mthd.flip) and\
                             check_mthd.g_name not in ['G1d']:  # used to be GSp
                         if copy_mthd is None:
-                            copy_mthd = vcs.creategraphicsmethod(
-                                arglist[3],
-                                arglist[4])
+                            try:
+                                copy_mthd = vcs.creategraphicsmethod(
+                                    arglist[3],
+                                    arglist[4])
+                            except Exception:
+                                pass
                             check_mthd = copy_mthd
                         t = arglist[0].getAxis(-1).clone()
                         timeunits = t.units
@@ -3414,7 +3422,7 @@ class Canvas(vcs.bestMatch):
                             t1,
                             timeunits,
                             calendar)
-            except:
+            except Exception:
                 pass
 
         if (hasattr(check_mthd, 'datawc_y1') and hasattr(check_mthd, 'datawc_y2'))\
@@ -3438,8 +3446,6 @@ class Canvas(vcs.bestMatch):
                     if i not in axes_changed:
                         ax = ax.clone()
                         axes_changed[i] = ax
-# else:
-# ax=axes_changed[i]
                     break
             if arglist[1] is not None:
                 ids2 = arglist[1].getAxisIds()
@@ -3447,15 +3453,13 @@ class Canvas(vcs.bestMatch):
                     if ax.id == ids2[i]:
                         if i not in axes_changed2:
                             axes_changed2[i] = ax
-# else:
-# ax=axes_changed2[i]
                         break
             try:
                 ax.toRelativeTime(
                     check_mthd.datawc_timeunits,
                     check_mthd.datawc_calendar)
                 convertedok = True
-            except:
+            except Exception:
                 convertedok = False
             if (check_mthd.yticlabels1 ==
                     '*' or check_mthd.yticlabels2 == '*') and convertedok:
@@ -3464,16 +3468,19 @@ class Canvas(vcs.bestMatch):
                 # GSp
                 if check_mthd.g_name == "G1d" and check_mthd.linewidth == 0:
                     A = axes_changed2
-                for cax in A.keys():
+                for cax in list(A.keys()):
                     if A[cax] is ax:
                         convert_datawc = True
                         break
                 if convert_datawc:
                     oax = arglist[0].getAxis(cax).clone()
                     if copy_mthd is None:
-                        copy_mthd = vcs.creategraphicsmethod(
-                            arglist[3],
-                            arglist[4])
+                        try:
+                            copy_mthd = vcs.creategraphicsmethod(
+                                arglist[3],
+                                arglist[4])
+                        except Exception:
+                            pass
                         check_mthd = copy_mthd
                     if copy_mthd.datawc_y1 > 9.E19:
                         copy_mthd.datawc_y1 = cdtime.reltime(
@@ -3501,9 +3508,12 @@ class Canvas(vcs.bestMatch):
                             copy_mthd.datawc_calendar)
                 if check_mthd.yticlabels1 == '*':
                     if copy_mthd is None:
-                        copy_mthd = vcs.creategraphicsmethod(
-                            arglist[3],
-                            arglist[4])
+                        try:
+                            copy_mthd = vcs.creategraphicsmethod(
+                                arglist[3],
+                                arglist[4])
+                        except Exception:
+                            pass
                         check_mthd = copy_mthd
                     copy_mthd.yticlabels1 = vcs.generate_time_labels(
                         copy_mthd.datawc_y1,
@@ -3512,9 +3522,12 @@ class Canvas(vcs.bestMatch):
                         copy_mthd.datawc_calendar)
                 if check_mthd.yticlabels2 == '*':
                     if copy_mthd is None:
-                        copy_mthd = vcs.creategraphicsmethod(
-                            arglist[3],
-                            arglist[4])
+                        try:
+                            copy_mthd = vcs.creategraphicsmethod(
+                                arglist[3],
+                                arglist[4])
+                        except Exception:
+                            pass
                         check_mthd = copy_mthd
                     copy_mthd.yticlabels2 = vcs.generate_time_labels(
                         copy_mthd.datawc_y1,
@@ -3530,12 +3543,13 @@ class Canvas(vcs.bestMatch):
                         0].getAxis(-2).isTime() and arglist[0].ndim > 1 and copy_mthd.g_name not in ["G1d", ]:
                     if check_mthd.yticlabels1 == '*' and check_mthd.yticlabels2 == '*':
                         if copy_mthd is None:
-                            copy_mthd = vcs.creategraphicsmethod(
-                                arglist[3],
-                                arglist[4])
+                            try:
+                                copy_mthd = vcs.creategraphicsmethod(
+                                    arglist[3],
+                                    arglist[4])
+                            except Exception:
+                                pass
                             check_mthd = copy_mthd
-# print
-# copy_mthd.datawc_y1,copy_mthd.datawc_y2,copy_mthd.datawc_timeunits,copy_mthd.datawc_calendar
                         t = arglist[0].getAxis(-2).clone()
                         timeunits = t.units
                         calendar = t.getCalendar()
@@ -3546,7 +3560,7 @@ class Canvas(vcs.bestMatch):
                             t1,
                             timeunits,
                             calendar)
-            except:
+            except Exception:
                 pass
 
         def clean_val(value):
@@ -3599,13 +3613,13 @@ class Canvas(vcs.bestMatch):
                 vals.append(clean_val(v))
             dic = vcs.mklabels(vals)
             dic2 = {}
-            for k in dic.keys():
+            for k in list(dic.keys()):
                 try:
                     if method == 'area_wt':
                         dic2[func(k * numpy.pi / 180.)] = dic[k]
                     else:
                         dic2[func(k)] = dic[k]
-                except:
+                except Exception:
                     pass
             return dic2
 
@@ -3631,17 +3645,23 @@ class Canvas(vcs.bestMatch):
                                         num,
                                         dic)
                                 did_something = True
-                except:
+                except Exception:
                     pass
             return did_something
 
         if set_convert_labels(check_mthd, test=1):
             if copy_mthd is None:
-                copy_mthd = vcs.creategraphicsmethod(arglist[3], arglist[4])
+                try:
+                    copy_mthd = vcs.creategraphicsmethod(arglist[3], arglist[4])
+                except Exception:
+                    pass
                 check_mthd = copy_mthd
                 set_convert_labels(copy_mthd)
         if copy_mthd is None:
-            copy_mthd = vcs.creategraphicsmethod(arglist[3], arglist[4])
+            try:
+                copy_mthd = vcs.creategraphicsmethod(arglist[3], arglist[4])
+            except Exception:
+                pass
             check_mthd = copy_mthd
 
         x = None
@@ -3663,14 +3683,14 @@ class Canvas(vcs.bestMatch):
                         datawc_x1 = arglist[0].getAxis(-1)[0]
                     else:
                         datawc_x1 = arglist[0].getAxis(-1).getBounds()[0][0]
-                except:
+                except Exception:
                     datawc_x1 = arglist[0].getAxis(-1)[0]
                 try:
                     if arglist[0].getAxis(-1).isCircularAxis():
                         datawc_x2 = arglist[0].getAxis(-1)[-1]
                     else:
                         datawc_x2 = arglist[0].getAxis(-1).getBounds()[-1][1]
-                except:
+                except Exception:
                     datawc_x2 = arglist[0].getAxis(-1)[-1]
             if arglist[0].getAxis(-2).isLongitude():
                 y = "longitude"
@@ -3690,17 +3710,17 @@ class Canvas(vcs.bestMatch):
             else:
                 try:
                     datawc_y1 = arglist[0].getAxis(-2).getBounds()[0][0]
-                except:
+                except Exception:
                     datawc_y1 = arglist[0].getAxis(-2)[0]
                 try:
                     datawc_y2 = arglist[0].getAxis(-2).getBounds()[-1][1]
-                except:
+                except Exception:
                     datawc_y2 = arglist[0].getAxis(-2)[-1]
             if isinstance(arglist[0].getGrid(
             ), (cdms2.gengrid.AbstractGenericGrid, cdms2.hgrid.AbstractCurveGrid)):
                 x = "longitude"
                 y = "latitude"
-        except:
+        except Exception:
             pass
         try:
             copy_mthd = vcs.setTicksandLabels(
@@ -3712,7 +3732,7 @@ class Canvas(vcs.bestMatch):
                 datawc_y2,
                 x=x,
                 y=y)
-        except:
+        except Exception:
             pass
 
         if copy_mthd is not None:
@@ -3727,7 +3747,7 @@ class Canvas(vcs.bestMatch):
 
         if isinstance(arglist[3], str) and arglist[
                 3].lower() == 'taylordiagram':
-            for p in slab_changed_attributes.keys():
+            for p in list(slab_changed_attributes.keys()):
                 if hasattr(arglist[0], p):
                     tmp = getattr(arglist[0], p)
                 else:
@@ -3736,7 +3756,7 @@ class Canvas(vcs.bestMatch):
                 slab_changed_attributes[p] = tmp
             # first look at the extra arguments and make sure there is no
             # duplicate
-            for k in keyargs.keys():
+            for k in list(keyargs.keys()):
                 if k not in ['template', 'skill', 'bg']:
                     del(keyargs[k])
                 if k == 'template':
@@ -3764,7 +3784,7 @@ class Canvas(vcs.bestMatch):
             dn.g_name = arglist[4]
             dn.array = arglist[:2]
             dn.extradisplays = t.displays
-            for p in slab_changed_attributes.keys():
+            for p in list(slab_changed_attributes.keys()):
                 tmp = slab_changed_attributes[p]
                 if tmp == (None, None):
                     delattr(arglist[0], p)
@@ -3792,7 +3812,7 @@ class Canvas(vcs.bestMatch):
             if p.type in no_deformation_projections and (
                     doratio == "0" or doratio[:4] == "auto"):
                 doratio = "1t"
-            for keyarg in keyargs.keys():
+            for keyarg in list(keyargs.keys()):
                 if keyarg not in self.__class__._plot_keywords_ + self.backend._plot_keywords:
                     if keyarg in self.__class__._deprecated_plot_keywords_:
                         warnings.warn("Deprecation Warning: Keyword '%s' will be removed in the next version"
@@ -3805,7 +3825,7 @@ class Canvas(vcs.bestMatch):
             if arglist[0] is not None or 'variable' in keyargs:
                 arglist[0] = self._reconstruct_tv(arglist, keyargs)
                 # Now applies the attributes change
-                for p in slab_changed_attributes.keys():
+                for p in list(slab_changed_attributes.keys()):
                     if hasattr(arglist[0], p):
                         tmp = getattr(arglist[0], p)
                     else:
@@ -3813,9 +3833,9 @@ class Canvas(vcs.bestMatch):
                     setattr(arglist[0], p, slab_changed_attributes[p])
                     slab_changed_attributes[p] = tmp
                 # Now applies the axes changes
-                for i in axes_changed.keys():
+                for i in list(axes_changed.keys()):
                     arglist[0].setAxis(i, axes_changed[i])
-                for i in axes_changed2.keys():
+                for i in list(axes_changed2.keys()):
                     arglist[1].setAxis(i, axes_changed2[i])
             # Check to make sure that you have at least 2 dimensions for the follow graphics methods
             # Flipping the order to avoid the tv not exist problem
@@ -3971,7 +3991,7 @@ class Canvas(vcs.bestMatch):
                         doratio = doratio[:-1]
                 try:
                     Ratio = float(doratio)
-                except:
+                except Exception:
                     Ratio = doratio
                 if copy_tmpl is None:
                     copy_tmpl = vcs.createtemplate(source=arglist[2])
@@ -4034,12 +4054,12 @@ class Canvas(vcs.bestMatch):
                 else:
                     dn = None
 
-            if dn is not None:
-                dn._template_origin = template_origin
-                dn.ratio = keyargs.get("ratio", None)
-                dn.continents = self.getcontinentstype()
-                dn.continents_line = self.getcontinentsline()
-                dn.newelements = self.__new_elts(original_elts, new_elts)
+                if dn is not None:
+                    dn._template_origin = template_origin
+                    dn.ratio = keyargs.get("ratio", None)
+                    dn.continents = self.getcontinentstype()
+                    dn.continents_line = self.getcontinentsline()
+                    dn.newelements = self.__new_elts(original_elts, new_elts)
 
             if self.mode != 0:
                 # self.update()
@@ -4054,7 +4074,7 @@ class Canvas(vcs.bestMatch):
                 self.animate_info.append((result, arglist[:2]))
 
         # Now executes output commands
-        for cc in cmds.keys():
+        for cc in list(cmds.keys()):
             c = cc.lower()
             if not isinstance(cmds[cc], type('')):
                 args = tuple(cmds[cc])
@@ -4074,13 +4094,13 @@ class Canvas(vcs.bestMatch):
                 self.ras(*args)
 
         # self.clean_auto_generated_objects("template")
-        for p in slab_changed_attributes.keys():
+        for p in list(slab_changed_attributes.keys()):
             tmp = slab_changed_attributes[p]
             if tmp == (None, None):
                 delattr(arglist[0], p)
             else:
                 setattr(arglist[0], p, tmp)
-        if dn is not None:
+        if dn is not None and not isinstance(dn, (list, tuple)):
             self.display_names.append(result.name)
             if result.g_type in (
                     "3d_scalar", "3d_vector") and self.configurator is not None:
@@ -4196,11 +4216,11 @@ class Canvas(vcs.bestMatch):
             if kargs.get("render", True):
                 dn = vcs.elements["display"][nm]
                 new_elts = getattr(dn, "newelements", {})
-                for e in new_elts.keys():
+                for e in list(new_elts.keys()):
                     if e == "display":
                         continue
                     for k in new_elts[e]:
-                        if k in vcs.elements[e].keys():
+                        if k in list(vcs.elements[e].keys()):
                             del(vcs.elements[e][k])
             if not preserve_display:
                 del(vcs.elements["display"][nm])
@@ -4274,7 +4294,7 @@ class Canvas(vcs.bestMatch):
         :type type: `str`_
         """
 
-        if isinstance(display, (str, unicode)):
+        if isinstance(display, str):
             display = vcs.elements["display"][display]
         display.g_type = type
         display.g_name = name
@@ -4378,7 +4398,7 @@ class Canvas(vcs.bestMatch):
         """
         try:
             return self._continents
-        except:
+        except Exception:
             return None
 
     def pstogif(self, filename, *opt):
@@ -4508,7 +4528,7 @@ class Canvas(vcs.bestMatch):
             cargs = ()
             try:
                 dict = self.canvasinfo(*cargs)
-            except:
+            except Exception:
                 dict = {}
             height = dict.get('width', -99)
             width = dict.get('height', -99)
@@ -4517,9 +4537,7 @@ class Canvas(vcs.bestMatch):
         self.flush()  # update the canvas by processing all the X events
 
         args = (width, height, x, y, clear)
-        l = self.backend.landscape(*args)
-
-        return l
+        return self.backend.landscape(*args)
     landscape.__doc__ = landscape.__doc__ % (xmldocs.canvas_width, xmldocs.canvas_height, xmldocs.canvas_clear)
 
     def listelements(self, *args):
@@ -4653,7 +4671,7 @@ class Canvas(vcs.bestMatch):
             cargs = ()
             try:
                 dict = self.canvasinfo(*cargs)
-            except:
+            except Exception:
                 dict = {}
             height = dict.get('width', -99)
             width = dict.get('height', -99)
@@ -4728,8 +4746,8 @@ class Canvas(vcs.bestMatch):
         :param options: Additional FFMPEG arguments
         :type options: `str`_
 
-        :returns: The output string generated by ffmpeg program
-        :rtype: `str`_
+        :returns: A object that Jupyter notebook can display
+        :rtype: `JupyterFFMPEG`_
 
         """
         args = ["ffmpeg", "-y"]
@@ -4808,7 +4826,7 @@ class Canvas(vcs.bestMatch):
             for f in Files:
                 os.remove(f)
 
-        return result == 0
+        return JupyterFFMPEG(movie, result)
 
     def getantialiasing(self):
         """Returns the current antialiasing rate for the canvas.
@@ -5051,7 +5069,7 @@ class Canvas(vcs.bestMatch):
             width = ci['width']
             factor = 1. / 72
             size = float(width) / float(height)
-        except:
+        except Exception:
             factor = 1.
             if self.size is None:
                 size = 1.2941176470588236
@@ -5198,7 +5216,7 @@ class Canvas(vcs.bestMatch):
                             else:
                                 height = 11.
                                 width = height * ratio
-                except:  # canvas never opened
+                except Exception:  # canvas never opened
                     if self.size is None:
                         sfactor = 1.
                         height = 8.5
@@ -5329,7 +5347,7 @@ class Canvas(vcs.bestMatch):
                 >>> bfs=vcs.listelements('boxfill') # list all boxfills
                 >>> try:
                 ...     bfs.index('new_box')
-                ... except:
+                ... except Exception:
                 ...     print ("boxfill 'new_box' doesn't exist")
                 boxfill 'new_box' doesn't exist
                 >>> vcs.scriptrun('new_box.json') # re-creates 'new_box'
@@ -5370,7 +5388,7 @@ class Canvas(vcs.bestMatch):
         # core dump is not checked.
         # try:
         #   updateVCSsegments_flag = args[1]
-        # except:
+        # except Exception:
         #   updateVCSsegments_flag = 1
 
         self.colormap = name
@@ -5507,7 +5525,7 @@ class Canvas(vcs.bestMatch):
                 return VCS_validation_functions.checkContinents(self, 1)
             else:
                 return path
-        except:
+        except Exception:
             return VCS_validation_functions.checkContinents(self, 1)
 
     def gif(self, filename='noname.gif', merge='r', orientation=None,
@@ -6023,8 +6041,8 @@ class Canvas(vcs.bestMatch):
         :type kargs: any
 
         """
-        print 'Arguments:', args
-        print 'Keywords:', kargs
+        print('Arguments:', args)
+        print('Keywords:', kargs)
         return None
 
 
@@ -6036,5 +6054,5 @@ def change_date_time(tv, number):
             cobj = tobj.tocomp(timeaxis.getCalendar())
             tv.date = '%s/%s/%s\0' % (cobj.year, cobj.month, cobj.day)
             tv.time = '%s:%s:%s\0' % (cobj.hour, cobj.minute, cobj.second)
-        except:
+        except Exception:  # noqa
             pass

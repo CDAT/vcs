@@ -33,33 +33,33 @@
 
     .. pragma: skip-doctest
 """
-import boxfill
-import isofill
-import isoline
-import taylor
-import meshfill
-import unified1D
-import vector
-import streamline
-import line
-import marker
-import fillarea
-import texttable
-import textorientation
-import textcombined
-import template
-import dv3d
-import displayplot
-import projection
+from . import boxfill
+from . import isofill
+from . import isoline
+from . import taylor
+from . import meshfill
+from . import unified1D
+from . import vector
+from . import streamline
+from . import line
+from . import marker
+from . import fillarea
+from . import texttable
+from . import textorientation
+from . import textcombined
+from . import template
+from . import dv3d
+from . import displayplot
+from . import projection
 import vcs
-import xmldocs
+from . import xmldocs
 
-from error import vcsError
+from .error import vcsError
 
 try:
     import vcsaddons
     hasVCSAddons = True
-except:
+except Exception:
     hasVCSAddons = False
 
 
@@ -129,7 +129,8 @@ def graphicsmethodlist():
     :rtype: `list`_
     """
     return ['boxfill', 'isofill', 'isoline', 'meshfill', 'scatter',
-            'vector', 'xvsy', 'xyvsy', 'yxvsx', 'taylordiagram', '1d', '3d_scalar', '3d_dual_scalar', '3d_vector']
+            'vector', 'streamline', 'xvsy', 'xyvsy', 'yxvsx', 'taylordiagram',
+            '1d', '3d_scalar', '3d_dual_scalar', '3d_vector']
 
 
 def graphicsmethodtype(gobj):

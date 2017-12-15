@@ -1,7 +1,7 @@
 from .pipeline import Pipeline
 from .. import vcs2vtk
 
-import fillareautils
+from . import fillareautils
 import numpy
 import vcs
 import vtk
@@ -236,34 +236,34 @@ class Pipeline2D(IPipeline2D):
                     L = [self._scalarRange[0] - 1., self._contourLevels[0][1]]
                 else:
                     L = list(self._contourLevels[i])
-                I = indices[i]
-                O = opacities[i]
+                Ind = indices[i]
+                Opc = opacities[i]
             else:
                 if l[0] == L[-1] and\
                         ((style == 'solid') or
-                            (I == indices[i] and C[-1] == self._contourColors[i] and
-                             O == opacities[i])):
+                            (Ind == indices[i] and C[-1] == self._contourColors[i] and
+                             Opc == opacities[i])):
                     # Ok same type lets keep going
                     if numpy.allclose(l[1], 1.e20):
                         L.append(self._scalarRange[1] + 1.)
                     else:
                         L.append(l[1])
                     C.append(self._contourColors[i])
-                    tmpOpacities.append(O)
-                    O = opacities[i]
+                    tmpOpacities.append(Opc)
+                    Opc = opacities[i]
                 else:  # ok we need new contouring
                     tmpLevels.append(L)
                     tmpColors.append(C)
-                    tmpIndices.append(I)
-                    tmpOpacities.append(O)
+                    tmpIndices.append(Ind)
+                    tmpOpacities.append(Opc)
                     C = [self._contourColors[i]]
                     L = self._contourLevels[i]
-                    I = indices[i]
-                    O = opacities[i]
+                    Ind = indices[i]
+                    Opc = opacities[i]
         tmpLevels.append(L)
         tmpColors.append(C)
-        tmpIndices.append(I)
-        tmpOpacities.append(O)
+        tmpIndices.append(Ind)
+        tmpOpacities.append(Opc)
 
         result = {
             "tmpLevels": tmpLevels,

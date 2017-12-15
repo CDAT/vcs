@@ -1,3 +1,4 @@
+from __future__ import division
 from .pipeline2d import Pipeline2D
 import vcs
 import numpy
@@ -32,15 +33,15 @@ class StreamlinePipeline(Pipeline2D):
 
         # Streamline color
         if (not self._gm.coloredbyvector):
-            l = self._gm.linetype
-            if l is None:
-                l = "default"
+            ln_tmp = self._gm.linetype
+            if ln_tmp is None:
+                ln_tmp = "default"
             try:
-                l = vcs.getline(l)
-                lwidth = l.width[0]  # noqa
-                lcolor = l.color[0]
-                lstyle = l.type[0]  # noqa
-            except:
+                ln_tmp = vcs.getline(ln_tmp)
+                lwidth = ln_tmp.width[0]  # noqa
+                lcolor = ln_tmp.color[0]
+                lstyle = ln_tmp.type[0]  # noqa
+            except Exception:
                 lstyle = "solid"  # noqa
                 lwidth = 1.  # noqa
                 lcolor = [0., 0., 0., 100.]
@@ -130,7 +131,7 @@ class StreamlinePipeline(Pipeline2D):
         contour.SetValue(0, 0.001)
         if (streamlines.GetNumberOfPoints()):
             r = streamlines.GetPointData().GetArray("arc_length").GetRange()
-            numberofglyphsoneside = self._gm.numberofglyphs / 2
+            numberofglyphsoneside = self._gm.numberofglyphs // 2
             for i in range(1, numberofglyphsoneside):
                 contour.SetValue(i, r[1] / numberofglyphsoneside * i)
         else:

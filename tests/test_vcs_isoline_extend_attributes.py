@@ -1,5 +1,6 @@
 import basevcstest
 
+
 class TestVCSIsolines(basevcstest.VCSBaseTest):
     def testIsolineExtendAttributes(self):
         isoline = self.x.createisoline()

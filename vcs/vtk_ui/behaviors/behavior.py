@@ -42,7 +42,7 @@ class Behavior(object):
             self.subscribe(event, call_in_order)
 
     def unregister(self):
-        for event in self.listeners.keys():
+        for event in list(self.listeners.keys()):
             self.unsubscribe(event)
         self.listeners = {}
 

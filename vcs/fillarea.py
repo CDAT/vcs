@@ -22,10 +22,11 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import scriptdocs, listdoc
+from .xmldocs import scriptdocs, listdoc
 
 
 def getmember(self, name):
@@ -35,7 +36,7 @@ def getmember(self, name):
 def process_src(nm, code):
     try:
         f = Tf(nm)
-    except:
+    except Exception:
         f = vcs.elements["fillarea"][nm]
     atts = {}
     if code.find("(") > -1:  # ok with have the keywords spelled out
@@ -55,7 +56,7 @@ def process_src(nm, code):
                 for V in v.split(","):
                     try:
                         vals.append(int(V))
-                    except:
+                    except Exception:
                         vals.append(float(V))
                     if a in ["fais"]:
                         vals[-1] = vals[-1] - 1
@@ -69,13 +70,13 @@ def process_src(nm, code):
 
     f.style = atts.get("fais", f.style)
     try:  # in case these are strings?
-        I = atts.get("fasi", f.index)
-        for i, v in enumerate(I):
+        Indx = atts.get("fasi", f.index)
+        for i, v in enumerate(Indx):
             if v == 0:
-                I[i] = 1
-    except:
+                Indx[i] = 1
+    except Exception:
         pass
-    f.index = I
+    f.index = Indx
     f.color = atts.get("faci", f.color)
     f.viewport = atts.get("vp", f.viewport)
     f.worldcoordinate = atts.get("wc", f.worldcoordinate)
@@ -85,8 +86,8 @@ def process_src(nm, code):
     if i > -1:
         j = code[i:].find(",") + i
         f.projection = code[i + 11:j]
-    for b in vcs.elements["boxfill"].values(
-    ) + vcs.elements["isofill"].values() + vcs.elements["meshfill"].values():
+    for b in list(vcs.elements["boxfill"].values(
+    )) + list(vcs.elements["isofill"].values()) + list(vcs.elements["meshfill"].values()):
         if b.fillareaindices is not None:
             for i, v in enumerate(b.fillareaindices):
                 if isinstance(v, str) and v == nm:
@@ -193,21 +194,7 @@ class Tf(vcs.bestMatch):
         .. pragma: skip-doctest
         """
     __slots__ = [
-        'name',
         's_name',
-        'color',
-        'opacity',
-        'pixelspacing',
-        'pixelscale',
-        'priority',
-        'style',
-        'index',
-        'viewport',
-        'worldcoordinate',
-        'x',
-        'y',
-        'projection',
-        'colormap',
         '_name',
         '_color',
         '_priority',
@@ -359,7 +346,7 @@ class Tf(vcs.bestMatch):
                 self,
                 'x',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:
@@ -384,7 +371,7 @@ class Tf(vcs.bestMatch):
                 self,
                 'y',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:
@@ -410,13 +397,13 @@ class Tf(vcs.bestMatch):
                     #
         if isinstance(Tf_name_src, Tf):
             Tf_name_src = Tf_name_src.name
-        if Tf_name_src != "default" and Tf_name_src not in vcs.elements[
-                "fillarea"].keys():
+        if Tf_name_src != "default" and Tf_name_src not in list(vcs.elements[
+                "fillarea"].keys()):
             raise ValueError("Fillarea '%s' does not exists" % Tf_name_src)
         if (Tf_name is None):
             raise ValueError('Must provide a fillarea name.')
         else:
-            if Tf_name in vcs.elements["fillarea"].keys():
+            if Tf_name in list(vcs.elements["fillarea"].keys()):
                 raise ValueError(
                     "The fillarea '%s' already exists, use getfillarea instead" %
                     Tf_name)
@@ -463,22 +450,22 @@ class Tf(vcs.bestMatch):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "---------- Fillarea (Tf) member (attribute) listings ----------"
-        print "secondary method =", self.s_name
-        print "name =", self.name
-        print "style =", self.style
-        print "index =", self.index
-        print "color =", self.color
-        print "opacity =", self.opacity
-        print "pixelspacing =", self.pixelspacing
-        print "pixelscale =", self.pixelscale
-        print "priority =", self.priority
-        print "viewport =", self.viewport
-        print "worldcoordinate =", self.worldcoordinate
-        print "x =", self.x
-        print "y =", self.y
-        print "projection =", self.projection
-        print "colormap =", self.colormap
+        print("---------- Fillarea (Tf) member (attribute) listings ----------")
+        print("secondary method =", self.s_name)
+        print("name =", self.name)
+        print("style =", self.style)
+        print("index =", self.index)
+        print("color =", self.color)
+        print("opacity =", self.opacity)
+        print("pixelspacing =", self.pixelspacing)
+        print("pixelscale =", self.pixelscale)
+        print("priority =", self.priority)
+        print("viewport =", self.viewport)
+        print("worldcoordinate =", self.worldcoordinate)
+        print("x =", self.x)
+        print("y =", self.y)
+        print("projection =", self.projection)
+        print("colormap =", self.colormap)
     list.__doc__ = listdoc.format(name="fillarea", parent="")
 
     #

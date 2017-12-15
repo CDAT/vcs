@@ -1,5 +1,6 @@
 import basevcstest
 
+
 class TestVSConfigurator(basevcstest.VCSBaseTest):
     def testClickMarker(self):
         self.x.bgX = 800
@@ -33,8 +34,8 @@ class TestVSConfigurator(basevcstest.VCSBaseTest):
 
         try:
             if actor not in display.backend[key][0]:
-                print "Found wrong key for actor"
+                print("Found wrong key for actor")
                 sys.exit(1)
         except AttributeError:
-            print "Found wrong key for actor"
+            print("Found wrong key for actor")
             sys.exit(1)
