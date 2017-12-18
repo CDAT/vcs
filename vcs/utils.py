@@ -2652,6 +2652,10 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
     dx = abs(templateLegend.x2 - templateLegend.x1)
     dy = abs(templateLegend.y2 - templateLegend.y1)
 
+    nolines = True
+    for lwidth in linewidths:
+        nolines = nolines and lwidth == 0.
+    print("No lines", nolines)
     # Loop until we can fit all elts into the box
     while maxx * maxy < nlines:
         maxwidth = 0
@@ -2661,11 +2665,15 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
             ext = canvas.gettextextent(text)[0]
             maxwidth = max(maxwidth, ext[1] - ext[0])
             maxheight = max(maxheight, ext[3] - ext[2])
-        if len(strings[i]) > 4:
+        if nolines:
+            leg_lines = 0.
+            leg_spc = .015
+        elif len(strings[i]) > 4:
             leg_lines = maxwidth / 3.
+            leg_spc = leg_lines / 3.
         else:
             leg_lines = maxwidth
-        leg_spc = leg_lines / 3.
+            leg_spc = leg_lines / 3.
         maxwidth = maxwidth + leg_lines + leg_spc
         maxx = int(dx / maxwidth)
         maxy = int(dy / maxheight)
@@ -2684,6 +2692,7 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
     else:
         nV = min(maxy, len(strings))  # How many elts on horizontal direction
         nH = numpy.ceil(nlines / float(nV))  # How many elts vertically
+    print("NV NH:",nV, nH)
     spcX = (dx - maxwidth * nH) / (nH + 1)
     spcY = (dy - maxheight * nV) / (nV + 1)
     txs = []
@@ -2715,12 +2724,12 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
         # so that we create less objet/renderers
         ln = canvas.createline()
         ln.color = [linecolors[i], ]
-        ln.type = linetypes[i]
         if linewidths[i] > 0:
             ln.width = linewidths[i]
             ln.priority = templateLegend.priority
         else:
             ln.priority = 0
+        ln.type = linetypes[i]
         # TODO check if previous marker was identical
         # so that we create less objet/renderers
         mrk = canvas.createmarker()
