@@ -1388,7 +1388,7 @@ def mklabels(vals, output='dict'):
             >>> keys=labels.keys()
             >>> keys.sort()
             >>> for key in keys:
-            ...     print key, ':', labels[key]
+            ...     print(key, ':', labels[key])
             0.0 : 0
             2.0 : 2
             4.0 : 4
@@ -1404,7 +1404,7 @@ def mklabels(vals, output='dict'):
             >>> keys=labels.keys()
             >>> keys.sort()
             >>> for key in keys:
-            ...     print key, ':', labels[key]
+            ...     print(key, ':', labels[key])
             2e-05 : 2E-5
             3e-05 : 3E-5
             5e-05 : 5E-5
@@ -2152,11 +2152,11 @@ def match_color(color, colormap=None):
         .. doctest:: utils_match_color
 
             >>> a=vcs.init()
-            >>> print vcs.match_color('salmon', 'magma')
+            >>> print(vcs.match_color('salmon', 'magma'))
             192
-            >>> print vcs.match_color('red', 'rainbow')
+            >>> print(vcs.match_color('red', 'rainbow'))
             242
-            >>> print vcs.match_color([0,0,100],'default') # closest color from blue
+            >>> print(vcs.match_color([0,0,100],'default')) # closest color from blue
             52
 
     :param color: Either a string name, or a rgb value between 0 and 100.
@@ -2655,7 +2655,6 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
     nolines = True
     for lwidth in linewidths:
         nolines = nolines and lwidth == 0.
-    print("No lines", nolines)
     # Loop until we can fit all elts into the box
     while maxx * maxy < nlines:
         maxwidth = 0
@@ -2692,7 +2691,6 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
     else:
         nV = min(maxy, len(strings))  # How many elts on horizontal direction
         nH = numpy.ceil(nlines / float(nV))  # How many elts vertically
-    print("NV NH:",nV, nH)
     spcX = (dx - maxwidth * nH) / (nH + 1)
     spcY = (dy - maxheight * nV) / (nV + 1)
     txs = []
