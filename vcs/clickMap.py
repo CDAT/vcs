@@ -14,7 +14,7 @@ class Param(object):
 def createAreaTag(parameters):
     """Create an area tag to go along with an html map tag
     input: parameters object
-    At the minimum parameter object needs thew followin g two attributes:
+    At the minimum parameter object needs thew following two attributes:
     "area": which describe the area polygon to be mapped
     "target":
     """
@@ -66,7 +66,7 @@ def mapPng(image, areas, targets=[], tooltips=[], classes=[],
     :param areas: list of each polygon coordinate on the image
     :type areas: `list`_
 
-    :param targets: list of target URL for each area tag.List will be completed with '#'s to match length of areas
+    :param targets: list of target URL for each area tag. List will be completed with '#'s to match length of areas
     :type targets: `list`_
 
     :param tooltips: list of tooltips html code for each area tag. List will be completed with ''s

@@ -2368,7 +2368,7 @@ class Canvas(vcs.bestMatch):
                 [[...]]
 
         :param textobject: A VCS text object
-        :param angle: If not None overwrites the textobject's angle (in degree)
+        :param angle: If not None overwrites the textobject's angle (in degrees)
         :type textobject: vcs.textcombined.Tc
 
         :returns: list of floats containing the coordinates of the text object's bounding box.
