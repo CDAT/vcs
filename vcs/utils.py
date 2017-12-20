@@ -1388,7 +1388,7 @@ def mklabels(vals, output='dict'):
             >>> keys=labels.keys()
             >>> keys.sort()
             >>> for key in keys:
-            ...     print key, ':', labels[key]
+            ...     print(key, ':', labels[key])
             0.0 : 0
             2.0 : 2
             4.0 : 4
@@ -1404,7 +1404,7 @@ def mklabels(vals, output='dict'):
             >>> keys=labels.keys()
             >>> keys.sort()
             >>> for key in keys:
-            ...     print key, ':', labels[key]
+            ...     print(key, ':', labels[key])
             2e-05 : 2E-5
             3e-05 : 3E-5
             5e-05 : 5E-5
@@ -2152,11 +2152,11 @@ def match_color(color, colormap=None):
         .. doctest:: utils_match_color
 
             >>> a=vcs.init()
-            >>> print vcs.match_color('salmon', 'magma')
+            >>> print(vcs.match_color('salmon', 'magma'))
             192
-            >>> print vcs.match_color('red', 'rainbow')
+            >>> print(vcs.match_color('red', 'rainbow'))
             242
-            >>> print vcs.match_color([0,0,100],'default') # closest color from blue
+            >>> print(vcs.match_color([0,0,100],'default')) # closest color from blue
             52
 
     :param color: Either a string name, or a rgb value between 0 and 100.
@@ -2652,6 +2652,9 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
     dx = abs(templateLegend.x2 - templateLegend.x1)
     dy = abs(templateLegend.y2 - templateLegend.y1)
 
+    nolines = True
+    for lwidth in linewidths:
+        nolines = nolines and lwidth == 0.
     # Loop until we can fit all elts into the box
     while maxx * maxy < nlines:
         maxwidth = 0
@@ -2661,11 +2664,15 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
             ext = canvas.gettextextent(text)[0]
             maxwidth = max(maxwidth, ext[1] - ext[0])
             maxheight = max(maxheight, ext[3] - ext[2])
-        if len(strings[i]) > 4:
+        if nolines:
+            leg_lines = 0.
+            leg_spc = .015
+        elif len(strings[i]) > 4:
             leg_lines = maxwidth / 3.
+            leg_spc = leg_lines / 3.
         else:
             leg_lines = maxwidth
-        leg_spc = leg_lines / 3.
+            leg_spc = leg_lines / 3.
         maxwidth = maxwidth + leg_lines + leg_spc
         maxx = int(dx / maxwidth)
         maxy = int(dy / maxheight)
@@ -2715,12 +2722,12 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
         # so that we create less objet/renderers
         ln = canvas.createline()
         ln.color = [linecolors[i], ]
-        ln.type = linetypes[i]
         if linewidths[i] > 0:
             ln.width = linewidths[i]
             ln.priority = templateLegend.priority
         else:
             ln.priority = 0
+        ln.type = linetypes[i]
         # TODO check if previous marker was identical
         # so that we create less objet/renderers
         mrk = canvas.createmarker()
