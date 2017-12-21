@@ -149,7 +149,7 @@ author = u'LLNL AIMS Team'
 # flags to set them explicitly using a variable defined there.
 #
 # The short X.Y version.
-version = '2.8.0'
+version = '2.12.0'
 
 # The full version, including alpha/beta/rc tags.
 release = '2.8.0'
