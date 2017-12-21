@@ -2565,7 +2565,8 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
                               linecolors, linetypes, linewidths,
                               markercolors, markertypes, markersizes,
                               strings, scratched=None, stringscolors=None,
-                              stacking="horizontal", bg=False, render=True):
+                              stacking="horizontal", bg=False, render=True,
+                              smallestfontsize=None):
     """Draws a legend with line/marker/text inside a template legend box
     Auto adjust text size to make it fit inside the box
     Auto arrange the elements to fill the box nicely
@@ -2639,6 +2640,11 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
     :param render: Boolean value indicating whether or not to render the new
         lines and markers.
     :type render: `bool`_
+
+    :param smallestfontsize: Integer value indicating the smallest font size we can use for rendering
+        None means no limit, 0 means use original size. Downscaling will still be used by algorigthm
+        to try to fit everything in the legend box.
+    :type smallestfintsize: `int`_
     """
 
     nlines = len(linecolors)
@@ -2655,6 +2661,9 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
     nolines = True
     for lwidth in linewidths:
         nolines = nolines and lwidth == 0.
+
+    originalFontSize = text.height
+
     # Loop until we can fit all elts into the box
     while maxx * maxy < nlines:
         maxwidth = 0
@@ -2684,6 +2693,13 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
             # We settle for the smallest size
             text.height = 1
             break
+
+    # Check if we had some user imposed limitation on font size
+    if smallestfontsize is not None:
+        if smallestfontsize == 0:
+            text.height = originalFontSize
+        else:
+            text.height = smallestfontsize
 
     if stacking[:3].lower() == "hor":
         nH = min(maxx, len(strings))  # How many elts on horizontal direction
