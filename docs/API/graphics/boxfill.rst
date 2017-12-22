@@ -1,9 +1,11 @@
+.. highlight:: python
+   :linenothreshold: 4
+
 boxfill
 -------
 .. automodule:: vcs.boxfill
    :members:
 
-Related Jupyter Notebooks
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
+Jupyter Notebooks
+^^^^^^^^^^^^^^^^^
+.. include:: boxfill_notebooks.rst

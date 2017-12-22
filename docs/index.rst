@@ -52,28 +52,26 @@ Table of contents
    developer-guide
    quick-reference
 
-Jupyter Notebooks
------------------
-.. toctree::
-   :maxdepth: 0
-
-   Jupyter/Basic_VCS_demo.ipynb
-   Jupyter/boxfill.ipynb
-   Jupyter/streamlines.ipynb
-   Jupyter/Taylor_Diagrams.ipynb
-   Jupyter/Animations.ipynb
-   Jupyter/Color_map_create_own.ipynb
-   Jupyter/Colormap_Tutorial.ipynb
-   Jupyter/Mathematical_Expressions_and_Symbols.ipynb
-   Jupyter/Shading_With_Patterns_in_VCS.ipynb
-   Jupyter/Logo_Control.ipynb
-   Jupyter/Masking_Data_Land-Sea_masks.ipynb
-
-
-
 API index
 ---------
 .. toctree::
    :maxdepth: 4
 
    API/vcs
+
+Jupyter Notebooks
+-----------------
+.. toctree::
+  :maxdepth: 0
+
+  Jupyter/Basic_VCS_demo.ipynb
+  Jupyter/boxfill.ipynb
+  Jupyter/streamlines.ipynb
+  Jupyter/Taylor_Diagrams.ipynb
+  Jupyter/Animations.ipynb
+  Jupyter/Color_map_create_own.ipynb
+  Jupyter/Colormap_Tutorial.ipynb
+  Jupyter/Mathematical_Expressions_and_Symbols.ipynb
+  Jupyter/Shading_With_Patterns_in_VCS.ipynb
+  Jupyter/Logo_Control.ipynb
+  Jupyter/Masking_Data_Land-Sea_masks.ipynb

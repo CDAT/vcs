@@ -12,8 +12,45 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+from __future__ import print_function
 import sys, os
 import subprocess
+import glob
+import shlex
+
+# First we need to create the jupyter links from gms to Notebooks
+
+jupyters = glob.glob("Jupyter/*.ipynb")
+if not os.path.exists(os.path.join("API","graphics","Jupyter")):
+    os.makedirs(os.path.join("API","graphics","Jupyter"))
+
+matches = {}
+for gm in ["boxfill","isofill","meshfill","isoline","streamline","vector",
+           "taylor","1d","xyvsx","yxvsx","scatter","xvsy","dv3d","unified1d"]:
+    for jup in jupyters:
+        match = subprocess.Popen(shlex.split("more {}".format(jup)), stdout=subprocess.PIPE)
+        match = match.communicate()[0].strip()
+        found = match.find("create{}".format(gm)) != -1
+        found = found or (match.find("get{}".format(gm)) != -1)
+        if found:  # we have a match
+            if gm in ["1d","xyvsy","yxvsx","scatter","xvsy","unified1d"]:
+                gm_name = "unified1D"
+            else:
+                gm_name = gm
+            tmp = matches.get(gm_name,set())
+            tmp.add(jup)
+            matches[gm_name] = tmp
+
+for gm in matches:
+    with open(os.path.join("API","graphics","{}_notebooks.rst".format(gm)),"w") as nb:
+        print(".. toctree::\n      :maxdepth: 0\n",file=nb)
+        for jup in sorted(matches[gm]):
+            print("    ",jup,file=nb)
+
+            if not os.path.exists(os.path.join("API","graphics",jup)):
+                os.symlink(os.path.join("..","..","..",jup),
+                           os.path.join("API","graphics",jup))
+
 #import sphinx_bootstrap_theme
 
 """
