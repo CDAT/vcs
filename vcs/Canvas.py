@@ -4747,7 +4747,7 @@ class Canvas(vcs.bestMatch):
         :type options: `str`_
 
         :returns: A object that Jupyter notebook can display
-        :rtype: `JupyterFFMPEG`_
+        :rtype: JupyterFFMPEG
 
         """
         args = ["ffmpeg", "-y"]
