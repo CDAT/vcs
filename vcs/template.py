@@ -1496,7 +1496,7 @@ class P(vcs.bestMatch):
                                   markercolors, markertypes, markersizes,
                                   strings, scratched=None, stringscolors=None,
                                   stacking="horizontal", bg=False, render=True,
-                                  smallestfontsize=None):
+                                  smallestfontsize=None, backgroundcolor=None):
         """Draws a legend with line/marker/text inside a template legend box.
         Auto adjusts text size to make it fit inside the box.
         Auto arranges the elements to fill the box nicely.
@@ -1589,13 +1589,18 @@ class P(vcs.bestMatch):
             None means no limit, 0 means use original size. Downscaling will still be used by algorigthm
             to try to fit everything in the legend box.
         :type smallestfintsize: `int`_
+
+        :param backgroundcolor: A list indicating the background color of the legended box.
+            Colors are represented as either an int from 0-255, an rgba tuple,
+            or a string color name.
+        :type markercolors: `list`_
         """
         return vcs.utils.drawLinesAndMarkersLegend(canvas,
                                                    self.legend,
                                                    linecolors, linetypes, linewidths,
                                                    markercolors, markertypes, markersizes,
                                                    strings, scratched, stringscolors, stacking, bg,
-                                                   render, smallestfontsize)
+                                                   render, smallestfontsize, backgroundcolor)
 
     def drawAttributes(self, x, slab, gm, bg=False, **kargs):
         """Draws attributes of slab onto a canvas
