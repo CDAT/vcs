@@ -42,6 +42,7 @@ class TestVCSMinTics(basevcstest.VCSBaseTest):
         line.xmtics1 = {numpy.pi/4.:"",3*numpy.pi/4:"",5*numpy.pi/4:"",7*numpy.pi/4:""}
         line.yticlabels1 = {-1.:"-1",-.5:"-0.5",0:"0",.5:"0.5",1:"1"}
         line.ymtics1 = {-.75:"", -.25:"", .25:"", .75:""}
+        tmpl.blank("mean")
         self.x.plot(s,line,tmpl,bg=self.bg)
         self.checkImage("test_vcs_1D_mintics.png")
 
