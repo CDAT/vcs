@@ -1375,7 +1375,7 @@ x.geometry(1200,800)
                     sys.prefix,
                     "share",
                     "vcs",
-                    "logo.png")
+                    "cdat.png")
                 reader = vtk.vtkPNGReader()
                 reader.SetFileName(defaultLogoFile)
                 reader.Update()
