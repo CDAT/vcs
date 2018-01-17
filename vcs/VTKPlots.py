@@ -1375,7 +1375,7 @@ x.geometry(1200,800)
                     sys.prefix,
                     "share",
                     "vcs",
-                    "uvcdat.png")
+                    "cdat.png")
                 reader = vtk.vtkPNGReader()
                 reader.SetFileName(defaultLogoFile)
                 reader.Update()
@@ -1383,7 +1383,7 @@ x.geometry(1200,800)
                 self.logoRepresentation = vtk.vtkLogoRepresentation()
                 self.logoRepresentation.SetImage(logo_input)
                 self.logoRepresentation.ProportionalResizeOn()
-                self.logoRepresentation.SetPosition(0.882, 0.0)
+                self.logoRepresentation.SetPosition(0.895, 0.0)
                 self.logoRepresentation.SetPosition2(0.10, 0.05)
                 self.logoRepresentation.GetImageProperty().SetOpacity(.8)
                 self.logoRepresentation.GetImageProperty(
