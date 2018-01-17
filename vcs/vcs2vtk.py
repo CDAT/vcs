@@ -1487,26 +1487,32 @@ def genPoly(coords, pts, filled=True):
 
 def prepGlyph(g, marker, index=0):
     t, s = marker.type[index], marker.size[index] * .5
+    s *=9.
     gs = vtk.vtkGlyphSource2D()
     pd = None
 
     if t == 'dot':
         gs.SetGlyphTypeToCircle()
         gs.FilledOn()
-        s *= numpy.pi
+        s *= numpy.pi/10.
     elif t == 'circle':
         gs.SetGlyphTypeToCircle()
         gs.FilledOff()
+        s*=.8
     elif t == 'plus':
         gs.SetGlyphTypeToCross()
         gs.FilledOff()
+        s*=10.
     elif t == 'cross':
         gs.SetGlyphTypeToCross()
         gs.SetRotationAngle(45)
         gs.FilledOff()
+        s*=10.
     elif t[:6] == 'square':
         gs.SetGlyphTypeToSquare()
         gs.FilledOff()
+        if t[-5:] != "_fill":
+            s*=.8
     elif t[:7] == 'diamond':
         gs.SetGlyphTypeToDiamond()
         gs.FilledOff()
@@ -1522,7 +1528,7 @@ def prepGlyph(g, marker, index=0):
         elif t[9] == "u":
             gs.SetRotationAngle(0)
     elif t == "hurricane":
-        s = s / 5.
+        s = s / 1400.
         ds = vtk.vtkDiskSource()
         ds.SetInnerRadius(.55 * s)
         ds.SetOuterRadius(1.01 * s)
@@ -1633,14 +1639,14 @@ def prepGlyph(g, marker, index=0):
         pd = vtk.vtkPolyData()
         polys = vtk.vtkCellArray()
         lines = vtk.vtkCellArray()
-        s *= 3
+        s *= .3
         # Lines first
         for l in params["line"]:
-            coords = numpy.array(list(zip(*l))) * s / 30.
+            coords = numpy.array(list(zip(*l))) * s / 60.
             line = genPoly(coords.tolist(), pts, filled=False)
             lines.InsertNextCell(line)
         for l in params["poly"]:
-            coords = numpy.array(list(zip(*l))) * s / 30.
+            coords = numpy.array(list(zip(*l))) * s / 60.
             line = genPoly(coords.tolist(), pts, filled=True)
             polys.InsertNextCell(line)
         geo, pts = project(pts, marker.projection, marker.worldcoordinate)
