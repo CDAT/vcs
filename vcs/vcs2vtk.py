@@ -1635,10 +1635,10 @@ def prepGlyph(g, marker, index=0):
         # Lines first
         scale_json_values = s / 30.
         for l in params["line"]:
-            line = genPoly(zip(*l), pts, filled=False, scale=scale_json_values)
+            line = genPoly(list(zip(*l)), pts, filled=False, scale=scale_json_values)
             lines.InsertNextCell(line)
         for l in params["poly"]:
-            line = genPoly(zip(*l), pts, filled=True, scale=scale_json_values)
+            line = genPoly(list(zip(*l)), pts, filled=True, scale=scale_json_values)
             polys.InsertNextCell(line)
         geo, pts = project(pts, marker.projection, marker.worldcoordinate)
         pd.SetPoints(pts)
