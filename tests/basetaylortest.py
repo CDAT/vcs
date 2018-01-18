@@ -13,7 +13,7 @@ class VCSTaylorBaseTest(basevcstest.VCSBaseTest):
         self.data.id = "My Taylor Diagram Data"
         # Markers attributes for later
         self.ids = ["A1", "A2", "A3", "B", "C1", "C2", "C3"]
-        self.sizes = [25., 5., 20., 20., 20., 20., 20., ]
+        self.sizes = [2.5, 5, 2., 2., 2., 2., 2., ]
         self.symbols = [
             "square",
             "dot",
