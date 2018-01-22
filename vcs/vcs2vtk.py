@@ -1506,13 +1506,11 @@ def prepGlyph(g, marker, index=0):
         gs.SetGlyphTypeToCross()
         gs.CrossOn()
         gs.FilledOff()
-        s *= 10.  # Cross does not scale like the other glyphes
     elif t == 'cross':
         gs.SetGlyphTypeToCross()
         gs.CrossOn()
         gs.SetRotationAngle(45)
         gs.FilledOff()
-        s *= 10.  # Cross does not scale like the other glyphes
     elif t[:6] == 'square':
         gs.SetGlyphTypeToSquare()
         gs.FilledOff()
