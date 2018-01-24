@@ -11,7 +11,7 @@ class TestVCSMinTics(basevcstest.VCSBaseTest):
         line.linecolor = "red"  # Red color obviously
         line.linewidth = 2.  # A bit thicker
         line.marker = "circle"  #
-        line.markersize = 10  # A bit bigger
+        line.markersize = 1
         s = MV2.array(s)
         s.id = "sine"
         xaxis = s.getAxis(0)
