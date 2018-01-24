@@ -20,7 +20,7 @@ class TestVCSMarkersWmo(basevcstest.VCSBaseTest):
         m.worldcoordinate = [0, M, 0, M]
         m.type = wmo
         m.color = [242, ]
-        m.size = [10., ]
+        m.size = [20., ]
         xs = []
         ys = []
         for Y in range(7):

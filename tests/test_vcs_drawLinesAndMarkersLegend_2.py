@@ -3,20 +3,9 @@ import basevcstest
 
 class TestVCSDrawMarkerLeg(basevcstest.VCSBaseTest):
     def testDrawMarkerLegend(self):
-        t = self.x.createtemplate()
-        t.drawLinesAndMarkersLegend(self.x,
-                                    ["red", "blue", "green"], [
-                                        "solid", "dash", "dot"], [1, 4, 8],
-                                    ["blue", "green", "red"], [
-                                        "cross", "square", "dot"], [.2, .6, 5],
-                                    ["sample A", "type B", "thing C"], render=True, bg=self.bg)
-
-        fnm = "test_drawLinesAndMarkersLegend.png"
-        self.checkImage(fnm)
-        self.x.clear()
         t = self.x.gettemplate("deftaylor")
         t.legend.x1 = .5
-        t.legend.x2 = 1
+        t.legend.x2 = .6
         t.legend.y1 = .2
         t.legend.y2 = .65
         ids = ["Sea Level Pressure (ERA-Interim)","SW Cloud Forcing (CERES-EBAF 4.0)","LW Cloud Forcing (CERES-EBAF 4.0)","Land Precipitation (GPCP 2.2)","Ocean Precipitation (GPCP 2.2)","2-m temperature","More"]
@@ -29,7 +18,19 @@ class TestVCSDrawMarkerLeg(basevcstest.VCSBaseTest):
         n = 7
         t.drawLinesAndMarkersLegend(self.x, linecolors=[[0,0,0,0]]*n, linetypes=['solid',]*n, linewidths=[0,]*n, markercolors=id_colors, markertypes=symbols, markersizes=id_sizes, strings=ids, scratched=None, stringscolors=id_colors, stacking='vertical', bg=False, render=True)
 
-        fnm = "test_drawLinesAndMarkersLegend_nolines.png"
+        fnm = "test_drawLinesAndMarkersLegend_noscale.png"
         self.checkImage(fnm)
+        self.x.clear()
+        t.drawLinesAndMarkersLegend(self.x, linecolors=[[0,0,0,0]]*n, linetypes=['solid',]*n, linewidths=[0,]*n, markercolors=id_colors, markertypes=symbols, markersizes=id_sizes, strings=ids, scratched=None, stringscolors=id_colors, stacking='vertical', bg=False, render=True, smallestfontsize=6)
+
+        fnm = "test_drawLinesAndMarkersLegend_limit_size.png"
+        self.checkImage(fnm)
+        self.x.clear()
+        t.drawLinesAndMarkersLegend(self.x, linecolors=[[0,0,0,0]]*n, linetypes=['solid',]*n, linewidths=[0,]*n, markercolors=id_colors, markertypes=symbols, markersizes=id_sizes, strings=ids, scratched=None, stringscolors=id_colors, stacking='vertical', bg=False, render=True, smallestfontsize=0)
+
+        fnm = "test_drawLinesAndMarkersLegend_original.png"
+        self.checkImage(fnm)
+
+
 
 
