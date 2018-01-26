@@ -1,5 +1,4 @@
 os:
-    #    - osx
     - linux
 dist: trusty
 sudo: false
