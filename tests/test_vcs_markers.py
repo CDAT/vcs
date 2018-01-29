@@ -12,6 +12,6 @@ class TestVCSMarkers(basevcstest.VCSBaseTest):
         # m.worldcoordinate=[-10,10,0,10]
         m.type = ['plus', 'diamond', 'square_fill', "hurricane"]
         m.color = [242, 243, 244, 242]
-        m.size = [20, 20, 20, 5]
+        m.size = [2, 2, 2, 150]
         self.x.plot(m, bg=self.bg)
         self.checkImage("test_vcs_markers.png")

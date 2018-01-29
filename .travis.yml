@@ -1,5 +1,4 @@
 os:
-    #    - osx
     - linux
 dist: trusty
 sudo: false
@@ -13,8 +12,9 @@ before_install:
 script:
 - export UVCDAT_ANONYMOUS_LOG=False
 - export UVCDAT_SETUP_PATH=${HOME}
-- conda create -q -n py2 -c uvcdat/label/nightly -c conda-forge -c uvcdat "cdms2>2.12.2017" cdat_info udunits2 nose flake8 genutil "matplotlib<2.1" vtk-cdat mesalib image-compare "dv3d>2.12.2017" "cdutil>2.12.2017" nbsphinx easydev
-- conda create -q -n py3 -c nesii/channel/dev-esmf  -c uvcdat/label/nightly -c conda-forge -c uvcdat "python>3" "cdms2>2.12.2017" cdat_info udunits2 nose flake8 genutil "matplotlib<2.1" vtk-cdat mesalib image-compare "dv3d>2.12.2017" "cdutil>2.12.2017" nbsphinx easydev
+- conda create -q -n py2 -c uvcdat/label/nightly -c conda-forge -c uvcdat "cdms2>2.12.2017" cdat_info udunits2 nose flake8 genutil "matplotlib<2.1" vtk-cdat mesalib image-compare "dv3d>2.12.2017" "cdutil>2.12.2017"nbsphinx easydev
+- conda create -q -n py3 -c nesii/channel/dev-esmf  -c uvcdat/label/nightly -c conda-forge -c uvcdat "python>3" "cdms2>2.12.2017" cdat_info udunits2 nose flake8 genutil "matplotlib<2.1" vtk-cdat mesalib image-compare "dv3d>2.12.2017" "cdutil>2.12.2017" "cdtime<2018" nbsphinx easydev
+>>>>>>> master
 - echo $TRAVIS_BRANCH
 - export TRAVIS_PR_BRANCH=$TRAVIS_BRANCH
 - echo $TRAVIS_EVENT_TYPE
@@ -24,10 +24,10 @@ script:
 - git clone git://github.com/uv-cdat/uvcdat-testdata
 - cd uvcdat-testdata ; git checkout $TRAVIS_BRANCH ; cd ..
 - df -h
-- python run_tests.py -v2 -n2 -g --no-vtk-ui
+- python run_tests.py -n2 -g --no-vtk-ui
 - source activate py3
 - rm -rf build
 - python setup.py install --old-and-unmanageable
-- travis_wait python run_tests.py -n2 -g --no-vtk-ui
+- python run_tests.py -v2 -n2 -g --no-vtk-ui
 after_success:
     - if [ "$TRAVIS_BRANCH" == "master" -a "$TRAVIS_PULL_REQUEST" == "false" ]; then conda install -n root conda-build anaconda-client && bash ci-support/conda_upload.sh ; fi

@@ -17,7 +17,7 @@ class TestVCSLogo(basevcstest.VCSBaseTest):
         logo1.y = .2
         logo1.plot(self.x, bg=self.bg)
 
-        png_pth = os.path.join(sys.prefix, "share", "vcs", "uvcdat.png")
+        png_pth = os.path.join("tests", "share", "uvcdat.png")
         print("PNG:", png_pth)
         logo2 = vcs.utils.Logo(png_pth)
         logo2.x = .7

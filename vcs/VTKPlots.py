@@ -44,7 +44,8 @@ class VCSInteractorStyle(vtk.vtkInteractorStyleUser):
 
 class VTKVCSBackend(object):
 
-    def __init__(self, canvas, renWin=None, debug=False, bg=None, geometry=None):
+    def __init__(self, canvas, renWin=None,
+                 debug=False, bg=None, geometry=None):
         self._lastSize = None
         self.canvas = canvas
         self.renWin = renWin
@@ -67,12 +68,14 @@ class VTKVCSBackend(object):
             # This may be smaller than the data viewport. It is used
             # if autot is passed
             'ratio_autot_viewport',
-            # used to render the dataset for clicked point info (hardware selection)
+            # used to render the dataset for clicked point info (hardware
+            # selection)
             'surface_renderer',
             # (xScale, yScale) - datasets can be scaled using the window ratio
             'surface_scale',
             # the same as vcs.utils.getworldcoordinates for now. getworldcoordinates uses
-            # gm.datawc_... or, if that is not set, it uses data axis margins (without bounds).
+            # gm.datawc_... or, if that is not set, it uses data axis margins
+            # (without bounds).
             'plotting_dataset_bounds',
             # dataset bounds before masking
             'vtk_dataset_bounds_no_mask',
@@ -158,7 +161,8 @@ class VTKVCSBackend(object):
             if (surfaceRenderer and dataset):
                 selector.SetRenderer(surfaceRenderer)
                 selector.SetArea(xy[0], xy[1], xy[0], xy[1])
-                selector.SetFieldAssociation(vtk.vtkDataObject.FIELD_ASSOCIATION_CELLS)
+                selector.SetFieldAssociation(
+                    vtk.vtkDataObject.FIELD_ASSOCIATION_CELLS)
                 # We only want to render the surface for selection
                 renderers = self.renWin.GetRenderers()
                 renderers.InitTraversal()
@@ -208,7 +212,8 @@ class VTKVCSBackend(object):
                                 worldPosition[1] /= (yScale / xScale)
                             lonLat = worldPosition
                             if (attributes is None):
-                                # if point dataset, return the value for the closest point
+                                # if point dataset, return the value for the
+                                # closest point
                                 cell = dataset.GetCell(cellId)
                                 closestPoint = [0, 0, 0]
                                 subId = vtk.mutable(0)
@@ -224,10 +229,12 @@ class VTKVCSBackend(object):
                                     attributes = dataset.GetPointData().GetVectors()
                                 elementId = pointId
                             if (geoTransform):
-                                geoTransform.InternalTransformPoint(worldPosition, lonLat)
+                                geoTransform.InternalTransformPoint(
+                                    worldPosition, lonLat)
                                 geoTransform.Inverse()
                             if (float("inf") not in lonLat):
-                                st += "X=%4.1f\nY=%4.1f\n" % (lonLat[0], lonLat[1])
+                                st += "X=%4.1f\nY=%4.1f\n" % (
+                                    lonLat[0], lonLat[1])
                             # get the cell value or the closest point value
                             if (attributes):
                                 if (attributes.GetNumberOfComponents() > 1):
@@ -677,7 +684,8 @@ class VTKVCSBackend(object):
             ren = kargs["renderer"]
 
         vtk_backend_grid = kargs.get("vtk_backend_grid", None)
-        vtk_dataset_bounds_no_mask = kargs.get("vtk_dataset_bounds_no_mask", None)
+        vtk_dataset_bounds_no_mask = kargs.get(
+            "vtk_dataset_bounds_no_mask", None)
         vtk_backend_geo = kargs.get("vtk_backend_geo", None)
         bounds = vtk_dataset_bounds_no_mask if vtk_dataset_bounds_no_mask else None
 
@@ -697,7 +705,10 @@ class VTKVCSBackend(object):
             returned.update(self.plot3D(data1, data2, tpl, gm, ren, **kargs))
         elif gtype in ["text"]:
             if tt.priority != 0:
-                tt_key = (tt.priority, tuple(tt.viewport), tuple(tt.worldcoordinate), tt.projection)
+                tt_key = (
+                    tt.priority, tuple(
+                        tt.viewport), tuple(
+                        tt.worldcoordinate), tt.projection)
                 if tt_key in self.text_renderers:
                     ren = self.text_renderers[tt_key]
                 else:
@@ -859,7 +870,8 @@ class VTKVCSBackend(object):
 
         # Stippling
         vcs2vtk.stippleLine(line_prop, contLine.type[0])
-        vtk_dataset_bounds_no_mask = kargs.get("vtk_dataset_bounds_no_mask", None)
+        vtk_dataset_bounds_no_mask = kargs.get(
+            "vtk_dataset_bounds_no_mask", None)
         return self.fitToViewport(contActor,
                                   vp,
                                   wc=wc, geo=geo,
@@ -867,10 +879,18 @@ class VTKVCSBackend(object):
                                   priority=priority,
                                   create_renderer=True)
 
-    def renderTemplate(self, tmpl, data, gm, taxis, zaxis, X=None, Y=None, **kargs):
+    def renderTemplate(self, tmpl, data, gm, taxis,
+                       zaxis, X=None, Y=None, **kargs):
         # ok first basic template stuff, let's store the displays
         # because we need to return actors for min/max/mean
-        displays = tmpl.plot(self.canvas, data, gm, bg=self.bg, X=X, Y=Y, **kargs)
+        displays = tmpl.plot(
+            self.canvas,
+            data,
+            gm,
+            bg=self.bg,
+            X=X,
+            Y=Y,
+            **kargs)
         returned = {}
         for d in displays:
             if d is None:
@@ -1081,7 +1101,9 @@ class VTKVCSBackend(object):
             xoff = xOffset * pixelInWorldCoord
             yoff = yOffset * pixelInWorldCoord
         else:
-            raise RuntimeError("vtk put image does not understand %s for offset units" % units)
+            raise RuntimeError(
+                "vtk put image does not understand %s for offset units" %
+                units)
         xc = origin[0] + .5 * width
         yc = origin[1] + .5 * height
         cam.SetParallelScale(heightInWorldCoord * 0.5)
@@ -1323,7 +1345,7 @@ x.geometry(1200,800)
     def Animate(self, *args, **kargs):
         return VTKAnimate.VTKAnimate(*args, **kargs)
 
-    def gettextextent(self, textorientation, texttable):
+    def gettextextent(self, textorientation, texttable, angle=None):
         # Ensure renwin exists
         self.createRenWin()
 
@@ -1332,18 +1354,23 @@ x.geometry(1200,800)
         if isinstance(texttable, str):
             texttable = vcs.gettexttable(texttable)
 
-        from .vtk_ui.text import text_dimensions
+        from .vtk_ui.text import text_box
 
         text_property = vtk.vtkTextProperty()
         info = self.canvasinfo()
         win_size = info["width"], info["height"]
-        vcs2vtk.prepTextProperty(text_property, win_size, to=textorientation, tt=texttable)
+        vcs2vtk.prepTextProperty(
+            text_property,
+            win_size,
+            to=textorientation,
+            tt=texttable)
 
         dpi = self.renWin.GetDPI()
 
         length = max(len(texttable.string), len(texttable.x), len(texttable.y))
 
-        strings = texttable.string + [texttable.string[-1]] * (length - len(texttable.string))
+        strings = texttable.string + \
+            [texttable.string[-1]] * (length - len(texttable.string))
         xs = texttable.x + [texttable.x[-1]] * (length - len(texttable.x))
         ys = texttable.y + [texttable.y[-1]] * (length - len(texttable.y))
 
@@ -1352,9 +1379,25 @@ x.geometry(1200,800)
         extents = []
 
         for s, x, y in labels:
-            width, height = text_dimensions(s, text_property, dpi)
-            extents.append([x, x + float(width) / win_size[0], y, y + float(height) / win_size[1]])
-
+            if angle is None:
+                coords = text_box(
+                    s, text_property, dpi, -textorientation.angle)
+            else:
+                coords = text_box(s, text_property, dpi, -angle)
+            vp = texttable.viewport
+            coords[0] = x +\
+                (texttable.worldcoordinate[1] - texttable.worldcoordinate[0]) *\
+                float(coords[0]) / win_size[0] / abs(vp[1] - vp[0])
+            coords[1] = x +\
+                (texttable.worldcoordinate[1] - texttable.worldcoordinate[0]) *\
+                float(coords[1]) / win_size[0] / abs(vp[1] - vp[0])
+            coords[2] = y +\
+                (texttable.worldcoordinate[3] - texttable.worldcoordinate[2]) *\
+                float(coords[2]) / win_size[1] / abs(vp[3] - vp[2])
+            coords[3] = y +\
+                (texttable.worldcoordinate[3] - texttable.worldcoordinate[2]) *\
+                float(coords[3]) / win_size[1] / abs(vp[3] - vp[2])
+            extents.append(coords)
         return extents
 
     def getantialiasing(self):
@@ -1375,7 +1418,7 @@ x.geometry(1200,800)
                     sys.prefix,
                     "share",
                     "vcs",
-                    "uvcdat.png")
+                    "cdat.png")
                 reader = vtk.vtkPNGReader()
                 reader.SetFileName(defaultLogoFile)
                 reader.Update()
@@ -1383,7 +1426,7 @@ x.geometry(1200,800)
                 self.logoRepresentation = vtk.vtkLogoRepresentation()
                 self.logoRepresentation.SetImage(logo_input)
                 self.logoRepresentation.ProportionalResizeOn()
-                self.logoRepresentation.SetPosition(0.882, 0.0)
+                self.logoRepresentation.SetPosition(0.895, 0.0)
                 self.logoRepresentation.SetPosition2(0.10, 0.05)
                 self.logoRepresentation.GetImageProperty().SetOpacity(.8)
                 self.logoRepresentation.GetImageProperty(
@@ -1637,7 +1680,8 @@ x.geometry(1200,800)
                             try:
                                 meanstring = 'Mean %.4g' % array1.mean()
                             except Exception:
-                                meanstring = 'Mean %.4g' % numpy.mean(array1.filled())
+                                meanstring = 'Mean %.4g' % numpy.mean(
+                                    array1.filled())
                     t.SetInput(meanstring)
                 elif att == "crdate" and tstr is not None:
                     t.SetInput(tstr.split()[0].replace("-", "/"))

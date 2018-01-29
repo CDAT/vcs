@@ -1014,7 +1014,7 @@ class P(vcs.bestMatch):
     # Adding the drawing functionnality to plot all these attributes on the
     # Canvas
     def drawTicks(self, slab, gm, x, axis, number,
-                  vp, wc, bg=False, X=None, Y=None, **kargs):
+                  vp, wc, bg=False, X=None, Y=None, mintic=False, **kargs):
         """Draws the ticks for the axis x number number
         using the label passed by the graphic  method
         vp and wc are from the actual canvas, they have
@@ -1034,7 +1034,10 @@ class P(vcs.bestMatch):
         dx = dx / (vp[1] - vp[0])
         dy = dy / (vp[3] - vp[2])
         # get the actual labels
-        loc = copy.copy(getattr(gm, axis + 'ticlabels' + number))
+        if mintic is False:
+            loc = copy.copy(getattr(gm, axis + 'ticlabels' + number))
+        else:
+            loc = copy.copy(getattr(gm, axis + 'mtics' + number))
         # Are they set or do we need to it ?
         if (loc is None or loc == '*'):
                 # well i guess we have to do it !
@@ -1067,53 +1070,58 @@ class P(vcs.bestMatch):
                 if not (dw1 >= k >= dw2):
                     del(loc[k])
         # The ticks
-        obj = getattr(self, axis + 'tic' + number)
-        # the labels
-        objlabl = getattr(self, axis + 'label' + number)
+        if mintic is False:
+            obj = getattr(self, axis + 'tic' + number)
+        else:
+            obj = getattr(self, axis + 'mintic' + number)
         # the following to make sure we have a unique name,
         # i put them together assuming it would be faster
         ticks = x.createline(source=obj.line)
         ticks.projection = gm.projection
         ticks.priority = obj.priority
-        tt = x.createtext(
-            Tt_source=objlabl.texttable,
-            To_source=objlabl.textorientation)
-        tt.projection = gm.projection
-        tt.priority = objlabl.priority
+        if mintic is False:
+            # the labels
+            objlabl = getattr(self, axis + 'label' + number)
+            tt = x.createtext(
+                Tt_source=objlabl.texttable,
+                To_source=objlabl.textorientation)
+            tt.projection = gm.projection
+            tt.priority = objlabl.priority
         if vcs.elements["projection"][gm.projection].type != "linear":
             ticks.viewport = vp
             ticks.worldcoordinate = wc
-            tt.worldcoordinate = wc
-            if axis == "y":
-                tt.viewport = vp
-                # TODO: Transform axes names through geographic projections
-                # In that case the if goes and only the statement stays
-                if ("ratio_autot_viewport" not in kargs):
-                    tt.viewport[0] = objlabl.x
-                if vcs.elements["projection"][
-                        tt.projection].type in round_projections:
-                    tt.priority = 0
-            else:
-                if vcs.elements["projection"][
-                        tt.projection].type in round_projections:
-                    xmn, xmx = vcs.minmax(self.data.x1, self.data.x2)
-                    ymn, ymx = vcs.minmax(self.data.y1, self.data.y2)
-                    xwiden = .02
-                    ywiden = .02
-                    xmn -= xwiden
-                    xmx += xwiden
-                    ymn -= ywiden
-                    ymx += ywiden
-                    vp = [
-                        max(0., xmn), min(xmx, 1.), max(0, ymn), min(ymx, 1.)]
-                    tt.viewport = vp
-                    pass
-                else:
+            if mintic is False:
+                tt.worldcoordinate = wc
+                if axis == "y":
                     tt.viewport = vp
                     # TODO: Transform axes names through geographic projections
                     # In that case the if goes and only the statement stays
                     if ("ratio_autot_viewport" not in kargs):
-                        tt.viewport[2] = objlabl.y
+                        tt.viewport[0] = objlabl.x
+                    if vcs.elements["projection"][
+                            tt.projection].type in round_projections:
+                        tt.priority = 0
+                else:
+                    if vcs.elements["projection"][
+                            tt.projection].type in round_projections:
+                        xmn, xmx = vcs.minmax(self.data.x1, self.data.x2)
+                        ymn, ymx = vcs.minmax(self.data.y1, self.data.y2)
+                        xwiden = .02
+                        ywiden = .02
+                        xmn -= xwiden
+                        xmx += xwiden
+                        ymn -= ywiden
+                        ymx += ywiden
+                        vp = [
+                            max(0., xmn), min(xmx, 1.), max(0, ymn), min(ymx, 1.)]
+                        tt.viewport = vp
+                        pass
+                    else:
+                        tt.viewport = vp
+                        # TODO: Transform axes names through geographic projections
+                        # In that case the if goes and only the statement stays
+                        if ("ratio_autot_viewport" not in kargs):
+                            tt.viewport[2] = objlabl.y
 
         # initialize the list of values
         tstring = []
@@ -1122,7 +1130,10 @@ class P(vcs.bestMatch):
         tys = []
         txs = []
         loc2 = loc
-        loc = getattr(gm, axis + 'ticlabels' + number)
+        if mintic is False:
+            loc = getattr(gm, axis + 'ticlabels' + number)
+        else:
+            loc = getattr(gm, axis + "mtics" + number)
         if loc == '*' or loc is None:
             loc = loc2
         if isinstance(loc, str):
@@ -1140,8 +1151,9 @@ class P(vcs.bestMatch):
                                 vp[0], (l_tmp - wc[0]) / dx +
                                 vp[0]])
                         ys.append([obj.y1, obj.y2])
-                        txs.append((l_tmp - wc[0]) / dx + vp[0])
-                        tys.append(objlabl.y)
+                        if mintic is False:
+                            txs.append((l_tmp - wc[0]) / dx + vp[0])
+                            tys.append(objlabl.y)
                     elif vcs.elements["projection"][gm.projection].type in elliptical_projections:
                         pass
                     else:
@@ -1151,9 +1163,11 @@ class P(vcs.bestMatch):
                             (obj.y2 - obj.y1) /\
                             (self.data._y2 - self._data.y1)
                         ys.append([wc[2], end])
-                        txs.append(l_tmp)
-                        tys.append(wc[3])
-                    tstring.append(loc[l_tmp])
+                        if mintic is False:
+                            txs.append(l_tmp)
+                            tys.append(wc[3])
+                    if mintic is False:
+                        tstring.append(loc[l_tmp])
             elif axis == 'y':
                 if ymn <= l_tmp <= ymx:
                     if vcs.elements["projection"][
@@ -1162,8 +1176,9 @@ class P(vcs.bestMatch):
                             [(l_tmp - wc[2]) / dy +
                                 vp[2], (l_tmp - wc[2]) / dy + vp[2]])
                         xs.append([obj.x1, obj.x2])
-                        tys.append((l_tmp - wc[2]) / dy + vp[2])
-                        txs.append(objlabl.x)
+                        if mintic is False:
+                            tys.append((l_tmp - wc[2]) / dy + vp[2])
+                            txs.append(objlabl.x)
                     else:
                         ys.append([l_tmp, l_tmp])
                         end = wc[
@@ -1175,49 +1190,12 @@ class P(vcs.bestMatch):
                                 end < -180.:
                             end = wc[0]
                         xs.append([wc[0], end])
-                        tys.append(l_tmp)
-                        txs.append(wc[0])
-                    tstring.append(loc[l_tmp])
-        # now does the mini ticks
-        mintics = getattr(gm, axis + 'mtics' + number)
-        if mintics != '':
-            if isinstance(mintics, str):
-                mintics = vcs.elements["list"][mintics]
-            obj = getattr(self, axis + 'mintic' + number)
-            if obj.priority > 0:
-                ynum = getattr(self._data, "_y%s" % number)
-                xnum = getattr(self._data, "_x%s" % number)
-                for l_tmp in list(mintics.keys()):
-                    if axis == 'x':
-                        if xmn <= l_tmp <= xmx:
-                            if vcs.elements["projection"][
-                                    gm.projection].type == "linear":
-                                xs.append(
-                                    [(l_tmp - wc[0]) / dx +
-                                        vp[0], (l_tmp - wc[0]) / dx + vp[0]])
-                                ys.append([obj.y1, obj.y2])
-                            else:
-                                xs.append([l_tmp, l_tmp])
-                                ys.append([wc[2],
-                                           wc[2] + (wc[3] - wc[2]) *
-                                           (obj._y - ynum) /
-                                           (self._data._y2 - self._data._y1)])
-                    elif axis == 'y':
-                        if ymn <= l_tmp <= ymx:
-                            if vcs.elements["projection"][
-                                    gm.projection].type == "linear":
-                                ys.append(
-                                    [(l_tmp - wc[2]) / dy +
-                                        vp[2], (l_tmp - wc[2]) / dy + vp[2]])
-                                xs.append([obj.x1, obj.x2])
-                            else:
-                                ys.append([l_tmp, l_tmp])
-                                xs.append([wc[0],
-                                           wc[0] +
-                                           (wc[1] - wc[0]) * (obj._x - xnum) /
-                                           (self._data._x2 - self._data._x1)])
-
-        if txs != []:
+                        if mintic is False:
+                            tys.append(l_tmp)
+                            txs.append(wc[0])
+                    if mintic is False:
+                        tstring.append(loc[l_tmp])
+        if mintic is False and txs != []:
             tt.string = tstring
             tt.x = txs
             tt.y = tys
@@ -1227,10 +1205,11 @@ class P(vcs.bestMatch):
             ticks._y = ys
             displays.append(x.line(ticks, bg=bg, **kargs))
         del(vcs.elements["line"][ticks.name])
-        sp = tt.name.split(":::")
-        del(vcs.elements["texttable"][sp[0]])
-        del(vcs.elements["textorientation"][sp[1]])
-        del(vcs.elements["textcombined"][tt.name])
+        if mintic is False:
+            sp = tt.name.split(":::")
+            del(vcs.elements["texttable"][sp[0]])
+            del(vcs.elements["textorientation"][sp[1]])
+            del(vcs.elements["textcombined"][tt.name])
         return displays
 
     def blank(self, attribute=None):
@@ -1496,7 +1475,7 @@ class P(vcs.bestMatch):
                                   markercolors, markertypes, markersizes,
                                   strings, scratched=None, stringscolors=None,
                                   stacking="horizontal", bg=False, render=True,
-                                  smallestfontsize=None):
+                                  smallestfontsize=None, backgroundcolor=None):
         """Draws a legend with line/marker/text inside a template legend box.
         Auto adjusts text size to make it fit inside the box.
         Auto arranges the elements to fill the box nicely.
@@ -1589,13 +1568,18 @@ class P(vcs.bestMatch):
             None means no limit, 0 means use original size. Downscaling will still be used by algorigthm
             to try to fit everything in the legend box.
         :type smallestfintsize: `int`_
+
+        :param backgroundcolor: A list indicating the background color of the legended box.
+            Colors are represented as either an int from 0-255, an rgba tuple,
+            or a string color name.
+        :type markercolors: `list`_
         """
         return vcs.utils.drawLinesAndMarkersLegend(canvas,
                                                    self.legend,
                                                    linecolors, linetypes, linewidths,
                                                    markercolors, markertypes, markersizes,
                                                    strings, scratched, stringscolors, stacking, bg,
-                                                   render, smallestfontsize)
+                                                   render, smallestfontsize, backgroundcolor)
 
     def drawAttributes(self, x, slab, gm, bg=False, **kargs):
         """Draws attributes of slab onto a canvas
@@ -1762,50 +1746,21 @@ class P(vcs.bestMatch):
 
         # Do the tickmarks/labels
         if not isinstance(gm, vcs.taylor.Gtd):
-            displays += self.drawTicks(slab,
-                                       gm,
-                                       x,
-                                       axis='x',
-                                       number='1',
-                                       vp=vp2,
-                                       wc=wc2,
-                                       bg=bg,
-                                       X=X,
-                                       Y=Y,
-                                       **kargs)
-            displays += self.drawTicks(slab,
-                                       gm,
-                                       x,
-                                       axis='x',
-                                       number='2',
-                                       vp=vp2,
-                                       wc=wc2,
-                                       bg=bg,
-                                       X=X,
-                                       Y=Y,
-                                       **kargs)
-            displays += self.drawTicks(slab,
-                                       gm,
-                                       x,
-                                       axis='y',
-                                       number='1',
-                                       vp=vp2,
-                                       wc=wc2,
-                                       bg=bg,
-                                       X=X,
-                                       Y=Y,
-                                       **kargs)
-            displays += self.drawTicks(slab,
-                                       gm,
-                                       x,
-                                       axis='y',
-                                       number='2',
-                                       vp=vp2,
-                                       wc=wc2,
-                                       bg=bg,
-                                       X=X,
-                                       Y=Y,
-                                       **kargs)
+            for axis in ["x", "y"]:
+                for number in ["1", "2"]:
+                    for mintic in [False, True]:
+                        displays += self.drawTicks(slab,
+                                                   gm,
+                                                   x,
+                                                   axis=axis,
+                                                   number=number,
+                                                   vp=vp2,
+                                                   wc=wc2,
+                                                   bg=bg,
+                                                   X=X,
+                                                   Y=Y,
+                                                   mintic=mintic,
+                                                   **kargs)
 
         if X is None:
             X = slab.getAxis(-1)

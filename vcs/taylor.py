@@ -303,7 +303,7 @@ class TDMarker(vcs.bestMatch):
             self,
             'size',
             value,
-            minvalue=1,
+            minvalue=0,
             ints=False)
         if value is not None:
             self._size = value
