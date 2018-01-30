@@ -45,7 +45,7 @@ class VCSInteractorStyle(vtk.vtkInteractorStyleUser):
 class VTKVCSBackend(object):
 
     def __init__(self, canvas, renWin=None,
-                 debug=False, bg=None, geometry=None):
+                 debug=False, bg=None):
         self._lastSize = None
         self.canvas = canvas
         self.renWin = renWin
@@ -90,7 +90,6 @@ class VTKVCSBackend(object):
         # Turn on anti-aliasing by default
         # Initially set to 16x Multi-Sampled Anti-Aliasing
         self.antialiasing = 8
-        self._geometry = geometry
 
         if renWin is not None:
             self.renWin = renWin
@@ -449,12 +448,10 @@ class VTKVCSBackend(object):
             # turning off antialiasing by default
             # mostly so that pngs are same accross platforms
             self.renWin.SetMultiSamples(self.antialiasing)
-            if self._geometry is not None:
-                width = self._geometry["width"]
-                height = self._geometry["height"]
-            else:
-                width = None
-                height = None
+
+            width = self.canvas.width
+            height = self.canvas.height
+
             if "width" in kargs and kargs["width"] is not None:
                 width = kargs["width"]
             if "height" in kargs and kargs["height"] is not None:
@@ -505,15 +502,8 @@ class VTKVCSBackend(object):
     def canvasinfo(self):
         if self.renWin is None:
             mapstate = False
-            if (self.bg):
-                height = self.canvas.bgY
-                width = self.canvas.bgX
-            elif (self._geometry):
-                height = self._geometry['height']
-                width = self._geometry['width']
-            else:
-                height = self.canvas.bgY
-                width = self.canvas.bgX
+            width = self.canvas.width
+            height = self.canvas.height
             depth = None
             x = 0
             y = 0
@@ -555,17 +545,14 @@ class VTKVCSBackend(object):
             self.clear()
         if self.renWin is None:
             if W != -99:
-                self.canvas.bgX = W
-                self.canvas.bgY = H
+                self.canvas.width = W
+                self.canvas.height = H
             else:
-                W = self.canvas.bgX
-            if self._geometry:
-                self._geometry["width"] = self.canvas.bgX
-                self._geometry["height"] = self.canvas.bgY
+                W = self.canvas.width
         else:
             self.setsize(W, H)
-            self.canvas.bgX = W
-            self.canvas.bgY = H
+            self.canvas.width = W
+            self.canvas.height = H
 
     def portrait(self, W=-99, H=-99, x=-99, y=-99, clear=0):
         self.resize_or_rotate_window(W, H, x, y, clear)
@@ -589,25 +576,25 @@ class VTKVCSBackend(object):
         try:
             # following works on some machines but not all
             # Creates the window to be 60% of user's screen's width
-            bgX = int(screenSize[0] * .6)
-            bgY = int(bgX / self.canvas.size)
-            if bgY > screenSize[1]:
+            cw = int(screenSize[0] * .6)
+            ch = int(cw / self.canvas.size)
+            if ch > screenSize[1]:
                 # If still too big use 60% of height
                 # typical case: @doutriaux1 screens
-                bgY = int(screenSize[1] * .6)
-                bgX = int(bgY * self.canvas.size)
+                ch = int(screenSize[1] * .6)
+                cw = int(ch * self.canvas.size)
         except Exception:
-            bgX = self.canvas.bgX
+            cw = self.canvas.width
         # Respect user chosen aspect ratio
-        bgY = int(bgX / self.canvas.size)
+        ch = int(cw / self.canvas.size)
         # Sets renWin dimensions
         # make the dimensions even for Macs
-        bgX = _makeEven(bgX)
-        bgY = _makeEven(bgY)
-        self.setsize(bgX, bgY)
-        self.canvas.bgX = bgX
-        self.canvas.bgY = bgY
-        self._lastSize = (bgX, bgY)
+        cw = _makeEven(cw)
+        ch = _makeEven(ch)
+        self.canvas.width = cw
+        self.canvas.height = ch
+        self.setsize(cw, ch)
+        self._lastSize = (cw, ch)
 
     def open(self, width=None, height=None, **kargs):
         self.createRenWin(open=True, width=width, height=height)
@@ -630,16 +617,17 @@ class VTKVCSBackend(object):
 
     def geometry(self, *args):
         if len(args) == 0:
-            return self._geometry
+            return {'width': self.canvas.width, 'height': self.canvas.height}
         if len(args) < 2:
             raise TypeError("Function takes zero or two <width, height> "
                             "or more than two arguments. Got " + len(*args))
         x = args[0]
         y = args[1]
 
+        self.canvas.width = x
+        self.canvas.height = y
         if self.renWin is not None:
             self.setsize(x, y)
-        self._geometry = {'width': x, 'height': y}
         self._lastSize = (x, y)
 
     def setsize(self, x, y):
@@ -662,7 +650,6 @@ class VTKVCSBackend(object):
         self.createRenWin(**kargs)
         if self.bg:
             self.renWin.SetOffScreenRendering(True)
-            self.setsize(self.canvas.bgX, self.canvas.bgY)
         self.cell_coordinates = kargs.get('cell_coordinates', None)
         self.canvas.initLogoDrawing()
         if gtype == "text":
@@ -1259,6 +1246,8 @@ class VTKVCSBackend(object):
         except Exception:
             pass
 
+        user_dims = None
+
         sz = self.renWin.GetSize()
         if width is not None and height is not None:
             if sz != (width, height):
@@ -1272,14 +1261,10 @@ x=vcs.init()
 x.geometry(1200,800)
 """
                 warnings.warn(wrn)
-                user_dims = (self.canvas.bgX, self.canvas.bgY, sz[0], sz[1])
-                # We need to set canvas.bgX and canvas.bgY before we do renWin.SetSize
-                # otherwise, canvas.bgX,canvas.bgY will win
-                self.canvas.bgX = width
-                self.canvas.bgY = height
-                self.setsize(width, height)
-            else:
-                user_dims = None
+                user_dims = (sz[0], sz[1])
+                self.canvas.width = width
+                self.canvas.height = height
+                self.setsize(self.canvas.width, self.canvas.height)
 
         imgfiltr = vtk.vtkWindowToImageFilter()
         imgfiltr.SetInput(self.renWin)
@@ -1304,8 +1289,8 @@ x.geometry(1200,800)
             writer.AddText(k, v)
         writer.Write()
         if user_dims is not None:
-            self.canvas.bgX, self.canvas.bgY, w, h = user_dims
-            self.setsize(w, h)
+            self.canvas.width, self.canvas.height = user_dims
+            self.setsize(self.canvas.width, self.canvas.height)
             self.renWin.Render()
 
     def cgm(self, file):

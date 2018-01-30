@@ -357,8 +357,8 @@ class Canvas(vcs.bestMatch):
         'ParameterChanged',
         'colormap',
         'backgroundcolor',
-        'bgX',
-        'bgY',
+        'width',
+        'height',
         'display_names',
         '_dotdir',
         '_dotdirenv',
@@ -919,18 +919,21 @@ class Canvas(vcs.bestMatch):
                                                                             maxelements=2, ints=True)
             else:
                 raise ValueError("geometry should be list, tuple, or dict")
-            geometry = {"width": width, "height": height}
 
-        if geometry is not None and bg:
-            self.bgX = geometry["width"]
-            self.bgY = geometry["height"]
+            self.width = width
+            self.height = height
         else:
-            # default size for bg
-            self.bgX = 814
-            self.bgY = 606
+            w, h = 814, 606
+            if size is not None:
+                # What is the purpose of the 'size' argument?  Is it intended to forever
+                # constrain the aspect ratio of the plot?  What if size and geometry are
+                # both given, but are inconsistent?
+                w = h * size
+            self.width = w
+            self.height = h
 
         if backend == "vtk":
-            self.backend = VTKVCSBackend(self, geometry=geometry, bg=bg)
+            self.backend = VTKVCSBackend(self, bg=bg)
         elif isinstance(backend, vtk.vtkRenderWindow):
             self.backend = VTKVCSBackend(self, renWin=backend, bg=bg)
         else:
@@ -4963,8 +4966,8 @@ class Canvas(vcs.bestMatch):
             width, height, units)
 
         # in pixels?
-        self.bgX = W
-        self.bgY = H
+        self.width = W
+        self.height = H
         return
     # display ping
     setbgoutputdimensions.__doc__ = setbgoutputdimensions.__doc__ % (xmldocs.output_width, xmldocs.output_height,
@@ -5306,8 +5309,8 @@ class Canvas(vcs.bestMatch):
                         height = 8.5
                         width = self.size * height
             else:
-                width = self.bgX
-                height = self.bgY
+                width = self.width
+                height = self.height
         elif width is None:
             if self.size is None:
                 width = 1.2941176470588236 * height
