@@ -29,7 +29,7 @@ for gm in ["boxfill","isofill","meshfill","isoline","streamline","vector",
            "taylor","1d","xyvsx","yxvsx","scatter","xvsy","dv3d","unified1d"]:
     for jup in jupyters:
         match = subprocess.Popen(shlex.split("more {}".format(jup)), stdout=subprocess.PIPE)
-        match = match.communicate()[0].strip()
+        match = str(match.communicate()[0].strip())
         found = match.find("create{}".format(gm)) != -1
         found = found or (match.find("get{}".format(gm)) != -1)
         if found:  # we have a match
@@ -119,6 +119,14 @@ ex = ex1 = ex2 = None
 __examples = [ex, ex1, ex2]
 # Copy vcs.elements so we can do a diff later.
 # check if it already exists so we don't overwrite the first copy
+for d in vcs.listelements("display"):
+    try:
+        disp = vcs.elements["display"][d]
+    except:
+        continue
+    if disp._parent is not None:
+        disp._parent.clear()
+vcs.reset()
 try:
     elts
 except:
@@ -128,18 +136,18 @@ except:
             elts[key]=dict(vcs.elements[key])
         else:
             elts[key]=vcs.elements[key]
-try:
-    vcs.removeobject(vcs.elements['texttable']['EXAMPLE_tt'])
-    vcs.removeobject(vcs.elements['textorientation']['EXAMPLE_tto'])
-    vcs.removeobject(vcs.elements['template']['example1'])
-    vcs.removeobject(vcs.elements['colormap']['example'])
-    a.close()
-except:
-    pass
     """
 
 doctest_global_cleanup = """
-import glob, sys
+import glob, sys, vcs
+for d in vcs.listelements("display"):
+    try:
+        disp = vcs.elements["display"][d]
+    except:
+        continue
+    if disp._parent is not None:
+        disp._parent.clear()
+vcs.reset()
 f=open("dt_cleanup_log", "a+", 1)
 log=[]
 gb = glob.glob
@@ -154,23 +162,6 @@ for file in files:
         os.remove(file)
     except:
         log.append("COULD NOT delete file: " + file + "\\n")
-for key in vcs.elements.keys():
-    for _ in vcs.elements[key].keys():
-        if not elts[key].has_key(_) and (key,_) != ('line','red'):
-            try:
-                vcs.removeobject(vcs.elements[key][_])
-            except:
-                pass
-            else:
-                log.append("Removed object: vcs.elements['%s']['%s']%s" % (key,_,'\\n'))
-selected_items = [('texttable','EXAMPLE_tt'),('textorientation','EXAMPLE_tto'),('template','example1'),('colormap','example1')]
-for item in selected_items:
-    try:
-        vcs.removeobject(vcs.elements[item[0]][item[1]])
-    except:
-        log.append("COULD NOT remove object: vcs.elements['%s']['%s']%s" % (item[0],item[1],'\\n'))
-    else:
-        log.append("Removed object: vcs.elements['%s']['%s']%s" % (item[0],item[1],'\\n'))
 f.writelines(log)
 f.flush()
 """
@@ -200,7 +191,7 @@ author = u'LLNL AIMS Team'
 #
 
 # The full version, including alpha/beta/rc tags.
-release = subprocess.Popen(['git', 'describe','--tags'],stdout=subprocess.PIPE).communicate()[0].strip()
+release = str(subprocess.Popen(['git', 'describe','--tags'],stdout=subprocess.PIPE).communicate()[0].strip())
 
 # The short X.Y version.
 version = ".".join(release.split(".")[:2])

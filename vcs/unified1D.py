@@ -580,21 +580,21 @@ class G1d(vcs.bestMatch):
         self._linetype = value
     linetype = property(_getlinetype, _setlinetype)
 
-    def _getline(self):
-        print('DEPRECATED: Use linetype or setLineAttributes instead.')
-        return self._linetype
-
-    def _setline(self, ln):
-        from . import queries
-        print('DEPRECATED: Use linetype or setLineAttributes instead.')
-        if (queries.isline(ln) or
-                (isinstance(ln, basestring) and ln in vcs.elements["line"])):
-            ln = vcs.elements["line"][ln]
-            self.setLineAttributes(ln)
-        else:
-            self._linetype = ln
-
-    line = property(_getline, _setline)
+#     def _getline(self):
+#         print('DEPRECATED: Use linetype or setLineAttributes instead.')
+#         return self._linetype
+# 
+#     def _setline(self, ln):
+#         from . import queries
+#         print('DEPRECATED: Use linetype or setLineAttributes instead.')
+#         if (queries.isline(ln) or
+#                 (isinstance(ln, basestring) and ln in vcs.elements["line"])):
+#             ln = vcs.elements["line"][ln]
+#             self.setLineAttributes(ln)
+#         else:
+#             self._linetype = ln
+# 
+#     line = property(_getline, _setline)
 
     def setLineAttributes(self, line):
         '''

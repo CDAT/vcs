@@ -304,7 +304,7 @@ class Dp(vcs.bestMatch):
                     >>> obj=a.getboxfill() # default boxfill
                     >>> dsp = a.plot(obj,array) # store displayplot
                     >>> dsp.list()
-                     ---------- ... ----------
+                    ---------- ... ----------
                     ...
             """
         if (self.name == '__removed_from_VCS__'):

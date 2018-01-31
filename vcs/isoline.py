@@ -706,15 +706,15 @@ class Gi(vcs.bestMatch):
 
     linetypes = property(_getlinetypes, _setlinetypes)
 
-    def _getline(self):
-        print('DEPRECATED: Use linetypes or setLineAttributes instead.')
-        return self._linetypes
-
-    def _setline(self, value):
-        print('DEPRECATED: Use linetypes or setLineAttributes instead.')
-        self.setLineAttributes(value)
-
-    line = property(_getline, _setline)
+#    def _getline(self):
+#        print('DEPRECATED: Use linetypes or setLineAttributes instead.')
+#        return self._linetypes
+#
+#    def _setline(self, value):
+#        print('DEPRECATED: Use linetypes or setLineAttributes instead.')
+#        self.setLineAttributes(value)
+#
+#    line = property(_getline, _setline)
 
     def setLineAttributes(self, mixed):
         """

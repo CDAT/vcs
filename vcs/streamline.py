@@ -910,6 +910,7 @@ class Gs(vcs.bestMatch):
         print("ext_1 = ", self.ext_1)
         print("ext_2 = ", self.ext_2)
         print('fillareacolors =', self.fillareacolors)
+        print("linetype = ", self.linetype)
         print("linecolor = ", self.linecolor)
         print("linewidth = ", self.linewidth)
         print("reference = ", self.reference)
@@ -1054,7 +1055,7 @@ class Gs(vcs.bestMatch):
                      (unique_name, self.fillareastyle))
 
             # Unique attribute for streamline
-            fp.write("%s.line = %s\n" % (unique_name, self.line))
+            fp.write("%s.linetype = %s\n" % (unique_name, self.linetype))
             fp.write("%s.linecolor = %s\n" % (unique_name, self.linecolor))
             fp.write("%s.linewidth = %s\n" % (unique_name, self.linewidth))
             fp.write("%s.reference = %s\n\n" % (unique_name, self.reference))

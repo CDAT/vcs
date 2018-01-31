@@ -1433,13 +1433,14 @@ class Canvas(vcs.bestMatch):
                 >>> import cdms2 # Need cdms2 to create a slab
                 >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # get data file
                 >>> s = f('clt') # use data file to create a cdms2 slab
-                >>> a.scalar3d(ds,s) # Plot slab with defaults
+                >>> # Plot slab with defaults
+                >>> a.scalar3d(ds, s) # doctest:+SKIP
                 initCamera: Camera => (...)
                 <vcs.displayplot.Dp ...>
                 >>> a.clear() # Clear VCS canvas
-                     saved state data to file  <...>
                 >>> t = a.gettemplate('polar')
-                >>> a.scalar3d(s,ds,t) # Plot with 'polar' template
+                >>> # Plot with 'polar' template
+                >>> a.scalar3d(s, ds, t)  # doctest:+SKIP
                 initCamera: Camera => (...)
                 <vcs.displayplot.Dp ...>
         """
@@ -1479,15 +1480,16 @@ class Canvas(vcs.bestMatch):
                     >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # get data file
                     >>> s = f('u') # use data file to create a cdms2 slab
                     >>> s2 = f('v') # need two slabs, so get another
-                    >>> a.vector3d(dv3,s,s2) # Plot slabs
+                    >>> # Plot slabs
+                    >>> a.vector3d(dv3, s, s2)  # doctest:+SKIP
                     Sample rate: 6
                     Sample rate: 6
                     initCamera: Camera => (...)
                     <vcs.displayplot.Dp ...>
                     >>> a.clear() # Clear VCS canvas
-                         saved state data to file  <...>
                     >>> t = a.gettemplate('polar')
-                    >>> a.vector3d(s,s2,dv3,t) # Plot with 'polar' template
+                    >>> # Plot with 'polar' template
+                    >>> a.vector3d(s, s2, dv3, t)  # doctest:+SKIP
                     Sample rate: 6
                     Sample rate: 6
                     initCamera: Camera => (...)
@@ -1529,13 +1531,14 @@ class Canvas(vcs.bestMatch):
                     >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # get data file
                     >>> s = f('clt') # use data file to create a cdms2 slab
                     >>> s2 = f('v') # need two slabs, so get another
-                    >>> a.dual_scalar3d(ds3,s,s2) # Plot slabs
+                    >>> # Plot slabs
+                    >>> a.dual_scalar3d(ds3, s, s2)  # doctest:+SKIP
                     initCamera: Camera => (...)
                     <vcs.displayplot.Dp ...>
                     >>> a.clear() # Clear VCS canvas
-                         saved state data to file  <...>
                     >>> t = a.gettemplate('polar')
-                    >>> a.dual_scalar3d(s,s2,ds3,t) # Plot w/ 'polar' template
+                    >>> # Plot w/ 'polar' template
+                    >>> a.dual_scalar3d(s,s2,ds3,t)  # doctest:+SKIP
                     initCamera: Camera => (...)
                     <vcs.displayplot.Dp ...>
         """
@@ -1834,24 +1837,23 @@ class Canvas(vcs.bestMatch):
             .. doctest:: canvas_streamline
 
                 >>> a=vcs.init()
-                >>> a.show('streamline') # Show all the existing streamline
-                                         # graphics methods
+                >>> a.show('streamline') # Show all the existing streamline graphics methods
                 *******************Streamline Names List**********************
                 ...
-                *******************End Streamline Names List********************
+                *******************End Streamline Names List**********************
                 >>> import cdms2 # Need cdms2 to create a slab
                 >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open a data file
                 >>> slab1 = f('u') # use the data file to create a cdms2 slab
                 >>> slab2 = f('v') # streamline needs 2 slabs, so get another
+                >>> # plot streamline using slab and default
+                >>> # streamline
                 >>> a.streamline(slab1, slab2)
-                                   # plot streamline using slab and default
-                                   # streamline
                 <vcs.displayplot.Dp ...>
                 >>> a.clear() # Clear VCS canvas
                 >>> template=a.gettemplate('hovmuller')
+                >>> # Plot array using default streamline
+                >>> # and specified template
                 >>> a.streamline(slab1, slab2, template)
-                                   # Plot array using default streamline
-                                   # and specified template
                 <vcs.displayplot.Dp ...>
 
         :returns: A VCS displayplot object.
@@ -2306,7 +2308,11 @@ class Canvas(vcs.bestMatch):
             *******************Textorientation Names List**********************
             ...
             *******************End Textorientation Names List**********************
-            >>> vcs.createtext('qa_tta', 'qa', '7left_tto', '7left') # Create instance of 'std_tt' and '7left_to'
+            >>> if "qa_tta" in vcs.listelements("texttable"): vcs.reset()
+            ...
+            >>> if "7left_tto" in vcs.listelements("textorientation"): vcs.reset()
+            ...
+            >>> vcs.createtext('qa_tta', 'qa', '7left_tto', '7left') # Create instance of 'qa_tt' and '7left_to'
             <vcs.textcombined.Tc object at ...>
             >>> tc=a.gettext('qa_tta', '7left_tto')
             >>> tc.string='Text1' # Show the string "Text1" on the VCS Canvas
@@ -2465,6 +2471,8 @@ class Canvas(vcs.bestMatch):
                 *******************Texttable Names List**********************
                 ...
                 *******************End Texttable Names List**********************
+                >>> if "draw_tt" in vcs.listelements("texttable"): vcs.reset()
+                >>> if "draw_tto" in vcs.listelements("textorientation"): vcs.reset()
                 >>> vcs.createtextcombined('draw_tt','qa', 'draw_tto', '7left')
                 <vcs.textcombined.Tc object at 0x...>
                 >>> msg=["Hello", "drawtextcombined!"]
@@ -4439,10 +4447,9 @@ class Canvas(vcs.bestMatch):
 
                 >>> a=vcs.init()
                 >>> ci=a.canvasinfo()
-                >>> keys=a.canvasinfo().keys()
-                >>> keys.sort()
+                >>> keys=sorted(a.canvasinfo().keys())
                 >>> for key in keys:
-                ...     print key, str(ci[key])
+                ...     print(key, str(ci[key]))
                 depth ...
                 height ...
                 mapstate ...
@@ -4476,74 +4483,6 @@ class Canvas(vcs.bestMatch):
             return self._continents
         except Exception:
             return None
-
-    def pstogif(self, filename, *opt):
-        """In some cases, the user may want to save the plot out as a gif image. This
-        routine allows the user to convert a postscript file to a gif file.
-
-        :Example:
-
-            .. doctest:: canvas_pstogif
-
-                >>> a=vcs.init()
-                >>> array = [range(1, 11) for _ in range(1, 11)]
-                >>> a.plot(array)
-                <vcs.displayplot.Dp ...>
-                >>> a.pstogif('filename.ps') # convert the postscript file to a gif file
-                >>> a.pstogif('filename.ps','l') # convert the postscript file to a gif file (l=landscape)
-                >>> a.pstogif('filename.ps','p') # convert the postscript file to a gif file (p=portrait)
-
-        :param filename: String name of the desired output file
-        :type filename: `str`_
-
-        :param opt: One of 'l' or 'p', indicating landscape or portrait mode, respectively.
-        :type opt: `str`_
-        """
-        from os import popen
-
-        # Generate the VCS postscript file
-        if (filename[-3:] != '.ps'):
-            filename = filename + '.ps'
-
-        # Set the default orientation to landscape'
-        if len(opt) == 0:
-            orientation = 'l'
-        else:
-            orientation = opt[0]
-        # end of if len(orientation) == 0:
-
-        cmd1 = 'gs -r72x72 -q -sDEVICE=ppmraw -sOutputFile=- '
-        cmd2flip = ' | pnmflip -cw '
-        cmd3 = '| pnmcrop | ppmtogif > '
-
-        if orientation == 'l':
-            cmd = cmd1 + filename + cmd2flip + cmd3 + filename[:-2] + 'gif\n'
-        elif orientation == 'p':
-            cmd = cmd1 + filename + cmd3 + filename[:-2] + 'gif \n'
-        else:
-            cmd = '\n'
-        # end if orientation == 'l':
-        f = popen(cmd, 'w')
-        f.close()
-        return
-
-    def grid(self, *args):
-        """
-        Set the default plotting region for variables that have more dimension values
-        than the graphics method. This will also be used for animating plots over the
-        third and fourth dimensions.
-
-        .. attention::
-
-            This function does not currently work.
-            It will be implemented in the future.
-
-        .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
-        """
-
-        p = self.canvas.grid(*args)
-
-        return p
 
     def landscape(self, width=-99, height=-99, x=-99, y=-99, clear=0):
         """Change the VCS Canvas orientation to Landscape.
@@ -4803,11 +4742,11 @@ class Canvas(vcs.bestMatch):
                 <vcs.displayplot.Dp object at 0x...>
                 <vcs.displayplot.Dp object at 0x...>
                 >>> a.ffmpeg('m1.mpeg',png_files) # using list of files
-                True
+                <vcs.Canvas.JupyterFFMPEG object at 0x...>
                 >>> a.ffmpeg('m2.mpeg',png_files,bitrate=512) # 512kbit rate
-                True
+                <vcs.Canvas.JupyterFFMPEG object at 0x...>
                 >>> a.ffmpeg('m3.mpeg',png_files,rate=50) # 50 frames/second
-                True
+                <vcs.Canvas.JupyterFFMPEG object at 0x...>
 
         :param movie: Output video file name
         :type movie: `str`_
@@ -5695,45 +5634,6 @@ class Canvas(vcs.bestMatch):
         return vcs.show(*args)
     show.__doc__ = vcs.utils.show.__doc__
 
-    def isinfile(self, GM, file=None):
-        """Checks if a graphic method is stored in a file
-        if no file name is passed then looks into the initial.attributes file
-
-        :Example:
-
-            .. doctest:: canvas_isinfile
-
-                >>> a=vcs.init()
-                >>> box=a.getboxfill()
-                >>> a.scriptobject(box, 'deft_box.py')
-                >>> a.isinfile(box, 'deft_box.py')
-                1
-
-        :param GM: The graphics method to search for
-        :type GM: `str`_
-
-        :param file: String name of the file to search.
-            If None, VCS will search initial.attributes.
-        :type file: `str`_
-
-        :returns: 1 if the graphic method is stored in the file, nothing if it is not.
-
-        .. pragma: skip-doctest This function needs to be fixed
-        """
-        nm = GM.name
-        gm = GM.g_name
-        key = key = gm + '_' + nm + '('
-        if file is None:
-            file = os.path.join(
-                os.path.expanduser("~"),
-                self._dotdir,
-                'initial.attributes')
-        f = open(file, 'r')
-        for ln in f:
-            if ln.find(key) > -1:
-                f.close()
-                return 1
-        return
 
     def saveinitialfile(self):
         """At start-up, VCS reads a script file named initial.attributes that
