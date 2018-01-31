@@ -4,8 +4,8 @@ import basevcstest
 class TestVSConfigurator(basevcstest.VCSBaseTest):
     def testConfiguratorClickTest(self):
 
-        self.x.bgX = 800
-        self.x.bgY = 606
+        self.x.width = 800
+        self.x.height = 606
         t = self.x.createtext()
         t.string = "test string"
         t.x = .1
@@ -23,7 +23,7 @@ class TestVSConfigurator(basevcstest.VCSBaseTest):
         # Make sure the displays are current
         c.update()
 
-        w, h = self.x.bgX, self.x.bgY
+        w, h = self.x.width, self.x.height
 
         # Retrieve the actor at the specified point
         actor = c.actor_at_point(.1 * w + 10, .1 * h + 5)

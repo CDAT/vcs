@@ -65,8 +65,8 @@ class VCSBaseTest(unittest.TestCase):
         if not pngReady:
             self.x.png(
                 fnm,
-                width=self.x.bgX,
-                height=self.x.bgY,
+                width=self.x.width,
+                height=self.x.height,
                 units="pixels")
         ret = checkimage.check_result_image(fnm, src, threshold)
         self.assertEqual(ret, 0)
