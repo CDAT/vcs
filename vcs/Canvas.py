@@ -5904,6 +5904,7 @@ class Canvas(vcs.bestMatch):
             i = max(vcs.elements["fontNumber"].keys()) + 1
             vcs.elements["font"][name] = fnm
             vcs.elements["fontNumber"][i] = name
+            nms.append(name)
         if len(nms) == 0:
             raise vcsError('No font Loaded')
         elif len(nms) > 1:
