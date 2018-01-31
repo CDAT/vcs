@@ -320,6 +320,7 @@ def isdisplay(obj):
     else:
         return 0
 
+
 def isprojection(obj):
     if (isinstance(obj, projection.Proj)):
         return 1

@@ -5637,7 +5637,6 @@ class Canvas(vcs.bestMatch):
         return vcs.show(*args)
     show.__doc__ = vcs.utils.show.__doc__
 
-
     def saveinitialfile(self):
         """At start-up, VCS reads a script file named initial.attributes that
         defines the initial appearance of the VCS Interface. Although not

@@ -1069,7 +1069,8 @@ class Gs(vcs.bestMatch):
             fp.write("%s.evenlyspaced = %r\n" % (unique_name, self.evenlyspaced))
             fp.write("%s.numberofseeds = %d\n" % (unique_name, self.numberofseeds))
             if self.startseed is not None:
-                fp.write("%s.startseed = [%d,%d,%d]\n" % (unique_name, self.startseed[0], self.startseed[1], self.startseed[2]))
+                fp.write("%s.startseed = [%d,%d,%d]\n" % (unique_name, self.startseed[0],
+                                                          self.startseed[1], self.startseed[2]))
             else:
                 fp.write("%s.startseed = None\n")
             fp.write("%s.separatingdistance = %d\n" % (unique_name, self.separatingdistance))

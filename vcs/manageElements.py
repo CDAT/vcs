@@ -1861,7 +1861,7 @@ def removeCp(obj):
 def removeDp(obj):
     if isinstance(obj, basestring):
         obj = vcs.elements["display"][obj]
-    if not obj.name in obj._parent.return_display_names():
+    if obj.name not in obj._parent.return_display_names():
         return removeG(obj, "display")
 
 
