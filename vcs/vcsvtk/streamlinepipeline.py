@@ -95,7 +95,9 @@ class StreamlinePipeline(Pipeline2D):
 
         if (self._gm.evenlyspaced):
             streamer = vtk.vtkEvenlySpacedStreamlines2D()
-            streamer.SetStartPosition(self._gm.startseed)
+            startseed = self._gm.startseed \
+                if self._gm.startseed else polydata.GetCenter()
+            streamer.SetStartPosition(startseed)
             streamer.SetSeparatingDistance(self._gm.separatingdistance)
             streamer.SetSeparatingDistanceRatio(self._gm.separatingdistanceratio)
             streamer.SetClosedLoopMaximumDistance(self._gm.closedloopmaximumdistance)

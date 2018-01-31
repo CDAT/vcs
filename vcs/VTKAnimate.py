@@ -51,11 +51,11 @@ class VTKAnimationCreate(animate_helper.StoppableThread):
         self.controller = controller
         self.create_prefix()
         self.canvas = vcs.init()
-        self.canvas.bgX, self.canvas.bgY = controller.vcs_self.backend.renWin.GetSize()
+        self.canvas.width, self.canvas.height = controller.vcs_self.backend.renWin.GetSize()
         # Animation resizing is broken right now; this will give us some buffer
         # space to work with.
-        self.canvas.bgX *= 2
-        self.canvas.bgY *= 2
+        self.canvas.width *= 2
+        self.canvas.height *= 2
         self.controller.animation_created = True
         import atexit
         atexit.register(self.close)

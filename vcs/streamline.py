@@ -437,13 +437,16 @@ class Gs(vcs.bestMatch):
 
     """
        Position of the start seed. Used only for evenly spaced streamlines.
+       By default is set to None which is taken to mean the middle of the domain.
 
     """
     def _getstartseed(self):
         return self._startseed
 
     def _setstartseed(self, value):
-        value = VCS_validation_functions.checkListOfNumbers(self, 'startseed', value)
+        if (value):
+            value = VCS_validation_functions.checkListOfNumbers(
+                self, 'startseed', value)
         self._startseed = value
     startseed = property(_getstartseed, _setstartseed)
 
@@ -785,7 +788,7 @@ class Gs(vcs.bestMatch):
             self._fillareastyle = 'solid'
             self._evenlyspaced = True
             self._numberofseeds = 500
-            self._startseed = [0., 0., 0.]
+            self._startseed = None
             self._separatingdistance = 1
             self._separatingdistanceratio = 0.4
             self._closedloopmaximumdistance = 0.2
