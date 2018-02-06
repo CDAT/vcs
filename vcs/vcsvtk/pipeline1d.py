@@ -4,6 +4,7 @@ import numpy
 import vcs
 import cdms2
 
+
 def smooth(x, beta, window_len=11):
     """ kaiser window smoothing """
     # extending the data at beginning and at the end
@@ -36,10 +37,10 @@ class Pipeline1D(Pipeline):
             Y = X
             X = tmp
 
-        X = self.convertAxis(cdms2.createAxis(X),"x")
+        X = self.convertAxis(cdms2.createAxis(X), "x")
         if self._gm.smooth is not None:
             Y = smooth(Y, self._gm.smooth)
-        Y = self.convertAxis(cdms2.createAxis(Y),"y")
+        Y = self.convertAxis(cdms2.createAxis(Y), "y")
 
         ln_tmp = self._context().canvas.createline()
         Xs = X[:].tolist()

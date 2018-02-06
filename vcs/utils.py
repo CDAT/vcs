@@ -1856,18 +1856,22 @@ def prettifyAxisLabels(ticks, axis):
                 ticks[0] = "Eq"
     return ticks
 
-axisConvertFunctions = { 
-        "linear": { "forward": lambda x: x, "backward": lambda x: x},
-        "area_weight": {"forward": numpy.sin, "backward": numpy.cos},
-        "ln": {"forward": numpy.log, "backward": numpy.exp},
-        "log10": {"forward": numpy.log10, "backward": lambda x: numpy.power(10,x)},
-        "exp": {"forward": numpy.exp, "backward": numpy.log}
-        }
+
+axisConvertFunctions = {
+    "linear": {"forward": lambda x: x, "backward": lambda x: x},
+    "area_weight": {"forward": numpy.sin, "backward": numpy.cos},
+    "ln": {"forward": numpy.log, "backward": numpy.exp},
+    "log10": {"forward": numpy.log10, "backward": lambda x: numpy.power(10, x)},
+    "exp": {"forward": numpy.exp, "backward": numpy.log}
+}
+
+
 def transformTicks(ticks_in, transform):
     ticks_out = {}
     for key in ticks_in:
         ticks_out[transform(key)] = ticks_in[key]
     return ticks_out
+
 
 def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                       datawc_y1, datawc_y2, x=None, y=None):
@@ -1929,11 +1933,14 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
         for number in ["1", "2"]:
             # ticklabels
             lbls = getattr(gm, "{}ticlabels{}".format(location, number))
-            if lbs is None or lbls == "*":
-                if location is "x" and x == "longitude" and abs(datawc_x2 - datawc_x1) > 30:
-                    ticks = transformTicks(vcs.elements["list"]["Lon30"], x_forward)
+            if lbls is None or lbls == "*":
+                if location is "x" and x == "longitude" and abs(
+                        datawc_x2 - datawc_x1) > 30:
+                    ticks = transformTicks(
+                        vcs.elements["list"]["Lon30"], x_forward)
                 elif location == "y" and y == "latitude" and abs(datawc_y2 - datawc_y1) > 20:
-                    ticks = transformTicks(vcs.elements["list"]["Lat20"], y_forward)
+                    ticks = transformTicks(
+                        vcs.elements["list"]["Lat20"], y_forward)
                 else:
                     if location == "x":
                         ticks = vcs.mkscale(datawc_x1, datawc_x2)
@@ -1951,9 +1958,11 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                     copy_gm = creategraphicsmethod(gm.g_name, gm.name)
                     gm = copy_gm
                 if x == "longitude" and abs(datawc_x2 - datawc_x1) > 30:
-                    ticks = transformTicks(vcs.elements["list"]["Lon30"], x_forward)
+                    ticks = transformTicks(
+                        vcs.elements["list"]["Lon30"], x_forward)
                 elif location == "y" and y == "latitude" and abs(datawc_y2 - datawc_y1) > 20:
-                    ticks = transformTicks(vcs.elements["list"]["Lat20"], y_forward)
+                    ticks = transformTicks(
+                        vcs.elements["list"]["Lat20"], y_forward)
                 else:
                     if location == "x":
                         ticks = vcs.mkscale(datawc_x1, datawc_x2)
@@ -1967,9 +1976,9 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                     else:
                         ticks = prettifyAxisLabels(vcs.mklabels(tick2), y)
             else:
-                ticks = transformTicks(mticks)
+                ticks = transformTicks(mtics)
             setattr(copy_gm, '{}mtics{}'.format(location, number), ticks)
-    ## Now we need to take care of user defined tics
+    # Now we need to take care of user defined tics
     return copy_gm
 
 
@@ -2605,8 +2614,16 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
     if backgroundcolor is not None:
         # Adding a fill area above the legends
         fa = canvas.createfillarea()
-        fa.x = [[templateLegend.x1, templateLegend.x2, templateLegend.x2, templateLegend.x1, templateLegend.x1]]
-        fa.y = [[templateLegend.y1, templateLegend.y1, templateLegend.y2, templateLegend.y2, templateLegend.y1]]
+        fa.x = [[templateLegend.x1,
+                 templateLegend.x2,
+                 templateLegend.x2,
+                 templateLegend.x1,
+                 templateLegend.x1]]
+        fa.y = [[templateLegend.y1,
+                 templateLegend.y1,
+                 templateLegend.y2,
+                 templateLegend.y2,
+                 templateLegend.y1]]
         fa.style = ["solid"]
         fa.color = backgroundcolor
         canvas.plot(fa)

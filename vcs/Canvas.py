@@ -70,7 +70,7 @@ def rotate(x, y, xorigin, yorigin, angle):
     # translate
     xtr = x - xorigin
     ytr = y - yorigin
-    angle = angle/180.*numpy.pi
+    angle = angle / 180. * numpy.pi
     xout = xtr * numpy.cos(angle) - ytr * numpy.sin(angle)
     yout = xtr * numpy.sin(angle) + ytr * numpy.cos(angle)
 
@@ -80,7 +80,8 @@ def rotate(x, y, xorigin, yorigin, angle):
 
 
 class JupyterFFMPEG(object):
-    def __init__(self, source, ffmpeg_result, width=640, height=420, controls=True):
+    def __init__(self, source, ffmpeg_result,
+                 width=640, height=420, controls=True):
         self.source = source
         self.width = width
         self.height = height
@@ -269,7 +270,8 @@ def _determine_arg_list(g_name, actual_args):
                 "Error in argument list for vcs %s  command." %
                 g_name)
 
-    if hasVCSAddons and isinstance(arglist[igraphics_method], vcsaddons.core.VCSaddon):
+    if hasVCSAddons and isinstance(
+            arglist[igraphics_method], vcsaddons.core.VCSaddon):
         if found_slabs != arglist[igraphics_method].g_nslabs:
             raise vcsError(
                 "%s requires %i slab(s)" %
@@ -902,7 +904,7 @@ class Canvas(vcs.bestMatch):
 
         if geometry is not None:
             # Extract width and height, create dict
-            if type(geometry) == dict:
+            if isinstance(geometry, dict):
                 for key in geometry:
                     if key not in ("width", "height"):
                         raise ValueError("Unexpected key %s in geometry" % key)
@@ -2410,9 +2412,13 @@ class Canvas(vcs.bestMatch):
             raise vcsError('You must pass a text object')
 
         # for rotation we need to normalize coordinates
-        text2 = vcs.createtext(Tt_source=textobject.Tt_name, To_source=textobject.To_name)
-        xs = numpy.array(textobject.x) / (text2.worldcoordinate[1] - text2.worldcoordinate[0])
-        ys = numpy.array(textobject.y) / (text2.worldcoordinate[3] - text2.worldcoordinate[2])
+        text2 = vcs.createtext(
+            Tt_source=textobject.Tt_name,
+            To_source=textobject.To_name)
+        xs = numpy.array(textobject.x) / \
+            (text2.worldcoordinate[1] - text2.worldcoordinate[0])
+        ys = numpy.array(textobject.y) / \
+            (text2.worldcoordinate[3] - text2.worldcoordinate[2])
         text2.x = xs.tolist()
         text2.y = ys.tolist()
 
@@ -2422,26 +2428,42 @@ class Canvas(vcs.bestMatch):
         noangles = self.gettextextent(text2, 0.)
         out = []
         for bounding, noangle in zip(boundings, noangles):
-            bxmid = (bounding[0] + bounding[1])/2.
+            bxmid = (bounding[0] + bounding[1]) / 2.
             bymid = (bounding[2] + bounding[3]) / 2.
 
-            xmid = (noangle[0] + noangle[1])/2.
-            ymid = (noangle[2] + noangle[3])/2.
+            xmid = (noangle[0] + noangle[1]) / 2.
+            ymid = (noangle[2] + noangle[3]) / 2.
 
             slim = []
             # first corner
-            slim.append(rotate(noangle[0], noangle[2], xmid, ymid, -textobject.angle))
+            slim.append(
+                rotate(
+                    noangle[0], noangle[2], xmid, ymid, -textobject.angle))
             # second corner
-            slim.append(rotate(noangle[1], noangle[2], xmid, ymid, -textobject.angle))
+            slim.append(
+                rotate(
+                    noangle[1], noangle[2], xmid, ymid, -textobject.angle))
             # third corner
-            slim.append(rotate(noangle[1], noangle[3], xmid, ymid, -textobject.angle))
+            slim.append(
+                rotate(
+                    noangle[1], noangle[3], xmid, ymid, -textobject.angle))
             # fourth corner
-            slim.append(rotate(noangle[0], noangle[3], xmid, ymid, -textobject.angle))
+            slim.append(
+                rotate(
+                    noangle[0], noangle[3], xmid, ymid, -textobject.angle))
             # Ok now we need to translte in the middle of the bounding box
             xs = [p[0] for p in slim]
             ys = [p[1] for p in slim]
-            outx = [bxmid + (x - xmid)*(textobject.worldcoordinate[1]-textobject.worldcoordinate[0]) for x in xs]
-            outy = [bymid + (y - ymid)*(textobject.worldcoordinate[3]-textobject.worldcoordinate[2]) for y in ys]
+            outx = [bxmid +
+                    (x -
+                     xmid) *
+                    (textobject.worldcoordinate[1] -
+                     textobject.worldcoordinate[0]) for x in xs]
+            outy = [bymid +
+                    (y -
+                     ymid) *
+                    (textobject.worldcoordinate[3] -
+                     textobject.worldcoordinate[2]) for y in ys]
             out.append([outx, outy])
         return out
 
@@ -2532,7 +2554,7 @@ class Canvas(vcs.bestMatch):
     drawtextcombined.__doc__ = drawtextcombined.__doc__ % (xmldocs.color, xmldocs.viewport, xmldocs.worldcoordinate,
                                                            xmldocs.x_y_coords, xmldocs.bg)
 
-    _plot_keywords_ = ['variable', 'grid', 'xaxis', 'xarray',  'xrev', 'yaxis', 'yarray', 'yrev', 'continents',
+    _plot_keywords_ = ['variable', 'grid', 'xaxis', 'xarray', 'xrev', 'yaxis', 'yarray', 'yrev', 'continents',
                        'xbounds', 'ybounds', 'zaxis', 'zarray', 'taxis', 'tarray', 'waxis', 'warray', 'bg', 'ratio',
                        'donotstoredisplay', 'render', 'continents_line', "display_name"]
 
@@ -2849,7 +2871,8 @@ class Canvas(vcs.bestMatch):
         assert arglist[0] is None or cdms2.isVariable(arglist[0])
         assert arglist[1] is None or cdms2.isVariable(arglist[1])
         assert isinstance(arglist[2], str)
-        if hasVCSAddons and not isinstance(arglist[3], vcsaddons.core.VCSaddon):
+        if hasVCSAddons and not isinstance(
+                arglist[3], vcsaddons.core.VCSaddon):
             assert isinstance(arglist[3], str)
         assert isinstance(arglist[4], str)
 
@@ -3780,7 +3803,8 @@ class Canvas(vcs.bestMatch):
 
             return dn
         else:  # not taylor diagram
-            if hasVCSAddons and isinstance(arglist[3], vcsaddons.core.VCSaddon):
+            if hasVCSAddons and isinstance(
+                    arglist[3], vcsaddons.core.VCSaddon):
                 gm = arglist[3]
             else:
                 tp = arglist[3]
@@ -3899,7 +3923,8 @@ class Canvas(vcs.bestMatch):
                 if doratio[-1] == 't' or template_origin == 'default':
                     box_and_ticks = 1
 
-                if hasVCSAddons and isinstance(arglist[3], vcsaddons.core.VCSaddon):
+                if hasVCSAddons and isinstance(
+                        arglist[3], vcsaddons.core.VCSaddon):
                     gm = arglist[3]
                 else:
                     tp = arglist[3]
@@ -4005,7 +4030,8 @@ class Canvas(vcs.bestMatch):
                         'Error - VECTOR components must be on the same grid.')
             if "bg" in keyargs:
                 del(keyargs["bg"])
-            if hasVCSAddons and isinstance(arglist[3], vcsaddons.core.VCSaddon):
+            if hasVCSAddons and isinstance(
+                    arglist[3], vcsaddons.core.VCSaddon):
                 if arglist[1] is None:
                     dn = arglist[3].plot(
                         arglist[0],
@@ -4523,7 +4549,8 @@ class Canvas(vcs.bestMatch):
 
         args = (width, height, x, y, clear)
         return self.backend.landscape(*args)
-    landscape.__doc__ = landscape.__doc__ % (xmldocs.canvas_width, xmldocs.canvas_height, xmldocs.canvas_clear)
+    landscape.__doc__ = landscape.__doc__ % (
+        xmldocs.canvas_width, xmldocs.canvas_height, xmldocs.canvas_clear)
 
     def listelements(self, *args):
         """Returns a sorted Python list of all VCS object names, or a list of
@@ -4669,7 +4696,8 @@ class Canvas(vcs.bestMatch):
 
         return p
 
-    portrait.__doc__ = portrait.__doc__ % (xmldocs.canvas_width, xmldocs.canvas_height, xmldocs.canvas_clear)
+    portrait.__doc__ = portrait.__doc__ % (
+        xmldocs.canvas_width, xmldocs.canvas_height, xmldocs.canvas_clear)
 
     def ffmpeg(self, movie, files, bitrate=1024, rate=None, options=None):
         """MPEG output from a list of valid files.
@@ -4962,7 +4990,10 @@ class Canvas(vcs.bestMatch):
             width, height, units, background=True)
         return self.backend.png(
             file, W, H, units, draw_white_background, **args)
-    png.__doc__ = png.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
+    png.__doc__ = png.__doc__ % (xmldocs.output_file,
+                                 xmldocs.output_width,
+                                 xmldocs.output_height,
+                                 xmldocs.output_units)
 
     def pdf(self, file, width=None, height=None, units='inches',
             textAsPaths=True):
@@ -5002,8 +5033,12 @@ class Canvas(vcs.bestMatch):
 
         if not file.split('.')[-1].lower() in ['pdf']:
             file += '.pdf'
-        return self.backend.pdf(file, width=W, height=H, units=units, textAsPaths=textAsPaths)
-    pdf.__doc__ = pdf.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
+        return self.backend.pdf(file, width=W, height=H,
+                                units=units, textAsPaths=textAsPaths)
+    pdf.__doc__ = pdf.__doc__ % (xmldocs.output_file,
+                                 xmldocs.output_width,
+                                 xmldocs.output_height,
+                                 xmldocs.output_units)
 
     def svg(self, file, width=None, height=None, units='inches',
             textAsPaths=True):
@@ -5043,8 +5078,12 @@ class Canvas(vcs.bestMatch):
 
         if not file.split('.')[-1].lower() in ['svg']:
             file += '.svg'
-        return self.backend.svg(file, width=W, height=H, units=units, textAsPaths=textAsPaths)
-    svg.__doc__ = svg.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
+        return self.backend.svg(file, width=W, height=H,
+                                units=units, textAsPaths=textAsPaths)
+    svg.__doc__ = svg.__doc__ % (xmldocs.output_file,
+                                 xmldocs.output_width,
+                                 xmldocs.output_height,
+                                 xmldocs.output_units)
 
     def _compute_margins(
             self, W, H, top_margin, bottom_margin, right_margin, left_margin, dpi):
@@ -5164,7 +5203,8 @@ class Canvas(vcs.bestMatch):
         """
         return self.backend.isopened()
 
-    def _compute_width_height(self, width, height, units, ps=False, background=False):
+    def _compute_width_height(
+            self, width, height, units, ps=False, background=False):
         dpi = 72.  # dot per inches
         if units in ["in", "inches"]:
             factor = 1.
@@ -5236,7 +5276,8 @@ class Canvas(vcs.bestMatch):
             H = tmp
         return W, H
 
-    def postscript(self, file, mode='r', orientation=None, width=None, height=None, units='inches', textAsPaths=True):
+    def postscript(self, file, mode='r', orientation=None,
+                   width=None, height=None, units='inches', textAsPaths=True):
         """Postscript output is another form of vector graphics. It is larger than its CGM output
         counter part, because it is stored out in ASCII format.
 
@@ -5291,7 +5332,8 @@ class Canvas(vcs.bestMatch):
         if not file.split('.')[-1].lower() in ['ps', 'eps']:
             file += '.ps'
         if mode == 'r':
-            return self.backend.postscript(file, W, H, units="pixels", textAsPaths=textAsPaths)
+            return self.backend.postscript(
+                file, W, H, units="pixels", textAsPaths=textAsPaths)
         else:
             n = random.randint(0, 10000000000000)
             psnm = '/tmp/' + '__VCS__tmp__' + str(n) + '.ps'
@@ -5429,7 +5471,8 @@ class Canvas(vcs.bestMatch):
         :param line: Line to use for drawing continents. Can be a string name of a line, or a VCS line object
         :type line: `str`_ or :py:class:`vcs.line.Tl`
         """
-        linename = VCS_validation_functions.checkLine(self, "continentsline", line)
+        linename = VCS_validation_functions.checkLine(
+            self, "continentsline", line)
         line = vcs.getline(linename)
         self._continents_line = line
 
@@ -5505,7 +5548,8 @@ class Canvas(vcs.bestMatch):
 
     def _continentspath(self):
         try:
-            path = VCS_validation_functions.checkContinents(self, self._continents)
+            path = VCS_validation_functions.checkContinents(
+                self, self._continents)
             if path is None and self._continents != 0:
                 return VCS_validation_functions.checkContinents(self, 1)
             else:
@@ -5547,9 +5591,12 @@ class Canvas(vcs.bestMatch):
     def gs(self, filename='noname.gs', device='png256',
            orientation=None, resolution='792x612'):
 
-        warnings.warn("Export to GhostScript is no longer supported", vcs.VCSDeprecationWarning)
+        warnings.warn(
+            "Export to GhostScript is no longer supported",
+            vcs.VCSDeprecationWarning)
 
-    def eps(self, file, mode='r', orientation=None, width=None, height=None, units='inches', textAsPaths=True):
+    def eps(self, file, mode='r', orientation=None, width=None,
+            height=None, units='inches', textAsPaths=True):
         """In some cases, the user may want to save the plot out as an Encapsulated
         PostScript image. This routine allows the user to save the VCS canvas output
         as an Encapsulated PostScript file.
@@ -5598,7 +5645,10 @@ class Canvas(vcs.bestMatch):
 
         os.popen("ps2epsi %s %s" % (tmpfile, file)).readlines()
         os.remove(tmpfile)
-    eps.__doc__ = eps.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
+    eps.__doc__ = eps.__doc__ % (xmldocs.output_file,
+                                 xmldocs.output_width,
+                                 xmldocs.output_height,
+                                 xmldocs.output_units)
 
     def show(self, *args):
         return vcs.show(*args)
