@@ -1858,11 +1858,11 @@ def prettifyAxisLabels(ticks, axis):
 
 
 axisConvertFunctions = {
-    "linear": {"forward": lambda x: x, "backward": lambda x: x},
-    "area_weight": {"forward": numpy.sin, "backward": numpy.cos},
-    "ln": {"forward": numpy.log, "backward": numpy.exp},
-    "log10": {"forward": numpy.log10, "backward": lambda x: numpy.power(10, x)},
-    "exp": {"forward": numpy.exp, "backward": numpy.log}
+    "linear": {"forward": lambda x: x, "invert": lambda x: x},
+    "area_weight": {"forward": lambda x: numpy.sin(x / 180. * numpy.pi), "invert": lambda x: numpy.cos(x / 180. * numpy.pi)},
+    "ln": {"forward": numpy.log, "invert": numpy.exp},
+    "log10": {"forward": numpy.log10, "invert": lambda x: numpy.power(10, x)},
+    "exp": {"forward": numpy.exp, "invert": numpy.log}
 }
 
 
@@ -1870,6 +1870,12 @@ def transformTicks(ticks_in, transform):
     ticks_out = {}
     for key in ticks_in:
         ticks_out[transform(key)] = ticks_in[key]
+    return ticks_out
+
+def transformTicksLabels(ticks_in, transform):
+    ticks_out = {}
+    for key in ticks_in:
+        ticks_out[key] = "{}".format(transform(key))
     return ticks_out
 
 
@@ -1906,9 +1912,16 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     """
     # Ok axisconvertion functions
     x_forward = axisConvertFunctions[gm.xaxisconvert]["forward"]
-    x_backward = axisConvertFunctions[gm.xaxisconvert]["backward"]
+    x_invert = axisConvertFunctions[gm.xaxisconvert]["invert"]
     y_forward = axisConvertFunctions[gm.yaxisconvert]["forward"]
-    y_backward = axisConvertFunctions[gm.yaxisconvert]["backward"]
+    y_invert = axisConvertFunctions[gm.yaxisconvert]["invert"]
+
+    print("COMING IN:",datawc_x1, datawc_x2, datawc_y1, datawc_y2)
+    # Convert 
+    datawc_x1 = x_forward(datawc_x1)
+    datawc_x2 = x_forward(datawc_x2)
+    datawc_y1 = y_forward(datawc_y1)
+    datawc_y2 = y_forward(datawc_y2)
 
     # Ok all this is nice but if user specified datawc we need to use it!
     for a in ["x1", "x2", "y1", "y2"]:
@@ -1944,12 +1957,22 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                 else:
                     if location == "x":
                         ticks = vcs.mkscale(datawc_x1, datawc_x2)
-                        ticks = prettifyAxisLabels(vcs.mklabels(ticks), x)
+                        ticks = vcs.mklabels(ticks)
+                        ticks = transformTicksLabels(ticks, x_invert)
+                        print("TICKS ARE:",ticks)
+                        ticks = prettifyAxisLabels(ticks,  x)
                     else:
                         ticks = vcs.mkscale(datawc_y1, datawc_y2)
-                        ticks = prettifyAxisLabels(vcs.mklabels(ticks), y)
+                        ticks = vcs.mklabels(ticks)
+                        print("FIRST CUT:",ticks)
+                        ticks = transformTicksLabels(ticks, y_invert)
+                        print("LAST CUT:",ticks)
+                        ticks = prettifyAxisLabels(ticks, y)
             else:
-                ticks = transformTicks(lbls)
+                if location == "x":
+                    ticks = transformTicks(lbls, x_forward)
+                else:
+                    ticks = transformTicks(lbls, y_forward)
             setattr(copy_gm, '{}ticlabels{}'.format(location, number), ticks)
             # mtics
             mtics = getattr(gm, "{}mtics{}".format(location, number))
@@ -1976,7 +1999,10 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                     else:
                         ticks = prettifyAxisLabels(vcs.mklabels(tick2), y)
             else:
-                ticks = transformTicks(mtics)
+                if location == "x":
+                    ticks = transformTicks(mtics, x_forward)
+                else:
+                    ticks = transformTicks(mtics, y_forward)
             setattr(copy_gm, '{}mtics{}'.format(location, number), ticks)
     # Now we need to take care of user defined tics
     return copy_gm
