@@ -1859,7 +1859,7 @@ def prettifyAxisLabels(ticks, axis):
 
 axisConvertFunctions = {
     "linear": {"forward": lambda x: x, "invert": lambda x: x},
-    "area_weight": {"forward": lambda x: numpy.sin(x / 180. * numpy.pi), "invert": lambda x: numpy.cos(x / 180. * numpy.pi)},
+    "area_wt": {"forward": lambda x: numpy.sin(x / 180. * numpy.pi), "invert": lambda x: numpy.arcsin(x) / numpy.pi * 180.},
     "ln": {"forward": numpy.log, "invert": numpy.exp},
     "log10": {"forward": numpy.log10, "invert": lambda x: numpy.power(10, x)},
     "exp": {"forward": numpy.exp, "invert": numpy.log}
@@ -1875,7 +1875,7 @@ def transformTicks(ticks_in, transform):
 def transformTicksLabels(ticks_in, transform):
     ticks_out = {}
     for key in ticks_in:
-        ticks_out[key] = "{}".format(transform(key))
+        ticks_out[key] = "{:g}".format(transform(key))
     return ticks_out
 
 
@@ -1916,12 +1916,13 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     y_forward = axisConvertFunctions[gm.yaxisconvert]["forward"]
     y_invert = axisConvertFunctions[gm.yaxisconvert]["invert"]
 
-    print("COMING IN:",datawc_x1, datawc_x2, datawc_y1, datawc_y2)
     # Convert 
+    print("RECEIVED:",datawc_x1, datawc_x2, datawc_y1, datawc_y2)
     datawc_x1 = x_forward(datawc_x1)
     datawc_x2 = x_forward(datawc_x2)
     datawc_y1 = y_forward(datawc_y1)
     datawc_y2 = y_forward(datawc_y2)
+    print("MADE:",datawc_x1, datawc_x2, datawc_y1, datawc_y2)
 
     # Ok all this is nice but if user specified datawc we need to use it!
     for a in ["x1", "x2", "y1", "y2"]:
@@ -1951,22 +1952,28 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                         datawc_x2 - datawc_x1) > 30:
                     ticks = transformTicks(
                         vcs.elements["list"]["Lon30"], x_forward)
-                elif location == "y" and y == "latitude" and abs(datawc_y2 - datawc_y1) > 20:
-                    ticks = transformTicks(
-                        vcs.elements["list"]["Lat20"], y_forward)
+                elif location == "x" and x == "latitude" and abs(datawc_x2 - datawc_x1) > x_forward(20):
+                    if gm.xaxisconvert == 'area_wt':
+                        lats = vcs.elements["list"]["Lat_wt"]
+                    else:
+                        lats = vcs.elements["list"]["Lat20"]
+                    ticks = transformTicks(lats, x_forward)
+                elif location == "y" and y == "latitude" and abs(datawc_y2 - datawc_y1) > y_forward(20):
+                    if gm.yaxisconvert == 'area_wt':
+                        lats = vcs.elements["list"]["Lat_wt"]
+                    else:
+                        lats = vcs.elements["list"]["Lat20"]
+                    ticks = transformTicks(lats, y_forward)
                 else:
                     if location == "x":
                         ticks = vcs.mkscale(datawc_x1, datawc_x2)
                         ticks = vcs.mklabels(ticks)
                         ticks = transformTicksLabels(ticks, x_invert)
-                        print("TICKS ARE:",ticks)
                         ticks = prettifyAxisLabels(ticks,  x)
                     else:
                         ticks = vcs.mkscale(datawc_y1, datawc_y2)
                         ticks = vcs.mklabels(ticks)
-                        print("FIRST CUT:",ticks)
                         ticks = transformTicksLabels(ticks, y_invert)
-                        print("LAST CUT:",ticks)
                         ticks = prettifyAxisLabels(ticks, y)
             else:
                 if location == "x":
@@ -1983,9 +1990,18 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                 if x == "longitude" and abs(datawc_x2 - datawc_x1) > 30:
                     ticks = transformTicks(
                         vcs.elements["list"]["Lon30"], x_forward)
-                elif location == "y" and y == "latitude" and abs(datawc_y2 - datawc_y1) > 20:
-                    ticks = transformTicks(
-                        vcs.elements["list"]["Lat20"], y_forward)
+                elif location == "x" and x == "latitude" and abs(datawc_x2 - datawc_x1) > x_forward(20):
+                    if gm.xaxisconvert == 'area_wt':
+                        lats = vcs.elements["list"]["Lat_wt"]
+                    else:
+                        lats = vcs.elements["list"]["Lat20"]
+                    ticks = transformTicks(lats, x_forward)
+                elif location == "y" and y == "latitude" and abs(datawc_y2 - datawc_y1) > y_forward(20):
+                    if gm.yaxisconvert == 'area_wt':
+                        lats = vcs.elements["list"]["Lat_wt"]
+                    else:
+                        lats = vcs.elements["list"]["Lat20"]
+                    ticks = transformTicks(lats, y_forward)
                 else:
                     if location == "x":
                         ticks = vcs.mkscale(datawc_x1, datawc_x2)

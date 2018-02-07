@@ -183,6 +183,9 @@ for j in range(-80, 81, 20):
 dic[-90] = "90S"
 dic[90] = "90N"
 elements["list"]["Lat20"] = dic
+elements["list"]["Lat_wt"] = {-90.:"90S", -60:"60S", -45:"45S", -30:"30S", -15:"15S",
+                              0:"Eq",
+                              15:"15N", 30:"30S", 45:"45N", 60:"60N", 90:"90N"}
 
 i = 1
 for nm, fnt in [
