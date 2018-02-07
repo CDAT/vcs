@@ -25,13 +25,14 @@ class Pipeline1D(Pipeline):
     def plot(self, data1, data2, tmpl, grid, transform, **kargs):
         """Overrides baseclass implementation."""
         Y = self._context().trimData1D(data1)
-        data = data1 # For template
+        data = data1  # For template
         if data2 is None:
             X = Y.getAxis(0)
         else:
             data = data2
             if self._gm.flip:
-                raise RuntimeError("You cannot use the flip option on D graphic methods if you are passing 2 arrays, please reverse order of arrays")
+                raise RuntimeError("You cannot use the flip option on 1D graphic methods" +
+                                   " if you are passing 2 arrays, please reverse order of arrays")
             X = Y
             data1._yname = data2.id
             Y = self._context().trimData1D(data2)
