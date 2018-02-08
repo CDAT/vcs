@@ -130,7 +130,7 @@ class Pxt(vcs.bestMatch):
         self.priority = 1
         if member == "xtic1":
             self.y1 = 0.259999990463
-            self.y2 = 0.24399999392
+            self.y2 = 0.24699999392
         elif member == "xtic2":
             self.y1 = 0.860000014305
             self.y2 = 0.871999979019

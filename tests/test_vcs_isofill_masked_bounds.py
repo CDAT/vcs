@@ -8,10 +8,9 @@ class TestVCSIsofill(basevcstest.VCSBaseTest):
 
         data = os.path.join(self.basedatadir, "coads_climatology.nc")
         f = cdms2.open(data)
-        s = f["SST"]
+        s = f("SST")
         t = s.getTime()
-        tc = t.asComponentTime()
-        print("TC:",tc[:3])
+        t.units = "hours since 1"
         iso = self.x.getisofill('a_robinson_isofill')
         self.x.plot(s, iso, bg=self.bg)
         self.checkImage("test_vcs_isofill_masked_bounds.png")

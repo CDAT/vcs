@@ -1947,6 +1947,8 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
         for number in ["1", "2"]:
             # ticklabels
             lbls = getattr(gm, "{}ticlabels{}".format(location, number))
+            if isinstance(lbls, basestring) and lbls != "*":
+                mticks = vcs.elements["list"][lbls]
             if lbls is None or lbls == "*":
                 if location is "x" and x == "longitude" and abs(
                         datawc_x2 - datawc_x1) > 30:
@@ -1968,12 +1970,14 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                     if location == "x":
                         ticks = vcs.mkscale(datawc_x1, datawc_x2)
                         ticks = vcs.mklabels(ticks)
-                        ticks = transformTicksLabels(ticks, x_invert)
+                        if gm.xaxisconvert != "linear":
+                            ticks = transformTicksLabels(ticks, x_invert)
                         ticks = prettifyAxisLabels(ticks,  x)
                     else:
                         ticks = vcs.mkscale(datawc_y1, datawc_y2)
                         ticks = vcs.mklabels(ticks)
-                        ticks = transformTicksLabels(ticks, y_invert)
+                        if gm.yaxisconvert != "linear":
+                            ticks = transformTicksLabels(ticks, y_invert)
                         ticks = prettifyAxisLabels(ticks, y)
             else:
                 if location == "x":
@@ -1983,7 +1987,9 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
             setattr(copy_gm, '{}ticlabels{}'.format(location, number), ticks)
             # mtics
             mtics = getattr(gm, "{}mtics{}".format(location, number))
-            if mtics is None or mtics == '*':
+            if isinstance(mtics, basestring) and mtics not in ["*", ""]:
+                mtics = vcs.elements["list"][mtics]
+            if mtics is None or mtics in ['*', ""]:
                 if copy_gm is None:
                     copy_gm = creategraphicsmethod(gm.g_name, gm.name)
                     gm = copy_gm
@@ -2010,6 +2016,7 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                         ticks = prettifyAxisLabels(vcs.mklabels(tick2), y)
             else:
                 if location == "x":
+                    print("TRANSMING:", mtics)
                     ticks = transformTicks(mtics, x_forward)
                 else:
                     ticks = transformTicks(mtics, y_forward)
