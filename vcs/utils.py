@@ -2015,7 +2015,6 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                         ticks = prettifyAxisLabels(vcs.mklabels(tick2), y)
             else:
                 if location == "x":
-                    print("TRANSMING:", mtics)
                     ticks = transformTicks(mtics, x_forward)
                 else:
                     ticks = transformTicks(mtics, y_forward)

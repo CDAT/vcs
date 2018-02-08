@@ -26,7 +26,6 @@ class Pipeline1D(Pipeline):
         """Overrides baseclass implementation."""
         Y = self._context().trimData1D(data1)
         data = data1  # For template
-        self._gm.list()
         if data2 is None:
             X = Y.getAxis(0)
         else:
@@ -85,7 +84,7 @@ class Pipeline1D(Pipeline):
 
         # Also need to make sure it fills the whole space
         x1, x2, y1, y2 = vcs.utils.getworldcoordinates(self._gm, X, Y)
-        if (y1>y2) and numpy.allclose(self._gm.datawc_y1, 1.E20):
+        if (y1 > y2) and numpy.allclose(self._gm.datawc_y1, 1.E20):
             tmp = y1
             y1 = y2
             y2 = tmp
