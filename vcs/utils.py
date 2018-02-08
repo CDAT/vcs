@@ -1923,7 +1923,6 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     datawc_x2 = x_forward(datawc_x2)
     datawc_y1 = y_forward(datawc_y1)
     datawc_y2 = y_forward(datawc_y2)
-
     # Ok all this is nice but if user specified datawc we need to use it!
     for a in ["x1", "x2", "y1", "y2"]:
         nm = "datawc_%s" % a
