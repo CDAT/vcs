@@ -277,6 +277,10 @@ class Pipeline2D(IPipeline2D):
     def plot(self, data1, data2, tmpl, grid, transform, **kargs):
         """Overrides baseclass implementation."""
         # Clear old results:
+        X = self.convertAxis(data1.getAxis(-1), "x")
+        Y = self.convertAxis(data1.getAxis(-2), "y")
+        data1.setAxis(-1,X)
+        data1.setAxis(-2,Y)
         self._resultDict = {}
 
         self._template = tmpl
