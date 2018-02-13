@@ -599,7 +599,7 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
 vcsContinents = {}
 
 
-def prepContinents(fnm):
+def prepContinents(fnm, xConvertFunction=lambda x: x, yConvertFunction=lambda y:y):
     """ This converts vcs continents files to vtkpolydata
     Author: Charles Doutriaux
     Input: vcs continent file name
@@ -629,7 +629,9 @@ def prepContinents(fnm):
                         l, L = float(sp[i * 2]), float(sp[i * 2 + 1])
                         spts.append([l, L])
                     for p in spts:
-                        pts.InsertNextPoint(p[1], p[0], 0.)
+                        x = xConvertFunction(p[1])
+                        y = yConvertFunction(p[0])
+                        pts.InsertNextPoint(x, y, 0.)
                     n += sn
                     didIt = True
                 except Exception:
@@ -637,7 +639,9 @@ def prepContinents(fnm):
             if didIt is False:
                 while len(ln) > 2:
                     l, L = float(ln[:8]), float(ln[8:16])
-                    pts.InsertNextPoint(L, l, 0.)
+                    x = xConvertFunction(L)
+                    y = yConvertFunction(l)
+                    pts.InsertNextPoint(x, y, 0.)
                     ln = ln[16:]
                     n += 2
         ln = vtk.vtkPolyLine()

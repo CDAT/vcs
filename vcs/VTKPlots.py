@@ -809,7 +809,9 @@ class VTKVCSBackend(object):
         continents_path = self.canvas._continentspath()
         if continents_path is None:
             return (None, 1, 1)
-        contData = vcs2vtk.prepContinents(continents_path)
+        xforward = vcs.utils.axisConvertFunctions[kargs.get('xaxisconvert','linear')]['forward']
+        yforward = vcs.utils.axisConvertFunctions[kargs.get('yaxisconvert','linear')]['forward']
+        contData = vcs2vtk.prepContinents(continents_path, xforward, yforward)
         contData = vcs2vtk.doWrapData(contData, wc, fastClip=False)
         contMapper = vtk.vtkPolyDataMapper()
         contMapper.SetInputData(contData)
