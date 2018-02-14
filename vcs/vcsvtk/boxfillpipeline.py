@@ -28,7 +28,13 @@ class BoxfillPipeline(Pipeline2D):
     def _updateScalarData(self):
         """Overrides baseclass implementation."""
         # Update data1 if this is a log10 boxfill:
-        data = self._originalData1
+        data = self._originalData1.clone()
+        print("GET ITME:",data.getTime())
+        X = self.convertAxis(data.getAxis(-1), "x")
+        Y = self.convertAxis(data.getAxis(-2), "y")
+        data.setAxis(-1,X)
+        data.setAxis(-2,Y)
+        print("GET ITME:",data.getTime())
         if self._gm.boxfill_type == "log10":
             data = numpy.ma.log10(data)
 
