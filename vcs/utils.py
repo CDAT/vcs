@@ -1912,7 +1912,6 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     :returns: A VCS graphics method object
     :rtype: A VCS graphics method object
     """
-    print("WEW ARE COMIGNG HERTE")
     # Ok axisconvertion functions
     x_forward = axisConvertFunctions[gm.xaxisconvert]["forward"]
     x_invert = axisConvertFunctions[gm.xaxisconvert]["invert"]
@@ -1920,12 +1919,10 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     y_invert = axisConvertFunctions[gm.yaxisconvert]["invert"]
 
     # Convert
-    print("DATAWC :",datawc_x1, datawc_x2, datawc_y1, datawc_y2)
     datawc_x1 = x_forward(datawc_x1)
     datawc_x2 = x_forward(datawc_x2)
     datawc_y1 = y_forward(datawc_y1)
     datawc_y2 = y_forward(datawc_y2)
-    print("DATAWC :",datawc_x1, datawc_x2, datawc_y1, datawc_y2)
     # Ok all this is nice but if user specified datawc we need to use it!
     for a in ["x1", "x2", "y1", "y2"]:
         nm = "datawc_%s" % a
@@ -1949,7 +1946,6 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     for location in ["x", "y"]:
         for number in ["1", "2"]:
             # ticklabels
-            print("LOC NUM:",location, number, x,y)
             lbls = getattr(gm, "{}ticlabels{}".format(location, number))
             if isinstance(lbls, basestring) and lbls != "*":
                 mticks = vcs.elements["list"][lbls]
