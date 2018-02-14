@@ -31,6 +31,7 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
         for method in [
                 vcs.createboxfill,
                 vcs.createisofill,
+                vcs.createisoline,
                        ]:
             self.axisConvertGmAreaWt(method)
             self.axisConvertGmLog10(method)
