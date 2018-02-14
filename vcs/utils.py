@@ -1912,6 +1912,7 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     :returns: A VCS graphics method object
     :rtype: A VCS graphics method object
     """
+    print("WEW ARE COMIGNG HERTE")
     # Ok axisconvertion functions
     x_forward = axisConvertFunctions[gm.xaxisconvert]["forward"]
     x_invert = axisConvertFunctions[gm.xaxisconvert]["invert"]
@@ -1919,14 +1920,17 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     y_invert = axisConvertFunctions[gm.yaxisconvert]["invert"]
 
     # Convert
+    print("DATAWC :",datawc_x1, datawc_x2, datawc_y1, datawc_y2)
     datawc_x1 = x_forward(datawc_x1)
     datawc_x2 = x_forward(datawc_x2)
     datawc_y1 = y_forward(datawc_y1)
     datawc_y2 = y_forward(datawc_y2)
+    print("DATAWC :",datawc_x1, datawc_x2, datawc_y1, datawc_y2)
     # Ok all this is nice but if user specified datawc we need to use it!
     for a in ["x1", "x2", "y1", "y2"]:
         nm = "datawc_%s" % a
-        if not numpy.allclose(getattr(gm, nm), 1.e20):
+        dwc = getattr(gm, nm)
+        if not isinstance(dwc, (float, int, numpy.int, numpy.float)) or not numpy.allclose(dwc, 1.e20):
             loc = locals()
             exec("%s = gm.%s" % (nm, nm))
             if nm == "datawc_x1":
@@ -1945,6 +1949,7 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     for location in ["x", "y"]:
         for number in ["1", "2"]:
             # ticklabels
+            print("LOC NUM:",location, number, x,y)
             lbls = getattr(gm, "{}ticlabels{}".format(location, number))
             if isinstance(lbls, basestring) and lbls != "*":
                 mticks = vcs.elements["list"][lbls]
@@ -2002,10 +2007,17 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                     lats = vcs.elements["list"]["lat5"]
                     ticks = transformTicks(lats, y_forward)
                 else:
+                    rclass = type(cdtime.reltime(0,"days since 2020"))
                     if location == "x":
-                        ticks = vcs.mkscale(datawc_x1, datawc_x2)
+                        if isinstance(datawc_x1, rclass) or isinstance(datawc_x2, rclass):
+                            ticks = mkscale(datawc_x1.value, datawc_x2.value)
+                        else:
+                            ticks = vcs.mkscale(datawc_x1, datawc_x2)
                     else:
-                        ticks = vcs.mkscale(datawc_y1, datawc_y2)
+                        if isinstance(datawc_y1, rclass) or isinstance(datawc_y2, rclass):
+                            ticks = mkscale(datawc_y1.value, datawc_y2.value)
+                        else:
+                            ticks = vcs.mkscale(datawc_y1, datawc_y2)
                     tick2 = []
                     for i in range(len(ticks) - 1):
                         tick2.append((ticks[i] + ticks[i + 1]) / 2.)
