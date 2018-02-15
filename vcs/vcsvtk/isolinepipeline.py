@@ -311,6 +311,8 @@ class IsolinePipeline(Pipeline2D):
             self._useContinents = False
         if self._useContinents:
             projection = vcs.elements["projection"][self._gm.projection]
+            kwargs['xaxisconvert'] = self._gm.xaxisconvert
+            kwargs['yaxisconvert'] = self._gm.yaxisconvert
             continents_renderer, xScale, yScale = self._context().plotContinents(
                 plotting_dataset_bounds, projection,
                 self._dataWrapModulo,

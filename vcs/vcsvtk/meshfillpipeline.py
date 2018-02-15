@@ -20,7 +20,13 @@ class MeshfillPipeline(Pipeline2D):
         """Overrides baseclass implementation."""
         # We don't trim _data2 for meshfill:
         self._data1 = self._context().trimData2D(self._originalData1)
+        _convert = self._gm.yaxisconvert
+        _func = vcs.utils.axisConvertFunctions[_convert]["forward"]
         self._data2 = self._originalData2
+        self._data2[..., 0, :] = _func(self._data2[..., 0, :])
+        _convert = self._gm.xaxisconvert
+        _func = vcs.utils.axisConvertFunctions[_convert]["forward"]
+        self._data2[..., 1, :] = _func(self._data2[..., 1, :])
 
     def _updateContourLevelsAndColors(self):
         self._updateContourLevelsAndColorsGeneric()
@@ -42,6 +48,15 @@ class MeshfillPipeline(Pipeline2D):
         wholeDataMin, wholeDataMax = vcs.minmax(self._originalData1)
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
+        # We need to do the convertion thing
+        _convert = self._gm.yaxisconvert
+        _func = vcs.utils.axisConvertFunctions[_convert]["forward"]
+        y1 = _func(y1)
+        y2 = _func(y2)
+        _convert = self._gm.xaxisconvert
+        _func = vcs.utils.axisConvertFunctions[_convert]["forward"]
+        x1 = _func(x1)
+        x2 = _func(x2)
         _colorMap = self.getColorMap()
         for i, l in enumerate(tmpLevels):
             # Ok here we are trying to group together levels can be, a join
@@ -276,6 +291,8 @@ class MeshfillPipeline(Pipeline2D):
             self._useContinents = False
         if self._useContinents:
             projection = vcs.elements["projection"][self._gm.projection]
+            kwargs['xaxisconvert'] = self._gm.xaxisconvert
+            kwargs['yaxisconvert'] = self._gm.yaxisconvert
             continents_renderer, xScale, yScale = self._context().plotContinents(
                 plotting_dataset_bounds, projection,
                 self._dataWrapModulo,

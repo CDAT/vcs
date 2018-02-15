@@ -18,8 +18,6 @@ class VectorPipeline(Pipeline2D):
         """Overrides baseclass implementation."""
         # Preserve time and z axis for plotting these inof in rendertemplate
         projection = vcs.elements["projection"][self._gm.projection]
-        print("IN VECTOR:",self._originalData1.getAxis(-2))
-        print("IN VECTOR:",self._data1.getAxis(-2))
         taxis = self._originalData1.getTime()
         scaleFactor = 1.0
 
@@ -33,7 +31,6 @@ class VectorPipeline(Pipeline2D):
         lon = None
 
         latAccessor = self._data1.getLatitude()
-        print("latAcessor:",latAccessor)
         lonAccessor = self._data1.getLongitude()
         if latAccessor:
             lat = latAccessor[:]

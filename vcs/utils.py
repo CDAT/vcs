@@ -2003,7 +2003,7 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                     lats = vcs.elements["list"]["lat5"]
                     ticks = transformTicks(lats, y_forward)
                 else:
-                    rclass = type(cdtime.reltime(0,"days since 2020"))
+                    rclass = type(cdtime.reltime(0, "days since 2020"))
                     if location == "x":
                         if isinstance(datawc_x1, rclass) or isinstance(datawc_x2, rclass):
                             ticks = mkscale(datawc_x1.value, datawc_x2.value)

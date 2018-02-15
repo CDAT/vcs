@@ -1,4 +1,5 @@
 import basevcstest
+import os
 import vcs
 import cdms2
 import numpy
@@ -30,6 +31,9 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
         if isinstance(method, vcs.vector.Gv):
             data = self.clt("u")
             data2 = self.clt("v")
+        elif isinstance(method, vcs.meshfill.Gfm):
+            data = cdms2.open(os.path.join(vcs.sample_data,"sampleCurveGrid4.nc"))("sample")
+            data2 = None
         else:
             data = self.clt("clt")
             data2 = None
@@ -47,11 +51,13 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
 
     def test_areawt(self):
         for method in [
-        #        vcs.createboxfill,
-        #        vcs.createisofill,
-        #        vcs.createisoline,
-                vcs.createvector,
+                vcs.createboxfill,
+                vcs.createisofill,
+                vcs.createisoline,
+                vcs.createmeshfill,
+        #        vcs.createvector,
                        ]:
             self.axisConvertGmAreaWt(method)
-            self.axisConvertGmLog10(method)
-            self.axisConvertGmLog10Areawt(method)
+            if not method in [vcs.createmeshfill,]:
+                self.axisConvertGmLog10(method)
+                self.axisConvertGmLog10Areawt(method)

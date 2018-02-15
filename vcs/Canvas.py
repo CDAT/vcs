@@ -3801,7 +3801,10 @@ class Canvas(vcs.bestMatch):
             dn.newelements = self.__new_elts(original_elts, new_elts)
             dn._parent = self
 
-            self.setcontinentstype(self._savedcontinentstype)
+            try:
+                self.setcontinentstype(self._savedcontinentstype)
+            except:
+                pass
             return dn
         else:  # not taylor diagram
             if hasVCSAddons and isinstance(
@@ -3817,7 +3820,10 @@ class Canvas(vcs.bestMatch):
                     tp = "1d"
                 gm = vcs.elements[tp][arglist[4]]
                 if hasattr(gm, "priority") and gm.priority == 0:
-                    self.setcontinentstype(self._savedcontinentstype)
+                    try:  # not always saved
+                        self.setcontinentstype(self._savedcontinentstype)
+                    except:
+                        pass
                     return
             p = self.getprojection(gm.projection)
             if p.type in no_deformation_projections and (
@@ -4121,7 +4127,10 @@ class Canvas(vcs.bestMatch):
             if self.backend.bg is False and self.configurator is not None:
                 self.configurator.update()
 
-        self.setcontinentstype(self._savedcontinentstype)
+        try:  # primitive do not use/set this
+            self.setcontinentstype(self._savedcontinentstype)
+        except:
+            pass
         return result
 
     def setAnimationStepper(self, stepper):

@@ -604,8 +604,6 @@ def prepContinents(fnm, xConvertFunction=lambda x: x, yConvertFunction=lambda y:
     Author: Charles Doutriaux
     Input: vcs continent file name
     """
-    if fnm in vcsContinents:
-        return vcsContinents[fnm]
     poly = vtk.vtkPolyData()
     cells = vtk.vtkCellArray()
     pts = vtk.vtkPoints()
@@ -668,7 +666,6 @@ def prepContinents(fnm, xConvertFunction=lambda x: x, yConvertFunction=lambda y:
     clipper.Update()
     poly = clipper.GetOutput()
 
-    vcsContinents[fnm] = poly
     return poly
 
 
