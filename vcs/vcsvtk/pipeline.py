@@ -40,6 +40,8 @@ class Pipeline(object):
         if _bounds is not None:
             _bounds = _func(_bounds)
             _axis.setBounds(_bounds)
+        if hasattr(axis, "units"):
+            _axis.units = axis.units
 
         return _axis
 

@@ -20,7 +20,6 @@ import warnings
 import numpy.ma
 import MV2
 import numpy
-import cdutil
 from .queries import *  # noqa
 from . import boxfill
 from . import isofill

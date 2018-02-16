@@ -230,7 +230,8 @@ class IsofillPipeline(Pipeline2D):
         projection = vcs.elements["projection"][self._gm.projection]
         kwargs['xaxisconvert'] = self._gm.xaxisconvert
         kwargs['yaxisconvert'] = self._gm.yaxisconvert
-        self._context().plotContinents(self._plot_kargs.get("continents", 1),
-                                       plotting_dataset_bounds, projection,
-                                       self._dataWrapModulo,
-                                       vp, self._template.data.priority, **kwargs)
+        if self._data1.getAxis(-1).isLongitude() and self._data1.getAxis(-2).isLatitude():
+            self._context().plotContinents(self._plot_kargs.get("continents", 1),
+                                           plotting_dataset_bounds, projection,
+                                           self._dataWrapModulo,
+                                           vp, self._template.data.priority, **kwargs)

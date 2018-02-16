@@ -809,7 +809,6 @@ class VTKVCSBackend(object):
         if continentType in [0, None]:
             return
         continents_path = self.canvas._continentspath(continentType)
-        print("CONTINENT PATH:",continents_path)
         if continents_path is None:
             return (None, 1, 1)
         xforward = vcs.utils.axisConvertFunctions[kargs.get('xaxisconvert', 'linear')]['forward']
