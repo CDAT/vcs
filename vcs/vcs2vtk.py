@@ -599,7 +599,7 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
 vcsContinents = {}
 
 
-def prepContinents(fnm, xConvertFunction=lambda x: x, yConvertFunction=lambda y:y):
+def prepContinents(fnm, xConvertFunction=lambda x: x, yConvertFunction=lambda y: y):
     """ This converts vcs continents files to vtkpolydata
     Author: Charles Doutriaux
     Input: vcs continent file name

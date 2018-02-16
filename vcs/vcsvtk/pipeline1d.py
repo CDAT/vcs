@@ -19,8 +19,8 @@ class Pipeline1D(Pipeline):
 
     """Implementation of the Pipeline interface for 1D VCS plots."""
 
-    def __init__(self, gm, context_):
-        super(Pipeline1D, self).__init__(gm, context_)
+    def __init__(self, gm, context_, plot_keyargs):
+        super(Pipeline1D, self).__init__(gm, context_, plot_keyargs)
 
     def plot(self, data1, data2, tmpl, grid, transform, **kargs):
         """Overrides baseclass implementation."""

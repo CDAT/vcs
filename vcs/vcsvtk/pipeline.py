@@ -11,7 +11,7 @@ class Pipeline(object):
     VTK plot command. Refer to the method documentation for details.
     """
 
-    def __init__(self, graphics_method, context_):
+    def __init__(self, graphics_method, context_, plot_keyargs):
         """Initialize the pipeline object.
 
         _gm is a vcs graphics method
@@ -20,6 +20,7 @@ class Pipeline(object):
         """
         self._context = weakref.ref(context_)
         self._gm = graphics_method
+        self._plot_kargs = plot_keyargs
 
     # For now, we'll just throw everything at plot. This might need to be
     # broken up into set_data, set_template, etc methods...

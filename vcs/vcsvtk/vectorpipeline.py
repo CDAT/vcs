@@ -9,8 +9,8 @@ class VectorPipeline(Pipeline2D):
 
     """Implementation of the Pipeline interface for VCS vector plots."""
 
-    def __init__(self, gm, context_):
-        super(VectorPipeline, self).__init__(gm, context_)
+    def __init__(self, gm, context_, plot_keyargs):
+        super(VectorPipeline, self).__init__(gm, context_, plot_keyargs)
         self._needsCellData = False
         self._needsVectors = True
 
@@ -205,14 +205,12 @@ class VectorPipeline(Pipeline2D):
             self._context().canvas, self._template.legend, lcolor, lstyle, lwidth,
             unitString, maxNormInVp, maxNorm, minNormInVp, minNorm)
 
-        if self._context().canvas._continents is None:
-            self._useContinents = False
-        if self._useContinents:
-            kwargs['xaxisconvert'] = self._gm.xaxisconvert
-            kwargs['yaxisconvert'] = self._gm.yaxisconvert
-            continents_renderer, xScale, yScale = self._context().plotContinents(
-                plotting_dataset_bounds, projection,
-                self._dataWrapModulo, vp, self._template.data.priority, **kwargs)
+        kwargs['xaxisconvert'] = self._gm.xaxisconvert
+        kwargs['yaxisconvert'] = self._gm.yaxisconvert
+        self._context().plotContinents(self._plot_kargs.get("continents", 1),
+                                       plotting_dataset_bounds, projection,
+                                       self._dataWrapModulo, vp,
+                                       self._template.data.priority, **kwargs)
         self._resultDict["vtk_backend_actors"] = [[act, plotting_dataset_bounds]]
         self._resultDict["vtk_backend_glyphfilters"] = [glyphFilter]
         self._resultDict["vtk_backend_luts"] = [[None, None]]

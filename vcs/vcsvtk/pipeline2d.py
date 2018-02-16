@@ -60,8 +60,8 @@ class IPipeline2D(Pipeline):
         - _maskedDataMapper: The mapper used to render masked data.
     """
 
-    def __init__(self, gm, context_):
-        super(IPipeline2D, self).__init__(gm, context_)
+    def __init__(self, gm, context_, plot_keyargs):
+        super(IPipeline2D, self).__init__(gm, context_, plot_keyargs)
 
         # TODO This should be replaced by getters that retrieve the info
         # needed, or document the members of the map somewhere. Much of this
@@ -173,8 +173,8 @@ class Pipeline2D(IPipeline2D):
 
     """Common VTK pipeline functionality for 2D VCS plot."""
 
-    def __init__(self, gm, context_):
-        super(Pipeline2D, self).__init__(gm, context_)
+    def __init__(self, gm, context_, plot_keyargs):
+        super(Pipeline2D, self).__init__(gm, context_, plot_keyargs)
 
     def _patternCreation(self, vtkFilter, color, style, index, opacity):
         """ Creates pattern things """

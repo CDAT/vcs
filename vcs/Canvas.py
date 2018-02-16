@@ -372,7 +372,6 @@ class Canvas(vcs.bestMatch):
         '_Canvas__last_plot_keyargs',
         '__last_plot_actual_args',
         '__last_plot_keyargs',
-        '_continents',
         '_continents_line',
         '_savedcontinentstype',
     ]
@@ -604,9 +603,6 @@ class Canvas(vcs.bestMatch):
 
         return tv
 
-    def savecontinentstype(self, value):
-        self._savedcontinentstype = value
-
     def onClosing(self, cell):
         if self.configurator:
             self.endconfigure()
@@ -799,23 +795,6 @@ class Canvas(vcs.bestMatch):
                 tv, 'date') and not hasattr(tv, 'time'):
             change_date_time(tv, 0)
 
-        # Draw continental outlines if specified.
-        contout = keyargs.get('continents', None)
-        if contout is None:
-            if (xdim >= 0 and ydim >= 0 and tv.getAxis(xdim).isLongitude() and tv.getAxis(ydim).isLatitude()) or\
-                    (self.isplottinggridded):
-                contout = self.getcontinentstype()
-            else:
-                contout = 0
-
-        if (isinstance(arglist[GRAPHICS_METHOD], str) and (arglist[GRAPHICS_METHOD]) == 'meshfill') or (
-                (xdim >= 0 and ydim >= 0 and (isinstance(contout, str) or contout >= 1))):
-            self.savecontinentstype(self.getcontinentstype())
-            self.setcontinentstype(contout)
-        else:
-            self.savecontinentstype(self.getcontinentstype())
-            self.setcontinentstype(0)
-
         # Reverse axis direction if necessary
         xrev = keyargs.get('xrev', 0)
         if xrev == 1 and xdim >= 0:
@@ -949,7 +928,6 @@ class Canvas(vcs.bestMatch):
 
         self.configurator = None
         self.setcontinentsline("default")
-        self.setcontinentstype(1)
 
 # Initial.attributes is being called in main.c, so it is not needed here!
 # Actually it is for taylordiagram graphic methods....
@@ -2807,38 +2785,6 @@ class Canvas(vcs.bestMatch):
                                    plot_2_1D_input,
                                    plot_output)
 
-    def plot_filledcontinents(
-            self, slab, template_name, g_type, g_name, bg, ratio):
-        cf = cdutil.continent_fill.Gcf()
-        if g_type.lower() == 'boxfill':
-            g = self.getboxfill(g_name)
-        lons = slab.getLongitude()
-        lats = slab.getLatitude()
-
-        if lons is None or lats is None:
-            return
-        if g.datawc_x1 > 9.9E19:
-            cf.datawc_x1 = lons[0]
-        else:
-            cf.datawc_x1 = g.datawc_x1
-        if g.datawc_x2 > 9.9E19:
-            cf.datawc_x2 = lons[-1]
-        else:
-            cf.datawc_x2 = g.datawc_x2
-        if g.datawc_y1 > 9.9E19:
-            cf.datawc_y1 = lats[0]
-        else:
-            cf.datawc_y1 = g.datawc_y1
-        if g.datawc_y2 > 9.9E19:
-            cf.datawc_y2 = lats[-1]
-        else:
-            cf.datawc_y2 = g.datawc_y2
-        try:
-            self.gettemplate(template_name)
-            cf.plot(x=self, template=template_name, ratio=ratio)
-        except Exception as err:
-            print(err)
-
     def __new_elts(self, original, new):
         for e in list(vcs.elements.keys()):
             for k in list(vcs.elements[e].keys()):
@@ -3785,7 +3731,6 @@ class Canvas(vcs.bestMatch):
             else:
                 nm, src = self.check_name_source(None, "default", "display")
                 dn = displayplot.Dp(nm)
-            dn.continents = self.getcontinentstype()
             dn.continents_line = self.getcontinentsline()
             dn.template = arglist[2]
             dn.g_type = arglist[3]
@@ -3801,10 +3746,12 @@ class Canvas(vcs.bestMatch):
             dn.newelements = self.__new_elts(original_elts, new_elts)
             dn._parent = self
 
+            """
             try:
                 self.setcontinentstype(self._savedcontinentstype)
-            except:
+            except Exception:
                 pass
+            """
             return dn
         else:  # not taylor diagram
             if hasVCSAddons and isinstance(
@@ -3820,10 +3767,12 @@ class Canvas(vcs.bestMatch):
                     tp = "1d"
                 gm = vcs.elements[tp][arglist[4]]
                 if hasattr(gm, "priority") and gm.priority == 0:
+                    """
                     try:  # not always saved
                         self.setcontinentstype(self._savedcontinentstype)
-                    except:
+                    except Exception:
                         pass
+                        """
                     return
             p = self.getprojection(gm.projection)
             if p.type in no_deformation_projections and (
@@ -4019,7 +3968,7 @@ class Canvas(vcs.bestMatch):
             if hasattr(self, '_isplottinggridded'):
                 del(self._isplottinggridded)
             # Get the continents for animation generation
-            self.animate.continents_value = self._continentspath()
+            # self.animate.continents_value = self._continentspath()
 
             # Get the option for doing graphics in the background.
             if bg:
@@ -4076,7 +4025,6 @@ class Canvas(vcs.bestMatch):
                 if dn is not None:
                     dn._template_origin = template_origin
                     dn.ratio = keyargs.get("ratio", None)
-                    dn.continents = self.getcontinentstype()
                     dn.continents_line = self.getcontinentsline()
                     dn.newelements = self.__new_elts(original_elts, new_elts)
 
@@ -4127,10 +4075,6 @@ class Canvas(vcs.bestMatch):
             if self.backend.bg is False and self.configurator is not None:
                 self.configurator.update()
 
-        try:  # primitive do not use/set this
-            self.setcontinentstype(self._savedcontinentstype)
-        except:
-            pass
         return result
 
     def setAnimationStepper(self, stepper):
@@ -4402,27 +4346,6 @@ class Canvas(vcs.bestMatch):
         :rtype: dict
         """
         return self.backend.canvasinfo(*args, **kargs)
-
-    def getcontinentstype(self, *args):
-        """Retrieve continents type from VCS; either an integer between 0 and 6 or the
-        path to a custom continentstype.
-
-        :Example:
-
-            .. doctest:: canvas_getcontinentstype
-
-                >>> a=vcs.init()
-                >>> a.setcontinentstype(6)
-                >>> a.getcontinentstype() # Get the continents type
-                6
-
-        :returns An int between 0 and 6, or the path to a custom continentstype
-        :rtype: `int`_ or system filepath
-        """
-        try:
-            return self._continents
-        except Exception:
-            return None
 
     def pstogif(self, filename, *opt):
         """In some cases, the user may want to save the plot out as a gif image. This
@@ -5509,60 +5432,11 @@ class Canvas(vcs.bestMatch):
         else:
             return self._continents_line
 
-    def setcontinentstype(self, value):
-        """One has the option of using continental maps that are predefined or that
-        are user-defined. Predefined continental maps are either internal to VCS
-        or are specified by external files. User-defined continental maps are
-        specified by additional external files that must be read as input.
-
-        The continents-type values are integers ranging from 0 to 11, where:
-
-            * 0 signifies "No Continents"
-
-            * 1 signifies "Fine Continents"
-
-            * 2 signifies "Coarse Continents"
-
-            * 3 signifies "United States" (with "Fine Continents")
-
-            * 4 signifies "Political Borders" (with "Fine Continents")
-
-            * 5 signifies "Rivers" (with "Fine Continents")
-
-            * 6 uses a custom continent set
-
-        You can also pass a file by path.
-
-        :Example:
-
-            .. doctest:: canvas_setcontinentstype
-
-                >>> a=vcs.init()
-                >>> a.setcontinentstype(4) # "Political Borders"
-                >>> import cdms2 # We need cdms2 to create a slab
-                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
-                >>> v = f('v') # use the data file to create a slab
-                >>> a.plot(v,'default','isofill','quick') # map with borders
-                <vcs.displayplot.Dp ...>
-
-        :param value: Integer representing continent type, as specified in function description
-        :type value: `int`_
-        """
-        continent_path = VCS_validation_functions.checkContinents(self, value)
-        self._continents = value
-        if continent_path is not None and not os.path.exists(
-                continent_path):
-            warnings.warn(
-                "Continents file not found: %s, substituing with fine continents" %
-                continent_path)
-            self._continents = 1
-            return
-
-    def _continentspath(self):
+    def _continentspath(self, continentsPath):
         try:
             path = VCS_validation_functions.checkContinents(
-                self, self._continents)
-            if path is None and self._continents != 0:
+                self, continentsPath)
+            if path is None and continentsPath != 0:
                 return VCS_validation_functions.checkContinents(self, 1)
             else:
                 return path

@@ -676,7 +676,7 @@ class VTKVCSBackend(object):
         vtk_backend_geo = kargs.get("vtk_backend_geo", None)
         bounds = vtk_dataset_bounds_no_mask if vtk_dataset_bounds_no_mask else None
 
-        pipeline = vcsvtk.createPipeline(gm, self)
+        pipeline = vcsvtk.createPipeline(gm, self, kargs)
         if pipeline is not None:
             returned.update(pipeline.plot(data1, data2, tpl,
                                           vtk_backend_grid, vtk_backend_geo, **kargs))
@@ -805,12 +805,15 @@ class VTKVCSBackend(object):
             if hasattr(plot, 'onClosing'):
                 plot.onClosing(cell)
 
-    def plotContinents(self, wc, projection, wrap, vp, priority, **kargs):
-        continents_path = self.canvas._continentspath()
+    def plotContinents(self, continentType, wc, projection, wrap, vp, priority, **kargs):
+        if continentType in [0, None]:
+            return
+        continents_path = self.canvas._continentspath(continentType)
+        print("CONTINENT PATH:",continents_path)
         if continents_path is None:
             return (None, 1, 1)
-        xforward = vcs.utils.axisConvertFunctions[kargs.get('xaxisconvert','linear')]['forward']
-        yforward = vcs.utils.axisConvertFunctions[kargs.get('yaxisconvert','linear')]['forward']
+        xforward = vcs.utils.axisConvertFunctions[kargs.get('xaxisconvert', 'linear')]['forward']
+        yforward = vcs.utils.axisConvertFunctions[kargs.get('yaxisconvert', 'linear')]['forward']
         contData = vcs2vtk.prepContinents(continents_path, xforward, yforward)
         contData = vcs2vtk.doWrapData(contData, wc, fastClip=False)
         contMapper = vtk.vtkPolyDataMapper()

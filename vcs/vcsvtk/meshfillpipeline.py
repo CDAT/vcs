@@ -11,8 +11,8 @@ class MeshfillPipeline(Pipeline2D):
 
     """Implementation of the Pipeline interface for VCS meshfill plots."""
 
-    def __init__(self, gm, context_):
-        super(MeshfillPipeline, self).__init__(gm, context_)
+    def __init__(self, gm, context_, plot_keyargs):
+        super(MeshfillPipeline, self).__init__(gm, context_, plot_keyargs)
 
         self._needsCellData = True
 
@@ -287,16 +287,13 @@ class MeshfillPipeline(Pipeline2D):
                                            self.getColorMap(),
                                            **patternArgs))
 
-        if self._context().canvas._continents is None:
-            self._useContinents = False
-        if self._useContinents:
-            projection = vcs.elements["projection"][self._gm.projection]
-            kwargs['xaxisconvert'] = self._gm.xaxisconvert
-            kwargs['yaxisconvert'] = self._gm.yaxisconvert
-            continents_renderer, xScale, yScale = self._context().plotContinents(
-                plotting_dataset_bounds, projection,
-                self._dataWrapModulo,
-                vp, self._template.data.priority, **kwargs)
+        projection = vcs.elements["projection"][self._gm.projection]
+        kwargs['xaxisconvert'] = self._gm.xaxisconvert
+        kwargs['yaxisconvert'] = self._gm.yaxisconvert
+        self._context().plotContinents(self._plot_kargs.get("continents", 1),
+                                       plotting_dataset_bounds, projection,
+                                       self._dataWrapModulo,
+                                       vp, self._template.data.priority, **kwargs)
 
     def getPlottingBounds(self):
         """gm.datawc if it is set or dataset_bounds

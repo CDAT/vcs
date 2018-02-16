@@ -9,13 +9,13 @@ class TestVCSNoContinents(basevcstest.VCSBaseTest):
         clt = clt(latitude=(-90.0, 90.0), longitude=(-180., 175.), squeeze=1,
                   time=('1979-1-1 0:0:0.0', '1988-12-1 0:0:0.0'))
 
-        t1 = self.x.createtemplate()
-        t1.scale(.5, "y")
-        t1.move(-.15, "y")
-        t2 = self.x.createtemplate(source=t1.name)
-        t2.move(.5, 'y')
+        template_bottom = self.x.createtemplate()
+        template_bottom.scale(.5, "y")
+        template_bottom.move(-.15, "y")
+        template_top = self.x.createtemplate(source=template_bottom.name)
+        template_top.move(.5, 'y')
 
-        self.x.plot(clt, t1, continents=0, bg=self.bg)
-        self.x.plot(clt, t2, continents=1, bg=self.bg)
+        self.x.plot(clt, template_bottom, continents=0, bg=self.bg)
+        self.x.plot(clt, template_top, continents=1, bg=self.bg)
 
         self.checkImage("test_vcs_no_continents.png")
