@@ -4353,7 +4353,6 @@ class Canvas(vcs.bestMatch):
         """
         return self.backend.canvasinfo(*args, **kargs)
 
-
     def landscape(self, width=-99, height=-99, x=-99, y=-99, clear=0):
         """Change the VCS Canvas orientation to Landscape.
 
