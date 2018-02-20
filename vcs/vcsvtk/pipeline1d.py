@@ -2,6 +2,7 @@ from .pipeline import Pipeline
 
 import numpy
 import vcs
+import cdms2
 
 
 def smooth(x, beta, window_len=11):
@@ -24,9 +25,14 @@ class Pipeline1D(Pipeline):
     def plot(self, data1, data2, tmpl, grid, transform, **kargs):
         """Overrides baseclass implementation."""
         Y = self._context().trimData1D(data1)
+        data = data1  # For template
         if data2 is None:
             X = Y.getAxis(0)
         else:
+            data = data2
+            if self._gm.flip:
+                raise RuntimeError("You cannot use the flip option on 1D graphic methods" +
+                                   " if you are passing 2 arrays, please reverse order of arrays")
             X = Y
             data1._yname = data2.id
             Y = self._context().trimData1D(data2)
@@ -36,8 +42,10 @@ class Pipeline1D(Pipeline):
             Y = X
             X = tmp
 
+        X = self.convertAxis(cdms2.createAxis(X), "x")
         if self._gm.smooth is not None:
             Y = smooth(Y, self._gm.smooth)
+        Y = self.convertAxis(cdms2.createAxis(Y), "y")
 
         ln_tmp = self._context().canvas.createline()
         Xs = X[:].tolist()
@@ -76,12 +84,22 @@ class Pipeline1D(Pipeline):
 
         # Also need to make sure it fills the whole space
         x1, x2, y1, y2 = vcs.utils.getworldcoordinates(self._gm, X, Y)
+        if (y1 > y2) and numpy.allclose(self._gm.datawc_y1, 1.E20):
+            tmp = y1
+            y1 = y2
+            y2 = tmp
+
+        self._gm.datawc_x1 = x1
+        self._gm.datawc_x2 = x2
+        self._gm.datawc_y1 = y1
+        self._gm.datawc_y2 = y2
         if numpy.allclose(y1, y2):
             y1 -= .0001
             y2 += .0001
         if numpy.allclose(x1, x2):
             x1 -= .0001
             x2 += .0001
+
         ln_tmp._worldcoordinate = [x1, x2, y1, y2]
         if self._gm.marker is not None:
             m = self._context().canvas.createmarker()
@@ -106,7 +124,7 @@ class Pipeline1D(Pipeline):
         ren2 = self._context().createRenderer()
         self._context().setLayer(ren2, ln_tmp.priority)
         self._context().renWin.AddRenderer(ren2)
-        tmpl.plot(self._context().canvas, data1, self._gm, bg=self._context().bg,
+        tmpl.plot(self._context().canvas, data, self._gm, bg=self._context().bg,
                   renderer=ren2, X=X, Y=Y)
         if hasattr(data1, "_yname"):
             del(data1._yname)
