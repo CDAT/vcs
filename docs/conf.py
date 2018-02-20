@@ -12,16 +12,57 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+from __future__ import print_function
 import sys, os
+import subprocess
+import glob
+import shlex
+
+# First we need to create the jupyter links from gms to Notebooks
+
+jupyters = glob.glob("Jupyter/*.ipynb")
+if not os.path.exists(os.path.join("API","graphics","Jupyter")):
+    os.makedirs(os.path.join("API","graphics","Jupyter"))
+
+matches = {}
+for gm in ["boxfill","isofill","meshfill","isoline","streamline","vector",
+           "taylor","1d","xyvsx","yxvsx","scatter","xvsy","dv3d","unified1d"]:
+    for jup in jupyters:
+        match = subprocess.Popen(shlex.split("more {}".format(jup)), stdout=subprocess.PIPE)
+        match = str(match.communicate()[0].strip())
+        found = match.find("create{}".format(gm)) != -1
+        found = found or (match.find("get{}".format(gm)) != -1)
+        if found:  # we have a match
+            if gm in ["1d","xyvsy","yxvsx","scatter","xvsy","unified1d"]:
+                gm_name = "unified1D"
+            else:
+                gm_name = gm
+            tmp = matches.get(gm_name,set())
+            tmp.add(jup)
+            matches[gm_name] = tmp
+
+for gm in matches:
+    with open(os.path.join("API","graphics","{}_notebooks.rst".format(gm)),"w") as nb:
+        print(".. toctree::\n      :maxdepth: 0\n",file=nb)
+        for jup in sorted(matches[gm]):
+            print("    ",jup,file=nb)
+
+            if not os.path.exists(os.path.join("API","graphics",jup)):
+                os.symlink(os.path.join("..","..","..",jup),
+                           os.path.join("API","graphics",jup))
+
 #import sphinx_bootstrap_theme
 
+"""
 # on_rtd is whether we are on readthedocs.org
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
 if not on_rtd:  # only import and set the theme if we're building docs locally
     import sphinx_rtd_theme
-    html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+"""
+html_theme = 'haiku'
+import easydev
+html_theme_path = [easydev.get_path_sphinx_themes()]
 
 # otherwise, readthedocs.org uses their theme by default, so no need to specify it
 
@@ -38,7 +79,9 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc',
+
+extensions = ['easydev.copybutton',
+              'sphinx.ext.autodoc',
               'sphinx.ext.todo',
               'sphinx.ext.coverage',
               'sphinx.ext.mathjax',
@@ -46,7 +89,22 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.viewcode',
               'sphinx.ext.extlinks',
               'sphinx.ext.doctest',
-              'sphinx.ext.intersphinx']
+              'sphinx.ext.intersphinx',
+              'sphinx.ext.graphviz',
+              'sphinx.ext.napoleon',
+              'nbsphinx',
+              'sphinx.ext.mathjax',
+              ]
+
+jscopybutton_path = "copybutton.js"
+
+try:
+    from easydev.copybutton import get_copybutton_path
+    from easydev.copybutton import copy_javascript_into_static_path
+    copy_javascript_into_static_path("_build/html/_static", get_copybutton_path())
+except Exception:
+    print("could not copy the copybutton javascript")
+
 
 # turn off doctests of autodoc included files (these are tested elsewhere)
 # doctest_test_doctest_blocks = None
@@ -61,6 +119,14 @@ ex = ex1 = ex2 = None
 __examples = [ex, ex1, ex2]
 # Copy vcs.elements so we can do a diff later.
 # check if it already exists so we don't overwrite the first copy
+for d in vcs.listelements("display"):
+    try:
+        disp = vcs.elements["display"][d]
+    except:
+        continue
+    if disp._parent is not None:
+        disp._parent.clear()
+vcs.reset()
 try:
     elts
 except:
@@ -70,18 +136,18 @@ except:
             elts[key]=dict(vcs.elements[key])
         else:
             elts[key]=vcs.elements[key]
-try:
-    vcs.removeobject(vcs.elements['texttable']['EXAMPLE_tt'])
-    vcs.removeobject(vcs.elements['textorientation']['EXAMPLE_tto'])
-    vcs.removeobject(vcs.elements['template']['example1'])
-    vcs.removeobject(vcs.elements['colormap']['example'])
-    a.close()
-except:
-    pass
     """
 
 doctest_global_cleanup = """
-import glob, sys
+import glob, sys, vcs
+for d in vcs.listelements("display"):
+    try:
+        disp = vcs.elements["display"][d]
+    except:
+        continue
+    if disp._parent is not None:
+        disp._parent.clear()
+vcs.reset()
 f=open("dt_cleanup_log", "a+", 1)
 log=[]
 gb = glob.glob
@@ -96,23 +162,6 @@ for file in files:
         os.remove(file)
     except:
         log.append("COULD NOT delete file: " + file + "\\n")
-for key in vcs.elements.keys():
-    for _ in vcs.elements[key].keys():
-        if not elts[key].has_key(_) and (key,_) != ('line','red'):
-            try:
-                vcs.removeobject(vcs.elements[key][_])
-            except:
-                pass
-            else:
-                log.append("Removed object: vcs.elements['%s']['%s']%s" % (key,_,'\\n'))
-selected_items = [('texttable','EXAMPLE_tt'),('textorientation','EXAMPLE_tto'),('template','example1'),('colormap','example1')]
-for item in selected_items:
-    try:
-        vcs.removeobject(vcs.elements[item[0]][item[1]])
-    except:
-        log.append("COULD NOT remove object: vcs.elements['%s']['%s']%s" % (item[0],item[1],'\\n'))
-    else:
-        log.append("Removed object: vcs.elements['%s']['%s']%s" % (item[0],item[1],'\\n'))
 f.writelines(log)
 f.flush()
 """
@@ -140,11 +189,12 @@ author = u'LLNL AIMS Team'
 # These are set to None here, but this is overridden in CMakeLists.txt via -D
 # flags to set them explicitly using a variable defined there.
 #
-# The short X.Y version.
-version = '2.8.0'
 
 # The full version, including alpha/beta/rc tags.
-release = '2.8.0'
+release = str(subprocess.Popen(['git', 'describe','--tags'],stdout=subprocess.PIPE).communicate()[0].strip())
+
+# The short X.Y version.
+version = ".".join(release.split(".")[:2])
 
 # The language for content autogenerated by Sphinx. Refer to documentation
 # for a list of supported languages.
@@ -158,7 +208,7 @@ release = '2.8.0'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build']
+exclude_patterns = ['_build', '**.ipynb_checkpoints']
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None

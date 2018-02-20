@@ -8,7 +8,7 @@ The PCMDI Visualization Control System (VCS) is expressly designed to meet the n
 
 In the VCS model, the data display is defined by a trio of named object sets, designated the “primary objects” (or “primary elements”). These include:
 
-* **Data Ingestion**: The data, which drives the visualization is ingested into the system via cdms2 or numeric modules such as numpy;.
+* **Data Ingestion**: The data, which drives the visualization is ingested into the system via cdms2 or other numeric modules such as numpy;.
 
 * **Graphics Method**: The graphics method, which specifies the display technique.
 
@@ -41,7 +41,7 @@ By combining primary and secondary objects in various ways (either at the comman
 For an overview of the concepts present in VCS, we recommend checking out the :doc:`user-guide`.
 
 VCS is published under the Apache 2.0 License. Its source code can be found at
-https://github.com/UV-CDAT/uvcdat/Packages/vcs
+https://github.com/uv-cdat/vcs
 
 Table of contents
 -----------------
@@ -54,8 +54,24 @@ Table of contents
 
 API index
 ---------
-
 .. toctree::
    :maxdepth: 4
 
    API/vcs
+
+Jupyter Notebooks
+-----------------
+.. toctree::
+  :maxdepth: 0
+
+  Jupyter/Basic_VCS_demo.ipynb
+  Jupyter/boxfill.ipynb
+  Jupyter/streamlines.ipynb
+  Jupyter/Taylor_Diagrams.ipynb
+  Jupyter/Animations.ipynb
+  Jupyter/Color_map_create_own.ipynb
+  Jupyter/Colormap_Tutorial.ipynb
+  Jupyter/Mathematical_Expressions_and_Symbols.ipynb
+  Jupyter/Shading_With_Patterns_in_VCS.ipynb
+  Jupyter/Logo_Control.ipynb
+  Jupyter/Masking_Data_Land-Sea_masks.ipynb

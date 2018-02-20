@@ -406,7 +406,7 @@ class Tc(vcs.bestMatch):
                 >>> ctc = vcs.createtextcombined # alias long name
                 >>> obj=ctc('list_tt', 'qa', 'list_tto', '7left')
                 >>> obj.list() # print textcombined attributes
-                 ---------- ... ----------
+                ---------- ... ----------
                 ...
         """
         if ((self.Tt_name == '__removed_from_VCS__') or

@@ -1161,12 +1161,12 @@ def minmax(*data):
 
         .. doctest:: utils_minmax
 
-            >>> s=range(7)
+            >>> s = range(7)
             >>> vcs.minmax(s)
             (0.0, 6.0)
-            >>> vcs.minmax([s,s])
+            >>> vcs.minmax([s, s])
             (0.0, 6.0)
-            >>> vcs.minmax([[s,s*2],4.,[6.,7.,s]],[5.,-7.,8,(6.,1.)])
+            >>> vcs.minmax([[s, list(s) * 2], 4., [6., 7., s]],[ 5., -7., 8, (6., 1.)])
             (-7.0, 8.0)
 
     :param data: A comma-separated list of lists/arrays/tuples
@@ -1383,10 +1383,10 @@ def mklabels(vals, output='dict'):
 
         .. doctest:: utils_mklabels
 
-            >>> scale=vcs.mkscale(2,20,zero=2)
-            >>> labels=vcs.mklabels(scale)
-            >>> keys=labels.keys()
-            >>> keys.sort()
+            >>> from __future__ import print_function
+            >>> scale = vcs.mkscale(2, 20, zero=2)
+            >>> labels = vcs.mklabels(scale)
+            >>> keys = sorted(labels.keys())
             >>> for key in keys:
             ...     print(key, ':', labels[key])
             0.0 : 0
@@ -1401,8 +1401,7 @@ def mklabels(vals, output='dict'):
             18.0 : 18
             20.0 : 20
             >>> labels=vcs.mklabels([.00002,.00003,.00005])
-            >>> keys=labels.keys()
-            >>> keys.sort()
+            >>> keys=sorted(labels.keys())
             >>> for key in keys:
             ...     print(key, ':', labels[key])
             2e-05 : 2E-5
@@ -2822,8 +2821,8 @@ def _createLegendString(value, unit):
 
 def drawVectorLegend(canvas, templateLegend,
                      linecolor, linetype, linewidth,
-                     unitString, maxNormInVp, maxNorm,
-                     minNormInVp, minNorm, bg=False, render=True):
+                     unitString, maxNormInVp=1., maxNorm=1.,
+                     minNormInVp=0., minNorm=0., bg=False, render=True):
     """Draws a legend with vector line/text inside a template legend box
     Auto adjust text size to make it fit inside the box
 
@@ -2836,7 +2835,6 @@ def drawVectorLegend(canvas, templateLegend,
             >>> t = vcs.createtemplate()
             >>> vcs.utils.drawVectorLegend(x,t.legend,
             ...     "red", "solid", 1, "sample A", bg=True)
-            >>> x.png("sample")
 
     :param canvas: a VCS canvas object onto which to draw the legend
     :type canvas: vcs.Canvas.Canvas
