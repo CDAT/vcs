@@ -1,12 +1,12 @@
 .. highlight:: python
    :linenothreshold: 4
 
-unified1D
----------
-.. automodule:: vcs.unified1D
+streamline
+----------
+.. automodule:: vcs.streamline
    :members:
 
 Jupyter Notebooks
 ^^^^^^^^^^^^^^^^^
 
-.. include:: unified1d_notebooks.rst
+.. include:: streamline_notebooks.rst

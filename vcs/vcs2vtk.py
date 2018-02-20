@@ -965,11 +965,21 @@ def doWrapData(data, wc, wrap=[0., 360], fastClip=True):
     surface.SetInputData(data)
     surface.Update()
     data = surface.GetOutput()
-
     bounds = data.GetBounds()
     # insure that GLOBALIDS are not removed by the append filter
     attributes = data.GetCellData()
-    attributes.SetActiveAttribute(-1, attributes.GLOBALIDS)
+    globalIds = attributes.GetGlobalIds()
+    globalIdsName = None
+    if (globalIds):
+        globalIdsName = globalIds.GetName()
+    attributes.SetActiveAttribute(-1, vtk.vtkDataSetAttributes.GLOBALIDS)
+    # insure that vtkTransformPolyData does not change the VECTORS attribute
+    pointAttributes = data.GetPointData()
+    vectors = pointAttributes.GetVectors()
+    vectorsName = None
+    if (vectors):
+        vectorsName = vectors.GetName()
+    pointAttributes.SetActiveAttribute(-1, vtk.vtkDataSetAttributes.VECTORS)
     xmn = min(wc[0], wc[1])
     xmx = max(wc[0], wc[1])
     if (numpy.allclose(xmn, 1.e20) or numpy.allclose(xmx, 1.e20)):
@@ -1062,13 +1072,18 @@ def doWrapData(data, wc, wrap=[0., 360], fastClip=True):
         clipper.SetClipFunction(clipBox)
     clipper.SetInputConnection(appendFilter.GetOutputPort())
     clipper.Update()
-    # set globalids attribute
-    attributes = clipper.GetOutput().GetCellData()
-    globalIdsIndex = vtk.mutable(-1)
-    attributes.GetArray("GlobalIds", globalIdsIndex)
-    attributes.SetActiveAttribute(globalIdsIndex, attributes.GLOBALIDS)
-
-    return clipper.GetOutput()
+    result = clipper.GetOutput()
+    if (globalIdsName):
+        attributes = result.GetCellData()
+        index = vtk.mutable(-1)
+        attributes.GetArray(globalIdsName, index)
+        attributes.SetActiveAttribute(index, vtk.vtkDataSetAttributes.GLOBALIDS)
+    if (vectorsName):
+        index = vtk.mutable(-1)
+        pointAttributes = result.GetPointData()
+        pointAttributes.GetArray(vectorsName, index)
+        pointAttributes.SetActiveAttribute(index, vtk.vtkDataSetAttributes.VECTORS)
+    return result
 
 
 # Wrap grid in interval minX, minX + 360

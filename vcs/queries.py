@@ -259,6 +259,8 @@ def issecondaryobject(sobj):
 
                 9.) projections
 
+                10.) displays
+
     :Example:
 
         .. doctest:: queries_issecondary
@@ -295,6 +297,25 @@ def issecondaryobject(sobj):
     elif (isinstance(sobj, projection.Proj)):
         return 1
     elif (isinstance(sobj, vcs.colormap.Cp)):
+        return 1
+    elif (isinstance(sobj, vcs.displayplot.Dp)):
+        return 1
+    else:
+        return 0
+
+
+def isdisplay(obj):
+    """
+    Check to see if this object is a VCS display object
+
+    :param obj: A VCS object
+    :type obj: VCS Object
+
+    :returns: An integer indicating whether the object is a
+        display (1), or not (0).
+    :rtype: int
+    """
+    if (isinstance(obj, vcs.displayplot.Dp)):
         return 1
     else:
         return 0

@@ -25,15 +25,15 @@ the following command ::
 To enable conda installation in a tight ssl certificate/security environment try ::
 
     conda config --set ssl_verify False
-    binstar config --set verify_ssl False
+
 
 Install uvcdat which will install vcs as well using the following command ::
 
-    conda install uvcdat -c uvcdat
+    conda install uvcdat -c conda-forge -c uvcdat
 
 To install only vcs, use the following command ::
 
-    conda install vcs -c uvcdat
+    conda install vcs -c conda-forge -c uvcdat
 
 Concepts
 --------
@@ -45,10 +45,39 @@ direct use of these modules, see the VCS API Examples chapter and the examples l
 VCS Model
 ^^^^^^^^^
 
-The VCS model is defined by a trio of named attribute sets, designated the “Primary Objects” (also known as “Primary Elements”).
-These include: the data, which specifies what is to be displayed and are obtained from the cdms2 or numpy array;
-the graphics method, which specifies the display technique; and the picture template, which determines the appearance of
-each segment of the display.
+VCS Allows scientists to produce highly customized plots. Everything can be precisely and logically controlled, without any guessing game
+
+Essentially a vcs plot can be broken down into three parts
+
+**WHAT** is plotted (e.g data and labels)
+**HOW** it is rendered (isolines, boxfill, isofill, vectors, etc...)
+**WHERE** (location on the page each elements is to be plotted)
+
+What
+^^^^
+
+This is the scientific piece of information that the user is trying to represent for others (or self) to understand. It can be as raw as a simple numpy object. But it is recommended to use [CDMS](https://github.com/uv-cdat/cdms)'s transient variables. CDNS transient variables contain metadata such as name, units, geospatial information, that can be used by VCS to represent data better.
+
+The [tutorials] section has many documents for CDMS. The CDMS documentation can be found [here](http://readthedocs.org/projects/cdms/)
+
+How
+^^^
+
+This describe the data representation, at the highest level it is a "graphics method" i.e boxfill, isofill, vectors, streamlines, line plot, etc... But it also contains information to further control these plot types, e.g which colors to use, which levels, lines thickness, etc...
+
+Graphic methods also describe how axes and labels show be represented (e.g which axes values to show and which text to use for it, the user might want to show the `-20.` longitude represented as `20S` or the date `2020-01-15` shown as `Jan 2020`
+
+Currently VCS supports the following graphic methods
+
+
+
+Where
+^^^^^
+
+This is the most complicated part of VCS but also one of the most powerful. This controls precisely the location of every component on the plot, these *control* objects are called `templates`. Templates also contain one exception to the WHAT/HOW./WHERE rule as they control texts information, albeit via [primary](#primary) objects.
+
+Bringing it all together
+------------------------
 
 VCS Primary Objects (or Primary Elements)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

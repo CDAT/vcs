@@ -46,13 +46,13 @@ except NameError:
 def reset(gtype=None):
     """Remove all user generated objects
 
-    :Example:
-
-        .. doctest:: manageElements_reset
-
-            >>> vcs.reset()
-            >>> vcs.reset("boxfill")
-            >>> vcs.reset(["isofill", "template"])
+#    :Example:
+#
+#        .. doctest:: manageElements_reset
+#
+#            >>> vcs.reset()
+#            >>> vcs.reset("boxfill")
+#            >>> vcs.reset(["isofill", "template"])
 
 
     :param gtype: String or list of stringsname of a VCS object type.
@@ -1858,6 +1858,13 @@ def removeCp(obj):
     return removeG(obj, "colormap")
 
 
+def removeDp(obj):
+    if isinstance(obj, basestring):
+        obj = vcs.elements["display"][obj]
+    if obj.name not in obj._parent.return_display_names():
+        return removeG(obj, "display")
+
+
 def removeP(obj):
     # first we need to see if the template was scaled
     # If so we need to remove the textorientation objects
@@ -1968,10 +1975,12 @@ def removeobject(obj):
             msg = vcs.removeProj(obj.name)
         elif (obj.s_name == 'Cp'):
             msg = vcs.removeCp(obj.name)
+        elif (obj.s_name == 'Dp'):
+            msg = vcs.removeDp(obj.name)
         else:
             msg = 'Could not find the correct secondary class object.'
             raise vcsError(msg)
     else:
-        msg = 'This is not a template, graphics method, or secondary method object.'
+        msg = 'This ({}) is not a template, graphics method, or secondary method object.'.format(obj)
         raise vcsError(msg)
     return msg

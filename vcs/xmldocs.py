@@ -342,7 +342,7 @@ listdoc = """Lists the current values of object attributes
             >>> a=vcs.init()
             >>> obj=a.get{name}({parent}) # default
             >>> obj.list() # print {name} attributes
-             ---------- ... ----------
+            ---------- ... ----------
             ...
     """
 # due to the labels being plugged in below, we have to use a dictionary to format this docstring.
@@ -466,7 +466,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             <vcs.displayplot.Dp ...>""" % d
             # for objects like template, where a call to plot() needs to be made
             # objects in the list cannot be plotted without a graphics method
-                elif obj_name not in ['textorientation', 'texttable', 'colormap', 'projection', 'template']:
+                elif obj_name not in ['textorientation', 'texttable', 'colormap', 'projection', 'template', 'display']:
                     plot = """
             >>> a.plot(ex%(args)s) # plot %(name)s
             <vcs.displayplot.Dp ...>
@@ -476,19 +476,19 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             <vcs.displayplot.Dp ...>"""
                 if obj_name.find('3d') >= 0:
                     if obj_name is "3d_vector":
-                        plot = """
-            >>> a.plot(ex%(args)s) # plot %(name)s
-            Sample rate: 6
-            Sample rate: 6
-            initCamera: Camera => (...)
-            <vcs.displayplot.Dp ...>
-            """
+                        plot = ""
+#            >>> a.plot(ex%(args)s) # plot %(name)s
+#            Sample rate: 6
+#            Sample rate: 6
+#            initCamera: Camera => (...)
+#            <vcs.displayplot.Dp ...>
+#            """
                     else:
-                        plot = """
-            >>> a.plot(ex%(args)s) # plot %(name)s
-            initCamera: Camera => (...)
-            <vcs.displayplot.Dp ...>
-            """
+                        plot = ""
+#            >>> a.plot(ex%(args)s) # plot %(name)s
+#            initCamera: Camera => (...)
+#            <vcs.displayplot.Dp ...>
+#            """
 
                 if d['slabs'] is not '':
                     plot = d['slabs'] + plot
