@@ -10,8 +10,8 @@ class StreamlinePipeline(Pipeline2D):
 
     """Implementation of the Pipeline interface for VCS streamline plots."""
 
-    def __init__(self, gm, context_):
-        super(StreamlinePipeline, self).__init__(gm, context_)
+    def __init__(self, gm, context_, plot_keyargs):
+        super(StreamlinePipeline, self).__init__(gm, context_, plot_keyargs)
         self._needsCellData = False
         self._needsVectors = True
 
@@ -255,11 +255,10 @@ class StreamlinePipeline(Pipeline2D):
                                                None,
                                                self.getColorMap()))
 
-        if self._context().canvas._continents is None:
-            self._useContinents = False
-        if self._useContinents:
-            continents_renderer, xScale, yScale = self._context().plotContinents(
-                plotting_dataset_bounds, projection,
-                self._dataWrapModulo, vp, self._template.data.priority, **kwargs)
+        if self._data1.getAxis(-1).isLongitude() and self._data1.getAxis(-2).isLatitude():
+            self._context().plotContinents(self._plot_kargs.get("continents", 1),
+                                           plotting_dataset_bounds, projection,
+                                           self._dataWrapModulo, vp,
+                                           self._template.data.priority, **kwargs)
         self._resultDict["vtk_backend_actors"] = [[act, plotting_dataset_bounds]]
         self._resultDict["vtk_backend_luts"] = [[None, None]]

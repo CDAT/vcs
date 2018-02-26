@@ -132,7 +132,7 @@ class Pxl(vcs.bestMatch):
         if member == "xlabel1":
             self.y = 0.234999999404
         elif member == "xlabel2":
-            self.y = 0.870000004768
+            self.y = 0.880000004768
             self.priority = 0
 
     ##########################################################################

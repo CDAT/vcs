@@ -1856,6 +1856,30 @@ def prettifyAxisLabels(ticks, axis):
     return ticks
 
 
+axisConvertFunctions = {
+    "linear": {"forward": lambda x: x, "invert": lambda x: x},
+    "area_wt": {"forward": lambda x: numpy.sin(x / 180. * numpy.pi),
+                "invert": lambda x: numpy.arcsin(x) / numpy.pi * 180.},
+    "ln": {"forward": numpy.log, "invert": numpy.exp},
+    "log10": {"forward": numpy.log10, "invert": lambda x: numpy.power(10, x)},
+    "exp": {"forward": numpy.exp, "invert": numpy.log}
+}
+
+
+def transformTicks(ticks_in, transform):
+    ticks_out = {}
+    for key in ticks_in:
+        ticks_out[transform(key)] = ticks_in[key]
+    return ticks_out
+
+
+def transformTicksLabels(ticks_in, transform):
+    ticks_out = {}
+    for key in ticks_in:
+        ticks_out[key] = "{:g}".format(transform(key))
+    return ticks_out
+
+
 def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
                       datawc_y1, datawc_y2, x=None, y=None):
     """Sets the labels and ticks for a graphics method made in python
@@ -1887,138 +1911,122 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
     :returns: A VCS graphics method object
     :rtype: A VCS graphics method object
     """
+    # Ok axisconvertion functions
+    x_forward = axisConvertFunctions[gm.xaxisconvert]["forward"]
+    x_invert = axisConvertFunctions[gm.xaxisconvert]["invert"]
+    y_forward = axisConvertFunctions[gm.yaxisconvert]["forward"]
+    y_invert = axisConvertFunctions[gm.yaxisconvert]["invert"]
+
+    # Convert
+    datawc_x1 = x_forward(datawc_x1)
+    datawc_x2 = x_forward(datawc_x2)
+    datawc_y1 = y_forward(datawc_y1)
+    datawc_y2 = y_forward(datawc_y2)
     # Ok all this is nice but if user specified datawc we need to use it!
     for a in ["x1", "x2", "y1", "y2"]:
         nm = "datawc_%s" % a
-        if not numpy.allclose(getattr(gm, nm), 1.e20):
+        dwc = getattr(gm, nm)
+        if not isinstance(dwc, (float, int, numpy.int, numpy.float)) or not numpy.allclose(dwc, 1.e20):
             loc = locals()
             exec("%s = gm.%s" % (nm, nm))
             if nm == "datawc_x1":
-                datawc_x1 = loc[nm]
+                datawc_x1 = x_forward(loc[nm])
             elif nm == "datawc_x2":
-                datawc_x2 = loc[nm]
+                datawc_x2 = x_forward(loc[nm])
             elif nm == "datawc_y1":
-                datawc_y1 = loc[nm]
+                datawc_y1 = y_forward(loc[nm])
             elif nm == "datawc_y2":
-                datawc_y2 = loc[nm]
+                datawc_y2 = y_forward(loc[nm])
     if isinstance(gm, vcs.taylor.Gtd):
         return
-    # Now the template stuff
-    # first create the dictionary to remember which ones are changed
-    dic = {}
-    for key in ('xticlabels1', 'xmtics1', 'xticlabels2', 'xmtics2',
-                'yticlabels1', 'ymtics1', 'yticlabels2', 'ymtics2'):
-        dic[key] = False
-    # xticklabels1
-    if gm.xticlabels1 is None or gm.xticlabels1 == '*':
-        if copy_gm is None:
-            copy_gm = creategraphicsmethod(gm.g_name, gm.name)
-            gm = copy_gm
-        if x == "longitude" and abs(datawc_x2 - datawc_x1) > 30:
-            ticks = "Lon30"
-        else:
-            ticks = vcs.mkscale(datawc_x1, datawc_x2)
-            ticks = prettifyAxisLabels(vcs.mklabels(ticks), x)
-        setattr(gm, 'xticlabels1', ticks)
-        dic['xticlabels1'] = True
-    # xmtics1
-    if gm.xmtics1 is None or gm.xmtics1 == '*':
-        if copy_gm is None:
-            copy_gm = creategraphicsmethod(gm.g_name, gm.name)
-            gm = copy_gm
-        if x == "longitude" and abs(datawc_x2 - datawc_x1) > 30:
-            ticks = list(gm.xticlabels1.keys())
-        else:
-            ticks = vcs.mkscale(datawc_x1, datawc_x2)
-        tick2 = []
-        for i in range(len(ticks) - 1):
-            tick2.append((ticks[i] + ticks[i + 1]) / 2.)
-        ticks = prettifyAxisLabels(vcs.mklabels(tick2), x)
-        setattr(gm, 'xmtics1', ticks)
-        dic['xmtics1'] = True
-    # xticklabels2
-    if hasattr(gm, "xticlabels2") and (
-            gm.xticlabels2 is None or gm.xticlabels2 == '*'):
-        if copy_gm is None:
-            copy_gm = creategraphicsmethod(gm.g_name, gm.name)
-            gm = copy_gm
-        if x == "longitude" and abs(datawc_x2 - datawc_x1) > 30:
-            ticks = "Lon30"
-        else:
-            ticks = vcs.mkscale(datawc_x1, datawc_x2)
-            ticks = prettifyAxisLabels(vcs.mklabels(ticks), x)
-        setattr(gm, 'xticlabels2', ticks)
-        dic['xticlabels2'] = True
-    # xmtics2
-    if hasattr(gm, "xmtics2") and (gm.xmtics2 is None or gm.xmtics2 == '*'):
-        if copy_gm is None:
-            copy_gm = creategraphicsmethod(gm.g_name, gm.name)
-            gm = copy_gm
-        if x == "longitude" and abs(datawc_x2 - datawc_x1) > 30:
-            ticks = list(gm.xticlabels2.keys())
-        else:
-            ticks = vcs.mkscale(datawc_x1, datawc_x2)
-        tick2 = []
-        for i in range(len(ticks) - 1):
-            tick2.append((ticks[i] + ticks[i + 1]) / 2.)
-        ticks = prettifyAxisLabels(vcs.mklabels(tick2), x)
-        setattr(gm, 'xmtics2', ticks)
-        dic['xmtics2'] = True
-    # yticklabels1
-    if gm.yticlabels1 is None or gm.yticlabels1 == '*':
-        if copy_gm is None:
-            copy_gm = creategraphicsmethod(gm.g_name, gm.name)
-            gm = copy_gm
-        if y == "latitude" and abs(datawc_y2 - datawc_y1) > 20:
-            ticks = "Lat20"
-        else:
-            ticks = vcs.mkscale(datawc_y1, datawc_y2)
-            ticks = prettifyAxisLabels(vcs.mklabels(ticks), y)
-        setattr(gm, 'yticlabels1', ticks)
-        dic['yticlabels1'] = True
-    # ymtics1
-    if gm.ymtics1 is None or gm.ymtics1 == '*':
-        if copy_gm is None:
-            copy_gm = creategraphicsmethod(gm.g_name, gm.name)
-            gm = copy_gm
-        if y == "latitude" and abs(datawc_y2 - datawc_y1) > 20:
-            ticks = list(gm.yticlabels1.keys())
-        else:
-            ticks = vcs.mkscale(datawc_y1, datawc_y2)
-        tick2 = []
-        for i in range(len(ticks) - 1):
-            tick2.append((ticks[i] + ticks[i + 1]) / 2.)
-        ticks = prettifyAxisLabels(vcs.mklabels(tick2), y)
-        setattr(gm, 'ymtics1', ticks)
-        dic['ymtics1'] = True
-    # yticklabels2
-    if hasattr(gm, "yticlabels2") and (
-            gm.yticlabels2 is None or gm.yticlabels2 == '*'):
-        if copy_gm is None:
-            copy_gm = creategraphicsmethod(gm.g_name, gm.name)
-            gm = copy_gm
-        if y == "latitude" and abs(datawc_y2 - datawc_y1) > 20:
-            ticks = "Lat20"
-        else:
-            ticks = vcs.mkscale(datawc_y1, datawc_y2)
-            ticks = prettifyAxisLabels(vcs.mklabels(ticks), y)
-        setattr(gm, 'yticlabels2', ticks)
-        dic['yticlabels2'] = True
-    # ymtics2
-    if hasattr(gm, "ymtics2") and (gm.ymtics2 is None or gm.ymtics2 == '*'):
-        if copy_gm is None:
-            copy_gm = creategraphicsmethod(gm.g_name, gm.name)
-            gm = copy_gm
-        if y == "latitude" and abs(datawc_y2 - datawc_y1) > 20:
-            ticks = list(gm.yticlabels2.keys())
-        else:
-            ticks = vcs.mkscale(datawc_y1, datawc_y2)
-        tick2 = []
-        for i in range(len(ticks) - 1):
-            tick2.append((ticks[i] + ticks[i + 1]) / 2.)
-        ticks = prettifyAxisLabels(vcs.mklabels(tick2), y)
-        setattr(gm, 'ymtics2', ticks)
-        dic['ymtics2'] = True
+    if copy_gm is None:
+        copy_gm = creategraphicsmethod(gm.g_name, gm.name)
+        gm = copy_gm
+    for location in ["x", "y"]:
+        for number in ["1", "2"]:
+            # ticklabels
+            lbls = getattr(gm, "{}ticlabels{}".format(location, number))
+            if isinstance(lbls, basestring) and lbls != "*":
+                mticks = vcs.elements["list"][lbls]
+            if lbls is None or lbls == "*":
+                if location is "x" and x == "longitude" and abs(
+                        datawc_x2 - datawc_x1) > 30:
+                    ticks = transformTicks(
+                        vcs.elements["list"]["Lon30"], x_forward)
+                elif location == "x" and x == "latitude" and abs(datawc_x2 - datawc_x1) > x_forward(20):
+                    if gm.xaxisconvert == 'area_wt':
+                        lats = vcs.elements["list"]["Lat_wt"]
+                    else:
+                        lats = vcs.elements["list"]["Lat20"]
+                    ticks = transformTicks(lats, x_forward)
+                elif location == "y" and y == "latitude" and abs(datawc_y2 - datawc_y1) > y_forward(20):
+                    if gm.yaxisconvert == 'area_wt':
+                        lats = vcs.elements["list"]["Lat_wt"]
+                    else:
+                        lats = vcs.elements["list"]["Lat20"]
+                    ticks = transformTicks(lats, y_forward)
+                else:
+                    if location == "x":
+                        ticks = vcs.mkscale(datawc_x1, datawc_x2)
+                        ticks = vcs.mklabels(ticks)
+                        if gm.xaxisconvert != "linear":
+                            ticks = transformTicksLabels(ticks, x_invert)
+                        ticks = prettifyAxisLabels(ticks,  x)
+                    else:
+                        ticks = vcs.mkscale(datawc_y1, datawc_y2)
+                        ticks = vcs.mklabels(ticks)
+                        if gm.yaxisconvert != "linear":
+                            ticks = transformTicksLabels(ticks, y_invert)
+                        ticks = prettifyAxisLabels(ticks, y)
+            else:
+                if location == "x":
+                    ticks = transformTicks(lbls, x_forward)
+                else:
+                    ticks = transformTicks(lbls, y_forward)
+            setattr(copy_gm, '{}ticlabels{}'.format(location, number), ticks)
+            # mtics
+            mtics = getattr(gm, "{}mtics{}".format(location, number))
+            if isinstance(mtics, basestring) and mtics not in ["*", ""]:
+                mtics = vcs.elements["list"][mtics]
+            if mtics is None or mtics in ['*', ""]:
+                if copy_gm is None:
+                    copy_gm = creategraphicsmethod(gm.g_name, gm.name)
+                    gm = copy_gm
+                if x == "longitude" and abs(datawc_x2 - datawc_x1) > 30:
+                    ticks = transformTicks(
+                        vcs.elements["list"]["lon5"], x_forward)
+                elif location == "x" and x == "latitude" and abs(datawc_x2 - datawc_x1) > x_forward(20):
+                    lats = vcs.elements["list"]["lat5"]
+                    ticks = transformTicks(lats, x_forward)
+                elif location == "y" and y == "latitude" and abs(datawc_y2 - datawc_y1) > y_forward(20):
+                    lats = vcs.elements["list"]["lat5"]
+                    ticks = transformTicks(lats, y_forward)
+                else:
+                    rclass = type(cdtime.reltime(0, "days since 2020"))
+                    if location == "x":
+                        if isinstance(datawc_x1, rclass) or isinstance(datawc_x2, rclass):
+                            ticks = mkscale(datawc_x1.value, datawc_x2.value)
+                        else:
+                            ticks = vcs.mkscale(datawc_x1, datawc_x2)
+                    else:
+                        if isinstance(datawc_y1, rclass) or isinstance(datawc_y2, rclass):
+                            ticks = mkscale(datawc_y1.value, datawc_y2.value)
+                        else:
+                            ticks = vcs.mkscale(datawc_y1, datawc_y2)
+                    tick2 = []
+                    for i in range(len(ticks) - 1):
+                        tick2.append((ticks[i] + ticks[i + 1]) / 2.)
+                    if location == "x":
+                        ticks = prettifyAxisLabels(vcs.mklabels(tick2), x)
+                    else:
+                        ticks = prettifyAxisLabels(vcs.mklabels(tick2), y)
+            else:
+                if location == "x":
+                    ticks = transformTicks(mtics, x_forward)
+                else:
+                    ticks = transformTicks(mtics, y_forward)
+            setattr(copy_gm, '{}mtics{}'.format(location, number), ticks)
+    # Now we need to take care of user defined tics
     return copy_gm
 
 
@@ -2654,8 +2662,16 @@ def drawLinesAndMarkersLegend(canvas, templateLegend,
     if backgroundcolor is not None:
         # Adding a fill area above the legends
         fa = canvas.createfillarea()
-        fa.x = [[templateLegend.x1, templateLegend.x2, templateLegend.x2, templateLegend.x1, templateLegend.x1]]
-        fa.y = [[templateLegend.y1, templateLegend.y1, templateLegend.y2, templateLegend.y2, templateLegend.y1]]
+        fa.x = [[templateLegend.x1,
+                 templateLegend.x2,
+                 templateLegend.x2,
+                 templateLegend.x1,
+                 templateLegend.x1]]
+        fa.y = [[templateLegend.y1,
+                 templateLegend.y1,
+                 templateLegend.y2,
+                 templateLegend.y2,
+                 templateLegend.y1]]
         fa.style = ["solid"]
         fa.color = backgroundcolor
         canvas.plot(fa)

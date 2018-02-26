@@ -17,8 +17,8 @@ class BoxfillPipeline(Pipeline2D):
             set of ivars (at minimum, identify what the mappers are rendering).
     """
 
-    def __init__(self, gm, context_):
-        super(BoxfillPipeline, self).__init__(gm, context_)
+    def __init__(self, gm, context_, plot_keyargs):
+        super(BoxfillPipeline, self).__init__(gm, context_, plot_keyargs)
 
         self._contourLabels = None
         self._mappers = None
@@ -28,7 +28,11 @@ class BoxfillPipeline(Pipeline2D):
     def _updateScalarData(self):
         """Overrides baseclass implementation."""
         # Update data1 if this is a log10 boxfill:
-        data = self._originalData1
+        data = self._originalData1.clone()
+        X = self.convertAxis(data.getAxis(-1), "x")
+        Y = self.convertAxis(data.getAxis(-2), "y")
+        data.setAxis(-1, X)
+        data.setAxis(-2, Y)
         if self._gm.boxfill_type == "log10":
             data = numpy.ma.log10(data)
 
@@ -201,14 +205,14 @@ class BoxfillPipeline(Pipeline2D):
                                            self.getColorMap(),
                                            **patternArgs))
 
-        if self._context().canvas._continents is None:
-            self._useContinents = False
-        if self._useContinents:
-            projection = vcs.elements["projection"][self._gm.projection]
-            continents_renderer, xScale, yScale = self._context().plotContinents(
-                plotting_dataset_bounds, projection,
-                self._dataWrapModulo,
-                vp, self._template.data.priority, **kwargs)
+        projection = vcs.elements["projection"][self._gm.projection]
+        kwargs['xaxisconvert'] = self._gm.xaxisconvert
+        kwargs['yaxisconvert'] = self._gm.yaxisconvert
+        if self._data1.getAxis(-1).isLongitude() and self._data1.getAxis(-2).isLatitude():
+            self._context().plotContinents(self._plot_kargs.get("continents", 1),
+                                           plotting_dataset_bounds, projection,
+                                           self._dataWrapModulo,
+                                           vp, self._template.data.priority, **kwargs)
 
     def _plotInternalBoxfill(self):
         """Implements the logic to render a non-custom boxfill."""
