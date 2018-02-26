@@ -205,10 +205,6 @@ class VTKVCSBackend(object):
                             worldPicker = vtk.vtkWorldPointPicker()
                             worldPicker.Pick(xy[0], xy[1], 0, surfaceRenderer)
                             worldPosition = list(worldPicker.GetPickPosition())
-                            if (xScale > yScale):
-                                worldPosition[0] /= (xScale / yScale)
-                            else:
-                                worldPosition[1] /= (yScale / xScale)
                             lonLat = worldPosition
                             if (attributes is None):
                                 # if point dataset, return the value for the

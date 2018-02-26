@@ -27,9 +27,6 @@ script:
 - source activate py3
 - rm -rf build
 - python setup.py install --old-and-unmanageable
-- python run_tests.py -v2 -n2 -g --no-vtk-ui
-- cd docs
-- make doctest
-- cd ..
+- python run_tests.py -n2 -g --no-vtk-ui
 after_success:
     - if [ "$TRAVIS_BRANCH" == "master" -a "$TRAVIS_PULL_REQUEST" == "false" ]; then conda install -n root conda-build anaconda-client && bash ci-support/conda_upload.sh ; fi

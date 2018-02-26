@@ -1438,9 +1438,13 @@ def prepFillarea(context, renWin, farea, cmap=None):
     # Transform points
     geo, pts = project(pts, farea.projection, farea.worldcoordinate)
     polygonPolyData.SetPoints(pts)
+    # for concave polygons
+    tris = vtk.vtkTriangleFilter()
+    tris.SetInputData(polygonPolyData)
+
     # Setup rendering
     m = vtk.vtkPolyDataMapper()
-    m.SetInputData(polygonPolyData)
+    m.SetInputConnection(tris.GetOutputPort())
     a = vtk.vtkActor()
     a.SetMapper(m)
     ren, xscale, yscale = context.fitToViewport(a,
