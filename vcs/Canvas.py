@@ -2973,7 +2973,7 @@ class Canvas(vcs.bestMatch):
         if inGrid is not None and arglist[0] is not None and\
                 isinstance(arglist[0], cdms2.avariable.AbstractVariable) and\
                 not isinstance(arglist[0].getGrid(), cdms2.grid.AbstractRectGrid) and\
-                arglist[3] not in ["meshfill", ]:
+                arglist[3] not in ["meshfill", "isofill" ]:
             raise RuntimeError("You are attempting to plot unstructured grid" +
                                "with a method that is not meshfill")
         # preprocessing for extra keyword (at-plotting-time options)
@@ -3926,7 +3926,7 @@ class Canvas(vcs.bestMatch):
                     arglist[1].setAxis(i, axes_changed2[i])
             # Check to make sure that you have at least 2 dimensions for the follow graphics methods
             # Flipping the order to avoid the tv not exist problem
-            if (arglist[3] in ['boxfill', 'isofill', 'isoline', 'vector']) and (
+            if (arglist[3] in ['boxfill', 'isoline', 'vector']) and (
                     len(arglist[0].shape) < 2):
                 raise vcsError(
                     'Invalid number of dimensions for %s' %
