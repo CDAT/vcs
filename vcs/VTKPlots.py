@@ -1508,12 +1508,22 @@ x.geometry(1200,800)
                     pass
                 if flipX:
                     cam.Azimuth(180.)
+
         T = vtk.vtkTransform()
         T.Scale(xScale, yScale, 1.)
-
-        Actor.SetUserTransform(T)
-
         mapper = Actor.GetMapper()
+        data = mapper.GetInput()
+        vectors = data.GetPointData().GetVectors()
+        data.GetPointData().SetActiveVectors(None)
+        transformFilter = vtk.vtkTransformFilter()
+        transformFilter.SetInputData(data)
+        transformFilter.SetTransform(T)
+        transformFilter.Update()
+        outputData = transformFilter.GetOutput()
+        data.GetPointData().SetVectors(vectors)
+        outputData.GetPointData().SetVectors(vectors)
+        mapper.SetInputData(outputData)
+
         planeCollection = mapper.GetClippingPlanes()
 
         # We have to transform the hardware clip planes as well

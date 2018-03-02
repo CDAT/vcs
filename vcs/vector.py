@@ -613,10 +613,10 @@ class Gv(vcs.bestMatch):
     """
     One of the following strings:
       off - No scaling is performed on the vector values
-      constant - vector value *  self.scale
-      normalize - vector value /  max_norm
-      constantNNormalize - vector value * self.scale / max_norm
-      linear - map [min_norm, max_norm] to self.scalerange
+      constant: vector value *  self.scale
+      normalize: vector value /  max_norm
+      constantNNormalize: vector value * self.scale / max_norm
+      linear: map [min_norm, max_norm] to self.scalerange
       constantNLinear - map [min_norm, max_norm] to self.scalerange and then multiply by self.scale
     """
     def _getscaletype(self):
