@@ -10,7 +10,8 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
         method = method()
         f = cdms2.open(vcs.sample_data+"/ta_ncep_87-6-88-4.nc")
         data = f("ta", time=slice(0,1), longitude=(12,12,'cob'), squeeze=1)
-        if isinstance(method, vcs.vector.Gv):
+        if isinstance(method, vcs.vector.Gv) or \
+           isinstance(method, vcs.streamline.Gs):
             data2 = data
         else:
             data2 = None
@@ -20,7 +21,8 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
         method = method()
         f = cdms2.open(vcs.sample_data+"/ta_ncep_87-6-88-4.nc")
         data = f("ta", longitude=(12,12,'cob'), latitude=(12, 12, 'cob'), squeeze=1)
-        if isinstance(method, vcs.vector.Gv):
+        if isinstance(method, vcs.vector.Gv) or \
+           isinstance(method, vcs.streamline.Gs):
             data2 = data
         else:
             data2 = None
@@ -28,7 +30,8 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
 
     def axisConvertGmAreaWt(self, method):
         method = method()
-        if isinstance(method, vcs.vector.Gv):
+        if isinstance(method, vcs.vector.Gv) or \
+           isinstance(method, vcs.streamline.Gs):
             data = self.clt("u")
             data2 = self.clt("v")
         elif isinstance(method, vcs.meshfill.Gfm):
@@ -51,11 +54,12 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
 
     def test_areawt(self):
         for method in [
-                vcs.createboxfill,
-                vcs.createisofill,
-                vcs.createisoline,
-                vcs.createmeshfill,
-        #        vcs.createvector,
+                # vcs.createboxfill,
+                # vcs.createisofill,
+                # vcs.createisoline,
+                # vcs.createmeshfill,
+                vcs.createvector,
+                #vcs.createstreamline,
                        ]:
             self.axisConvertGmAreaWt(method)
             if not method in [vcs.createmeshfill,]:
