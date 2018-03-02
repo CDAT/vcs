@@ -539,7 +539,7 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
             vg = wrapDataSetX(vg)
             pts = vg.GetPoints()
             xm, xM, ym, yM, tmp, tmp2 = vg.GetPoints().GetBounds()
-        vg = doWrapData(vg, wc)
+        vg = doWrapData(vg, wc, getattr(gm,"wrap",[0.,360.]))
         pts = vg.GetPoints()
         xm, xM, ym, yM, tmp, tmp2 = vg.GetPoints().GetBounds()
         projection = vcs.elements["projection"][gm.projection]
