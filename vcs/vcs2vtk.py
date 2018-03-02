@@ -1025,7 +1025,7 @@ def doWrapData(data, wc, wrap=[0., 360], fastClip=True):
     # Negative translation
     for i in range(nNeg, nPos):
         for j in range(nNeg, nPos):
-            if i==0 and j==0:
+            if i == 0 and j == 0:
                 continue
             Tpf = vtk.vtkTransformPolyDataFilter()
             Tpf.SetInputData(data)
