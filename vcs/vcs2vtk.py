@@ -1002,55 +1002,35 @@ def doWrapData(data, wc, wrap=[0., 360], fastClip=True):
     appendFilter.Update()
     # X axis wrappping
     Amn, Amx = bounds[0], bounds[1]
+    nX = [0, 0]  # number of translations needed (neg and pos)
     if wrap[1] != 0.:
-        i = 0
         while Amn > xmn:
-            i += 1
+            nX[0] += 1
             Amn -= wrap[1]
-            Tpf = vtk.vtkTransformPolyDataFilter()
-            Tpf.SetInputData(data)
-            T = vtk.vtkTransform()
-            T.Translate(-i * wrap[1], 0, 0)
-            Tpf.SetTransform(T)
-            Tpf.Update()
-            appendFilter.AddInputData(Tpf.GetOutput())
-            appendFilter.Update()
-        i = 0
         while Amx < xmx:
-            i += 1
+            nX[1] += 1
             Amx += wrap[1]
-            Tpf = vtk.vtkTransformPolyDataFilter()
-            Tpf.SetInputData(data)
-            T = vtk.vtkTransform()
-            T.Translate(i * wrap[1], 0, 0)
-            Tpf.SetTransform(T)
-            Tpf.Update()
-            appendFilter.AddInputData(Tpf.GetOutput())
-            appendFilter.Update()
-
-    # Y axis wrapping
     Amn, Amx = bounds[2], bounds[3]
+    nY = [0, 0]  # number of translations needed (neg and pos)
     if wrap[0] != 0.:
-        i = 0
         while Amn > ymn:
-            i += 1
+            nY[0] += 1
             Amn -= wrap[0]
-            Tpf = vtk.vtkTransformPolyDataFilter()
-            Tpf.SetInputData(data)
-            T = vtk.vtkTransform()
-            T.Translate(0, i * wrap[0], 0)
-            Tpf.SetTransform(T)
-            Tpf.Update()
-            appendFilter.AddInputData(Tpf.GetOutput())
-            appendFilter.Update()
-        i = 0
         while Amx < ymx:
-            i += 1
+            nY[1] += 1
             Amx += wrap[0]
+
+    nNeg = -max(nX[0], nY[0])  # Number of negative translation needed
+    nPos = max(nX[1], nY[1]) + 1  # Number of negative translation needed
+    # Negative translation
+    for i in range(nNeg, nPos):
+        for j in range(nNeg, nPos):
+            if i==0 and j==0:
+                continue
             Tpf = vtk.vtkTransformPolyDataFilter()
             Tpf.SetInputData(data)
             T = vtk.vtkTransform()
-            T.Translate(0, -i * wrap[0], 0)
+            T.Translate(i * wrap[1], j * wrap[0], 0)
             Tpf.SetTransform(T)
             Tpf.Update()
             appendFilter.AddInputData(Tpf.GetOutput())
