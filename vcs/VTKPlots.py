@@ -13,6 +13,7 @@ import inspect
 from . import VTKAnimate
 from . import vcsvtk
 
+index = 0
 
 def _makeEven(val):
     if (val & 0x1):
@@ -1430,7 +1431,7 @@ x.geometry(1200,800)
 
     def fitToViewport(self, Actor, vp, wc=None, geoBounds=None, geo=None, priority=None,
                       create_renderer=False, add_actor=True):
-
+        global index
         # Data range in World Coordinates
         if priority == 0:
             return (None, 1, 1)
@@ -1513,6 +1514,7 @@ x.geometry(1200,800)
         T.Scale(xScale, yScale, 1.)
         mapper = Actor.GetMapper()
         data = mapper.GetInput()
+        vcs2vtk.debugWriteGrid(data, "data" + str(index))
         vectors = data.GetPointData().GetVectors()
         data.GetPointData().SetActiveVectors(None)
         transformFilter = vtk.vtkTransformFilter()
@@ -1522,6 +1524,8 @@ x.geometry(1200,800)
         outputData = transformFilter.GetOutput()
         data.GetPointData().SetVectors(vectors)
         outputData.GetPointData().SetVectors(vectors)
+        vcs2vtk.debugWriteGrid(outputData, "outputData" + str(index))
+        index = index + 1
         mapper.SetInputData(outputData)
 
         planeCollection = mapper.GetClippingPlanes()
