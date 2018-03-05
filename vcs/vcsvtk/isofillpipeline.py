@@ -148,7 +148,8 @@ class IsofillPipeline(Pipeline2D):
                 c = self.getColorIndexOrRGBA(_colorMap, tmpColors[ct][0])
 
                 # Get the transformed contour data
-                transform = act.GetUserTransform()
+                transform = vtk.vtkTransform()
+                transform.Scale(xScale, yScale, 1.)
                 transformFilter = vtk.vtkTransformFilter()
                 transformFilter.SetInputData(mapper.GetInput())
                 transformFilter.SetTransform(transform)

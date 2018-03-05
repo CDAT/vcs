@@ -1479,7 +1479,8 @@ def prepFillarea(context, renWin, farea, cmap=None):
                                                 priority=farea.priority,
                                                 create_renderer=True)
     actors.append((a, geo))
-    transform = a.GetUserTransform()
+    transform = vtk.vtkTransform()
+    transform.Scale(xscale, yscale, 1.)
 
     # Patterns/hatches support
     for i, pd in pattern_polydatas:
@@ -1721,10 +1722,9 @@ def setMarkerColor(p, marker, c, cmap=None):
     p.SetOpacity(color[-1])
 
 
-def scaleMarkerGlyph(g, gs, pd, a):
+def scaleMarkerGlyph(g, gs, pd, scale):
     # Invert the scale of the actor's transform.
     glyphTransform = vtk.vtkTransform()
-    scale = a.GetUserTransform().GetScale()
     xComp = scale[0]
     scale = [xComp / float(val) for val in scale]
     glyphTransform.Scale(scale)
