@@ -177,11 +177,6 @@ class VectorPipeline(Pipeline2D):
             create_renderer=True)
         # We get the scaled data.
         newPolyData = mapper.GetInput()
-        if self._gm.scaletype == 'normalize' or self._gm.scaletype == 'constantNNormalize':
-            length = newPolyData.GetLength()
-            # max size of a glyph
-            length = length / 50
-            scaleFactor = scaleFactor * length
         glyphFilter.SetScaleFactor(scaleFactor)
         glyphFilter.SetInputData(newPolyData)
         glyphFilter.Update()

@@ -206,7 +206,7 @@ class MeshfillPipeline(Pipeline2D):
 
                     # Get the transformed contour data
                     transform = vtk.vtkTransform()
-                    transform.Scale(xscale, yscale, 1.)
+                    transform.Scale(xScale, yScale, 1.)
                     transformFilter = vtk.vtkTransformFilter()
                     transformFilter.SetInputData(mapper.GetInput())
                     transformFilter.SetTransform(transform)
