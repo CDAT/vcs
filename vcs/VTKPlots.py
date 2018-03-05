@@ -714,7 +714,7 @@ class VTKVCSBackend(object):
                 returned["vtk_backend_line_actors"] = actors
                 create_renderer = True
                 for act, geo in actors:
-                    ren = self.fitToViewport(
+                    ren, xScale, yScale = self.fitToViewport(
                         act,
                         gm.viewport,
                         wc=gm.worldcoordinate,
@@ -730,7 +730,7 @@ class VTKVCSBackend(object):
                 returned["vtk_backend_marker_actors"] = actors
                 create_renderer = True
                 for g, gs, pd, act, geo in actors:
-                    ren = self.fitToViewport(
+                    ren, xScale, yScale = self.fitToViewport(
                         act,
                         gm.viewport,
                         wc=gm.worldcoordinate,
@@ -739,8 +739,8 @@ class VTKVCSBackend(object):
                         priority=gm.priority,
                         create_renderer=create_renderer)
                     create_renderer = False
-                    if pd is None and act.GetUserTransform():
-                        vcs2vtk.scaleMarkerGlyph(g, gs, pd, act)
+                    if pd is None:
+                        vcs2vtk.scaleMarkerGlyph(g, gs, pd, [xScale, yScale, 1.0])
 
         elif gtype == "fillarea":
             if gm.priority != 0:
@@ -1512,7 +1512,12 @@ x.geometry(1200,800)
 
         T = vtk.vtkTransform()
         T.Scale(xScale, yScale, 1.)
+
         mapper = Actor.GetMapper()
+
+
+        #Actor.SetUserTransform(T)
+
         data = mapper.GetInput()
         vcs2vtk.debugWriteGrid(data, "data" + str(index))
         vectors = data.GetPointData().GetVectors()

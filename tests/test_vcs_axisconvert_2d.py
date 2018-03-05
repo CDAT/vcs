@@ -54,12 +54,12 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
 
     def test_areawt(self):
         for method in [
-                # vcs.createboxfill,
-                # vcs.createisofill,
-                # vcs.createisoline,
-                # vcs.createmeshfill,
-                # vcs.createvector,
-                vcs.createstreamline,
+                vcs.createboxfill,
+                vcs.createisofill,
+                vcs.createisoline,
+                vcs.createmeshfill,
+                vcs.createvector,
+                # vcs.createstreamline,
                        ]:
             self.axisConvertGmAreaWt(method)
             if not method in [vcs.createmeshfill,]:
