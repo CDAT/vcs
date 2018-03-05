@@ -602,7 +602,7 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
     vg.GetCellData().SetGlobalIds(globalIds)
 
     debugWriteGrid(vg, "vg")
-    
+
     out = {"vtk_backend_grid": vg,
            "xm": xm,
            "xM": xM,
