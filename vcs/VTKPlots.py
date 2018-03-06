@@ -730,6 +730,10 @@ class VTKVCSBackend(object):
                 returned["vtk_backend_marker_actors"] = actors
                 create_renderer = True
                 for g, gs, pd, act, geo in actors:
+                    data = g.GetInput()
+                    mapper = act.GetMapper()
+                    # scale the data not the markers
+                    mapper.SetInputData(data)
                     ren, xScale, yScale = self.fitToViewport(
                         act,
                         gm.viewport,
@@ -739,8 +743,13 @@ class VTKVCSBackend(object):
                         priority=gm.priority,
                         create_renderer=create_renderer)
                     create_renderer = False
-                    if pd is None:
-                        vcs2vtk.scaleMarkerGlyph(g, gs, pd, [xScale, yScale, 1.0])
+                    # get the scaled data
+                    scaledData = mapper.GetInput()
+                    g.SetInputData(scaledData)
+                    g.Update()
+                    # set the markers to be rendered
+                    mapper.SetInputData(g.GetOutput())
+                    #mapper.Update()
 
         elif gtype == "fillarea":
             if gm.priority != 0:
