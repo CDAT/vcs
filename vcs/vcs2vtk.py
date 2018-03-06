@@ -1442,6 +1442,9 @@ def prepFillarea(context, renWin, farea, cmap=None):
     # Transform points
     geo, pts = project(pts, farea.projection, farea.worldcoordinate)
     polygonPolyData.SetPoints(pts)
+
+    debugWriteGrid(polygonPolyData, "fillarea")
+
     # for concave polygons
     tris = vtk.vtkTriangleFilter()
     tris.SetInputData(polygonPolyData)

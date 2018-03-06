@@ -1525,8 +1525,9 @@ x.geometry(1200,800)
         mapper = Actor.GetMapper()
 
 
-        #Actor.SetUserTransform(T)
+        # Actor.SetUserTransform(T)
 
+        mapper.Update()
         data = mapper.GetInput()
         vcs2vtk.debugWriteGrid(data, "data" + str(index))
         vectors = data.GetPointData().GetVectors()
