@@ -1522,7 +1522,7 @@ def prepGlyph(g, marker, index=0):
         gs.SetGlyphTypeToCircle()
         gs.FilledOn()
         gs.SetResolution(25)
-        s /= 5.  # We want tiny dots not filled circles
+        s /= 300.  # We want tiny dots not filled circles
     elif t == 'circle':
         gs.SetGlyphTypeToCircle()
         gs.FilledOff()
@@ -1700,24 +1700,6 @@ def setMarkerColor(p, marker, c, cmap=None):
         color = c
     p.SetColor([C / 100. for C in color[:3]])
     p.SetOpacity(color[-1])
-
-
-def scaleMarkerGlyph(g, gs, pd, scale):
-    # Invert the scale of the actor's transform.
-    glyphTransform = vtk.vtkTransform()
-    xComp = scale[0]
-    scale = [xComp / float(val) for val in scale]
-    glyphTransform.Scale(scale)
-
-    glyphFixer = vtk.vtkTransformPolyDataFilter()
-    glyphFixer.SetTransform(glyphTransform)
-
-    if pd is None:
-        glyphFixer.SetInputConnection(gs.GetOutputPort())
-    else:
-        glyphFixer.SetInputData(pd)
-        g.SetSourceData(None)
-    g.SetSourceConnection(glyphFixer.GetOutputPort())
 
 
 def prepMarker(renWin, marker, cmap=None):
