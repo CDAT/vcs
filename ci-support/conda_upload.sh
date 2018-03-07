@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-PKG_NAME=vcs
+PKG_NAME=dv3d
 USER=uvcdat
 VERSION="2.12"
 echo "Trying to upload conda"
