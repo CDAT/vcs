@@ -101,6 +101,8 @@ class VTKVCSBackend(object):
             self.reRender = False
             self.oldCursor = None
 
+        self._animationActorTransforms = {}
+
     def setAnimationStepper(self, stepper):
         for plot in list(self.plotApps.values()):
             plot.setAnimationStepper(stepper)
@@ -408,6 +410,7 @@ class VTKVCSBackend(object):
                 r, g, b = [c / 255. for c in self.canvas.backgroundcolor]
                 ren.SetBackground(r, g, b)
             ren = renderers.GetNextItem()
+        self._animationActorTransforms = {}
         self.showGUI(render=False)
 
         if hasValidRenderer and self.renWin.IsDrawable() and render:
@@ -1438,9 +1441,64 @@ x.geometry(1200,800)
                 self.setLayer(self.logoRenderer, 1)
                 self.renWin.AddRenderer(self.logoRenderer)
 
+    def _applyTransformationToMapperInput(self, T, mapper):
+        global index
+
+        mapper.Update()
+        data = mapper.GetInput()
+        vcs2vtk.debugWriteGrid(data, "data" + str(index))
+        vectors = data.GetPointData().GetVectors()
+        data.GetPointData().SetActiveVectors(None)
+        transformFilter = vtk.vtkTransformFilter()
+        transformFilter.SetInputData(data)
+        transformFilter.SetTransform(T)
+        transformFilter.Update()
+        outputData = transformFilter.GetOutput()
+        data.GetPointData().SetVectors(vectors)
+        outputData.GetPointData().SetVectors(vectors)
+        vcs2vtk.debugWriteGrid(outputData, "outputData" + str(index))
+        index = index + 1
+        mapper.SetInputData(outputData)
+
+        planeCollection = mapper.GetClippingPlanes()
+
+        # We have to transform the hardware clip planes as well
+        if (planeCollection is not None):
+            planeCollection.InitTraversal()
+            plane = planeCollection.GetNextItem()
+            while (plane):
+                origin = plane.GetOrigin()
+                inOrigin = [origin[0], origin[1], origin[2], 1.0]
+                outOrigin = [origin[0], origin[1], origin[2], 1.0]
+
+                normal = plane.GetNormal()
+                inNormal = [normal[0], normal[1], normal[2], 0.0]
+                outNormal = [normal[0], normal[1], normal[2], 0.0]
+
+                T.MultiplyPoint(inOrigin, outOrigin)
+                if (outOrigin[3] != 0.0):
+                    outOrigin[0] /= outOrigin[3]
+                    outOrigin[1] /= outOrigin[3]
+                    outOrigin[2] /= outOrigin[3]
+                plane.SetOrigin(outOrigin[0], outOrigin[1], outOrigin[2])
+
+                # For normal matrix, compute the transpose of inverse
+                normalTransform = vtk.vtkTransform()
+                normalTransform.DeepCopy(T)
+                mat = vtk.vtkMatrix4x4()
+                normalTransform.GetTranspose(mat)
+                normalTransform.GetInverse(mat)
+                normalTransform.SetMatrix(mat)
+                normalTransform.MultiplyPoint(inNormal, outNormal)
+                if (outNormal[3] != 0.0):
+                    outNormal[0] /= outNormal[3]
+                    outNormal[1] /= outNormal[3]
+                    outNormal[2] /= outNormal[3]
+                plane.SetNormal(outNormal[0], outNormal[1], outNormal[2])
+                plane = planeCollection.GetNextItem()
+
     def fitToViewport(self, Actor, vp, wc=None, geoBounds=None, geo=None, priority=None,
                       create_renderer=False, add_actor=True):
-        global index
         # Data range in World Coordinates
         if priority == 0:
             return (None, 1, 1)
@@ -1524,61 +1582,10 @@ x.geometry(1200,800)
 
         mapper = Actor.GetMapper()
 
-
+        self._animationActorTransforms[Actor] = T
         # Actor.SetUserTransform(T)
 
-        mapper.Update()
-        data = mapper.GetInput()
-        vcs2vtk.debugWriteGrid(data, "data" + str(index))
-        vectors = data.GetPointData().GetVectors()
-        data.GetPointData().SetActiveVectors(None)
-        transformFilter = vtk.vtkTransformFilter()
-        transformFilter.SetInputData(data)
-        transformFilter.SetTransform(T)
-        transformFilter.Update()
-        outputData = transformFilter.GetOutput()
-        data.GetPointData().SetVectors(vectors)
-        outputData.GetPointData().SetVectors(vectors)
-        vcs2vtk.debugWriteGrid(outputData, "outputData" + str(index))
-        index = index + 1
-        mapper.SetInputData(outputData)
-
-        planeCollection = mapper.GetClippingPlanes()
-
-        # We have to transform the hardware clip planes as well
-        if (planeCollection is not None):
-            planeCollection.InitTraversal()
-            plane = planeCollection.GetNextItem()
-            while (plane):
-                origin = plane.GetOrigin()
-                inOrigin = [origin[0], origin[1], origin[2], 1.0]
-                outOrigin = [origin[0], origin[1], origin[2], 1.0]
-
-                normal = plane.GetNormal()
-                inNormal = [normal[0], normal[1], normal[2], 0.0]
-                outNormal = [normal[0], normal[1], normal[2], 0.0]
-
-                T.MultiplyPoint(inOrigin, outOrigin)
-                if (outOrigin[3] != 0.0):
-                    outOrigin[0] /= outOrigin[3]
-                    outOrigin[1] /= outOrigin[3]
-                    outOrigin[2] /= outOrigin[3]
-                plane.SetOrigin(outOrigin[0], outOrigin[1], outOrigin[2])
-
-                # For normal matrix, compute the transpose of inverse
-                normalTransform = vtk.vtkTransform()
-                normalTransform.DeepCopy(T)
-                mat = vtk.vtkMatrix4x4()
-                normalTransform.GetTranspose(mat)
-                normalTransform.GetInverse(mat)
-                normalTransform.SetMatrix(mat)
-                normalTransform.MultiplyPoint(inNormal, outNormal)
-                if (outNormal[3] != 0.0):
-                    outNormal[0] /= outNormal[3]
-                    outNormal[1] /= outNormal[3]
-                    outNormal[2] /= outNormal[3]
-                plane.SetNormal(outNormal[0], outNormal[1], outNormal[2])
-                plane = planeCollection.GetNextItem()
+        self._applyTransformationToMapperInput(T, mapper)
 
         if add_actor:
             Renderer.AddActor(Actor)
@@ -1662,6 +1669,8 @@ x.geometry(1200,800)
                             if rg[2]:
                                 mapper.SetScalarModeToUseCellData()
                             mapper.SetScalarRange(rg[0], rg[1])
+                    if act in self._animationActorTransforms:
+                        self._applyTransformationToMapperInput(self._animationActorTransforms[act], mapper)
                     act.SetMapper(mapper)
                     i += 1
 
