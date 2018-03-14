@@ -2,16 +2,15 @@
 PKG_NAME=vcs
 USER=cdat
 VERSION="2.12"
+ESMF_CHANNEL="nesii/label/dev-esmf"
 echo "Trying to upload conda"
 if [ `uname` == "Linux" ]; then
     OS=linux-64
     echo "Linux OS"
     conda update -y -q conda
-    ESMF_CHANNEL="nesii/label/dev-esmf"
 else
     echo "Mac OS"
     OS=osx-64
-    ESMF_CHANNEL="nadeau1"
 fi
 
 mkdir ~/conda-bld
