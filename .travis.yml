@@ -12,8 +12,8 @@ before_install:
 script:
 - export UVCDAT_ANONYMOUS_LOG=False
 - export UVCDAT_SETUP_PATH=${HOME}
-- conda create -q -n py2 -c cdat/label/nightly -c uvcdat/label/nightly -c conda-forge -c uvcdat cdms2 cdat_info udunits2 nose flake8 genutil matplotlib mesalib image-compare dv3d cdutil
-- conda create -q -n py3 -c nesii/channel/dev-esmf  -c cdat/label/nightly -c uvcdat/label/nightly -c conda-forge -c uvcdat "python>3" cdms2 cdat_info udunits2 nose flake8 genutil matplotlib mesalib image-compare dv3d cdutil cdtime
+- conda create -q -n py2 -c cdat/label/nightly -c nesii/label/dev-esmf -c conda-forge -c uvcdat cdms2 cdat_info udunits2 nose flake8 genutil matplotlib mesalib image-compare dv3d cdutil "proj4<5" "python<3"
+- conda create -q -n py3 -c cdat/label/nightly -c nesii/label/dev-esmf -c conda-forge -c uvcdat cdms2 cdat_info udunits2 nose flake8 genutil matplotlib mesalib image-compare dv3d cdutil cdtime "proj4<5" "python>3"
 - echo $TRAVIS_BRANCH
 - export TRAVIS_PR_BRANCH=$TRAVIS_BRANCH
 - echo $TRAVIS_EVENT_TYPE
