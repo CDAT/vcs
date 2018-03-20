@@ -119,15 +119,16 @@ class BoxfillPipeline(Pipeline2D):
                     c = self.getColorIndexOrRGBA(_colorMap, tmpColors[cti][ctj])
 
                     # Get the transformed contour data
-                    transform = vtk.vtkTransform()
-                    transform.Scale(xScale, yScale, 1.)
-                    transformFilter = vtk.vtkTransformFilter()
-                    transformFilter.SetInputData(mapper.GetInput())
-                    transformFilter.SetTransform(transform)
-                    transformFilter.Update()
+                    # transform = vtk.vtkTransform()
+                    # transform.Scale(xScale, yScale, 1.)
+                    # transformFilter = vtk.vtkTransformFilter()
+                    # transformFilter.SetInputData(mapper.GetInput())
+                    # transformFilter.SetTransform(transform)
+                    # transformFilter.Update()
 
                     patact = fillareautils.make_patterned_polydata(
-                        transformFilter.GetOutput(),
+                        # transformFilter.GetOutput(),
+                        mapper.GetInput(),
                         fillareastyle=_style,
                         fillareaindex=self._customBoxfillArgs["tmpIndices"][cti],
                         fillareacolors=c,

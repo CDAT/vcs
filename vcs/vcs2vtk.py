@@ -15,7 +15,7 @@ from .vcsvtk import fillareautils
 import sys
 import numbers
 
-_DEBUG_VTK = True
+_DEBUG_VTK = False
 
 
 def debugWriteGrid(grid, name):
