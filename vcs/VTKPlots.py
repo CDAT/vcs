@@ -1441,11 +1441,8 @@ x.geometry(1200,800)
                 self.setLayer(self.logoRenderer, 1)
                 self.renWin.AddRenderer(self.logoRenderer)
 
-    def _applyTransformationToMapperInput(self, T, mapper):
+    def _applyTransformationToDataset(self, T, data):
         global index
-
-        mapper.Update()
-        data = mapper.GetInput()
         vcs2vtk.debugWriteGrid(data, "data" + str(index))
         vectors = data.GetPointData().GetVectors()
         data.GetPointData().SetActiveVectors(None)
@@ -1458,6 +1455,12 @@ x.geometry(1200,800)
         outputData.GetPointData().SetVectors(vectors)
         vcs2vtk.debugWriteGrid(outputData, "outputData" + str(index))
         index = index + 1
+        return outputData
+
+    def _applyTransformationToMapperInput(self, T, mapper):
+        mapper.Update()
+        data = mapper.GetInput()
+        outputData = self._applyTransformationToDataset(T, data)
         mapper.SetInputData(outputData)
 
         planeCollection = mapper.GetClippingPlanes()
