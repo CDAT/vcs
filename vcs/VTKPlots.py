@@ -15,6 +15,7 @@ from . import vcsvtk
 
 index = 0
 
+
 def _makeEven(val):
     if (val & 0x1):
         val -= 1
@@ -752,7 +753,7 @@ class VTKVCSBackend(object):
                     g.Update()
                     # set the markers to be rendered
                     mapper.SetInputData(g.GetOutput())
-                    #mapper.Update()
+                    # mapper.Update()
 
         elif gtype == "fillarea":
             if gm.priority != 0:
