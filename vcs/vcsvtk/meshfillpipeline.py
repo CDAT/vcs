@@ -290,7 +290,7 @@ class MeshfillPipeline(Pipeline2D):
         projection = vcs.elements["projection"][self._gm.projection]
         kwargs['xaxisconvert'] = self._gm.xaxisconvert
         kwargs['yaxisconvert'] = self._gm.yaxisconvert
-        self._context().plotContinents(self._plot_kargs.get("continents", 1),
+        self._context().plotContinents(self._plot_kargs.get("continents", self._useContinents),
                                        plotting_dataset_bounds, projection,
                                        self._dataWrapModulo,
                                        vp, self._template.data.priority, **kwargs)
