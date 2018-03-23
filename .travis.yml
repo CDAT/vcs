@@ -12,8 +12,8 @@ before_install:
 script:
 - export UVCDAT_ANONYMOUS_LOG=False
 - export UVCDAT_SETUP_PATH=${HOME}
-- conda create -q -n py2 -c nesii/label/dev-esmf -c conda-forge -c cdat/label/v80 vcs image-compare nose flake8 "python<3"
-- conda create -q -n py3 -c nesii/label/dev-esmf -c conda-forge -c cdat/label/v80 vcs image-compare nose flake8 "python>3"
+- conda create -q -n py2 -c nesii/label/dev-esmf -c conda-forge -c cdat/label/v80 vcs image-compare nose flake8 mesalib "python<3"
+- conda create -q -n py3 -c nesii/label/dev-esmf -c conda-forge -c cdat/label/v80 vcs image-compare nose flake8 mesalib "python>3"
 - echo $TRAVIS_BRANCH
 - export TRAVIS_PR_BRANCH=$TRAVIS_BRANCH
 - echo $TRAVIS_EVENT_TYPE
