@@ -11,10 +11,6 @@ source activate py3
 conda list
 python run_tests.py -n 2 --no-vtk-ui
 RESULT=$(( $RESULT + $? ))
-cd docs
-make doctest
-RESULT=$(( $RESULT + $? ))
-cd ..
 echo "py3 test command exit result:",$RESULT
 exit $RESULT
 
