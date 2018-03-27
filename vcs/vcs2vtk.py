@@ -1521,6 +1521,21 @@ def prepGlyph(g, marker, index=0):
     gs = vtk.vtkGlyphSource2D()
     pd = None
 
+    windowWidth = windowGeometry['width']
+    windowHeight = windowGeometry['height']
+    dx = marker.worldcoordinate[1] - marker.worldcoordinate[0]
+    dy = marker.worldcoordinate[3] - marker.worldcoordinate[2]
+    worldDim = dx if dx > dy else dy
+    windowDim = windowWidth if dx > dy else windowHeight
+    bias = 0
+    finalScale = worldDim / windowDim * (s + bias)
+    print('t = %s, s = %d' % (t, s))
+    print('dx = %f' % dx)
+    print('dy = %f' % dy)
+    print('windowWidth = %d' % windowWidth)
+    print('windowHeight = %d' % windowHeight)
+    print('finalScale = %f' % finalScale)
+
     if t == 'dot':
         gs.SetGlyphTypeToCircle()
         gs.FilledOn()
@@ -1557,7 +1572,7 @@ def prepGlyph(g, marker, index=0):
         elif t[9] == "u":
             gs.SetRotationAngle(0)
     elif t == "hurricane":
-        scale_factor = s / 275.
+        scale_factor = finalScale / 2   # Hurricane appears bigger than others
         ds = vtk.vtkDiskSource()
         ds.SetInnerRadius(.55 * scale_factor)
         ds.SetOuterRadius(1.01 * scale_factor)
@@ -1622,7 +1637,7 @@ def prepGlyph(g, marker, index=0):
         g.SetSourceData(apd.GetOutput())
     elif t[:4] == "star":
         np = 5
-        points = starPoints(s*.006, 0, 0, np)
+        points = starPoints(finalScale, 0, 0, np)
 
         pts = vtk.vtkPoints()
         # Add all perimeter points
@@ -1659,7 +1674,7 @@ def prepGlyph(g, marker, index=0):
         polys = vtk.vtkCellArray()
         lines = vtk.vtkCellArray()
         # Lines first
-        scale_json_values = s / 30.
+        scale_json_values = s / 25
         for l in params["line"]:
             line = genPoly(list(zip(*l)), pts, filled=False, scale=scale_json_values)
             lines.InsertNextCell(line)
