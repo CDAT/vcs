@@ -2377,7 +2377,7 @@ def getworldcoordinates(gm, X, Y):
             >>> yax=v.getAxis(2) # Y axis
             >>> box=vcs.getboxfill()
             >>> vcs.getworldcoordinates(box, xax, yax)
-            [-180.0, 180.0, -88.288399, 88.288399]
+            [-180.0, 180.0, -88.2884, 88.2884]
 
     :param gm: A VCS graphics method object to get worldcoordinates for.
     :type gm: graphics method object
