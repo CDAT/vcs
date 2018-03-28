@@ -1,13 +1,12 @@
 import vtk
 from .patterns import pattern_list
 
+
 def computeResolutionAndScale(renderer, pt1, pt2, xRange, yRange, pxScale=None, pxSpacing=None):
     # Be smart about calculating the resolution by taking the screen pixel
     # size into account
     # First, convert a distance of one unit screen distance to data
     # coordinates
-    point1 = [1.0, 1.0, 0.0]
-    point2 = [0.0, 0.0, 0.0]
     renderer.SetDisplayPoint(pt1)
     renderer.DisplayToWorld()
     wpoint1 = renderer.GetWorldPoint()

@@ -733,9 +733,7 @@ class VTKVCSBackend(object):
                     self.findOrCreateUniqueRenderer(None, gm.viewport,
                                                     gm.worldcoordinate, None,
                                                     None, gm.priority, True)
-                actors = vcs2vtk.prepMarker(ren, gm,
-                                            self.canvas.geometry(),
-                                            cmap=self.canvas.colormap)
+                actors = vcs2vtk.prepMarker(ren, gm, cmap=self.canvas.colormap)
                 returned["vtk_backend_marker_actors"] = actors
                 for g, gs, pd, act, geo in actors:
                     data = g.GetInput()
@@ -756,7 +754,6 @@ class VTKVCSBackend(object):
                     g.Update()
                     # set the markers to be rendered
                     mapper.SetInputData(g.GetOutput())
-                    # mapper.Update()
 
         elif gtype == "fillarea":
             if gm.priority != 0:
@@ -1514,7 +1511,6 @@ x.geometry(1200,800)
             if Actor is not None:
                 Xrg = list(Actor.GetXRange())
                 Yrg = list(Actor.GetYRange())
-                print('****************** fitToViewport() is using actor range instead of world coordinates *******************')
             else:
                 raise Exception('Cannot find unique renderer without an actor or world coords range')
         else:

@@ -1516,44 +1516,28 @@ def genPoly(coords, pts, filled=True, scale=1.):
     return poly
 
 
-def prepGlyph(ren, g, marker, windowGeometry, index=0):
+def prepGlyph(ren, g, marker, index=0):
     t, s = marker.type[index], marker.size[index]
     gs = vtk.vtkGlyphSource2D()
     pd = None
 
-    point1 = [ 0.0, 0.0, 0.0 ]
+    point1 = [0.0, 0.0, 0.0]
     side = 1 / math.sqrt(2)
-    point2 = [ side, side, 0.0 ]
+    point2 = [side, side, 0.0]
 
-    ww = windowGeometry['width']
-    wh = windowGeometry['height']
     dx = marker.worldcoordinate[1] - marker.worldcoordinate[0]
     dy = marker.worldcoordinate[3] - marker.worldcoordinate[2]
-    bias = 10
+    offset = 3
 
-    unused, scale = fillareautils.computeResolutionAndScale(ren, point1, point2, dx, dy, (s + bias))
-
-    # worldDim = dx if dx > dy else dy
-    # windowDim = ww if dx > dy else wh
-    worldDim = math.sqrt((dx * dx) + (dy * dy))
-    windowDim = math.sqrt((ww * ww) + (wh * wh))
-
-    finalScale = worldDim / windowDim * (s + bias)
-    print('t = %s, s = %d' % (t, s))
-    print('dx = %f' % dx)
-    print('dy = %f' % dy)
-    print('ww = %d' % ww)
-    print('wh = %d' % wh)
-    print('finalScale = %f' % finalScale)
-    print('smart scale = [%f, %f]' % (scale[0], scale[1]))
-
+    unused, scale = fillareautils.computeResolutionAndScale(ren, point1, point2, dx, dy, (s + offset))
     finalScale = scale[0]
+
+    print('prepGlyph => marker type: %s, size: %d, computed scale: [%f, %f]' % (t, s, scale[0], scale[1]))
 
     if t == 'dot':
         gs.SetGlyphTypeToCircle()
         gs.FilledOn()
         gs.SetResolution(25)
-        s /= 300.  # We want tiny dots not filled circles
     elif t == 'circle':
         gs.SetGlyphTypeToCircle()
         gs.FilledOff()
@@ -1687,7 +1671,8 @@ def prepGlyph(ren, g, marker, windowGeometry, index=0):
         polys = vtk.vtkCellArray()
         lines = vtk.vtkCellArray()
         # Lines first
-        scale_json_values = s / 25
+        # scale_json_values = s / 25
+        scale_json_values = finalScale * 4
         for l in params["line"]:
             line = genPoly(list(zip(*l)), pts, filled=False, scale=scale_json_values)
             lines.InsertNextCell(line)
@@ -1733,7 +1718,7 @@ def setMarkerColor(p, marker, c, cmap=None):
     p.SetOpacity(color[-1])
 
 
-def prepMarker(ren, marker, windowGeometry, cmap=None):
+def prepMarker(ren, marker, cmap=None):
     n = prepPrimitive(marker)
     if n == 0:
         return []
@@ -1756,7 +1741,7 @@ def prepMarker(ren, marker, windowGeometry, cmap=None):
 
         #  Type
         # Ok at this point generates the source for glpyh
-        gs, pd = prepGlyph(ren, g, marker, windowGeometry, index=i)
+        gs, pd = prepGlyph(ren, g, marker, index=i)
         g.SetInputData(markers)
 
         a = vtk.vtkActor()
