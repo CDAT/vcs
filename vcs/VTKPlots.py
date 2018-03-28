@@ -1588,23 +1588,22 @@ x.geometry(1200,800)
 
     def fitToViewport(self, Actor, vp, wc=None, geoBounds=None, geo=None, priority=None,
                       create_renderer=False, add_actor=True):
-
         (Renderer, xScale, yScale) = \
             self.findOrCreateUniqueRenderer(Actor, vp, wc, geoBounds, geo,
                                             priority, create_renderer)
 
-        T = vtk.vtkTransform()
-        T.Scale(xScale, yScale, 1.)
+        if Renderer is not None:
+            T = vtk.vtkTransform()
+            T.Scale(xScale, yScale, 1.)
 
-        mapper = Actor.GetMapper()
+            mapper = Actor.GetMapper()
 
-        self._animationActorTransforms[Actor] = T
-        # Actor.SetUserTransform(T)
+            self._animationActorTransforms[Actor] = T
+            self._applyTransformationToMapperInput(T, mapper)
 
-        self._applyTransformationToMapperInput(T, mapper)
+            if add_actor:
+                Renderer.AddActor(Actor)
 
-        if add_actor:
-            Renderer.AddActor(Actor)
         return (Renderer, xScale, yScale)
 
     def update_input(self, vtkobjects, array1, array2=None, update=True):
