@@ -1516,25 +1516,38 @@ def genPoly(coords, pts, filled=True, scale=1.):
     return poly
 
 
-def prepGlyph(g, marker, index=0):
+def prepGlyph(ren, g, marker, windowGeometry, index=0):
     t, s = marker.type[index], marker.size[index]
     gs = vtk.vtkGlyphSource2D()
     pd = None
 
-    windowWidth = windowGeometry['width']
-    windowHeight = windowGeometry['height']
+    point1 = [ 0.0, 0.0, 0.0 ]
+    side = 1 / math.sqrt(2)
+    point2 = [ side, side, 0.0 ]
+
+    ww = windowGeometry['width']
+    wh = windowGeometry['height']
     dx = marker.worldcoordinate[1] - marker.worldcoordinate[0]
     dy = marker.worldcoordinate[3] - marker.worldcoordinate[2]
-    worldDim = dx if dx > dy else dy
-    windowDim = windowWidth if dx > dy else windowHeight
-    bias = 0
+    bias = 10
+
+    unused, scale = fillareautils.computeResolutionAndScale(ren, point1, point2, dx, dy, (s + bias))
+
+    # worldDim = dx if dx > dy else dy
+    # windowDim = ww if dx > dy else wh
+    worldDim = math.sqrt((dx * dx) + (dy * dy))
+    windowDim = math.sqrt((ww * ww) + (wh * wh))
+
     finalScale = worldDim / windowDim * (s + bias)
     print('t = %s, s = %d' % (t, s))
     print('dx = %f' % dx)
     print('dy = %f' % dy)
-    print('windowWidth = %d' % windowWidth)
-    print('windowHeight = %d' % windowHeight)
+    print('ww = %d' % ww)
+    print('wh = %d' % wh)
     print('finalScale = %f' % finalScale)
+    print('smart scale = [%f, %f]' % (scale[0], scale[1]))
+
+    finalScale = scale[0]
 
     if t == 'dot':
         gs.SetGlyphTypeToCircle()
@@ -1720,7 +1733,7 @@ def setMarkerColor(p, marker, c, cmap=None):
     p.SetOpacity(color[-1])
 
 
-def prepMarker(renWin, marker, cmap=None):
+def prepMarker(ren, marker, windowGeometry, cmap=None):
     n = prepPrimitive(marker)
     if n == 0:
         return []
@@ -1743,7 +1756,7 @@ def prepMarker(renWin, marker, cmap=None):
 
         #  Type
         # Ok at this point generates the source for glpyh
-        gs, pd = prepGlyph(g, marker, index=i)
+        gs, pd = prepGlyph(ren, g, marker, windowGeometry, index=i)
         g.SetInputData(markers)
 
         a = vtk.vtkActor()

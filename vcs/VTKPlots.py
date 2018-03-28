@@ -729,10 +729,14 @@ class VTKVCSBackend(object):
                     create_renderer = False
         elif gtype == "marker":
             if gm.priority != 0:
-                actors = vcs2vtk.prepMarker(self.renWin, gm,
+                ren, xScale, yScale = \
+                    self.findOrCreateUniqueRenderer(None, gm.viewport,
+                                                    gm.worldcoordinate, None,
+                                                    None, gm.priority, True)
+                actors = vcs2vtk.prepMarker(ren, gm,
+                                            self.canvas.geometry(),
                                             cmap=self.canvas.colormap)
                 returned["vtk_backend_marker_actors"] = actors
-                create_renderer = True
                 for g, gs, pd, act, geo in actors:
                     data = g.GetInput()
                     mapper = act.GetMapper()
@@ -745,8 +749,7 @@ class VTKVCSBackend(object):
                         geoBounds=None,
                         geo=None,
                         priority=gm.priority,
-                        create_renderer=create_renderer)
-                    create_renderer = False
+                        create_renderer=False)
                     # get the scaled data
                     scaledData = mapper.GetInput()
                     g.SetInputData(scaledData)
@@ -1501,15 +1504,19 @@ x.geometry(1200,800)
                 plane.SetNormal(outNormal[0], outNormal[1], outNormal[2])
                 plane = planeCollection.GetNextItem()
 
-    def fitToViewport(self, Actor, vp, wc=None, geoBounds=None, geo=None, priority=None,
-                      create_renderer=False, add_actor=True):
+    def findOrCreateUniqueRenderer(self, Actor, vp, wc, geoBounds=None,
+                                   geo=None, priority=None, create_renderer=False):
         # Data range in World Coordinates
         if priority == 0:
             return (None, 1, 1)
         vp = tuple(vp)
         if wc is None:
-            Xrg = list(Actor.GetXRange())
-            Yrg = list(Actor.GetYRange())
+            if Actor is not None:
+                Xrg = list(Actor.GetXRange())
+                Yrg = list(Actor.GetYRange())
+                print('****************** fitToViewport() is using actor range instead of world coordinates *******************')
+            else:
+                raise Exception('Cannot find unique renderer without an actor or world coords range')
         else:
             Xrg = [float(wc[0]), float(wc[1])]
             Yrg = [float(wc[2]), float(wc[3])]
@@ -1580,6 +1587,15 @@ x.geometry(1200,800)
                     pass
                 if flipX:
                     cam.Azimuth(180.)
+
+        return (Renderer, xScale, yScale)
+
+    def fitToViewport(self, Actor, vp, wc=None, geoBounds=None, geo=None, priority=None,
+                      create_renderer=False, add_actor=True):
+
+        (Renderer, xScale, yScale) = \
+            self.findOrCreateUniqueRenderer(Actor, vp, wc, geoBounds, geo,
+                                            priority, create_renderer)
 
         T = vtk.vtkTransform()
         T.Scale(xScale, yScale, 1.)
