@@ -20,7 +20,7 @@ class TestVCSMarkersWmo(basevcstest.VCSBaseTest):
         m.worldcoordinate = [0, M, 0, M]
         m.type = wmo
         m.color = [242, ]
-        m.size = [20., ]
+        m.size = [35., ]
         xs = []
         ys = []
         for Y in range(7):
@@ -31,4 +31,4 @@ class TestVCSMarkersWmo(basevcstest.VCSBaseTest):
         m.y = ys
         self.x.plot(m, bg=self.bg)
         fnm = "test_vcs_wmo_markers.png"
-        self.checkImage(fnm)
+        self.checkImage(fnm, threshold=20)

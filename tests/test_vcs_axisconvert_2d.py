@@ -6,6 +6,18 @@ import numpy
 
 
 class TestVCSAxisConvert(basevcstest.VCSBaseTest):
+    def axisConvertGmLinear(self, method):
+        method = method()
+        f = cdms2.open(vcs.sample_data+"/ta_ncep_87-6-88-4.nc")
+        data = f("ta", longitude=(12,12,'cob'), latitude=(12, 12, 'cob'), squeeze=1)
+        if isinstance(method, vcs.vector.Gv) or \
+           isinstance(method, vcs.streamline.Gs):
+            data = self.clt("u")
+            data2 = self.clt("v")
+        else:
+            data2 = None
+        self.axisConvertGm(data, data2, method, 'linear', 'linear')
+
     def axisConvertGmLog10Areawt(self, method):
         method = method()
         f = cdms2.open(vcs.sample_data+"/ta_ncep_87-6-88-4.nc")
@@ -63,5 +75,6 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
                        ]:
             self.axisConvertGmAreaWt(method)
             if not method in [vcs.createmeshfill,]:
+                self.axisConvertGmLinear(method)
                 self.axisConvertGmLog10(method)
                 self.axisConvertGmLog10Areawt(method)
