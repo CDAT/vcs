@@ -1694,9 +1694,7 @@ def prepGlyph(ren, g, marker, index=0):
     if pd is None:
         # Use the difference in x to scale the point, as later we'll use the
         # x range to correct the aspect ratio:
-        dx = marker.worldcoordinate[1] - marker.worldcoordinate[0]
-        s *= abs(float(dx)) / 110.
-        gs.SetScale(s)
+        gs.SetScale(finalScale)
         gs.Update()
         g.SetSourceConnection(gs.GetOutputPort())
     return gs, pd
