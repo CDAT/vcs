@@ -13,6 +13,8 @@ import inspect
 from . import VTKAnimate
 from . import vcsvtk
 
+index = 0
+
 
 def _makeEven(val):
     if (val & 0x1):
@@ -99,6 +101,8 @@ class VTKVCSBackend(object):
         if sys.platform == "darwin":
             self.reRender = False
             self.oldCursor = None
+
+        self._animationActorTransforms = {}
 
     def setAnimationStepper(self, stepper):
         for plot in list(self.plotApps.values()):
@@ -407,6 +411,7 @@ class VTKVCSBackend(object):
                 r, g, b = [c / 255. for c in self.canvas.backgroundcolor]
                 ren.SetBackground(r, g, b)
             ren = renderers.GetNextItem()
+        self._animationActorTransforms = {}
         self.showGUI(render=False)
 
         if hasValidRenderer and self.renWin.IsDrawable() and render:
@@ -713,7 +718,7 @@ class VTKVCSBackend(object):
                 returned["vtk_backend_line_actors"] = actors
                 create_renderer = True
                 for act, geo in actors:
-                    ren = self.fitToViewport(
+                    ren, xScale, yScale = self.fitToViewport(
                         act,
                         gm.viewport,
                         wc=gm.worldcoordinate,
@@ -724,22 +729,31 @@ class VTKVCSBackend(object):
                     create_renderer = False
         elif gtype == "marker":
             if gm.priority != 0:
-                actors = vcs2vtk.prepMarker(self.renWin, gm,
-                                            cmap=self.canvas.colormap)
+                ren, xScale, yScale = \
+                    self.findOrCreateUniqueRenderer(None, gm.viewport,
+                                                    gm.worldcoordinate, None,
+                                                    None, gm.priority, True)
+                actors = vcs2vtk.prepMarker(ren, gm, cmap=self.canvas.colormap)
                 returned["vtk_backend_marker_actors"] = actors
-                create_renderer = True
                 for g, gs, pd, act, geo in actors:
-                    ren = self.fitToViewport(
+                    data = g.GetInput()
+                    mapper = act.GetMapper()
+                    # scale the data not the markers
+                    mapper.SetInputData(data)
+                    ren, xScale, yScale = self.fitToViewport(
                         act,
                         gm.viewport,
                         wc=gm.worldcoordinate,
                         geoBounds=None,
                         geo=None,
                         priority=gm.priority,
-                        create_renderer=create_renderer)
-                    create_renderer = False
-                    if pd is None and act.GetUserTransform():
-                        vcs2vtk.scaleMarkerGlyph(g, gs, pd, act)
+                        create_renderer=False)
+                    # get the scaled data
+                    scaledData = mapper.GetInput()
+                    g.SetInputData(scaledData)
+                    g.Update()
+                    # set the markers to be rendered
+                    mapper.SetInputData(g.GetOutput())
 
         elif gtype == "fillarea":
             if gm.priority != 0:
@@ -1428,16 +1442,77 @@ x.geometry(1200,800)
                 self.setLayer(self.logoRenderer, 1)
                 self.renWin.AddRenderer(self.logoRenderer)
 
-    def fitToViewport(self, Actor, vp, wc=None, geoBounds=None, geo=None, priority=None,
-                      create_renderer=False, add_actor=True):
+    def _applyTransformationToDataset(self, T, data):
+        global index
+        vcs2vtk.debugWriteGrid(data, "data" + str(index))
+        vectors = data.GetPointData().GetVectors()
+        data.GetPointData().SetActiveVectors(None)
+        transformFilter = vtk.vtkTransformFilter()
+        transformFilter.SetInputData(data)
+        transformFilter.SetTransform(T)
+        transformFilter.Update()
+        outputData = transformFilter.GetOutput()
+        data.GetPointData().SetVectors(vectors)
+        outputData.GetPointData().SetVectors(vectors)
+        vcs2vtk.debugWriteGrid(outputData, "outputData" + str(index))
+        index = index + 1
+        return outputData
 
+    def _applyTransformationToMapperInput(self, T, mapper):
+        mapper.Update()
+        data = mapper.GetInput()
+        outputData = self._applyTransformationToDataset(T, data)
+        mapper.SetInputData(outputData)
+
+        planeCollection = mapper.GetClippingPlanes()
+
+        # We have to transform the hardware clip planes as well
+        if (planeCollection is not None):
+            planeCollection.InitTraversal()
+            plane = planeCollection.GetNextItem()
+            while (plane):
+                origin = plane.GetOrigin()
+                inOrigin = [origin[0], origin[1], origin[2], 1.0]
+                outOrigin = [origin[0], origin[1], origin[2], 1.0]
+
+                normal = plane.GetNormal()
+                inNormal = [normal[0], normal[1], normal[2], 0.0]
+                outNormal = [normal[0], normal[1], normal[2], 0.0]
+
+                T.MultiplyPoint(inOrigin, outOrigin)
+                if (outOrigin[3] != 0.0):
+                    outOrigin[0] /= outOrigin[3]
+                    outOrigin[1] /= outOrigin[3]
+                    outOrigin[2] /= outOrigin[3]
+                plane.SetOrigin(outOrigin[0], outOrigin[1], outOrigin[2])
+
+                # For normal matrix, compute the transpose of inverse
+                normalTransform = vtk.vtkTransform()
+                normalTransform.DeepCopy(T)
+                mat = vtk.vtkMatrix4x4()
+                normalTransform.GetTranspose(mat)
+                normalTransform.GetInverse(mat)
+                normalTransform.SetMatrix(mat)
+                normalTransform.MultiplyPoint(inNormal, outNormal)
+                if (outNormal[3] != 0.0):
+                    outNormal[0] /= outNormal[3]
+                    outNormal[1] /= outNormal[3]
+                    outNormal[2] /= outNormal[3]
+                plane.SetNormal(outNormal[0], outNormal[1], outNormal[2])
+                plane = planeCollection.GetNextItem()
+
+    def findOrCreateUniqueRenderer(self, Actor, vp, wc, geoBounds=None,
+                                   geo=None, priority=None, create_renderer=False):
         # Data range in World Coordinates
         if priority == 0:
             return (None, 1, 1)
         vp = tuple(vp)
         if wc is None:
-            Xrg = list(Actor.GetXRange())
-            Yrg = list(Actor.GetYRange())
+            if Actor is not None:
+                Xrg = list(Actor.GetXRange())
+                Yrg = list(Actor.GetYRange())
+            else:
+                raise Exception('Cannot find unique renderer without an actor or world coords range')
         else:
             Xrg = [float(wc[0]), float(wc[1])]
             Yrg = [float(wc[2]), float(wc[3])]
@@ -1508,51 +1583,27 @@ x.geometry(1200,800)
                     pass
                 if flipX:
                     cam.Azimuth(180.)
-        T = vtk.vtkTransform()
-        T.Scale(xScale, yScale, 1.)
 
-        Actor.SetUserTransform(T)
+        return (Renderer, xScale, yScale)
 
-        mapper = Actor.GetMapper()
-        planeCollection = mapper.GetClippingPlanes()
+    def fitToViewport(self, Actor, vp, wc=None, geoBounds=None, geo=None, priority=None,
+                      create_renderer=False, add_actor=True):
+        (Renderer, xScale, yScale) = \
+            self.findOrCreateUniqueRenderer(Actor, vp, wc, geoBounds, geo,
+                                            priority, create_renderer)
 
-        # We have to transform the hardware clip planes as well
-        if (planeCollection is not None):
-            planeCollection.InitTraversal()
-            plane = planeCollection.GetNextItem()
-            while (plane):
-                origin = plane.GetOrigin()
-                inOrigin = [origin[0], origin[1], origin[2], 1.0]
-                outOrigin = [origin[0], origin[1], origin[2], 1.0]
+        if Renderer is not None:
+            T = vtk.vtkTransform()
+            T.Scale(xScale, yScale, 1.)
 
-                normal = plane.GetNormal()
-                inNormal = [normal[0], normal[1], normal[2], 0.0]
-                outNormal = [normal[0], normal[1], normal[2], 0.0]
+            mapper = Actor.GetMapper()
 
-                T.MultiplyPoint(inOrigin, outOrigin)
-                if (outOrigin[3] != 0.0):
-                    outOrigin[0] /= outOrigin[3]
-                    outOrigin[1] /= outOrigin[3]
-                    outOrigin[2] /= outOrigin[3]
-                plane.SetOrigin(outOrigin[0], outOrigin[1], outOrigin[2])
+            self._animationActorTransforms[Actor] = T
+            self._applyTransformationToMapperInput(T, mapper)
 
-                # For normal matrix, compute the transpose of inverse
-                normalTransform = vtk.vtkTransform()
-                normalTransform.DeepCopy(T)
-                mat = vtk.vtkMatrix4x4()
-                normalTransform.GetTranspose(mat)
-                normalTransform.GetInverse(mat)
-                normalTransform.SetMatrix(mat)
-                normalTransform.MultiplyPoint(inNormal, outNormal)
-                if (outNormal[3] != 0.0):
-                    outNormal[0] /= outNormal[3]
-                    outNormal[1] /= outNormal[3]
-                    outNormal[2] /= outNormal[3]
-                plane.SetNormal(outNormal[0], outNormal[1], outNormal[2])
-                plane = planeCollection.GetNextItem()
+            if add_actor:
+                Renderer.AddActor(Actor)
 
-        if add_actor:
-            Renderer.AddActor(Actor)
         return (Renderer, xScale, yScale)
 
     def update_input(self, vtkobjects, array1, array2=None, update=True):
@@ -1633,6 +1684,8 @@ x.geometry(1200,800)
                             if rg[2]:
                                 mapper.SetScalarModeToUseCellData()
                             mapper.SetScalarRange(rg[0], rg[1])
+                    if act in self._animationActorTransforms:
+                        self._applyTransformationToMapperInput(self._animationActorTransforms[act], mapper)
                     act.SetMapper(mapper)
                     i += 1
 

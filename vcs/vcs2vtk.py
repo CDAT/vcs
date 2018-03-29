@@ -15,6 +15,27 @@ from .vcsvtk import fillareautils
 import sys
 import numbers
 
+_DEBUG_VTK = False
+
+
+def debugWriteGrid(grid, name):
+    if (_DEBUG_VTK):
+        writer = vtk.vtkXMLDataSetWriter()
+        gridType = grid.GetDataObjectType()
+        if (gridType == vtk.VTK_STRUCTURED_GRID):
+            ext = ".vts"
+        elif (gridType == vtk.VTK_UNSTRUCTURED_GRID):
+            ext = ".vtu"
+        elif (gridType == vtk.VTK_POLY_DATA):
+            ext = ".vtp"
+        else:
+            print "Unknown grid type: %d" % gridType
+            ext = ".vtk"
+        writer.SetFileName(name + ext)
+        writer.SetInputData(grid)
+        writer.Write()
+
+
 f = open(os.path.join(sys.prefix, "share", "vcs", "wmo_symbols.json"))
 wmo = json.load(f)
 
@@ -579,6 +600,9 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
     globalIds = numpy_to_vtk_wrapper(numpy.arange(0, vg.GetNumberOfCells()), deep=True)
     globalIds.SetName('GlobalIds')
     vg.GetCellData().SetGlobalIds(globalIds)
+
+    debugWriteGrid(vg, "vg")
+
     out = {"vtk_backend_grid": vg,
            "xm": xm,
            "xM": xM,
@@ -1418,6 +1442,9 @@ def prepFillarea(context, renWin, farea, cmap=None):
     # Transform points
     geo, pts = project(pts, farea.projection, farea.worldcoordinate)
     polygonPolyData.SetPoints(pts)
+
+    debugWriteGrid(polygonPolyData, "fillarea")
+
     # for concave polygons
     tris = vtk.vtkTriangleFilter()
     tris.SetInputData(polygonPolyData)
@@ -1435,7 +1462,8 @@ def prepFillarea(context, renWin, farea, cmap=None):
                                                 priority=farea.priority,
                                                 create_renderer=True)
     actors.append((a, geo))
-    transform = a.GetUserTransform()
+    transform = vtk.vtkTransform()
+    transform.Scale(xscale, yscale, 1.)
 
     # Patterns/hatches support
     for i, pd in pattern_polydatas:
@@ -1488,16 +1516,28 @@ def genPoly(coords, pts, filled=True, scale=1.):
     return poly
 
 
-def prepGlyph(g, marker, index=0):
+def prepGlyph(ren, g, marker, index=0):
     t, s = marker.type[index], marker.size[index]
     gs = vtk.vtkGlyphSource2D()
     pd = None
+
+    point1 = [0.0, 0.0, 0.0]
+    side = 1 / math.sqrt(2)
+    point2 = [side, side, 0.0]
+
+    dx = marker.worldcoordinate[1] - marker.worldcoordinate[0]
+    dy = marker.worldcoordinate[3] - marker.worldcoordinate[2]
+    offset = 3
+
+    unused, scale = fillareautils.computeResolutionAndScale(ren, point1, point2, dx, dy, (s + offset))
+    finalScale = scale[0]
+
+    print('prepGlyph => marker type: %s, size: %d, computed scale: [%f, %f]' % (t, s, scale[0], scale[1]))
 
     if t == 'dot':
         gs.SetGlyphTypeToCircle()
         gs.FilledOn()
         gs.SetResolution(25)
-        s /= 5.  # We want tiny dots not filled circles
     elif t == 'circle':
         gs.SetGlyphTypeToCircle()
         gs.FilledOff()
@@ -1529,7 +1569,7 @@ def prepGlyph(g, marker, index=0):
         elif t[9] == "u":
             gs.SetRotationAngle(0)
     elif t == "hurricane":
-        scale_factor = s / 275.
+        scale_factor = finalScale / 2   # Hurricane appears bigger than others
         ds = vtk.vtkDiskSource()
         ds.SetInnerRadius(.55 * scale_factor)
         ds.SetOuterRadius(1.01 * scale_factor)
@@ -1594,7 +1634,7 @@ def prepGlyph(g, marker, index=0):
         g.SetSourceData(apd.GetOutput())
     elif t[:4] == "star":
         np = 5
-        points = starPoints(s*.006, 0, 0, np)
+        points = starPoints(finalScale, 0, 0, np)
 
         pts = vtk.vtkPoints()
         # Add all perimeter points
@@ -1631,7 +1671,8 @@ def prepGlyph(g, marker, index=0):
         polys = vtk.vtkCellArray()
         lines = vtk.vtkCellArray()
         # Lines first
-        scale_json_values = s / 30.
+        # scale_json_values = s / 25
+        scale_json_values = finalScale * 4
         for l in params["line"]:
             line = genPoly(list(zip(*l)), pts, filled=False, scale=scale_json_values)
             lines.InsertNextCell(line)
@@ -1653,9 +1694,7 @@ def prepGlyph(g, marker, index=0):
     if pd is None:
         # Use the difference in x to scale the point, as later we'll use the
         # x range to correct the aspect ratio:
-        dx = marker.worldcoordinate[1] - marker.worldcoordinate[0]
-        s *= abs(float(dx)) / 110.
-        gs.SetScale(s)
+        gs.SetScale(finalScale)
         gs.Update()
         g.SetSourceConnection(gs.GetOutputPort())
     return gs, pd
@@ -1677,26 +1716,7 @@ def setMarkerColor(p, marker, c, cmap=None):
     p.SetOpacity(color[-1])
 
 
-def scaleMarkerGlyph(g, gs, pd, a):
-    # Invert the scale of the actor's transform.
-    glyphTransform = vtk.vtkTransform()
-    scale = a.GetUserTransform().GetScale()
-    xComp = scale[0]
-    scale = [xComp / float(val) for val in scale]
-    glyphTransform.Scale(scale)
-
-    glyphFixer = vtk.vtkTransformPolyDataFilter()
-    glyphFixer.SetTransform(glyphTransform)
-
-    if pd is None:
-        glyphFixer.SetInputConnection(gs.GetOutputPort())
-    else:
-        glyphFixer.SetInputData(pd)
-        g.SetSourceData(None)
-    g.SetSourceConnection(glyphFixer.GetOutputPort())
-
-
-def prepMarker(renWin, marker, cmap=None):
+def prepMarker(ren, marker, cmap=None):
     n = prepPrimitive(marker)
     if n == 0:
         return []
@@ -1719,7 +1739,7 @@ def prepMarker(renWin, marker, cmap=None):
 
         #  Type
         # Ok at this point generates the source for glpyh
-        gs, pd = prepGlyph(g, marker, index=i)
+        gs, pd = prepGlyph(ren, g, marker, index=i)
         g.SetInputData(markers)
 
         a = vtk.vtkActor()

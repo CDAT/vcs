@@ -2,6 +2,37 @@ import vtk
 from .patterns import pattern_list
 
 
+def computeResolutionAndScale(renderer, pt1, pt2, xRange, yRange, pxScale=None, pxSpacing=None):
+    # Be smart about calculating the resolution by taking the screen pixel
+    # size into account
+    # First, convert a distance of one unit screen distance to data
+    # coordinates
+    renderer.SetDisplayPoint(pt1)
+    renderer.DisplayToWorld()
+    wpoint1 = renderer.GetWorldPoint()
+    renderer.SetDisplayPoint(pt2)
+    renderer.DisplayToWorld()
+    wpoint2 = renderer.GetWorldPoint()
+    diffwpoints = [abs(wpoint1[0] - wpoint2[0]),
+                   abs(wpoint1[1] - wpoint2[1])]
+    diffwpoints = [1.0 if i < 1e-6 else i for i in diffwpoints]
+
+    # Choosing an arbitary factor to scale the number of points.  A spacing
+    # of 10 pixels and a scale of 7.5 pixels was chosen based on visual
+    # inspection of result.  Essentially, it means each glyph is 10 pixels
+    # away from its neighbors and 7.5 pixels high and wide.
+    xres = yres = 1
+    scale = [1.0, 1.0]
+    if pxSpacing:
+        xres = int(xRange / (pxSpacing[0] * diffwpoints[0])) + 1
+        yres = int(yRange / (pxSpacing[1] * diffwpoints[1])) + 1
+
+    if pxScale:
+        scale = [pxScale * x for x in diffwpoints[:2]]
+
+    return ([xres, yres], scale)
+
+
 def make_patterned_polydata(inputContours, fillareastyle=None,
                             fillareaindex=None, fillareacolors=None,
                             fillareaopacity=None,
@@ -37,32 +68,16 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
     xBounds = bounds[1] - bounds[0]
     yBounds = bounds[3] - bounds[2]
 
-    xres = yres = 1
-    scale = [1.0, 1.0]
     if renderer is not None:
-        # Be smart about calculating the resolution by taking the screen pixel
-        # size into account
-        # First, convert a distance of one unit screen distance to data
-        # coordinates
         point1 = [1.0, 1.0, 0.0]
         point2 = [0.0, 0.0, 0.0]
-        renderer.SetDisplayPoint(point1)
-        renderer.DisplayToWorld()
-        wpoint1 = renderer.GetWorldPoint()
-        renderer.SetDisplayPoint(point2)
-        renderer.DisplayToWorld()
-        wpoint2 = renderer.GetWorldPoint()
-        diffwpoints = [abs(wpoint1[0] - wpoint2[0]),
-                       abs(wpoint1[1] - wpoint2[1])]
-        diffwpoints = [1.0 if i < 1e-6 else i for i in diffwpoints]
-
-        # Choosing an arbitary factor to scale the number of points.  A spacing
-        # of 10 pixels and a scale of 7.5 pixels was chosen based on visual
-        # inspection of result.  Essentially, it means each glyph is 10 pixels
-        # away from its neighbors and 7.5 pixels high and wide.
-        xres = int(xBounds / (fillareapixelspacing[0] * diffwpoints[0])) + 1
-        yres = int(yBounds / (fillareapixelspacing[1] * diffwpoints[1])) + 1
-        scale = [fillareapixelscale * x for x in diffwpoints[:2]]
+        [xres, yres], scale = computeResolutionAndScale(renderer,
+                                                        point1,
+                                                        point2,
+                                                        xBounds,
+                                                        yBounds,
+                                                        fillareapixelscale,
+                                                        fillareapixelspacing)
     else:
         if xBounds <= 1 and yBounds <= 1 and size is not None:
             xBounds *= size[0] / 3

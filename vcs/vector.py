@@ -386,8 +386,6 @@ class Gv(vcs.bestMatch):
             self,
             'xaxisconvert',
             value)
-        if value != 'linear':
-            raise ValueError('streamline currently cannot handle axis scaling')
         self._xaxisconvert = value
     xaxisconvert = property(_getxaxisconvert, _setxaxisconvert)
 
@@ -399,8 +397,6 @@ class Gv(vcs.bestMatch):
             self,
             'yaxisconvert',
             value)
-        if value != 'linear':
-            raise ValueError('streamline currently cannot handle axis scaling')
         self._yaxisconvert = value
     yaxisconvert = property(_getyaxisconvert, _setyaxisconvert)
 
@@ -617,10 +613,10 @@ class Gv(vcs.bestMatch):
     """
     One of the following strings:
       off - No scaling is performed on the vector values
-      constant - vector value *  self.scale
-      normalize - vector value /  max_norm
-      constantNNormalize - vector value * self.scale / max_norm
-      linear - map [min_norm, max_norm] to self.scalerange
+      constant: vector value *  self.scale
+      normalize: vector value /  max_norm
+      constantNNormalize: vector value * self.scale / max_norm
+      linear: map [min_norm, max_norm] to self.scalerange
       constantNLinear - map [min_norm, max_norm] to self.scalerange and then multiply by self.scale
     """
     def _getscaletype(self):
