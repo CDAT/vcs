@@ -71,7 +71,7 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
                 vcs.createisoline,
                 vcs.createmeshfill,
                 vcs.createvector,
-                # vcs.createstreamline,
+                vcs.createstreamline,
                        ]:
             self.axisConvertGmAreaWt(method)
             if not method in [vcs.createmeshfill,]:

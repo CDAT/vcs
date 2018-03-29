@@ -53,6 +53,32 @@ class StreamlinePipeline(Pipeline2D):
         self._vtkPolyDataFilter.Update()
         polydata = self._vtkPolyDataFilter.GetOutput()
 
+        # Only need one fitToViewport call, where the mapper
+        # connected to the actor we pass has the self._vtkPolyDataFilter as its
+        # input.
+
+        tmpActor = vtk.vtkActor()
+        tmpMapper = vtk.vtkPolyDataMapper()
+        tmpMapper.SetInputData(polydata)
+        tmpActor.SetMapper(tmpMapper)
+
+        plotting_dataset_bounds = self.getPlottingBounds()
+        vp = self._resultDict.get('ratio_autot_viewport',
+                                  [self._template.data.x1, self._template.data.x2,
+                                   self._template.data.y1, self._template.data.y2])
+
+        dataset_renderer, xScale, yScale = self._context().fitToViewport(
+            tmpActor, vp,
+            wc=plotting_dataset_bounds,
+            geoBounds=self._vtkDataSetBoundsNoMask,
+            geo=self._vtkGeoTransform,
+            priority=self._template.data.priority,
+            create_renderer=True,
+            add_actor=False)
+
+        polydata = tmpMapper.GetInput()
+        plotting_dataset_bounds = self.getPlottingBounds()
+
         dataLength = polydata.GetLength()
 
         if (not self._gm.evenlyspaced):
@@ -225,18 +251,8 @@ class StreamlinePipeline(Pipeline2D):
                                   [self._template.data.x1, self._template.data.x2,
                                    self._template.data.y1, self._template.data.y2])
 
-        dataset_renderer, xScale, yScale = self._context().fitToViewport(
-            act, vp,
-            wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
-            geo=self._vtkGeoTransform,
-            priority=self._template.data.priority,
-            create_renderer=True)
-        glyph_renderer, xScale, yScale = self._context().fitToViewport(
-            glyphActor, vp,
-            wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
-            geo=self._vtkGeoTransform,
-            priority=self._template.data.priority,
-            create_renderer=False)
+        dataset_renderer.AddActor(act)
+        dataset_renderer.AddActor(glyphActor)
 
         kwargs = {'vtk_backend_grid': self._vtkDataSet,
                   'dataset_bounds': self._vtkDataSetBounds,
