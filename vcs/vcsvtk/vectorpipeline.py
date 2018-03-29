@@ -19,7 +19,6 @@ class VectorPipeline(Pipeline2D):
         # Preserve time and z axis for plotting these inof in rendertemplate
         projection = vcs.elements["projection"][self._gm.projection]
         taxis = self._originalData1.getTime()
-        scaleFactor = 1.0
 
         if self._originalData1.ndim > 2:
             zaxis = self._originalData1.getAxis(-3)
@@ -27,17 +26,17 @@ class VectorPipeline(Pipeline2D):
             zaxis = None
 
         scale = 1.0
-        lat = None
-        lon = None
-
-        latAccessor = self._data1.getLatitude()
-        lonAccessor = self._data1.getLongitude()
-        if latAccessor:
-            lat = latAccessor[:]
-        if lonAccessor:
-            lon = lonAccessor[:]
 
         if self._vtkGeoTransform is not None:
+            lat = None
+            lon = None
+
+            latAccessor = self._data1.getLatitude()
+            lonAccessor = self._data1.getLongitude()
+            if latAccessor:
+                lat = latAccessor[:]
+            if lonAccessor:
+                lon = lonAccessor[:]
             newv = vtk.vtkDoubleArray()
             newv.SetNumberOfComponents(3)
             newv.InsertTypedTuple(0, [lon.min(), lat.min(), 0])
@@ -97,7 +96,6 @@ class VectorPipeline(Pipeline2D):
             scaleFactor = 1.0
 
         glyphFilter = vtk.vtkGlyph2D()
-        glyphFilter.SetInputData(polydata)
         glyphFilter.SetInputArrayToProcess(1, 0, 0, 0, "vector")
         glyphFilter.SetSourceConnection(arrow.GetOutputPort())
         glyphFilter.SetVectorModeToUseVector()
@@ -147,17 +145,13 @@ class VectorPipeline(Pipeline2D):
                 # and not remap the range.
                 glyphFilter.SetScaleModeToScaleByScalar()
 
-        glyphFilter.SetScaleFactor(scaleFactor)
         if (maxNormInVp is None):
             maxNormInVp = maxNorm * scaleFactor
             # minNormInVp is left None, as it is displayed only for linear scaling.
 
         mapper = vtk.vtkPolyDataMapper()
 
-        glyphFilter.Update()
-        data = glyphFilter.GetOutput()
-
-        mapper.SetInputData(data)
+        mapper.SetInputData(polydata)
         mapper.ScalarVisibilityOff()
         act = vtk.vtkActor()
         act.SetMapper(mapper)
@@ -173,6 +167,7 @@ class VectorPipeline(Pipeline2D):
         vp = self._resultDict.get('ratio_autot_viewport',
                                   [self._template.data.x1, self._template.data.x2,
                                    self._template.data.y1, self._template.data.y2])
+
         dataset_renderer, xScale, yScale = self._context().fitToViewport(
             act, vp,
             wc=plotting_dataset_bounds,
@@ -180,6 +175,17 @@ class VectorPipeline(Pipeline2D):
             geo=self._vtkGeoTransform,
             priority=self._template.data.priority,
             create_renderer=True)
+        # We get the scaled data.
+        newPolyData = mapper.GetInput()
+        glyphFilter.SetScaleFactor(scaleFactor)
+        glyphFilter.SetInputData(newPolyData)
+        glyphFilter.Update()
+        # and set the arrows to be rendered.
+
+        data = glyphFilter.GetOutput()
+        vcs2vtk.debugWriteGrid(data, "glyph")
+        mapper.SetInputData(data)
+
         kwargs = {'vtk_backend_grid': self._vtkDataSet,
                   'dataset_bounds': self._vtkDataSetBounds,
                   'plotting_dataset_bounds': plotting_dataset_bounds,
