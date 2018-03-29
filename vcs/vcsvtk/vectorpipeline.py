@@ -86,6 +86,30 @@ class VectorPipeline(Pipeline2D):
         arrow.FilledOff()
 
         polydata = self._vtkPolyDataFilter.GetOutput()
+
+        plotting_dataset_bounds = self.getPlottingBounds()
+        vp = self._resultDict.get('ratio_autot_viewport',
+                                  [self._template.data.x1, self._template.data.x2,
+                                   self._template.data.y1, self._template.data.y2])
+
+        # Scale the input data before we build the pipeline
+        tmpActor = vtk.vtkActor()
+        tmpMapper = vtk.vtkPolyDataMapper()
+        tmpMapper.SetInputData(polydata)
+        tmpActor.SetMapper(tmpMapper)
+
+        dataset_renderer, xScale, yScale = self._context().fitToViewport(
+            tmpActor, vp,
+            wc=plotting_dataset_bounds,
+            geoBounds=self._vtkDataSetBoundsNoMask,
+            geo=self._vtkGeoTransform,
+            priority=self._template.data.priority,
+            create_renderer=True,
+            add_actor=False)
+
+        polydata = tmpMapper.GetInput()
+        plotting_dataset_bounds = self.getPlottingBounds()
+
         vectors = polydata.GetPointData().GetVectors()
 
         if self._gm.scaletype == 'constant' or\
@@ -155,6 +179,7 @@ class VectorPipeline(Pipeline2D):
         mapper.ScalarVisibilityOff()
         act = vtk.vtkActor()
         act.SetMapper(mapper)
+        dataset_renderer.AddActor(act)
 
         cmap = self.getColorMap()
         if isinstance(lcolor, (list, tuple)):
@@ -163,27 +188,13 @@ class VectorPipeline(Pipeline2D):
             r, g, b, a = cmap.index[lcolor]
         act.GetProperty().SetColor(r / 100., g / 100., b / 100.)
 
-        plotting_dataset_bounds = self.getPlottingBounds()
-        vp = self._resultDict.get('ratio_autot_viewport',
-                                  [self._template.data.x1, self._template.data.x2,
-                                   self._template.data.y1, self._template.data.y2])
-
-        dataset_renderer, xScale, yScale = self._context().fitToViewport(
-            act, vp,
-            wc=plotting_dataset_bounds,
-            geoBounds=self._vtkDataSetBoundsNoMask,
-            geo=self._vtkGeoTransform,
-            priority=self._template.data.priority,
-            create_renderer=True)
-        # We get the scaled data.
-        newPolyData = mapper.GetInput()
+        # Using the scaled data, set the glyph filter input
         glyphFilter.SetScaleFactor(scaleFactor)
-        glyphFilter.SetInputData(newPolyData)
+        glyphFilter.SetInputData(polydata)
         glyphFilter.Update()
         # and set the arrows to be rendered.
 
         data = glyphFilter.GetOutput()
-        vcs2vtk.debugWriteGrid(data, "glyph")
         mapper.SetInputData(data)
 
         kwargs = {'vtk_backend_grid': self._vtkDataSet,
