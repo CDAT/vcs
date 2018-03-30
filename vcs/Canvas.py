@@ -20,7 +20,6 @@ import warnings
 import numpy.ma
 import MV2
 import numpy
-import cdutil
 from .queries import *  # noqa
 from . import boxfill
 from . import isofill
@@ -70,7 +69,7 @@ def rotate(x, y, xorigin, yorigin, angle):
     # translate
     xtr = x - xorigin
     ytr = y - yorigin
-    angle = angle/180.*numpy.pi
+    angle = angle / 180. * numpy.pi
     xout = xtr * numpy.cos(angle) - ytr * numpy.sin(angle)
     yout = xtr * numpy.sin(angle) + ytr * numpy.cos(angle)
 
@@ -80,7 +79,8 @@ def rotate(x, y, xorigin, yorigin, angle):
 
 
 class JupyterFFMPEG(object):
-    def __init__(self, source, ffmpeg_result, width=640, height=420, controls=True):
+    def __init__(self, source, ffmpeg_result,
+                 width=640, height=420, controls=True):
         self.source = source
         self.width = width
         self.height = height
@@ -269,7 +269,8 @@ def _determine_arg_list(g_name, actual_args):
                 "Error in argument list for vcs %s  command." %
                 g_name)
 
-    if hasVCSAddons and isinstance(arglist[igraphics_method], vcsaddons.core.VCSaddon):
+    if hasVCSAddons and isinstance(
+            arglist[igraphics_method], vcsaddons.core.VCSaddon):
         if found_slabs != arglist[igraphics_method].g_nslabs:
             raise vcsError(
                 "%s requires %i slab(s)" %
@@ -370,7 +371,6 @@ class Canvas(vcs.bestMatch):
         '_Canvas__last_plot_keyargs',
         '__last_plot_actual_args',
         '__last_plot_keyargs',
-        '_continents',
         '_continents_line',
         '_savedcontinentstype',
     ]
@@ -602,9 +602,6 @@ class Canvas(vcs.bestMatch):
 
         return tv
 
-    def savecontinentstype(self, value):
-        self._savedcontinentstype = value
-
     def onClosing(self, cell):
         if self.configurator:
             self.endconfigure()
@@ -797,23 +794,6 @@ class Canvas(vcs.bestMatch):
                 tv, 'date') and not hasattr(tv, 'time'):
             change_date_time(tv, 0)
 
-        # Draw continental outlines if specified.
-        contout = keyargs.get('continents', None)
-        if contout is None:
-            if (xdim >= 0 and ydim >= 0 and tv.getAxis(xdim).isLongitude() and tv.getAxis(ydim).isLatitude()) or\
-                    (self.isplottinggridded):
-                contout = self.getcontinentstype()
-            else:
-                contout = 0
-
-        if (isinstance(arglist[GRAPHICS_METHOD], str) and (arglist[GRAPHICS_METHOD]) == 'meshfill') or (
-                (xdim >= 0 and ydim >= 0 and (isinstance(contout, str) or contout >= 1))):
-            self.setcontinentstype(contout)
-            self.savecontinentstype(contout)
-        else:
-            self.setcontinentstype(0)
-            self.savecontinentstype(0)
-
         # Reverse axis direction if necessary
         xrev = keyargs.get('xrev', 0)
         if xrev == 1 and xdim >= 0:
@@ -902,7 +882,7 @@ class Canvas(vcs.bestMatch):
 
         if geometry is not None:
             # Extract width and height, create dict
-            if type(geometry) == dict:
+            if isinstance(geometry, dict):
                 for key in geometry:
                     if key not in ("width", "height"):
                         raise ValueError("Unexpected key %s in geometry" % key)
@@ -947,7 +927,6 @@ class Canvas(vcs.bestMatch):
 
         self.configurator = None
         self.setcontinentsline("default")
-        self.setcontinentstype(1)
 
 # Initial.attributes is being called in main.c, so it is not needed here!
 # Actually it is for taylordiagram graphic methods....
@@ -2416,9 +2395,13 @@ class Canvas(vcs.bestMatch):
             raise vcsError('You must pass a text object')
 
         # for rotation we need to normalize coordinates
-        text2 = vcs.createtext(Tt_source=textobject.Tt_name, To_source=textobject.To_name)
-        xs = numpy.array(textobject.x) / (text2.worldcoordinate[1] - text2.worldcoordinate[0])
-        ys = numpy.array(textobject.y) / (text2.worldcoordinate[3] - text2.worldcoordinate[2])
+        text2 = vcs.createtext(
+            Tt_source=textobject.Tt_name,
+            To_source=textobject.To_name)
+        xs = numpy.array(textobject.x) / \
+            (text2.worldcoordinate[1] - text2.worldcoordinate[0])
+        ys = numpy.array(textobject.y) / \
+            (text2.worldcoordinate[3] - text2.worldcoordinate[2])
         text2.x = xs.tolist()
         text2.y = ys.tolist()
 
@@ -2428,26 +2411,42 @@ class Canvas(vcs.bestMatch):
         noangles = self.gettextextent(text2, 0.)
         out = []
         for bounding, noangle in zip(boundings, noangles):
-            bxmid = (bounding[0] + bounding[1])/2.
+            bxmid = (bounding[0] + bounding[1]) / 2.
             bymid = (bounding[2] + bounding[3]) / 2.
 
-            xmid = (noangle[0] + noangle[1])/2.
-            ymid = (noangle[2] + noangle[3])/2.
+            xmid = (noangle[0] + noangle[1]) / 2.
+            ymid = (noangle[2] + noangle[3]) / 2.
 
             slim = []
             # first corner
-            slim.append(rotate(noangle[0], noangle[2], xmid, ymid, -textobject.angle))
+            slim.append(
+                rotate(
+                    noangle[0], noangle[2], xmid, ymid, -textobject.angle))
             # second corner
-            slim.append(rotate(noangle[1], noangle[2], xmid, ymid, -textobject.angle))
+            slim.append(
+                rotate(
+                    noangle[1], noangle[2], xmid, ymid, -textobject.angle))
             # third corner
-            slim.append(rotate(noangle[1], noangle[3], xmid, ymid, -textobject.angle))
+            slim.append(
+                rotate(
+                    noangle[1], noangle[3], xmid, ymid, -textobject.angle))
             # fourth corner
-            slim.append(rotate(noangle[0], noangle[3], xmid, ymid, -textobject.angle))
+            slim.append(
+                rotate(
+                    noangle[0], noangle[3], xmid, ymid, -textobject.angle))
             # Ok now we need to translte in the middle of the bounding box
             xs = [p[0] for p in slim]
             ys = [p[1] for p in slim]
-            outx = [bxmid + (x - xmid)*(textobject.worldcoordinate[1]-textobject.worldcoordinate[0]) for x in xs]
-            outy = [bymid + (y - ymid)*(textobject.worldcoordinate[3]-textobject.worldcoordinate[2]) for y in ys]
+            outx = [bxmid +
+                    (x -
+                     xmid) *
+                    (textobject.worldcoordinate[1] -
+                     textobject.worldcoordinate[0]) for x in xs]
+            outy = [bymid +
+                    (y -
+                     ymid) *
+                    (textobject.worldcoordinate[3] -
+                     textobject.worldcoordinate[2]) for y in ys]
             out.append([outx, outy])
         return out
 
@@ -2540,7 +2539,7 @@ class Canvas(vcs.bestMatch):
     drawtextcombined.__doc__ = drawtextcombined.__doc__ % (xmldocs.color, xmldocs.viewport, xmldocs.worldcoordinate,
                                                            xmldocs.x_y_coords, xmldocs.bg)
 
-    _plot_keywords_ = ['variable', 'grid', 'xaxis', 'xarray',  'xrev', 'yaxis', 'yarray', 'yrev', 'continents',
+    _plot_keywords_ = ['variable', 'grid', 'xaxis', 'xarray', 'xrev', 'yaxis', 'yarray', 'yrev', 'continents',
                        'xbounds', 'ybounds', 'zaxis', 'zarray', 'taxis', 'tarray', 'waxis', 'warray', 'bg', 'ratio',
                        'donotstoredisplay', 'render', 'continents_line', "display_name"]
 
@@ -2793,38 +2792,6 @@ class Canvas(vcs.bestMatch):
                                    plot_2_1D_input,
                                    plot_output)
 
-    def plot_filledcontinents(
-            self, slab, template_name, g_type, g_name, bg, ratio):
-        cf = cdutil.continent_fill.Gcf()
-        if g_type.lower() == 'boxfill':
-            g = self.getboxfill(g_name)
-        lons = slab.getLongitude()
-        lats = slab.getLatitude()
-
-        if lons is None or lats is None:
-            return
-        if g.datawc_x1 > 9.9E19:
-            cf.datawc_x1 = lons[0]
-        else:
-            cf.datawc_x1 = g.datawc_x1
-        if g.datawc_x2 > 9.9E19:
-            cf.datawc_x2 = lons[-1]
-        else:
-            cf.datawc_x2 = g.datawc_x2
-        if g.datawc_y1 > 9.9E19:
-            cf.datawc_y1 = lats[0]
-        else:
-            cf.datawc_y1 = g.datawc_y1
-        if g.datawc_y2 > 9.9E19:
-            cf.datawc_y2 = lats[-1]
-        else:
-            cf.datawc_y2 = g.datawc_y2
-        try:
-            self.gettemplate(template_name)
-            cf.plot(x=self, template=template_name, ratio=ratio)
-        except Exception as err:
-            print(err)
-
     def __new_elts(self, original, new):
         for e in list(vcs.elements.keys()):
             for k in list(vcs.elements[e].keys()):
@@ -2857,7 +2824,8 @@ class Canvas(vcs.bestMatch):
         assert arglist[0] is None or cdms2.isVariable(arglist[0])
         assert arglist[1] is None or cdms2.isVariable(arglist[1])
         assert isinstance(arglist[2], str)
-        if hasVCSAddons and not isinstance(arglist[3], vcsaddons.core.VCSaddon):
+        if hasVCSAddons and not isinstance(
+                arglist[3], vcsaddons.core.VCSaddon):
             assert isinstance(arglist[3], str)
         assert isinstance(arglist[4], str)
 
@@ -3650,100 +3618,6 @@ class Canvas(vcs.bestMatch):
             except Exception:
                 pass
 
-        def clean_val(value):
-            if numpy.allclose(value, 0.):
-                return 0.
-            elif value < 0:
-                sign = -1
-                value = -value
-            else:
-                sign = 1
-            i = int(numpy.log10(value))
-            if i > 0:
-                j = i
-                k = 10.
-            else:
-                j = i - 1
-                k = 10.
-            v = int(value / numpy.power(k, j)) * numpy.power(k, j)
-            return v * sign
-
-        def mkdic(method, values):
-            if method == 'area_wt':
-                func = numpy.sin
-                func2 = numpy.arcsin
-            elif method == 'exp':
-                func = numpy.exp
-                func2 = numpy.log
-            elif method == 'ln':
-                func = numpy.log
-                func2 = numpy.exp
-            elif method == 'log10':
-                func = numpy.log10
-            vals = []
-            for v in values:
-                if method == 'area_wt':
-                    vals.append(func(v * numpy.pi / 180.))
-                else:
-                    vals.append(func(v))
-            min, max = vcs.minmax(vals)
-            levs = vcs.mkscale(min, max)
-# levs=vcs.mkevenlevels(min,max)
-            vals = []
-            for l in levs:
-                if method == 'log10':
-                    v = numpy.power(10, l)
-                elif method == 'area_wt':
-                    v = func2(l) / numpy.pi * 180.
-                else:
-                    v = func2(l)
-                vals.append(clean_val(v))
-            dic = vcs.mklabels(vals)
-            dic2 = {}
-            for k in list(dic.keys()):
-                try:
-                    if method == 'area_wt':
-                        dic2[func(k * numpy.pi / 180.)] = dic[k]
-                    else:
-                        dic2[func(k)] = dic[k]
-                except Exception:
-                    pass
-            return dic2
-
-        def set_convert_labels(copy_mthd, test=0):
-            did_something = False
-            for axc in ['x', 'y']:
-                try:
-                    mthd = getattr(copy_mthd, axc + 'axisconvert')
-                    if mthd != 'linear':
-                        for num in ['1', '2']:
-                            if getattr(
-                                    copy_mthd, axc + 'ticlabels' + num) == '*':
-                                if axc == 'x':
-                                    axn = -1
-                                else:
-                                    axn = -2
-                                dic = mkdic(mthd, arglist[0].getAxis(axn)[:])
-                                if test == 0:
-                                    setattr(
-                                        copy_mthd,
-                                        axc +
-                                        'ticlabels' +
-                                        num,
-                                        dic)
-                                did_something = True
-                except Exception:
-                    pass
-            return did_something
-
-        if set_convert_labels(check_mthd, test=1):
-            if copy_mthd is None:
-                try:
-                    copy_mthd = vcs.creategraphicsmethod(arglist[3], arglist[4])
-                except Exception:
-                    pass
-                check_mthd = copy_mthd
-                set_convert_labels(copy_mthd)
         if copy_mthd is None:
             try:
                 copy_mthd = vcs.creategraphicsmethod(arglist[3], arglist[4])
@@ -3864,7 +3738,6 @@ class Canvas(vcs.bestMatch):
             else:
                 nm, src = self.check_name_source(None, "default", "display")
                 dn = displayplot.Dp(nm)
-            dn.continents = self.getcontinentstype()
             dn.continents_line = self.getcontinentsline()
             dn.template = arglist[2]
             dn.g_type = arglist[3]
@@ -3880,9 +3753,16 @@ class Canvas(vcs.bestMatch):
             dn.newelements = self.__new_elts(original_elts, new_elts)
             dn._parent = self
 
+            """
+            try:
+                self.setcontinentstype(self._savedcontinentstype)
+            except Exception:
+                pass
+            """
             return dn
         else:  # not taylor diagram
-            if hasVCSAddons and isinstance(arglist[3], vcsaddons.core.VCSaddon):
+            if hasVCSAddons and isinstance(
+                    arglist[3], vcsaddons.core.VCSaddon):
                 gm = arglist[3]
             else:
                 tp = arglist[3]
@@ -3894,6 +3774,12 @@ class Canvas(vcs.bestMatch):
                     tp = "1d"
                 gm = vcs.elements[tp][arglist[4]]
                 if hasattr(gm, "priority") and gm.priority == 0:
+                    """
+                    try:  # not always saved
+                        self.setcontinentstype(self._savedcontinentstype)
+                    except Exception:
+                        pass
+                        """
                     return
             p = self.getprojection(gm.projection)
             if p.type in no_deformation_projections and (
@@ -4001,7 +3887,8 @@ class Canvas(vcs.bestMatch):
                 if doratio[-1] == 't' or template_origin == 'default':
                     box_and_ticks = 1
 
-                if hasVCSAddons and isinstance(arglist[3], vcsaddons.core.VCSaddon):
+                if hasVCSAddons and isinstance(
+                        arglist[3], vcsaddons.core.VCSaddon):
                     gm = arglist[3]
                 else:
                     tp = arglist[3]
@@ -4088,7 +3975,7 @@ class Canvas(vcs.bestMatch):
             if hasattr(self, '_isplottinggridded'):
                 del(self._isplottinggridded)
             # Get the continents for animation generation
-            self.animate.continents_value = self._continentspath()
+            # self.animate.continents_value = self._continentspath()
 
             # Get the option for doing graphics in the background.
             if bg:
@@ -4107,7 +3994,8 @@ class Canvas(vcs.bestMatch):
                         'Error - VECTOR components must be on the same grid.')
             if "bg" in keyargs:
                 del(keyargs["bg"])
-            if hasVCSAddons and isinstance(arglist[3], vcsaddons.core.VCSaddon):
+            if hasVCSAddons and isinstance(
+                    arglist[3], vcsaddons.core.VCSaddon):
                 if arglist[1] is None:
                     dn = arglist[3].plot(
                         arglist[0],
@@ -4144,7 +4032,6 @@ class Canvas(vcs.bestMatch):
                 if dn is not None:
                     dn._template_origin = template_origin
                     dn.ratio = keyargs.get("ratio", None)
-                    dn.continents = self.getcontinentstype()
                     dn.continents_line = self.getcontinentsline()
                     dn.newelements = self.__new_elts(original_elts, new_elts)
 
@@ -4466,27 +4353,6 @@ class Canvas(vcs.bestMatch):
         """
         return self.backend.canvasinfo(*args, **kargs)
 
-    def getcontinentstype(self, *args):
-        """Retrieve continents type from VCS; either an integer between 0 and 6 or the
-        path to a custom continentstype.
-
-        :Example:
-
-            .. doctest:: canvas_getcontinentstype
-
-                >>> a=vcs.init()
-                >>> a.setcontinentstype(6)
-                >>> a.getcontinentstype() # Get the continents type
-                6
-
-        :returns An int between 0 and 6, or the path to a custom continentstype
-        :rtype: `int`_ or system filepath
-        """
-        try:
-            return self._continents
-        except Exception:
-            return None
-
     def landscape(self, width=-99, height=-99, x=-99, y=-99, clear=0):
         """Change the VCS Canvas orientation to Landscape.
 
@@ -4556,7 +4422,8 @@ class Canvas(vcs.bestMatch):
 
         args = (width, height, x, y, clear)
         return self.backend.landscape(*args)
-    landscape.__doc__ = landscape.__doc__ % (xmldocs.canvas_width, xmldocs.canvas_height, xmldocs.canvas_clear)
+    landscape.__doc__ = landscape.__doc__ % (
+        xmldocs.canvas_width, xmldocs.canvas_height, xmldocs.canvas_clear)
 
     def listelements(self, *args):
         """Returns a sorted Python list of all VCS object names, or a list of
@@ -4702,7 +4569,8 @@ class Canvas(vcs.bestMatch):
 
         return p
 
-    portrait.__doc__ = portrait.__doc__ % (xmldocs.canvas_width, xmldocs.canvas_height, xmldocs.canvas_clear)
+    portrait.__doc__ = portrait.__doc__ % (
+        xmldocs.canvas_width, xmldocs.canvas_height, xmldocs.canvas_clear)
 
     def ffmpeg(self, movie, files, bitrate=1024, rate=None, options=None):
         """MPEG output from a list of valid files.
@@ -4995,7 +4863,10 @@ class Canvas(vcs.bestMatch):
             width, height, units, background=True)
         return self.backend.png(
             file, W, H, units, draw_white_background, **args)
-    png.__doc__ = png.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
+    png.__doc__ = png.__doc__ % (xmldocs.output_file,
+                                 xmldocs.output_width,
+                                 xmldocs.output_height,
+                                 xmldocs.output_units)
 
     def pdf(self, file, width=None, height=None, units='inches',
             textAsPaths=True):
@@ -5035,8 +4906,12 @@ class Canvas(vcs.bestMatch):
 
         if not file.split('.')[-1].lower() in ['pdf']:
             file += '.pdf'
-        return self.backend.pdf(file, width=W, height=H, units=units, textAsPaths=textAsPaths)
-    pdf.__doc__ = pdf.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
+        return self.backend.pdf(file, width=W, height=H,
+                                units=units, textAsPaths=textAsPaths)
+    pdf.__doc__ = pdf.__doc__ % (xmldocs.output_file,
+                                 xmldocs.output_width,
+                                 xmldocs.output_height,
+                                 xmldocs.output_units)
 
     def svg(self, file, width=None, height=None, units='inches',
             textAsPaths=True):
@@ -5076,8 +4951,12 @@ class Canvas(vcs.bestMatch):
 
         if not file.split('.')[-1].lower() in ['svg']:
             file += '.svg'
-        return self.backend.svg(file, width=W, height=H, units=units, textAsPaths=textAsPaths)
-    svg.__doc__ = svg.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
+        return self.backend.svg(file, width=W, height=H,
+                                units=units, textAsPaths=textAsPaths)
+    svg.__doc__ = svg.__doc__ % (xmldocs.output_file,
+                                 xmldocs.output_width,
+                                 xmldocs.output_height,
+                                 xmldocs.output_units)
 
     def _compute_margins(
             self, W, H, top_margin, bottom_margin, right_margin, left_margin, dpi):
@@ -5197,7 +5076,8 @@ class Canvas(vcs.bestMatch):
         """
         return self.backend.isopened()
 
-    def _compute_width_height(self, width, height, units, ps=False, background=False):
+    def _compute_width_height(
+            self, width, height, units, ps=False, background=False):
         dpi = 72.  # dot per inches
         if units in ["in", "inches"]:
             factor = 1.
@@ -5269,7 +5149,8 @@ class Canvas(vcs.bestMatch):
             H = tmp
         return W, H
 
-    def postscript(self, file, mode='r', orientation=None, width=None, height=None, units='inches', textAsPaths=True):
+    def postscript(self, file, mode='r', orientation=None,
+                   width=None, height=None, units='inches', textAsPaths=True):
         """Postscript output is another form of vector graphics. It is larger than its CGM output
         counter part, because it is stored out in ASCII format.
 
@@ -5324,7 +5205,8 @@ class Canvas(vcs.bestMatch):
         if not file.split('.')[-1].lower() in ['ps', 'eps']:
             file += '.ps'
         if mode == 'r':
-            return self.backend.postscript(file, W, H, units="pixels", textAsPaths=textAsPaths)
+            return self.backend.postscript(
+                file, W, H, units="pixels", textAsPaths=textAsPaths)
         else:
             n = random.randint(0, 10000000000000)
             psnm = '/tmp/' + '__VCS__tmp__' + str(n) + '.ps'
@@ -5462,7 +5344,8 @@ class Canvas(vcs.bestMatch):
         :param line: Line to use for drawing continents. Can be a string name of a line, or a VCS line object
         :type line: `str`_ or :py:class:`vcs.line.Tl`
         """
-        linename = VCS_validation_functions.checkLine(self, "continentsline", line)
+        linename = VCS_validation_functions.checkLine(
+            self, "continentsline", line)
         line = vcs.getline(linename)
         self._continents_line = line
 
@@ -5487,59 +5370,11 @@ class Canvas(vcs.bestMatch):
         else:
             return self._continents_line
 
-    def setcontinentstype(self, value):
-        """One has the option of using continental maps that are predefined or that
-        are user-defined. Predefined continental maps are either internal to VCS
-        or are specified by external files. User-defined continental maps are
-        specified by additional external files that must be read as input.
-
-        The continents-type values are integers ranging from 0 to 11, where:
-
-            * 0 signifies "No Continents"
-
-            * 1 signifies "Fine Continents"
-
-            * 2 signifies "Coarse Continents"
-
-            * 3 signifies "United States" (with "Fine Continents")
-
-            * 4 signifies "Political Borders" (with "Fine Continents")
-
-            * 5 signifies "Rivers" (with "Fine Continents")
-
-            * 6 uses a custom continent set
-
-        You can also pass a file by path.
-
-        :Example:
-
-            .. doctest:: canvas_setcontinentstype
-
-                >>> a=vcs.init()
-                >>> a.setcontinentstype(4) # "Political Borders"
-                >>> import cdms2 # We need cdms2 to create a slab
-                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
-                >>> v = f('v') # use the data file to create a slab
-                >>> a.plot(v,'default','isofill','quick') # map with borders
-                <vcs.displayplot.Dp ...>
-
-        :param value: Integer representing continent type, as specified in function description
-        :type value: `int`_
-        """
-        continent_path = VCS_validation_functions.checkContinents(self, value)
-        self._continents = value
-        if continent_path is not None and not os.path.exists(
-                continent_path):
-            warnings.warn(
-                "Continents file not found: %s, substituing with fine continents" %
-                continent_path)
-            self._continents = 1
-            return
-
-    def _continentspath(self):
+    def _continentspath(self, continentsPath):
         try:
-            path = VCS_validation_functions.checkContinents(self, self._continents)
-            if path is None and self._continents != 0:
+            path = VCS_validation_functions.checkContinents(
+                self, continentsPath)
+            if path is None and continentsPath != 0:
                 return VCS_validation_functions.checkContinents(self, 1)
             else:
                 return path
@@ -5580,9 +5415,12 @@ class Canvas(vcs.bestMatch):
     def gs(self, filename='noname.gs', device='png256',
            orientation=None, resolution='792x612'):
 
-        warnings.warn("Export to GhostScript is no longer supported", vcs.VCSDeprecationWarning)
+        warnings.warn(
+            "Export to GhostScript is no longer supported",
+            vcs.VCSDeprecationWarning)
 
-    def eps(self, file, mode='r', orientation=None, width=None, height=None, units='inches', textAsPaths=True):
+    def eps(self, file, mode='r', orientation=None, width=None,
+            height=None, units='inches', textAsPaths=True):
         """In some cases, the user may want to save the plot out as an Encapsulated
         PostScript image. This routine allows the user to save the VCS canvas output
         as an Encapsulated PostScript file.
@@ -5631,7 +5469,10 @@ class Canvas(vcs.bestMatch):
 
         os.popen("ps2epsi %s %s" % (tmpfile, file)).readlines()
         os.remove(tmpfile)
-    eps.__doc__ = eps.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
+    eps.__doc__ = eps.__doc__ % (xmldocs.output_file,
+                                 xmldocs.output_width,
+                                 xmldocs.output_height,
+                                 xmldocs.output_units)
 
     def show(self, *args):
         return vcs.show(*args)

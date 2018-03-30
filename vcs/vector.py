@@ -386,6 +386,8 @@ class Gv(vcs.bestMatch):
             self,
             'xaxisconvert',
             value)
+        if value != 'linear':
+            raise ValueError('streamline currently cannot handle axis scaling')
         self._xaxisconvert = value
     xaxisconvert = property(_getxaxisconvert, _setxaxisconvert)
 
@@ -397,6 +399,8 @@ class Gv(vcs.bestMatch):
             self,
             'yaxisconvert',
             value)
+        if value != 'linear':
+            raise ValueError('streamline currently cannot handle axis scaling')
         self._yaxisconvert = value
     yaxisconvert = property(_getyaxisconvert, _setyaxisconvert)
 

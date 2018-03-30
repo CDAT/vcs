@@ -562,6 +562,8 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
             vg = wrapDataSetX(vg)
             pts = vg.GetPoints()
             xm, xM, ym, yM, tmp, tmp2 = vg.GetPoints().GetBounds()
+        vg = doWrapData(vg, wc, wrap)
+        pts = vg.GetPoints()
         xm, xM, ym, yM, tmp, tmp2 = vg.GetPoints().GetBounds()
         print("XS:",xm, xM, ym, yM, tmp, tmp2)
         pts = vg.GetPoints()
@@ -630,13 +632,11 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
 vcsContinents = {}
 
 
-def prepContinents(fnm):
+def prepContinents(fnm, xConvertFunction=lambda x: x, yConvertFunction=lambda y: y):
     """ This converts vcs continents files to vtkpolydata
     Author: Charles Doutriaux
     Input: vcs continent file name
     """
-    if fnm in vcsContinents:
-        return vcsContinents[fnm]
     poly = vtk.vtkPolyData()
     cells = vtk.vtkCellArray()
     pts = vtk.vtkPoints()
@@ -660,7 +660,9 @@ def prepContinents(fnm):
                         l, L = float(sp[i * 2]), float(sp[i * 2 + 1])
                         spts.append([l, L])
                     for p in spts:
-                        pts.InsertNextPoint(p[1], p[0], 0.)
+                        x = xConvertFunction(p[1])
+                        y = yConvertFunction(p[0])
+                        pts.InsertNextPoint(x, y, 0.)
                     n += sn
                     didIt = True
                 except Exception:
@@ -668,7 +670,9 @@ def prepContinents(fnm):
             if didIt is False:
                 while len(ln) > 2:
                     l, L = float(ln[:8]), float(ln[8:16])
-                    pts.InsertNextPoint(L, l, 0.)
+                    x = xConvertFunction(L)
+                    y = yConvertFunction(l)
+                    pts.InsertNextPoint(x, y, 0.)
                     ln = ln[16:]
                     n += 2
         ln = vtk.vtkPolyLine()
@@ -695,7 +699,6 @@ def prepContinents(fnm):
     clipper.Update()
     poly = clipper.GetOutput()
 
-    vcsContinents[fnm] = poly
     return poly
 
 
@@ -1032,55 +1035,35 @@ def doWrapData(data, wc, wrap=[0., 360], fastClip=True):
     appendFilter.Update()
     # X axis wrappping
     Amn, Amx = bounds[0], bounds[1]
+    nX = [0, 0]  # number of translations needed (neg and pos)
     if wrap[1] != 0.:
-        i = 0
         while Amn > xmn:
-            i += 1
+            nX[0] += 1
             Amn -= wrap[1]
-            Tpf = vtk.vtkTransformPolyDataFilter()
-            Tpf.SetInputData(data)
-            T = vtk.vtkTransform()
-            T.Translate(-i * wrap[1], 0, 0)
-            Tpf.SetTransform(T)
-            Tpf.Update()
-            appendFilter.AddInputData(Tpf.GetOutput())
-            appendFilter.Update()
-        i = 0
         while Amx < xmx:
-            i += 1
+            nX[1] += 1
             Amx += wrap[1]
-            Tpf = vtk.vtkTransformPolyDataFilter()
-            Tpf.SetInputData(data)
-            T = vtk.vtkTransform()
-            T.Translate(i * wrap[1], 0, 0)
-            Tpf.SetTransform(T)
-            Tpf.Update()
-            appendFilter.AddInputData(Tpf.GetOutput())
-            appendFilter.Update()
-
-    # Y axis wrapping
     Amn, Amx = bounds[2], bounds[3]
+    nY = [0, 0]  # number of translations needed (neg and pos)
     if wrap[0] != 0.:
-        i = 0
         while Amn > ymn:
-            i += 1
+            nY[0] += 1
             Amn -= wrap[0]
-            Tpf = vtk.vtkTransformPolyDataFilter()
-            Tpf.SetInputData(data)
-            T = vtk.vtkTransform()
-            T.Translate(0, i * wrap[0], 0)
-            Tpf.SetTransform(T)
-            Tpf.Update()
-            appendFilter.AddInputData(Tpf.GetOutput())
-            appendFilter.Update()
-        i = 0
         while Amx < ymx:
-            i += 1
+            nY[1] += 1
             Amx += wrap[0]
+
+    nNeg = -max(nX[0], nY[0])  # Number of negative translation needed
+    nPos = max(nX[1], nY[1]) + 1  # Number of negative translation needed
+    # Negative translation
+    for i in range(nNeg, nPos):
+        for j in range(nNeg, nPos):
+            if i == 0 and j == 0:
+                continue
             Tpf = vtk.vtkTransformPolyDataFilter()
             Tpf.SetInputData(data)
             T = vtk.vtkTransform()
-            T.Translate(0, -i * wrap[0], 0)
+            T.Translate(i * wrap[1], j * wrap[0], 0)
             Tpf.SetTransform(T)
             Tpf.Update()
             appendFilter.AddInputData(Tpf.GetOutput())
@@ -1468,9 +1451,13 @@ def prepFillarea(context, renWin, farea, cmap=None):
     # Transform points
     geo, pts = project(pts, farea.projection, farea.worldcoordinate)
     polygonPolyData.SetPoints(pts)
+    # for concave polygons
+    tris = vtk.vtkTriangleFilter()
+    tris.SetInputData(polygonPolyData)
+
     # Setup rendering
     m = vtk.vtkPolyDataMapper()
-    m.SetInputData(polygonPolyData)
+    m.SetInputConnection(tris.GetOutputPort())
     a = vtk.vtkActor()
     a.SetMapper(m)
     ren, xscale, yscale = context.fitToViewport(a,

@@ -240,19 +240,19 @@
     "priority": 0, 
     "textorientation": "defcenter", 
     "texttable": "default", 
-    "y": 0.870000004768
+    "y": 0.880000004768
    }, 
    "xmintic1": {
     "line": "default", 
     "priority": 0, 
     "y1": 0.259999990463, 
-    "y2": 0.256999999285
+    "y2": 0.248999999285
    }, 
    "xmintic2": {
     "line": "default", 
     "priority": 0, 
     "y1": 0.860000014305, 
-    "y2": 0.860000014305
+    "y2": 0.868000014305
    }, 
    "xname": {
     "priority": 1, 
