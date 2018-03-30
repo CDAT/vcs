@@ -29,7 +29,7 @@ def debugWriteGrid(grid, name):
         elif (gridType == vtk.VTK_POLY_DATA):
             ext = ".vtp"
         else:
-            print "Unknown grid type: %d" % gridType
+            print("Unknown grid type: %d" % gridType)
             ext = ".vtk"
         writer.SetFileName(name + ext)
         writer.SetInputData(grid)
