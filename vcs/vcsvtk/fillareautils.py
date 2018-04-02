@@ -2,7 +2,7 @@ import vtk
 from .patterns import pattern_list
 
 
-def computeResolutionAndScale(renderer, pt1, pt2, xRange, yRange, pxScale=None, pxSpacing=None):
+def computeResolutionAndScale(renderer, pt1, pt2, xRange, yRange, pxScale=None, pxSpacing=None, threshold=1e-6):
     # Be smart about calculating the resolution by taking the screen pixel
     # size into account
     # First, convert a distance of one unit screen distance to data
@@ -15,7 +15,7 @@ def computeResolutionAndScale(renderer, pt1, pt2, xRange, yRange, pxScale=None, 
     wpoint2 = renderer.GetWorldPoint()
     diffwpoints = [abs(wpoint1[0] - wpoint2[0]),
                    abs(wpoint1[1] - wpoint2[1])]
-    diffwpoints = [1.0 if i < 1e-6 else i for i in diffwpoints]
+    diffwpoints = [1.0 if i < threshold else i for i in diffwpoints]
 
     # Choosing an arbitary factor to scale the number of points.  A spacing
     # of 10 pixels and a scale of 7.5 pixels was chosen based on visual

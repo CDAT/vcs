@@ -1529,10 +1529,8 @@ def prepGlyph(ren, g, marker, index=0):
     dy = marker.worldcoordinate[3] - marker.worldcoordinate[2]
     offset = 3
 
-    unused, scale = fillareautils.computeResolutionAndScale(ren, point1, point2, dx, dy, (s + offset))
+    unused, scale = fillareautils.computeResolutionAndScale(ren, point1, point2, dx, dy, (s + offset), None, 1e-10)
     finalScale = scale[0]
-
-    print('prepGlyph => marker type: %s, size: %d, computed scale: [%f, %f]' % (t, s, scale[0], scale[1]))
 
     if t == 'dot':
         gs.SetGlyphTypeToCircle()
