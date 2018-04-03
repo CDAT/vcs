@@ -41,5 +41,6 @@ jobs:
 
 workflows:
   version: 2
-  jobs:
-    - macos_py2     
+  nightly:
+    jobs:
+      - macos_py2     
