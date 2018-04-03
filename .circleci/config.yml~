@@ -1,0 +1,10 @@
+version: 2
+
+aliases:
+
+  - &setup_miniconda
+    name: setup_miniconda
+    command: |
+      mkdir -p workspace
+      git clone git@github.com:CDAT/cdat workspace/cdat
+      python workspace/cdat/scripts/install_nightly.py -w $WORKDIR -p $PYTHON_VERSION
