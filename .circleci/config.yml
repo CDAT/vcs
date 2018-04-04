@@ -92,7 +92,7 @@ jobs:
       - run: *run_vcs_tests
 
   rhel_vcs:
-    machine:
+    docker:
       image: registry.access.redhat.com/rhel 
     environment:
       WORKDIR: "workspace/test_macos_vcs"
