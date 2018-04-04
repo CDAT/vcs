@@ -2,6 +2,8 @@ version: 2
 
 checkout:
   post: 
+    - run: pwd
+    - run: ls -al
     - ./ci-support/checkout_merge_commit.sh
         
 
@@ -43,9 +45,10 @@ jobs:
       WORKDIR: "workspace/test_macos_py2"
       PYTHON_VERSION: "py2"
     steps:
-      - run: *setup_miniconda
-      - run: *get_testdata
-      - run: *create_py2_env
+      - run: echo "xxx in macos_py2 step xxx"
+      #- run: *setup_miniconda
+      #- run: *get_testdata
+      #- run: *create_py2_env
 
 workflows:
   version: 2
