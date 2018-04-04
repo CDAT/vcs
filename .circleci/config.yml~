@@ -5,6 +5,44 @@ aliases:
   - &setup_miniconda
     name: setup_miniconda
     command: |
+      echo "xxx setup_miniconda xxx"
       mkdir -p workspace
-      git clone git@github.com:CDAT/cdat workspace/cdat
-      python workspace/cdat/scripts/install_nightly.py -w $WORKDIR -p $PYTHON_VERSION
+      git clone -b validateNightly git@github.com:CDAT/cdat workspace/cdat
+      ls workspace/cdat
+      # following will install miniconda under $WORKDIR/miniconda/bin
+      python workspace/cdat/scripts/install_miniconda.py -w $WORKDIR -p $PYTHON_VERSION
+      
+  - &get_testdata
+    name: get_testdata
+    command: | 
+      git clone git://github.com/cdat/uvcdat-testdata
+
+  - &create_py2_env
+    name: create_py2_env
+    command: |
+       export PATH=$WORKDIR/miniconda/bin:$PATH
+       conda create -q -n py2 -c cdat/label/nightly -c conda-forge -c cdat cdms2 cdat_info udunits2 nose flake8 mesalib nose image-compare flake8 matplotlib image-compare genutil dv3d cdutil cdtime "proj4<5" "python<3" "numpy>1.14" 
+
+  - &create_py3_env
+    name: create_py3_env
+    command: |
+       export PATH=$WORKDIR/miniconda/bin:$PATH
+       conda create -q -n py3 -c cdat/label/nightly -c conda-forge -c cdat cdms2 nose flake8 cdat_info udunits2 mesalib nose image-compare flake8 matplotlib image-compare genutil dv3d cdutil cdtime nbsphinx easydev "proj4<5" "python>3" "numpy>1.14" 
+
+jobs:
+  macos_py2:
+    macos:
+      xcode: "9.2.0"
+    environment:
+      WORKDIR: "workspace/test_macos_py2"
+      PYTHON_VERSION: "py2"
+    steps:
+      - run: *setup_miniconda
+      - run: *get_testdata
+      - run: *create_py2_env
+
+workflows:
+  version: 2
+  nightly:
+    jobs:
+      - macos_py2     
