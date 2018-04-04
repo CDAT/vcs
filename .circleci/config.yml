@@ -34,11 +34,27 @@ aliases:
     name: setup_vcs
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
-       which python
        source activate py2
        python setup.py install --old-and-unmanageable
        source activate py3
        python setup.py install --old-and-unmanageable
+
+  - &run_vcs_tests
+    name: run_vcs_tests
+    command: |
+       export PATH=$WORKDIR/miniconda/bin:$PATH
+       source activate py2
+       python run_tests.py -v2 -n 2 -g --no-vtk-ui       
+       RESULT=$?
+       echo "py2 test command exit result:",$RESULT
+       source activate py3
+       python run_tests.py -n 2 -g --no-vtk-ui
+       RESULT=$(( $RESULT + $? ))
+       cd docs
+       make doctest
+       RESULT=$(( $RESULT + $? ))
+       cd ..
+       echo "py3 test command exit result:",$RESULT
 
 jobs:
   macos_vcs:
@@ -54,6 +70,7 @@ jobs:
       - run: *get_testdata
       - run: *create_conda_env
       - run: *setup_vcs
+      - run: *run_vcs_tests
 workflows:
   version: 2
   nightly:
