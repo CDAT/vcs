@@ -1,10 +1,14 @@
 version: 2
 
+general:
+  artifacts:
+    - tests_html
+    - tests_png
+
 #checkout:
 #  post:
 #    - ./ci-support/checkout_merge_commit.sh
         
-
 aliases:
 
   - &setup_miniconda
@@ -91,18 +95,11 @@ jobs:
       - run: *setup_vcs
       - run: *run_vcs_tests
 
-  rhel_vcs:
-    docker:
-      image: registry.access.redhat.com/rhel 
-    environment:
-      WORKDIR: "workspace/test_macos_vcs"
-    steps:
-      - run: uname -a
 
 workflows:
   version: 2
   nightly:
     jobs:
-      #- macos_vcs
-      #- linux_vcs
-      - rhel_vcs
+      - macos_vcs
+      - linux_vcs
+ 
