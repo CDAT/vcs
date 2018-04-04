@@ -43,6 +43,8 @@ aliases:
     name: run_vcs_tests
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
+       export UVCDAT_ANONYMOUS_LOG=False
+       export UVCDAT_SETUP_PATH=${HOME}
        source activate py2
        python run_tests.py -v2 -n 2 -g --no-vtk-ui       
        RESULT=$?
@@ -55,6 +57,7 @@ aliases:
        RESULT=$(( $RESULT + $? ))
        cd ..
        echo "py3 test command exit result:",$RESULT
+       # REVISIT -- need to check results and upload
 
 jobs:
   macos_vcs:
