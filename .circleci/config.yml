@@ -82,7 +82,7 @@ jobs:
       - run: echo "abc" > Miniconda2.sh
       #- run: *setup_miniconda
       - save_cache:
-          key: py2_conda_cache-{{ checksum "Miniconda2.sh" }}
+          key: py2_conda_cache-{{ checksum "miniconda" }}
           paths: miniconda
 
   macos_py2_vcs:
@@ -93,7 +93,7 @@ jobs:
     steps:
       - restore_cache:
           keys:
-            - py2_conda_cache-{{ checksum "Miniconda2.sh" }}
+            - py2_conda_cache-{{ checksum "miniconda" }}
 
       - run: echo "xxx in macos_py2_vcs step xxxx"
       - run: pwd
