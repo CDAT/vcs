@@ -74,27 +74,29 @@ jobs:
     macos:
       xcode: "9.2.0"
     environment:
+      TODAY: date "+DATE: %Y-%m-%d"
       WORKDIR: "workspace/test_macos_vcs"
       PYTHON_VERSION: 'py2'
     steps:
       - run: *setup_miniconda
       - save_cache:
-          key: py2_conda_cache_v1
-          paths: miniconda
+          key: py2_conda_cache-$TODAY
+          paths: $WORKDIR/miniconda
 
   macos_py2_vcs:
     macos:
       xcode: "9.2.0"
     environment:
+      TODAY: date "+DATE: %Y-%m-%d"
       WORKDIR: "workspace/test_macos_vcs"
     steps:
       - restore_cache:
           keys:
-            - py2_conda_cache-v1
+            - py2_conda_cache-$TODAY
 
       - run: echo "xxx in macos_py2_vcs step xxxx"
       - run: pwd
-      - run: ls -l 
+      - run: ls -l $WORKDIR/miniconda
 
       #- run: *get_testdata
       #- run: *create_conda_env
