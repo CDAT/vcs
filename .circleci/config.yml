@@ -79,8 +79,8 @@ jobs:
     steps:
       - run: *setup_miniconda
       - save_cache:
-          key: py2_conda_cache-123
-          paths: $WORKDIR/miniconda
+          key: py2_conda_cache-124
+          paths: miniconda
 
   macos_py2_vcs:
     macos:
@@ -90,11 +90,11 @@ jobs:
     steps:
       - restore_cache:
           keys:
-            - py2_conda_cache-123
+            - py2_conda_cache-124
 
       - run: echo "xxx in macos_py2_vcs step xxxx"
       - run: pwd
-      - run: ls -l $WORKDIR/miniconda
+      - run: ls -l miniconda
 
       #- run: *get_testdata
       #- run: *create_conda_env
