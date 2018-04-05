@@ -27,8 +27,8 @@ aliases:
       ls -l  workspace
       git clone git://github.com/cdat/uvcdat-testdata
 
-  - &create_py2_conda_env
-    name: create_py2_conda_env
+  - &create_conda_env
+    name: create_conda_env
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
        if [ $PYTHON_VERSION == 'py2' ]: then
