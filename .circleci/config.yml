@@ -82,7 +82,7 @@ jobs:
       - run: date '+%Y-%m-%d' > todaysDate.txt
       #- run: *setup_miniconda
       - save_cache:
-          key: py2_cache-v1-{{ checksum "todaysDate.txt" }}
+          key: py2_cache-v2-{{ checksum "todaysDate.txt" }}
           paths: testDir
 
   macos_py2_vcs:
@@ -94,7 +94,7 @@ jobs:
       - run: date '+%Y-%m-%d' > todaysDate.txt
       - restore_cache:
           keys:
-          key: py2_cache-v1-{{ checksum "todaysDate.txt" }}
+          key: py2_cache-v2-{{ checksum "todaysDate.txt" }}
 
       - run: echo "xxx in macos_py2_vcs step xxxx"
       - run: pwd
