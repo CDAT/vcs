@@ -95,7 +95,7 @@ jobs:
       - run: ls $WORKDIR/miniconda
       - run: *prep_cache
       - save_cache:
-          key: py2_cache-v9-{{ checksum "todaysDate.txt" }}
+          key: py2_cache-v10-{{ checksum "todaysDate.txt" }}
           paths: miniconda
 
   macos_py2_vcs:
@@ -107,16 +107,16 @@ jobs:
       - run: date '+%Y-%m-%d' > todaysDate.txt
       - restore_cache:
           keys:
-          key: py2_cache-v9-{{ checksum "todaysDate.txt" }}
+          key: py2_cache-v10-{{ checksum "todaysDate.txt" }}
       - run: *use_restored_cache
       - run: echo "xxx in macos_py2_vcs step xxxx"
       - run: pwd
       - run: ls -l $WORKDIR/miniconda
-      
-      #- run: *get_testdata
-      #- run: *create_conda_env
-      #- run: *setup_vcs
-      #- run: *run_vcs_tests
+      - checkout
+      - run: *get_testdata
+      - run: *create_conda_env
+      - run: *setup_vcs
+      - run: *run_vcs_tests
 
   linux_vcs:
     machine:
