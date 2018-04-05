@@ -31,7 +31,7 @@ aliases:
     name: create_conda_env
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
-       if [ $PYTHON_VERSION == 'py2' ]: then
+       if [ $PYTHON_VERSION == 'py2' ]; then
           conda create -q -n py2 -c cdat/label/nightly -c conda-forge -c cdat cdms2 cdat_info udunits2 nose flake8 mesalib nose image-compare flake8 matplotlib image-compare genutil dv3d cdutil cdtime "proj4<5" "python<3" "numpy>1.14" 
        else
           conda create -q -n py3 -c cdat/label/nightly -c conda-forge -c cdat cdms2 nose flake8 cdat_info udunits2 mesalib nose image-compare flake8 matplotlib image-compare genutil dv3d cdutil cdtime nbsphinx easydev "proj4<5" "python>3" "numpy>1.14" 
@@ -93,7 +93,7 @@ jobs:
       - run: ls $WORKDIR/miniconda
       - run: *prep_cache
       - save_cache:
-          key: py2_cache-v11-{{ checksum "todaysDate.txt" }}
+          key: py2_cache-v12-{{ checksum "todaysDate.txt" }}
           paths: miniconda
 
   macos_py2_vcs:
@@ -107,7 +107,7 @@ jobs:
       - run: date '+%Y-%m-%d' > todaysDate.txt
       - restore_cache:
           keys:
-          key: py2_cache-v11-{{ checksum "todaysDate.txt" }}
+          key: py2_cache-v12-{{ checksum "todaysDate.txt" }}
       - run: *use_restored_cache
       - run: echo "xxx in macos_py2_vcs step xxxx"
       - run: pwd
