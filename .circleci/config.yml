@@ -68,6 +68,17 @@ aliases:
        ##echo "py3 test command exit result:",$RESULT
        # REVISIT -- need to check results and upload
 
+  - &prep_cache
+    name: prep_cache
+    command: |
+       echo "preparing cache..."
+       ln -s $WORKDIR/miniconda .
+
+  - &use_restored_cache
+    name: use_restored_cache
+    command: | 
+       echo "use restored cache..."
+       ln -s miniconda $WORKDIR/. 
 jobs:
 
   macos_py2_miniconda:
@@ -77,12 +88,13 @@ jobs:
       WORKDIR: "workspace/test_macos_vcs"
       PYTHON_VERSION: 'py2'
     steps:
-      - run: mkdir testDir
       - run: date '+%Y-%m-%d' > testDir/todays.txt 
       - run: date '+%Y-%m-%d' > todaysDate.txt
-      #- run: *setup_miniconda
+      - run: *setup_miniconda
+      - run: ls $WORKDIR/miniconda
+      - run: *prep_cache
       - save_cache:
-          key: py2_cache-v2-{{ checksum "todaysDate.txt" }}
+          key: py2_cache-v3-{{ checksum "todaysDate.txt" }}
           paths: testDir
 
   macos_py2_vcs:
@@ -94,11 +106,11 @@ jobs:
       - run: date '+%Y-%m-%d' > todaysDate.txt
       - restore_cache:
           keys:
-          key: py2_cache-v2-{{ checksum "todaysDate.txt" }}
-
+          key: py2_cache-v3-{{ checksum "todaysDate.txt" }}
+      - run: *use_restored_cache
       - run: echo "xxx in macos_py2_vcs step xxxx"
       - run: pwd
-      - run: ls -l testDir
+      - run: ls -l $WORKDIR/miniconda
 
       #- run: *get_testdata
       #- run: *create_conda_env
