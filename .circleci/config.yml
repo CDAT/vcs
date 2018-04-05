@@ -31,13 +31,11 @@ aliases:
     name: create_py2_conda_env
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
-       conda create -q -n py2 -c cdat/label/nightly -c conda-forge -c cdat cdms2 cdat_info udunits2 nose flake8 mesalib nose image-compare flake8 matplotlib image-compare genutil dv3d cdutil cdtime "proj4<5" "python<3" "numpy>1.14" 
-
-  - &create_py3_conda_env
-    name: create_py3_conda_env
-    command: |
-       export PATH=$WORKDIR/miniconda/bin:$PATH
-       conda create -q -n py3 -c cdat/label/nightly -c conda-forge -c cdat cdms2 nose flake8 cdat_info udunits2 mesalib nose image-compare flake8 matplotlib image-compare genutil dv3d cdutil cdtime nbsphinx easydev "proj4<5" "python>3" "numpy>1.14" 
+       if [ $PYTHON_VERSION == 'py2' ]: then
+          conda create -q -n py2 -c cdat/label/nightly -c conda-forge -c cdat cdms2 cdat_info udunits2 nose flake8 mesalib nose image-compare flake8 matplotlib image-compare genutil dv3d cdutil cdtime "proj4<5" "python<3" "numpy>1.14" 
+       else
+          conda create -q -n py3 -c cdat/label/nightly -c conda-forge -c cdat cdms2 nose flake8 cdat_info udunits2 mesalib nose image-compare flake8 matplotlib image-compare genutil dv3d cdutil cdtime nbsphinx easydev "proj4<5" "python>3" "numpy>1.14" 
+       fi
 
   - &setup_vcs
     name: setup_vcs
@@ -103,6 +101,7 @@ jobs:
       xcode: "9.2.0"
     environment:
       WORKDIR: "workspace/test_macos_vcs"
+      PYTHON_VERSION: 'py2'
     steps:
       - run: date '+%Y-%m-%d' > todaysDate.txt
       - restore_cache:
