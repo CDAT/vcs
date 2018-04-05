@@ -77,9 +77,12 @@ jobs:
       WORKDIR: "workspace/test_macos_vcs"
       PYTHON_VERSION: 'py2'
     steps:
-      - run: *setup_miniconda
+      - run: mkdir miniconda
+      - run: echo "hello there" > miniconda/hello
+      - run: echo "abc" > Miniconda2.sh
+      #- run: *setup_miniconda
       - save_cache:
-          key: py2_conda_cache
+          key: py2_conda_cache-{{ checksum "Miniconda*.sh" }}
           paths: miniconda
 
   macos_py2_vcs:
@@ -90,7 +93,7 @@ jobs:
     steps:
       - restore_cache:
           keys:
-            - py2_conda_cache
+            - py2_conda_cache-{{ checksum "Miniconda*.sh" }}
 
       - run: echo "xxx in macos_py2_vcs step xxxx"
       - run: pwd
