@@ -77,8 +77,8 @@ jobs:
       WORKDIR: "workspace/test_macos_vcs"
       PYTHON_VERSION: 'py2'
     steps:
-      - run: date "+DATE: %Y-%m-%d" 
-      - run: date "+DATE: %Y-%m-%d" > todaysDate.txt
+      - run: date '+%Y-%m-%d' 
+      - run: date '+%Y-%m-%d' > todaysDate.txt
       - run: *setup_miniconda
       - save_cache:
           key: py2_cache-v1-{{ checksum "todaysDate.txt" }}
@@ -90,7 +90,7 @@ jobs:
     environment:
       WORKDIR: "workspace/test_macos_vcs"
     steps:
-      - run: date "+DATE: %Y-%m-%d" > todaysDate.txt
+      - run: date '+%Y-%m-%d' > todaysDate.txt
       - restore_cache:
           keys:
           key: py2_cache-v1-{{ checksum "todaysDate.txt" }}
