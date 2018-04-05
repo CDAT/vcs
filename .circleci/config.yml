@@ -88,14 +88,13 @@ jobs:
       WORKDIR: "workspace/test_macos_vcs"
       PYTHON_VERSION: 'py2'
     steps:
-      - run: date '+%Y-%m-%d' > testDir/todays.txt 
       - run: date '+%Y-%m-%d' > todaysDate.txt
       - run: *setup_miniconda
       - run: ls $WORKDIR/miniconda
       - run: *prep_cache
       - save_cache:
           key: py2_cache-v3-{{ checksum "todaysDate.txt" }}
-          paths: testDir
+          paths: miniconda
 
   macos_py2_vcs:
     macos:
