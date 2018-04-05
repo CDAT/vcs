@@ -77,10 +77,9 @@ jobs:
       WORKDIR: "workspace/test_macos_vcs"
       PYTHON_VERSION: 'py2'
     steps:
-      - checkout
       - run: *setup_miniconda
       - save_cache:
-          key: py2_conda_cache-{{ checksum "setup.py" }}
+          key: py2_conda_cache_v1
           paths: miniconda
 
   macos_py2_vcs:
@@ -89,14 +88,13 @@ jobs:
     environment:
       WORKDIR: "workspace/test_macos_vcs"
     steps:
-      - checkout
       - restore_cache:
           keys:
-            - py2_conda_cache-{{ checksum "setup.py" }}
+            - py2_conda_cache-v1
 
       - run: echo "xxx in macos_py2_vcs step xxxx"
       - run: pwd
-      - run: ls -l $CIRCLE_WORKING_DIRECTORY/miniconda
+      - run: ls -l 
 
       #- run: *get_testdata
       #- run: *create_conda_env
