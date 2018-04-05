@@ -96,7 +96,7 @@ jobs:
 
       - run: echo "xxx in macos_py2_vcs step xxxx"
       - run: pwd
-      - run: ls -l miniconda
+      - run: ls -l $CIRCLE_WORKING_DIRECTORY/miniconda
 
       #- run: *get_testdata
       #- run: *create_conda_env
