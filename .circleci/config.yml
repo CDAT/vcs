@@ -90,7 +90,7 @@ jobs:
     steps:
       - restore_cache:
           keys:
-            - p2_conda_cache
+            - py2_conda_cache
 
       - run: echo "xxx in macos_py2_vcs step xxxx"
       - run: pwd
