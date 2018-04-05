@@ -92,7 +92,7 @@ jobs:
           keys:
             - p2_conda_cache
 
-      - run: echo "xxx in macos_py2_vcs step xxx"
+      - run: echo "xxx in macos_py2_vcs step xxxx"
       - run: pwd
       - run: ls -l
       #- checkout
