@@ -87,9 +87,12 @@ jobs:
     environment:
       WORKDIR: "workspace/test_macos_vcs"
     steps:
-      - run: uname -a
-      - run: echo "xxx in macos_py2 step xxx"
-      - run: pwd
+      - checkout
+      - run: *setup_miniconda
+      - run: *get_testdata
+      - run: *create_conda_env
+      - run: *setup_vcs
+      - run: *run_vcs_tests
 
 
 workflows:
