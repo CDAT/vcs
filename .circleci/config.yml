@@ -72,8 +72,8 @@ aliases:
        echo "preparing cache..."
        mv $WORKDIR/miniconda miniconda
  
-  - &use_conda_cache
-    name: use_conda_cache
+  - &get_conda_cache
+    name: get_conda_cache
     command: | 
        echo "use restored cache..."
        mkdir -p $WORKDIR
@@ -96,7 +96,7 @@ jobs:
       - run: ls $WORKDIR/miniconda
       - run: *prep_conda_cache
       - save_cache:
-          key: py2_cache-v12-{{ checksum "todaysDate.txt" }}
+          key: py2_cache-v13-{{ checksum "todaysDate.txt" }}
           paths: miniconda
 
   macos_py2_vcs:
@@ -110,8 +110,8 @@ jobs:
       - run: date '+%Y-%m-%d' > todaysDate.txt
       - restore_cache:
           keys:
-          key: py2_cache-v12-{{ checksum "todaysDate.txt" }}
-      - run: *use_restored_cache
+          key: py2_cache-v13-{{ checksum "todaysDate.txt" }}
+      - run: *get_conda_cache
       - run: echo "xxx in macos_py2_vcs step xxxx"
       - run: pwd
       - run: ls -l $WORKDIR/miniconda
