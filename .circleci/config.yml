@@ -66,19 +66,22 @@ aliases:
        ##echo "py3 test command exit result:",$RESULT
        # REVISIT -- need to check results and upload
 
-  - &prep_cache
-    name: prep_cache
+  - &prep_conda_cache
+    name: prep_conda_cache
     command: |
        echo "preparing cache..."
        mv $WORKDIR/miniconda miniconda
  
-  - &use_restored_cache
-    name: use_restored_cache
+  - &use_conda_cache
+    name: use_conda_cache
     command: | 
        echo "use restored cache..."
        mkdir -p $WORKDIR
        mv miniconda $WORKDIR/
- 
+       export PATH=$WORKDIR/miniconda/bin:$PATH
+       conda config --set always_yes yes --set changeps1 no
+       conda update -y -q conda
+       conda config --set anaconda_upload no
 jobs:
 
   macos_py2_miniconda:
@@ -91,7 +94,7 @@ jobs:
       - run: date '+%Y-%m-%d' > todaysDate.txt
       - run: *setup_miniconda
       - run: ls $WORKDIR/miniconda
-      - run: *prep_cache
+      - run: *prep_conda_cache
       - save_cache:
           key: py2_cache-v12-{{ checksum "todaysDate.txt" }}
           paths: miniconda
