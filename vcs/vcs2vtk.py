@@ -15,26 +15,6 @@ from .vcsvtk import fillareautils
 import sys
 import numbers
 
-_DEBUG_VTK = False
-
-
-def debugWriteGrid(grid, name):
-    if (_DEBUG_VTK):
-        writer = vtk.vtkXMLDataSetWriter()
-        gridType = grid.GetDataObjectType()
-        if (gridType == vtk.VTK_STRUCTURED_GRID):
-            ext = ".vts"
-        elif (gridType == vtk.VTK_UNSTRUCTURED_GRID):
-            ext = ".vtu"
-        elif (gridType == vtk.VTK_POLY_DATA):
-            ext = ".vtp"
-        else:
-            print("Unknown grid type: %d" % gridType)
-            ext = ".vtk"
-        writer.SetFileName(name + ext)
-        writer.SetInputData(grid)
-        writer.Write()
-
 
 f = open(os.path.join(sys.prefix, "share", "vcs", "wmo_symbols.json"))
 wmo = json.load(f)
@@ -600,8 +580,6 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
     globalIds = numpy_to_vtk_wrapper(numpy.arange(0, vg.GetNumberOfCells()), deep=True)
     globalIds.SetName('GlobalIds')
     vg.GetCellData().SetGlobalIds(globalIds)
-
-    debugWriteGrid(vg, "vg")
 
     out = {"vtk_backend_grid": vg,
            "xm": xm,
@@ -1442,8 +1420,6 @@ def prepFillarea(context, renWin, farea, cmap=None):
     # Transform points
     geo, pts = project(pts, farea.projection, farea.worldcoordinate)
     polygonPolyData.SetPoints(pts)
-
-    debugWriteGrid(polygonPolyData, "fillarea")
 
     # for concave polygons
     tris = vtk.vtkTriangleFilter()

@@ -13,8 +13,6 @@ import inspect
 from . import VTKAnimate
 from . import vcsvtk
 
-index = 0
-
 
 def _makeEven(val):
     if (val & 0x1):
@@ -1443,8 +1441,6 @@ x.geometry(1200,800)
                 self.renWin.AddRenderer(self.logoRenderer)
 
     def _applyTransformationToDataset(self, T, data):
-        global index
-        vcs2vtk.debugWriteGrid(data, "data" + str(index))
         vectors = data.GetPointData().GetVectors()
         data.GetPointData().SetActiveVectors(None)
         transformFilter = vtk.vtkTransformFilter()
@@ -1454,8 +1450,6 @@ x.geometry(1200,800)
         outputData = transformFilter.GetOutput()
         data.GetPointData().SetVectors(vectors)
         outputData.GetPointData().SetVectors(vectors)
-        vcs2vtk.debugWriteGrid(outputData, "outputData" + str(index))
-        index = index + 1
         return outputData
 
     def _applyTransformationToMapperInput(self, T, mapper):
