@@ -271,6 +271,8 @@ class StreamlinePipeline(Pipeline2D):
                                                None,
                                                self.getColorMap()))
 
+        kwargs['xaxisconvert'] = self._gm.xaxisconvert
+        kwargs['yaxisconvert'] = self._gm.yaxisconvert
         if self._data1.getAxis(-1).isLongitude() and self._data1.getAxis(-2).isLatitude():
             self._context().plotContinents(self._plot_kargs.get("continents", self._useContinents),
                                            plotting_dataset_bounds, projection,
