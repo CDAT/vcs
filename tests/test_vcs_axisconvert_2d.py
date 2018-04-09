@@ -76,5 +76,6 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
             self.axisConvertGmAreaWt(method)
             if not method in [vcs.createmeshfill,]:
                 self.axisConvertGmLinear(method)
-                self.axisConvertGmLog10(method)
-                self.axisConvertGmLog10Areawt(method)
+                if not method is vcs.createstreamline:
+                    self.axisConvertGmLog10(method)
+                    self.axisConvertGmLog10Areawt(method)
