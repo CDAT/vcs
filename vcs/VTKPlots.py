@@ -1027,10 +1027,13 @@ class VTKVCSBackend(object):
             g = data.getGrid()
             gaxes = list(g.getAxisList())
             daxes = list(data.getAxisList())
-            if daxes[len(daxes) - len(gaxes):] == gaxes:
+            if numpy.allclose(daxes[len(daxes) - len(gaxes):], gaxes):
                 # Ok it is gridded and the grid axes are last
-                return self.cleanupData(
-                    data(*(slice(0, 1),) * (len(daxes) - len(gaxes)), squeeze=1))
+                if len(daxes) != len(gaxes):
+                    return self.cleanupData(
+                        data(*(slice(0, 1),) * (len(daxes) - len(gaxes)), squeeze=1))
+                else:
+                    return data
             else:
                 # Ok just return the last two dims
                 return self.cleanupData(

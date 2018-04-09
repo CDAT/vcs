@@ -289,7 +289,7 @@ class Pipeline2D(IPipeline2D):
         self._updateScalarData()
         self._min = self._data1.min()
         self._max = self._data1.max()
-        self._scalarRange = vcs.minmax(self._data1)
+        self._scalarRange = (self._min, self._max)
 
         # Create/update the VTK dataset.
         plotBasedDualGrid = kargs.get('plot_based_dual_grid', True)
@@ -357,7 +357,18 @@ class Pipeline2D(IPipeline2D):
     def _createPolyDataFilter(self):
         """This is only used when we use the grid stored in the file for all plots."""
         self._vtkPolyDataFilter = vtk.vtkDataSetSurfaceFilter()
-        if self._hasCellData == self._needsCellData:
+        import ipdb
+        ipdb.set_trace()
+        if self._vtkDataSet.IsA("vtkUnstructuredGrid"):
+            print("UNSADFRRTVXDFGFDGDHRFDCGDRFDSGDSFGREDSCFDGRDFSG")
+            delny = vtk.vtkDelaunay2D()
+            profile = vtk.vtkPolyData()
+            profile.SetPoints(self._vtkDataSet.GetPoints())
+            delny.SetInputData(profile)
+            delny.SetTolerance(0.001)
+            self._vtkPolyDataFilter.SetInputConnection(delny.GetOutputPort())
+
+        elif self._hasCellData == self._needsCellData:
             self._vtkPolyDataFilter.SetInputData(self._vtkDataSet)
         elif self._hasCellData:
             # use cells but needs points

@@ -356,10 +356,33 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
                     m3 = numpy.concatenate(
                         (m2, numpy.zeros(
                             (m2.shape[0], 1))), axis=1)
-                except Exception:
-                    print("SETTING M3 to False")
-                    m3 = False  # no mesh but gengrid
-                    cellData = False
+                except Exception:  # ok no mesh, so unstructured grid point data
+                    vg = vtk.vtkUnstructuredGrid()
+                    lat = g.getLatitude().asma()
+                    lon = g.getLongitude().asma()
+                    pts = vtk.vtkPoints()
+                    for i in range(len(lat)):
+                        pts.InsertNextPoint(float(lon[i]),float(lat[i]),0.)
+                    vg.SetPoints(pts)
+
+
+                    
+                    xm, xM, ym, yM = lon.min(),lon.max(),lat.min(),lat.max()
+                    wc = [gm.datawc_x1, gm.datawc_x2, gm.datawc_y1, gm.datawc_y2]
+                    geo, geopts = project(pts, projection, getWrappedBounds(wc, [xm, xM, ym, yM], wrap))
+                    out = {"vtk_backend_grid": vg,
+                           "xm": xm,
+                           "xM": xM,
+                           "ym": ym,
+                           "yM": yM,
+                           "continents": continents,
+                           "wrap": wrap,
+                           "geo": geo,
+                           "cellData": False,
+                           "data": data1,
+                           "data2": data2
+                           }
+                    return out
 
         # Could still be meshfill with mesh data
         # Ok probably should do a test for hgrid before sending data2
@@ -388,25 +411,15 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
     if m3 is not None:
         # Create unstructured grid points
         vg = vtk.vtkUnstructuredGrid()
-        print("WELL M3 is:",m3)
-        if m3 is not False:
-            for i in range(numberOfCells):
-                pt_ids = []
-                for j in range(nVertices):
-                    indx = i * nVertices + j
-                    if not numpy.isnan(m3[indx][0]):  # missing value means skip vertex
-                        pt_ids.append(indx)
-                vg.InsertNextCell(vtk.VTK_POLYGON,
-                                  len(pt_ids),
-                                  pt_ids)
-        else:  # gengrid with no bounds
-            lat = g.getLatitude().asma()
-            lon = g.getLongitude().asma()
-            numberOfPoints = len(lat)
-            pts = vtk.vtkPoints()
-            for i in range(numberOfPoints):
-                pts.InsertNextPoint((lon[i],lat[i],0.))
-            vg.SetPoints(pts)
+        for i in range(numberOfCells):
+            pt_ids = []
+            for j in range(nVertices):
+                indx = i * nVertices + j
+                if not numpy.isnan(m3[indx][0]):  # missing value means skip vertex
+                    pt_ids.append(indx)
+            vg.InsertNextCell(vtk.VTK_POLYGON,
+                              len(pt_ids),
+                              pt_ids)
     else:
         # Ok a simple structured grid is enough
         if grid is None:
@@ -498,14 +511,12 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
 
     # attribute data
     gridForAttribute = grid if grid else vg
-    print("GFA AND VG:",gridForAttribute, vg)
     if genVectors:
         attribute = generateVectorArray(data1, data2, gridForAttribute)
     else:
         attribute = numpy_to_vtk_wrapper(data1.filled(0.).flat,
                                          deep=False)
         attribute.SetName("scalar")
-    print("CELLDATA:????",cellData)
     if cellData:
         attributes = gridForAttribute.GetCellData()
     else:
@@ -517,30 +528,26 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
 
     if grid is None:
         # First create the points/vertices (in vcs terms)
-        if m3 is not False:
-            pts = vtk.vtkPoints()
-            # Convert nupmy array to vtk ones
-            ppV = numpy_to_vtk_wrapper(m3, deep=deep)
-            pts.SetData(ppV)
-            ptsBounds = pts.GetBounds()
-            xRange = ptsBounds[1] - ptsBounds[0]
-            xm, xM, ym, yM, tmp, tmp2 = pts.GetBounds()
+        pts = vtk.vtkPoints()
+        # Convert nupmy array to vtk ones
+        ppV = numpy_to_vtk_wrapper(m3, deep=deep)
+        pts.SetData(ppV)
+        ptsBounds = pts.GetBounds()
+        xRange = ptsBounds[1] - ptsBounds[0]
+        xm, xM, ym, yM, tmp, tmp2 = pts.GetBounds()
 
-            # We use the zooming feature for linear and polar projections
-            # We use plotting coordinates for doing the projection
-            # such that parameters such that central meridian are set correctly
-            if (gm.g_name == 'Gfm'):
-                # axes are not lon/lat for meshfill
-                wc = [gm.datawc_x1, gm.datawc_x2, gm.datawc_y1, gm.datawc_y2]
-            else:
-                wc = vcs.utils.getworldcoordinates(gm,
-                                                   data1.getAxis(-1),
-                                                   data1.getAxis(-2))
-
-            vg.SetPoints(pts)
+        # We use the zooming feature for linear and polar projections
+        # We use plotting coordinates for doing the projection
+        # such that parameters such that central meridian are set correctly
+        if (gm.g_name == 'Gfm'):
+            # axes are not lon/lat for meshfill
+            wc = [gm.datawc_x1, gm.datawc_x2, gm.datawc_y1, gm.datawc_y2]
         else:
-            wc = [lon.min(),lon.max(),lat.min(),lat.max()]
-            print("WC:",wc)
+            wc = vcs.utils.getworldcoordinates(gm,
+                                               data1.getAxis(-1),
+                                               data1.getAxis(-2))
+
+        vg.SetPoints(pts)
         # index into the scalar array. Used for upgrading
         # the scalar after wrapping. Note this will work
         # correctly only for cell data. For point data
@@ -548,7 +555,6 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
         # wrapping
         pedigreeId = vtk.vtkIntArray()
         pedigreeId.SetName("PedigreeIds")
-        print("TUPLES:",attribute.GetNumberOfTuples())
         pedigreeId.SetNumberOfTuples(attribute.GetNumberOfTuples())
         for i in range(0, attribute.GetNumberOfTuples()):
             pedigreeId.SetValue(i, i)
@@ -565,18 +571,8 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
         vg = doWrapData(vg, wc, wrap)
         pts = vg.GetPoints()
         xm, xM, ym, yM, tmp, tmp2 = vg.GetPoints().GetBounds()
-        print("XS:",xm, xM, ym, yM, tmp, tmp2)
-        pts = vg.GetPoints()
-        print("HERE WE HAVE:",pts.GetNumberOfPoints())
-        if m3 is not False:
-            vg = doWrapData(vg, wc)
-            pts = vg.GetPoints()
-            xm, xM, ym, yM, tmp, tmp2 = vg.GetPoints().GetBounds()
         projection = vcs.elements["projection"][gm.projection]
-        #vg.SetPoints(pts)
-        print("XS:",xm, xM, ym, yM, tmp, tmp2)
-        import pdb
-        pdb.set_trace()
+        vg.SetPoints(pts)
         geo, geopts = project(pts, projection, getWrappedBounds(
             wc, [xm, xM, ym, yM], wrap))
         # proj4 returns inf for points that are not visible. Set those to a valid point
