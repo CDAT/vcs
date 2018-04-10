@@ -95,13 +95,15 @@ jobs:
       - run: *run_vcs_tests
 
   centos_vcs:
-    docker:
-      image: centos:6.8
+    #docker:
+    #  image: centos:6.8
+    machine:
+      image: circleci/classic:latest
     environment:
       WORKDIR: "workspace/test_macos_vcs"
     steps:
       - checkout
-      - run: echo "HELLO from CentOS"    
+      - run: which docker    
 
 workflows:
   version: 2
