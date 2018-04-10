@@ -95,10 +95,10 @@ jobs:
       - run: *run_vcs_tests
 
   centos_vcs:
-    #docker:
-    #  image: centos:6.8
-    machine:
-      image: circleci/classic:latest
+    docker:
+      image: centos6.8
+    #machine:
+    #  image: circleci/classic:latest
     environment:
       WORKDIR: "workspace/test_macos_vcs"
     steps:
