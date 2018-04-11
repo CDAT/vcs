@@ -101,7 +101,7 @@ jobs:
       WORKDIR: "workspace/test_centos_vcs"
     steps:
       - run: uname -a
-      - run: echo "CIRCLE_PR_NUMBER: ", $CIRCLE_PR_NUMBER
+      - run: echo $CIRCLE_PR_NUMBER
       - run: git clone https://github.com/CDAT/vcs
       - run: pwd
       - run: ls -l
