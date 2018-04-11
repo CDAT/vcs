@@ -94,12 +94,15 @@ jobs:
       - run: *setup_vcs
       - run: *run_vcs_tests
 
+
   centos_vcs:
     docker:
       - image: muryanto1/cci-centos68
     environment:
       WORKDIR: "workspace/test_centos_vcs"
     steps:
+      - run: echo "xxx CentOS ..."
+      - run: id
       - run: uname -a
       - run: git clone -b $CIRCLE_BRANCH https://github.com/CDAT/vcs
       - run: *setup_miniconda
