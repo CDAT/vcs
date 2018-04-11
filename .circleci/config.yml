@@ -97,13 +97,11 @@ jobs:
   centos_vcs:
     docker:
       - image: muryanto1/cci-centos68
-    #machine:
-    #  image: circleci/classic:latest
     environment:
-      WORKDIR: "workspace/test_macos_vcs"
+      WORKDIR: "workspace/test_centos_vcs"
     steps:
-      - checkout
       - run: uname -a
+      - run: ls -l
 
 workflows:
   version: 2
