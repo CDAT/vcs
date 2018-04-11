@@ -105,7 +105,7 @@ jobs:
       - run: pwd
       - run: ls -al vcs
       - run: cd vcs; git status
-      - run: cat .circleci/config.yml
+      - run: cd vcs; cat .circleci/config.yml
 
 workflows:
   version: 2
