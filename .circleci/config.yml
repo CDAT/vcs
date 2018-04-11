@@ -96,7 +96,7 @@ jobs:
 
   centos_vcs:
     docker:
-      image: muryanto1/cci-centos68
+      - image: muryanto1/cci-centos68
     #machine:
     #  image: circleci/classic:latest
     environment:
