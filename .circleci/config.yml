@@ -101,7 +101,7 @@ jobs:
       WORKDIR: "workspace/test_centos_vcs"
     steps:
       - run: uname -a
-      - run: ls -l
+      - run: git clone https://github.com/CDAT/vcs
 
 workflows:
   version: 2
