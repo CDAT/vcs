@@ -103,6 +103,7 @@ jobs:
       - run: uname -a
       - run: git clone https://github.com/CDAT/vcs
       - run: pwd
+      - run: ls -l vcs
       - run: cat vcs/.circleci/config.yml
 
 workflows:
