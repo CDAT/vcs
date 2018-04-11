@@ -102,10 +102,7 @@ jobs:
     steps:
       - run: uname -a
       - run: git clone -b $CIRCLE_BRANCH https://github.com/CDAT/vcs
-      - run: pwd
-      - run: ls -al vcs
-      - run: cd vcs; git status
-      - run: cd vcs; cat .circleci/config.yml
+      - run: *setup_miniconda
 
 workflows:
   version: 2
