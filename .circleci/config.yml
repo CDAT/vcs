@@ -102,6 +102,8 @@ jobs:
     steps:
       - run: uname -a
       - run: git clone https://github.com/CDAT/vcs
+      - run: pwd
+      - run: ls -l
 
 workflows:
   version: 2
