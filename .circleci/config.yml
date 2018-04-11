@@ -101,11 +101,11 @@ jobs:
       WORKDIR: "workspace/test_centos_vcs"
     steps:
       - run: uname -a
-      - run: git clone https://github.com/CDAT/vcs
+      - run: git clone -b $CIRCLE_BRANCH https://github.com/CDAT/vcs
       - run: pwd
       - run: ls -al vcs
       - run: cd vcs; git status
-      - run: echo $CIRCLE_BRANCH
+      - run: cat .circleci/config.yml
 
 workflows:
   version: 2
