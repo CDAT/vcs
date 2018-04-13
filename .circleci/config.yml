@@ -88,12 +88,13 @@ jobs:
     environment:
       WORKDIR: "workspace/test_macos_vcs"
     steps:
-      - checkout
-      - run: *setup_miniconda
-      - run: *get_testdata
-      - run: *create_conda_env
-      - run: *setup_vcs
-      - run: *run_vcs_tests
+      - run: id
+      #- checkout
+      #- run: *setup_miniconda
+      #- run: *get_testdata
+      #- run: *create_conda_env
+      #- run: *setup_vcs
+      #- run: *run_vcs_tests
 
 
   centos_vcs:
@@ -113,5 +114,5 @@ workflows:
   nightly:
     jobs:
       - macos_vcs
-      #- linux_vcs
+      - linux_vcs
       - centos_vcs
