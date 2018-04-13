@@ -31,9 +31,9 @@ aliases:
     name: create_conda_env
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
-       #conda config --set always_yes yes --set changeps1 no
-       #conda update -y -q conda
-       #conda config --set anaconda_upload no
+       conda config --set always_yes yes --set changeps1 no
+       conda update -y -q conda
+       conda config --set anaconda_upload no
        conda create -q -n py2 -c cdat/label/nightly -c conda-forge -c cdat cdms2 cdat_info udunits2 nose flake8 mesalib nose image-compare flake8 matplotlib image-compare genutil dv3d cdutil cdtime "proj4<5" "python<3" "numpy>1.14" 
        conda create -q -n py3 -c cdat/label/nightly -c conda-forge -c cdat cdms2 nose flake8 cdat_info udunits2 mesalib nose image-compare flake8 matplotlib image-compare genutil dv3d cdutil cdtime nbsphinx easydev "proj4<5" "python>3" "numpy>1.14" 
 
@@ -74,40 +74,25 @@ jobs:
     environment:
       WORKDIR: "workspace/test_macos_vcs"
     steps:
-      - run: id
-      #- checkout
-      #- run: *setup_miniconda
-      #- run: *get_testdata
-      #- run: *create_conda_env
-      #- run: *setup_vcs
-      #- run: *run_vcs_tests
+      - checkout
+      - run: *setup_miniconda
+      - run: *get_testdata
+      - run: *create_conda_env
+      - run: *setup_vcs
+      - run: *run_vcs_tests
 
   linux_vcs:
     machine:
       image: circleci/classic:latest
     environment:
-      WORKDIR: "workspace/test_macos_vcs"
+      WORKDIR: "workspace/test_linux_vcs"
     steps:
-      - run: id
-      #- checkout
-      #- run: *setup_miniconda
-      #- run: *get_testdata
-      #- run: *create_conda_env
-      #- run: *setup_vcs
-      #- run: *run_vcs_tests
-
-
-  centos_vcs:
-    docker:
-      - image: muryanto1/cci-centos68
-    environment:
-      WORKDIR: "workspace/test_centos_vcs"
-    steps:
-      - run: echo "xxx CentOS ..."
-      - run: id
-      - run: uname -a
-      - run: git clone -b $CIRCLE_BRANCH https://github.com/CDAT/vcs
+      - checkout
       - run: *setup_miniconda
+      - run: *get_testdata
+      - run: *create_conda_env
+      - run: *setup_vcs
+      - run: *run_vcs_tests
 
 workflows:
   version: 2
@@ -115,4 +100,3 @@ workflows:
     jobs:
       - macos_vcs
       - linux_vcs
-      - centos_vcs
