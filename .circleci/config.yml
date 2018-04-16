@@ -5,9 +5,9 @@ general:
     - tests_html
     - tests_png
 
-#checkout:
-#  post:
-#    - ./ci-support/checkout_merge_commit.sh
+checkout:
+  post:
+    - ./ci-support/checkout_merge_commit.sh
         
 aliases:
 
@@ -64,10 +64,11 @@ aliases:
        RESULT=$(( $RESULT + $? ))
        cd ..
        echo "py3 test command exit result:",$RESULT
-       ##REVISIT -- need to check results and upload
+       if [ $RESULT -eq 0 -a $CIRCLE_BRANCH == "master" ]; then conda install -n root conda-build anaconda-client ; fi
+       if [ $RESULT -eq 0 -a $CIRCLE_BRANCH == "master" ]; then bash ../ci-support/conda_upload.sh ; fi
+
 
 jobs:
-
   macos_vcs:
     macos:
       xcode: "9.2.0"
