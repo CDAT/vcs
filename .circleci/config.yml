@@ -1,10 +1,5 @@
 version: 2
 
-general:
-  artifacts:
-    - tests_html
-    - tests_png
-
 checkout:
   post:
     - ./ci-support/checkout_merge_commit.sh
@@ -81,6 +76,12 @@ jobs:
       - run: *create_conda_env
       - run: *setup_vcs
       - run: *run_vcs_tests
+      - store_artifacts:
+          path: tests_html
+          destination: tests_html
+      - store_artifacts:
+          path: tests_png
+          destination: tests_png
 
   linux_vcs:
     machine:
@@ -94,6 +95,12 @@ jobs:
       - run: *create_conda_env
       - run: *setup_vcs
       - run: *run_vcs_tests
+      - store_artifacts:
+          path: tests_html
+          destination: tests_html
+      - store_artifacts:
+          path: tests_png
+          destination: tests_png
 
 workflows:
   version: 2
