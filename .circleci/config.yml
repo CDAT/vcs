@@ -48,11 +48,11 @@ aliases:
        export UVCDAT_ANONYMOUS_LOG=False
        export UVCDAT_SETUP_PATH=${HOME}
        source activate py2
-       python run_tests.py -v2 -n 2 -g --no-vtk-ui       
+       python run_tests.py -H -v2 -n 2 -g --no-vtk-ui       
        RESULT=$?
        echo "py2 test command exit result:",$RESULT
        source activate py3
-       python run_tests.py -n 2 -g --no-vtk-ui
+       python run_tests.py -H -n 2 -g --no-vtk-ui
        RESULT=$(( $RESULT + $? ))
        cd docs
        make doctest
