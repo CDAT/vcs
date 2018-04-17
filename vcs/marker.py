@@ -400,7 +400,7 @@ class Tm(vcs.bestMatch):
         self.s_name = 'Tm'
         if Tm_name == "default":
             self._type = ["dot", ]
-            self._size = [1.0, ]
+            self._size = [10.0, ]
             self._color = [1, ]
             self._priority = 1
             self._viewport = [0., 1., 0., 1.]
