@@ -1503,9 +1503,8 @@ def prepGlyph(ren, g, marker, index=0):
 
     dx = marker.worldcoordinate[1] - marker.worldcoordinate[0]
     dy = marker.worldcoordinate[3] - marker.worldcoordinate[2]
-    offset = 3
 
-    unused, scale = fillareautils.computeResolutionAndScale(ren, point1, point2, dx, dy, (s + offset), None, 1e-10)
+    unused, scale = fillareautils.computeResolutionAndScale(ren, point1, point2, dx, dy, (s * 10), None, 1e-10)
     finalScale = scale[0]
 
     if t == 'dot':
@@ -1646,7 +1645,7 @@ def prepGlyph(ren, g, marker, index=0):
         lines = vtk.vtkCellArray()
         # Lines first
         # scale_json_values = s / 25
-        scale_json_values = finalScale * 4
+        scale_json_values = finalScale * 5
         for l in params["line"]:
             line = genPoly(list(zip(*l)), pts, filled=False, scale=scale_json_values)
             lines.InsertNextCell(line)

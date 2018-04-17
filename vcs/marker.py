@@ -117,7 +117,7 @@ class Tm(vcs.bestMatch):
 
     Markers are intended to be sized consistently across all plots and legends,
     indepenent of plot size or world coordinate range.  The size attribute
-    sets the screen size (in pixels) of the marker.
+    sets the screen size (in "deci-pixels", see below) of the marker.
 
 
     .. describe:: Useful Functions:
@@ -156,7 +156,7 @@ class Tm(vcs.bestMatch):
                 mk.list()
                 # Range from 1 to 256
                 mk.color=100
-                # Range from 1 to 300 (screen size, in pixels)
+                # Range from 1 to 300 (screen size, in "deci-pixels", i.e. marker size * 10 = size in pixels)
                 mk.size=100
 
         * Specify the marker type:
