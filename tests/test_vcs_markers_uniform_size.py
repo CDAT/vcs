@@ -14,7 +14,7 @@ class TestVCSMarkers(basevcstest.VCSBaseTest):
         tmpl.legend.y1 = .05
         tmpl.legend.y2 = .95
         n = len(names)
-        sizes = [10,]*len(names)
+        sizes = [1,]*len(names)
         # for i in range(len(names)-len(sizes)):
         #     sizes.append(1.)
         tmpl.drawLinesAndMarkersLegend(self.x, [[0,0,0,0]]*n,

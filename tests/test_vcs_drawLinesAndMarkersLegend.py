@@ -8,7 +8,7 @@ class TestVCSDrawMarkerLeg(basevcstest.VCSBaseTest):
                                     ["red", "blue", "green"], [
                                         "solid", "dash", "dot"], [1, 4, 8],
                                     ["blue", "green", "red"], [
-                                        "cross", "square", "dot"], [10, 10, 10],
+                                        "cross", "square", "dot"], [1, 1, 1],
                                     ["sample A", "type B", "thing C"], render=True, bg=self.bg)
 
         fnm = "test_drawLinesAndMarkersLegend.png"
@@ -21,7 +21,7 @@ class TestVCSDrawMarkerLeg(basevcstest.VCSBaseTest):
         t.legend.y2 = .65
         ids = ["Sea Level Pressure (ERA-Interim)","SW Cloud Forcing (CERES-EBAF 4.0)","LW Cloud Forcing (CERES-EBAF 4.0)","Land Precipitation (GPCP 2.2)","Ocean Precipitation (GPCP 2.2)","2-m temperature","More"]
         #ids = ["SLP(ERA-Interim)","A2","A3","B1","C1","C2","C3"]
-        id_sizes = [18, 18, 18, 18, 18, 18, 18,]
+        id_sizes = [1.8, 1.8, 1.8, 1.8, 1.8, 1.8, 1.8,]
         id_colors = ["red","orange","green","cyan","blue","purple","black"]
         symbols = ["diamond","square_fill","circle","triangle_right_fill","triangle_left_fill","triangle_up_fill","triangle_down_fill"]
         n = 7
