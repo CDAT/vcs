@@ -27,5 +27,5 @@ class TestVCSReadSCR(unittest.TestCase):
         self.assertEqual(y.linewidth, 1)
         self.assertEqual(y.marker, "circle")
         self.assertEqual(y.markercolor, [0.0, 0.0, 0.0, 100.0])
-        self.assertEqual(y.markersize, 1)
+        self.assertEqual(y.markersize, 10)
         self.assertEqual(y.flip, False)
