@@ -255,16 +255,16 @@ class Gv(vcs.bestMatch):
 
             .. code-block:: python
 
-                # Same as vc.line='solid'
-                vc.line=0
-                # Same as vc.line='dash'
-                vc.line=1
-                # Same as vc.line='dot'
-                vc.line=2
-                # Same as vc.line='dash-dot'
-                vc.line=3
-                # Same as vc.line='long-dot'
-                vc.line=4
+                # Same as vc.linetype='solid'
+                vc.linetype=0
+                # Same as vc.linetype='dash'
+                vc.linetype=1
+                # Same as vc.linetype='dot'
+                vc.linetype=2
+                # Same as vc.linetype='dash-dot'
+                vc.linetype=3
+                # Same as vc.linetype='long-dot'
+                vc.linetype=4
 
         * Specify the line color of the vectors:
 
@@ -274,6 +274,24 @@ class Gv(vcs.bestMatch):
                 vc.linecolor=16
                 # Width range: 1 to 100, default size is 1
                 vc.linewidth=1
+
+        * Specify the vector scaling type
+
+            .. code-block:: python
+
+                # One of the following strings:
+                # off - No scaling is performed on the vector values
+                vc.scaletype = "off"
+                # constant - vector value *  self.scale
+                vc.scaletype = "constant"
+                # normalize - vector value /  max_norm
+                vc.scaletype = "normalize"
+                # constantNNormalize - vector value * self.scale / max_norm (default)
+                vc.scaletype = "constantNNormalize"
+                # linear - map [min_norm, max_norm] to self.scalerange
+                vc.scaletype = "linear"
+                # constantNLinear - map [min_norm, max_norm] to self.scalerange and then multiply by self.scale
+                vc.scaletype = "constantNLinear"
 
         * Specify the vector scale factor:
 
@@ -776,7 +794,7 @@ class Gv(vcs.bestMatch):
         print("datawc_calendar = ", self.datawc_calendar)
         print("xaxisconvert = ", self.xaxisconvert)
         print("yaxisconvert = ", self.yaxisconvert)
-        print("line = ", self.line)
+        print("linetype = ", self.linetype)
         print("linecolor = ", self.linecolor)
         print("linewidth = ", self.linewidth)
         print("scale = ", self.scale)
