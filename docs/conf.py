@@ -60,7 +60,7 @@ on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if not on_rtd:  # only import and set the theme if we're building docs locally
     import sphinx_rtd_theme
 """
-html_theme = 'haiku'
+html_theme = 'agogo'
 import easydev
 html_theme_path = [easydev.get_path_sphinx_themes()]
 
