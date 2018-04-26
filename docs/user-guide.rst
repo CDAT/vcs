@@ -29,11 +29,16 @@ To enable conda installation in a tight ssl certificate/security environment try
 
 Install uvcdat which will install vcs as well using the following command ::
 
-    conda install uvcdat -c conda-forge -c uvcdat
+    conda install cdat -c conda-forge -c cdat
 
 To install only vcs, use the following command ::
 
-    conda install vcs -c conda-forge -c uvcdat
+    conda install vcs -c conda-forge -c cdat
+
+On headless servers or if you run into DISPLAY/OpenGL issues at runtime you
+might want to enable the mesalib version (this can be done after the fact)::
+
+    conda install mesalib -c conda-forge -c cdat
 
 Concepts
 --------
