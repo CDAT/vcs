@@ -5,7 +5,7 @@ VERSION="2.12"
 echo "Trying to upload to conda"
 echo ""
 echo "Activating base env"
-conda activate base
+source activate base
 echo "Making sure conda-build is installed"
 conda install conda-build
 echo "Updating conda"
