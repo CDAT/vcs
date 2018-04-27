@@ -1098,7 +1098,7 @@ markerdoc = """
 
         .. py:attribute:: markersize (None/int)
 
-            size of markers
+            size of markers (screen size, in "deci-pixels", i.e. marker size * 10 = size in pixels)
     """
 color_one_two_doc = """
         .. py:attribute:: color_1 (float)

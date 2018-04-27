@@ -605,7 +605,7 @@ class G1d(vcs.bestMatch):
                 self,
                 'markersize',
                 value,
-                1,
+                0,
                 300)
         self._markersize = value
     markersize = property(_getmarkersize, _setmarkersize)

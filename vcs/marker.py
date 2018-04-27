@@ -115,6 +115,10 @@ class Tm(vcs.bestMatch):
     can be used to change some or all of the marker attributes in an
     existing marker table entry.
 
+    Markers are intended to be sized consistently across all plots and legends,
+    indepenent of plot size or world coordinate range.  The size attribute
+    sets the screen size (in "deci-pixels", see below) of the marker.
+
 
     .. describe:: Useful Functions:
 
@@ -152,7 +156,7 @@ class Tm(vcs.bestMatch):
                 mk.list()
                 # Range from 1 to 256
                 mk.color=100
-                # Range from 1 to 300
+                # Range from 1 to 300 (screen size, in "deci-pixels", i.e. marker size * 10 = size in pixels)
                 mk.size=100
 
         * Specify the marker type:

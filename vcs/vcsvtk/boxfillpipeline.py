@@ -81,7 +81,6 @@ class BoxfillPipeline(Pipeline2D):
             [self._template.data.x1, self._template.data.x2,
              self._template.data.y1, self._template.data.y2])
         dataset_renderer = None
-        xScale, yScale = (1, 1)
         fareapixelspacing, fareapixelscale = self._patternSpacingAndScale()
 
         for mapper in self._mappers:
@@ -119,15 +118,8 @@ class BoxfillPipeline(Pipeline2D):
                     # Since pattern creation requires a single color, assuming the first
                     c = self.getColorIndexOrRGBA(_colorMap, tmpColors[cti][ctj])
 
-                    # Get the transformed contour data
-                    transform = act.GetUserTransform()
-                    transformFilter = vtk.vtkTransformFilter()
-                    transformFilter.SetInputData(mapper.GetInput())
-                    transformFilter.SetTransform(transform)
-                    transformFilter.Update()
-
                     patact = fillareautils.make_patterned_polydata(
-                        transformFilter.GetOutput(),
+                        mapper.GetInput(),
                         fillareastyle=_style,
                         fillareaindex=self._customBoxfillArgs["tmpIndices"][cti],
                         fillareacolors=c,

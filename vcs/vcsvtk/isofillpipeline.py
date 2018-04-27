@@ -147,14 +147,7 @@ class IsofillPipeline(Pipeline2D):
                 # Since pattern creation requires a single color, assuming the first
                 c = self.getColorIndexOrRGBA(_colorMap, tmpColors[ct][0])
 
-                # Get the transformed contour data
-                transform = act.GetUserTransform()
-                transformFilter = vtk.vtkTransformFilter()
-                transformFilter.SetInputData(mapper.GetInput())
-                transformFilter.SetTransform(transform)
-                transformFilter.Update()
-
-                patact = fillareautils.make_patterned_polydata(transformFilter.GetOutput(),
+                patact = fillareautils.make_patterned_polydata(mapper.GetInput(),
                                                                fillareastyle=style,
                                                                fillareaindex=tmpIndices[ct],
                                                                fillareacolors=c,

@@ -205,13 +205,15 @@ class MeshfillPipeline(Pipeline2D):
                     c = self.getColorIndexOrRGBA(_colorMap, tmpColors[cti][ctj])
 
                     # Get the transformed contour data
-                    transform = act.GetUserTransform()
-                    transformFilter = vtk.vtkTransformFilter()
-                    transformFilter.SetInputData(mapper.GetInput())
-                    transformFilter.SetTransform(transform)
-                    transformFilter.Update()
+                    # transform = vtk.vtkTransform()
+                    # transform.Scale(xScale, yScale, 1.)
+                    # transformFilter = vtk.vtkTransformFilter()
+                    # transformFilter.SetInputData(mapper.GetInput())
+                    # transformFilter.SetTransform(transform)
+                    # transformFilter.Update()
 
-                    patact = fillareautils.make_patterned_polydata(transformFilter.GetOutput(),
+                    # patact = fillareautils.make_patterned_polydata(transformFilter.GetOutput(),
+                    patact = fillareautils.make_patterned_polydata(mapper.GetInput(),
                                                                    fillareastyle=style,
                                                                    fillareaindex=tmpIndices[cti],
                                                                    fillareacolors=c,
