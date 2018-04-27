@@ -59,7 +59,6 @@ aliases:
        RESULT=$(( $RESULT + $? ))
        cd ..
        echo "py3 test command exit result:",$RESULT
-       ls ./ci-support/conda_upload.sh
        if [ $RESULT -eq 0 -a $CIRCLE_BRANCH == "master" ]; then conda install -n root conda-build anaconda-client ; fi
        if [ $RESULT -eq 0 -a $CIRCLE_BRANCH == "master" ]; then bash ./ci-support/conda_upload.sh ; fi
 
