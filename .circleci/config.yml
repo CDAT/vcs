@@ -9,7 +9,6 @@ aliases:
   - &setup_miniconda
     name: setup_miniconda
     command: |
-      echo "xxx setup_miniconda xxx"
       mkdir -p workspace
       git clone -b validateNightly git@github.com:CDAT/cdat workspace/cdat
       ls workspace/cdat
@@ -60,7 +59,7 @@ aliases:
        cd ..
        echo "py3 test command exit result:",$RESULT
        if [ $RESULT -eq 0 -a $CIRCLE_BRANCH == "master" ]; then conda install -n root conda-build anaconda-client ; fi
-       if [ $RESULT -eq 0 -a $CIRCLE_BRANCH == "master" ]; then bash ../ci-support/conda_upload.sh ; fi
+       if [ $RESULT -eq 0 -a $CIRCLE_BRANCH == "master" ]; then bash ./ci-support/conda_upload.sh ; fi
 
 
 jobs:
