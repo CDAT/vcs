@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 PKG_NAME=vcs
 USER=cdat
-VERSION="2.12"
+VERSION="8.0"
 echo "Trying to upload to conda"
 echo ""
 echo "Activating base env"
