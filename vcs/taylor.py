@@ -435,7 +435,7 @@ class TDMarker(vcs.bestMatch):
             if color is None:
                 color = 'black'
             if size is None:
-                size = 5
+                size = 7
             if line_color is None:
                 line_color = 'black'
             if line_size is None:

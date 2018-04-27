@@ -6,11 +6,24 @@ import numpy
 
 
 class TestVCSAxisConvert(basevcstest.VCSBaseTest):
+    def axisConvertGmLinear(self, method):
+        method = method()
+        f = cdms2.open(vcs.sample_data+"/ta_ncep_87-6-88-4.nc")
+        data = f("ta", longitude=(12,12,'cob'), latitude=(12, 12, 'cob'), squeeze=1)
+        if isinstance(method, vcs.vector.Gv) or \
+           isinstance(method, vcs.streamline.Gs):
+            data = self.clt("u")
+            data2 = self.clt("v")
+        else:
+            data2 = None
+        self.axisConvertGm(data, data2, method, 'linear', 'linear')
+
     def axisConvertGmLog10Areawt(self, method):
         method = method()
         f = cdms2.open(vcs.sample_data+"/ta_ncep_87-6-88-4.nc")
         data = f("ta", time=slice(0,1), longitude=(12,12,'cob'), squeeze=1)
-        if isinstance(method, vcs.vector.Gv):
+        if isinstance(method, vcs.vector.Gv) or \
+           isinstance(method, vcs.streamline.Gs):
             data2 = data
         else:
             data2 = None
@@ -20,7 +33,8 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
         method = method()
         f = cdms2.open(vcs.sample_data+"/ta_ncep_87-6-88-4.nc")
         data = f("ta", longitude=(12,12,'cob'), latitude=(12, 12, 'cob'), squeeze=1)
-        if isinstance(method, vcs.vector.Gv):
+        if isinstance(method, vcs.vector.Gv) or \
+           isinstance(method, vcs.streamline.Gs):
             data2 = data
         else:
             data2 = None
@@ -28,7 +42,8 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
 
     def axisConvertGmAreaWt(self, method):
         method = method()
-        if isinstance(method, vcs.vector.Gv):
+        if isinstance(method, vcs.vector.Gv) or \
+           isinstance(method, vcs.streamline.Gs):
             data = self.clt("u")
             data2 = self.clt("v")
         elif isinstance(method, vcs.meshfill.Gfm):
@@ -55,9 +70,12 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
                 vcs.createisofill,
                 vcs.createisoline,
                 vcs.createmeshfill,
-        #        vcs.createvector,
+                vcs.createvector,
+                vcs.createstreamline,
                        ]:
             self.axisConvertGmAreaWt(method)
             if not method in [vcs.createmeshfill,]:
-                self.axisConvertGmLog10(method)
-                self.axisConvertGmLog10Areawt(method)
+                self.axisConvertGmLinear(method)
+                if not method is vcs.createstreamline:
+                    self.axisConvertGmLog10(method)
+                    self.axisConvertGmLog10Areawt(method)

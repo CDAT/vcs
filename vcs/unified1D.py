@@ -688,7 +688,7 @@ class G1d(vcs.bestMatch):
             self._linewidth = 1
             self._marker = 'dot'
             self._markercolor = (0.0, 0.0, 0.0, 100.0)
-            self._markersize = 1
+            self._markersize = 10
             self._datawc_timeunits = "days since 2000"
             self._datawc_calendar = 135441
             self._colormap = None
