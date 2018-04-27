@@ -9,7 +9,6 @@ aliases:
   - &setup_miniconda
     name: setup_miniconda
     command: |
-      echo "xxx setup_miniconda xxx"
       mkdir -p workspace
       git clone -b validateNightly git@github.com:CDAT/cdat workspace/cdat
       ls workspace/cdat
