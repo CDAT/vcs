@@ -2,17 +2,22 @@
 PKG_NAME=vcs
 USER=cdat
 VERSION="2.12"
-echo "Trying to upload conda"
+echo "Trying to upload to conda"
+echo ""
+echo "Activating base env"
+conda activate base
+echo "Making sure conda-build is installed"
+conda install conda-build
+echo "Updating conda"
+conda update -y -q conda
 if [ `uname` == "Linux" ]; then
     OS=linux-64
     echo "Linux OS"
-    conda update -y -q conda
 else
     echo "Mac OS"
     OS=osx-64
 fi
 
-conda activate base
 mkdir ~/conda-bld
 conda config --set anaconda_upload no
 export CONDA_BLD_PATH=${HOME}/conda-bld
