@@ -17,6 +17,9 @@ import sys, os
 import subprocess
 import glob
 import shlex
+import os
+
+os.environ["UVCDAT_ANONYMOUS_LOG"] = "False"
 
 # First we need to create the jupyter links from gms to Notebooks
 
@@ -61,8 +64,8 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
     import sphinx_rtd_theme
 """
 html_theme = 'agogo'
-import easydev
-html_theme_path = [easydev.get_path_sphinx_themes()]
+#import easydev
+#html_theme_path = [easydev.get_path_sphinx_themes()]
 
 # otherwise, readthedocs.org uses their theme by default, so no need to specify it
 
@@ -80,7 +83,7 @@ sys.path.insert(0, os.path.abspath('..'))
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 
-extensions = ['easydev.copybutton',
+extensions = [#'easydev.copybutton',
               'sphinx.ext.autodoc',
               'sphinx.ext.todo',
               'sphinx.ext.coverage',
