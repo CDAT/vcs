@@ -1,2 +1,2 @@
 conda:
-    file: vcs_py2.yaml
+    file: cdat-v80-nox_py2.Linux.yaml
