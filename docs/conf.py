@@ -17,7 +17,6 @@ import sys, os
 import subprocess
 import glob
 import shlex
-import os
 
 os.environ["UVCDAT_ANONYMOUS_LOG"] = "False"
 
