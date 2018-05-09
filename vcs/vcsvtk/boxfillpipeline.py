@@ -83,6 +83,12 @@ class BoxfillPipeline(Pipeline2D):
         dataset_renderer = None
         fareapixelspacing, fareapixelscale = self._patternSpacingAndScale()
 
+        # view and interactive area
+        view = vtk.vtkContextView()
+        view.SetRenderWindow(self._context().renWin)
+        area = vtk.vtkInteractiveArea()
+        view.GetScene().AddItem(area)
+
         for mapper in self._mappers:
             act = vtk.vtkActor()
             act.SetMapper(mapper)
@@ -97,6 +103,58 @@ class BoxfillPipeline(Pipeline2D):
                 priority=self._template.data.priority,
                 create_renderer=(dataset_renderer is None),
                 add_actor=(_style == "solid"))
+
+            rect = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
+                                self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
+                                self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
+            mapper.Update()
+            poly = mapper.GetInput()
+            # create poly item
+            item = vtk.vtkPolyDataItem()
+            item.SetPolyData(poly)
+            if self._needsCellData:
+                item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                data = poly.GetCellData().GetScalars()
+            else:
+                item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
+                data = poly.GetPointData().GetScalars()
+            lut = mapper.GetLookupTable()
+            range = mapper.GetScalarRange()
+            lut.SetRange(range)
+            mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+            item.SetMappedColors(mappedColors)
+            area.SetDrawAreaBounds(rect)
+            area.GetDrawAreaItem().AddItem(item)
+            area.SetShowGrid(False)
+            axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
+            axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
+            axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
+            axisTop = area.GetAxis(vtk.vtkAxis.TOP)
+            axisTop.SetVisible(False)
+            axisRight.SetVisible(False)
+            axisLeft.SetVisible(False)
+            axisBottom.SetVisible(False)
+            # axis = self._data1.getAxisList()[0]
+            # axisLeft.SetTitle(axis.id)
+            # axis = self._data1.getAxisList()[1]
+            # axisBottom.SetTitle(axis.id)
+
+            # adjust the viewport
+            device = view.GetContext().GetDevice()
+            device.Begin(view.GetRenderer())
+            rectLeft = axisLeft.GetBoundingRect(view.GetContext())
+            rectRight = axisRight.GetBoundingRect(view.GetContext())
+            rectTop = axisTop.GetBoundingRect(view.GetContext())
+            rectBottom = axisBottom.GetBoundingRect(view.GetContext())
+            device.End()
+            xmin = vp[0] - rectLeft.GetWidth() / self._context().renWin.GetSize()[0]
+            xmax = vp[1] + rectRight.GetWidth() / self._context().renWin.GetSize()[0]
+            ymin = vp[2] - rectBottom.GetHeight() / self._context().renWin.GetSize()[1]
+            ymax = vp[3] + rectTop.GetHeight() / self._context().renWin.GetSize()[1]
+
+            # xmin, ymin, xmax, ymax
+            dataset_renderer = view.GetRenderer()
+            dataset_renderer.SetViewport(xmin, ymin, xmax, ymax)
 
             # TODO We shouldn't need this conditional branch, the 'else' body
             # should be used and GetMapper called to get the mapper as needed.

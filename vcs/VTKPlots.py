@@ -560,8 +560,8 @@ class VTKVCSBackend(object):
         self.resize_or_rotate_window(W, H, x, y, clear)
 
     def initialSize(self, width=None, height=None):
-        if hasattr(vtk.vtkRenderingOpenGLPython, "vtkXOpenGLRenderWindow") and\
-                isinstance(self.renWin, vtk.vtkRenderingOpenGLPython.vtkXOpenGLRenderWindow):
+        if hasattr(vtk.vtkRenderingOpenGL2Python, "vtkXOpenGLRenderWindow") and\
+                isinstance(self.renWin, vtk.vtkRenderingOpenGL2Python.vtkXOpenGLRenderWindow):
             if os.environ.get("DISPLAY", None) is None:
                 raise RuntimeError("No DISPLAY set. Set your DISPLAY env variable or install mesalib conda package")
 
@@ -879,17 +879,31 @@ class VTKVCSBackend(object):
                                   create_renderer=True)
 
     def renderTemplate(self, tmpl, data, gm, taxis,
-                       zaxis, X=None, Y=None, **kargs):
+                       zaxis, X=None, Y=None, draw_attributes=False, **kargs):
         # ok first basic template stuff, let's store the displays
         # because we need to return actors for min/max/mean
-        displays = tmpl.plot(
-            self.canvas,
-            data,
-            gm,
-            bg=self.bg,
-            X=X,
-            Y=Y,
-            **kargs)
+        if draw_attributes:
+            savedVp = self.canvas._viewport
+            savedWc = self.canvas._worldcoordinate
+            self.canvas._viewport = [0, 1, 0, 1]
+            self.canvas._worldcoordinate = [0, 1, 0, 1]
+            displays = tmpl.drawAttributes(
+                self.canvas,
+                data,
+                gm,
+                bg=self.bg,
+                **kargs)
+            self.canvas._viewport = savedVp
+            self.canvas._worldcoordinate = savedWc
+        else:
+            displays = tmpl.plot(
+                self.canvas,
+                data,
+                gm,
+                bg=self.bg,
+                X=X,
+                Y=Y,
+                **kargs)
         returned = {}
         for d in displays:
             if d is None:
