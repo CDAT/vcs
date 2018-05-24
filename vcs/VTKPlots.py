@@ -560,8 +560,9 @@ class VTKVCSBackend(object):
         self.resize_or_rotate_window(W, H, x, y, clear)
 
     def initialSize(self, width=None, height=None):
-        if hasattr(vtk.vtkRenderingOpenGL2Python, "vtkXOpenGLRenderWindow") and\
-                isinstance(self.renWin, vtk.vtkRenderingOpenGL2Python.vtkXOpenGLRenderWindow):
+        import vtkmodules
+        if hasattr(vtkmodules.vtkRenderingOpenGL2Python, "vtkXOpenGLRenderWindow") and\
+                isinstance(self.renWin, vtkmodules.vtkRenderingOpenGL2Python.vtkXOpenGLRenderWindow):
             if os.environ.get("DISPLAY", None) is None:
                 raise RuntimeError("No DISPLAY set. Set your DISPLAY env variable or install mesalib conda package")
 
