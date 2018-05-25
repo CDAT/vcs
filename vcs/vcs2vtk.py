@@ -1255,9 +1255,12 @@ def genTextActor(renderer, string=None, x=None, y=None,
     actors = []
     pts = vtk.vtkPoints()
     if vcs.elements["projection"][tt.projection].type != "linear":
-        wc = geoBounds[:4]
-        # renderer.SetViewport(tt.viewport[0],tt.viewport[2],tt.viewport[1],tt.viewport[3])
-        renderer.SetWorldPoint(wc)
+        if geoBounds is not None:
+            wc = geoBounds[:4]
+            # renderer.SetViewport(tt.viewport[0],tt.viewport[2],tt.viewport[1],tt.viewport[3])
+            renderer.SetWorldPoint(wc)
+        else:
+            wc = None
 
     for i in range(n):
         t = vtk.vtkTextActor()
@@ -1268,6 +1271,21 @@ def genTextActor(renderer, string=None, x=None, y=None,
         if vcs.elements["projection"][tt.projection].type != "linear":
             _, pts = project(pts, tt.projection, tt.worldcoordinate, geo=geo)
             X, Y, tz = pts.GetPoint(0)
+            if wc is None:
+                wc = tt.worldcoordinate
+                pts_wc = vtk.vtkPoints()
+                # Scan a bunch of points within wc
+                # In case the proj deformation bring origin close
+                # from each others
+                for wx in numpy.arange(wc[0],wc[1],(wc[1]-wc[0])/25.):
+                    for wy in numpy.arange(wc[2],wc[3],(wc[3]-wc[2])/25.):
+                        pts_wc.InsertNextPoint(wx, wy, 0.)
+                _, pts_wc = project(pts_wc, tt.projection, tt.worldcoordinate, geo=geo)
+                as_numpy = VN.vtk_to_numpy(pts_wc.GetData())
+                wx = as_numpy[:,0]
+                wy = as_numpy[:,1]
+                wc = [wx.min(), wx.max(), wy.min(), wy.max()]
+            renderer.SetWorldPoint(wc)
             X, Y = world2Renderer(renderer, X, Y, tt.viewport, wc)
         else:
             X, Y = world2Renderer(
