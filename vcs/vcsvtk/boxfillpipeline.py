@@ -5,6 +5,10 @@ import numpy
 import vcs
 import vtk
 
+from .. import vcs2vtk
+
+_callidx = 0
+
 
 class BoxfillPipeline(Pipeline2D):
 
@@ -24,6 +28,7 @@ class BoxfillPipeline(Pipeline2D):
         self._mappers = None
         self._customBoxfillArgs = {}
         self._needsCellData = True
+
 
     def _updateScalarData(self):
         """Overrides baseclass implementation."""
@@ -57,6 +62,7 @@ class BoxfillPipeline(Pipeline2D):
         self._contourColors = list(range(self._gm.color_1, self._gm.color_2 + 1))
 
     def _plotInternal(self):
+        global _callidx
         """Overrides baseclass implementation."""
         # Special case for custom boxfills:
         if self._gm.boxfill_type != "custom":
@@ -89,6 +95,8 @@ class BoxfillPipeline(Pipeline2D):
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
+        midx = 0
+
         for mapper in self._mappers:
             act = vtk.vtkActor()
             act.SetMapper(mapper)
@@ -109,6 +117,10 @@ class BoxfillPipeline(Pipeline2D):
                                 self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
             mapper.Update()
             poly = mapper.GetInput()
+
+            vcs2vtk.debugWriteGrid(poly, 'boxfill-%d-mapper-%d-poly%s' % (_callidx, midx, poly.GetAddressAsString(None)))
+            midx += 1
+
             # create poly item
             item = vtk.vtkPolyDataItem()
             item.SetPolyData(poly)
@@ -264,6 +276,8 @@ class BoxfillPipeline(Pipeline2D):
                                            self._dataWrapModulo,
                                            vp, self._template.data.priority, **kwargs)
 
+        _callidx += 1
+
     def _plotInternalBoxfill(self):
         """Implements the logic to render a non-custom boxfill."""
         # Prep mapper
@@ -318,6 +332,9 @@ class BoxfillPipeline(Pipeline2D):
     def _plotInternalCustomBoxfill(self):
         """Implements the logic to render a custom boxfill."""
         self._mappers = []
+
+        # import pdb
+        # pdb.set_trace()
 
         self._customBoxfillArgs = self._prepContours()
         tmpLevels = self._customBoxfillArgs["tmpLevels"]
