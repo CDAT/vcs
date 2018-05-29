@@ -1985,6 +1985,7 @@ def removeobject(obj):
         raise vcsError(msg)
     return msg
 
+
 def addfont(path, name=""):
     """Add a font to VCS.
 
@@ -2031,6 +2032,7 @@ def addfont(path, name=""):
     else:
         return nms[0]
 
+
 def getfont(font):
     """Get the font name/number associated with a font number/name
 
@@ -2064,6 +2066,7 @@ def getfont(font):
         return vcs.getfontnumber(font)
     else:
         raise vcsError("Error you must pass a string or int")
+
 
 def switchfonts(font1, font2):
     """Switch the font numbers of two fonts.
@@ -2109,6 +2112,7 @@ def switchfonts(font1, font2):
     vcs.elements['fontNumber'][index1] = vcs.elements['fontNumber'][index2]
     vcs.elements['fontNumber'][index2] = tmp
 
+
 def copyfontto(font1, font2):
     """Copy 'font1' into 'font2'.
 
@@ -2126,7 +2130,7 @@ def copyfontto(font1, font2):
     .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
     """
     if isinstance(font1, basestring):
-        index1 = self.getfont(font1)
+        index1 = vcs.getfont(font1)
     elif isinstance(font1, (int, float)):
         index1 = int(font1)
         name1 = vcs.getfont(index1)  # make sure font exists
@@ -2135,10 +2139,10 @@ def copyfontto(font1, font2):
             "Error you must pass either a number or font name!, you passed for font 1: %s" %
             font1)
     if isinstance(font2, basestring):
-        index2 = self.getfont(font2)
+        index2 = vcs.getfont(font2)
     elif isinstance(font2, (int, float)):
         index2 = int(font2)
-        name2 = vcs.getfont(index2)  # make sure font exists
+        vcs.getfont(index2)  # make sure font exists
     else:
         raise vcsError(
             "Error you must pass either a number or font name!, you passed for font 2: %s" %
@@ -2147,6 +2151,7 @@ def copyfontto(font1, font2):
     if index2 == 1:
         raise vcsError("You cannot copy into the default font")
     vcs.elements["fontNumber"][index2] = name1
+
 
 def setdefaultfont(font):
     """Sets the passed/def show font as the default font for vcs
@@ -2168,4 +2173,3 @@ def setdefaultfont(font):
     else:
         raise vcsError("You need to pass an int or an existing font name")
     vcs.elements["font"]["default"] = vcs.elements["font"][font]
-

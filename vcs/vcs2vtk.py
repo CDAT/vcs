@@ -1277,13 +1277,13 @@ def genTextActor(renderer, string=None, x=None, y=None,
                 # Scan a bunch of points within wc
                 # In case the proj deformation bring origin close
                 # from each others
-                for wx in numpy.arange(wc[0],wc[1],(wc[1]-wc[0])/25.):
-                    for wy in numpy.arange(wc[2],wc[3],(wc[3]-wc[2])/25.):
+                for wx in numpy.arange(wc[0], wc[1], (wc[1] - wc[0]) / 25.):
+                    for wy in numpy.arange(wc[2], wc[3], (wc[3] - wc[2]) / 25.):
                         pts_wc.InsertNextPoint(wx, wy, 0.)
                 _, pts_wc = project(pts_wc, tt.projection, tt.worldcoordinate, geo=geo)
                 as_numpy = VN.vtk_to_numpy(pts_wc.GetData())
-                wx = as_numpy[:,0]
-                wy = as_numpy[:,1]
+                wx = as_numpy[:, 0]
+                wy = as_numpy[:, 1]
                 wc = [wx.min(), wx.max(), wy.min(), wy.max()]
             renderer.SetWorldPoint(wc)
             X, Y = world2Renderer(renderer, X, Y, tt.viewport, wc)
