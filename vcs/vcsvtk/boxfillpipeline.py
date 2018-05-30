@@ -118,8 +118,8 @@ class BoxfillPipeline(Pipeline2D):
             mapper.Update()
             poly = mapper.GetInput()
 
-            vcs2vtk.debugWriteGrid(poly, 'boxfill-%d-mapper-%d-poly%s' % (_callidx, midx, poly.GetAddressAsString(None)))
-            midx += 1
+            # vcs2vtk.debugWriteGrid(poly, 'boxfill-%d-mapper-%d-poly%s' % (_callidx, midx, poly.GetAddressAsString(None)))
+            # midx += 1
 
             # create poly item
             item = vtk.vtkPolyDataItem()
@@ -188,6 +188,8 @@ class BoxfillPipeline(Pipeline2D):
                     # Since pattern creation requires a single color, assuming the first
                     c = self.getColorIndexOrRGBA(_colorMap, tmpColors[cti][ctj])
 
+                    print('Doing patterns on a custom boxfill!')
+
                     patact = fillareautils.make_patterned_polydata(
                         mapper.GetInput(),
                         fillareastyle=_style,
@@ -204,6 +206,10 @@ class BoxfillPipeline(Pipeline2D):
                     if patact is not None:
                         dataset_renderer.AddActor(patact)
                         actors.append([patact, plotting_dataset_bounds])
+
+        if dataset_renderer:
+            dataset_renderer.SetRenderWindow(None)
+            self._context().renWin.RemoveRenderer(dataset_renderer)
 
         self._resultDict["vtk_backend_actors"] = actors
 
