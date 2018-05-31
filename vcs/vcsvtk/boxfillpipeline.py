@@ -92,34 +92,90 @@ class BoxfillPipeline(Pipeline2D):
         # view and interactive area
         view = vtk.vtkContextView()
         view.SetRenderWindow(self._context().renWin)
+        dataset_renderer = view.GetRenderer()
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
+
+        rect = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
+                            self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
+                            self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
+
+        area.SetDrawAreaBounds(rect)
+        area.SetShowGrid(False)
+
+        axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
+        axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
+        axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
+        axisTop = area.GetAxis(vtk.vtkAxis.TOP)
+        axisTop.SetVisible(False)
+        axisRight.SetVisible(False)
+        axisLeft.SetVisible(False)
+        axisBottom.SetVisible(False)
+        # axis = self._data1.getAxisList()[0]
+        # axisLeft.SetTitle(axis.id)
+        # axis = self._data1.getAxisList()[1]
+        # axisBottom.SetTitle(axis.id)
+
+        # adjust the viewport
+        device = view.GetContext().GetDevice()
+        device.Begin(view.GetRenderer())
+        rectLeft = axisLeft.GetBoundingRect(view.GetContext())
+        rectRight = axisRight.GetBoundingRect(view.GetContext())
+        rectTop = axisTop.GetBoundingRect(view.GetContext())
+        rectBottom = axisBottom.GetBoundingRect(view.GetContext())
+        # device.End()
+        xmin = vp[0] - rectLeft.GetWidth() / self._context().renWin.GetSize()[0]
+        xmax = vp[1] + rectRight.GetWidth() / self._context().renWin.GetSize()[0]
+        ymin = vp[2] - rectBottom.GetHeight() / self._context().renWin.GetSize()[1]
+        ymax = vp[3] + rectTop.GetHeight() / self._context().renWin.GetSize()[1]
+
+        # dataset_renderer.SetViewport(xmin, ymin, xmax, ymax)
+        dataset_renderer.SetViewport(vp[0], vp[2], vp[1], vp[3])
 
         midx = 0
 
         for mapper in self._mappers:
             act = vtk.vtkActor()
             act.SetMapper(mapper)
+            mapper.Update()
 
             # create a new renderer for this mapper
             # (we need one for each mapper because of camera flips)
             # if not dataset_renderer:
-            dataset_renderer, xScale, yScale = self._context().fitToViewport(
-                act, vp,
-                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
-                geo=self._vtkGeoTransform,
-                priority=self._template.data.priority,
-                create_renderer=(dataset_renderer is None),
-                add_actor=(_style == "solid"))
+            print('boxfillpipeline calling computeScaleToFitViewport')
+            xScale, yScale, xc, yc, yd, flipX, flipY = self._context().computeScaleToFitViewport(
+                vp,
+                wc=plotting_dataset_bounds,
+                geoBounds=self._vtkDataSetBoundsNoMask,
+                geo=self._vtkGeoTransform)
 
-            rect = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
-                                self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
-                                self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
+            print('boxfillpipeline._plotInternal(): xScale = %f, yScale = %f, xc = %f, yc = %f, yd = %f, flipX = %s, flipY = %s' % (xScale, yScale, xc, yc, yd, flipX, flipY))
+
+            cam = dataset_renderer.GetActiveCamera()
+            cam.ParallelProjectionOn()
+            # We increase the parallel projection parallelepiped with 1/1000 so that
+            # it does not overlap with the outline of the dataset. This resulted in
+            # system dependent display of the outline.
+            cam.SetParallelScale(yd * 1.001)
+            cd = cam.GetDistance()
+            cam.SetPosition(xc, yc, cd)
+            cam.SetFocalPoint(xc, yc, 0.)
+            if self._vtkGeoTransform is None:
+                if flipY:
+                    cam.Elevation(180.)
+                    cam.Roll(180.)
+                    pass
+                if flipX:
+                    cam.Azimuth(180.)
+
+            T = vtk.vtkTransform()
+            T.Scale(xScale, yScale, 1.)
+            self._context()._applyTransformationToMapperInput(T, mapper)
             mapper.Update()
             poly = mapper.GetInput()
 
-            # vcs2vtk.debugWriteGrid(poly, 'boxfill-%d-mapper-%d-poly%s' % (_callidx, midx, poly.GetAddressAsString(None)))
-            # midx += 1
+            vcs2vtk.debugWriteGrid(poly, 'boxfill-%d-mapper-%d-poly%s' % (_callidx, midx, poly.GetAddressAsString(None)))
+            midx += 1
 
             # create poly item
             item = vtk.vtkPolyDataItem()
@@ -135,38 +191,7 @@ class BoxfillPipeline(Pipeline2D):
             lut.SetRange(range)
             mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
             item.SetMappedColors(mappedColors)
-            area.SetDrawAreaBounds(rect)
             area.GetDrawAreaItem().AddItem(item)
-            area.SetShowGrid(False)
-            axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
-            axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
-            axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
-            axisTop = area.GetAxis(vtk.vtkAxis.TOP)
-            axisTop.SetVisible(False)
-            axisRight.SetVisible(False)
-            axisLeft.SetVisible(False)
-            axisBottom.SetVisible(False)
-            # axis = self._data1.getAxisList()[0]
-            # axisLeft.SetTitle(axis.id)
-            # axis = self._data1.getAxisList()[1]
-            # axisBottom.SetTitle(axis.id)
-
-            # adjust the viewport
-            device = view.GetContext().GetDevice()
-            device.Begin(view.GetRenderer())
-            rectLeft = axisLeft.GetBoundingRect(view.GetContext())
-            rectRight = axisRight.GetBoundingRect(view.GetContext())
-            rectTop = axisTop.GetBoundingRect(view.GetContext())
-            rectBottom = axisBottom.GetBoundingRect(view.GetContext())
-            device.End()
-            xmin = vp[0] - rectLeft.GetWidth() / self._context().renWin.GetSize()[0]
-            xmax = vp[1] + rectRight.GetWidth() / self._context().renWin.GetSize()[0]
-            ymin = vp[2] - rectBottom.GetHeight() / self._context().renWin.GetSize()[1]
-            ymax = vp[3] + rectTop.GetHeight() / self._context().renWin.GetSize()[1]
-
-            # xmin, ymin, xmax, ymax
-            dataset_renderer = view.GetRenderer()
-            dataset_renderer.SetViewport(xmin, ymin, xmax, ymax)
 
             # TODO We shouldn't need this conditional branch, the 'else' body
             # should be used and GetMapper called to get the mapper as needed.
@@ -207,9 +232,11 @@ class BoxfillPipeline(Pipeline2D):
                         dataset_renderer.AddActor(patact)
                         actors.append([patact, plotting_dataset_bounds])
 
-        if dataset_renderer:
-            dataset_renderer.SetRenderWindow(None)
-            self._context().renWin.RemoveRenderer(dataset_renderer)
+        device.End()
+
+        # if dataset_renderer:
+        #     dataset_renderer.SetRenderWindow(None)
+        #     self._context().renWin.RemoveRenderer(dataset_renderer)
 
         self._resultDict["vtk_backend_actors"] = actors
 

@@ -1593,7 +1593,51 @@ x.geometry(1200,800)
                 if flipX:
                     cam.Azimuth(180.)
 
+            print('VTKPlots.findOrCreateUniqueRenderer(): xScale = %f, yScale = %f, xc = %f, yc = %f, yd = %f, flipX = %s, flipY = %s' % (xScale, yScale, xc, yc, yd, flipX, flipY))
+
         return (Renderer, xScale, yScale)
+
+    def computeScaleToFitViewport(self, vp, wc, geoBounds=None, geo=None):
+        vp = tuple(vp)
+        Xrg = [float(wc[0]), float(wc[1])]
+        Yrg = [float(wc[2]), float(wc[3])]
+
+        wc_used = (float(Xrg[0]), float(Xrg[1]), float(Yrg[0]), float(Yrg[1]))
+        sc = self.renWin.GetSize()
+
+        if Yrg[0] > Yrg[1]:
+            # Yrg=[Yrg[1],Yrg[0]]
+            # T.RotateY(180)
+            Yrg = [Yrg[1], Yrg[0]]
+            flipY = True
+        else:
+            flipY = False
+        if Xrg[0] > Xrg[1]:
+            Xrg = [Xrg[1], Xrg[0]]
+            flipX = True
+        else:
+            flipX = False
+
+        if geo is not None and geoBounds is not None:
+            Xrg = geoBounds[0:2]
+            Yrg = geoBounds[2:4]
+
+        wRatio = float(sc[0]) / float(sc[1])
+        dRatio = (Xrg[1] - Xrg[0]) / (Yrg[1] - Yrg[0])
+        vRatio = float(vp[1] - vp[0]) / float(vp[3] - vp[2])
+
+        if wRatio > 1.:  # landscape orientated window
+            yScale = 1.
+            xScale = vRatio * wRatio / dRatio
+        else:
+            xScale = 1.
+            yScale = dRatio / (vRatio * wRatio)
+
+        xc = xScale * float(Xrg[1] + Xrg[0]) / 2.
+        yc = yScale * float(Yrg[1] + Yrg[0]) / 2.
+        yd = yScale * float(Yrg[1] - Yrg[0]) / 2.
+
+        return (xScale, yScale, xc, yc, yd, flipX, flipY)
 
     def fitToViewport(self, Actor, vp, wc=None, geoBounds=None, geo=None, priority=None,
                       create_renderer=False, add_actor=True):
@@ -1616,6 +1660,8 @@ x.geometry(1200,800)
         return (Renderer, xScale, yScale)
 
     def update_input(self, vtkobjects, array1, array2=None, update=True):
+        import pdb
+        pdb.set_trace()
         if "vtk_backend_grid" in vtkobjects:
             # Ok ths is where we update the input data
             vg = vtkobjects["vtk_backend_grid"]
