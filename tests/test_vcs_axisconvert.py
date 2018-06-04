@@ -1,29 +1,33 @@
 import basevcstest
 import vcs
 
-import numpy
+import MV2
 
 
 class TestVCSAxisConvert(basevcstest.VCSBaseTest):
     def testAxisConvert(self):
         gm = vcs.create1d()
         gm.yaxisconvert = "log10"
-        data = numpy.arange(10)
-        self.x.plot(numpy.power(10,data), gm, bg=self.bg)
+        data = MV2.arange(10)
+        data_pow = MV2.power(10, data)
+        data_pow.id = "test"
+        self.x.plot(data_pow, gm, bg=self.bg)
         self.checkImage("test_vcs_yaxisconvert_log10.png")
 
         self.x.clear()
         gm.flip = True
         gm.yaxisconvert = "linear"
         gm.xaxisconvert="log10"
-        self.x.plot(numpy.power(10,data), gm, bg=self.bg)
+        self.x.plot(data_pow, gm, bg=self.bg)
         self.checkImage("test_vcs_xaxisconvert_log10_flip.png")
 
         self.x.clear()
         gm.flip = False
         gm.xaxisconvert = "linear"
         gm.yaxisconvert="ln"
-        self.x.plot(numpy.exp(data), gm, bg=self.bg)
+        data_exp = MV2.exp(data)
+        data_exp.id = "test"
+        self.x.plot(data_exp, gm, bg=self.bg)
         self.checkImage("test_vcs_yaxisconvert_ln.png")
 
         self.x.clear()
@@ -46,12 +50,12 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
         gm.flip = False
         gm.xaxisconvert="log10"
         gm.yaxisconvert = "ln"
-        self.x.plot(numpy.power(10,data), numpy.exp(data), gm, bg=self.bg)
+        self.x.plot(data_pow, data_exp, gm, bg=self.bg)
         self.checkImage("test_vcs_axisconvert_log10_ln.png")
         
         self.x.clear()
         #gm.flip = True
-        data2[:] = numpy.power(10,numpy.arange(1, data2.shape[0]+1))
+        data2[:] = MV2.power(10,MV2.arange(1, data2.shape[0]+1))
         data2 = data2[:10]
         gm.xaxisconvert = "area_wt"
         gm.yaxisconvert="log10"
@@ -69,13 +73,15 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
         gm.flip = False
         gm.xaxisconvert = "area_wt"
         gm.yaxisconvert="log10"
-        self.x.plot(data2.getAxis(0)[:], data2 , gm, bg=self.bg)
+        data_axis = MV2.array(data2.getAxis(0)[:])
+        data_axis.id = "test"
+        self.x.plot(data_axis, data2 , gm, bg=self.bg)
         self.checkImage("test_vcs_axisconvert_area_log10_2arrays.png")
         
         with self.assertRaises(RuntimeError):
             self.x.clear()
             gm.flip = True
-            self.x.plot(data2.getAxis(0)[:], data2 , gm, bg=self.bg)
+            self.x.plot(data_axis, data2 , gm, bg=self.bg)
         
         self.x.clear()
         gm.flip = False
@@ -111,5 +117,5 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
         tmpl.xlabel2.priority=1
         tmpl.ylabel1.priority=1
         tmpl.ylabel2.priority=1
-        self.x.plot(data2.getAxis(0)[:], data2 , gm, tmpl, bg=self.bg)
+        self.x.plot(data_axis, data2 , gm, tmpl, bg=self.bg)
         self.checkImage("test_vcs_axisconvert_area_log10_user_labels.png")

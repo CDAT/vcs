@@ -63,6 +63,10 @@ try:
     hasVCSAddons = True
 except Exception:
     hasVCSAddons = False
+try:
+    basestring
+except Exception:
+    basestring = str
 
 
 def rotate(x, y, xorigin, yorigin, angle):
@@ -3227,17 +3231,22 @@ class Canvas(vcs.bestMatch):
                 if copy_tmpl is None:
                     copy_tmpl = vcs.createtemplate(source=arglist[2])
                     check_tmpl = copy_tmpl
-                if getattr(getattr(check_tmpl, p), 'priority') == 0:
-                    setattr(getattr(copy_tmpl, p), 'priority', 1)
+                if p == "id":
+                    pname = "dataname"
+                else:
+                    pname = p
+                if getattr(getattr(check_tmpl, pname), 'priority') == 0:
+                    setattr(getattr(copy_tmpl, pname), 'priority', 1)
                 if not isinstance(
                         k, list):  # not a list means only priority set
                     if isinstance(k, dict):
                         for kk in list(k.keys()):
-                            setattr(getattr(copy_tmpl, p), kk, k[kk])
+                            setattr(getattr(copy_tmpl, pname), kk, k[kk])
                     elif isinstance(k, int):
-                        setattr(getattr(copy_tmpl, p), 'priority', k)
+                        setattr(getattr(copy_tmpl, pname), 'priority', k)
                     elif isinstance(k, str):
                         slab_changed_attributes[p] = k
+                        setattr(arglist[0], p, k)
                 else:
                     # if hasattr(arglist[0],p):
                     # slab_changed_attributes[p]=getattr(arglist[0],p)
@@ -3245,11 +3254,11 @@ class Canvas(vcs.bestMatch):
                     # slab_created_attributes.append(p)
                     # setattr(arglist[0],p,k[0])
                     slab_changed_attributes[p] = k[0]
-                    setattr(getattr(copy_tmpl, p), 'x', k[1])
-                    setattr(getattr(copy_tmpl, p), 'y', k[2])
+                    setattr(getattr(copy_tmpl, pname), 'x', k[1])
+                    setattr(getattr(copy_tmpl, pname), 'y', k[2])
                     if isinstance(k[-1], type({})):
                         for kk in list(k[-1].keys()):
-                            setattr(getattr(copy_tmpl, p), kk, k[-1][kk])
+                            setattr(getattr(copy_tmpl, pname), kk, k[-1][kk])
 
                 del(keyargs[p])
             # Now Axis related keywords
@@ -3706,7 +3715,7 @@ class Canvas(vcs.bestMatch):
         # get the background value
         bg = keyargs.get('bg', 0)
 
-        if isinstance(arglist[3], str) and arglist[
+        if isinstance(arglist[3], basestring) and arglist[
                 3].lower() == 'taylordiagram':
             for p in list(slab_changed_attributes.keys()):
                 if hasattr(arglist[0], p):
