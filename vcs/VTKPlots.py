@@ -756,6 +756,7 @@ class VTKVCSBackend(object):
 
         elif gtype == "fillarea":
             if gm.priority != 0:
+                print('VTKPlots.py -> calling prepFillarea(), gm = ', gm)
                 actors = vcs2vtk.prepFillarea(self, self.renWin, gm,
                                               cmap=self.canvas.colormap)
                 returned["vtk_backend_fillarea_actors"] = actors

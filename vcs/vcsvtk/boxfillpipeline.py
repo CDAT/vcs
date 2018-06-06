@@ -117,8 +117,8 @@ class BoxfillPipeline(Pipeline2D):
         # axisBottom.SetTitle(axis.id)
 
         # adjust the viewport
-        device = view.GetContext().GetDevice()
-        device.Begin(view.GetRenderer())
+        # device = view.GetContext().GetDevice()
+        # device.Begin(view.GetRenderer())
         rectLeft = axisLeft.GetBoundingRect(view.GetContext())
         rectRight = axisRight.GetBoundingRect(view.GetContext())
         rectTop = axisTop.GetBoundingRect(view.GetContext())
@@ -129,10 +129,12 @@ class BoxfillPipeline(Pipeline2D):
         ymin = vp[2] - rectBottom.GetHeight() / self._context().renWin.GetSize()[1]
         ymax = vp[3] + rectTop.GetHeight() / self._context().renWin.GetSize()[1]
 
-        # dataset_renderer.SetViewport(xmin, ymin, xmax, ymax)
-        dataset_renderer.SetViewport(vp[0], vp[2], vp[1], vp[3])
+        dataset_renderer.SetViewport(xmin, ymin, xmax, ymax)
+        # dataset_renderer.SetViewport(vp[0], vp[2], vp[1], vp[3])
 
         midx = 0
+
+        appendFilter = vtk.vtkAppendPolyData()
 
         for mapper in self._mappers:
             act = vtk.vtkActor()
@@ -142,14 +144,13 @@ class BoxfillPipeline(Pipeline2D):
             # create a new renderer for this mapper
             # (we need one for each mapper because of camera flips)
             # if not dataset_renderer:
-            print('boxfillpipeline calling computeScaleToFitViewport')
             xScale, yScale, xc, yc, yd, flipX, flipY = self._context().computeScaleToFitViewport(
                 vp,
                 wc=plotting_dataset_bounds,
                 geoBounds=self._vtkDataSetBoundsNoMask,
                 geo=self._vtkGeoTransform)
 
-            print('boxfillpipeline._plotInternal(): xScale = %f, yScale = %f, xc = %f, yc = %f, yd = %f, flipX = %s, flipY = %s' % (xScale, yScale, xc, yc, yd, flipX, flipY))
+            # print('boxfillpipeline._plotInternal(): xScale = %f, yScale = %f, xc = %f, yc = %f, yd = %f, flipX = %s, flipY = %s' % (xScale, yScale, xc, yc, yd, flipX, flipY))
 
             cam = dataset_renderer.GetActiveCamera()
             cam.ParallelProjectionOn()
@@ -168,30 +169,28 @@ class BoxfillPipeline(Pipeline2D):
                 if flipX:
                     cam.Azimuth(180.)
 
-            T = vtk.vtkTransform()
-            T.Scale(xScale, yScale, 1.)
-            self._context()._applyTransformationToMapperInput(T, mapper)
-            mapper.Update()
+            # T = vtk.vtkTransform()
+            # T.Scale(xScale, yScale, 1.)
+            # self._context()._applyTransformationToMapperInput(T, mapper)
+            # mapper.Update()
             poly = mapper.GetInput()
 
-            vcs2vtk.debugWriteGrid(poly, 'boxfill-%d-mapper-%d-poly%s' % (_callidx, midx, poly.GetAddressAsString(None)))
-            midx += 1
+            # vcs2vtk.debugWriteGrid(poly, 'boxfill-%d-mapper-%d-poly%s' % (_callidx, midx, poly.GetAddressAsString(None)))
 
-            # create poly item
-            item = vtk.vtkPolyDataItem()
-            item.SetPolyData(poly)
-            if self._needsCellData:
-                item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
-                data = poly.GetCellData().GetScalars()
-            else:
-                item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
-                data = poly.GetPointData().GetScalars()
-            lut = mapper.GetLookupTable()
-            range = mapper.GetScalarRange()
-            lut.SetRange(range)
-            mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
-            item.SetMappedColors(mappedColors)
-            area.GetDrawAreaItem().AddItem(item)
+            if _style == "solid":
+                if self._needsCellData:
+                    attrs = poly.GetCellData()
+                else:
+                    attrs = poly.GetPointData()
+                data = attrs.GetScalars()
+                lut = mapper.GetLookupTable()
+                range = mapper.GetScalarRange()
+                lut.SetRange(range)
+                mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                mappedColors.SetName('Colors')
+                attrs.AddArray(mappedColors)
+                # attrs.SetScalars(mappedColors)
+                appendFilter.AddInputData(poly)
 
             # TODO We shouldn't need this conditional branch, the 'else' body
             # should be used and GetMapper called to get the mapper as needed.
@@ -213,10 +212,8 @@ class BoxfillPipeline(Pipeline2D):
                     # Since pattern creation requires a single color, assuming the first
                     c = self.getColorIndexOrRGBA(_colorMap, tmpColors[cti][ctj])
 
-                    print('Doing patterns on a custom boxfill!')
-
                     patact = fillareautils.make_patterned_polydata(
-                        mapper.GetInput(),
+                        poly,
                         fillareastyle=_style,
                         fillareaindex=self._customBoxfillArgs["tmpIndices"][cti],
                         fillareacolors=c,
@@ -229,10 +226,42 @@ class BoxfillPipeline(Pipeline2D):
                     ctj += 1
 
                     if patact is not None:
-                        dataset_renderer.AddActor(patact)
+                        patMapper = patact.GetMapper()
+                        patMapper.Update()
+                        patPoly = patMapper.GetInput()
+
+                        # vcs2vtk.debugWriteGrid(patPoly, 'boxfill-%d-mapper-%d-patPoly%s' % (_callidx, midx, patPoly.GetAddressAsString(None)))
+
+                        appendFilter.AddInputData(patPoly)
+                        c = patPoly.GetCellData().GetArray('Colors').GetTuple(2)
+                        print('color: [%d, %d, %d, %d]' % (c[0], c[1], c[2], c[3]))
+
                         actors.append([patact, plotting_dataset_bounds])
 
-        device.End()
+            midx += 1
+
+        # device.End()
+
+        # Update appendfilter and add its output to a polydata item
+        appendFilter.Update()
+        combinedPoly = appendFilter.GetOutput()
+
+        vcs2vtk.debugWriteGrid(combinedPoly, 'combined-poly-%d' % _callidx)
+
+        item = vtk.vtkPolyDataItem()
+        item.SetPolyData(combinedPoly)
+
+        if self._needsCellData:
+            print('vtkPolyDataItem scalar mode <- USE_CELL_DATA')
+            item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+            colorArray = combinedPoly.GetCellData().GetArray('Colors')
+        else:
+            print('vtkPolyDataItem scalar mode <- USE_POINT_DATA')
+            item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
+            colorArray = combinedPoly.GetPointData().GetArray('Colors')
+
+        item.SetMappedColors(colorArray)
+        area.GetDrawAreaItem().AddItem(item)
 
         # if dataset_renderer:
         #     dataset_renderer.SetRenderWindow(None)
