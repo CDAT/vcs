@@ -62,7 +62,7 @@ aliases:
   - &conda_upload
     name: conda_upload
     command: |
-       if [[ $CIRCLE_BRANCH == 'master' ]]; then
+       if [[ $CIRCLE_BRANCH != 'master' ]]; then
           exit 0
        fi
        export PATH=${HOME}/project/$WORKDIR/miniconda/bin:$PATH
@@ -90,10 +90,10 @@ jobs:
     steps:
       - checkout
       - run: *setup_miniconda
-        #- run: *get_testdata
-        #- run: *create_conda_env
-        #- run: *setup_vcs
-        #- run: *run_vcs_tests
+      - run: *get_testdata
+      - run: *create_conda_env
+      - run: *setup_vcs
+      - run: *run_vcs_tests
       - run: *conda_upload
       - store_artifacts:
           path: tests_html
@@ -111,10 +111,10 @@ jobs:
     steps:
       - checkout
       - run: *setup_miniconda
-        #- run: *get_testdata
-        #- run: *create_conda_env
-        #- run: *setup_vcs
-        #- run: *run_vcs_tests
+      - run: *get_testdata
+      - run: *create_conda_env
+      - run: *setup_vcs
+      - run: *run_vcs_tests
       - run: *conda_upload
       - store_artifacts:
           path: tests_html
@@ -127,5 +127,5 @@ workflows:
   version: 2
   vcs:
     jobs:
-        #- macos_vcs
+      - macos_vcs
       - linux_vcs
