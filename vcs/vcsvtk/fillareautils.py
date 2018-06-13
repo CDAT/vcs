@@ -152,14 +152,14 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
                fillareacolors, fillareaopacity)
 
     cutter.Update()
-    fname = 'cut-colored-pattern-%d' % _callidx
-    print('fname: %s' % fname)
-    print('  fillareastyle: %s' % fillareastyle)
-    print('  fillareacolors: [%f, %f, %f, %f]' % (fillareacolors[0], fillareacolors[1], fillareacolors[2], fillareacolors[3]))
-    print('  fillareaopacity: %f' % fillareaopacity)
-    print('  pattern class: %s' % pattern_list[fillareaindex])
-    debugWriteGrid(cutter.GetOutput(), fname)
-    _callidx += 1
+    # fname = 'cut-colored-pattern-%d' % _callidx
+    # print('fname: %s' % fname)
+    # print('  fillareastyle: %s' % fillareastyle)
+    # print('  fillareacolors: [%f, %f, %f, %f]' % (fillareacolors[0], fillareacolors[1], fillareacolors[2], fillareacolors[3]))
+    # print('  fillareaopacity: %f' % fillareaopacity)
+    # print('  pattern class: %s' % pattern_list[fillareaindex])
+    # debugWriteGrid(cutter.GetOutput(), fname)
+    # _callidx += 1
 
     mapper = vtk.vtkPolyDataMapper()
     mapper.SetInputConnection(cutter.GetOutputPort())

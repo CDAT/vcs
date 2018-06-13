@@ -1594,7 +1594,7 @@ x.geometry(1200,800)
                 if flipX:
                     cam.Azimuth(180.)
 
-            print('VTKPlots.findOrCreateUniqueRenderer(): xScale = %f, yScale = %f, xc = %f, yc = %f, yd = %f, flipX = %s, flipY = %s' % (xScale, yScale, xc, yc, yd, flipX, flipY))
+            # print('VTKPlots.findOrCreateUniqueRenderer(): xScale = %f, yScale = %f, xc = %f, yc = %f, yd = %f, flipX = %s, flipY = %s' % (xScale, yScale, xc, yc, yd, flipX, flipY))
 
         return (Renderer, xScale, yScale)
 

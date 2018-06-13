@@ -233,8 +233,8 @@ class BoxfillPipeline(Pipeline2D):
                         # vcs2vtk.debugWriteGrid(patPoly, 'boxfill-%d-mapper-%d-patPoly%s' % (_callidx, midx, patPoly.GetAddressAsString(None)))
 
                         appendFilter.AddInputData(patPoly)
-                        c = patPoly.GetCellData().GetArray('Colors').GetTuple(2)
-                        print('color: [%d, %d, %d, %d]' % (c[0], c[1], c[2], c[3]))
+                        # c = patPoly.GetCellData().GetArray('Colors').GetTuple(2)
+                        # print('color: [%d, %d, %d, %d]' % (c[0], c[1], c[2], c[3]))
 
                         actors.append([patact, plotting_dataset_bounds])
 
@@ -252,11 +252,11 @@ class BoxfillPipeline(Pipeline2D):
         item.SetPolyData(combinedPoly)
 
         if self._needsCellData:
-            print('vtkPolyDataItem scalar mode <- USE_CELL_DATA')
+            # print('vtkPolyDataItem scalar mode <- USE_CELL_DATA')
             item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
             colorArray = combinedPoly.GetCellData().GetArray('Colors')
         else:
-            print('vtkPolyDataItem scalar mode <- USE_POINT_DATA')
+            # print('vtkPolyDataItem scalar mode <- USE_POINT_DATA')
             item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
             colorArray = combinedPoly.GetPointData().GetArray('Colors')
 
