@@ -49,6 +49,7 @@ class VTKVCSBackend(object):
         self._lastSize = None
         self.canvas = canvas
         self.renWin = renWin
+        self.contextView = None
         self.debug = debug
         self.bg = bg
         self.type = "vtk"
@@ -463,6 +464,9 @@ class VTKVCSBackend(object):
             self.renWin.AddRenderer(self.renderer)
         if self.bg:
             self.renWin.SetOffScreenRendering(True)
+        if self.contextView is None:
+            self.contextView = vtk.vtkContextView()
+            self.contextView.SetRenderWindow(self.renWin)
         if "open" in kargs and kargs["open"]:
             self.renWin.Render()
 
@@ -756,7 +760,6 @@ class VTKVCSBackend(object):
 
         elif gtype == "fillarea":
             if gm.priority != 0:
-                print('VTKPlots.py -> calling prepFillarea(), gm = ', gm)
                 actors = vcs2vtk.prepFillarea(self, self.renWin, gm,
                                               cmap=self.canvas.colormap)
                 returned["vtk_backend_fillarea_actors"] = actors

@@ -1352,6 +1352,9 @@ def __build_pd__():
 
 
 def prepFillarea(context, renWin, farea, cmap=None):
+    vp = farea.viewport
+    print('fillarea viewport: [%f, %f, %f, %f]' % (vp[0], vp[1], vp[2], vp[3]))
+
     n = prepPrimitive(farea)
     if n == 0:
         return []

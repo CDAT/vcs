@@ -86,12 +86,13 @@ class BoxfillPipeline(Pipeline2D):
             'ratio_autot_viewport',
             [self._template.data.x1, self._template.data.x2,
              self._template.data.y1, self._template.data.y2])
-        dataset_renderer = None
+
+        print('boxfillpipeline viewport: [%f, %f, %f, %f]' % (vp[0], vp[1], vp[2], vp[3]))
+
         fareapixelspacing, fareapixelscale = self._patternSpacingAndScale()
 
         # view and interactive area
-        view = vtk.vtkContextView()
-        view.SetRenderWindow(self._context().renWin)
+        view = self._context().contextView
         dataset_renderer = view.GetRenderer()
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
@@ -100,7 +101,13 @@ class BoxfillPipeline(Pipeline2D):
                             self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
                             self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
 
+        [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+
         area.SetDrawAreaBounds(rect)
+        area.SetGeometry(geom)
+        # area.SetFixedMargins(0, 0, 0, 0)
+        area.SetFillViewport(False)
         area.SetShowGrid(False)
 
         axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
@@ -119,22 +126,20 @@ class BoxfillPipeline(Pipeline2D):
         # adjust the viewport
         # device = view.GetContext().GetDevice()
         # device.Begin(view.GetRenderer())
-        rectLeft = axisLeft.GetBoundingRect(view.GetContext())
-        rectRight = axisRight.GetBoundingRect(view.GetContext())
-        rectTop = axisTop.GetBoundingRect(view.GetContext())
-        rectBottom = axisBottom.GetBoundingRect(view.GetContext())
-        # device.End()
-        xmin = vp[0] - rectLeft.GetWidth() / self._context().renWin.GetSize()[0]
-        xmax = vp[1] + rectRight.GetWidth() / self._context().renWin.GetSize()[0]
-        ymin = vp[2] - rectBottom.GetHeight() / self._context().renWin.GetSize()[1]
-        ymax = vp[3] + rectTop.GetHeight() / self._context().renWin.GetSize()[1]
+        # rectLeft = axisLeft.GetBoundingRect(view.GetContext())
+        # rectRight = axisRight.GetBoundingRect(view.GetContext())
+        # rectTop = axisTop.GetBoundingRect(view.GetContext())
+        # rectBottom = axisBottom.GetBoundingRect(view.GetContext())
+        # # device.End()
+        # xmin = vp[0] - rectLeft.GetWidth() / self._context().renWin.GetSize()[0]
+        # xmax = vp[1] + rectRight.GetWidth() / self._context().renWin.GetSize()[0]
+        # ymin = vp[2] - rectBottom.GetHeight() / self._context().renWin.GetSize()[1]
+        # ymax = vp[3] + rectTop.GetHeight() / self._context().renWin.GetSize()[1]
 
-        dataset_renderer.SetViewport(xmin, ymin, xmax, ymax)
+        # dataset_renderer.SetViewport(xmin, ymin, xmax, ymax)
         # dataset_renderer.SetViewport(vp[0], vp[2], vp[1], vp[3])
 
         midx = 0
-
-        appendFilter = vtk.vtkAppendPolyData()
 
         for mapper in self._mappers:
             act = vtk.vtkActor()
@@ -188,9 +193,17 @@ class BoxfillPipeline(Pipeline2D):
                 lut.SetRange(range)
                 mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
                 mappedColors.SetName('Colors')
-                attrs.AddArray(mappedColors)
-                # attrs.SetScalars(mappedColors)
-                appendFilter.AddInputData(poly)
+
+                item = vtk.vtkPolyDataItem()
+                item.SetPolyData(poly)
+
+                if self._needsCellData:
+                    item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                else:
+                    item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
+
+                item.SetMappedColors(mappedColors)
+                area.GetDrawAreaItem().AddItem(item)
 
             # TODO We shouldn't need this conditional branch, the 'else' body
             # should be used and GetMapper called to get the mapper as needed.
@@ -230,42 +243,18 @@ class BoxfillPipeline(Pipeline2D):
                         patMapper.Update()
                         patPoly = patMapper.GetInput()
 
-                        # vcs2vtk.debugWriteGrid(patPoly, 'boxfill-%d-mapper-%d-patPoly%s' % (_callidx, midx, patPoly.GetAddressAsString(None)))
+                        item = vtk.vtkPolyDataItem()
+                        item.SetPolyData(patPoly)
 
-                        appendFilter.AddInputData(patPoly)
-                        # c = patPoly.GetCellData().GetArray('Colors').GetTuple(2)
-                        # print('color: [%d, %d, %d, %d]' % (c[0], c[1], c[2], c[3]))
+                        item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                        colorArray = patPoly.GetCellData().GetArray('Colors')
+
+                        item.SetMappedColors(colorArray)
+                        area.GetDrawAreaItem().AddItem(item)
 
                         actors.append([patact, plotting_dataset_bounds])
 
             midx += 1
-
-        # device.End()
-
-        # Update appendfilter and add its output to a polydata item
-        appendFilter.Update()
-        combinedPoly = appendFilter.GetOutput()
-
-        vcs2vtk.debugWriteGrid(combinedPoly, 'combined-poly-%d' % _callidx)
-
-        item = vtk.vtkPolyDataItem()
-        item.SetPolyData(combinedPoly)
-
-        if self._needsCellData:
-            # print('vtkPolyDataItem scalar mode <- USE_CELL_DATA')
-            item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
-            colorArray = combinedPoly.GetCellData().GetArray('Colors')
-        else:
-            # print('vtkPolyDataItem scalar mode <- USE_POINT_DATA')
-            item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
-            colorArray = combinedPoly.GetPointData().GetArray('Colors')
-
-        item.SetMappedColors(colorArray)
-        area.GetDrawAreaItem().AddItem(item)
-
-        # if dataset_renderer:
-        #     dataset_renderer.SetRenderWindow(None)
-        #     self._context().renWin.RemoveRenderer(dataset_renderer)
 
         self._resultDict["vtk_backend_actors"] = actors
 
