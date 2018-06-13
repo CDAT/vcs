@@ -1355,6 +1355,33 @@ def prepFillarea(context, renWin, farea, cmap=None):
     vp = farea.viewport
     print('fillarea viewport: [%f, %f, %f, %f]' % (vp[0], vp[1], vp[2], vp[3]))
 
+    # view and interactive area
+    view = context.contextView
+    ren = view.GetRenderer()
+    area = vtk.vtkInteractiveArea()
+    view.GetScene().AddItem(area)
+
+    wc = farea.worldcoordinate
+    rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
+
+    [renWinWidth, renWinHeight] = renWin.GetSize()
+    geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+
+    area.SetDrawAreaBounds(rect)
+    area.SetGeometry(geom)
+    # area.SetFixedMargins(0, 0, 0, 0)
+    area.SetFillViewport(False)
+    area.SetShowGrid(False)
+
+    axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
+    axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
+    axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
+    axisTop = area.GetAxis(vtk.vtkAxis.TOP)
+    axisTop.SetVisible(False)
+    axisRight.SetVisible(False)
+    axisLeft.SetVisible(False)
+    axisBottom.SetVisible(False)
+
     n = prepPrimitive(farea)
     if n == 0:
         return []
@@ -1449,21 +1476,61 @@ def prepFillarea(context, renWin, farea, cmap=None):
     tris = vtk.vtkTriangleFilter()
     tris.SetInputData(polygonPolyData)
 
-    # Setup rendering
-    m = vtk.vtkPolyDataMapper()
-    m.SetInputConnection(tris.GetOutputPort())
-    a = vtk.vtkActor()
-    a.SetMapper(m)
-    ren, xscale, yscale = context.fitToViewport(a,
-                                                farea.viewport,
-                                                wc=farea.worldcoordinate,
-                                                geoBounds=None,
-                                                geo=None,
-                                                priority=farea.priority,
-                                                create_renderer=True)
-    actors.append((a, geo))
-    transform = vtk.vtkTransform()
-    transform.Scale(xscale, yscale, 1.)
+    # # Setup rendering
+    # m = vtk.vtkPolyDataMapper()
+    # m.SetInputConnection(tris.GetOutputPort())
+    # a = vtk.vtkActor()
+    # a.SetMapper(m)
+    # ren, xscale, yscale = context.fitToViewport(a,
+    #                                             farea.viewport,
+    #                                             wc=farea.worldcoordinate,
+    #                                             geoBounds=None,
+    #                                             geo=None,
+    #                                             priority=farea.priority,
+    #                                             create_renderer=True)
+    # actors.append((a, geo))
+    # transform = vtk.vtkTransform()
+    # transform.Scale(xscale, yscale, 1.)
+
+
+    # create a new renderer for this mapper
+    # (we need one for each mapper because of camera flips)
+    # if not dataset_renderer:
+    xScale, yScale, xc, yc, yd, flipX, flipY = context.computeScaleToFitViewport(
+        vp,
+        wc=wc,
+        geoBounds=None,
+        geo=None)
+
+    cam = ren.GetActiveCamera()
+    cam.ParallelProjectionOn()
+    # We increase the parallel projection parallelepiped with 1/1000 so that
+    # it does not overlap with the outline of the dataset. This resulted in
+    # system dependent display of the outline.
+    cam.SetParallelScale(yd * 1.001)
+    cd = cam.GetDistance()
+    cam.SetPosition(xc, yc, cd)
+    cam.SetFocalPoint(xc, yc, 0.)
+
+    if flipY:
+        cam.Elevation(180.)
+        cam.Roll(180.)
+        pass
+    if flipX:
+        cam.Azimuth(180.)
+
+
+    if st == 'solid':
+        tris.Update()
+        solidPoly = tris.GetOutput()
+        item = vtk.vtkPolyDataItem()
+        item.SetPolyData(solidPoly)
+
+        item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+        colorArray = solidPoly.GetCellData().GetArray('Colors')
+
+        item.SetMappedColors(colorArray)
+        area.GetDrawAreaItem().AddItem(item)
 
     # Patterns/hatches support
     for i, pd in pattern_polydatas:
@@ -1472,14 +1539,15 @@ def prepFillarea(context, renWin, farea, cmap=None):
             geo, proj_points = project(
                 pd.GetPoints(), farea.projection, farea.worldcoordinate)
             pd.SetPoints(proj_points)
-            transformFilter = vtk.vtkTransformFilter()
-            transformFilter.SetInputData(pd)
-            transformFilter.SetTransform(transform)
-            transformFilter.Update()
+            # transformFilter = vtk.vtkTransformFilter()
+            # transformFilter.SetInputData(pd)
+            # transformFilter.SetTransform(transform)
+            # transformFilter.Update()
             cellcolor = [0, 0, 0, 0]
             colors.GetTypedTuple(i, cellcolor)
             pcolor = [indC * 100. / 255.0 for indC in cellcolor]
-            act = fillareautils.make_patterned_polydata(transformFilter.GetOutput(),
+            # act = fillareautils.make_patterned_polydata(transformFilter.GetOutput(),
+            act = fillareautils.make_patterned_polydata(pd,
                                                         st,
                                                         fillareaindex=farea.index[i],
                                                         fillareacolors=pcolor,
@@ -1489,8 +1557,28 @@ def prepFillarea(context, renWin, farea, cmap=None):
                                                         size=renWin.GetSize(),
                                                         renderer=ren)
             if act is not None:
-                ren.AddActor(act)
-                actors.append((act, geo))
+                patMapper = act.GetMapper()
+                patMapper.Update()
+                patPoly = patMapper.GetInput()
+
+                item = vtk.vtkPolyDataItem()
+                item.SetPolyData(patPoly)
+
+                item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                colorArray = patPoly.GetCellData().GetArray('Colors')
+
+                print('will set colorArray to: ', colorArray)
+                numLineCells = patPoly.GetLines().GetNumberOfCells()
+                numPolyCells = patPoly.GetPolys().GetNumberOfCells()
+                print('numLineCells = %d, numPolyCells = %d' % (numLineCells, numPolyCells))
+
+                debugWriteGrid(patPoly, 'fillarea-patpoly-%d-lines-%d-polys' % (numLineCells, numPolyCells))
+
+                item.SetMappedColors(colorArray)
+                area.GetDrawAreaItem().AddItem(item)
+
+                # ren.AddActor(act)
+                # actors.append((act, geo))
 
     return actors
 
