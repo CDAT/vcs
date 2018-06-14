@@ -1567,13 +1567,6 @@ def prepFillarea(context, renWin, farea, cmap=None):
                 item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
                 colorArray = patPoly.GetCellData().GetArray('Colors')
 
-                print('will set colorArray to: ', colorArray)
-                numLineCells = patPoly.GetLines().GetNumberOfCells()
-                numPolyCells = patPoly.GetPolys().GetNumberOfCells()
-                print('numLineCells = %d, numPolyCells = %d' % (numLineCells, numPolyCells))
-
-                debugWriteGrid(patPoly, 'fillarea-patpoly-%d-lines-%d-polys' % (numLineCells, numPolyCells))
-
                 item.SetMappedColors(colorArray)
                 area.GetDrawAreaItem().AddItem(item)
 
