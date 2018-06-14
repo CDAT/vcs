@@ -267,7 +267,8 @@ class BoxfillPipeline(Pipeline2D):
                   "dataset_bounds": self._vtkDataSetBounds,
                   "plotting_dataset_bounds": plotting_dataset_bounds,
                   "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
-                  "vtk_backend_geo": self._vtkGeoTransform}
+                  "vtk_backend_geo": self._vtkGeoTransform,
+                  "vtk_backend_pipeline_context_area": area}
         if ("ratio_autot_viewport" in self._resultDict):
             kwargs["ratio_autot_viewport"] = vp
         self._resultDict.update(self._context().renderTemplate(

@@ -828,31 +828,31 @@ class VTKVCSBackend(object):
         yforward = vcs.utils.axisConvertFunctions[kargs.get('yaxisconvert', 'linear')]['forward']
         contData = vcs2vtk.prepContinents(continents_path, xforward, yforward)
         contData = vcs2vtk.doWrapData(contData, wc, fastClip=False)
-        contMapper = vtk.vtkPolyDataMapper()
-        contMapper.SetInputData(contData)
-        contActor = vtk.vtkActor()
-        contActor.SetMapper(contMapper)
+        # contMapper = vtk.vtkPolyDataMapper()
+        # contMapper.SetInputData(contData)
+        # contActor = vtk.vtkActor()
+        # contActor.SetMapper(contMapper)
 
         if projection.type != "linear":
-            contData = contActor.GetMapper().GetInput()
+            # contData = contActor.GetMapper().GetInput()
             cpts = contData.GetPoints()
             # we use plotting coordinates for doing the projection so
             # that parameters such that central meridian are set correctly.
             geo, gcpts = vcs2vtk.project(cpts, projection, wc)
             contData.SetPoints(gcpts)
 
-            contMapper = vtk.vtkPolyDataMapper()
-            contMapper.SetInputData(contData)
-            contActor = vtk.vtkActor()
-            contActor.SetMapper(contMapper)
+            # contMapper = vtk.vtkPolyDataMapper()
+            # contMapper.SetInputData(contData)
+            # contActor = vtk.vtkActor()
+            # contActor.SetMapper(contMapper)
         else:
             geo = None
 
         contLine = self.canvas.getcontinentsline()
-        line_prop = contActor.GetProperty()
+        # line_prop = contActor.GetProperty()
 
-        # Width
-        line_prop.SetLineWidth(contLine.width[0])
+        # # Width
+        # line_prop.SetLineWidth(contLine.width[0])
 
         # Color
         if contLine.colormap:
@@ -866,22 +866,78 @@ class VTKVCSBackend(object):
         else:
             color = contLine.color[0]
 
-        color = [c / 100. for c in color]
+        color = [int((c / 100) * 255) for c in color]
 
-        line_prop.SetColor(*color[:3])
-        if len(color) == 4:
-            line_prop.SetOpacity(color[3])
+        print('color: ', color)
+
+        # line_prop.SetColor(*color[:3])
+        # if len(color) == 4:
+        #     line_prop.SetOpacity(color[3])
 
         # Stippling
-        vcs2vtk.stippleLine(line_prop, contLine.type[0])
-        vtk_dataset_bounds_no_mask = kargs.get(
-            "vtk_dataset_bounds_no_mask", None)
-        return self.fitToViewport(contActor,
-                                  vp,
-                                  wc=wc, geo=geo,
-                                  geoBounds=vtk_dataset_bounds_no_mask,
-                                  priority=priority,
-                                  create_renderer=True)
+        # vcs2vtk.stippleLine(line_prop, contLine.type[0])
+        # vtk_dataset_bounds_no_mask = kargs.get(
+        #     "vtk_dataset_bounds_no_mask", None)
+        # return self.fitToViewport(contActor,
+        #                           vp,
+        #                           wc=wc, geo=geo,
+        #                           geoBounds=vtk_dataset_bounds_no_mask,
+        #                           priority=priority,
+        #                           create_renderer=True)
+
+        # view and interactive area
+        view = self.contextView
+        area = kargs.get("vtk_backend_pipeline_context_area", None)
+
+        if not area:
+            print(' @@@@@@@@@@@@@@@@@@@@ Did not find vtkContextArea from pipeline, making a new one')
+            area = vtk.vtkContextArea()
+            view.GetScene().AddItem(area)
+
+            rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
+
+            [renWinWidth, renWinHeight] = self.renWin.GetSize()
+            geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+
+            area.SetDrawAreaBounds(rect)
+            area.SetGeometry(geom)
+
+            area.SetFillViewport(False)
+            area.SetShowGrid(False)
+
+            axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
+            axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
+            axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
+            axisTop = area.GetAxis(vtk.vtkAxis.TOP)
+            axisTop.SetVisible(False)
+            axisRight.SetVisible(False)
+            axisLeft.SetVisible(False)
+            axisBottom.SetVisible(False)
+
+        color_arr = vtk.vtkUnsignedCharArray()
+        color_arr.SetNumberOfComponents(4)
+        # color_arr.SetNumberOfTuples(contData.GetNumberOfCells())
+        color_arr.SetName("Colors")
+
+        for i in range(contData.GetNumberOfCells()):
+            if len(color) == 4:
+                color_arr.InsertNextTypedTuple(color)
+            else:
+                color_arr.InsertNextTypedTuple([color[0], color[1], color[2], 255])
+
+        contData.GetCellData().AddArray(color_arr)
+
+        vcs2vtk.debugWriteGrid(contData, 'continents')
+
+        # FIXME: Figure out how to make properties set on the context2D "pen",
+        # FIXME: such line width and type (stipple) only apply to the polydata
+        # FIXME: item we add below, and not to all of them.
+
+        item = vtk.vtkPolyDataItem()
+        item.SetPolyData(contData)
+        item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+        item.SetMappedColors(color_arr)
+        area.GetDrawAreaItem().AddItem(item)
 
     def renderTemplate(self, tmpl, data, gm, taxis,
                        zaxis, X=None, Y=None, draw_attributes=False, **kargs):

@@ -1358,7 +1358,7 @@ def prepFillarea(context, renWin, farea, cmap=None):
     # view and interactive area
     view = context.contextView
     ren = view.GetRenderer()
-    area = vtk.vtkInteractiveArea()
+    area = vtk.vtkContextArea()
     view.GetScene().AddItem(area)
 
     wc = farea.worldcoordinate
