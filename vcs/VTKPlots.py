@@ -744,20 +744,51 @@ class VTKVCSBackend(object):
                 # self.text_renderers[tt_key] = ren
         elif gtype == "line":
             if gm.priority != 0:
-                actors = vcs2vtk.prepLine(self.renWin, gm,
+
+
+                view = self.contextView
+
+                area = vtk.vtkContextArea()
+                view.GetScene().AddItem(area)
+
+                vp = gm.viewport
+                wc = gm.worldcoordinate
+
+                rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
+
+                [renWinWidth, renWinHeight] = self.renWin.GetSize()
+                geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+
+                area.SetDrawAreaBounds(rect)
+                area.SetGeometry(geom)
+
+                area.SetFillViewport(False)
+                area.SetShowGrid(False)
+
+                axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
+                axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
+                axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
+                axisTop = area.GetAxis(vtk.vtkAxis.TOP)
+                axisTop.SetVisible(False)
+                axisRight.SetVisible(False)
+                axisLeft.SetVisible(False)
+                axisBottom.SetVisible(False)
+
+
+                actors = vcs2vtk.prepLine(area.GetDrawAreaItem(), gm,
                                           cmap=self.canvas.colormap)
-                returned["vtk_backend_line_actors"] = actors
-                create_renderer = True
-                for act, geo in actors:
-                    ren, xScale, yScale = self.fitToViewport(
-                        act,
-                        gm.viewport,
-                        wc=gm.worldcoordinate,
-                        geo=geo,
-                        geoBounds=bounds,
-                        priority=gm.priority,
-                        create_renderer=create_renderer)
-                    create_renderer = False
+                # returned["vtk_backend_line_actors"] = actors
+                # create_renderer = True
+                # for act, geo in actors:
+                #     ren, xScale, yScale = self.fitToViewport(
+                #         act,
+                #         gm.viewport,
+                #         wc=gm.worldcoordinate,
+                #         geo=geo,
+                #         geoBounds=bounds,
+                #         priority=gm.priority,
+                #         create_renderer=create_renderer)
+                #     create_renderer = False
         elif gtype == "marker":
             if gm.priority != 0:
                 ren, xScale, yScale = \
@@ -1757,6 +1788,8 @@ x.geometry(1200,800)
 
     def fitToViewport(self, Actor, vp, wc=None, geoBounds=None, geo=None, priority=None,
                       create_renderer=False, add_actor=True):
+        # import pdb
+        # pdb.set_trace()
         (Renderer, xScale, yScale) = \
             self.findOrCreateUniqueRenderer(Actor, vp, wc, geoBounds, geo,
                                             priority, create_renderer)

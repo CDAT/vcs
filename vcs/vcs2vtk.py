@@ -1875,7 +1875,7 @@ def stippleLine(prop, line_type):
         raise Exception("Unknown line type: '%s'" % line_type)
 
 
-def prepLine(renWin, line, cmap=None):
+def prepLine(contextArea, line, cmap=None):
     number_lines = prepPrimitive(line)
     if number_lines == 0:
         return []
@@ -1957,16 +1957,24 @@ def prepLine(renWin, line, cmap=None):
         geo, pts = project(pts, line.projection, line.worldcoordinate)
         linesPoly.SetPoints(pts)
 
-        a = vtk.vtkActor()
-        m = vtk.vtkPolyDataMapper()
-        m.SetInputData(linesPoly)
-        a.SetMapper(m)
+        # a = vtk.vtkActor()
+        # m = vtk.vtkPolyDataMapper()
+        # m.SetInputData(linesPoly)
+        # a.SetMapper(m)
 
-        p = a.GetProperty()
-        p.SetLineWidth(w)
+        # p = a.GetProperty()
+        # p.SetLineWidth(w)
 
-        stippleLine(p, t)
-        actors.append((a, geo))
+        # stippleLine(p, t)
+        # actors.append((a, geo))
+
+        ### FIXME: line width and stipple applied to a polydata maybe could be
+        ### FIXME: handled via the vtkPaintNotifierItem()
+        item = vtk.vtkPolyDataItem()
+        item.SetPolyData(linesPoly)
+        item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+        item.SetMappedColors(colors)
+        contextArea.AddItem(item)
 
     return actors
 
