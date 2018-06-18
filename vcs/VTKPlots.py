@@ -700,20 +700,48 @@ class VTKVCSBackend(object):
                     tt.priority, tuple(
                         tt.viewport), tuple(
                         tt.worldcoordinate), tt.projection)
-                if tt_key in self.text_renderers:
-                    ren = self.text_renderers[tt_key]
-                else:
-                    ren = self.createRenderer()
-                    self.renWin.AddRenderer(ren)
-                    self.setLayer(ren, 1)
+                # if tt_key in self.text_renderers:
+                #     ren = self.text_renderers[tt_key]
+                # else:
+                #     ren = self.createRenderer()
+                #     self.renWin.AddRenderer(ren)
+                #     self.setLayer(ren, 1)
+
+                view = self.contextView
+
+                area = vtk.vtkContextArea()
+                view.GetScene().AddItem(area)
+
+                vp = self.canvas._viewport
+                wc = self.canvas._worldcoordinate
+
+                rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
+
+                [renWinWidth, renWinHeight] = self.renWin.GetSize()
+                geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+
+                area.SetDrawAreaBounds(rect)
+                area.SetGeometry(geom)
+
+                area.SetFillViewport(False)
+                area.SetShowGrid(False)
+
+                axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
+                axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
+                axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
+                axisTop = area.GetAxis(vtk.vtkAxis.TOP)
+                axisTop.SetVisible(False)
+                axisRight.SetVisible(False)
+                axisLeft.SetVisible(False)
+                axisBottom.SetVisible(False)
 
                 returned["vtk_backend_text_actors"] = vcs2vtk.genTextActor(
-                    ren,
+                    area.GetDrawAreaItem(),
                     to=to,
                     tt=tt,
                     cmap=self.canvas.colormap, geoBounds=bounds, geo=vtk_backend_geo)
-                self.setLayer(ren, tt.priority)
-                self.text_renderers[tt_key] = ren
+                # self.setLayer(ren, tt.priority)
+                # self.text_renderers[tt_key] = ren
         elif gtype == "line":
             if gm.priority != 0:
                 actors = vcs2vtk.prepLine(self.renWin, gm,
@@ -941,6 +969,34 @@ class VTKVCSBackend(object):
 
     def renderTemplate(self, tmpl, data, gm, taxis,
                        zaxis, X=None, Y=None, draw_attributes=False, **kargs):
+        # import pdb
+        # pdb.set_trace()
+
+        # view and interactive area
+        view = self.contextView
+
+        area = vtk.vtkContextArea()
+        view.GetScene().AddItem(area)
+
+        vp = self.canvas._viewport
+        wc = self.canvas._worldcoordinate
+
+        rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
+
+        [renWinWidth, renWinHeight] = self.renWin.GetSize()
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+
+        area.SetDrawAreaBounds(rect)
+        area.SetGeometry(geom)
+
+        area.SetFillViewport(False)
+        area.SetShowGrid(False)
+
+        area.GetAxis(vtk.vtkAxis.LEFT).SetVisible(False)
+        area.GetAxis(vtk.vtkAxis.RIGHT).SetVisible(False)
+        area.GetAxis(vtk.vtkAxis.BOTTOM).SetVisible(False)
+        area.GetAxis(vtk.vtkAxis.TOP).SetVisible(False)
+
         # ok first basic template stuff, let's store the displays
         # because we need to return actors for min/max/mean
         if draw_attributes:
@@ -1002,18 +1058,18 @@ class VTKVCSBackend(object):
                 crdate.string = tstr.split()[0].replace("-", "/")
                 crtime = vcs2vtk.applyAttributesFromVCStmpl(tmpl, "crtime")
                 crtime.string = tstr.split()[1]
-                if not (None, None, None) in list(self._renderers.keys()):
-                    ren = self.createRenderer()
-                    self.renWin.AddRenderer(ren)
-                    self.setLayer(ren, 1)
-                    self._renderers[(None, None, None)] = (ren, 1, 1)
-                else:
-                    ren, xratio, yratio = self._renderers[(None, None, None)]
+                # if not (None, None, None) in list(self._renderers.keys()):
+                #     ren = self.createRenderer()
+                #     self.renWin.AddRenderer(ren)
+                #     self.setLayer(ren, 1)
+                #     self._renderers[(None, None, None)] = (ren, 1, 1)
+                # else:
+                #     ren, xratio, yratio = self._renderers[(None, None, None)]
                 tt, to = crdate.name.split(":::")
                 tt = vcs.elements["texttable"][tt]
                 to = vcs.elements["textorientation"][to]
                 if crdate.priority > 0:
-                    actors = vcs2vtk.genTextActor(ren, to=to, tt=tt)
+                    actors = vcs2vtk.genTextActor(area.GetDrawAreaItem(), to=to, tt=tt)
                     returned["vtk_backend_crdate_text_actor"] = actors[0]
                 del(vcs.elements["texttable"][tt.name])
                 del(vcs.elements["textorientation"][to.name])
@@ -1022,7 +1078,7 @@ class VTKVCSBackend(object):
                 tt = vcs.elements["texttable"][tt]
                 to = vcs.elements["textorientation"][to]
                 if crtime.priority > 0:
-                    actors = vcs2vtk.genTextActor(ren, to=to, tt=tt)
+                    actors = vcs2vtk.genTextActor(area.GetDrawAreaItem(), to=to, tt=tt)
                     returned["vtk_backend_crtime_text_actor"] = actors[0]
                 del(vcs.elements["texttable"][tt.name])
                 del(vcs.elements["textorientation"][to.name])
@@ -1039,18 +1095,18 @@ class VTKVCSBackend(object):
                     zvalue.string = str(zaxis.asComponentTime()[0])
                 else:
                     zvalue.string = "%g" % zaxis[0]
-                if not (None, None, None) in list(self._renderers.keys()):
-                    ren = self.createRenderer()
-                    self.renWin.AddRenderer(ren)
-                    self.setLayer(ren, 1)
-                    self._renderers[(None, None, None)] = (ren, 1, 1)
-                else:
-                    ren, xratio, yratio = self._renderers[(None, None, None)]
+                # if not (None, None, None) in list(self._renderers.keys()):
+                #     ren = self.createRenderer()
+                #     self.renWin.AddRenderer(ren)
+                #     self.setLayer(ren, 1)
+                #     self._renderers[(None, None, None)] = (ren, 1, 1)
+                # else:
+                #     ren, xratio, yratio = self._renderers[(None, None, None)]
                 tt, to = zname.name.split(":::")
                 tt = vcs.elements["texttable"][tt]
                 to = vcs.elements["textorientation"][to]
                 if zname.priority > 0:
-                    vcs2vtk.genTextActor(ren, to=to, tt=tt)
+                    vcs2vtk.genTextActor(area.GetDrawAreaItem(), to=to, tt=tt)
                 del(vcs.elements["texttable"][tt.name])
                 del(vcs.elements["textorientation"][to.name])
                 del(vcs.elements["textcombined"][zname.name])
@@ -1061,7 +1117,7 @@ class VTKVCSBackend(object):
                         tt, to = zunits.name.split(":::")
                         tt = vcs.elements["texttable"][tt]
                         to = vcs.elements["textorientation"][to]
-                        vcs2vtk.genTextActor(ren, to=to, tt=tt)
+                        vcs2vtk.genTextActor(area.GetDrawAreaItem(), to=to, tt=tt)
                         del(vcs.elements["texttable"][tt.name])
                         del(vcs.elements["textorientation"][to.name])
                         del(vcs.elements["textcombined"][zunits.name])
@@ -1069,7 +1125,7 @@ class VTKVCSBackend(object):
                 tt = vcs.elements["texttable"][tt]
                 to = vcs.elements["textorientation"][to]
                 if zvalue.priority > 0:
-                    actors = vcs2vtk.genTextActor(ren, to=to, tt=tt)
+                    actors = vcs2vtk.genTextActor(area.GetDrawAreaItem(), to=to, tt=tt)
                     returned["vtk_backend_zvalue_text_actor"] = actors[0]
                 del(vcs.elements["texttable"][tt.name])
                 del(vcs.elements["textorientation"][to.name])

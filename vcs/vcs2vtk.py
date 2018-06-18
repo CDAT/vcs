@@ -1250,8 +1250,12 @@ def prepTextProperty(p, winSize, to="default", tt="default", cmap=None,
     p.SetFontSize(int(to.height * winSize[1] / 800.))
 
 
-def genTextActor(renderer, string=None, x=None, y=None,
+# def genTextActor(renderer, string=None, x=None, y=None,
+def genTextActor(contextArea, string=None, x=None, y=None,
                  to='default', tt='default', cmap=None, geoBounds=None, geo=None):
+
+    renderer = contextArea.GetScene().GetRenderer()
+
     if isinstance(to, str):
         to = vcs.elements["textorientation"][to]
     if isinstance(tt, str):
@@ -1295,11 +1299,18 @@ def genTextActor(renderer, string=None, x=None, y=None,
                 renderer, x[i], y[i], tt.viewport, tt.worldcoordinate)
         t.SetPosition(X, Y)
         t.SetInput(string[i])
+        print('making a text actor %d for %s' % (i, string[i]))
         # T=vtk.vtkTransform()
         # T.Scale(1.,sz[1]/606.,1.)
         # T.RotateY(to.angle)
         # t.SetUserTransform(T)
-        renderer.AddActor(t)
+
+        # renderer.AddActor(t)
+
+        item = vtk.vtkPropItem()
+        item.SetPropObject(t)
+        contextArea.AddItem(item)
+
         actors.append(t)
     return actors
 
