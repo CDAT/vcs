@@ -791,31 +791,98 @@ class VTKVCSBackend(object):
                 #     create_renderer = False
         elif gtype == "marker":
             if gm.priority != 0:
-                ren, xScale, yScale = \
-                    self.findOrCreateUniqueRenderer(None, gm.viewport,
-                                                    gm.worldcoordinate, None,
-                                                    None, gm.priority, True)
-                actors = vcs2vtk.prepMarker(ren, gm, cmap=self.canvas.colormap)
+
+
+                view = self.contextView
+
+                area = vtk.vtkContextArea()
+                view.GetScene().AddItem(area)
+
+                vp = gm.viewport
+                wc = gm.worldcoordinate
+
+                rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
+
+                [renWinWidth, renWinHeight] = self.renWin.GetSize()
+                geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+
+                area.SetDrawAreaBounds(rect)
+                area.SetGeometry(geom)
+
+                area.SetFillViewport(False)
+                area.SetShowGrid(False)
+
+                area.GetAxis(vtk.vtkAxis.LEFT).SetVisible(False)
+                area.GetAxis(vtk.vtkAxis.RIGHT).SetVisible(False)
+                area.GetAxis(vtk.vtkAxis.BOTTOM).SetVisible(False)
+                area.GetAxis(vtk.vtkAxis.TOP).SetVisible(False)
+
+
+                # ren, xScale, yScale = \
+                #     self.findOrCreateUniqueRenderer(None, gm.viewport,
+                #                                     gm.worldcoordinate, None,
+                #                                     None, gm.priority, True)
+
+
+                # create a new renderer for this mapper
+                # (we need one for each mapper because of camera flips)
+                # if not dataset_renderer:
+                xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
+                    vp,
+                    wc=wc,
+                    geoBounds=None,
+                    geo=None)
+
+                cam = view.GetRenderer().GetActiveCamera()
+                cam.ParallelProjectionOn()
+                # We increase the parallel projection parallelepiped with 1/1000 so that
+                # it does not overlap with the outline of the dataset. This resulted in
+                # system dependent display of the outline.
+                cam.SetParallelScale(yd * 1.001)
+                cd = cam.GetDistance()
+                cam.SetPosition(xc, yc, cd)
+                cam.SetFocalPoint(xc, yc, 0.)
+                if flipY:
+                    cam.Elevation(180.)
+                    cam.Roll(180.)
+                    pass
+                if flipX:
+                    cam.Azimuth(180.)
+
+
+                # actors = vcs2vtk.prepMarker(ren, gm, cmap=self.canvas.colormap)
+                actors = vcs2vtk.prepMarker(view.GetRenderer(), gm, cmap=self.canvas.colormap)
                 returned["vtk_backend_marker_actors"] = actors
-                for g, gs, pd, act, geo in actors:
-                    data = g.GetInput()
-                    mapper = act.GetMapper()
-                    # scale the data not the markers
-                    mapper.SetInputData(data)
-                    ren, xScale, yScale = self.fitToViewport(
-                        act,
-                        gm.viewport,
-                        wc=gm.worldcoordinate,
-                        geoBounds=None,
-                        geo=None,
-                        priority=gm.priority,
-                        create_renderer=False)
-                    # get the scaled data
-                    scaledData = mapper.GetInput()
-                    g.SetInputData(scaledData)
-                    g.Update()
+                for g, pd, geo in actors:
+                    # data = g.GetInput()
+                    # mapper = act.GetMapper()
+                    # # scale the data not the markers
+                    # mapper.SetInputData(data)
+                    # ren, xScale, yScale = self.fitToViewport(
+                    #     act,
+                    #     gm.viewport,
+                    #     wc=gm.worldcoordinate,
+                    #     geoBounds=None,
+                    #     geo=None,
+                    #     priority=gm.priority,
+                    #     create_renderer=False)
+                    # # get the scaled data
+                    # scaledData = mapper.GetInput()
+                    # g.SetInputData(scaledData)
+                    # g.Update()
+                    # data = g.GetOutput()
+
+                    item = vtk.vtkPolyDataItem()
+                    item.SetPolyData(g)
+
+                    item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                    colorArray = g.GetCellData().GetArray('Colors')
+
+                    item.SetMappedColors(colorArray)
+                    area.GetDrawAreaItem().AddItem(item)
+
                     # set the markers to be rendered
-                    mapper.SetInputData(g.GetOutput())
+                    # mapper.SetInputData(g.GetOutput())
 
         elif gtype == "fillarea":
             if gm.priority != 0:
@@ -964,14 +1031,10 @@ class VTKVCSBackend(object):
             area.SetFillViewport(False)
             area.SetShowGrid(False)
 
-            axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
-            axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
-            axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
-            axisTop = area.GetAxis(vtk.vtkAxis.TOP)
-            axisTop.SetVisible(False)
-            axisRight.SetVisible(False)
-            axisLeft.SetVisible(False)
-            axisBottom.SetVisible(False)
+            area.GetAxis(vtk.vtkAxis.LEFT).SetVisible(False)
+            area.GetAxis(vtk.vtkAxis.RIGHT).SetVisible(False)
+            area.GetAxis(vtk.vtkAxis.BOTTOM).SetVisible(False)
+            area.GetAxis(vtk.vtkAxis.TOP).SetVisible(False)
 
         color_arr = vtk.vtkUnsignedCharArray()
         color_arr.SetNumberOfComponents(4)
@@ -986,7 +1049,7 @@ class VTKVCSBackend(object):
 
         contData.GetCellData().AddArray(color_arr)
 
-        vcs2vtk.debugWriteGrid(contData, 'continents')
+        # vcs2vtk.debugWriteGrid(contData, 'continents')
 
         # FIXME: Figure out how to make properties set on the context2D "pen",
         # FIXME: such line width and type (stipple) only apply to the polydata

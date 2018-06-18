@@ -1789,7 +1789,7 @@ def prepGlyph(ren, g, marker, index=0):
     return gs, pd
 
 
-def setMarkerColor(p, marker, c, cmap=None):
+def getMarkerColor(marker, c, cmap=None):
     # Color
     if marker.colormap is not None:
         cmap = marker.colormap
@@ -1801,8 +1801,14 @@ def setMarkerColor(p, marker, c, cmap=None):
         color = cmap.index[c]
     else:
         color = c
-    p.SetColor([C / 100. for C in color[:3]])
-    p.SetOpacity(color[-1])
+    # p.SetColor([C / 100. for C in color[:3]])
+    # p.SetOpacity(color[-1])
+
+    retval = [int((C / 100.) * 255) for C in color]
+
+    print('marker color: ', retval)
+
+    return retval
 
 
 def prepMarker(ren, marker, cmap=None):
@@ -1831,14 +1837,31 @@ def prepMarker(ren, marker, cmap=None):
         gs, pd = prepGlyph(ren, g, marker, index=i)
         g.SetInputData(markers)
 
-        a = vtk.vtkActor()
-        m = vtk.vtkPolyDataMapper()
-        m.SetInputConnection(g.GetOutputPort())
-        m.Update()
-        a.SetMapper(m)
-        p = a.GetProperty()
-        setMarkerColor(p, marker, c, cmap)
-        actors.append((g, gs, pd, a, geo))
+        # a = vtk.vtkActor()
+        # m = vtk.vtkPolyDataMapper()
+        # m.SetInputConnection(g.GetOutputPort())
+        # m.Update()
+        # a.SetMapper(m)
+        # p = a.GetProperty()
+        # setMarkerColor(p, marker, c, cmap)
+        g.Update()
+        glyphs = g.GetOutput()
+
+        cellData = glyphs.GetCellData()
+        numCells = glyphs.GetNumberOfCells()
+
+        vtk_color = getMarkerColor(marker, c, cmap)
+
+        colors = vtk.vtkUnsignedCharArray()
+        colors.SetName('Colors')
+        colors.SetNumberOfComponents(4)
+
+        for j in range(numCells):
+            colors.InsertNextTypedTuple(vtk_color)
+
+        cellData.AddArray(colors)
+
+        actors.append((glyphs, pd, geo))
 
     return actors
 
