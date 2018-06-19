@@ -158,7 +158,11 @@ class VTKVCSBackend(object):
                 continue
             # Use the hardware selector to determine the cell id we clicked on
             selector = vtk.vtkHardwareSelector()
-            surfaceRenderer = d.backend['surface_renderer']
+            if 'surface_renderer' in d.backend:
+                surfaceRenderer = d.backend['surface_renderer']
+            else:
+                print('No "surface_renderer" in display backend')
+                return
             dataset = d.backend['vtk_backend_grid']
             if (surfaceRenderer and dataset):
                 selector.SetRenderer(surfaceRenderer)
@@ -973,6 +977,20 @@ class VTKVCSBackend(object):
             # contActor.SetMapper(contMapper)
         else:
             geo = None
+
+        vtk_dataset_bounds_no_mask = kargs.get(
+            "vtk_dataset_bounds_no_mask", None)
+        print('Plotting continents')
+        print('vtk_dataset_bounds_no_mask = ', vtk_dataset_bounds_no_mask)
+        xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
+            vp,
+            wc=wc,
+            geoBounds=vtk_dataset_bounds_no_mask)
+
+        # Transform the input data
+        T = vtk.vtkTransform()
+        T.Scale(xScale, yScale, 1.)
+        contData = self._applyTransformationToDataset(T, contData)
 
         contLine = self.canvas.getcontinentsline()
         # line_prop = contActor.GetProperty()

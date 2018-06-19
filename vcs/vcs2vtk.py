@@ -1299,7 +1299,7 @@ def genTextActor(contextArea, string=None, x=None, y=None,
                 renderer, x[i], y[i], tt.viewport, tt.worldcoordinate)
         t.SetPosition(X, Y)
         t.SetInput(string[i])
-        print('making a text actor %d for %s' % (i, string[i]))
+
         # T=vtk.vtkTransform()
         # T.Scale(1.,sz[1]/606.,1.)
         # T.RotateY(to.angle)

@@ -85,7 +85,8 @@ class VectorPipeline(Pipeline2D):
         arrow.SetOutputPointsPrecision(vtk.vtkAlgorithm.DOUBLE_PRECISION)
         arrow.FilledOff()
 
-        polydata = self._vtkPolyDataFilter.GetOutput()
+        # polydata = self._vtkPolyDataFilter.GetOutput()
+        polydata = self._vtkDataSetFittedToViewport
 
         plotting_dataset_bounds = self.getPlottingBounds()
         vp = self._resultDict.get('ratio_autot_viewport',
@@ -115,6 +116,38 @@ class VectorPipeline(Pipeline2D):
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
+        # xScale, yScale, xc, yc, yd, flipX, flipY = self._context().computeScaleToFitViewport(
+        #     vp,
+        #     wc=plotting_dataset_bounds,
+        #     geoBounds=self._vtkDataSetBoundsNoMask,
+        #     geo=self._vtkGeoTransform)
+
+        # print('boxfillpipeline._plotInternal(): xScale = %f, yScale = %f, xc = %f, yc = %f, yd = %f, flipX = %s, flipY = %s' % (xScale, yScale, xc, yc, yd, flipX, flipY))
+
+        cam = dataset_renderer.GetActiveCamera()
+        cam.ParallelProjectionOn()
+        # We increase the parallel projection parallelepiped with 1/1000 so that
+        # it does not overlap with the outline of the dataset. This resulted in
+        # system dependent display of the outline.
+        cam.SetParallelScale(self._context_yd * 1.001)
+        cd = cam.GetDistance()
+        cam.SetPosition(self._context_xc, self._context_yc, cd)
+        cam.SetFocalPoint(self._context_xc, self._context_yc, 0.)
+        if self._vtkGeoTransform is None:
+            if self._context_flipY:
+                cam.Elevation(180.)
+                cam.Roll(180.)
+                pass
+            if self._context_flipX:
+                cam.Azimuth(180.)
+
+        # Transform the input data
+        # T = vtk.vtkTransform()
+        # T.Scale(xScale, yScale, 1.)
+        # polydata = self._context()._applyTransformationToDataset(T, polydata)
+
+        # newBounds = polydata.GetBounds()
+
         rect = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
                             self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
                             self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
@@ -132,31 +165,6 @@ class VectorPipeline(Pipeline2D):
         area.GetAxis(vtk.vtkAxis.RIGHT).SetVisible(False)
         area.GetAxis(vtk.vtkAxis.BOTTOM).SetVisible(False)
         area.GetAxis(vtk.vtkAxis.TOP).SetVisible(False)
-
-        xScale, yScale, xc, yc, yd, flipX, flipY = self._context().computeScaleToFitViewport(
-            vp,
-            wc=plotting_dataset_bounds,
-            geoBounds=self._vtkDataSetBoundsNoMask,
-            geo=self._vtkGeoTransform)
-
-        # print('boxfillpipeline._plotInternal(): xScale = %f, yScale = %f, xc = %f, yc = %f, yd = %f, flipX = %s, flipY = %s' % (xScale, yScale, xc, yc, yd, flipX, flipY))
-
-        cam = dataset_renderer.GetActiveCamera()
-        cam.ParallelProjectionOn()
-        # We increase the parallel projection parallelepiped with 1/1000 so that
-        # it does not overlap with the outline of the dataset. This resulted in
-        # system dependent display of the outline.
-        cam.SetParallelScale(yd * 1.001)
-        cd = cam.GetDistance()
-        cam.SetPosition(xc, yc, cd)
-        cam.SetFocalPoint(xc, yc, 0.)
-        if self._vtkGeoTransform is None:
-            if flipY:
-                cam.Elevation(180.)
-                cam.Roll(180.)
-                pass
-            if flipX:
-                cam.Azimuth(180.)
 
 
 
@@ -272,6 +280,7 @@ class VectorPipeline(Pipeline2D):
                   'dataset_bounds': self._vtkDataSetBounds,
                   'plotting_dataset_bounds': plotting_dataset_bounds,
                   "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
+                  # "vtk_dataset_bounds_no_mask": newBounds,
                   'vtk_backend_geo': self._vtkGeoTransform,
                   "vtk_backend_pipeline_context_area": area}
         if ('ratio_autot_viewport' in self._resultDict):

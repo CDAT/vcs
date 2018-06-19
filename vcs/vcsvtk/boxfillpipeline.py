@@ -87,8 +87,6 @@ class BoxfillPipeline(Pipeline2D):
             [self._template.data.x1, self._template.data.x2,
              self._template.data.y1, self._template.data.y2])
 
-        print('boxfillpipeline viewport: [%f, %f, %f, %f]' % (vp[0], vp[1], vp[2], vp[3]))
-
         fareapixelspacing, fareapixelscale = self._patternSpacingAndScale()
 
         # view and interactive area
@@ -106,38 +104,13 @@ class BoxfillPipeline(Pipeline2D):
 
         area.SetDrawAreaBounds(rect)
         area.SetGeometry(geom)
-        # area.SetFixedMargins(0, 0, 0, 0)
         area.SetFillViewport(False)
         area.SetShowGrid(False)
 
-        axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
-        axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
-        axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
-        axisTop = area.GetAxis(vtk.vtkAxis.TOP)
-        axisTop.SetVisible(False)
-        axisRight.SetVisible(False)
-        axisLeft.SetVisible(False)
-        axisBottom.SetVisible(False)
-        # axis = self._data1.getAxisList()[0]
-        # axisLeft.SetTitle(axis.id)
-        # axis = self._data1.getAxisList()[1]
-        # axisBottom.SetTitle(axis.id)
-
-        # adjust the viewport
-        # device = view.GetContext().GetDevice()
-        # device.Begin(view.GetRenderer())
-        # rectLeft = axisLeft.GetBoundingRect(view.GetContext())
-        # rectRight = axisRight.GetBoundingRect(view.GetContext())
-        # rectTop = axisTop.GetBoundingRect(view.GetContext())
-        # rectBottom = axisBottom.GetBoundingRect(view.GetContext())
-        # # device.End()
-        # xmin = vp[0] - rectLeft.GetWidth() / self._context().renWin.GetSize()[0]
-        # xmax = vp[1] + rectRight.GetWidth() / self._context().renWin.GetSize()[0]
-        # ymin = vp[2] - rectBottom.GetHeight() / self._context().renWin.GetSize()[1]
-        # ymax = vp[3] + rectTop.GetHeight() / self._context().renWin.GetSize()[1]
-
-        # dataset_renderer.SetViewport(xmin, ymin, xmax, ymax)
-        # dataset_renderer.SetViewport(vp[0], vp[2], vp[1], vp[3])
+        area.GetAxis(vtk.vtkAxis.LEFT).SetVisible(False)
+        area.GetAxis(vtk.vtkAxis.RIGHT).SetVisible(False)
+        area.GetAxis(vtk.vtkAxis.BOTTOM).SetVisible(False)
+        area.GetAxis(vtk.vtkAxis.TOP).SetVisible(False)
 
         midx = 0
 
@@ -145,42 +118,24 @@ class BoxfillPipeline(Pipeline2D):
             act = vtk.vtkActor()
             act.SetMapper(mapper)
             mapper.Update()
-
-            # create a new renderer for this mapper
-            # (we need one for each mapper because of camera flips)
-            # if not dataset_renderer:
-            xScale, yScale, xc, yc, yd, flipX, flipY = self._context().computeScaleToFitViewport(
-                vp,
-                wc=plotting_dataset_bounds,
-                geoBounds=self._vtkDataSetBoundsNoMask,
-                geo=self._vtkGeoTransform)
-
-            # print('boxfillpipeline._plotInternal(): xScale = %f, yScale = %f, xc = %f, yc = %f, yd = %f, flipX = %s, flipY = %s' % (xScale, yScale, xc, yc, yd, flipX, flipY))
+            poly = mapper.GetInput()
 
             cam = dataset_renderer.GetActiveCamera()
             cam.ParallelProjectionOn()
             # We increase the parallel projection parallelepiped with 1/1000 so that
             # it does not overlap with the outline of the dataset. This resulted in
             # system dependent display of the outline.
-            cam.SetParallelScale(yd * 1.001)
+            cam.SetParallelScale(self._context_yd * 1.001)
             cd = cam.GetDistance()
-            cam.SetPosition(xc, yc, cd)
-            cam.SetFocalPoint(xc, yc, 0.)
+            cam.SetPosition(self._context_xc, self._context_yc, cd)
+            cam.SetFocalPoint(self._context_xc, self._context_yc, 0.)
             if self._vtkGeoTransform is None:
-                if flipY:
+                if self._context_flipY:
                     cam.Elevation(180.)
                     cam.Roll(180.)
                     pass
-                if flipX:
+                if self._context_flipX:
                     cam.Azimuth(180.)
-
-            # T = vtk.vtkTransform()
-            # T.Scale(xScale, yScale, 1.)
-            # self._context()._applyTransformationToMapperInput(T, mapper)
-            # mapper.Update()
-            poly = mapper.GetInput()
-
-            # vcs2vtk.debugWriteGrid(poly, 'boxfill-%d-mapper-%d-poly%s' % (_callidx, midx, poly.GetAddressAsString(None)))
 
             if _style == "solid":
                 if self._needsCellData:
@@ -337,12 +292,14 @@ class BoxfillPipeline(Pipeline2D):
         self._mappers = [mapper]
 
         if self._gm.ext_1 and self._gm.ext_2:
-            mapper.SetInputConnection(self._vtkPolyDataFilter.GetOutputPort())
+            # mapper.SetInputConnection(self._vtkPolyDataFilter.GetOutputPort())
+            mapper.SetInputData(self._vtkDataSetFittedToViewport)
             self._resultDict["vtk_backend_geofilters"] = \
                 [self._vtkPolyDataFilter]
         else:
             thr = vtk.vtkThreshold()
-            thr.SetInputConnection(self._vtkPolyDataFilter.GetOutputPort())
+            # thr.SetInputConnection(self._vtkPolyDataFilter.GetOutputPort())
+            thr.SetInputData(self._vtkDataSetFittedToViewport)
             if not self._gm.ext_1 and not self._gm.ext_2:
                 thr.ThresholdBetween(self._contourLevels[0],
                                      self._contourLevels[-1])
@@ -410,7 +367,8 @@ class BoxfillPipeline(Pipeline2D):
                 lut = vtk.vtkLookupTable()
                 th = vtk.vtkThreshold()
                 th.ThresholdBetween(l[j], l[j + 1])
-                th.SetInputConnection(self._vtkPolyDataFilter.GetOutputPort())
+                # th.SetInputConnection(self._vtkPolyDataFilter.GetOutputPort())
+                th.SetInputData(self._vtkDataSetFittedToViewport)
                 geoFilter2 = vtk.vtkDataSetSurfaceFilter()
                 geoFilter2.SetInputConnection(th.GetOutputPort())
                 # Make the polydata output available here for patterning later
