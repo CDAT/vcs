@@ -25,4 +25,5 @@ class TestVCSIsofill(basevcstest.VCSBaseTest):
         fnm = os.path.join(self.basedatadir, "masked-file.nc")
         f = cdms2.open(fnm)
         data = f("test")
+        del(data.mean)
         self.isofillLevels(data, 3)

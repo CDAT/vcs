@@ -59,6 +59,7 @@ class VCSBaseTest(unittest.TestCase):
         ret = cdat_info.checkImage(fnm, self.x, self.basedir, self.pngsdir, src,
                                     threshold, pngReady, pngPathSet)
         self.assertEqual(ret, 0)
+        return ret
 
     def check_values_setting(self, gm, attributes,
                              good_values=[], bad_values=[]):
