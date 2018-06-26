@@ -6,9 +6,6 @@
         "type": null
     }, 
     "--vtk": {
-        "aliases": [
-            "-v"
-        ], 
         "help": "conda channel and extras to use for vtk. Command will be 'conda install -c [VTK] vtk-cdat"
     }
 }
