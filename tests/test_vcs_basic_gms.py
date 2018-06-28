@@ -124,7 +124,7 @@ class TestVCSBasicGms(basevcstest.VCSBaseTest):
 
     def testBasicGms(self):
         # for gm in "boxfill isofill isoline meshfill".split():
-        gm = 'boxfill'
+        gm = 'meshfill'
         for proj in [0, -3, "aeqd"]:
             self.basicGm(gm, proj, mask=True)
             # self.basicGm(gm, proj, lat1=-90, lat2=0)

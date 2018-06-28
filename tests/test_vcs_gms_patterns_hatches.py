@@ -75,7 +75,7 @@ class TestVCSHatch(basevcstest.VCSBaseTest):
 
     def testHatchPatterns(self):
         # for gm in ["boxfill", "isofill", "meshfill"]:
-        gm = "boxfill"
+        gm = "meshfill"
         for style in ["hatch", "solid", "pattern"]:
             self.gmPatternHatch(gm_type=gm, fill_style=style, contig=False)
             self.gmPatternHatch(gm_type=gm, fill_style=style, contig=True)
