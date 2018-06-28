@@ -1,5 +1,6 @@
 from .pipeline2d import Pipeline2D
 from . import fillareautils
+# from .. import vcs2vtk
 
 import numpy
 import vcs
@@ -44,7 +45,8 @@ class IsofillPipeline(Pipeline2D):
             lut = vtk.vtkLookupTable()
             cot = vtk.vtkBandedPolyDataContourFilter()
             cot.ClippingOn()
-            cot.SetInputData(self._vtkPolyDataFilter.GetOutput())
+            # cot.SetInputData(self._vtkPolyDataFilter.GetOutput())
+            cot.SetInputData(self._vtkDataSetFittedToViewport)
             cot.SetNumberOfContours(len(l))
             cot.SetClipTolerance(0.)
             for j, v in enumerate(l):
@@ -83,6 +85,7 @@ class IsofillPipeline(Pipeline2D):
 
         numLevels = len(self._contourLevels)
         if mappers == []:  # ok didn't need to have special banded contours
+            print('This seems like a weird case, do not get it')
             mapper = vtk.vtkPolyDataMapper()
             mappers = [mapper]
             # Colortable bit
@@ -117,11 +120,60 @@ class IsofillPipeline(Pipeline2D):
         vp = self._resultDict.get('ratio_autot_viewport',
                                   [self._template.data.x1, self._template.data.x2,
                                    self._template.data.y1, self._template.data.y2])
-        dataset_renderer = None
-        xScale, yScale = (1, 1)
+
+
+        # view and interactive area
+        view = self._context().contextView
+        dataset_renderer = view.GetRenderer()
+        area = vtk.vtkInteractiveArea()
+        view.GetScene().AddItem(area)
+
+        rect = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
+                            self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
+                            self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
+
+        [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+
+        area.SetDrawAreaBounds(rect)
+        area.SetGeometry(geom)
+        area.SetFillViewport(False)
+        area.SetShowGrid(False)
+
+        area.GetAxis(vtk.vtkAxis.LEFT).SetVisible(False)
+        area.GetAxis(vtk.vtkAxis.RIGHT).SetVisible(False)
+        area.GetAxis(vtk.vtkAxis.BOTTOM).SetVisible(False)
+        area.GetAxis(vtk.vtkAxis.TOP).SetVisible(False)
+
+        cam = dataset_renderer.GetActiveCamera()
+        cam.ParallelProjectionOn()
+        # We increase the parallel projection parallelepiped with 1/1000 so that
+        # it does not overlap with the outline of the dataset. This resulted in
+        # system dependent display of the outline.
+        cam.SetParallelScale(self._context_yd * 1.001)
+        cd = cam.GetDistance()
+        cam.SetPosition(self._context_xc, self._context_yc, cd)
+        cam.SetFocalPoint(self._context_xc, self._context_yc, 0.)
+        if self._vtkGeoTransform is None:
+            if self._context_flipY:
+                cam.Elevation(180.)
+                cam.Roll(180.)
+                pass
+            if self._context_flipX:
+                cam.Azimuth(180.)
+
+
+        # mIdx = 0
+
         for mapper in mappers:
             act = vtk.vtkActor()
             act.SetMapper(mapper)
+            mapper.Update()
+            poly = mapper.GetInput()
+
+            if not poly:
+                print(' #$#$#$#$#$#$#$ => This must be that useless mapper we created above for some mysterious reason')
+                continue
 
             patact = None
             # TODO see comment in boxfill.
@@ -130,24 +182,36 @@ class IsofillPipeline(Pipeline2D):
             else:
                 actors.append([act, plotting_dataset_bounds])
 
-            # create a new renderer for this mapper
-            # (we need one for each mapper because of cmaera flips)
-            # Note that fitToViewport is called on the actor before calling any
-            # patterns code so that patterns are generated for the transformed
-            # data set
-            dataset_renderer, xScale, yScale = self._context().fitToViewport(
-                act, vp,
-                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
-                geo=self._vtkGeoTransform,
-                priority=self._template.data.priority,
-                create_renderer=(mapper is self._maskedDataMapper or dataset_renderer is None),
-                add_actor=(style == "solid"))
+            if style == "solid":
+                if mapper is self._maskedDataMapper:
+                    # FIXME: Not quite sure how I got away without this in the other cases
+                    mappedColors = vtk.vtkUnsignedCharArray()
+                    mappedColors.SetNumberOfComponents(4)
+                    for i in range(poly.GetNumberOfCells()):
+                        mappedColors.InsertNextTypedTuple([0, 0, 0, 255])
+                else:
+                    attrs = poly.GetCellData()
+                    data = attrs.GetScalars()
+                    lut = mapper.GetLookupTable()
+                    scalarRange = mapper.GetScalarRange()
+                    lut.SetRange(scalarRange)
+                    mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+
+                    # fname = 'isofill-solid-%d' % mIdx
+                    # vcs2vtk.debugWriteGrid(poly, fname)
+                    # mIdx += 1
+
+                item = vtk.vtkPolyDataItem()
+                item.SetPolyData(poly)
+                item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                item.SetMappedColors(mappedColors)
+                area.GetDrawAreaItem().AddItem(item)
 
             if mapper is not self._maskedDataMapper:
                 # Since pattern creation requires a single color, assuming the first
                 c = self.getColorIndexOrRGBA(_colorMap, tmpColors[ct][0])
 
-                patact = fillareautils.make_patterned_polydata(mapper.GetInput(),
+                patact = fillareautils.make_patterned_polydata(poly,
                                                                fillareastyle=style,
                                                                fillareaindex=tmpIndices[ct],
                                                                fillareacolors=c,
@@ -159,7 +223,19 @@ class IsofillPipeline(Pipeline2D):
 
                 if patact is not None:
                     actors.append([patact, plotting_dataset_bounds])
-                    dataset_renderer.AddActor(patact)
+
+                    patMapper = patact.GetMapper()
+                    patMapper.Update()
+                    patPoly = patMapper.GetInput()
+
+                    item = vtk.vtkPolyDataItem()
+                    item.SetPolyData(patPoly)
+
+                    item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                    colorArray = patPoly.GetCellData().GetArray('Colors')
+
+                    item.SetMappedColors(colorArray)
+                    area.GetDrawAreaItem().AddItem(item)
 
                 # increment the count
                 ct += 1
@@ -175,7 +251,8 @@ class IsofillPipeline(Pipeline2D):
                   "dataset_bounds": self._vtkDataSetBounds,
                   "plotting_dataset_bounds": plotting_dataset_bounds,
                   "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
-                  "vtk_backend_geo": self._vtkGeoTransform}
+                  "vtk_backend_geo": self._vtkGeoTransform,
+                  "vtk_backend_pipeline_context_area": area}
         if ("ratio_autot_viewport" in self._resultDict):
             kwargs["ratio_autot_viewport"] = vp
         self._resultDict.update(self._context().renderTemplate(
