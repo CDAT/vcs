@@ -6,6 +6,30 @@ import vcs
 import vtk
 
 
+def getPaintHandler(paintAttrs):
+    print('Have paintAttrs when creating handler: ', paintAttrs)
+
+    @vtk.calldata_type(vtk.VTK_OBJECT)
+    def onPaintEvent(object, event, context2DPainter):
+        pen = context2DPainter.GetPen()
+
+        oldLineType = pen.GetLineType()
+        oldLineWidth = pen.GetWidth()
+
+        pen.SetLineType(paintAttrs['stippleType'])
+        pen.SetWidth(paintAttrs['lineWidth'])
+
+        poly = paintAttrs['poly']
+        colors = paintAttrs['colors']
+        mode = paintAttrs['mode']
+        context2DPainter.DrawPolyData(0, 0, poly, colors, mode)
+
+        pen.SetLineType(oldLineType)
+        pen.SetWidth(oldLineWidth)
+
+    return onPaintEvent
+
+
 class IsolinePipeline(Pipeline2D):
 
     """Implementation of the Pipeline interface for VCS isoline plots."""
@@ -272,11 +296,11 @@ class IsolinePipeline(Pipeline2D):
 
             # Create actor to add to scene
             act = vtk.vtkActor()
-            act.SetMapper(mapper)
-            # Set line properties here
-            p = act.GetProperty()
-            p.SetLineWidth(tmpLineWidths[i])
-            vcs2vtk.stippleLine(p, tmpLineTypes[i])
+            # act.SetMapper(mapper)
+            # # Set line properties here
+            # p = act.GetProperty()
+            # p.SetLineWidth(tmpLineWidths[i])
+            # vcs2vtk.stippleLine(p, tmpLineTypes[i])
 
             actors.append([act, plotting_dataset_bounds])
 
@@ -292,21 +316,26 @@ class IsolinePipeline(Pipeline2D):
 
             if self._needsCellData:
                 attrs = poly.GetCellData()
+                scalarMode = vtk.VTK_SCALAR_MODE_USE_CELL_DATA
             else:
                 attrs = poly.GetPointData()
+                scalarMode = vtk.VTK_SCALAR_MODE_USE_POINT_DATA
+
             data = attrs.GetScalars()
             mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
 
-            item = vtk.vtkPolyDataItem()
-            item.SetPolyData(poly)
+            customItem = vtk.vtkPaintNotifierItem()
+            attrs = {
+                'contextItem': customItem,
+                'poly': poly,
+                'colors': mappedColors,
+                'mode': scalarMode,
+                'lineWidth': tmpLineWidths[i],
+                'stippleType': vcs2vtk.getStipple(tmpLineTypes[i])
+            }
+            customItem.AddObserver(vtk.vtkCommand.Context2DPaintEvent, getPaintHandler(attrs))
 
-            if self._needsCellData:
-                item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
-            else:
-                item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
-
-            item.SetMappedColors(mappedColors)
-            area.GetDrawAreaItem().AddItem(item)
+            area.GetDrawAreaItem().AddItem(customItem)
 
 
             countLevels += len(l)

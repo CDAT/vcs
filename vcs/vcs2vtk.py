@@ -1898,6 +1898,29 @@ def stippleLine(prop, line_type):
         raise Exception("Unknown line type: '%s'" % line_type)
 
 
+def getStipple(line_type):
+    """
+        vtkPen has:
+            SOLID_LINE,
+            DASH_LINE,
+            DOT_LINE,
+            DASH_DOT_LINE,
+            DASH_DOT_DOT_LINE
+    """
+    if line_type == 'long-dash':
+        return vtk.vtkPen.DASH_DOT_DOT_LINE
+    elif line_type == 'dot':
+        return vtk.vtkPen.DOT_LINE
+    elif line_type == 'dash':
+        return vtk.vtkPen.DASH_LINE
+    elif line_type == 'dash-dot':
+        return vtk.vtkPen.DASH_DOT_LINE
+    elif line_type == 'solid':
+        return vtk.vtkPen.SOLID_LINE
+    else:
+        raise Exception("Unknown line type: '%s'" % line_type)
+
+
 def prepLine(contextArea, line, cmap=None):
     number_lines = prepPrimitive(line)
     if number_lines == 0:
