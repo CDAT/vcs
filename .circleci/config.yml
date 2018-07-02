@@ -25,8 +25,8 @@ aliases:
        conda config --set always_yes yes --set changeps1 no
        conda update -y -q conda
        conda config --set anaconda_upload no
-       conda create -q -n py2 -c cdat/label/nightly -c conda-forge -c cdat cdms2 cdat_info udunits2 nose flake8 mesalib nose image-compare flake8 matplotlib image-compare genutil dv3d cdutil cdtime "proj4<5" "python<3" "numpy>1.14" 
-       conda create -q -n py3 -c cdat/label/nightly -c conda-forge -c cdat cdms2 nose flake8 cdat_info udunits2 mesalib nose image-compare flake8 matplotlib image-compare genutil dv3d cdutil cdtime nbsphinx easydev "proj4<5" "python>3" "numpy>1.14" 
+       conda create -q -n py2 -c cdat/label/nightly -c cdat/label/nightly -c conda-forge -c cdat cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime "proj4<5" "numpy<1.14" "python<3" "libdrs<3.0.1"
+       conda create -q -n py3 -c cdat/label/nightly -c cdat/label/nightly -c conda-forge -c cdat cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime "proj4<5" "numpy<1.14" "python>3" "libdrs<3.0.1"
 
   - &setup_vcs
     name: setup_vcs
