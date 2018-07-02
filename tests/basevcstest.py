@@ -54,7 +54,7 @@ class VCSBaseTest(unittest.TestCase):
         # if glob.glob(os.path.join(self.pngsdir,"*")) == []:
         #    shutil.rmtree(self.pngsdir)
 
-    def checkImage(self, fnm, src=None, threshold=cdat_info.checkimage.defaultThreshold,
+    def checkImage(self, fnm, src=None, threshold=cdat_info.defaultThreshold,
                    pngReady=False, pngPathSet=False):
         ret = cdat_info.checkImage(fnm, self.x, self.basedir, self.pngsdir, src,
                                     threshold, pngReady, pngPathSet)
