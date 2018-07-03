@@ -53,6 +53,7 @@ aliases:
        echo "**** py3 test result: "${PY3_RESULT}
        RESULT=$(( $RESULT + $PY3_RESULT))
        cd docs
+       conda install -c cdat/label/nightly -c conda-forge -c cdat nbsphinx easydev
        make doctest
        PY3_RESULT=$?
        echo "**** py3 doc test result: "${PY3_RESULT}
