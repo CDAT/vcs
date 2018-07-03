@@ -308,12 +308,17 @@ class Pipeline2D(IPipeline2D):
         # Determine and format the contouring information:
         self._updateContourLevelsAndColors()
 
-        # Generate a mapper to render masked data:
-        self._vtkDataSetBoundsNoMask = self._vtkDataSet.GetBounds()
-        self._createMaskedDataMapper()
+        # # Generate a mapper to render masked data:
+        # self._vtkDataSetBoundsNoMask = self._vtkDataSet.GetBounds()
+        # self._createMaskedDataMapper()
 
         # Create the polydata filter:
+        self._vtkDataSetBoundsNoMask = self._vtkDataSet.GetBounds()
         self._createPolyDataFilter()
+
+        # Generate a mapper to render masked data:
+        # self._vtkDataSetBoundsNoMask = self._vtkDataSet.GetBounds()
+        self._createMaskedDataMapper()
 
         if (kargs.get('ratio', '0') == 'autot' and
                 # atot is implemented for linear plots at vcs level
@@ -384,16 +389,40 @@ class Pipeline2D(IPipeline2D):
             [self._template.data.x1, self._template.data.x2,
              self._template.data.y1, self._template.data.y2])
         plotting_dataset_bounds = self.getPlottingBounds()
-        surface_renderer, xScale, yScale = self._context().fitToViewport(
-            act, vp,
-            wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
-            geo=self._vtkGeoTransform,
-            priority=self._template.data.priority,
-            create_renderer=True)
-        self._resultDict['surface_renderer'] = surface_renderer
+
+        # surface_renderer, xScale, yScale = self._context().fitToViewport(
+        #     act, vp,
+        #     wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
+        #     geo=self._vtkGeoTransform,
+        #     priority=self._template.data.priority,
+        #     create_renderer=True)
+
+        xScale, yScale, xc, yc, yd, flipX, flipY = self._context().computeScaleToFitViewport(
+            vp,
+            wc=plotting_dataset_bounds,
+            geoBounds=self._vtkDataSetBoundsNoMask,
+            geo=self._vtkGeoTransform)
+
+        # Transform the input data
+        T = vtk.vtkTransform()
+        T.Scale(xScale, yScale, 1.)
+
+        act.GetMapper().Update()
+        self._vtkDataSetFittedToViewport = self._context()._applyTransformationToDataset(T, act.GetMapper().GetInput())
+        self._vtkDataSetBoundsNoMask = self._vtkDataSetFittedToViewport.GetBounds()
+
+        self._context_xScale = xScale
+        self._context_yScale = yScale
+        self._context_xc = xc
+        self._context_yc = yc
+        self._context_yd = yd
+        self._context_flipX = flipX
+        self._context_flipY = flipY
+
+        # self._resultDict['surface_renderer'] = surface_renderer
         self._resultDict['surface_scale'] = (xScale, yScale)
-        if (surface_renderer):
-            surface_renderer.SetDraw(False)
+        # if (surface_renderer):
+        #     surface_renderer.SetDraw(False)
 
     def _updateFromGenGridDict(self, genGridDict):
         """Overrides baseclass implementation."""
@@ -411,8 +440,11 @@ class Pipeline2D(IPipeline2D):
         _colorMap = self.getColorMap()
         if color is not None:
             color = self.getColorIndexOrRGBA(_colorMap, color)
+        # self._maskedDataMapper = vcs2vtk.putMaskOnVTKGrid(
+        #     self._data1, self._vtkDataSet, color, self._hasCellData,
+        #     deep=False)
         self._maskedDataMapper = vcs2vtk.putMaskOnVTKGrid(
-            self._data1, self._vtkDataSet, color, self._hasCellData,
+            self._data1, self._vtkDataSetFittedToViewport, color, self._hasCellData,
             deep=False)
 
         self._resultDict["vtk_backend_missing_mapper"] = (

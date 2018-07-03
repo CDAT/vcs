@@ -1,6 +1,24 @@
 import vtk
 from .patterns import pattern_list
 
+def debugWriteGrid(grid, name):
+    writer = vtk.vtkXMLDataSetWriter()
+    gridType = grid.GetDataObjectType()
+    if (gridType == vtk.VTK_STRUCTURED_GRID):
+        ext = ".vts"
+    elif (gridType == vtk.VTK_UNSTRUCTURED_GRID):
+        ext = ".vtu"
+    elif (gridType == vtk.VTK_POLY_DATA):
+        ext = ".vtp"
+    else:
+        print "Unknown grid type: %d" % gridType
+        ext = ".vtk"
+    writer.SetFileName(name + ext)
+    writer.SetInputData(grid)
+    writer.Write()
+
+_callidx = 0
+
 
 def computeResolutionAndScale(renderer, pt1, pt2, xRange, yRange, pxScale=None, pxSpacing=None, threshold=1e-6):
     # Be smart about calculating the resolution by taking the screen pixel
@@ -38,6 +56,7 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
                             fillareaopacity=None,
                             fillareapixelspacing=None, fillareapixelscale=None,
                             size=None, renderer=None):
+    global _callidx
     if inputContours is None or fillareastyle == 'solid':
         return None
     if inputContours.GetNumberOfCells() == 0:
@@ -132,6 +151,16 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
     map_colors(cutter.GetOutput(), fillareastyle,
                fillareacolors, fillareaopacity)
 
+    cutter.Update()
+    # fname = 'cut-colored-pattern-%d' % _callidx
+    # print('fname: %s' % fname)
+    # print('  fillareastyle: %s' % fillareastyle)
+    # print('  fillareacolors: [%f, %f, %f, %f]' % (fillareacolors[0], fillareacolors[1], fillareacolors[2], fillareacolors[3]))
+    # print('  fillareaopacity: %f' % fillareaopacity)
+    # print('  pattern class: %s' % pattern_list[fillareaindex])
+    # debugWriteGrid(cutter.GetOutput(), fname)
+    # _callidx += 1
+
     mapper = vtk.vtkPolyDataMapper()
     mapper.SetInputConnection(cutter.GetOutputPort())
     actor = vtk.vtkActor()
@@ -159,6 +188,7 @@ def map_colors(clippedPolyData, fillareastyle=None,
     colors.SetNumberOfComponents(4)
     colors.SetName("Colors")
     clippedPolyData.GetCellData().SetScalars(colors)
+    # clippedPolyData.GetCellData().AddArray(colors)
     for i in range(clippedPolyData.GetNumberOfCells()):
         colors.InsertNextTypedTuple(color)
 

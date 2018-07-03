@@ -5,6 +5,10 @@ import numpy
 import vcs
 import vtk
 
+from .. import vcs2vtk
+
+_callidx = 0
+
 
 class BoxfillPipeline(Pipeline2D):
 
@@ -24,6 +28,7 @@ class BoxfillPipeline(Pipeline2D):
         self._mappers = None
         self._customBoxfillArgs = {}
         self._needsCellData = True
+
 
     def _updateScalarData(self):
         """Overrides baseclass implementation."""
@@ -57,6 +62,7 @@ class BoxfillPipeline(Pipeline2D):
         self._contourColors = list(range(self._gm.color_1, self._gm.color_2 + 1))
 
     def _plotInternal(self):
+        global _callidx
         """Overrides baseclass implementation."""
         # Special case for custom boxfills:
         if self._gm.boxfill_type != "custom":
@@ -80,23 +86,79 @@ class BoxfillPipeline(Pipeline2D):
             'ratio_autot_viewport',
             [self._template.data.x1, self._template.data.x2,
              self._template.data.y1, self._template.data.y2])
-        dataset_renderer = None
+
         fareapixelspacing, fareapixelscale = self._patternSpacingAndScale()
+
+        # view and interactive area
+        view = self._context().contextView
+        dataset_renderer = view.GetRenderer()
+        area = vtk.vtkInteractiveArea()
+        view.GetScene().AddItem(area)
+
+        rect = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
+                            self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
+                            self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
+
+        [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+
+        area.SetDrawAreaBounds(rect)
+        area.SetGeometry(geom)
+        area.SetFillViewport(False)
+        area.SetShowGrid(False)
+
+        area.GetAxis(vtk.vtkAxis.LEFT).SetVisible(False)
+        area.GetAxis(vtk.vtkAxis.RIGHT).SetVisible(False)
+        area.GetAxis(vtk.vtkAxis.BOTTOM).SetVisible(False)
+        area.GetAxis(vtk.vtkAxis.TOP).SetVisible(False)
+
+        midx = 0
 
         for mapper in self._mappers:
             act = vtk.vtkActor()
             act.SetMapper(mapper)
+            mapper.Update()
+            poly = mapper.GetInput()
 
-            # create a new renderer for this mapper
-            # (we need one for each mapper because of camera flips)
-            # if not dataset_renderer:
-            dataset_renderer, xScale, yScale = self._context().fitToViewport(
-                act, vp,
-                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
-                geo=self._vtkGeoTransform,
-                priority=self._template.data.priority,
-                create_renderer=(dataset_renderer is None),
-                add_actor=(_style == "solid"))
+            cam = dataset_renderer.GetActiveCamera()
+            cam.ParallelProjectionOn()
+            # We increase the parallel projection parallelepiped with 1/1000 so that
+            # it does not overlap with the outline of the dataset. This resulted in
+            # system dependent display of the outline.
+            cam.SetParallelScale(self._context_yd * 1.001)
+            cd = cam.GetDistance()
+            cam.SetPosition(self._context_xc, self._context_yc, cd)
+            cam.SetFocalPoint(self._context_xc, self._context_yc, 0.)
+            if self._vtkGeoTransform is None:
+                if self._context_flipY:
+                    cam.Elevation(180.)
+                    cam.Roll(180.)
+                    pass
+                if self._context_flipX:
+                    cam.Azimuth(180.)
+
+            if _style == "solid":
+                if self._needsCellData:
+                    attrs = poly.GetCellData()
+                else:
+                    attrs = poly.GetPointData()
+                data = attrs.GetScalars()
+                lut = mapper.GetLookupTable()
+                range = mapper.GetScalarRange()
+                lut.SetRange(range)
+                mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                mappedColors.SetName('Colors')
+
+                item = vtk.vtkPolyDataItem()
+                item.SetPolyData(poly)
+
+                if self._needsCellData:
+                    item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                else:
+                    item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
+
+                item.SetMappedColors(mappedColors)
+                area.GetDrawAreaItem().AddItem(item)
 
             # TODO We shouldn't need this conditional branch, the 'else' body
             # should be used and GetMapper called to get the mapper as needed.
@@ -119,7 +181,7 @@ class BoxfillPipeline(Pipeline2D):
                     c = self.getColorIndexOrRGBA(_colorMap, tmpColors[cti][ctj])
 
                     patact = fillareautils.make_patterned_polydata(
-                        mapper.GetInput(),
+                        poly,
                         fillareastyle=_style,
                         fillareaindex=self._customBoxfillArgs["tmpIndices"][cti],
                         fillareacolors=c,
@@ -132,8 +194,22 @@ class BoxfillPipeline(Pipeline2D):
                     ctj += 1
 
                     if patact is not None:
-                        dataset_renderer.AddActor(patact)
+                        patMapper = patact.GetMapper()
+                        patMapper.Update()
+                        patPoly = patMapper.GetInput()
+
+                        item = vtk.vtkPolyDataItem()
+                        item.SetPolyData(patPoly)
+
+                        item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                        colorArray = patPoly.GetCellData().GetArray('Colors')
+
+                        item.SetMappedColors(colorArray)
+                        area.GetDrawAreaItem().AddItem(item)
+
                         actors.append([patact, plotting_dataset_bounds])
+
+            midx += 1
 
         self._resultDict["vtk_backend_actors"] = actors
 
@@ -146,7 +222,8 @@ class BoxfillPipeline(Pipeline2D):
                   "dataset_bounds": self._vtkDataSetBounds,
                   "plotting_dataset_bounds": plotting_dataset_bounds,
                   "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
-                  "vtk_backend_geo": self._vtkGeoTransform}
+                  "vtk_backend_geo": self._vtkGeoTransform,
+                  "vtk_backend_pipeline_context_area": area}
         if ("ratio_autot_viewport" in self._resultDict):
             kwargs["ratio_autot_viewport"] = vp
         self._resultDict.update(self._context().renderTemplate(
@@ -206,6 +283,8 @@ class BoxfillPipeline(Pipeline2D):
                                            self._dataWrapModulo,
                                            vp, self._template.data.priority, **kwargs)
 
+        _callidx += 1
+
     def _plotInternalBoxfill(self):
         """Implements the logic to render a non-custom boxfill."""
         # Prep mapper
@@ -213,12 +292,14 @@ class BoxfillPipeline(Pipeline2D):
         self._mappers = [mapper]
 
         if self._gm.ext_1 and self._gm.ext_2:
-            mapper.SetInputConnection(self._vtkPolyDataFilter.GetOutputPort())
+            # mapper.SetInputConnection(self._vtkPolyDataFilter.GetOutputPort())
+            mapper.SetInputData(self._vtkDataSetFittedToViewport)
             self._resultDict["vtk_backend_geofilters"] = \
                 [self._vtkPolyDataFilter]
         else:
             thr = vtk.vtkThreshold()
-            thr.SetInputConnection(self._vtkPolyDataFilter.GetOutputPort())
+            # thr.SetInputConnection(self._vtkPolyDataFilter.GetOutputPort())
+            thr.SetInputData(self._vtkDataSetFittedToViewport)
             if not self._gm.ext_1 and not self._gm.ext_2:
                 thr.ThresholdBetween(self._contourLevels[0],
                                      self._contourLevels[-1])
@@ -261,6 +342,9 @@ class BoxfillPipeline(Pipeline2D):
         """Implements the logic to render a custom boxfill."""
         self._mappers = []
 
+        # import pdb
+        # pdb.set_trace()
+
         self._customBoxfillArgs = self._prepContours()
         tmpLevels = self._customBoxfillArgs["tmpLevels"]
         tmpColors = self._customBoxfillArgs["tmpColors"]
@@ -283,7 +367,8 @@ class BoxfillPipeline(Pipeline2D):
                 lut = vtk.vtkLookupTable()
                 th = vtk.vtkThreshold()
                 th.ThresholdBetween(l[j], l[j + 1])
-                th.SetInputConnection(self._vtkPolyDataFilter.GetOutputPort())
+                # th.SetInputConnection(self._vtkPolyDataFilter.GetOutputPort())
+                th.SetInputData(self._vtkDataSetFittedToViewport)
                 geoFilter2 = vtk.vtkDataSetSurfaceFilter()
                 geoFilter2.SetInputConnection(th.GetOutputPort())
                 # Make the polydata output available here for patterning later

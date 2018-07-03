@@ -29,6 +29,7 @@ class TestVCSHatch(basevcstest.VCSBaseTest):
         gm.fillareacolors = [242, 244, 237, 248, 250, 252, 44, 243, 139, 247]
         if fill_style == "hatch":
             gm.fillareaindices = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+            # gm.fillareaindices = [2, 4, 6, 8, 1, 3, 14, 16, 18, 20]
             gm.fillareaopacity = [50, 75, 20, 100, 25, 30, 40, 80, 60, 100]
         else:
             gm.fillareaindices = [1, 3, 5, 7, 9, 11, 18, 15, 17, 19]
@@ -73,9 +74,9 @@ class TestVCSHatch(basevcstest.VCSBaseTest):
         self.checkImage(fnm + ".png")
 
     def testHatchPatterns(self):
-        for gm in ["boxfill", "isofill", "meshfill"]:
-            for style in ["solid", "pattern", "hatch"]:
-                self.gmPatternHatch(gm_type=gm, fill_style=style, contig=False)
-                self.gmPatternHatch(gm_type=gm, fill_style=style, contig=True)
-                self.gmPatternHatch(
-                    gm_type=gm, fill_style=style, lon1=0, lon2=360)
+        # for gm in ["boxfill", "isofill", "meshfill"]:
+        gm = "isofill"
+        for style in ["hatch", "solid", "pattern"]:
+            self.gmPatternHatch(gm_type=gm, fill_style=style, contig=False)
+            self.gmPatternHatch(gm_type=gm, fill_style=style, contig=True)
+            self.gmPatternHatch(gm_type=gm, fill_style=style, lon1=0, lon2=360)
