@@ -70,8 +70,8 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
                 # vcs.createisofill,
                 # vcs.createisoline,
                 # vcs.createmeshfill,
-                vcs.createvector,
-                # vcs.createstreamline,
+                # vcs.createvector,
+                vcs.createstreamline,
                        ]:
             self.axisConvertGmAreaWt(method)
             if not method in [vcs.createmeshfill,]:
