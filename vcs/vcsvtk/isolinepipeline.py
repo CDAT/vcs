@@ -170,11 +170,20 @@ class IsolinePipeline(Pipeline2D):
         area.SetFillViewport(False)
         area.SetShowGrid(False)
 
-        area.GetAxis(vtk.vtkAxis.LEFT).SetVisible(False)
-        area.GetAxis(vtk.vtkAxis.RIGHT).SetVisible(False)
-        area.GetAxis(vtk.vtkAxis.BOTTOM).SetVisible(False)
-        area.GetAxis(vtk.vtkAxis.TOP).SetVisible(False)
+        axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
+        axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
+        axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
+        axisTop = area.GetAxis(vtk.vtkAxis.TOP)
 
+        axisLeft.SetVisible(False)
+        axisRight.SetVisible(False)
+        axisBottom.SetVisible(False)
+        axisTop.SetVisible(False)
+
+        axisLeft.SetMargins(0, 0)
+        axisRight.SetMargins(0, 0)
+        axisBottom.SetMargins(0, 0)
+        axisTop.SetMargins(0, 0)
 
         for i, l in enumerate(tmpLevels):
             numLevels = len(l)

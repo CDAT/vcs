@@ -1393,6 +1393,11 @@ def prepFillarea(context, renWin, farea, cmap=None):
     axisLeft.SetVisible(False)
     axisBottom.SetVisible(False)
 
+    axisTop.SetMargins(0, 0)
+    axisRight.SetMargins(0, 0)
+    axisLeft.SetMargins(0, 0)
+    axisBottom.SetMargins(0, 0)
+
     n = prepPrimitive(farea)
     if n == 0:
         return []

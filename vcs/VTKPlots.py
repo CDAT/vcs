@@ -734,10 +734,16 @@ class VTKVCSBackend(object):
                 axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
                 axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
                 axisTop = area.GetAxis(vtk.vtkAxis.TOP)
+
                 axisTop.SetVisible(False)
                 axisRight.SetVisible(False)
                 axisLeft.SetVisible(False)
                 axisBottom.SetVisible(False)
+
+                axisTop.SetMargins(0, 0)
+                axisRight.SetMargins(0, 0)
+                axisLeft.SetMargins(0, 0)
+                axisBottom.SetMargins(0, 0)
 
                 returned["vtk_backend_text_actors"] = vcs2vtk.genTextActor(
                     area.GetDrawAreaItem(),
@@ -773,11 +779,16 @@ class VTKVCSBackend(object):
                 axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
                 axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
                 axisTop = area.GetAxis(vtk.vtkAxis.TOP)
+
                 axisTop.SetVisible(False)
                 axisRight.SetVisible(False)
                 axisLeft.SetVisible(False)
                 axisBottom.SetVisible(False)
 
+                axisTop.SetMargins(0, 0)
+                axisRight.SetMargins(0, 0)
+                axisLeft.SetMargins(0, 0)
+                axisBottom.SetMargins(0, 0)
 
                 actors = vcs2vtk.prepLine(area.GetDrawAreaItem(), gm,
                                           cmap=self.canvas.colormap)
@@ -816,11 +827,20 @@ class VTKVCSBackend(object):
                 area.SetFillViewport(False)
                 area.SetShowGrid(False)
 
-                area.GetAxis(vtk.vtkAxis.LEFT).SetVisible(False)
-                area.GetAxis(vtk.vtkAxis.RIGHT).SetVisible(False)
-                area.GetAxis(vtk.vtkAxis.BOTTOM).SetVisible(False)
-                area.GetAxis(vtk.vtkAxis.TOP).SetVisible(False)
+                axisLeft = area.GetAxis(vtk.vtkAxis.LEFT).SetVisible(False)
+                axisRight = area.GetAxis(vtk.vtkAxis.RIGHT).SetVisible(False)
+                axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM).SetVisible(False)
+                axisTop = area.GetAxis(vtk.vtkAxis.TOP).SetVisible(False)
 
+                axisLeft.SetVisible(False)
+                axisRight.SetVisible(False)
+                axisBottom.SetVisible(False)
+                axisTop.SetVisible(False)
+
+                axisLeft.SetMargins(0, 0)
+                axisRight.SetMargins(0, 0)
+                axisBottom.SetMargins(0, 0)
+                axisTop.SetMargins(0, 0)
 
                 # ren, xScale, yScale = \
                 #     self.findOrCreateUniqueRenderer(None, gm.viewport,
@@ -1049,10 +1069,20 @@ class VTKVCSBackend(object):
             area.SetFillViewport(False)
             area.SetShowGrid(False)
 
-            area.GetAxis(vtk.vtkAxis.LEFT).SetVisible(False)
-            area.GetAxis(vtk.vtkAxis.RIGHT).SetVisible(False)
-            area.GetAxis(vtk.vtkAxis.BOTTOM).SetVisible(False)
-            area.GetAxis(vtk.vtkAxis.TOP).SetVisible(False)
+            axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
+            axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
+            axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
+            axisTop = area.GetAxis(vtk.vtkAxis.TOP)
+
+            axisLeft.SetVisible(False)
+            axisRight.SetVisible(False)
+            axisBottom.SetVisible(False)
+            axisTop.SetVisible(False)
+
+            axisLeft.SetMargins(0, 0)
+            axisRight.SetMargins(0, 0)
+            axisBottom.SetMargins(0, 0)
+            axisTop.SetMargins(0, 0)
 
         color_arr = vtk.vtkUnsignedCharArray()
         color_arr.SetNumberOfComponents(4)
@@ -1104,10 +1134,20 @@ class VTKVCSBackend(object):
         area.SetFillViewport(False)
         area.SetShowGrid(False)
 
-        area.GetAxis(vtk.vtkAxis.LEFT).SetVisible(False)
-        area.GetAxis(vtk.vtkAxis.RIGHT).SetVisible(False)
-        area.GetAxis(vtk.vtkAxis.BOTTOM).SetVisible(False)
-        area.GetAxis(vtk.vtkAxis.TOP).SetVisible(False)
+        axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
+        axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
+        axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
+        axisTop = area.GetAxis(vtk.vtkAxis.TOP)
+
+        axisLeft.SetVisible(False)
+        axisRight.SetVisible(False)
+        axisBottom.SetVisible(False)
+        axisTop.SetVisible(False)
+
+        axisLeft.SetMargins(0, 0)
+        axisRight.SetMargins(0, 0)
+        axisBottom.SetMargins(0, 0)
+        axisTop.SetMargins(0, 0)
 
         # ok first basic template stuff, let's store the displays
         # because we need to return actors for min/max/mean
