@@ -405,15 +405,17 @@ class VTKVCSBackend(object):
             app.plot.quit()
 
         self.hideGUI()
-        while ren is not None:
-            ren.RemoveAllViewProps()
-            if not ren.GetLayer() == 0:
-                self.renWin.RemoveRenderer(ren)
-            else:
-                # Update background color
-                r, g, b = [c / 255. for c in self.canvas.backgroundcolor]
-                ren.SetBackground(r, g, b)
-            ren = renderers.GetNextItem()
+        # while ren is not None:
+        #     ren.RemoveAllViewProps()
+        #     if not ren.GetLayer() == 0:
+        #         self.renWin.RemoveRenderer(ren)
+        #     else:
+        #         # Update background color
+        #         r, g, b = [c / 255. for c in self.canvas.backgroundcolor]
+        #         ren.SetBackground(r, g, b)
+        #     ren = renderers.GetNextItem()
+        if self.contextView:
+            self.contextView.GetScene().ClearItems()
         self._animationActorTransforms = {}
         self.showGUI(render=False)
 
@@ -969,6 +971,9 @@ class VTKVCSBackend(object):
                 plot.onClosing(cell)
 
     def plotContinents(self, continentType, wc, projection, wrap, vp, priority, **kargs):
+        print('plotting continents w/ proj: ')
+        print(projection.list())
+
         if continentType in [0, None]:
             return
         continents_path = self.canvas._continentspath(continentType)
