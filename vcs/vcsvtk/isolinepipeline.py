@@ -323,6 +323,8 @@ class IsolinePipeline(Pipeline2D):
             #     create_renderer=(dataset_renderer is None))
 
 
+            vcs2vtk.debugWriteGrid(poly, 'isoline')
+
             if self._needsCellData:
                 attrs = poly.GetCellData()
                 scalarMode = vtk.VTK_SCALAR_MODE_USE_CELL_DATA

@@ -68,6 +68,8 @@ class VCSBaseTest(unittest.TestCase):
                 width=self.x.width,
                 height=self.x.height,
                 units="pixels")
+        stuff = raw_input('Comparing %s with %s \n' % (fnm, src))
+        print('You entered %s' % stuff)
         ret = checkimage.check_result_image(fnm, src, threshold)
         self.assertEqual(ret, 0)
         return ret

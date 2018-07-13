@@ -756,44 +756,7 @@ class VTKVCSBackend(object):
                 # self.text_renderers[tt_key] = ren
         elif gtype == "line":
             if gm.priority != 0:
-
-
-                view = self.contextView
-
-                area = vtk.vtkContextArea()
-                view.GetScene().AddItem(area)
-
-                vp = gm.viewport
-                wc = gm.worldcoordinate
-
-                rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
-
-                [renWinWidth, renWinHeight] = self.renWin.GetSize()
-                geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
-
-                area.SetDrawAreaBounds(rect)
-                area.SetGeometry(geom)
-
-                area.SetFillViewport(False)
-                area.SetShowGrid(False)
-
-                axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
-                axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
-                axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
-                axisTop = area.GetAxis(vtk.vtkAxis.TOP)
-
-                axisTop.SetVisible(False)
-                axisRight.SetVisible(False)
-                axisLeft.SetVisible(False)
-                axisBottom.SetVisible(False)
-
-                axisTop.SetMargins(0, 0)
-                axisRight.SetMargins(0, 0)
-                axisLeft.SetMargins(0, 0)
-                axisBottom.SetMargins(0, 0)
-
-                actors = vcs2vtk.prepLine(area.GetDrawAreaItem(), gm,
-                                          cmap=self.canvas.colormap)
+                vcs2vtk.prepLine(self, gm, geoBounds=bounds, cmap=self.canvas.colormap)
                 # returned["vtk_backend_line_actors"] = actors
                 # create_renderer = True
                 # for act, geo in actors:
@@ -806,6 +769,7 @@ class VTKVCSBackend(object):
                 #         priority=gm.priority,
                 #         create_renderer=create_renderer)
                 #     create_renderer = False
+
         elif gtype == "marker":
             if gm.priority != 0:
 
@@ -988,6 +952,8 @@ class VTKVCSBackend(object):
         # contActor = vtk.vtkActor()
         # contActor.SetMapper(contMapper)
 
+        vcs2vtk.debugWriteGrid(contData, 'continents_before_project')
+
         if projection.type != "linear":
             # contData = contActor.GetMapper().GetInput()
             cpts = contData.GetPoints()
@@ -1003,19 +969,25 @@ class VTKVCSBackend(object):
         else:
             geo = None
 
+        vcs2vtk.debugWriteGrid(contData, 'continents_after_project')
+
         vtk_dataset_bounds_no_mask = kargs.get(
             "vtk_dataset_bounds_no_mask", None)
         print('Plotting continents')
         print('vtk_dataset_bounds_no_mask = ', vtk_dataset_bounds_no_mask)
-        xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
-            vp,
-            wc=wc,
-            geoBounds=vtk_dataset_bounds_no_mask)
 
-        # Transform the input data
-        T = vtk.vtkTransform()
-        T.Scale(xScale, yScale, 1.)
-        contData = self._applyTransformationToDataset(T, contData)
+        if not geo:
+            xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
+                vp,
+                wc=wc,
+                geoBounds=vtk_dataset_bounds_no_mask)
+
+            # Transform the input data
+            T = vtk.vtkTransform()
+            T.Scale(xScale, yScale, 1.)
+            contData = self._applyTransformationToDataset(T, contData)
+
+            vcs2vtk.debugWriteGrid(contData, 'continents_after_fit_to_viewport')
 
         contLine = self.canvas.getcontinentsline()
         # line_prop = contActor.GetProperty()

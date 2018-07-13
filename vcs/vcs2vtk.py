@@ -17,6 +17,7 @@ import numbers
 
 
 _DEBUG_VTK = True
+prepLineCount = 0
 
 
 def debugWriteGrid(grid, name):
@@ -1926,7 +1927,31 @@ def getStipple(line_type):
         raise Exception("Unknown line type: '%s'" % line_type)
 
 
-def prepLine(contextArea, line, cmap=None):
+def getLinePaintHandler(paintAttrs):
+    @vtk.calldata_type(vtk.VTK_OBJECT)
+    def onPaintEvent(object, event, context2DPainter):
+        pen = context2DPainter.GetPen()
+
+        oldLineType = pen.GetLineType()
+        oldLineWidth = pen.GetWidth()
+
+        pen.SetLineType(paintAttrs['stippleType'])
+        pen.SetWidth(paintAttrs['lineWidth'])
+
+        poly = paintAttrs['poly']
+        colors = paintAttrs['colors']
+        mode = paintAttrs['mode']
+        context2DPainter.DrawPolyData(0, 0, poly, colors, mode)
+
+        pen.SetLineType(oldLineType)
+        pen.SetWidth(oldLineWidth)
+
+    return onPaintEvent
+
+
+def prepLine(plotsContext, line, geoBounds=None, cmap=None):
+    global prepLineCount
+
     number_lines = prepPrimitive(line)
     if number_lines == 0:
         return []
@@ -2001,12 +2026,79 @@ def prepLine(contextArea, line, cmap=None):
             ln_tmp.GetPointIds().SetId(1, j + point_offset + 1)
             lines.InsertNextCell(ln_tmp)
 
+    lineDataCount = 0
+
     for t, w in line_data:
         pts, _, linesPoly, colors = line_data[(t, w)]
 
         linesPoly.GetCellData().SetScalars(colors)
-        geo, pts = project(pts, line.projection, line.worldcoordinate)
+        geoTransform, pts = project(pts, line.projection, line.worldcoordinate)
         linesPoly.SetPoints(pts)
+
+        polyBounds = linesPoly.GetBounds()
+
+        view = plotsContext.contextView
+
+        area = vtk.vtkContextArea()
+        view.GetScene().AddItem(area)
+
+        vp = line.viewport
+        if geoTransform:
+            wc = polyBounds
+        else:
+            wc = line.worldcoordinate
+
+        print('doing a line with viewport and worldcoordinate as follows:')
+        print(vp)
+        print(wc)
+
+        rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
+
+        [renWinWidth, renWinHeight] = plotsContext.renWin.GetSize()
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+
+        area.SetDrawAreaBounds(rect)
+        area.SetGeometry(geom)
+
+        area.SetFillViewport(False)
+        area.SetShowGrid(False)
+
+        axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
+        axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
+        axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
+        axisTop = area.GetAxis(vtk.vtkAxis.TOP)
+
+        axisTop.SetVisible(False)
+        axisRight.SetVisible(False)
+        axisLeft.SetVisible(False)
+        axisBottom.SetVisible(False)
+
+        axisTop.SetMargins(0, 0)
+        axisRight.SetMargins(0, 0)
+        axisLeft.SetMargins(0, 0)
+        axisBottom.SetMargins(0, 0)
+
+
+
+        # if geoTransform:
+        #     xScale, yScale, xc, yc, yd, flipX, flipY = plotsContext.computeScaleToFitViewport(
+        #         line.viewport,
+        #         wc=line.worldcoordinate,
+        #         geoBounds=geoBounds,
+        #         geo=geoTransform)
+
+        #     # Transform the input data
+        #     T = vtk.vtkTransform()
+        #     T.Scale(xScale, yScale, 1.)
+
+        #     linesPoly = plotsContext._applyTransformationToDataset(T, linesPoly)
+
+        gridFileName = 'lines-%d-%d' % (prepLineCount, lineDataCount)
+        print('Got the polydata for that line (writing to %s), bounds are:' % gridFileName)
+        print(polyBounds)
+
+        debugWriteGrid(linesPoly, gridFileName)
+        lineDataCount += 1
 
         # a = vtk.vtkActor()
         # m = vtk.vtkPolyDataMapper()
@@ -2025,7 +2117,21 @@ def prepLine(contextArea, line, cmap=None):
         item.SetPolyData(linesPoly)
         item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
         item.SetMappedColors(colors)
-        contextArea.AddItem(item)
+        area.GetDrawAreaItem().AddItem(item)
+
+        # customItem = vtk.vtkPaintNotifierItem()
+        # attrs = {
+        #     'contextItem': customItem,
+        #     'poly': linesPoly,
+        #     'colors': colors,
+        #     'mode': vtk.VTK_SCALAR_MODE_USE_CELL_DATA,
+        #     'lineWidth': w,
+        #     'stippleType': getStipple(t)
+        # }
+        # customItem.AddObserver(vtk.vtkCommand.Context2DPaintEvent, getLinePaintHandler(attrs))
+        # area.GetDrawAreaItem().AddItem(customItem)
+
+    prepLineCount += 1
 
     return actors
 

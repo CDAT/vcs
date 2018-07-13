@@ -150,10 +150,10 @@ class TestVCSBasicGms(basevcstest.VCSBaseTest):
                 color = True
                 evenlySpaced = True
             # self.basicGm(gm, color=color, evenlySpaced=evenlySpaced)
-            # self.basicGm(
-            #     gm,
-            #     transparent=True,
-            #     color=color,
-            #     evenlySpaced=evenlySpaced)
-            self.basicGm(gm, zero=True, color=color, evenlySpaced=evenlySpaced)
-            self.basicGm(gm, mask=True, color=color, evenlySpaced=evenlySpaced)
+            self.basicGm(
+                gm,
+                transparent=True,
+                color=color,
+                evenlySpaced=evenlySpaced)
+            # self.basicGm(gm, zero=True, color=color, evenlySpaced=evenlySpaced)
+            # self.basicGm(gm, mask=True, color=color, evenlySpaced=evenlySpaced)
