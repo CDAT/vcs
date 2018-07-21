@@ -3794,11 +3794,23 @@ class Canvas(vcs.bestMatch):
             if p.type in no_deformation_projections and (
                     doratio == "0" or doratio[:4] == "auto"):
                 doratio = "1t"
+                if arglist[3] in ["boxfill", "isofill", "isoline"]:
+                    if numpy.allclose(copy_mthd.datawc_x1, 1.e20) and numpy.allclose(copy_mthd.datawc_x2, 1.e20):
+                        axis = arglist[0].getAxis(-1)
+                        amn, amx = vcs.minmax(axis)
+                        print("ORIGINAL:",amn, amx)
+                        bnds = axis.getBounds()
+                        mn, mx = vcs.minmax(bnds)
+                        if numpy.allclose(mx - mn, axis.modulo):
+                            arglist[0] = arglist[0](**{axis.id: (mn, mx, "ooe")})
+                            print("NEW MX MN:",vcs.minmax(arglist[0].getAxis(-1)))
+                            copy_mthd.datawc_x1 = amn
+                            copy_mthd.datawc_x2 = amx
             for keyarg in list(keyargs.keys()):
                 if keyarg not in self.__class__._plot_keywords_ + self.backend._plot_keywords:
                     if keyarg in self.__class__._deprecated_plot_keywords_:
                         warnings.warn("Deprecation Warning: Keyword '%s' will be removed in the next version"
-                                      "of UV-CDAT." % keyarg, vcs.VCSDeprecationWarning)
+                                      "of CDAT." % keyarg, vcs.VCSDeprecationWarning)
                     else:
                         warnings.warn(
                             'Unrecognized vcs plot keyword: %s, assuming backend (%s) keyword' %
