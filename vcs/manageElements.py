@@ -1984,3 +1984,192 @@ def removeobject(obj):
         msg = 'This ({}) is not a template, graphics method, or secondary method object.'.format(obj)
         raise vcsError(msg)
     return msg
+
+
+def addfont(path, name=""):
+    """Add a font to VCS.
+
+    :param path: Path to the font file you wish to add (must be .ttf)
+    :type path: `str`_
+
+    :param name: Name to use to represent the font.
+    :type name: `str`_
+
+    .. pragma: skip-doctest If you can reliably test it, please do.
+    """
+    if not os.path.exists(path):
+        raise ValueError('Error -  The font path does not exists')
+    if os.path.isdir(path):
+        dir_files = []
+        files = []
+        if name == "":
+            subfiles = os.listdir(path)
+            for file in subfiles:
+                dir_files.append(os.path.join(path, file))
+        elif name == 'r':
+            for root, dirs, subfiles in os.walk(path):
+                for file in subfiles:
+                    dir_files.append(os.path.join(root, file))
+        for f in dir_files:
+            if f.lower()[-3:]in ['ttf', 'pfa', 'pfb']:
+                files.append([f, ""])
+    else:
+        files = [[path, name], ]
+
+    nms = []
+    for f in files:
+        fnm, name = f
+        i = max(vcs.elements["fontNumber"].keys()) + 1
+        if name == "":
+            name = ".".join(os.path.basename(fnm).split(".")[:-1])
+        vcs.elements["font"][name] = os.path.abspath(fnm)
+        vcs.elements["fontNumber"][i] = name
+        nms.append(name)
+    if len(nms) == 0:
+        raise vcsError('No font Loaded')
+    elif len(nms) > 1:
+        return nms
+    else:
+        return nms[0]
+
+
+def getfont(font):
+    """Get the font name/number associated with a font number/name
+
+    :Example:
+
+        .. doctest:: canvas_getfont
+
+            >>> font_names=[]
+            >>> for i in range(1,17):
+            ...     font_names.append(str(vcs.getfont(i))) # font_names is now filled with all font names
+            >>> font_names
+            ['default', ...]
+            >>> font_numbers = []
+            >>> for name in font_names:
+            ...     font_numbers.append(vcs.getfont(name)) # font_numbers is now filled with all font numbers
+            >>> font_numbers
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+
+    :param font: The font name/number
+    :type font: `int`_ or `str`_
+
+    :returns: If font parameter was a string, will return the integer
+        associated with that string.
+        If font parameter was an integer, will return the string
+        associated with that integer.
+    :rtype: `int`_ or str
+    """
+    if isinstance(font, int):
+        return vcs.getfontname(font)
+    elif isinstance(font, str):
+        return vcs.getfontnumber(font)
+    else:
+        raise vcsError("Error you must pass a string or int")
+
+
+def switchfonts(font1, font2):
+    """Switch the font numbers of two fonts.
+
+    :Example:
+
+        .. doctest:: canvas_switchfonts
+
+            >>> a=vcs.init()
+            >>> maths1 = a.getfontnumber('Maths1') # store font number
+            >>> maths2 = a.getfontnumber('Maths2') # store font number
+            >>> a.switchfonts('Maths1','Maths2') # switch font numbers
+            >>> new_maths1 = a.getfontnumber('Maths1')
+            >>> new_maths2 = a.getfontnumber('Maths2')
+            >>> maths1 == new_maths2 and maths2 == new_maths1 # check
+            True
+
+    :param font1: The first font
+    :type font1: `int`_ or str
+
+    :param font2: The second font
+    :type font2: `int`_ or str
+    """
+    if isinstance(font1, str):
+        index1 = vcs.getfont(font1)
+    elif isinstance(font1, (int, float)):
+        index1 = int(font1)
+        vcs.getfont(index1)  # make sure font exists
+    else:
+        raise vcsError(
+            "Error you must pass either a number or font name!, you passed for font 1: %s" %
+            font1)
+    if isinstance(font2, str):
+        index2 = vcs.getfont(font2)
+    elif isinstance(font2, (int, float)):
+        index2 = int(font2)
+        vcs.getfont(index2)  # make sure font exists
+    else:
+        raise vcsError(
+            "Error you must pass either a number or font name!, you passed for font 2: %s" %
+            font2)
+    tmp = vcs.elements['fontNumber'][index1]
+    vcs.elements['fontNumber'][index1] = vcs.elements['fontNumber'][index2]
+    vcs.elements['fontNumber'][index2] = tmp
+
+
+def copyfontto(font1, font2):
+    """Copy 'font1' into 'font2'.
+
+    :param font1: Name/number of font to copy
+    :type font1: `str`_ or int
+
+    :param font2: Name/number of destination
+    :type font2: `str`_ or `int`_
+
+    .. attention::
+
+        This function does not currently work.
+        It will be added in the future.
+
+    .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
+    """
+    if isinstance(font1, basestring):
+        index1 = vcs.getfont(font1)
+    elif isinstance(font1, (int, float)):
+        index1 = int(font1)
+        name1 = vcs.getfont(index1)  # make sure font exists
+    else:
+        raise vcsError(
+            "Error you must pass either a number or font name!, you passed for font 1: %s" %
+            font1)
+    if isinstance(font2, basestring):
+        index2 = vcs.getfont(font2)
+    elif isinstance(font2, (int, float)):
+        index2 = int(font2)
+        vcs.getfont(index2)  # make sure font exists
+    else:
+        raise vcsError(
+            "Error you must pass either a number or font name!, you passed for font 2: %s" %
+            font2)
+
+    if index2 == 1:
+        raise vcsError("You cannot copy into the default font")
+    vcs.elements["fontNumber"][index2] = name1
+
+
+def setdefaultfont(font):
+    """Sets the passed/def show font as the default font for vcs
+
+    :param font: Font name or index to use as default
+    :type font: `str`_ or `int`_
+
+    .. attention::
+
+        This function does not currently work.
+        It will be implemented in the future.
+
+    .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
+    """
+    if isinstance(font, int):
+        font = vcs.getfontname(font)
+    elif isinstance(font, basestring):
+        vcs.getfont(font)  # Make sure it exists
+    else:
+        raise vcsError("You need to pass an int or an existing font name")
+    vcs.elements["font"]["default"] = vcs.elements["font"][font]

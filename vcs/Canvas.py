@@ -63,6 +63,10 @@ try:
     hasVCSAddons = True
 except Exception:
     hasVCSAddons = False
+try:
+    basestring
+except Exception:
+    basestring = str
 
 
 def rotate(x, y, xorigin, yorigin, angle):
@@ -3227,17 +3231,22 @@ class Canvas(vcs.bestMatch):
                 if copy_tmpl is None:
                     copy_tmpl = vcs.createtemplate(source=arglist[2])
                     check_tmpl = copy_tmpl
-                if getattr(getattr(check_tmpl, p), 'priority') == 0:
-                    setattr(getattr(copy_tmpl, p), 'priority', 1)
+                if p == "id":
+                    pname = "dataname"
+                else:
+                    pname = p
+                if getattr(getattr(check_tmpl, pname), 'priority') == 0:
+                    setattr(getattr(copy_tmpl, pname), 'priority', 1)
                 if not isinstance(
                         k, list):  # not a list means only priority set
                     if isinstance(k, dict):
                         for kk in list(k.keys()):
-                            setattr(getattr(copy_tmpl, p), kk, k[kk])
+                            setattr(getattr(copy_tmpl, pname), kk, k[kk])
                     elif isinstance(k, int):
-                        setattr(getattr(copy_tmpl, p), 'priority', k)
+                        setattr(getattr(copy_tmpl, pname), 'priority', k)
                     elif isinstance(k, str):
                         slab_changed_attributes[p] = k
+                        setattr(arglist[0], p, k)
                 else:
                     # if hasattr(arglist[0],p):
                     # slab_changed_attributes[p]=getattr(arglist[0],p)
@@ -3245,11 +3254,11 @@ class Canvas(vcs.bestMatch):
                     # slab_created_attributes.append(p)
                     # setattr(arglist[0],p,k[0])
                     slab_changed_attributes[p] = k[0]
-                    setattr(getattr(copy_tmpl, p), 'x', k[1])
-                    setattr(getattr(copy_tmpl, p), 'y', k[2])
+                    setattr(getattr(copy_tmpl, pname), 'x', k[1])
+                    setattr(getattr(copy_tmpl, pname), 'y', k[2])
                     if isinstance(k[-1], type({})):
                         for kk in list(k[-1].keys()):
-                            setattr(getattr(copy_tmpl, p), kk, k[-1][kk])
+                            setattr(getattr(copy_tmpl, pname), kk, k[-1][kk])
 
                 del(keyargs[p])
             # Now Axis related keywords
@@ -3706,7 +3715,7 @@ class Canvas(vcs.bestMatch):
         # get the background value
         bg = keyargs.get('bg', 0)
 
-        if isinstance(arglist[3], str) and arglist[
+        if isinstance(arglist[3], basestring) and arglist[
                 3].lower() == 'taylordiagram':
             for p in list(slab_changed_attributes.keys()):
                 if hasattr(arglist[0], p):
@@ -5609,47 +5618,8 @@ class Canvas(vcs.bestMatch):
     getcolormap.__doc__ = vcs.manageElements.getcolormap.__doc__
 
     def addfont(self, path, name=""):
-        """Add a font to VCS.
-
-        :param path: Path to the font file you wish to add (must be .ttf)
-        :type path: `str`_
-
-        :param name: Name to use to represent the font.
-        :type name: `str`_
-
-        .. pragma: skip-doctest If you can reliably test it, please do.
-        """
-        if not os.path.exists(path):
-            raise ValueError('Error -  The font path does not exists')
-        if os.path.isdir(path):
-            dir_files = []
-            files = []
-            if name == "":
-                subfiles = os.listdir(path)
-                for file in subfiles:
-                    dir_files.append(os.path.join(path, file))
-            elif name == 'r':
-                for root, dirs, subfiles in os.walk(path):
-                    for file in subfiles:
-                        dir_files.append(os.path.join(root, file))
-            for f in dir_files:
-                if f.lower()[-3:]in ['ttf', 'pfa', 'pfb']:
-                    files.append([f, ""])
-        else:
-            files = [[path, name], ]
-
-        nms = []
-        for f in files:
-            fnm, name = f
-            i = max(vcs.elements["fontNumber"].keys()) + 1
-            vcs.elements["font"][name] = fnm
-            vcs.elements["fontNumber"][i] = name
-        if len(nms) == 0:
-            raise vcsError('No font Loaded')
-        elif len(nms) > 1:
-            return nms
-        else:
-            return nms[0]
+        return vcs.addfont(path, name)
+    addfont.__doc__ = vcs.manageElements.addfont.__doc__
 
     def getfontnumber(self, name):
         return vcs.getfontnumber(name)
@@ -5660,136 +5630,20 @@ class Canvas(vcs.bestMatch):
     getfontname.__doc__ = vcs.utils.getfontname.__doc__
 
     def getfont(self, font):
-        """Get the font name/number associated with a font number/name
-
-        :Example:
-
-            .. doctest:: canvas_getfont
-
-                >>> a=vcs.init()
-                >>> font_names=[]
-                >>> for i in range(1,17):
-                ...     font_names.append(str(a.getfont(i))) # font_names is now filled with all font names
-                >>> font_names
-                ['default', ...]
-                >>> font_numbers = []
-                >>> for name in font_names:
-                ...     font_numbers.append(a.getfont(name)) # font_numbers is now filled with all font numbers
-                >>> font_numbers
-                [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-
-        :param font: The font name/number
-        :type font: `int`_ or `str`_
-
-        :returns: If font parameter was a string, will return the integer
-            associated with that string.
-            If font parameter was an integer, will return the string
-            associated with that integer.
-        :rtype: `int`_ or str
-        """
-        if isinstance(font, int):
-            return self.getfontname(font)
-        elif isinstance(font, str):
-            return self.getfontnumber(font)
-        else:
-            raise vcsError("Error you must pass a string or int")
+        return vcs.getfont(font)
+    getfont.__doc__ = vcs.manageElements.getfont.__doc__
 
     def switchfonts(self, font1, font2):
-        """Switch the font numbers of two fonts.
-
-        :Example:
-
-            .. doctest:: canvas_switchfonts
-
-                >>> a=vcs.init()
-                >>> maths1 = a.getfontnumber('Maths1') # store font number
-                >>> maths2 = a.getfontnumber('Maths2') # store font number
-                >>> a.switchfonts('Maths1','Maths2') # switch font numbers
-                >>> new_maths1 = a.getfontnumber('Maths1')
-                >>> new_maths2 = a.getfontnumber('Maths2')
-                >>> maths1 == new_maths2 and maths2 == new_maths1 # check
-                True
-
-        :param font1: The first font
-        :type font1: `int`_ or str
-
-        :param font2: The second font
-        :type font2: `int`_ or str
-        """
-        if isinstance(font1, str):
-            index1 = self.getfont(font1)
-        elif isinstance(font1, (int, float)):
-            index1 = int(font1)
-            self.getfont(index1)  # make sure font exists
-        else:
-            raise vcsError(
-                "Error you must pass either a number or font name!, you passed for font 1: %s" %
-                font1)
-        if isinstance(font2, str):
-            index2 = self.getfont(font2)
-        elif isinstance(font2, (int, float)):
-            index2 = int(font2)
-            self.getfont(index2)  # make sure font exists
-        else:
-            raise vcsError(
-                "Error you must pass either a number or font name!, you passed for font 2: %s" %
-                font2)
-        tmp = vcs.elements['fontNumber'][index1]
-        vcs.elements['fontNumber'][index1] = vcs.elements['fontNumber'][index2]
-        vcs.elements['fontNumber'][index2] = tmp
+        vcs.switchfonts(font1, font2)
+    switchfonts.__doc__ = vcs.manageElements.switchfonts.__doc__
 
     def copyfontto(self, font1, font2):
-        """Copy 'font1' into 'font2'.
-
-        :param font1: Name/number of font to copy
-        :type font1: `str`_ or int
-
-        :param font2: Name/number of destination
-        :type font2: `str`_ or `int`_
-
-        .. attention::
-
-            This function does not currently work.
-            It will be added in the future.
-
-        .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
-        """
-        if isinstance(font1, str):
-            index1 = self.getfont(font1)
-        elif isinstance(font1, (int, float)):
-            index1 = int(font1)
-            self.getfont(index1)  # make sure font exists
-        else:
-            raise vcsError(
-                "Error you must pass either a number or font name!, you passed for font 1: %s" %
-                font1)
-        if isinstance(font2, str):
-            index2 = self.getfont(font2)
-        elif isinstance(font2, (int, float)):
-            index2 = int(font2)
-            self.getfont(index2)  # make sure font exists
-        else:
-            raise vcsError(
-                "Error you must pass either a number or font name!, you passed for font 2: %s" %
-                font2)
-        return self.canvas.copyfontto(*(index1, index2))
+        vcs.copyfontto(font1, font2)
+    copyfontto.__doc__ = vcs.manageElements.copyfontto.__doc__
 
     def setdefaultfont(self, font):
-        """Sets the passed/def show font as the default font for vcs
-
-        :param font: Font name or index to use as default
-        :type font: `str`_ or `int`_
-
-        .. attention::
-
-            This function does not currently work.
-            It will be implemented in the future.
-
-        .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
-        """
-        if isinstance(font, str):
-            font = self.getfont(font)
-        return self.copyfontto(font, 1)
+        vcs.setdefaultfont(font)
+    setdefaultfont.__doc__ = vcs.manageElements.setdefaultfont.__doc__
 
     def orientation(self, *args, **kargs):
         """Return canvas orientation.
