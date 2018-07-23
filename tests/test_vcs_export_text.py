@@ -19,15 +19,15 @@ class TestVCSExportText(basevcstest.VCSBaseTest):
         txt.height = 10
         self.x.plot(txt, bg=self.bg)
 
-        tmpfile = tempfile.NamedTemporaryFile(suffix='.ps',
-                                              prefix='textAsPathsFalse', delete=False)
-        self.x.postscript(tmpfile.name, textAsPaths=False)
-        tmpfile.close()
+        # tmpfile = tempfile.NamedTemporaryFile(suffix='.ps',
+        #                                       prefix='textAsPathsFalse', delete=False)
+        # self.x.postscript(tmpfile.name, textAsPaths=False)
+        # tmpfile.close()
 
-        tmpfile = tempfile.NamedTemporaryFile(suffix='.ps',
-                                              prefix='textAsPathsTrue', delete=False)
-        self.x.postscript(tmpfile.name, textAsPaths=True)
-        tmpfile.close()
+        # tmpfile = tempfile.NamedTemporaryFile(suffix='.ps',
+        #                                       prefix='textAsPathsTrue', delete=False)
+        # self.x.postscript(tmpfile.name, textAsPaths=True)
+        # tmpfile.close()
 
         tmpfile = tempfile.NamedTemporaryFile(suffix='.pdf',
                                               prefix='textAsPathsFalse', delete=False)
@@ -49,12 +49,12 @@ class TestVCSExportText(basevcstest.VCSBaseTest):
         self.x.svg(tmpfile.name, textAsPaths=True)
         tmpfile.close()
 
-        tmpfile = tempfile.NamedTemporaryFile(suffix='.eps',
-                                              prefix='textAsPathsFalse', delete=False)
-        self.x.eps(tmpfile.name, textAsPaths=False)
-        tmpfile.close()
+        # tmpfile = tempfile.NamedTemporaryFile(suffix='.eps',
+        #                                       prefix='textAsPathsFalse', delete=False)
+        # self.x.eps(tmpfile.name, textAsPaths=False)
+        # tmpfile.close()
 
-        tmpfile = tempfile.NamedTemporaryFile(suffix='.eps',
-                                              prefix='textAsPathsTrue', delete=False)
-        self.x.eps(tmpfile.name, textAsPaths=True)
-        tmpfile.close()
+        # tmpfile = tempfile.NamedTemporaryFile(suffix='.eps',
+        #                                       prefix='textAsPathsTrue', delete=False)
+        # self.x.eps(tmpfile.name, textAsPaths=True)
+        # tmpfile.close()

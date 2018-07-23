@@ -60,16 +60,16 @@ class VCSBaseTest(unittest.TestCase):
             src = os.path.join(self.basedir, os.path.basename(fnm))
         if not pngPathSet:
             fnm = os.path.join(self.pngsdir, fnm)
-        print("Test file  :", fnm)
-        print("Source file:", src)
+        # print("Test file  :", fnm)
+        # print("Source file:", src)
         if not pngReady:
             self.x.png(
                 fnm,
                 width=self.x.width,
                 height=self.x.height,
                 units="pixels")
-        stuff = raw_input('Comparing %s with %s \n' % (fnm, src))
-        print('You entered %s' % stuff)
+        # stuff = raw_input('Comparing %s with %s \n' % (fnm, src))
+        # print('You entered %s' % stuff)
         ret = checkimage.check_result_image(fnm, src, threshold)
         self.assertEqual(ret, 0)
         return ret

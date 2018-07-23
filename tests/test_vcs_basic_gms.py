@@ -123,8 +123,11 @@ class TestVCSBasicGms(basevcstest.VCSBaseTest):
         self.checkImage(fnm + '.png', threshold=20)
 
     def testBasicGms(self):
-        self.basicGm("isoline", 0, mask=True)
+        # self.basicGm("isoline", 0, mask=True)
         # self.basicGm("isoline", 0, lat1=90, lat2=0, rg=True, flip=True)
+        self.basicGm("boxfill", 0, lat1=-90, lat2=0, lon1=-180, lon2=180)
+        # self.basicGm("boxfill", 0, lat1=-90, lat2=0)
+
 
         # # for gm in "boxfill isofill isoline meshfill".split():
         # for gm in "isoline".split():

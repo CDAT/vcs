@@ -793,10 +793,10 @@ class VTKVCSBackend(object):
                 area.SetFillViewport(False)
                 area.SetShowGrid(False)
 
-                axisLeft = area.GetAxis(vtk.vtkAxis.LEFT).SetVisible(False)
-                axisRight = area.GetAxis(vtk.vtkAxis.RIGHT).SetVisible(False)
-                axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM).SetVisible(False)
-                axisTop = area.GetAxis(vtk.vtkAxis.TOP).SetVisible(False)
+                axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
+                axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
+                axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
+                axisTop = area.GetAxis(vtk.vtkAxis.TOP)
 
                 axisLeft.SetVisible(False)
                 axisRight.SetVisible(False)
@@ -1493,12 +1493,38 @@ class VTKVCSBackend(object):
                                    units, textAsPaths)
 
     def pdf(self, file, width=None, height=None, units=None, textAsPaths=True):
-        return self.vectorGraphics("pdf", file, width, height,
-                                   units, textAsPaths)
+        # return self.vectorGraphics("pdf", file, width, height,
+        #                            units, textAsPaths)
+        self.hideGUI()
+
+        exporter = vtk.vtkPDFExporter()
+        exporter.SetRenderWindow(self.contextView.GetRenderWindow())
+        exporter.SetFileName(file)
+        exporter.Write()
+
+        plot = self.get3DPlot()
+        if plot:
+            plot.showWidgets()
+
+        self.showGUI()
 
     def svg(self, file, width=None, height=None, units=None, textAsPaths=True):
-        return self.vectorGraphics("svg", file, width,
-                                   height, units, textAsPaths)
+        # return self.vectorGraphics("svg", file, width,
+        #                            height, units, textAsPaths)
+        self.hideGUI()
+
+        exporter = vtk.vtkSVGExporter()
+        exporter.SetRenderWindow(self.contextView.GetRenderWindow())
+        exporter.SetFileName(file)
+        # For large polydata, we can limit the number of triangles emitted during gradient subdivision.
+        exporter.SetSubdivisionThreshold(10.0)
+        exporter.Write()
+
+        plot = self.get3DPlot()
+        if plot:
+            plot.showWidgets()
+
+        self.showGUI()
 
     def gif(self, filename='noname.gif', merge='r', orientation=None,
             geometry='1600x1200'):
