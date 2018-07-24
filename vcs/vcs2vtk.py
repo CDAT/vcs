@@ -1830,8 +1830,6 @@ def getMarkerColor(marker, c, cmap=None):
 
     retval = [int((C / 100.) * 255) for C in color]
 
-    print('marker color: ', retval)
-
     return retval
 
 
@@ -2066,10 +2064,6 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
         else:
             wc = line.worldcoordinate
 
-        print('doing a line with viewport and worldcoordinate as follows:')
-        print(vp)
-        print(wc)
-
         rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
 
         [renWinWidth, renWinHeight] = plotsContext.renWin.GetSize()
@@ -2111,12 +2105,9 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
 
         #     linesPoly = plotsContext._applyTransformationToDataset(T, linesPoly)
 
-        gridFileName = 'lines-%d-%d' % (prepLineCount, lineDataCount)
-        print('Got the polydata for that line (writing to %s), bounds are:' % gridFileName)
-        print(polyBounds)
-
-        debugWriteGrid(linesPoly, gridFileName)
-        lineDataCount += 1
+        # gridFileName = 'lines-%d-%d' % (prepLineCount, lineDataCount)
+        # debugWriteGrid(linesPoly, gridFileName)
+        # lineDataCount += 1
 
         # a = vtk.vtkActor()
         # m = vtk.vtkPolyDataMapper()

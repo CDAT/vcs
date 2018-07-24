@@ -48,6 +48,8 @@ def computeResolutionAndScale(renderer, pt1, pt2, xRange, yRange, pxScale=None, 
     if pxScale:
         scale = [pxScale * x for x in diffwpoints[:2]]
 
+    print('computeResolutionAndScale: xres = %f, yres = %f, scale = [%f, %f]' % (xres, yres, scale[0], scale[1]))
+
     return ([xres, yres], scale)
 
 
