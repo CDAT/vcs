@@ -76,6 +76,24 @@ class BoxfillPipeline(Pipeline2D):
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
 
+        dataOriginX, dataOriginY, dataWidth, dataHeight = (0, 0, 0, 0)
+
+        if self._vtkGeoTransform:
+            x1 = self._vtkDataSetBoundsNoMask[0]
+            x2 = self._vtkDataSetBoundsNoMask[1]
+            y1 = self._vtkDataSetBoundsNoMask[2]
+            y2 = self._vtkDataSetBoundsNoMask[3]
+        else:
+            x1 *= self._context_xScale
+            x2 *= self._context_xScale
+            y1 *= self._context_yScale
+            y2 *= self._context_yScale
+
+        dataOriginX = x1
+        dataOriginY = y1
+        dataWidth = x2 - x1
+        dataHeight = y2 - y1
+
         # And now we need actors to actually render this thing
         actors = []
         cti = 0
@@ -95,9 +113,7 @@ class BoxfillPipeline(Pipeline2D):
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
-        rect = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
-                            self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
-                            self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
+        rect = vtk.vtkRectd(dataOriginX, dataOriginY, dataWidth, dataHeight)
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
