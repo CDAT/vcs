@@ -976,18 +976,17 @@ class VTKVCSBackend(object):
         print('Plotting continents')
         print('vtk_dataset_bounds_no_mask = ', vtk_dataset_bounds_no_mask)
 
-        if not geo:
-            xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
-                vp,
-                wc=wc,
-                geoBounds=vtk_dataset_bounds_no_mask)
+        xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
+            vp,
+            wc=wc,
+            geoBounds=vtk_dataset_bounds_no_mask)
 
-            # Transform the input data
-            T = vtk.vtkTransform()
-            T.Scale(xScale, yScale, 1.)
-            contData = self._applyTransformationToDataset(T, contData)
+        # Transform the input data
+        T = vtk.vtkTransform()
+        T.Scale(xScale, yScale, 1.)
+        contData = self._applyTransformationToDataset(T, contData)
 
-            vcs2vtk.debugWriteGrid(contData, 'continents_after_fit_to_viewport')
+        vcs2vtk.debugWriteGrid(contData, 'continents_after_fit_to_viewport')
 
         contLine = self.canvas.getcontinentsline()
         # line_prop = contActor.GetProperty()
