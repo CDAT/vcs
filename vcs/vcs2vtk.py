@@ -2053,6 +2053,9 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
 
         polyBounds = linesPoly.GetBounds()
 
+        print('polyBounds = ', polyBounds)
+        print('geoBounds = ', geoBounds)
+
         view = plotsContext.contextView
 
         area = vtk.vtkContextArea()

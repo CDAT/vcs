@@ -1023,6 +1023,8 @@ class P(vcs.bestMatch):
         .. pragma: skip-doctest TODO add example/doctest
         """
 
+        print('axis, number = ', axis, number)
+
         kargs["donotstoredisplay"] = True
         if X is None:
             X = slab.getAxis(-1)
@@ -1803,6 +1805,8 @@ class P(vcs.bestMatch):
                                 wc2[0],
                                 wc2[0]]
                             ln_tmp._y = [wc2[2], wc2[2], wc2[3], wc2[3], wc2[2]]
+
+                            print('boxorline, wc2 = ', wc2)
                     else:
                         ln_tmp._x = [e._x1, e._x2, e._x2, e._x1, e._x1]
                         ln_tmp._y = [e._y1, e._y1, e._y2, e._y2, e._y1]
