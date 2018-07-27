@@ -1255,7 +1255,7 @@ def prepTextProperty(p, winSize, to="default", tt="default", cmap=None,
 def genTextActor(contextArea, string=None, x=None, y=None,
                  to='default', tt='default', cmap=None, geoBounds=None, geo=None):
 
-    renderer = contextArea.GetScene().GetRenderer()
+    renderer = contextArea.GetDrawAreaItem().GetScene().GetRenderer()
 
     if isinstance(to, str):
         to = vcs.elements["textorientation"][to]
@@ -1328,9 +1328,14 @@ def genTextActor(contextArea, string=None, x=None, y=None,
 
         item = vtk.vtkPropItem()
         item.SetPropObject(t)
-        contextArea.AddItem(item)
+        contextArea.GetDrawAreaItem().AddItem(item)
 
         actors.append(t)
+
+    # if wc:
+    #     rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
+    #     contextArea.SetDrawAreaBounds(rect)
+
     return actors
 
 
@@ -1632,7 +1637,7 @@ def genPoly(coords, pts, filled=True, scale=1.):
     return poly
 
 
-def prepGlyph(ren, g, marker, index=0):
+def prepGlyph(contextItem, g, marker, index=0):
     t, s = marker.type[index], marker.size[index]
     gs = vtk.vtkGlyphSource2D()
     pd = None
@@ -1644,7 +1649,7 @@ def prepGlyph(ren, g, marker, index=0):
     dx = marker.worldcoordinate[1] - marker.worldcoordinate[0]
     dy = marker.worldcoordinate[3] - marker.worldcoordinate[2]
 
-    unused, scale = fillareautils.computeResolutionAndScale(ren, point1, point2, dx, dy, (s * 10), None, 1e-10)
+    unused, scale = fillareautils.computeResolutionAndScale(contextItem, point1, point2, dx, dy, (s * 10), None, 1e-10)
     finalScale = scale[0]
 
     if t == 'dot':
@@ -1833,7 +1838,7 @@ def getMarkerColor(marker, c, cmap=None):
     return retval
 
 
-def prepMarker(ren, marker, cmap=None):
+def prepMarker(contextItem, marker, cmap=None):
     n = prepPrimitive(marker)
     if n == 0:
         return []
@@ -1856,7 +1861,7 @@ def prepMarker(ren, marker, cmap=None):
 
         #  Type
         # Ok at this point generates the source for glpyh
-        gs, pd = prepGlyph(ren, g, marker, index=i)
+        gs, pd = prepGlyph(contextItem, g, marker, index=i)
         g.SetInputData(markers)
 
         # a = vtk.vtkActor()
@@ -1964,9 +1969,40 @@ def getLinePaintHandler(paintAttrs):
 
     return onPaintEvent
 
+def getProjectedBoundsForWorldCoords(wc, proj, subdiv=25):
+    if vcs.elements['projection'][proj].type == 'linear':
+        return wc
+
+    print('projection type %s' % vcs.elements['projection'][proj].type)
+
+    # wc = [ x1, x2, y1, y2 ]
+    xs = numpy.linspace(wc[0], wc[1], subdiv).tolist()
+    xs += [wc[1], ] * subdiv
+    xs += numpy.linspace(wc[1], wc[0], subdiv).tolist()
+    xs += [wc[0], ] * subdiv
+
+    ys = [wc[2], ] * subdiv
+    ys += numpy.linspace(wc[2], wc[3], subdiv).tolist()
+    ys += [wc[3], ] * subdiv
+    ys += numpy.linspace(wc[3], wc[2], subdiv).tolist()
+
+    pts = vtk.vtkPoints()
+
+    for idx in range(len(xs)):
+        pts.InsertNextPoint(xs[idx], ys[idx], 0.0)
+
+    print('pre-transform projected bounds: ', pts.GetBounds())
+
+    geoTransform, pts = project(pts, proj, wc)
+
+    # return [-14243530.0, 14243530.0, -8625249.0, 8625249.0, 0.0, 0.0]
+    return pts.GetBounds()
 
 def prepLine(plotsContext, line, geoBounds=None, cmap=None):
     global prepLineCount
+
+    projBounds = getProjectedBoundsForWorldCoords(line.worldcoordinate, line.projection)
+    print('projBounds: ', projBounds)
 
     number_lines = prepPrimitive(line)
     if number_lines == 0:
@@ -1983,6 +2019,8 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
 
     if isinstance(cmap, str):
         cmap = vcs.elements["colormap"][cmap]
+
+    print('the line: ', line.list())
 
     for i in range(number_lines):
 
@@ -2047,13 +2085,18 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
     for t, w in line_data:
         pts, _, linesPoly, colors = line_data[(t, w)]
 
+        polyBounds = pts.GetBounds()
+        print('polyBounds before projection = ', polyBounds)
+
         linesPoly.GetCellData().SetScalars(colors)
         geoTransform, pts = project(pts, line.projection, line.worldcoordinate)
         linesPoly.SetPoints(pts)
 
-        polyBounds = linesPoly.GetBounds()
+        ptsBounds = pts.GetBounds()
+        print('polyBounds after projection (pts) = ', ptsBounds)
 
-        print('polyBounds = ', polyBounds)
+        polyBounds = linesPoly.GetBounds()
+        print('polyBounds after projection (poly) = ', polyBounds)
         print('geoBounds = ', geoBounds)
 
         view = plotsContext.contextView
@@ -2062,10 +2105,12 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
         view.GetScene().AddItem(area)
 
         vp = line.viewport
-        if geoTransform:
-            wc = polyBounds
-        else:
-            wc = line.worldcoordinate
+        # if geoTransform:
+        #     wc = polyBounds
+        # else:
+        #     wc = line.worldcoordinate
+
+        wc = projBounds
 
         rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
 

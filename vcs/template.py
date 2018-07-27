@@ -1205,7 +1205,11 @@ class P(vcs.bestMatch):
         if xs != []:
             ticks._x = xs
             ticks._y = ys
+            if axis == 'y' and int(number) == 2 and ticks.priority != 0:
+                print('here are the "ticks":')
+                print(ticks.list())
             displays.append(x.line(ticks, bg=bg, **kargs))
+
         del(vcs.elements["line"][ticks.name])
         if mintic is False:
             sp = tt.name.split(":::")
@@ -1806,7 +1810,7 @@ class P(vcs.bestMatch):
                                 wc2[0]]
                             ln_tmp._y = [wc2[2], wc2[2], wc2[3], wc2[3], wc2[2]]
 
-                            print('boxorline, wc2 = ', wc2)
+                            # print('boxorline, wc2 = ', wc2)
                     else:
                         ln_tmp._x = [e._x1, e._x2, e._x2, e._x1, e._x1]
                         ln_tmp._y = [e._y1, e._y1, e._y2, e._y2, e._y1]

@@ -748,7 +748,7 @@ class VTKVCSBackend(object):
                 axisBottom.SetMargins(0, 0)
 
                 returned["vtk_backend_text_actors"] = vcs2vtk.genTextActor(
-                    area.GetDrawAreaItem(),
+                    area,
                     to=to,
                     tt=tt,
                     cmap=self.canvas.colormap, geoBounds=bounds, geo=vtk_backend_geo)
@@ -841,7 +841,7 @@ class VTKVCSBackend(object):
 
 
                 # actors = vcs2vtk.prepMarker(ren, gm, cmap=self.canvas.colormap)
-                actors = vcs2vtk.prepMarker(view.GetRenderer(), gm, cmap=self.canvas.colormap)
+                actors = vcs2vtk.prepMarker(area, gm, cmap=self.canvas.colormap)
                 returned["vtk_backend_marker_actors"] = actors
                 for g, pd, geo in actors:
                     # data = g.GetInput()
@@ -936,7 +936,9 @@ class VTKVCSBackend(object):
 
     def plotContinents(self, continentType, wc, projection, wrap, vp, priority, **kargs):
         print('plotting continents w/ proj: ')
-        print(projection.list())
+        # print(projection.list())
+        print('wc = ', wc)
+        print('vp = ', vp)
 
         if continentType in [0, None]:
             return
@@ -976,17 +978,19 @@ class VTKVCSBackend(object):
         print('Plotting continents')
         print('vtk_dataset_bounds_no_mask = ', vtk_dataset_bounds_no_mask)
 
-        xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
-            vp,
-            wc=wc,
-            geoBounds=vtk_dataset_bounds_no_mask)
+        # if not geo:
+        if 1:
+            xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
+                vp,
+                wc=wc,
+                geoBounds=vtk_dataset_bounds_no_mask)
 
-        # Transform the input data
-        T = vtk.vtkTransform()
-        T.Scale(xScale, yScale, 1.)
-        contData = self._applyTransformationToDataset(T, contData)
+            # Transform the input data
+            T = vtk.vtkTransform()
+            T.Scale(xScale, yScale, 1.)
+            contData = self._applyTransformationToDataset(T, contData)
 
-        vcs2vtk.debugWriteGrid(contData, 'continents_after_fit_to_viewport')
+            vcs2vtk.debugWriteGrid(contData, 'continents_after_fit_to_viewport')
 
         contLine = self.canvas.getcontinentsline()
         # line_prop = contActor.GetProperty()

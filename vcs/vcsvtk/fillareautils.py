@@ -20,17 +20,20 @@ def debugWriteGrid(grid, name):
 _callidx = 0
 
 
-def computeResolutionAndScale(renderer, pt1, pt2, xRange, yRange, pxScale=None, pxSpacing=None, threshold=1e-6):
+def computeResolutionAndScale(contextItem, pt1, pt2, xRange, yRange, pxScale=None, pxSpacing=None, threshold=1e-6):
     # Be smart about calculating the resolution by taking the screen pixel
     # size into account
     # First, convert a distance of one unit screen distance to data
     # coordinates
-    renderer.SetDisplayPoint(pt1)
-    renderer.DisplayToWorld()
-    wpoint1 = renderer.GetWorldPoint()
-    renderer.SetDisplayPoint(pt2)
-    renderer.DisplayToWorld()
-    wpoint2 = renderer.GetWorldPoint()
+    scrPt1 = vtk.vtkVector2f(pt1[0], pt1[1])
+    scrPt2 = vtk.vtkVector2f(pt2[0], pt2[1])
+
+    wpoint1 = contextItem.MapFromScene(scrPt1)
+    wpoint2 = contextItem.MapFromScene(scrPt2)
+
+    # drawArea = contextItem.GetDrawAreaBounds()
+    # geom = contextItem.GetGeometry()
+
     diffwpoints = [abs(wpoint1[0] - wpoint2[0]),
                    abs(wpoint1[1] - wpoint2[1])]
     diffwpoints = [1.0 if i < threshold else i for i in diffwpoints]
