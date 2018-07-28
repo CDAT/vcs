@@ -1388,7 +1388,7 @@ def __build_pd__():
 
 def prepFillarea(context, renWin, farea, cmap=None):
     vp = farea.viewport
-    print('fillarea viewport: [%f, %f, %f, %f]' % (vp[0], vp[1], vp[2], vp[3]))
+    # print('fillarea viewport: [%f, %f, %f, %f]' % (vp[0], vp[1], vp[2], vp[3]))
 
     # view and interactive area
     view = context.contextView
@@ -1973,7 +1973,7 @@ def getProjectedBoundsForWorldCoords(wc, proj, subdiv=25):
     if vcs.elements['projection'][proj].type == 'linear':
         return wc
 
-    print('projection type %s' % vcs.elements['projection'][proj].type)
+    # print('projection type %s' % vcs.elements['projection'][proj].type)
 
     # wc = [ x1, x2, y1, y2 ]
     xs = numpy.linspace(wc[0], wc[1], subdiv).tolist()
@@ -1991,7 +1991,7 @@ def getProjectedBoundsForWorldCoords(wc, proj, subdiv=25):
     for idx in range(len(xs)):
         pts.InsertNextPoint(xs[idx], ys[idx], 0.0)
 
-    print('pre-transform projected bounds: ', pts.GetBounds())
+    # print('pre-transform projected bounds: ', pts.GetBounds())
 
     geoTransform, pts = project(pts, proj, wc)
 
@@ -2002,7 +2002,7 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
     global prepLineCount
 
     projBounds = getProjectedBoundsForWorldCoords(line.worldcoordinate, line.projection)
-    print('projBounds: ', projBounds)
+    # print('projBounds: ', projBounds)
 
     number_lines = prepPrimitive(line)
     if number_lines == 0:
@@ -2020,7 +2020,7 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
     if isinstance(cmap, str):
         cmap = vcs.elements["colormap"][cmap]
 
-    print('the line: ', line.list())
+    # print('the line: ', line.list())
 
     for i in range(number_lines):
 
@@ -2085,19 +2085,19 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
     for t, w in line_data:
         pts, _, linesPoly, colors = line_data[(t, w)]
 
-        polyBounds = pts.GetBounds()
-        print('polyBounds before projection = ', polyBounds)
+        # polyBounds = pts.GetBounds()
+        # print('polyBounds before projection = ', polyBounds)
 
         linesPoly.GetCellData().SetScalars(colors)
         geoTransform, pts = project(pts, line.projection, line.worldcoordinate)
         linesPoly.SetPoints(pts)
 
-        ptsBounds = pts.GetBounds()
-        print('polyBounds after projection (pts) = ', ptsBounds)
+        # ptsBounds = pts.GetBounds()
+        # print('polyBounds after projection (pts) = ', ptsBounds)
 
-        polyBounds = linesPoly.GetBounds()
-        print('polyBounds after projection (poly) = ', polyBounds)
-        print('geoBounds = ', geoBounds)
+        # polyBounds = linesPoly.GetBounds()
+        # print('polyBounds after projection (poly) = ', polyBounds)
+        # print('geoBounds = ', geoBounds)
 
         view = plotsContext.contextView
 

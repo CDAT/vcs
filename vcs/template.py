@@ -1023,7 +1023,7 @@ class P(vcs.bestMatch):
         .. pragma: skip-doctest TODO add example/doctest
         """
 
-        print('axis, number = ', axis, number)
+        # print('axis, number = ', axis, number)
 
         kargs["donotstoredisplay"] = True
         if X is None:
@@ -1205,9 +1205,9 @@ class P(vcs.bestMatch):
         if xs != []:
             ticks._x = xs
             ticks._y = ys
-            if axis == 'y' and int(number) == 2 and ticks.priority != 0:
-                print('here are the "ticks":')
-                print(ticks.list())
+            # if axis == 'y' and int(number) == 2 and ticks.priority != 0:
+            #     print('here are the "ticks":')
+            #     print(ticks.list())
             displays.append(x.line(ticks, bg=bg, **kargs))
 
         del(vcs.elements["line"][ticks.name])

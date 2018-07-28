@@ -84,6 +84,9 @@ class VTKVCSBackend(object):
             'vtk_backend_grid',
             # vtkGeoTransform used for geographic transformation
             'vtk_backend_geo',
+            "vtk_backend_pipeline_context_area",
+            "vtk_backend_draw_area_bounds",
+            "vtk_backend_viewport_scale"
         ]
         self.numberOfPlotCalls = 0
         self.renderWindowSize = None
@@ -935,10 +938,10 @@ class VTKVCSBackend(object):
                 plot.onClosing(cell)
 
     def plotContinents(self, continentType, wc, projection, wrap, vp, priority, **kargs):
-        print('plotting continents w/ proj: ')
+        print('plotting continents')
         # print(projection.list())
-        print('wc = ', wc)
-        print('vp = ', vp)
+        # print('wc = ', wc)
+        # print('vp = ', vp)
 
         if continentType in [0, None]:
             return
@@ -975,22 +978,23 @@ class VTKVCSBackend(object):
 
         vtk_dataset_bounds_no_mask = kargs.get(
             "vtk_dataset_bounds_no_mask", None)
-        print('Plotting continents')
+        # print('Plotting continents')
         print('vtk_dataset_bounds_no_mask = ', vtk_dataset_bounds_no_mask)
 
         # if not geo:
-        if 1:
-            xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
-                vp,
-                wc=wc,
-                geoBounds=vtk_dataset_bounds_no_mask)
+        # # if True:
+        #     print('     ^^^^^^^^^     FITTING CONTINENTS TO VIEWPORT     ^^^^^^^^^     ')
+        #     xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
+        #         vp,
+        #         wc=wc,
+        #         geoBounds=vtk_dataset_bounds_no_mask)
 
-            # Transform the input data
-            T = vtk.vtkTransform()
-            T.Scale(xScale, yScale, 1.)
-            contData = self._applyTransformationToDataset(T, contData)
+        #     # Transform the input data
+        #     T = vtk.vtkTransform()
+        #     T.Scale(xScale, yScale, 1.)
+        #     contData = self._applyTransformationToDataset(T, contData)
 
-            vcs2vtk.debugWriteGrid(contData, 'continents_after_fit_to_viewport')
+        #     # vcs2vtk.debugWriteGrid(contData, 'continents_after_fit_to_viewport')
 
         contLine = self.canvas.getcontinentsline()
         # line_prop = contActor.GetProperty()
@@ -1012,7 +1016,7 @@ class VTKVCSBackend(object):
 
         color = [int((c / 100) * 255) for c in color]
 
-        print('color: ', color)
+        # print('color: ', color)
 
         # line_prop.SetColor(*color[:3])
         # if len(color) == 4:
@@ -1031,38 +1035,53 @@ class VTKVCSBackend(object):
 
         # view and interactive area
         view = self.contextView
-        area = kargs.get("vtk_backend_pipeline_context_area", None)
+        # area = kargs.get("vtk_backend_pipeline_context_area", None)
+        viewportScale = kargs.get("vtk_backend_viewport_scale", None)
+        contBounds = kargs.get("vtk_backend_draw_area_bounds", None)
 
-        if not area:
-            print(' @@@@@@@@@@@@@@@@@@@@ Did not find vtkContextArea from pipeline, making a new one')
-            area = vtk.vtkContextArea()
-            view.GetScene().AddItem(area)
+        area = vtk.vtkContextArea()
+        view.GetScene().AddItem(area)
 
-            rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
+        # if projection.type != "linear":
+        if True:
+            # # Here we need to get the xscale and yscale computed in pipeline2d
+            # # and use them to scale the viewport
+            vpCenterX = (vp[1] + vp[0]) / 2.0
+            vpCenterY = (vp[3] + vp[2]) / 2.0
+            vpWidth = vp[1] - vp[0]
+            vpHeight = vp[3] - vp[2]
 
-            [renWinWidth, renWinHeight] = self.renWin.GetSize()
-            geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+            vpWidth *= viewportScale[0]
+            vpHeight *= viewportScale[1]
 
-            area.SetDrawAreaBounds(rect)
-            area.SetGeometry(geom)
+            vp[0] = vpCenterX - (vpWidth / 2.0)
+            vp[1] = vpCenterX + (vpWidth / 2.0)
+            vp[2] = vpCenterY - (vpHeight / 2.0)
+            vp[3] = vpCenterY + (vpHeight / 2.0)
 
-            area.SetFillViewport(False)
-            area.SetShowGrid(False)
+        [renWinWidth, renWinHeight] = self.renWin.GetSize()
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
-            axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
-            axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
-            axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
-            axisTop = area.GetAxis(vtk.vtkAxis.TOP)
+        area.SetDrawAreaBounds(contBounds)
+        area.SetGeometry(geom)
 
-            axisLeft.SetVisible(False)
-            axisRight.SetVisible(False)
-            axisBottom.SetVisible(False)
-            axisTop.SetVisible(False)
+        area.SetFillViewport(False)
+        area.SetShowGrid(False)
 
-            axisLeft.SetMargins(0, 0)
-            axisRight.SetMargins(0, 0)
-            axisBottom.SetMargins(0, 0)
-            axisTop.SetMargins(0, 0)
+        axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
+        axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
+        axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
+        axisTop = area.GetAxis(vtk.vtkAxis.TOP)
+
+        axisLeft.SetVisible(False)
+        axisRight.SetVisible(False)
+        axisBottom.SetVisible(False)
+        axisTop.SetVisible(False)
+
+        axisLeft.SetMargins(0, 0)
+        axisRight.SetMargins(0, 0)
+        axisBottom.SetMargins(0, 0)
+        axisTop.SetMargins(0, 0)
 
         color_arr = vtk.vtkUnsignedCharArray()
         color_arr.SetNumberOfComponents(4)
