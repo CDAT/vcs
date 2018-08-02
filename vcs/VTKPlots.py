@@ -939,6 +939,7 @@ class VTKVCSBackend(object):
 
     def plotContinents(self, continentType, wc, projection, wrap, vp, priority, **kargs):
         print('plotting continents')
+        print('  projection type is ', projection.type)
         # print(projection.list())
         # print('wc = ', wc)
         # print('vp = ', vp)
@@ -957,7 +958,7 @@ class VTKVCSBackend(object):
         # contActor = vtk.vtkActor()
         # contActor.SetMapper(contMapper)
 
-        vcs2vtk.debugWriteGrid(contData, 'continents_before_project')
+        vcs2vtk.debugWriteGrid(contData, 'raw_continents')
 
         if projection.type != "linear":
             # contData = contActor.GetMapper().GetInput()
@@ -974,27 +975,10 @@ class VTKVCSBackend(object):
         else:
             geo = None
 
-        vcs2vtk.debugWriteGrid(contData, 'continents_after_project')
-
         vtk_dataset_bounds_no_mask = kargs.get(
             "vtk_dataset_bounds_no_mask", None)
         # print('Plotting continents')
         print('vtk_dataset_bounds_no_mask = ', vtk_dataset_bounds_no_mask)
-
-        # if not geo:
-        # # if True:
-        #     print('     ^^^^^^^^^     FITTING CONTINENTS TO VIEWPORT     ^^^^^^^^^     ')
-        #     xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
-        #         vp,
-        #         wc=wc,
-        #         geoBounds=vtk_dataset_bounds_no_mask)
-
-        #     # Transform the input data
-        #     T = vtk.vtkTransform()
-        #     T.Scale(xScale, yScale, 1.)
-        #     contData = self._applyTransformationToDataset(T, contData)
-
-        #     # vcs2vtk.debugWriteGrid(contData, 'continents_after_fit_to_viewport')
 
         contLine = self.canvas.getcontinentsline()
         # line_prop = contActor.GetProperty()
@@ -1042,8 +1026,9 @@ class VTKVCSBackend(object):
         area = vtk.vtkContextArea()
         view.GetScene().AddItem(area)
 
-        # if projection.type != "linear":
-        if True:
+        viewportFittedProjections = ['lambert conformal c', 'linear']
+
+        if not projection.type in viewportFittedProjections:
             # # Here we need to get the xscale and yscale computed in pipeline2d
             # # and use them to scale the viewport
             vpCenterX = (vp[1] + vp[0]) / 2.0
@@ -1058,6 +1043,17 @@ class VTKVCSBackend(object):
             vp[1] = vpCenterX + (vpWidth / 2.0)
             vp[2] = vpCenterY - (vpHeight / 2.0)
             vp[3] = vpCenterY + (vpHeight / 2.0)
+        else:
+            print('     ^^^^^^^^^     FITTING CONTINENTS TO VIEWPORT     ^^^^^^^^^     ')
+            xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
+                vp,
+                wc=wc,
+                geoBounds=vtk_dataset_bounds_no_mask)
+
+            # Transform the input data
+            T = vtk.vtkTransform()
+            T.Scale(xScale, yScale, 1.)
+            contData = self._applyTransformationToDataset(T, contData)
 
         [renWinWidth, renWinHeight] = self.renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
@@ -1095,6 +1091,8 @@ class VTKVCSBackend(object):
                 color_arr.InsertNextTypedTuple([color[0], color[1], color[2], 255])
 
         contData.GetCellData().AddArray(color_arr)
+
+        vcs2vtk.debugWriteGrid(contData, 'projected_fitted_continents')
 
         # vcs2vtk.debugWriteGrid(contData, 'continents')
 
