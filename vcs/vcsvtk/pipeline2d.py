@@ -403,12 +403,13 @@ class Pipeline2D(IPipeline2D):
             geoBounds=self._vtkDataSetBoundsNoMask,
             geo=self._vtkGeoTransform)
 
-        # Transform the input data
-        T = vtk.vtkTransform()
-        T.Scale(xScale, yScale, 1.)
+        # # Transform the input data
+        # T = vtk.vtkTransform()
+        # T.Scale(xScale, yScale, 1.)
 
         act.GetMapper().Update()
-        self._vtkDataSetFittedToViewport = self._context()._applyTransformationToDataset(T, act.GetMapper().GetInput())
+        # self._vtkDataSetFittedToViewport = self._context()._applyTransformationToDataset(T, act.GetMapper().GetInput())
+        self._vtkDataSetFittedToViewport = act.GetMapper().GetInput()
         self._vtkDataSetBoundsNoMask = self._vtkDataSetFittedToViewport.GetBounds()
 
         self._context_xScale = xScale

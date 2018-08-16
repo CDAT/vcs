@@ -1004,34 +1004,34 @@ class VTKVCSBackend(object):
         area = vtk.vtkContextArea()
         view.GetScene().AddItem(area)
 
-        viewportFittedProjections = ['lambert conformal c', 'linear']
+        # viewportFittedProjections = ['lambert conformal c', 'linear']
 
-        if not projection.type in viewportFittedProjections:
-            # # Here we need to get the xscale and yscale computed in pipeline2d
-            # # and use them to scale the viewport
-            vpCenterX = (vp[1] + vp[0]) / 2.0
-            vpCenterY = (vp[3] + vp[2]) / 2.0
-            vpWidth = vp[1] - vp[0]
-            vpHeight = vp[3] - vp[2]
+        # if not projection.type in viewportFittedProjections:
+        #     # # Here we need to get the xscale and yscale computed in pipeline2d
+        #     # # and use them to scale the viewport
+        #     vpCenterX = (vp[1] + vp[0]) / 2.0
+        #     vpCenterY = (vp[3] + vp[2]) / 2.0
+        #     vpWidth = vp[1] - vp[0]
+        #     vpHeight = vp[3] - vp[2]
 
-            vpWidth *= viewportScale[0]
-            vpHeight *= viewportScale[1]
+        #     vpWidth *= viewportScale[0]
+        #     vpHeight *= viewportScale[1]
 
-            vp[0] = vpCenterX - (vpWidth / 2.0)
-            vp[1] = vpCenterX + (vpWidth / 2.0)
-            vp[2] = vpCenterY - (vpHeight / 2.0)
-            vp[3] = vpCenterY + (vpHeight / 2.0)
-        else:
-            print('     ^^^^^^^^^     FITTING CONTINENTS TO VIEWPORT     ^^^^^^^^^     ')
-            xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
-                vp,
-                wc=wc,
-                geoBounds=vtk_dataset_bounds_no_mask)
+        #     vp[0] = vpCenterX - (vpWidth / 2.0)
+        #     vp[1] = vpCenterX + (vpWidth / 2.0)
+        #     vp[2] = vpCenterY - (vpHeight / 2.0)
+        #     vp[3] = vpCenterY + (vpHeight / 2.0)
+        # else:
+        #     print('     ^^^^^^^^^     FITTING CONTINENTS TO VIEWPORT     ^^^^^^^^^     ')
+        #     xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
+        #         vp,
+        #         wc=wc,
+        #         geoBounds=vtk_dataset_bounds_no_mask)
 
-            # Transform the input data
-            T = vtk.vtkTransform()
-            T.Scale(xScale, yScale, 1.)
-            contData = self._applyTransformationToDataset(T, contData)
+        #     # Transform the input data
+        #     T = vtk.vtkTransform()
+        #     T.Scale(xScale, yScale, 1.)
+        #     contData = self._applyTransformationToDataset(T, contData)
 
         [renWinWidth, renWinHeight] = self.renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
