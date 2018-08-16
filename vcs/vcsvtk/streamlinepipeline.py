@@ -100,14 +100,14 @@ class StreamlinePipeline(Pipeline2D):
             if self._context_flipX:
                 cam.Azimuth(180.)
 
-        rect = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
+        drawAreaBounds = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
                             self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
                             self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
-        area.SetDrawAreaBounds(rect)
+        area.SetDrawAreaBounds(drawAreaBounds)
         area.SetGeometry(geom)
         # area.SetFixedMargins(0, 0, 0, 0)
         area.SetFillViewport(False)
@@ -349,12 +349,19 @@ class StreamlinePipeline(Pipeline2D):
         # dataset_renderer.AddActor(act)
         # dataset_renderer.AddActor(glyphActor)
 
-        kwargs = {'vtk_backend_grid': self._vtkDataSet,
-                  'dataset_bounds': self._vtkDataSetBounds,
-                  'plotting_dataset_bounds': plotting_dataset_bounds,
-                  "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
-                  'vtk_backend_geo': self._vtkGeoTransform,
-                  "vtk_backend_pipeline_context_area": area}
+        kwargs = {
+            'vtk_backend_grid': self._vtkDataSet,
+            'dataset_bounds': self._vtkDataSetBounds,
+            'plotting_dataset_bounds': plotting_dataset_bounds,
+            "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
+            'vtk_backend_geo': self._vtkGeoTransform,
+            # "vtk_backend_pipeline_context_area": area,
+            "vtk_backend_draw_area_bounds": drawAreaBounds,
+            "vtk_backend_viewport_scale": [
+                self._context_xScale,
+                self._context_yScale
+            ]
+        }
         if ('ratio_autot_viewport' in self._resultDict):
             kwargs["ratio_autot_viewport"] = vp
         self._resultDict.update(self._context().renderTemplate(

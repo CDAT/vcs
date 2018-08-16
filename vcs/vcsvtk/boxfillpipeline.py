@@ -254,7 +254,7 @@ class BoxfillPipeline(Pipeline2D):
             "plotting_dataset_bounds": plotting_dataset_bounds,
             "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
             "vtk_backend_geo": self._vtkGeoTransform,
-            "vtk_backend_pipeline_context_area": area,
+            # "vtk_backend_pipeline_context_area": area,
             "vtk_backend_draw_area_bounds": drawAreaBounds,
             "vtk_backend_viewport_scale": [
                 self._context_xScale,

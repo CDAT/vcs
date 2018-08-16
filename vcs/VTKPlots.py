@@ -972,9 +972,6 @@ class VTKVCSBackend(object):
 
         contLine = self.canvas.getcontinentsline()
 
-        import pdb
-        pdb.set_trace()
-
         # Color
         if contLine.colormap:
             cmap = vcs.getcolormap(contLine.colormap)
