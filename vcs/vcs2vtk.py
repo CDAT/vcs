@@ -1948,27 +1948,6 @@ def getStipple(line_type):
         raise Exception("Unknown line type: '%s'" % line_type)
 
 
-def getLinePaintHandler(paintAttrs):
-    @vtk.calldata_type(vtk.VTK_OBJECT)
-    def onPaintEvent(object, event, context2DPainter):
-        pen = context2DPainter.GetPen()
-
-        oldLineType = pen.GetLineType()
-        oldLineWidth = pen.GetWidth()
-
-        pen.SetLineType(paintAttrs['stippleType'])
-        pen.SetWidth(paintAttrs['lineWidth'])
-
-        poly = paintAttrs['poly']
-        colors = paintAttrs['colors']
-        mode = paintAttrs['mode']
-        context2DPainter.DrawPolyData(0, 0, poly, colors, mode)
-
-        pen.SetLineType(oldLineType)
-        pen.SetWidth(oldLineWidth)
-
-    return onPaintEvent
-
 def getProjectedBoundsForWorldCoords(wc, proj, subdiv=25):
     if vcs.elements['projection'][proj].type == 'linear':
         return wc
@@ -1997,6 +1976,7 @@ def getProjectedBoundsForWorldCoords(wc, proj, subdiv=25):
 
     # return [-14243530.0, 14243530.0, -8625249.0, 8625249.0, 0.0, 0.0]
     return pts.GetBounds()
+
 
 def prepLine(plotsContext, line, geoBounds=None, cmap=None):
     global prepLineCount
@@ -2138,8 +2118,6 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
         axisLeft.SetMargins(0, 0)
         axisBottom.SetMargins(0, 0)
 
-
-
         # if geoTransform:
         #     xScale, yScale, xc, yc, yd, flipX, flipY = plotsContext.computeScaleToFitViewport(
         #         line.viewport,
@@ -2157,36 +2135,23 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
         # debugWriteGrid(linesPoly, gridFileName)
         # lineDataCount += 1
 
-        # a = vtk.vtkActor()
-        # m = vtk.vtkPolyDataMapper()
-        # m.SetInputData(linesPoly)
-        # a.SetMapper(m)
+        intValue = vtk.vtkIntArray()
+        intValue.SetNumberOfComponents(1)
+        intValue.SetName("StippleType")
+        intValue.InsertNextValue(getStipple(t))
+        linesPoly.GetFieldData().AddArray(intValue)
 
-        # p = a.GetProperty()
-        # p.SetLineWidth(w)
+        floatValue = vtk.vtkFloatArray()
+        floatValue.SetNumberOfComponents(1)
+        floatValue.SetName("LineWidth")
+        floatValue.InsertNextValue(w)
+        linesPoly.GetFieldData().AddArray(floatValue)
 
-        # stippleLine(p, t)
-        # actors.append((a, geo))
-
-        ### FIXME: line width and stipple applied to a polydata maybe could be
-        ### FIXME: handled via the vtkPaintNotifierItem()
         item = vtk.vtkPolyDataItem()
         item.SetPolyData(linesPoly)
         item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
         item.SetMappedColors(colors)
         area.GetDrawAreaItem().AddItem(item)
-
-        # customItem = vtk.vtkPaintNotifierItem()
-        # attrs = {
-        #     'contextItem': customItem,
-        #     'poly': linesPoly,
-        #     'colors': colors,
-        #     'mode': vtk.VTK_SCALAR_MODE_USE_CELL_DATA,
-        #     'lineWidth': w,
-        #     'stippleType': getStipple(t)
-        # }
-        # customItem.AddObserver(vtk.vtkCommand.Context2DPaintEvent, getLinePaintHandler(attrs))
-        # area.GetDrawAreaItem().AddItem(customItem)
 
     prepLineCount += 1
 

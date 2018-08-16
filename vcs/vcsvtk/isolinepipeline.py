@@ -6,30 +6,6 @@ import vcs
 import vtk
 
 
-def getPaintHandler(paintAttrs):
-    print('Have paintAttrs when creating handler: ', paintAttrs)
-
-    @vtk.calldata_type(vtk.VTK_OBJECT)
-    def onPaintEvent(object, event, context2DPainter):
-        pen = context2DPainter.GetPen()
-
-        oldLineType = pen.GetLineType()
-        oldLineWidth = pen.GetWidth()
-
-        pen.SetLineType(paintAttrs['stippleType'])
-        pen.SetWidth(paintAttrs['lineWidth'])
-
-        poly = paintAttrs['poly']
-        colors = paintAttrs['colors']
-        mode = paintAttrs['mode']
-        context2DPainter.DrawPolyData(0, 0, poly, colors, mode)
-
-        pen.SetLineType(oldLineType)
-        pen.SetWidth(oldLineWidth)
-
-    return onPaintEvent
-
-
 class IsolinePipeline(Pipeline2D):
 
     """Implementation of the Pipeline interface for VCS isoline plots."""
@@ -335,19 +311,23 @@ class IsolinePipeline(Pipeline2D):
             data = attrs.GetScalars()
             mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
 
-            customItem = vtk.vtkPaintNotifierItem()
-            attrs = {
-                'contextItem': customItem,
-                'poly': poly,
-                'colors': mappedColors,
-                'mode': scalarMode,
-                'lineWidth': tmpLineWidths[i],
-                'stippleType': vcs2vtk.getStipple(tmpLineTypes[i])
-            }
-            customItem.AddObserver(vtk.vtkCommand.Context2DPaintEvent, getPaintHandler(attrs))
+            intValue = vtk.vtkIntArray()
+            intValue.SetNumberOfComponents(1)
+            intValue.SetName("StippleType")
+            intValue.InsertNextValue(vcs2vtk.getStipple(tmpLineTypes[i]))
+            poly.GetFieldData().AddArray(intValue)
 
-            area.GetDrawAreaItem().AddItem(customItem)
+            floatValue = vtk.vtkFloatArray()
+            floatValue.SetNumberOfComponents(1)
+            floatValue.SetName("LineWidth")
+            floatValue.InsertNextValue(tmpLineWidths[i])
+            poly.GetFieldData().AddArray(floatValue)
 
+            item = vtk.vtkPolyDataItem()
+            item.SetPolyData(poly)
+            item.SetScalarMode(scalarMode)
+            item.SetMappedColors(mappedColors)
+            area.GetDrawAreaItem().AddItem(item)
 
             countLevels += len(l)
         if len(textprops) > 0:

@@ -84,9 +84,9 @@ class VTKVCSBackend(object):
             'vtk_backend_grid',
             # vtkGeoTransform used for geographic transformation
             'vtk_backend_geo',
-            "vtk_backend_pipeline_context_area",
+            # "vtk_backend_pipeline_context_area",
+            "vtk_backend_viewport_scale",
             "vtk_backend_draw_area_bounds",
-            "vtk_backend_viewport_scale"
         ]
         self.numberOfPlotCalls = 0
         self.renderWindowSize = None
@@ -953,25 +953,15 @@ class VTKVCSBackend(object):
         yforward = vcs.utils.axisConvertFunctions[kargs.get('yaxisconvert', 'linear')]['forward']
         contData = vcs2vtk.prepContinents(continents_path, xforward, yforward)
         contData = vcs2vtk.doWrapData(contData, wc, fastClip=False)
-        # contMapper = vtk.vtkPolyDataMapper()
-        # contMapper.SetInputData(contData)
-        # contActor = vtk.vtkActor()
-        # contActor.SetMapper(contMapper)
 
         vcs2vtk.debugWriteGrid(contData, 'raw_continents')
 
         if projection.type != "linear":
-            # contData = contActor.GetMapper().GetInput()
             cpts = contData.GetPoints()
             # we use plotting coordinates for doing the projection so
             # that parameters such that central meridian are set correctly.
             geo, gcpts = vcs2vtk.project(cpts, projection, wc)
             contData.SetPoints(gcpts)
-
-            # contMapper = vtk.vtkPolyDataMapper()
-            # contMapper.SetInputData(contData)
-            # contActor = vtk.vtkActor()
-            # contActor.SetMapper(contMapper)
         else:
             geo = None
 
@@ -981,10 +971,9 @@ class VTKVCSBackend(object):
         print('vtk_dataset_bounds_no_mask = ', vtk_dataset_bounds_no_mask)
 
         contLine = self.canvas.getcontinentsline()
-        # line_prop = contActor.GetProperty()
 
-        # # Width
-        # line_prop.SetLineWidth(contLine.width[0])
+        import pdb
+        pdb.set_trace()
 
         # Color
         if contLine.colormap:
@@ -998,16 +987,8 @@ class VTKVCSBackend(object):
         else:
             color = contLine.color[0]
 
-        color = [int((c / 100) * 255) for c in color]
+        color = [int((c / 100.0) * 255) for c in color]
 
-        # print('color: ', color)
-
-        # line_prop.SetColor(*color[:3])
-        # if len(color) == 4:
-        #     line_prop.SetOpacity(color[3])
-
-        # Stippling
-        # vcs2vtk.stippleLine(line_prop, contLine.type[0])
         # vtk_dataset_bounds_no_mask = kargs.get(
         #     "vtk_dataset_bounds_no_mask", None)
         # return self.fitToViewport(contActor,
@@ -1081,7 +1062,6 @@ class VTKVCSBackend(object):
 
         color_arr = vtk.vtkUnsignedCharArray()
         color_arr.SetNumberOfComponents(4)
-        # color_arr.SetNumberOfTuples(contData.GetNumberOfCells())
         color_arr.SetName("Colors")
 
         for i in range(contData.GetNumberOfCells()):
@@ -1094,11 +1074,18 @@ class VTKVCSBackend(object):
 
         vcs2vtk.debugWriteGrid(contData, 'projected_fitted_continents')
 
-        # vcs2vtk.debugWriteGrid(contData, 'continents')
+        # Handle line drawing properties (line width + stipple)
+        intValue = vtk.vtkIntArray()
+        intValue.SetNumberOfComponents(1)
+        intValue.SetName("StippleType")
+        intValue.InsertNextValue(vcs2vtk.getStipple(contLine.type[0]))
+        contData.GetFieldData().AddArray(intValue)
 
-        # FIXME: Figure out how to make properties set on the context2D "pen",
-        # FIXME: such line width and type (stipple) only apply to the polydata
-        # FIXME: item we add below, and not to all of them.
+        floatValue = vtk.vtkFloatArray()
+        floatValue.SetNumberOfComponents(1)
+        floatValue.SetName("LineWidth")
+        floatValue.InsertNextValue(contLine.width[0])
+        contData.GetFieldData().AddArray(floatValue)
 
         item = vtk.vtkPolyDataItem()
         item.SetPolyData(contData)
