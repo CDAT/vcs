@@ -1202,7 +1202,7 @@ class VTKVCSBackend(object):
                 tt = vcs.elements["texttable"][tt]
                 to = vcs.elements["textorientation"][to]
                 if crdate.priority > 0:
-                    actors = vcs2vtk.genTextActor(area.GetDrawAreaItem(), to=to, tt=tt)
+                    actors = vcs2vtk.genTextActor(area, to=to, tt=tt)
                     returned["vtk_backend_crdate_text_actor"] = actors[0]
                 del(vcs.elements["texttable"][tt.name])
                 del(vcs.elements["textorientation"][to.name])
@@ -1211,7 +1211,7 @@ class VTKVCSBackend(object):
                 tt = vcs.elements["texttable"][tt]
                 to = vcs.elements["textorientation"][to]
                 if crtime.priority > 0:
-                    actors = vcs2vtk.genTextActor(area.GetDrawAreaItem(), to=to, tt=tt)
+                    actors = vcs2vtk.genTextActor(area, to=to, tt=tt)
                     returned["vtk_backend_crtime_text_actor"] = actors[0]
                 del(vcs.elements["texttable"][tt.name])
                 del(vcs.elements["textorientation"][to.name])
@@ -1239,7 +1239,7 @@ class VTKVCSBackend(object):
                 tt = vcs.elements["texttable"][tt]
                 to = vcs.elements["textorientation"][to]
                 if zname.priority > 0:
-                    vcs2vtk.genTextActor(area.GetDrawAreaItem(), to=to, tt=tt)
+                    vcs2vtk.genTextActor(area, to=to, tt=tt)
                 del(vcs.elements["texttable"][tt.name])
                 del(vcs.elements["textorientation"][to.name])
                 del(vcs.elements["textcombined"][zname.name])
@@ -1250,7 +1250,7 @@ class VTKVCSBackend(object):
                         tt, to = zunits.name.split(":::")
                         tt = vcs.elements["texttable"][tt]
                         to = vcs.elements["textorientation"][to]
-                        vcs2vtk.genTextActor(area.GetDrawAreaItem(), to=to, tt=tt)
+                        vcs2vtk.genTextActor(area, to=to, tt=tt)
                         del(vcs.elements["texttable"][tt.name])
                         del(vcs.elements["textorientation"][to.name])
                         del(vcs.elements["textcombined"][zunits.name])
@@ -1258,7 +1258,7 @@ class VTKVCSBackend(object):
                 tt = vcs.elements["texttable"][tt]
                 to = vcs.elements["textorientation"][to]
                 if zvalue.priority > 0:
-                    actors = vcs2vtk.genTextActor(area.GetDrawAreaItem(), to=to, tt=tt)
+                    actors = vcs2vtk.genTextActor(area, to=to, tt=tt)
                     returned["vtk_backend_zvalue_text_actor"] = actors[0]
                 del(vcs.elements["texttable"][tt.name])
                 del(vcs.elements["textorientation"][to.name])
