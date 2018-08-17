@@ -76,18 +76,19 @@ class BoxfillPipeline(Pipeline2D):
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
 
-        dataOriginX, dataOriginY, dataWidth, dataHeight = (0, 0, 0, 0)
+        # dataOriginX, dataOriginY, dataWidth, dataHeight = (0, 0, 0, 0)
 
         if self._vtkGeoTransform:
+        # if True:
             x1 = self._vtkDataSetBoundsNoMask[0]
             x2 = self._vtkDataSetBoundsNoMask[1]
             y1 = self._vtkDataSetBoundsNoMask[2]
             y2 = self._vtkDataSetBoundsNoMask[3]
-        else:
-            x1 *= self._context_xScale
-            x2 *= self._context_xScale
-            y1 *= self._context_yScale
-            y2 *= self._context_yScale
+        # else:
+        #     x1 *= self._context_xScale
+        #     x2 *= self._context_xScale
+        #     y1 *= self._context_yScale
+        #     y2 *= self._context_yScale
 
         dataOriginX = x1
         dataOriginY = y1
@@ -106,7 +107,8 @@ class BoxfillPipeline(Pipeline2D):
              self._template.data.y1, self._template.data.y2])
 
         print('boxfillpipeline viewport: ', vp)
-        print('boxfillpipeline bounds: [%f, %f, %f, %f]' % (x1, x2, y1, y2))
+        print('boxfillpipeline dataset bounds (no mask): ', self._vtkDataSetBoundsNoMask)
+        print('boxfillpipeline draw area bounds: [%f, %f, %f, %f]' % (x1, x2, y1, y2))
         print('boxfillpipeline scale: [xscale, yscale] = [%f, %f]' % (self._context_xScale, self._context_yScale))
 
         fareapixelspacing, fareapixelscale = self._patternSpacingAndScale()
