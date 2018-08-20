@@ -124,25 +124,7 @@ class BoxfillPipeline(Pipeline2D):
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
-        area.SetDrawAreaBounds(drawAreaBounds)
-        area.SetGeometry(geom)
-        area.SetFillViewport(False)
-        area.SetShowGrid(False)
-
-        axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
-        axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
-        axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
-        axisTop = area.GetAxis(vtk.vtkAxis.TOP)
-
-        axisLeft.SetVisible(False)
-        axisRight.SetVisible(False)
-        axisBottom.SetVisible(False)
-        axisTop.SetVisible(False)
-
-        axisLeft.SetMargins(0, 0)
-        axisRight.SetMargins(0, 0)
-        axisBottom.SetMargins(0, 0)
-        axisTop.SetMargins(0, 0)
+        vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
 
         midx = 0
 
@@ -192,14 +174,16 @@ class BoxfillPipeline(Pipeline2D):
                 item.SetMappedColors(mappedColors)
                 area.GetDrawAreaItem().AddItem(item)
 
+                print('boxfillpipeline adding a context item')
+
             # TODO We shouldn't need this conditional branch, the 'else' body
             # should be used and GetMapper called to get the mapper as needed.
             # If this is needed for other reasons, we need a comment explaining
             # why.
             if mapper is self._maskedDataMapper:
-                actors.append([act, self._maskedDataMapper, plotting_dataset_bounds])
+                actors.append([item, self._maskedDataMapper, plotting_dataset_bounds])
             else:
-                actors.append([act, plotting_dataset_bounds])
+                actors.append([item, plotting_dataset_bounds])
 
                 if self._gm.boxfill_type == "custom":
                     # Patterns/hatches creation for custom boxfill plots
@@ -230,16 +214,16 @@ class BoxfillPipeline(Pipeline2D):
                         patMapper.Update()
                         patPoly = patMapper.GetInput()
 
-                        item = vtk.vtkPolyDataItem()
-                        item.SetPolyData(patPoly)
+                        patItem = vtk.vtkPolyDataItem()
+                        patItem.SetPolyData(patPoly)
 
-                        item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                        patItem.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
                         colorArray = patPoly.GetCellData().GetArray('Colors')
 
-                        item.SetMappedColors(colorArray)
-                        area.GetDrawAreaItem().AddItem(item)
+                        patItem.SetMappedColors(colorArray)
+                        area.GetDrawAreaItem().AddItem(patItem)
 
-                        actors.append([patact, plotting_dataset_bounds])
+                        actors.append([patItem, plotting_dataset_bounds])
 
             midx += 1
 
@@ -256,7 +240,6 @@ class BoxfillPipeline(Pipeline2D):
             "plotting_dataset_bounds": plotting_dataset_bounds,
             "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
             "vtk_backend_geo": self._vtkGeoTransform,
-            # "vtk_backend_pipeline_context_area": area,
             "vtk_backend_draw_area_bounds": drawAreaBounds,
             "vtk_backend_viewport_scale": [
                 self._context_xScale,

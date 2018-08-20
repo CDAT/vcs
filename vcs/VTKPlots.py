@@ -1974,7 +1974,7 @@ x.geometry(1200,800)
             if "vtk_backend_actors" in vtkobjects:
                 i = 0
                 for a in vtkobjects["vtk_backend_actors"]:
-                    act = a[0]
+                    beItem = a[0]
                     if a[1] is missingMapper:
                         i -= 1
                         mapper = missingMapper2
@@ -1986,37 +1986,52 @@ x.geometry(1200,800)
                         elif "vtk_backend_labeled_luts" in vtkobjects:
                             lut, rg = vtkobjects["vtk_backend_labeled_luts"][i]
                             mapper = vtk.vtkLabeledContourMapper()
-                        if lut is None:
-                            mapper.SetInputConnection(ports[i].GetOutputPort())
-                        else:
+
+                        algo_i = ports[i]
+                        coloring = None
+                        scalarRange = None
+
+                        if lut is not None:
                             if mapper.IsA("vtkPolyDataMapper"):
-                                mapper.SetInputConnection(
-                                    ports[i].GetOutputPort())
-                                mapper.SetLookupTable(lut)
-                                mapper.SetScalarModeToUsePointData()
+                                coloring = 'points'
                             else:
                                 stripper = vtk.vtkStripper()
                                 stripper.SetInputConnection(
                                     ports[i].GetOutputPort())
                                 mapper.SetInputConnection(
                                     stripper.GetOutputPort())
-                                stripper.Update()
-                                tprops = vtkobjects[
-                                    "vtk_backend_contours_labels_text_properties"][i]
-                                mapper.GetPolyDataMapper().SetLookupTable(lut)
-                                mapper.GetPolyDataMapper(
-                                ).SetScalarModeToUsePointData()
-                                mapper.GetPolyDataMapper().SetScalarRange(
-                                    rg[0],
-                                    rg[1])
-                                mapper.SetLabelVisibility(1)
-                                mapper.SetTextProperties(tprops)
+                                algo_i = stripper
+                                coloring = 'points'
+                                scalarRange = rg
+
                             if rg[2]:
-                                mapper.SetScalarModeToUseCellData()
-                            mapper.SetScalarRange(rg[0], rg[1])
-                    if act in self._animationActorTransforms:
-                        self._applyTransformationToMapperInput(self._animationActorTransforms[act], mapper)
-                    act.SetMapper(mapper)
+                                coloring = 'cells'
+
+                            scalarRange = rg
+
+                        algo_i.Update()
+                        new_pd = algo_i.GetOutput()
+
+                        beItem.SetPolyData(new_pd)
+
+                        if coloring:
+                            attrs = new_pd.GetPointData()
+                            numColors = new_pd.GetNumberOfPoints()
+                            beItem.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
+
+                            if coloring == 'cells':
+                                attrs = new_pd.GetCellData()
+                                numColors = new_pd.GetNumberOfCells()
+                                beItem.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+
+                            colorByArray = attrs.GetScalars()
+
+                            if scalarRange:
+                                lut.SetRange(scalarRange[0], scalarRange[1])
+
+                            mappedColors = lut.MapScalars(colorByArray, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                            beItem.SetMappedColors(mappedColors)
+
                     i += 1
 
         taxis = array1.getTime()

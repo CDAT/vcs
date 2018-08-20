@@ -140,25 +140,7 @@ class IsolinePipeline(Pipeline2D):
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
-        area.SetDrawAreaBounds(drawAreaBounds)
-        area.SetGeometry(geom)
-        area.SetFillViewport(False)
-        area.SetShowGrid(False)
-
-        axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
-        axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
-        axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
-        axisTop = area.GetAxis(vtk.vtkAxis.TOP)
-
-        axisLeft.SetVisible(False)
-        axisRight.SetVisible(False)
-        axisBottom.SetVisible(False)
-        axisTop.SetVisible(False)
-
-        axisLeft.SetMargins(0, 0)
-        axisRight.SetMargins(0, 0)
-        axisBottom.SetMargins(0, 0)
-        axisTop.SetMargins(0, 0)
+        vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
 
         for i, l in enumerate(tmpLevels):
             numLevels = len(l)
@@ -279,14 +261,12 @@ class IsolinePipeline(Pipeline2D):
             cots.append(cot)
 
             # Create actor to add to scene
-            act = vtk.vtkActor()
+            # act = vtk.vtkActor()
             # act.SetMapper(mapper)
             # # Set line properties here
             # p = act.GetProperty()
             # p.SetLineWidth(tmpLineWidths[i])
             # vcs2vtk.stippleLine(p, tmpLineTypes[i])
-
-            actors.append([act, plotting_dataset_bounds])
 
             # create a new renderer for this mapper
             # (we need one for each mapper because of cmaera flips)
@@ -328,6 +308,8 @@ class IsolinePipeline(Pipeline2D):
             item.SetMappedColors(mappedColors)
             area.GetDrawAreaItem().AddItem(item)
 
+            actors.append([item, plotting_dataset_bounds])
+
             countLevels += len(l)
         if len(textprops) > 0:
             self._resultDict["vtk_backend_contours_labels_text_properties"] = \
@@ -342,17 +324,6 @@ class IsolinePipeline(Pipeline2D):
 
         if self._maskedDataMapper is not None:
             mappers.insert(0, self._maskedDataMapper)
-            act = vtk.vtkActor()
-            act.SetMapper(self._maskedDataMapper)
-            actors.append([act, self._maskedDataMapper, plotting_dataset_bounds])
-            # create a new renderer for this mapper
-            # (we need one for each mapper because of cmaera flips)
-            # self._context().fitToViewport(
-            #     act, vp,
-            #     wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
-            #     geo=self._vtkGeoTransform,
-            #     priority=self._template.data.priority,
-            #     create_renderer=True)
 
             self._maskedDataMapper.Update()
             maskedData = self._maskedDataMapper.GetInput()
@@ -365,6 +336,8 @@ class IsolinePipeline(Pipeline2D):
             maskItem.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
             maskItem.SetMappedColors(maskedColors)
             area.GetDrawAreaItem().AddItem(maskItem)
+
+            actors.append([maskItem, self._maskedDataMapper, plotting_dataset_bounds])
 
 
         self._resultDict["vtk_backend_actors"] = actors

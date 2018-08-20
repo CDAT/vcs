@@ -155,26 +155,7 @@ class VectorPipeline(Pipeline2D):
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
-        area.SetDrawAreaBounds(drawAreaBounds)
-        area.SetGeometry(geom)
-        # area.SetFixedMargins(0, 0, 0, 0)
-        area.SetFillViewport(False)
-        area.SetShowGrid(False)
-
-        axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
-        axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
-        axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
-        axisTop = area.GetAxis(vtk.vtkAxis.TOP)
-
-        axisLeft.SetVisible(False)
-        axisRight.SetVisible(False)
-        axisBottom.SetVisible(False)
-        axisTop.SetVisible(False)
-
-        axisLeft.SetMargins(0, 0)
-        axisRight.SetMargins(0, 0)
-        axisBottom.SetMargins(0, 0)
-        axisTop.SetMargins(0, 0)
+        vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
 
         # polydata = tmpMapper.GetInput()
         plotting_dataset_bounds = self.getPlottingBounds()
@@ -282,8 +263,6 @@ class VectorPipeline(Pipeline2D):
         item.SetMappedColors(colorArray)
         area.GetDrawAreaItem().AddItem(item)
 
-
-
         kwargs = {
             'vtk_backend_grid': self._vtkDataSet,
             'dataset_bounds': self._vtkDataSetBounds,
@@ -325,7 +304,7 @@ class VectorPipeline(Pipeline2D):
                                            plotting_dataset_bounds, projection,
                                            self._dataWrapModulo, vp,
                                            self._template.data.priority, **kwargs)
-        # self._resultDict["vtk_backend_actors"] = [[act, plotting_dataset_bounds]]
+        self._resultDict["vtk_backend_actors"] = [[item, plotting_dataset_bounds]]
         self._resultDict["vtk_backend_glyphfilters"] = [glyphFilter]
         self._resultDict["vtk_backend_luts"] = [[None, None]]
 

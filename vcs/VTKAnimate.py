@@ -308,7 +308,7 @@ class VTKAnimate(animate_helper.AnimationController):
                 self.playback_params.vertical_factor,
                 self.playback_params.horizontal_factor)
         else:
-            self.reclaim_renderers()
+            # self.reclaim_renderers()
 
             update_input(
                 self.vcs_self,

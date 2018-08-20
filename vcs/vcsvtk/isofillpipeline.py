@@ -1,6 +1,6 @@
 from .pipeline2d import Pipeline2D
 from . import fillareautils
-# from .. import vcs2vtk
+from .. import vcs2vtk
 
 import numpy
 import vcs
@@ -135,25 +135,7 @@ class IsofillPipeline(Pipeline2D):
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
-        area.SetDrawAreaBounds(drawAreaBounds)
-        area.SetGeometry(geom)
-        area.SetFillViewport(False)
-        area.SetShowGrid(False)
-
-        axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
-        axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
-        axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
-        axisTop = area.GetAxis(vtk.vtkAxis.TOP)
-
-        axisLeft.SetVisible(False)
-        axisRight.SetVisible(False)
-        axisBottom.SetVisible(False)
-        axisTop.SetVisible(False)
-
-        axisLeft.SetMargins(0, 0)
-        axisRight.SetMargins(0, 0)
-        axisBottom.SetMargins(0, 0)
-        axisTop.SetMargins(0, 0)
+        vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
 
         cam = dataset_renderer.GetActiveCamera()
         cam.ParallelProjectionOn()
@@ -172,7 +154,6 @@ class IsofillPipeline(Pipeline2D):
             if self._context_flipX:
                 cam.Azimuth(180.)
 
-
         # mIdx = 0
 
         for mapper in mappers:
@@ -186,11 +167,6 @@ class IsofillPipeline(Pipeline2D):
                 continue
 
             patact = None
-            # TODO see comment in boxfill.
-            if mapper is self._maskedDataMapper:
-                actors.append([act, self._maskedDataMapper, plotting_dataset_bounds])
-            else:
-                actors.append([act, plotting_dataset_bounds])
 
             if style == "solid":
                 if mapper is self._maskedDataMapper:
@@ -217,6 +193,12 @@ class IsofillPipeline(Pipeline2D):
                 item.SetMappedColors(mappedColors)
                 area.GetDrawAreaItem().AddItem(item)
 
+                        # TODO see comment in boxfill.
+            if mapper is self._maskedDataMapper:
+                actors.append([item, self._maskedDataMapper, plotting_dataset_bounds])
+            else:
+                actors.append([item, plotting_dataset_bounds])
+
             if mapper is not self._maskedDataMapper:
                 # Since pattern creation requires a single color, assuming the first
                 c = self.getColorIndexOrRGBA(_colorMap, tmpColors[ct][0])
@@ -238,14 +220,14 @@ class IsofillPipeline(Pipeline2D):
                     patMapper.Update()
                     patPoly = patMapper.GetInput()
 
-                    item = vtk.vtkPolyDataItem()
-                    item.SetPolyData(patPoly)
+                    patItem = vtk.vtkPolyDataItem()
+                    patItem.SetPolyData(patPoly)
 
-                    item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                    patItem.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
                     colorArray = patPoly.GetCellData().GetArray('Colors')
 
-                    item.SetMappedColors(colorArray)
-                    area.GetDrawAreaItem().AddItem(item)
+                    patItem.SetMappedColors(colorArray)
+                    area.GetDrawAreaItem().AddItem(patItem)
 
                 # increment the count
                 ct += 1
