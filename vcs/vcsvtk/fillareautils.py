@@ -25,17 +25,33 @@ def computeResolutionAndScale(contextItem, pt1, pt2, xRange, yRange, pxScale=Non
     # size into account
     # First, convert a distance of one unit screen distance to data
     # coordinates
-    scrPt1 = vtk.vtkVector2f(pt1[0], pt1[1])
-    scrPt2 = vtk.vtkVector2f(pt2[0], pt2[1])
 
-    wpoint1 = contextItem.MapFromScene(scrPt1)
-    wpoint2 = contextItem.MapFromScene(scrPt2)
+    # import pdb
+    # pdb.set_trace()
 
-    # drawArea = contextItem.GetDrawAreaBounds()
-    # geom = contextItem.GetGeometry()
+    # scrPt1 = vtk.vtkVector2f(pt1[0], pt1[1])
+    # scrPt2 = vtk.vtkVector2f(pt2[0], pt2[1])
 
-    diffwpoints = [abs(wpoint1[0] - wpoint2[0]),
-                   abs(wpoint1[1] - wpoint2[1])]
+    # wpoint1 = contextItem.MapFromScene(scrPt1)
+    # wpoint2 = contextItem.MapFromScene(scrPt2)
+
+    # # drawArea = contextItem.GetDrawAreaBounds()
+    # # geom = contextItem.GetGeometry()
+
+    # diffwpoints = [abs(wpoint1[0] - wpoint2[0]),
+    #                abs(wpoint1[1] - wpoint2[1])]
+
+    drawAreaBounds = contextItem.GetDrawAreaBounds()
+    dataWidth = drawAreaBounds[2]
+    dataHeight = drawAreaBounds[3]
+
+    screenGeometry = contextItem.GetGeometry()
+    screenWidth = screenGeometry[2]
+    screenHeight = screenGeometry[3]
+
+    diffwpoints = [abs(dataWidth / screenWidth),
+                   abs(dataHeight / screenHeight)]
+
     diffwpoints = [1.0 if i < threshold else i for i in diffwpoints]
 
     # Choosing an arbitary factor to scale the number of points.  A spacing

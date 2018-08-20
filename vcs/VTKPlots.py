@@ -729,26 +729,7 @@ class VTKVCSBackend(object):
                 [renWinWidth, renWinHeight] = self.renWin.GetSize()
                 geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
-                area.SetDrawAreaBounds(rect)
-                area.SetGeometry(geom)
-
-                area.SetFillViewport(False)
-                area.SetShowGrid(False)
-
-                axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
-                axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
-                axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
-                axisTop = area.GetAxis(vtk.vtkAxis.TOP)
-
-                axisTop.SetVisible(False)
-                axisRight.SetVisible(False)
-                axisLeft.SetVisible(False)
-                axisBottom.SetVisible(False)
-
-                axisTop.SetMargins(0, 0)
-                axisRight.SetMargins(0, 0)
-                axisLeft.SetMargins(0, 0)
-                axisBottom.SetMargins(0, 0)
+                vcs2vtk.configureContextArea(area, rect, geom)
 
                 returned["vtk_backend_text_actors"] = vcs2vtk.genTextActor(
                     area,
@@ -790,26 +771,7 @@ class VTKVCSBackend(object):
                 [renWinWidth, renWinHeight] = self.renWin.GetSize()
                 geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
-                area.SetDrawAreaBounds(rect)
-                area.SetGeometry(geom)
-
-                area.SetFillViewport(False)
-                area.SetShowGrid(False)
-
-                axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
-                axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
-                axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
-                axisTop = area.GetAxis(vtk.vtkAxis.TOP)
-
-                axisLeft.SetVisible(False)
-                axisRight.SetVisible(False)
-                axisBottom.SetVisible(False)
-                axisTop.SetVisible(False)
-
-                axisLeft.SetMargins(0, 0)
-                axisRight.SetMargins(0, 0)
-                axisBottom.SetMargins(0, 0)
-                axisTop.SetMargins(0, 0)
+                vcs2vtk.configureContextArea(area, rect, geom)
 
                 # ren, xScale, yScale = \
                 #     self.findOrCreateUniqueRenderer(None, gm.viewport,
@@ -1036,26 +998,7 @@ class VTKVCSBackend(object):
         [renWinWidth, renWinHeight] = self.renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
-        area.SetDrawAreaBounds(contBounds)
-        area.SetGeometry(geom)
-
-        area.SetFillViewport(False)
-        area.SetShowGrid(False)
-
-        axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
-        axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
-        axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
-        axisTop = area.GetAxis(vtk.vtkAxis.TOP)
-
-        axisLeft.SetVisible(False)
-        axisRight.SetVisible(False)
-        axisBottom.SetVisible(False)
-        axisTop.SetVisible(False)
-
-        axisLeft.SetMargins(0, 0)
-        axisRight.SetMargins(0, 0)
-        axisBottom.SetMargins(0, 0)
-        axisTop.SetMargins(0, 0)
+        vcs2vtk.configureContextArea(area, contBounds, geom)
 
         color_arr = vtk.vtkUnsignedCharArray()
         color_arr.SetNumberOfComponents(4)
@@ -1109,26 +1052,7 @@ class VTKVCSBackend(object):
         [renWinWidth, renWinHeight] = self.renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
-        area.SetDrawAreaBounds(rect)
-        area.SetGeometry(geom)
-
-        area.SetFillViewport(False)
-        area.SetShowGrid(False)
-
-        axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
-        axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
-        axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
-        axisTop = area.GetAxis(vtk.vtkAxis.TOP)
-
-        axisLeft.SetVisible(False)
-        axisRight.SetVisible(False)
-        axisBottom.SetVisible(False)
-        axisTop.SetVisible(False)
-
-        axisLeft.SetMargins(0, 0)
-        axisRight.SetMargins(0, 0)
-        axisBottom.SetMargins(0, 0)
-        axisTop.SetMargins(0, 0)
+        vcs2vtk.configureContextArea(area, rect, geom)
 
         # ok first basic template stuff, let's store the displays
         # because we need to return actors for min/max/mean
