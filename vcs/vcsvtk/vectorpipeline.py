@@ -144,7 +144,7 @@ class VectorPipeline(Pipeline2D):
         # Transform the input data
         # T = vtk.vtkTransform()
         # T.Scale(xScale, yScale, 1.)
-        # polydata = self._context()._applyTransformationToDataset(T, polydata)
+        # polydata = vcs2vtk.applyTransformationToDataset(T, polydata)
 
         # newBounds = polydata.GetBounds()
 

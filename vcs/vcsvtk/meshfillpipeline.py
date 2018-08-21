@@ -306,7 +306,7 @@ class MeshfillPipeline(Pipeline2D):
                                                                    fillareapixelspacing=fareapixelspacing,
                                                                    fillareapixelscale=fareapixelscale,
                                                                    size=self._context().renWin.GetSize(),
-                                                                   renderer=dataset_renderer)
+                                                                   screenGeom=self._context().renWin.GetSize())
                     ctj += 1
                 if patact is not None:
                     actors.append([patact, plotting_dataset_bounds])

@@ -102,6 +102,34 @@ def configureContextArea(area, dataBounds, screenGeom):
     axisTop.SetMargins(0, 0)
 
 
+def growBounds(previousBounds, newBounds):
+    nextBounds = [i for i in previousBounds]
+
+    if newBounds[0] < previousBounds[0]:
+        nextBounds[0] = newBounds[0]
+    if newBounds[1] > previousBounds[1]:
+        nextBounds[1] = newBounds[1]
+    if newBounds[2] < previousBounds[2]:
+        nextBounds[2] = newBounds[2]
+    if newBounds[3] > previousBounds[3]:
+        nextBounds[3] = newBounds[3]
+
+    return nextBounds
+
+
+def applyTransformationToDataset(T, data):
+    vectors = data.GetPointData().GetVectors()
+    data.GetPointData().SetActiveVectors(None)
+    transformFilter = vtk.vtkTransformFilter()
+    transformFilter.SetInputData(data)
+    transformFilter.SetTransform(T)
+    transformFilter.Update()
+    outputData = transformFilter.GetOutput()
+    data.GetPointData().SetVectors(vectors)
+    outputData.GetPointData().SetVectors(vectors)
+    return outputData
+
+
 def applyAttributesFromVCStmpl(tmpl, tmplattribute, txtobj=None):
     tatt = getattr(tmpl, tmplattribute)
     if txtobj is None:
@@ -1594,6 +1622,13 @@ def prepFillarea(context, renWin, farea, cmap=None):
         item.SetMappedColors(colorArray)
         area.GetDrawAreaItem().AddItem(item)
 
+    transform = vtk.vtkTransform()
+    transform.Scale(xScale, yScale, 1.)
+
+    # newWc = [wc[0] * xScale, wc[1] * xScale, wc[2] * yScale, wc[3] * yScale]
+    # rect = vtk.vtkRectd(newWc[0], newWc[2], newWc[1] - newWc[0], newWc[3] - newWc[2])
+    # area.SetDrawAreaBounds(rect)
+
     # Patterns/hatches support
     for i, pd in pattern_polydatas:
         st = farea.style[i]
@@ -1601,6 +1636,9 @@ def prepFillarea(context, renWin, farea, cmap=None):
             geo, proj_points = project(
                 pd.GetPoints(), farea.projection, farea.worldcoordinate)
             pd.SetPoints(proj_points)
+
+            pd = applyTransformationToDataset(transform, pd)
+
             # transformFilter = vtk.vtkTransformFilter()
             # transformFilter.SetInputData(pd)
             # transformFilter.SetTransform(transform)
@@ -1617,7 +1655,7 @@ def prepFillarea(context, renWin, farea, cmap=None):
                                                         fillareapixelspacing=farea.pixelspacing,
                                                         fillareapixelscale=farea.pixelscale,
                                                         size=renWin.GetSize(),
-                                                        renderer=ren)
+                                                        screenGeom=renWin.GetSize())
             if act is not None:
                 patMapper = act.GetMapper()
                 patMapper.Update()
@@ -1659,7 +1697,7 @@ def genPoly(coords, pts, filled=True, scale=1.):
     return poly
 
 
-def prepGlyph(contextItem, g, marker, index=0):
+def prepGlyph(g, marker, screenGeom, index=0):
     t, s = marker.type[index], marker.size[index]
     gs = vtk.vtkGlyphSource2D()
     pd = None
@@ -1671,8 +1709,8 @@ def prepGlyph(contextItem, g, marker, index=0):
     dx = marker.worldcoordinate[1] - marker.worldcoordinate[0]
     dy = marker.worldcoordinate[3] - marker.worldcoordinate[2]
 
-    unused, scale = fillareautils.computeResolutionAndScale(contextItem, point1, point2, dx, dy, (s * 10), None, 1e-10)
-    finalScale = scale[0]
+    scale = fillareautils.computeMarkerScale([dx, dy], screenGeom, (s * 10), 1e-10)
+    finalScale = scale
 
     if t == 'dot':
         gs.SetGlyphTypeToCircle()
@@ -1860,7 +1898,7 @@ def getMarkerColor(marker, c, cmap=None):
     return retval
 
 
-def prepMarker(contextItem, marker, cmap=None):
+def prepMarker(marker, screenGeom, scale=None, cmap=None):
     n = prepPrimitive(marker)
     if n == 0:
         return []
@@ -1881,9 +1919,16 @@ def prepMarker(contextItem, marker, cmap=None):
         geo, pts = project(pts, marker.projection, marker.worldcoordinate)
         markers.SetPoints(pts)
 
+        if scale:
+            # Scale the dataset before using it to make glyphs in an attempt
+            # to keep the glyphs from being stretched
+            T = vtk.vtkTransform()
+            T.Scale(scale[0], scale[1], 1.)
+            markers = applyTransformationToDataset(T, markers)
+
         #  Type
         # Ok at this point generates the source for glpyh
-        gs, pd = prepGlyph(contextItem, g, marker, index=i)
+        gs, pd = prepGlyph(g, marker, screenGeom=screenGeom, index=i)
         g.SetInputData(markers)
 
         # a = vtk.vtkActor()
@@ -2151,7 +2196,7 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
         #     T = vtk.vtkTransform()
         #     T.Scale(xScale, yScale, 1.)
 
-        #     linesPoly = plotsContext._applyTransformationToDataset(T, linesPoly)
+        #     linesPoly = applyTransformationToDataset(T, linesPoly)
 
         # gridFileName = 'lines-%d-%d' % (prepLineCount, lineDataCount)
         # debugWriteGrid(linesPoly, gridFileName)

@@ -1,4 +1,24 @@
+
+import math
 import vtk
+import vtk.util.numpy_support as ns
+import numpy as np
+
+"""
+> import vtk
+> import vtk.util.numpy_support as ns
+> import numpy as np
+>
+> Array = np.empty([235,3])
+> vtkarr = ns.numpy_to_vtk(num_array=Array, deep=True,
+> array_type=vtk.VTK_DOUBLE)
+>
+> >>> vtkarr.GetNumberOfTuples()
+> 235L
+> >>> vtkarr.GetNumberOfComponents()
+> 3
+"""
+
 from .patterns import pattern_list
 
 def debugWriteGrid(grid, name):
@@ -20,38 +40,33 @@ def debugWriteGrid(grid, name):
 _callidx = 0
 
 
-def computeResolutionAndScale(contextItem, pt1, pt2, xRange, yRange, pxScale=None, pxSpacing=None, threshold=1e-6):
-    # Be smart about calculating the resolution by taking the screen pixel
-    # size into account
-    # First, convert a distance of one unit screen distance to data
-    # coordinates
+def affine(value, inMin, inMax, outMin, outMax):
+    return ((float(value - inMin) / float(inMax - inMin)) * (outMax - outMin)) + outMin
 
-    # import pdb
-    # pdb.set_trace()
 
-    # scrPt1 = vtk.vtkVector2f(pt1[0], pt1[1])
-    # scrPt2 = vtk.vtkVector2f(pt2[0], pt2[1])
+def computeDiffPoints(dataRange, screenGeom):
+    sp1 = [0.0, 0.0]
+    side = 1 / math.sqrt(2)
+    sp2 = [side, side]
 
-    # wpoint1 = contextItem.MapFromScene(scrPt1)
-    # wpoint2 = contextItem.MapFromScene(scrPt2)
+    dp1 = [
+        affine(sp1[0], 0, screenGeom[0], 0, dataRange[0]),
+        affine(sp1[1], 0, screenGeom[1], 0, dataRange[1])
+    ]
 
-    # # drawArea = contextItem.GetDrawAreaBounds()
-    # # geom = contextItem.GetGeometry()
+    dp2 = [
+        affine(sp2[0], 0, screenGeom[0], 0, dataRange[0]),
+        affine(sp2[1], 0, screenGeom[1], 0, dataRange[1])
+    ]
 
-    # diffwpoints = [abs(wpoint1[0] - wpoint2[0]),
-    #                abs(wpoint1[1] - wpoint2[1])]
+    dx = abs(dp2[0] - dp1[0])
+    dy = abs(dp2[1] - dp1[1])
 
-    drawAreaBounds = contextItem.GetDrawAreaBounds()
-    dataWidth = drawAreaBounds[2]
-    dataHeight = drawAreaBounds[3]
+    return [dx, dy]
 
-    screenGeometry = contextItem.GetGeometry()
-    screenWidth = screenGeometry[2]
-    screenHeight = screenGeometry[3]
 
-    diffwpoints = [abs(dataWidth / screenWidth),
-                   abs(dataHeight / screenHeight)]
-
+def computeResolutionAndScale(dataRange, screenGeom, pxScale=None, pxSpacing=None, threshold=1e-6):
+    diffwpoints = computeDiffPoints(dataRange, screenGeom)
     diffwpoints = [1.0 if i < threshold else i for i in diffwpoints]
 
     # Choosing an arbitary factor to scale the number of points.  A spacing
@@ -61,22 +76,34 @@ def computeResolutionAndScale(contextItem, pt1, pt2, xRange, yRange, pxScale=Non
     xres = yres = 1
     scale = [1.0, 1.0]
     if pxSpacing:
-        xres = int(xRange / (pxSpacing[0] * diffwpoints[0])) + 1
-        yres = int(yRange / (pxSpacing[1] * diffwpoints[1])) + 1
+        xres = int(dataRange[0] / (pxSpacing[0] * diffwpoints[0])) + 1
+        yres = int(dataRange[1] / (pxSpacing[1] * diffwpoints[1])) + 1
 
     if pxScale:
         scale = [pxScale * x for x in diffwpoints[:2]]
 
-    # print('computeResolutionAndScale: xres = %f, yres = %f, scale = [%f, %f]' % (xres, yres, scale[0], scale[1]))
+    print('computeResolutionAndScale: xres = %f, yres = %f, scale = [%f, %f]' % (xres, yres, scale[0], scale[1]))
 
     return ([xres, yres], scale)
+
+
+def computeMarkerScale(dataRange, screenGeom, pxScale=None, threshold=1e-6):
+    diffwpoints = computeDiffPoints(dataRange, screenGeom)
+    diffwpoints = [1.0 if i < threshold else i for i in diffwpoints]
+    scale = min(*diffwpoints)
+    if pxScale:
+        scale *= pxScale
+
+    print('computeMarkerScale: scale = {0}'.format(scale))
+
+    return scale
 
 
 def make_patterned_polydata(inputContours, fillareastyle=None,
                             fillareaindex=None, fillareacolors=None,
                             fillareaopacity=None,
                             fillareapixelspacing=None, fillareapixelscale=None,
-                            size=None, renderer=None):
+                            size=None, screenGeom=None):
     global _callidx
     if inputContours is None or fillareastyle == 'solid':
         return None
@@ -108,14 +135,9 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
     xBounds = bounds[1] - bounds[0]
     yBounds = bounds[3] - bounds[2]
 
-    if renderer is not None:
-        point1 = [1.0, 1.0, 0.0]
-        point2 = [0.0, 0.0, 0.0]
-        [xres, yres], scale = computeResolutionAndScale(renderer,
-                                                        point1,
-                                                        point2,
-                                                        xBounds,
-                                                        yBounds,
+    if screenGeom is not None:
+        [xres, yres], scale = computeResolutionAndScale([xBounds, yBounds],
+                                                        screenGeom,
                                                         fillareapixelscale,
                                                         fillareapixelspacing)
     else:
@@ -205,13 +227,19 @@ def map_colors(clippedPolyData, fillareastyle=None,
         color = [int(c / 100. * 255) for c in fillareacolors[:3]]
     opacity = int(fillareaopacity / 100. * 255)
     color.append(opacity)
-    colors = vtk.vtkUnsignedCharArray()
-    colors.SetNumberOfComponents(4)
+
+    colorNpArray = np.empty([clippedPolyData.GetNumberOfCells(), 4])
+    colorNpArray[:,0] = color[0]
+    colorNpArray[:,1] = color[1]
+    colorNpArray[:,2] = color[2]
+    colorNpArray[:,3] = color[3]
+    # for i in range(clippedPolyData.GetNumberOfCells()):
+    #     colorNpArray[i,:] = color
+    colors = ns.numpy_to_vtk(num_array=colorNpArray,
+                             deep=True,
+                             array_type=vtk.VTK_UNSIGNED_CHAR)
     colors.SetName("Colors")
     clippedPolyData.GetCellData().SetScalars(colors)
-    # clippedPolyData.GetCellData().AddArray(colors)
-    for i in range(clippedPolyData.GetNumberOfCells()):
-        colors.InsertNextTypedTuple(color)
 
 
 def create_pattern(patternPolyData, scale=1.0,

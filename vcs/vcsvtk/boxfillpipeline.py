@@ -205,7 +205,7 @@ class BoxfillPipeline(Pipeline2D):
                         fillareapixelspacing=fareapixelspacing,
                         fillareapixelscale=fareapixelscale,
                         size=self._context().renWin.GetSize(),
-                        renderer=dataset_renderer)
+                        screenGeom=self._context().renWin.GetSize())
 
                     ctj += 1
 

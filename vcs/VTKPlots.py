@@ -756,8 +756,6 @@ class VTKVCSBackend(object):
 
         elif gtype == "marker":
             if gm.priority != 0:
-
-
                 view = self.contextView
 
                 area = vtk.vtkContextArea()
@@ -766,12 +764,12 @@ class VTKVCSBackend(object):
                 vp = gm.viewport
                 wc = gm.worldcoordinate
 
-                rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
+                # rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
 
                 [renWinWidth, renWinHeight] = self.renWin.GetSize()
                 geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
-                vcs2vtk.configureContextArea(area, rect, geom)
+                # vcs2vtk.configureContextArea(area, rect, geom)
 
                 # ren, xScale, yScale = \
                 #     self.findOrCreateUniqueRenderer(None, gm.viewport,
@@ -787,6 +785,34 @@ class VTKVCSBackend(object):
                     wc=wc,
                     geoBounds=None,
                     geo=None)
+
+                # xMid = (wc[0] + wc[1]) / 2.0
+                # yMid = (wc[2] + wc[3]) / 2.0
+                # dw = abs(wc[1] - wc[0]) / 2.0
+                # dh = abs(wc[3] - wc[2]) / 2.0
+                # dw *= xScale
+                # dh *= yScale
+
+                # newWc = [xMid - dw, xMid + dw, yMid - dh, yMid + dh]
+                newWc = [wc[0] * xScale, wc[1] * xScale, wc[2] * yScale, wc[3] * yScale]
+
+                # if wc[1] < wc[0]:
+                #     tmp = newWc[0]
+                #     newWc[0] = newWc[1]
+                #     newWc[1] = tmp
+
+                # if wc[3] < wc[2]:
+                #     tmp = newWc[2]
+                #     newWc[2] = newWc[3]
+                #     newWc[3] = tmp
+
+                print('plotting markers')
+                print('  computed viewport scaling: {0}'.format([xScale, yScale]))
+                print('  original wc: {0}'.format(wc))
+                print('  scaled wc: {0}'.format(newWc))
+
+                rect = vtk.vtkRectd(newWc[0], newWc[2], newWc[1] - newWc[0], newWc[3] - newWc[2])
+                vcs2vtk.configureContextArea(area, rect, geom)
 
                 cam = view.GetRenderer().GetActiveCamera()
                 cam.ParallelProjectionOn()
@@ -806,8 +832,9 @@ class VTKVCSBackend(object):
 
 
                 # actors = vcs2vtk.prepMarker(ren, gm, cmap=self.canvas.colormap)
-                actors = vcs2vtk.prepMarker(area, gm, cmap=self.canvas.colormap)
+                actors = vcs2vtk.prepMarker(gm, [renWinWidth, renWinHeight], scale=[xScale, yScale], cmap=self.canvas.colormap)
                 returned["vtk_backend_marker_actors"] = actors
+                glyphBounds = [100000000.0, -100000000.0, 100000000.0, -100000000.0]
                 for g, pd, geo in actors:
                     # data = g.GetInput()
                     # mapper = act.GetMapper()
@@ -827,6 +854,12 @@ class VTKVCSBackend(object):
                     # g.Update()
                     # data = g.GetOutput()
 
+                    # import pdb
+                    # pdb.set_trace()
+
+                    # bounds = g.GetBounds()
+                    # glyphBounds = vcs2vtk.growBounds(glyphBounds, bounds)
+
                     item = vtk.vtkPolyDataItem()
                     item.SetPolyData(g)
 
@@ -838,6 +871,12 @@ class VTKVCSBackend(object):
 
                     # set the markers to be rendered
                     # mapper.SetInputData(g.GetOutput())
+
+                # rect = vtk.vtkRectd(glyphBounds[0],
+                #                     glyphBounds[2],
+                #                     glyphBounds[1] - glyphBounds[0],
+                #                     glyphBounds[3] - glyphBounds[2])
+                # vcs2vtk.configureContextArea(area, rect, geom)
 
         elif gtype == "fillarea":
             if gm.priority != 0:
@@ -993,7 +1032,7 @@ class VTKVCSBackend(object):
         #     # Transform the input data
         #     T = vtk.vtkTransform()
         #     T.Scale(xScale, yScale, 1.)
-        #     contData = self._applyTransformationToDataset(T, contData)
+        #     contData = vcs2vtk.applyTransformationToDataset(T, contData)
 
         [renWinWidth, renWinHeight] = self.renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
@@ -1654,22 +1693,10 @@ x.geometry(1200,800)
                 self.setLayer(self.logoRenderer, 1)
                 self.renWin.AddRenderer(self.logoRenderer)
 
-    def _applyTransformationToDataset(self, T, data):
-        vectors = data.GetPointData().GetVectors()
-        data.GetPointData().SetActiveVectors(None)
-        transformFilter = vtk.vtkTransformFilter()
-        transformFilter.SetInputData(data)
-        transformFilter.SetTransform(T)
-        transformFilter.Update()
-        outputData = transformFilter.GetOutput()
-        data.GetPointData().SetVectors(vectors)
-        outputData.GetPointData().SetVectors(vectors)
-        return outputData
-
     def _applyTransformationToMapperInput(self, T, mapper):
         mapper.Update()
         data = mapper.GetInput()
-        outputData = self._applyTransformationToDataset(T, data)
+        outputData = vcs2vtk.applyTransformationToDataset(T, data)
         mapper.SetInputData(outputData)
 
         planeCollection = mapper.GetClippingPlanes()

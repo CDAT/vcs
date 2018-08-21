@@ -187,7 +187,8 @@ class Pipeline2D(IPipeline2D):
                                                     fillareastyle=style,
                                                     fillareaindex=index,
                                                     fillareacolors=c,
-                                                    fillareaopacity=opacity)
+                                                    fillareaopacity=opacity,
+                                                    screenGeom=self.context_.renWin.GetSize())
         if act is not None:
             self._patternActors.append(act)
         return
@@ -408,7 +409,7 @@ class Pipeline2D(IPipeline2D):
         # T.Scale(xScale, yScale, 1.)
 
         act.GetMapper().Update()
-        # self._vtkDataSetFittedToViewport = self._context()._applyTransformationToDataset(T, act.GetMapper().GetInput())
+        # self._vtkDataSetFittedToViewport = vcs2vtk.applyTransformationToDataset(T, act.GetMapper().GetInput())
         self._vtkDataSetFittedToViewport = act.GetMapper().GetInput()
         self._vtkDataSetBoundsNoMask = self._vtkDataSetFittedToViewport.GetBounds()
 

@@ -33,6 +33,12 @@ class IsofillPipeline(Pipeline2D):
         mappers = []
         _colorMap = self.getColorMap()
 
+        # Transform the input data
+        T = vtk.vtkTransform()
+        T.Scale(self._context_xScale, self._context_yScale, 1.)
+        self._vtkDataSetFittedToViewport = vcs2vtk.applyTransformationToDataset(T, self._vtkDataSetFittedToViewport)
+        self._vtkDataSetBoundsNoMask = self._vtkDataSetFittedToViewport.GetBounds()
+
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
         fareapixelspacing, fareapixelscale = self._patternSpacingAndScale()
@@ -167,6 +173,7 @@ class IsofillPipeline(Pipeline2D):
                 continue
 
             patact = None
+            item = None
 
             if style == "solid":
                 if mapper is self._maskedDataMapper:
@@ -211,11 +218,9 @@ class IsofillPipeline(Pipeline2D):
                                                                fillareapixelspacing=fareapixelspacing,
                                                                fillareapixelscale=fareapixelscale,
                                                                size=self._context().renWin.GetSize(),
-                                                               renderer=dataset_renderer)
+                                                               screenGeom=self._context().renWin.GetSize())
 
                 if patact is not None:
-                    actors.append([patact, plotting_dataset_bounds])
-
                     patMapper = patact.GetMapper()
                     patMapper.Update()
                     patPoly = patMapper.GetInput()
@@ -228,6 +233,8 @@ class IsofillPipeline(Pipeline2D):
 
                     patItem.SetMappedColors(colorArray)
                     area.GetDrawAreaItem().AddItem(patItem)
+
+                    actors.append([patItem, plotting_dataset_bounds])
 
                 # increment the count
                 ct += 1
