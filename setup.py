@@ -9,17 +9,6 @@ import os
 
 import cdat_info
 
-try:
-    externals = cdat_info.externals
-except:
-    externals = os.environ.get("EXTERNALS", externals)
-
-os.environ['PATH'] = os.environ['PATH'] + ':' + os.path.join(externals, 'bin')
-
-os.environ['PKG_CONFIG_PATH'] = os.path.join(
-    externals, 'lib', 'pkgconfig') + \
-    ':' + os.environ.get("PKG_CONFIG_PATH", "")
-
 setup(name="vcs",
       version=cdat_info.Version,
       description="Visualization and Control System",
@@ -35,12 +24,13 @@ setup(name="vcs",
                                  'Share/data_continent_other7',
                                  'Share/data_continent_fine',
                                  'Share/initial.attributes',
-                                 'Share/uvcdat.png',
+                                 'Share/cdat.png',
                                  'Share/marker_icon.png',
                                  'Share/text_icon.png',
                                  'Share/fill_icon.png',
                                  'Share/line_icon.png',
                                  'Share/sample_files.txt',
+                                 'Share/test_data_files.txt',
                                  'Fonts/Adelon_Regular.ttf',
                                  'Fonts/Arabic.ttf',
                                  'Fonts/Athens_Greek.ttf',
@@ -56,5 +46,19 @@ setup(name="vcs",
                                  'Fonts/hebrew.ttf',
                                  'Fonts/jsMath-msam10.ttf',
                                  'Fonts/jsMath-wasy10.ttf',
+                                 'Fonts/DejaVu Fonts License.txt',
+                                 'Fonts/DejaVuSans-Bold.ttf',
+                                 'Fonts/DejaVuSans-BoldOblique.ttf',
+                                 'Fonts/DejaVuSans-ExtraLight.ttf',
+                                 'Fonts/DejaVuSans-Oblique.ttf',
+                                 'Fonts/DejaVuSans.ttf',
+                                 'Fonts/DejaVuSansCondensed-Bold.ttf',
+                                 'Fonts/DejaVuSansCondensed-BoldOblique.ttf',
+                                 'Fonts/DejaVuSansCondensed-Oblique.ttf',
+                                 'Fonts/DejaVuSansCondensed.ttf',
+                                 'Share/mapper.js',
+                                 'Share/cvi_tip_lib.js',
+                                 'Share/tooltip.css',
+                                 'Share/modal.js'
                                  )), ],
       )

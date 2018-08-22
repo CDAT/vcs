@@ -12,10 +12,10 @@
 # Description:	Python command wrapper for VCS's projection secondary method. #
 # Version:      4.0							      #
 ###############################################################################
-import VCS_validation_functions
+from . import VCS_validation_functions
 import vcs
 import copy
-from xmldocs import scriptdocs
+from .xmldocs import scriptdocs, listdoc
 
 # used to decide if we show longitude labels for round projections or
 # latitude labels for elliptical projections
@@ -31,7 +31,7 @@ no_over_proj4_parameter_projections = round_projections+["aeqd", "lambert confor
 def process_src(nm, code):
     try:
         gm = Proj(nm)
-    except:
+    except Exception:
         gm = vcs.elements["projection"][nm]
     i = code.find("(")
     j = code.find(")")
@@ -43,7 +43,7 @@ def process_src(nm, code):
     gm.parameters = params
 
 
-class Proj(object):
+class Proj(vcs.bestMatch):
 
     """
     The projection secondary method (Proj) is used when plotting 2D data, and define
@@ -382,6 +382,7 @@ class Proj(object):
             # or
             iso.projection='lambert'
 
+    .. pragma: skip-doctest
     """
 
     def __init__(self, Proj_name=None, Proj_name_src='default'):
@@ -393,13 +394,13 @@ class Proj(object):
 
         if isinstance(Proj_name_src, Proj):
             Proj_name_src = Proj_name_src.name
-        if Proj_name_src != "default" and Proj_name_src not in vcs.elements[
-                "projection"].keys():
+        if Proj_name_src != "default" and Proj_name_src not in list(vcs.elements[
+                "projection"].keys()):
             raise ValueError("Projection '%s' does not exists" % Proj_name_src)
         if (Proj_name is None):
             raise ValueError('Must provide a projection name.')
         else:
-            if Proj_name in vcs.elements["projection"].keys():
+            if Proj_name in list(vcs.elements["projection"].keys()):
                 raise ValueError(
                     "The projection '%s' already exists, use getprojection instead" %
                     Proj_name)
@@ -431,8 +432,8 @@ class Proj(object):
             1e+20]
         if Proj_name != "default":
             src = vcs.elements["projection"][Proj_name_src]
-            self.type = src.type
-            self.parameters = copy.copy(src.parameters)
+            self._type = src._type
+            self._parameters = copy.copy(src._parameters)
         vcs.elements["projection"][Proj_name] = self
 
     ##########################################################################
@@ -443,14 +444,15 @@ class Proj(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print ' ---------- Projection (Proj) member (attribute) listings ---------'
-        print 'secondary method =', self.s_name
-        print 'name =', self.name
-        print 'type =', self.type
+        print('---------- Projection (Proj) member (attribute) listings ----------')
+        print('secondary method =', self.s_name)
+        print('name =', self.name)
+        print('type =', self.type)
         # print 'parameters =',self.parameters
 
         for att in self.attributes:
-            print att, '=', getattr(self, att)
+            print(att, '=', getattr(self, att))
+    list.__doc__ = listdoc.format(name="projection", parent="")
 
     @property
     def attributes(self):
@@ -623,7 +625,7 @@ class Proj(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[
@@ -668,42 +670,6 @@ class Proj(object):
 
     __slots__ = [
         's_name',
-        'smajor',
-        'sminor',
-        'centralmeridian',
-        'truescale',
-        'falseeasting',
-        'falsenorthing',
-        'factor',
-        'originlatitude',
-        'azimuthalangle',
-        'azimuthlongitude',
-        'longitude1',
-        'longitude2',
-        'latitude1',
-        'latitude2',
-        'subtype',
-        'orbitinclination',
-        'orbitlongitude',
-        'satelliterevolutionperiod',
-        'landsatcompensationratio',
-        'pathflag',
-        'path',
-        'satellite',
-        'sphere',
-        'centerlongitude',
-        'centerlatitude',
-        'standardparallel1',
-        'standardparallel2',
-        'standardparallel',
-        'height',
-        'angle',
-        'shapem',
-        'shapen',
-        'parent',
-        'name',
-        'type',
-        'parameters',
         '_smajor',
         '_sminor',
         '_centralmeridian',
@@ -980,7 +946,8 @@ class Proj(object):
 
     def _setname(self, value):
         value = VCS_validation_functions.checkname(self, 'name', value)
-        self._name = value
+        if value is not None:
+            self._name = value
     name = property(_getname, _setname)
 
     def _settype(self, value):

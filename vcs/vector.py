@@ -21,10 +21,21 @@
 #
 #
 #
+from __future__ import print_function
 import vcs
-import VCS_validation_functions
+from . import VCS_validation_functions
 import cdtime
-from xmldocs import scriptdocs
+from .xmldocs import scriptdocs
+
+try:
+    basestring
+except NameError:
+    basestring = str
+
+try:
+    long  # noqa
+except Exception:
+    long = int
 
 
 def load(nm, json_dict={}):
@@ -36,7 +47,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates vector gm from it
     try:
         gm = Gv(nm)
-    except:
+    except Exception:
         gm = vcs.elements["vector"][nm]
     # process attributes with = as assignement
     for att in ["projection",
@@ -80,15 +91,15 @@ def process_src(nm, code):
         try:
             # int will be converted
             setattr(gm, nm, int(sp[1]))
-        except:
+        except Exception:
             try:
                 # int and floats will be converted
                 setattr(gm, nm, eval(sp[1]))
-            except:
+            except Exception:
                 # strings
                 try:
                     setattr(gm, nm, sp[1])
-                except:
+                except Exception:
                     pass  # oh well we stick to default value
     # Tl
     i = code.find("Tl")
@@ -105,7 +116,7 @@ def process_src(nm, code):
             except ValueError:
                 try:
                     gm.setLineAttributes(tlValue)
-                except:
+                except Exception:
                     pass
         # Datawc
         idwc = code.find(" datawc(")
@@ -145,13 +156,14 @@ def process_src(nm, code):
                     gm.datawc_calendar)
 
 
-class Gv(object):
+class Gv(vcs.bestMatch):
 
     """
     The vector graphics method displays a vector plot of a 2D vector field. Vectors
     are located at the coordinate locations and point in the direction of the data
-    vector field. Vector magnitudes are the product of data vector field lengths and
-    a scaling factor. The example below shows how to modify the vector's line, scale,
+    vector field. See scaletype for how the lengh of a vector on the screen is determined.
+
+    The example below shows how to modify the vector's line, scale,
     alignment, type, and reference.
 
     This class is used to define an vector table entry used in VCS, or it  can be
@@ -300,36 +312,7 @@ class Gv(object):
                 vc.reference=4
     """
     __slots__ = [
-        'name',
         'g_name',
-        'xaxisconvert',
-        'yaxisconvert',
-        'linecolor',
-        'linetype',
-        'linewidth',
-        'projection',
-        'xticlabels1',
-        'xticlabels2',
-        'yticlabels1',
-        'yticlabels2',
-        'xmtics1',
-        'xmtics2',
-        'ymtics1',
-        'ymtics2',
-        'datawc_x1',
-        'datawc_x2',
-        'datawc_y1',
-        'datawc_y2',
-        'datawc_timeunits',
-        'datawc_calendar',
-        'scale',
-        'alignment',
-        'type',
-        'reference',
-        'colormap',
-        'scaleoptions',
-        'scaletype',
-        'scalerange',
         '_name',
         '_xaxisconvert',
         '_yaxisconvert',
@@ -599,27 +582,13 @@ class Gv(object):
         self._linetype = value
     linetype = property(_getlinetype, _setlinetype)
 
-    def _getline(self):
-        print 'DEPRECATED: Use linetype or setLineAttributes instead.'
-        return self._linetype
-
-    def _setline(self, l):
-        import queries
-        print 'DEPRECATED: Use linetype or setLineAttributes instead.'
-        if (queries.isline(l) or
-                (isinstance(l, basestring) and l in vcs.elements["line"])):
-            l = vcs.elements["line"][l]
-            self.setLineAttributes(l)
-        else:
-            self._linetype = l
-
-    line = property(_getline, _setline)
-
     def setLineAttributes(self, line):
-        '''
+        """
         Set attributes linecolor, linewidth and linetype from line l.
         l can be a line name defined in vcs.elements or a line object
-        '''
+        :param line:
+        :return:
+        """
         vcs.setLineAttributes(self, line)
 
     def _gettype(self):
@@ -641,6 +610,15 @@ class Gv(object):
         self._alignment = value
     alignment = property(_getalignment, _setalignment)
 
+    """
+    One of the following strings:
+      off - No scaling is performed on the vector values
+      constant: vector value *  self.scale
+      normalize: vector value /  max_norm
+      constantNNormalize: vector value * self.scale / max_norm
+      linear: map [min_norm, max_norm] to self.scalerange
+      constantNLinear - map [min_norm, max_norm] to self.scalerange and then multiply by self.scale
+    """
     def _getscaletype(self):
         return self._scaletype
 
@@ -774,35 +752,35 @@ class Gv(object):
         self.yaxisconvert = yat
 
     def list(self):
-        print "", "----------Vector (Gv) member (attribute) listings ----------"
-        print "graphics method =", self.g_name
-        print "name =", self.name
-        print "projection =", self.projection
-        print "xticlabels1 =", self.xticlabels1
-        print "xticlabels2 =", self.xticlabels2
-        print "xmtics1 =", self.xmtics1
-        print "xmtics2 =", self.xmtics2
-        print "yticlabels1 =", self.yticlabels1
-        print "yticlabels2 =", self.yticlabels2
-        print "ymtics1 = ", self.ymtics1
-        print "ymtics2 = ", self.ymtics2
-        print "datawc_x1 =", self.datawc_x1
-        print "datawc_y1 = ", self.datawc_y1
-        print "datawc_x2 = ", self.datawc_x2
-        print "datawc_y2 = ", self.datawc_y2
-        print "datawc_timeunits = ", self.datawc_timeunits
-        print "datawc_calendar = ", self.datawc_calendar
-        print "xaxisconvert = ", self.xaxisconvert
-        print "yaxisconvert = ", self.yaxisconvert
-        print "line = ", self.line
-        print "linecolor = ", self.linecolor
-        print "linewidth = ", self.linewidth
-        print "scale = ", self.scale
-        print "alignment = ", self.alignment
-        print "type = ", self.type
-        print "reference = ", self.reference
-        print "scaletype = ", self.scaletype
-        print "scalerange = ", self.scalerange
+        print("---------- Vector (Gv) member (attribute) listings ----------")
+        print("graphics method =", self.g_name)
+        print("name =", self.name)
+        print("projection =", self.projection)
+        print("xticlabels1 =", self.xticlabels1)
+        print("xticlabels2 =", self.xticlabels2)
+        print("xmtics1 =", self.xmtics1)
+        print("xmtics2 =", self.xmtics2)
+        print("yticlabels1 =", self.yticlabels1)
+        print("yticlabels2 =", self.yticlabels2)
+        print("ymtics1 = ", self.ymtics1)
+        print("ymtics2 = ", self.ymtics2)
+        print("datawc_x1 =", self.datawc_x1)
+        print("datawc_y1 = ", self.datawc_y1)
+        print("datawc_x2 = ", self.datawc_x2)
+        print("datawc_y2 = ", self.datawc_y2)
+        print("datawc_timeunits = ", self.datawc_timeunits)
+        print("datawc_calendar = ", self.datawc_calendar)
+        print("xaxisconvert = ", self.xaxisconvert)
+        print("yaxisconvert = ", self.yaxisconvert)
+        print("line = ", self.line)
+        print("linecolor = ", self.linecolor)
+        print("linewidth = ", self.linewidth)
+        print("scale = ", self.scale)
+        print("alignment = ", self.alignment)
+        print("type = ", self.type)
+        print("reference = ", self.reference)
+        print("scaletype = ", self.scaletype)
+        print("scalerange = ", self.scalerange)
 
     ##########################################################################
     #                                                                           #
@@ -829,7 +807,7 @@ class Gv(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[
@@ -914,20 +892,19 @@ class Gv(object):
                 "%s.yaxisconvert = '%s'\n" %
                 (unique_name, self.yaxisconvert))
             # Unique attribute for vector
-            fp.write("%s.line = %s\n" % (unique_name, self.line))
+            fp.write("%s.linetype = %s\n" % (unique_name, self.linetype))
             fp.write("%s.linecolor = %s\n" % (unique_name, self.linecolor))
             fp.write("%s.linewidth = %s\n" % (unique_name, self.linewidth))
             fp.write("%s.scale = %s\n" % (unique_name, self.scale))
-            fp.write("%s.scaletype = %s\n" % (unique_name, self.scaletype))
+            fp.write("%s.scaletype = %s\n" % (unique_name, repr(self.scaletype)))
             fp.write("%s.scalerange = %s\n" % (unique_name, self.scalerange))
-            fp.write("%s.scaleoptions = %s\n" % (unique_name, self.scaleoptions))
             fp.write("%s.alignment = '%s'\n" % (unique_name, self.alignment))
             fp.write("%s.type = '%s'\n" % (unique_name, self.type))
-            fp.write("%s.reference = %s\n\n" % (unique_name, self.reference))
-            fp.write(
-                "%s.colormap = '%s'\n\n" %
-                (unique_name, repr(
-                    self.colormap)))
+            fp.write("%s.reference = %g\n\n" % (unique_name, self.reference))
+            if self.colormap is not None:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, repr(self.colormap)))
+            else:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, self.colormap))
         else:
             # Json type
             mode += "+"

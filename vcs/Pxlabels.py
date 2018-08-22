@@ -22,7 +22,9 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
+import vcs
 #############################################################################
 #                                                                           #
 # Template text (Pxl) Class.                                                #
@@ -30,7 +32,7 @@ import VCS_validation_functions
 #############################################################################
 
 
-class Pxl(object):
+class Pxl(vcs.bestMatch):
 
     """
     The Template text object allows the manipulation of line type, width, and color index.
@@ -107,10 +109,6 @@ class Pxl(object):
     #                                                                           #
     ##########################################################################
     __slots__ = [
-        "priority",
-        "y",
-        "texttable",
-        "textorientation",
         "member",
         "_priority",
         "_y",
@@ -134,7 +132,7 @@ class Pxl(object):
         if member == "xlabel1":
             self.y = 0.234999999404
         elif member == "xlabel2":
-            self.y = 0.870000004768
+            self.y = 0.880000004768
             self.priority = 0
 
     ##########################################################################
@@ -153,11 +151,11 @@ class Pxl(object):
     #                                                                           #
     ##########################################################################
     def list(self):
-        print "member = ", self.member
-        print "     priority =", self.priority
-        print "     y =", self.y
-        print "     texttable =", self.texttable
-        print "     textorientation =", self.textorientation
+        print("member = ", self.member)
+        print("     priority =", self.priority)
+        print("     y =", self.y)
+        print("     texttable =", self.texttable)
+        print("     textorientation =", self.textorientation)
 
 
 ##########################################################################

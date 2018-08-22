@@ -1,5 +1,5 @@
 from .pipeline2d import Pipeline2D
-import fillareautils
+from . import fillareautils
 
 import numpy
 import vcs
@@ -17,8 +17,8 @@ class BoxfillPipeline(Pipeline2D):
             set of ivars (at minimum, identify what the mappers are rendering).
     """
 
-    def __init__(self, gm, context_):
-        super(BoxfillPipeline, self).__init__(gm, context_)
+    def __init__(self, gm, context_, plot_keyargs):
+        super(BoxfillPipeline, self).__init__(gm, context_, plot_keyargs)
 
         self._contourLabels = None
         self._mappers = None
@@ -28,7 +28,11 @@ class BoxfillPipeline(Pipeline2D):
     def _updateScalarData(self):
         """Overrides baseclass implementation."""
         # Update data1 if this is a log10 boxfill:
-        data = self._originalData1
+        data = self._originalData1.clone()
+        X = self.convertAxis(data.getAxis(-1), "x")
+        Y = self.convertAxis(data.getAxis(-2), "y")
+        data.setAxis(-1, X)
+        data.setAxis(-2, Y)
         if self._gm.boxfill_type == "log10":
             data = numpy.ma.log10(data)
 
@@ -50,7 +54,7 @@ class BoxfillPipeline(Pipeline2D):
         self._contourLevels = self._gm.getlevels(self._scalarRange[0], self._scalarRange[1])
         self._contourLabels = self._gm.getlegendlabels(self._contourLevels)
         # Use consecutive colors:
-        self._contourColors = range(self._gm.color_1, self._gm.color_2 + 1)
+        self._contourColors = list(range(self._gm.color_1, self._gm.color_2 + 1))
 
     def _plotInternal(self):
         """Overrides baseclass implementation."""
@@ -68,7 +72,6 @@ class BoxfillPipeline(Pipeline2D):
 
         # And now we need actors to actually render this thing
         actors = []
-        patternActors = []
         cti = 0
         ctj = 0
         _colorMap = self.getColorMap()
@@ -78,10 +81,22 @@ class BoxfillPipeline(Pipeline2D):
             [self._template.data.x1, self._template.data.x2,
              self._template.data.y1, self._template.data.y2])
         dataset_renderer = None
-        xScale, yScale = (1, 1)
+        fareapixelspacing, fareapixelscale = self._patternSpacingAndScale()
+
         for mapper in self._mappers:
             act = vtk.vtkActor()
             act.SetMapper(mapper)
+
+            # create a new renderer for this mapper
+            # (we need one for each mapper because of camera flips)
+            # if not dataset_renderer:
+            dataset_renderer, xScale, yScale = self._context().fitToViewport(
+                act, vp,
+                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
+                geo=self._vtkGeoTransform,
+                priority=self._template.data.priority,
+                create_renderer=(dataset_renderer is None),
+                add_actor=(_style == "solid"))
 
             # TODO We shouldn't need this conditional branch, the 'else' body
             # should be used and GetMapper called to get the mapper as needed.
@@ -102,39 +117,23 @@ class BoxfillPipeline(Pipeline2D):
                         cti += 1
                     # Since pattern creation requires a single color, assuming the first
                     c = self.getColorIndexOrRGBA(_colorMap, tmpColors[cti][ctj])
+
                     patact = fillareautils.make_patterned_polydata(
                         mapper.GetInput(),
                         fillareastyle=_style,
                         fillareaindex=self._customBoxfillArgs["tmpIndices"][cti],
                         fillareacolors=c,
                         fillareaopacity=self._customBoxfillArgs["tmpOpacities"][cti],
-                        size=(x2 - x1, y2 - y1))
+                        fillareapixelspacing=fareapixelspacing,
+                        fillareapixelscale=fareapixelscale,
+                        size=self._context().renWin.GetSize(),
+                        renderer=dataset_renderer)
 
                     ctj += 1
 
                     if patact is not None:
-                        patternActors.append(patact)
-
-            # create a new renderer for this mapper
-            # (we need one for each mapper because of camera flips)
-            dataset_renderer, xScale, yScale = self._context().fitToViewport(
-                act, vp,
-                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSet.GetBounds(),
-                geo=self._vtkGeoTransform,
-                priority=self._template.data.priority,
-                create_renderer=(dataset_renderer is None))
-
-        for act in patternActors:
-            if self._vtkGeoTransform is None:
-                # If using geofilter on wireframed does not get wrapped not sure
-                # why so sticking to many mappers
-                self._context().fitToViewport(
-                    act, vp,
-                    wc=plotting_dataset_bounds, geoBounds=self._vtkDataSet.GetBounds(),
-                    geo=self._vtkGeoTransform,
-                    priority=self._template.data.priority,
-                    create_renderer=True)
-                actors.append([act, plotting_dataset_bounds])
+                        dataset_renderer.AddActor(patact)
+                        actors.append([patact, plotting_dataset_bounds])
 
         self._resultDict["vtk_backend_actors"] = actors
 
@@ -146,6 +145,7 @@ class BoxfillPipeline(Pipeline2D):
         kwargs = {"vtk_backend_grid": self._vtkDataSet,
                   "dataset_bounds": self._vtkDataSetBounds,
                   "plotting_dataset_bounds": plotting_dataset_bounds,
+                  "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
                   "vtk_backend_geo": self._vtkGeoTransform}
         if ("ratio_autot_viewport" in self._resultDict):
             kwargs["ratio_autot_viewport"] = vp
@@ -185,6 +185,10 @@ class BoxfillPipeline(Pipeline2D):
             patternArgs['style'] = self._gm.fillareastyle
             patternArgs['index'] = self._gm.fillareaindices
             patternArgs['opacity'] = self._gm.fillareaopacity
+            # Compensate for the different viewport size of the colorbar
+            patternArgs['pixelspacing'] = [int(fareapixelspacing[0] / (vp[1] - vp[0])),
+                                           int(fareapixelspacing[1] / (vp[3] - vp[2]))]
+            patternArgs['pixelscale'] = fareapixelscale / (vp[1] - vp[0])
 
         self._resultDict.update(
             self._context().renderColorBar(self._template, self._contourLevels,
@@ -193,16 +197,14 @@ class BoxfillPipeline(Pipeline2D):
                                            self.getColorMap(),
                                            **patternArgs))
 
-        if self._context().canvas._continents is None:
-            self._useContinents = False
-        if self._useContinents:
-            projection = vcs.elements["projection"][self._gm.projection]
-            continents_renderer, xScale, yScale = self._context().plotContinents(
-                plotting_dataset_bounds, projection,
-                self._dataWrapModulo,
-                vp, self._template.data.priority,
-                vtk_backend_grid=self._vtkDataSet,
-                dataset_bounds=self._vtkDataSetBounds)
+        projection = vcs.elements["projection"][self._gm.projection]
+        kwargs['xaxisconvert'] = self._gm.xaxisconvert
+        kwargs['yaxisconvert'] = self._gm.yaxisconvert
+        if self._data1.getAxis(-1).isLongitude() and self._data1.getAxis(-2).isLatitude():
+            self._context().plotContinents(self._plot_kargs.get("continents", self._useContinents),
+                                           plotting_dataset_bounds, projection,
+                                           self._dataWrapModulo,
+                                           vp, self._template.data.priority, **kwargs)
 
     def _plotInternalBoxfill(self):
         """Implements the logic to render a non-custom boxfill."""

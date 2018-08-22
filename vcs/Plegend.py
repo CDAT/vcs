@@ -22,7 +22,9 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
+import vcs
 
 #############################################################################
 #                                                                           #
@@ -31,7 +33,7 @@ import VCS_validation_functions
 #############################################################################
 
 
-class Pls(object):
+class Pls(vcs.bestMatch):
 
     """
     The Template text object allows the manipulation of line type, width, and color index.
@@ -106,12 +108,6 @@ class Pls(object):
     #                                                                           #
     ##########################################################################
     __slots__ = [
-        "priority",
-        "x1",
-        "x2",
-        "y1",
-        "y2",
-        "line",
         "member",
         "_priority",
         "_x1",
@@ -121,11 +117,7 @@ class Pls(object):
         "_line",
         "_texttable",
         "_textorientation",
-        "texttable",
-        "textorientation",
-        "offset",
         "_offset",
-        "arrow",
         "_arrow",
     ]
 
@@ -174,16 +166,16 @@ class Pls(object):
     #                                                                           #
     ##########################################################################
     def list(self):
-        print "member = ", self.member
-        print "     priority =", self.priority
-        print "     x1 =", self.x1
-        print "     y1 =", self.y1
-        print "     x2 =", self.x2
-        print "     y2 =", self.y2
-        print "     line =", self.line
-        print "     texttable =", self.texttable
-        print "     textorientation =", self.textorientation
-        print "     offset =", self.offset
+        print("member = ", self.member)
+        print("     priority =", self.priority)
+        print("     x1 =", self.x1)
+        print("     y1 =", self.y1)
+        print("     x2 =", self.x2)
+        print("     y2 =", self.y2)
+        print("     line =", self.line)
+        print("     texttable =", self.texttable)
+        print("     textorientation =", self.textorientation)
+        print("     offset =", self.offset)
 
 
 ##########################################################################

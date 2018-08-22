@@ -21,10 +21,17 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
 import cdtime
-import xmldocs
+from . import xmldocs
 import vcs
+
+
+try:
+    basestring
+except NameError:
+    basestring = str
 
 
 def load(nm, json_dict={}):
@@ -37,7 +44,7 @@ def process_src(nm, code, typ):
     onm = nm + ""
     try:
         gm = G1d(nm)
-    except:
+    except Exception:
         gm = vcs.elements["1d"][nm]
     # process attributes with = as assignement
     for att in ["projection",
@@ -67,15 +74,15 @@ def process_src(nm, code, typ):
         try:
             # int will be converted
             setattr(gm, nm, int(sp[1]))
-        except:
+        except Exception:
             try:
                 # int and floats will be converted
                 setattr(gm, nm, eval(sp[1]))
-            except:
+            except Exception:
                 # strings
                 try:
                     setattr(gm, nm, sp[1])
-                except:
+                except Exception:
                     pass  # oh well we stick to default value
     # Tl
     i = code.find("Tl")
@@ -92,7 +99,7 @@ def process_src(nm, code, typ):
             except ValueError:
                 try:
                     gm.setLineAttributes(tlValue)
-                except:
+                except Exception:
                     pass
     # Datawc
     idwc = code.find("datawc(")
@@ -142,7 +149,7 @@ def process_src(nm, code, typ):
         vcs.elements["scatter"][onm] = gm
 
 
-class G1d(object):
+class G1d(vcs.bestMatch):
 
     __doc__ = """
     This graphics method displays a line plot from 1D data array (i.e. a
@@ -323,37 +330,9 @@ class G1d(object):
     """ % (xmldocs.graphics_method_core, xmldocs.xaxisconvert, xmldocs.linedoc, xmldocs.markerdoc)
     colormap = VCS_validation_functions.colormap
     __slots__ = [
-        '__doc__',
-        'name',
         'info',
-        'colormap',
         '_colormap',
         'g_name',
-        'xaxisconvert',
-        'yaxisconvert',
-        'linecolor',
-        'linetype',
-        'linewidth',
-        'marker',
-        'markersize',
-        'markercolor',
-        'projection',
-        'xticlabels1',
-        'xticlabels2',
-        'yticlabels1',
-        'yticlabels2',
-        'xmtics1',
-        'xmtics2',
-        'ymtics1',
-        'ymtics2',
-        'datawc_x1',
-        'datawc_x2',
-        'datawc_y1',
-        'datawc_y2',
-        'datawc_timeunits',
-        'datawc_calendar',
-        'flip',
-        'smooth',
         '_name',
         '_xaxisconvert',
         '_yaxisconvert',
@@ -601,22 +580,6 @@ class G1d(object):
         self._linetype = value
     linetype = property(_getlinetype, _setlinetype)
 
-    def _getline(self):
-        print 'DEPRECATED: Use linetype or setLineAttributes instead.'
-        return self._linetype
-
-    def _setline(self, l):
-        import queries
-        print 'DEPRECATED: Use linetype or setLineAttributes instead.'
-        if (queries.isline(l) or
-                (isinstance(l, basestring) and l in vcs.elements["line"])):
-            l = vcs.elements["line"][l]
-            self.setLineAttributes(l)
-        else:
-            self._linetype = l
-
-    line = property(_getline, _setline)
-
     def setLineAttributes(self, line):
         '''
         Set attributes linecolor, linewidth and linetype from line l.
@@ -642,7 +605,7 @@ class G1d(object):
                 self,
                 'markersize',
                 value,
-                1,
+                0,
                 300)
         self._markersize = value
     markersize = property(_getmarkersize, _setmarkersize)
@@ -759,61 +722,61 @@ class G1d(object):
     def xticlabels(self, xtl1='', xtl2=''):
         self.xticlabels1 = xtl1
         self.xticlabels2 = xtl2
-    xticlabels.__doc__ = xmldocs.xticlabelsdoc
+    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name": "1d", "data": "f('u')"}
 
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
         self.xmtics2 = xmt2
-    xmtics.__doc__ = xmldocs.xmticsdoc
+    xmtics.__doc__ = xmldocs.xmticsdoc.format(name="1d")
 
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
         self.yticlabels2 = ytl2
-    yticlabels.__doc__ = xmldocs.yticlabelsdoc
+    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name": "1d", "data": "f('u')"}
 
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1
         self.ymtics2 = ymt2
-    ymtics.__doc__ = xmldocs.ymticsdoc
+    ymtics.__doc__ = xmldocs.ymticsdoc.format(name="1d")
 
     def datawc(self, dsp1=1e20, dsp2=1e20, dsp3=1e20, dsp4=1e20):
         self.datawc_y1 = dsp1
         self.datawc_y2 = dsp2
         self.datawc_x1 = dsp3
         self.datawc_x2 = dsp4
-    datawc.__doc__ = xmldocs.datawcdoc
+    datawc.__doc__ = xmldocs.datawcdoc.format(name="1d")
 
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Yxvsx (GYx) member (attribute) listings ----------"
-        print "graphics method =", self.g_name
-        print "name =", self.name
-        print "projection =", self.projection
-        print "xticlabels1 =", self.xticlabels1
-        print "xticlabels2 =", self.xticlabels2
-        print "xmtics1 =", self.xmtics1
-        print "xmtics2 =", self.xmtics2
-        print "yticlabels1 =", self.yticlabels1
-        print "yticlabels2 =", self.yticlabels2
-        print "ymtics1 = ", self.ymtics1
-        print "ymtics2 = ", self.ymtics2
-        print "datawc_x1 =", self.datawc_x1
-        print "datawc_y1 = ", self.datawc_y1
-        print "datawc_x2 = ", self.datawc_x2
-        print "datawc_y2 = ", self.datawc_y2
-        print "datawc_timeunits = ", self.datawc_timeunits
-        print "datawc_calendar = ", self.datawc_calendar
-        print "xaxisconvert = ", self.xaxisconvert
-        print "yaxisconvert = ", self.yaxisconvert
-        print "linetype = ", self.linetype
-        print "linecolor = ", self.linecolor
-        print "linewidth = ", self.linewidth
-        print "marker = ", self.marker
-        print "markercolor = ", self.markercolor
-        print "markersize = ", self.markersize
-        print "flip = ", self.flip
-    list.__doc__ = xmldocs.listdoc
+        print("---------- Yxvsx (GYx) member (attribute) listings ----------")
+        print("graphics method =", self.g_name)
+        print("name =", self.name)
+        print("projection =", self.projection)
+        print("xticlabels1 =", self.xticlabels1)
+        print("xticlabels2 =", self.xticlabels2)
+        print("xmtics1 =", self.xmtics1)
+        print("xmtics2 =", self.xmtics2)
+        print("yticlabels1 =", self.yticlabels1)
+        print("yticlabels2 =", self.yticlabels2)
+        print("ymtics1 = ", self.ymtics1)
+        print("ymtics2 = ", self.ymtics2)
+        print("datawc_x1 =", self.datawc_x1)
+        print("datawc_y1 = ", self.datawc_y1)
+        print("datawc_x2 = ", self.datawc_x2)
+        print("datawc_y2 = ", self.datawc_y2)
+        print("datawc_timeunits = ", self.datawc_timeunits)
+        print("datawc_calendar = ", self.datawc_calendar)
+        print("xaxisconvert = ", self.xaxisconvert)
+        print("yaxisconvert = ", self.yaxisconvert)
+        print("linetype = ", self.linetype)
+        print("linecolor = ", self.linecolor)
+        print("linewidth = ", self.linewidth)
+        print("marker = ", self.marker)
+        print("markercolor = ", self.markercolor)
+        print("markersize = ", self.markersize)
+        print("flip = ", self.flip)
+    list.__doc__ = xmldocs.listdoc.format(name="1d", parent="'default'")
 
     ###########################################################################
     #                                                                         #
@@ -840,7 +803,7 @@ class G1d(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[
@@ -886,25 +849,25 @@ class G1d(object):
                 (unique_name, self.yticlabels2))
             fp.write("%s.ymtics1 = '%s'\n" % (unique_name, self.ymtics1))
             fp.write("%s.ymtics2 = '%s'\n" % (unique_name, self.ymtics2))
-            if isinstance(self.datawc_x1, (int, long, float)):
+            if isinstance(self.datawc_x1, (int, float)):
                 fp.write("%s.datawc_x1 = %g\n" % (unique_name, self.datawc_x1))
             else:
                 fp.write(
                     "%s.datawc_x1 = '%s'\n" %
                     (unique_name, self.datawc_x1))
-            if isinstance(self.datawc_y1, (int, long, float)):
+            if isinstance(self.datawc_y1, (int, float)):
                 fp.write("%s.datawc_y1 = %g\n" % (unique_name, self.datawc_y1))
             else:
                 fp.write(
                     "%s.datawc_y1 = '%s'\n" %
                     (unique_name, self.datawc_y1))
-            if isinstance(self.datawc_x2, (int, long, float)):
+            if isinstance(self.datawc_x2, (int, float)):
                 fp.write("%s.datawc_x2 = %g\n" % (unique_name, self.datawc_x2))
             else:
                 fp.write(
                     "%s.datawc_x2 = '%s'\n" %
                     (unique_name, self.datawc_x2))
-            if isinstance(self.datawc_y2, (int, long, float)):
+            if isinstance(self.datawc_y2, (int, float)):
                 fp.write("%s.datawc_y2 = %g\n" % (unique_name, self.datawc_y2))
             else:
                 fp.write(
@@ -923,17 +886,17 @@ class G1d(object):
                 "%s.yaxisconvert = '%s'\n" %
                 (unique_name, self.yaxisconvert))
             # Unique attribute for yxvsx
-            fp.write("%s.linetype = %s\n" % (unique_name, self.linetype))
+            fp.write("%s.linetype = '%s'\n" % (unique_name, self.linetype))
             fp.write("%s.linecolor = %s\n" % (unique_name, self.linecolor))
             fp.write("%s.linewidth = %s\n" % (unique_name, self.linewidth))
-            fp.write("%s.marker = %s\n" % (unique_name, self.marker))
+            fp.write("%s.marker = '%s'\n" % (unique_name, self.marker))
             fp.write("%s.markercolor = %s\n" % (unique_name, self.markercolor))
             fp.write("%s.markersize = %s\n\n" % (unique_name, self.markersize))
-            fp.write("%s.flip = '%s'\n\n" % (unique_name, repr(self.flip)))
-            fp.write(
-                "%s.colormap = '%s'\n\n" %
-                (unique_name, repr(
-                    self.colormap)))
+            fp.write("%s.flip = %s\n\n" % (unique_name, repr(self.flip)))
+            if self.colormap is not None:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, repr(self.colormap)))
+            else:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, self.colormap))
         else:
             # Json type
             mode += "+"

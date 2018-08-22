@@ -21,10 +21,11 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import scriptdocs
+from .xmldocs import scriptdocs, listdoc
 
 
 def process_src(nm, code):
@@ -32,7 +33,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates oneD gm from it
     try:
         gm = Tm(nm)
-    except:
+    except Exception:
         gm = vcs.elements["marker"][nm]
     # process attributes with = as assignement
     for att in ["projection", ]:
@@ -49,15 +50,15 @@ def process_src(nm, code):
         try:
             # int will be converted
             setattr(gm, nm, int(sp[1]))
-        except:
+        except Exception:
             try:
                 # int and floats will be converted
                 setattr(gm, nm, eval(sp[1]))
-            except:
+            except Exception:
                 # strings
                 try:
                     setattr(gm, nm, sp[1])
-                except:
+                except Exception:
                     pass  # oh well we stick to default value
         # Datawc
         for att in ["mtyp", "msize", "mci", "vp", "wc"]:
@@ -71,10 +72,10 @@ def process_src(nm, code):
                 for v in vals:
                     try:  # int first
                         values.append(int(v))
-                    except:
+                    except Exception:
                         try:
                             values.append(float(v))
-                        except:
+                        except Exception:
                             values.append(v)
                 try:
                     if att == "mtyp":
@@ -89,7 +90,7 @@ def process_src(nm, code):
                         gm.worldcoordinate = values
                     else:
                         raise Exception("Unkwnow marker attribute: %s" % att)
-                except:
+                except Exception:
                     pass
         for att in ["x", "y"]:
             i = code.find(" %s(" % att)
@@ -105,7 +106,7 @@ def process_src(nm, code):
 # Marker (Tm) Class.                                                        #
 #                                                                           #
 #############################################################################
-class Tm(object):
+class Tm(vcs.bestMatch):
 
     """
     The Marker object allows the manipulation of marker type, size, and color index.
@@ -113,6 +114,10 @@ class Tm(object):
     This class is used to define an marker table entry used in VCS, or it
     can be used to change some or all of the marker attributes in an
     existing marker table entry.
+
+    Markers are intended to be sized consistently across all plots and legends,
+    indepenent of plot size or world coordinate range.  The size attribute
+    sets the screen size (in "deci-pixels", see below) of the marker.
 
 
     .. describe:: Useful Functions:
@@ -151,7 +156,7 @@ class Tm(object):
                 mk.list()
                 # Range from 1 to 256
                 mk.color=100
-                # Range from 1 to 300
+                # Range from 1 to 300 (screen size, in "deci-pixels", i.e. marker size * 10 = size in pixels)
                 mk.size=100
 
         * Specify the marker type:
@@ -211,19 +216,11 @@ class Tm(object):
                 mk.x=[[0,.1,.2], [.3,.4,.5]]
                 # List of FloatTypes
                 mk.y=[[.5,.4,.3], [.2,.1,0]]
+
+        .. pragma: skip-doctest
         """
     __slots__ = [
         's_name',
-        'name',
-        'color',
-        'priority',
-        'type',
-        'size',
-        'viewport',
-        'worldcoordinate',
-        'x',
-        'y',
-        'colormap',
         '_name',
         '_color',
         '_priority',
@@ -357,7 +354,7 @@ class Tm(object):
                 self,
                 'x',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:
@@ -385,7 +382,7 @@ class Tm(object):
                 self,
                 'y',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:
@@ -429,24 +426,22 @@ class Tm(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Marker (Tm) member (attribute) listings ----------"
-        print "secondary method =", self.s_name
-        print "name =", self.name
-        print "type =", self.type
-        print "size =", self.size
-        print "color =", self.color
-        print "priority =", self.priority
-        print "viewport =", self.viewport
-        print "worldcoordinate =", self.worldcoordinate
-        print "x =", self.x
-        print "y =", self.y
-        print "projection =", self.projection
-        print "colormap =", self.colormap
+        print("---------- Marker (Tm) member (attribute) listings ----------")
+        print("secondary method =", self.s_name)
+        print("name =", self.name)
+        print("type =", self.type)
+        print("size =", self.size)
+        print("color =", self.color)
+        print("priority =", self.priority)
+        print("viewport =", self.viewport)
+        print("worldcoordinate =", self.worldcoordinate)
+        print("x =", self.x)
+        print("y =", self.y)
+        print("projection =", self.projection)
+        print("colormap =", self.colormap)
+    list.__doc__ = listdoc.format(name="marker", parent="")
 
     def script(self, script_filename=None, mode=None):
-        """
-        script.__doc__ = xmldocs.marker_script
-"""
         if (script_filename is None):
             raise ValueError(
                 'Error - Must provide an output script file name.')
@@ -466,7 +461,7 @@ class Tm(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[
@@ -487,30 +482,25 @@ class Tm(object):
                 fp.write("v=vcs.init()\n\n")
 
             unique_name = '__Tm__' + self.name
-            fp.write(
-                "#----------Marker (Tm) member (attribute) listings ----------\n")
+            fp.write("#----------Marker (Tm) member (attribute) listings ----------\n")
             fp.write("tm_list=v.listelements('marker')\n")
             fp.write("if ('%s' in tm_list):\n" % self.name)
             fp.write("   %s = v.getmarker('%s')\n" % (unique_name, self.name))
             fp.write("else:\n")
-            fp.write(
-                "   %s = v.createmarker('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.createmarker('%s')\n" % (unique_name, self.name))
             fp.write("%s.type = %s\n" % (unique_name, self.type))
             fp.write("%s.size = %s\n" % (unique_name, self.size))
             fp.write("%s.color = %s\n\n" % (unique_name, self.color))
             fp.write("%s.priority = %d\n" % (unique_name, self.priority))
             fp.write("%s.viewport = %s\n" % (unique_name, self.viewport))
-            fp.write(
-                "%s.worldcoordinate = %s\n" %
-                (unique_name, self.worldcoordinate))
+            fp.write("%s.worldcoordinate = %s\n" % (unique_name, self.worldcoordinate))
             fp.write("%s.x = %s\n" % (unique_name, self.x))
             fp.write("%s.y = %s\n" % (unique_name, self.y))
-            fp.write("%s.projection = %s\n" % (unique_name, self.projection))
-            fp.write(
-                "%s.colormap = '%s'\n\n" %
-                (unique_name, repr(
-                    self.colormap)))
+            fp.write("%s.projection = '%s'\n" % (unique_name, self.projection))
+            if self.colormap is not None:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, repr(self.colormap)))
+            else:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, self.colormap))
         else:
             # Json type
             mode += "+"

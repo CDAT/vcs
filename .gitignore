@@ -2,7 +2,9 @@
 *.egg-info
 build/
 docs/_build
+docs/doctest_info/
 dist/
 .idea/
 dist/
 vcs.egg-info/
+*.swp

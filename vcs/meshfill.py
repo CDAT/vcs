@@ -13,8 +13,9 @@
 # Version:      4.0							      #
 ###############################################################################
 
-import VCS_validation_functions
-import xmldocs
+from __future__ import print_function
+from . import VCS_validation_functions
+from . import xmldocs
 import cdtime
 import vcs
 
@@ -28,7 +29,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates meshfill gm from it
     try:
         g = Gfm(nm)
-    except:
+    except Exception:
         g = vcs.elements["meshfill"][nm]
     # process attributes with = as assignement
     for att in ["projection",
@@ -62,15 +63,15 @@ def process_src(nm, code):
         try:
             # int will be converted
             setattr(g, nm, int(sp[1]))
-        except:
+        except Exception:
             try:
                 # int and floats will be converted
                 setattr(g, nm, eval(sp[1]))
-            except:
+            except Exception:
                 # strings
                 try:
                     setattr(g, nm, sp[1])
-                except:
+                except Exception:
                     pass  # oh well we stick to default value
         # Datawc
         idwc = code.find(" datawc(")
@@ -123,7 +124,7 @@ def process_src(nm, code):
                     levs.append([float(sp[1][7:]), float(sp[2][7:])])
                     fa = sp[-1][3:]
                     fa = fa[:fa.find(")")]
-                    if fa not in vcs.elements["fillarea"].keys():
+                    if fa not in list(vcs.elements["fillarea"].keys()):
                         badfa = True
                         fai.append(fa)
                     else:
@@ -147,7 +148,7 @@ def process_src(nm, code):
 #                                                                           #
 #############################################################################
 # class Gfm(graphics_method_core):
-class Gfm(object):
+class Gfm(vcs.bestMatch):
 
     __doc__ = """
     The meshfill graphics method (Gfm) displays a two-dimensional data array
@@ -305,6 +306,8 @@ class Gfm(object):
     %s
     mesh :: (str/int) (0) Draws the mesh
     wrap :: ([float,float]) ([0.,0.]) Modulo to wrap around on either axis (automatically set to 360 for longitude axes)
+
+    .. pragma: skip-doctest
     """ % (xmldocs.graphics_method_core, xmldocs.meshfill_doc)
 
     ##########################################################################
@@ -314,38 +317,8 @@ class Gfm(object):
     ##########################################################################
     colormap = VCS_validation_functions.colormap
     __slots__ = [
-        '__doc__',
-        'name',
-        'colormap', '_colormap',
+        '_colormap',
         'g_name',
-        'xaxisconvert',
-        'yaxisconvert',
-        'levels',
-        'fillareacolors',
-        'fillareastyle',
-        'fillareaindices',
-        'fillareaopacity',
-        'ext_1',
-        'ext_2',
-        'missing',
-        'projection',
-        'xticlabels1',
-        'xticlabels2',
-        'yticlabels1',
-        'yticlabels2',
-        'xmtics1',
-        'xmtics2',
-        'ymtics1',
-        'ymtics2',
-        'datawc_x1',
-        'datawc_x2',
-        'datawc_y1',
-        'datawc_y2',
-        'wrap',
-        'mesh',
-        'legend',
-        'datawc_timeunits',
-        'datawc_calendar',
         '_name',
         '_xaxisconvert',
         '_yaxisconvert',
@@ -354,6 +327,8 @@ class Gfm(object):
         '_fillareastyle',
         '_fillareaindices',
         '_fillareaopacity',
+        '_fillareapixelspacing',
+        '_fillareapixelscale',
         '_ext_1',
         '_ext_2',
         '_missing',
@@ -436,6 +411,8 @@ class Gfm(object):
     fillareastyle = property(_getfillareastyle, _setfillareastyle)
 
     fillareaopacity = VCS_validation_functions.fillareaopacity
+    fillareapixelspacing = VCS_validation_functions.fillareapixelspacing
+    fillareapixelscale = VCS_validation_functions.fillareapixelscale
 
     ext_1 = VCS_validation_functions.ext_1
     ext_2 = VCS_validation_functions.ext_2
@@ -629,7 +606,7 @@ class Gfm(object):
 
         if not isinstance(Gfm_name, str):
             raise ValueError("meshfill name must be a string")
-        if Gfm_name in vcs.elements["meshfill"].keys():
+        if Gfm_name in list(vcs.elements["meshfill"].keys()):
             raise ValueError(
                 "meshfill graphic method '%s' already exists" %
                 Gfm_name)
@@ -659,6 +636,8 @@ class Gfm(object):
             self._fillareaindices = None
             self._fillareacolors = [1, ]
             self._fillareaopacity = []
+            self._fillareapixelspacing = None
+            self._fillareapixelscale = None
             self._levels = ([1.0000000200408773e+20, 1.0000000200408773e+20],)
             self._legend = None
             self._mesh = 0
@@ -669,7 +648,7 @@ class Gfm(object):
         else:
             if isinstance(Gfm_name_src, Gfm):
                 Gfm_name_src = Gfm_name_src.name
-            if Gfm_name_src not in vcs.elements["meshfill"].keys():
+            if Gfm_name_src not in list(vcs.elements["meshfill"].keys()):
                 raise ValueError(
                     "meshfill method '%s' does not exisits" %
                     Gfm_name_src)
@@ -678,19 +657,20 @@ class Gfm(object):
                         'xmtics1', 'xmtics2', 'yticlabels1', 'yticlabels2', 'ymtics1', 'ymtics2',
                         'datawc_y1', 'datawc_y2', 'datawc_x1',
                         'datawc_x2', 'xaxisconvert', 'yaxisconvert', 'missing', 'levels', 'ext_1', 'ext_2',
-                        'fillareastyle', 'fillareaindices', 'fillareacolors', 'fillareaopacity', 'legend',
-                        'datawc_timeunits', 'datawc_calendar']:
+                        'fillareastyle', 'fillareaindices', 'fillareacolors', 'fillareaopacity',
+                        'fillareapixelspacing', 'fillareapixelscale',
+                        'legend', 'datawc_timeunits', 'datawc_calendar']:
                 setattr(self, "_" + att, getattr(src, "_" + att))
         vcs.elements["meshfill"][Gfm_name] = self
 
     def colors(self, color1=16, color2=239):
-        self.fillareacolors = range(color1, color2)
-    colors.__doc__ = xmldocs.colorsdoc
+        self.fillareacolors = list(range(color1, color2))
+    colors.__doc__ = xmldocs.colorsdoc % {"name": "meshfill", "data": "array, array"}
 
     def exts(self, ext1='n', ext2='y'):
         self.ext_1 = ext1
         self.ext_2 = ext2
-    exts.__doc__ = xmldocs.extsdoc
+    exts.__doc__ = xmldocs.extsdoc.format(name="meshfill", data="array, array")
 
 #
 # Doesn't make sense to inherit. This would mean more coding in C.
@@ -699,34 +679,34 @@ class Gfm(object):
     def xticlabels(self, xtl1='', xtl2=''):
         self.xticlabels1 = xtl1
         self.xticlabels2 = xtl2
-    xticlabels.__doc__ = xmldocs.xticlabelsdoc
+    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name": "meshfill", "data": "f('u')"}
 
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
         self.xmtics2 = xmt2
-    xmtics.__doc__ = xmldocs.xmticsdoc
+    xmtics.__doc__ = xmldocs.xmticsdoc.format(name="meshfill")
 
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
         self.yticlabels2 = ytl2
-    yticlabels.__doc__ = xmldocs.yticlabelsdoc
+    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name": "meshfill", "data": "f('u')"}
 
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1
         self.ymtics2 = ymt2
-    ymtics.__doc__ = xmldocs.ymticsdoc
+    ymtics.__doc__ = xmldocs.xmticsdoc.format(name="meshfill")
 
     def datawc(self, dsp1=1e20, dsp2=1e20, dsp3=1e20, dsp4=1e20):
         self.datawc_y1 = dsp1
         self.datawc_y2 = dsp2
         self.datawc_x1 = dsp3
         self.datawc_x2 = dsp4
-    datawc.__doc__ = xmldocs.datawcdoc
+    datawc.__doc__ = xmldocs.datawcdoc.format(name="meshfill")
 
     def xyscale(self, xat='', yat=''):
         self.xaxisconvert = xat
         self.yaxisconvert = yat
-    xyscale.__doc__ = xmldocs.xyscaledoc % (('meshfill',) * 2)
+    xyscale.__doc__ = xmldocs.xyscaledoc.format(name='meshfill')
 
     ##########################################################################
     #                                                                           #
@@ -736,39 +716,39 @@ class Gfm(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print ' ---------- Meshfill (Gmf) member (attribute) listings ---------'
-        print 'graphics method =', self.g_name
-        print 'name =', self.name
-        print 'projection =', self.projection
-        print 'xticlabels1 =', self.xticlabels1
-        print 'xticlabels2 =', self.xticlabels2
-        print 'xmtics1 =', self.xmtics1
-        print 'xmtics2 =', self.xmtics2
-        print 'yticlabels1 =', self.yticlabels1
-        print 'yticlabels2 =', self.yticlabels2
-        print 'ymtics1 =', self.ymtics1
-        print 'ymtics2 =', self.ymtics2
-        print 'datawc_x1 =', self.datawc_x1
-        print 'datawc_y1 =', self.datawc_y1
-        print 'datawc_x2 =', self.datawc_x2
-        print 'datawc_y2 =', self.datawc_y2
-        print "datawc_timeunits = ", self.datawc_timeunits
-        print "datawc_calendar = ", self.datawc_calendar
-        print 'xaxisconvert =', self.xaxisconvert
-        print 'yaxisconvert =', self.yaxisconvert
-        print 'levels =', self.levels
-        print 'fillareacolors =', self.fillareacolors
-        print 'fillareastyle =', self.fillareastyle
-        print 'fillareaindices =', self.fillareaindices
-        print 'legend =', self.legend
-        print 'ext_1 =', self.ext_1
-        print 'ext_2 =', self.ext_2
-        print 'missing =', self.missing
-        print 'mesh =', self.mesh
-        print 'wrap =', self.wrap
-        print 'colormap = ', self.colormap
+        print('---------- Meshfill (Gmf) member (attribute) listings ----------')
+        print('graphics method =', self.g_name)
+        print('name =', self.name)
+        print('projection =', self.projection)
+        print('xticlabels1 =', self.xticlabels1)
+        print('xticlabels2 =', self.xticlabels2)
+        print('xmtics1 =', self.xmtics1)
+        print('xmtics2 =', self.xmtics2)
+        print('yticlabels1 =', self.yticlabels1)
+        print('yticlabels2 =', self.yticlabels2)
+        print('ymtics1 =', self.ymtics1)
+        print('ymtics2 =', self.ymtics2)
+        print('datawc_x1 =', self.datawc_x1)
+        print('datawc_y1 =', self.datawc_y1)
+        print('datawc_x2 =', self.datawc_x2)
+        print('datawc_y2 =', self.datawc_y2)
+        print("datawc_timeunits = ", self.datawc_timeunits)
+        print("datawc_calendar = ", self.datawc_calendar)
+        print('xaxisconvert =', self.xaxisconvert)
+        print('yaxisconvert =', self.yaxisconvert)
+        print('levels =', self.levels)
+        print('fillareacolors =', self.fillareacolors)
+        print('fillareastyle =', self.fillareastyle)
+        print('fillareaindices =', self.fillareaindices)
+        print('legend =', self.legend)
+        print('ext_1 =', self.ext_1)
+        print('ext_2 =', self.ext_2)
+        print('missing =', self.missing)
+        print('mesh =', self.mesh)
+        print('wrap =', self.wrap)
+        print('colormap = ', self.colormap)
         return
-    list.__doc__ = xmldocs.listdoc
+    list.__doc__ = xmldocs.listdoc.format(name="meshfill", parent="")
 
     ##########################################################################
     #                                                                           #
@@ -795,7 +775,7 @@ class Gfm(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[
@@ -816,92 +796,57 @@ class Gfm(object):
                 fp.write("v=vcs.init()\n\n")
 
             unique_name = '__Gfm__' + self.name
-            fp.write(
-                "#----------Meshfill (Gfm) member (attribute) listings ----------\n")
+            fp.write("#----------Meshfill (Gfm) member (attribute) listings ----------\n")
             fp.write("gfm_list=v.listelements('meshfill')\n")
             fp.write("if ('%s' in gfm_list):\n" % self.name)
-            fp.write(
-                "   %s = v.getmeshfill('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.getmeshfill('%s')\n" % (unique_name, self.name))
             fp.write("else:\n")
-            fp.write(
-                "   %s = v.createmeshfill('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.createmeshfill('%s')\n" % (unique_name, self.name))
             # Common core graphics method attributes
             fp.write("%s.projection = '%s'\n" % (unique_name, self.projection))
-            fp.write(
-                "%s.xticlabels1 = '%s'\n" %
-                (unique_name, self.xticlabels1))
-            fp.write(
-                "%s.xticlabels2 = '%s'\n" %
-                (unique_name, self.xticlabels2))
+            fp.write("%s.xticlabels1 = '%s'\n" % (unique_name, self.xticlabels1))
+            fp.write("%s.xticlabels2 = '%s'\n" % (unique_name, self.xticlabels2))
             fp.write("%s.xmtics1 = '%s'\n" % (unique_name, self.xmtics1))
             fp.write("%s.xmtics2 = '%s'\n" % (unique_name, self.xmtics2))
-            fp.write(
-                "%s.yticlabels1 = '%s'\n" %
-                (unique_name, self.yticlabels1))
-            fp.write(
-                "%s.yticlabels2 = '%s'\n" %
-                (unique_name, self.yticlabels2))
+            fp.write("%s.yticlabels1 = '%s'\n" % (unique_name, self.yticlabels1))
+            fp.write("%s.yticlabels2 = '%s'\n" % (unique_name, self.yticlabels2))
             fp.write("%s.ymtics1 = '%s'\n" % (unique_name, self.ymtics1))
             fp.write("%s.ymtics2 = '%s'\n" % (unique_name, self.ymtics2))
-            if isinstance(self.datawc_x1, (int, long, float)):
+            if isinstance(self.datawc_x1, (int, float)):
                 fp.write("%s.datawc_x1 = %g\n" % (unique_name, self.datawc_x1))
             else:
-                fp.write(
-                    "%s.datawc_x1 = '%s'\n" %
-                    (unique_name, self.datawc_x1))
-            if isinstance(self.datawc_y1, (int, long, float)):
+                fp.write("%s.datawc_x1 = '%s'\n" % (unique_name, self.datawc_x1))
+            if isinstance(self.datawc_y1, (int, float)):
                 fp.write("%s.datawc_y1 = %g\n" % (unique_name, self.datawc_y1))
             else:
-                fp.write(
-                    "%s.datawc_y1 = '%s'\n" %
-                    (unique_name, self.datawc_y1))
-            if isinstance(self.datawc_x2, (int, long, float)):
+                fp.write("%s.datawc_y1 = '%s'\n" % (unique_name, self.datawc_y1))
+            if isinstance(self.datawc_x2, (int, float)):
                 fp.write("%s.datawc_x2 = %g\n" % (unique_name, self.datawc_x2))
             else:
-                fp.write(
-                    "%s.datawc_x2 = '%s'\n" %
-                    (unique_name, self.datawc_x2))
-            if isinstance(self.datawc_y2, (int, long, float)):
+                fp.write("%s.datawc_x2 = '%s'\n" % (unique_name, self.datawc_x2))
+            if isinstance(self.datawc_y2, (int, float)):
                 fp.write("%s.datawc_y2 = %g\n" % (unique_name, self.datawc_y2))
             else:
-                fp.write(
-                    "%s.datawc_y2 = '%s'\n" %
-                    (unique_name, self.datawc_y2))
-            fp.write(
-                "%s.datawc_calendar = %g\n" %
-                (unique_name, self.datawc_calendar))
-            fp.write(
-                "%s.datawc_timeunits = '%s'\n\n" %
-                (unique_name, self.datawc_timeunits))
-            fp.write(
-                "%s.xaxisconvert = '%s'\n" %
-                (unique_name, self.xaxisconvert))
-            fp.write(
-                "%s.yaxisconvert = '%s'\n" %
-                (unique_name, self.yaxisconvert))
+                fp.write("%s.datawc_y2 = '%s'\n" % (unique_name, self.datawc_y2))
+            fp.write("%s.datawc_calendar = %g\n" % (unique_name, self.datawc_calendar))
+            fp.write("%s.datawc_timeunits = '%s'\n\n" % (unique_name, self.datawc_timeunits))
+            fp.write("%s.xaxisconvert = '%s'\n" % (unique_name, self.xaxisconvert))
+            fp.write("%s.yaxisconvert = '%s'\n" % (unique_name, self.yaxisconvert))
             # Unique attribute for meshfill
-            fp.write("%s.ext_1 = '%s'\n" % (unique_name, self.ext_1))
-            fp.write("%s.ext_2 = '%s'\n" % (unique_name, self.ext_2))
-            fp.write("%s.levels = '%s'\n" % (unique_name, self.levels))
-            fp.write(
-                "%s.fillareacolors = '%s'\n" %
-                (unique_name, self.fillareacolors))
-            fp.write(
-                "%s.fillareastyle = '%s'\n" %
-                (unique_name, self.fillareastyle))
-            fp.write(
-                "%s.fillareindices = '%s'\n" %
-                (unique_name, self.fillareaindices))
-            fp.write("%s.legend = '%s'\n" % (unique_name, self.legend))
-            fp.write("%s.mesh = '%s'\n" % (unique_name, self.mesh))
-            fp.write("%s.wrap = '%s'\n" % (unique_name, self.wrap))
-            fp.write("%s.missing = %g\n\n" % (unique_name, self.missing))
-            fp.write(
-                "%s.colormap = '%s'\n\n" %
-                (unique_name, repr(
-                    self.colormap)))
+            fp.write("%s.ext_1 = %s\n" % (unique_name, self.ext_1))
+            fp.write("%s.ext_2 = %s\n" % (unique_name, self.ext_2))
+            fp.write("%s.levels = %s\n" % (unique_name, self.levels))
+            fp.write("%s.fillareacolors = %s\n" % (unique_name, self.fillareacolors))
+            fp.write("%s.fillareastyle = '%s'\n" % (unique_name, self.fillareastyle))
+            fp.write("%s.fillareaindices = %s\n" % (unique_name, self.fillareaindices))
+            fp.write("%s.legend = %s\n" % (unique_name, self.legend))
+            fp.write("%s.mesh = %s\n" % (unique_name, self.mesh))
+            fp.write("%s.wrap = %s\n" % (unique_name, self.wrap))
+            fp.write("%s.missing = %s\n\n" % (unique_name, repr(self.missing)))
+            if self.colormap is not None:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, repr(self.colormap)))
+            else:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, self.colormap))
         else:
             # Json type
             mode += "+"

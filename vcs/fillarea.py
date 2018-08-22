@@ -22,10 +22,11 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import scriptdocs
+from .xmldocs import scriptdocs, listdoc
 
 
 def getmember(self, name):
@@ -35,7 +36,7 @@ def getmember(self, name):
 def process_src(nm, code):
     try:
         f = Tf(nm)
-    except:
+    except Exception:
         f = vcs.elements["fillarea"][nm]
     atts = {}
     if code.find("(") > -1:  # ok with have the keywords spelled out
@@ -55,10 +56,10 @@ def process_src(nm, code):
                 for V in v.split(","):
                     try:
                         vals.append(int(V))
-                    except:
+                    except Exception:
                         vals.append(float(V))
                     if a in ["fais"]:
-                        vals[-1] = vals[-1]-1
+                        vals[-1] = vals[-1] - 1
                 atts[a] = vals
     else:
         sp = code.split(",")
@@ -69,13 +70,13 @@ def process_src(nm, code):
 
     f.style = atts.get("fais", f.style)
     try:  # in case these are strings?
-        I = atts.get("fasi", f.index)
-        for i, v in enumerate(I):
+        Indx = atts.get("fasi", f.index)
+        for i, v in enumerate(Indx):
             if v == 0:
-                I[i] = 1
-    except:
+                Indx[i] = 1
+    except Exception:
         pass
-    f.index = I
+    f.index = Indx
     f.color = atts.get("faci", f.color)
     f.viewport = atts.get("vp", f.viewport)
     f.worldcoordinate = atts.get("wc", f.worldcoordinate)
@@ -85,8 +86,8 @@ def process_src(nm, code):
     if i > -1:
         j = code[i:].find(",") + i
         f.projection = code[i + 11:j]
-    for b in vcs.elements["boxfill"].values(
-    ) + vcs.elements["isofill"].values() + vcs.elements["meshfill"].values():
+    for b in list(vcs.elements["boxfill"].values(
+    )) + list(vcs.elements["isofill"].values()) + list(vcs.elements["meshfill"].values()):
         if b.fillareaindices is not None:
             for i, v in enumerate(b.fillareaindices):
                 if isinstance(v, str) and v == nm:
@@ -94,18 +95,18 @@ def process_src(nm, code):
                     b._fillareacolor[i] = f.color
                     b._fillareastyle = f.style
                     b._fillareaopacity = f.opacity
+                    b._fillareapixelspacing = f.pixelspacing
+                    b._fillareapixelscale = f.pixelscale
 
 #
 #
-# Fillarea (Tm) Class.                                                      #
+# Fillarea (Tf) Class.                                                      #
 #
 #
 
 
-class Tf(object):
-
-    """
-    The Fillarea class object allows the user to edit fillarea attributes, including
+class Tf(vcs.bestMatch):
+    """The Fillarea class allows the user to edit fillarea attributes, including
     fillarea interior style, style index, and color index.
 
     This class is used to define an fillarea table entry used in VCS, or it
@@ -190,21 +191,10 @@ class Tf(object):
                 # List of FloatTypes
                 fa.y=[[.5,.4,.3], [.2,.1,0]]
 
+        .. pragma: skip-doctest
         """
     __slots__ = [
-        'name',
         's_name',
-        'color',
-        'opacity',
-        'priority',
-        'style',
-        'index',
-        'viewport',
-        'worldcoordinate',
-        'x',
-        'y',
-        'projection',
-        'colormap',
         '_name',
         '_color',
         '_priority',
@@ -216,7 +206,9 @@ class Tf(object):
         '_y',
         '_projection',
         '_colormap',
-        '_opacity'
+        '_opacity',
+        '_pixelspacing',
+        '_pixelscale'
     ]
 
     colormap = VCS_validation_functions.colormap
@@ -294,6 +286,33 @@ class Tf(object):
         self._style = value
     style = property(_getfillareastyle, _setfillareastyle)
 
+    def _getfillareapixelspacing(self):
+        return getmember(self, 'pixelspacing')
+
+    def _setfillareapixelspacing(self, value):
+        if value is not None:
+            value = VCS_validation_functions.checkListOfNumbers(
+                self,
+                'pixelspacing',
+                value,
+                minelements=2,
+                maxelements=2,
+                ints=True)
+        self._pixelspacing = value
+    pixelspacing = property(_getfillareapixelspacing, _setfillareapixelspacing)
+
+    def _getfillareapixelscale(self):
+        return getmember(self, 'pixelscale')
+
+    def _setfillareapixelscale(self, value):
+        if value is not None:
+            value = VCS_validation_functions.checkNumber(
+                self,
+                'pixelscale',
+                value)
+        self._pixelscale = value
+    pixelscale = property(_getfillareapixelscale, _setfillareapixelscale)
+
     def _getpriority(self):
         return getmember(self, 'priority')
 
@@ -327,7 +346,7 @@ class Tf(object):
                 self,
                 'x',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:
@@ -352,7 +371,7 @@ class Tf(object):
                 self,
                 'y',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:
@@ -378,13 +397,13 @@ class Tf(object):
                     #
         if isinstance(Tf_name_src, Tf):
             Tf_name_src = Tf_name_src.name
-        if Tf_name_src != "default" and Tf_name_src not in vcs.elements[
-                "fillarea"].keys():
+        if Tf_name_src != "default" and Tf_name_src not in list(vcs.elements[
+                "fillarea"].keys()):
             raise ValueError("Fillarea '%s' does not exists" % Tf_name_src)
         if (Tf_name is None):
             raise ValueError('Must provide a fillarea name.')
         else:
-            if Tf_name in vcs.elements["fillarea"].keys():
+            if Tf_name in list(vcs.elements["fillarea"].keys()):
                 raise ValueError(
                     "The fillarea '%s' already exists, use getfillarea instead" %
                     Tf_name)
@@ -396,6 +415,8 @@ class Tf(object):
             self._index = [1, ]
             self._color = [1, ]
             self._opacity = []
+            self._pixelspacing = None
+            self._pixelscale = None
             self._priority = 1
             self._viewport = [0., 1., 0., 1.]
             self._worldcoordinate = [0., 1., 0., 1.]
@@ -409,6 +430,8 @@ class Tf(object):
             self.index = src.index
             self.color = src.color
             self.opacity = src.opacity
+            self.pixelspacing = src.pixelspacing
+            self.pixelscale = src.pixelscale
             self.priority = src.priority
             self.viewport = src.viewport
             self.worldcoordinate = src.worldcoordinate
@@ -427,20 +450,23 @@ class Tf(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Fillarea (Tf) member (attribute) listings ----------"
-        print "secondary method =", self.s_name
-        print "name =", self.name
-        print "style =", self.style
-        print "index =", self.index
-        print "color =", self.color
-        print "opacity =", self.opacity
-        print "priority =", self.priority
-        print "viewport =", self.viewport
-        print "worldcoordinate =", self.worldcoordinate
-        print "x =", self.x
-        print "y =", self.y
-        print "projection =", self.projection
-        print "colormap =", self.colormap
+        print("---------- Fillarea (Tf) member (attribute) listings ----------")
+        print("secondary method =", self.s_name)
+        print("name =", self.name)
+        print("style =", self.style)
+        print("index =", self.index)
+        print("color =", self.color)
+        print("opacity =", self.opacity)
+        print("pixelspacing =", self.pixelspacing)
+        print("pixelscale =", self.pixelscale)
+        print("priority =", self.priority)
+        print("viewport =", self.viewport)
+        print("worldcoordinate =", self.worldcoordinate)
+        print("x =", self.x)
+        print("y =", self.y)
+        print("projection =", self.projection)
+        print("colormap =", self.colormap)
+    list.__doc__ = listdoc.format(name="fillarea", parent="")
 
     #
     #
@@ -467,7 +493,7 @@ class Tf(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[
@@ -488,33 +514,28 @@ class Tf(object):
                 fp.write("v=vcs.init()\n\n")
 
             unique_name = '__Tf__' + self.name
-            fp.write(
-                "#----------Fillarea (Tf) member (attribute) listings ----------\n")
+            fp.write("#----------Fillarea (Tf) member (attribute) listings ----------\n")
             fp.write("tf_list=v.listelements('fillarea')\n")
             fp.write("if ('%s' in tf_list):\n" % self.name)
-            fp.write(
-                "   %s = v.getfillarea('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.getfillarea('%s')\n" % (unique_name, self.name))
             fp.write("else:\n")
-            fp.write(
-                "   %s = v.createfillarea('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.createfillarea('%s')\n" % (unique_name, self.name))
             fp.write("%s.style = %s\n" % (unique_name, self.style))
             fp.write("%s.index = %s\n" % (unique_name, self.index))
             fp.write("%s.color = %s\n\n" % (unique_name, self.color))
             fp.write("%s.opacity = %s\n\n" % (unique_name, self.opacity))
+            fp.write("%s.pixelspacing = %s\n\n" % (unique_name, self.pixelspacing))
+            fp.write("%s.pixelscale = %s\n\n" % (unique_name, self.pixelscale))
             fp.write("%s.priority = %d\n" % (unique_name, self.priority))
             fp.write("%s.viewport = %s\n" % (unique_name, self.viewport))
-            fp.write(
-                "%s.worldcoordinate = %s\n" %
-                (unique_name, self.worldcoordinate))
+            fp.write("%s.worldcoordinate = %s\n" % (unique_name, self.worldcoordinate))
             fp.write("%s.x = %s\n" % (unique_name, self.x))
             fp.write("%s.y = %s\n\n" % (unique_name, self.y))
-            fp.write("%s.projection = %s\n\n" % (unique_name, self.projection))
-            fp.write(
-                "%s.colormap = %s\n\n" %
-                (unique_name, repr(
-                    self.colormap)))
+            fp.write("%s.projection = '%s'\n\n" % (unique_name, self.projection))
+            if self.colormap is not None:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, repr(self.colormap)))
+            else:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, self.colormap))
         else:
             # Json type
             mode += "+"

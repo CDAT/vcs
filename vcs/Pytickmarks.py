@@ -22,7 +22,9 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
+import vcs
 #############################################################################
 #                                                                           #
 # Template text (Pyt) Class.                                                #
@@ -30,7 +32,7 @@ import VCS_validation_functions
 #############################################################################
 
 
-class Pyt(object):
+class Pyt(vcs.bestMatch):
 
     """
     The Template text object allows the manipulation of line type, width, and color index.
@@ -107,10 +109,6 @@ class Pyt(object):
     #                                                                           #
     ##########################################################################
     __slots__ = [
-        "line",
-        "priority",
-        "x1",
-        "x2",
         "member",
         "_line",
         "_priority",
@@ -157,11 +155,11 @@ class Pyt(object):
     #                                                                           #
     ##########################################################################
     def list(self):
-        print "member = ", self.member
-        print "     priority =", self.priority
-        print "     x1 =", self.x1
-        print "     x2 =", self.x2
-        print "     line =", self.line
+        print("member = ", self.member)
+        print("     priority =", self.priority)
+        print("     x1 =", self.x1)
+        print("     x2 =", self.x2)
+        print("     line =", self.line)
 
 
 ##########################################################################

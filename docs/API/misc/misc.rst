@@ -10,8 +10,8 @@ These are a variety of modules from VCS that help out with useful functionality.
     colormap
     colors
     displayplot
-    error
     manageElements
     queries
     utils
+    error
     vcshelp

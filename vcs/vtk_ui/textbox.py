@@ -1,6 +1,6 @@
-from text import Label, text_dimensions
+from .text import Label, text_dimensions
 from datetime import datetime, timedelta
-from line import Line
+from .line import Line
 import vtk
 
 

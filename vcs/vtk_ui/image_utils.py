@@ -1,6 +1,6 @@
 import math
 from vtk import vtkImageData, VTK_UNSIGNED_CHAR
-import text
+from . import text
 
 
 def load_image(image):
@@ -29,7 +29,7 @@ def load_image(image):
     except KeyError:
         raise ValueError(
             "image should refer to an image of one of these types: %s; provided %s" %
-            (readers.keys(), extension))
+            (list(readers.keys()), extension))
     return image
 
 
@@ -67,9 +67,9 @@ def transpose(image):
     components = image.GetNumberOfScalarComponents()
     data = img(h, w, components=components)
 
-    for col in xrange(w):
-        for row in xrange(h):
-            for component in xrange(components):
+    for col in range(w):
+        for row in range(h):
+            for component in range(components):
                 data.SetScalarComponentFromFloat(
                     row,
                     col,
@@ -91,8 +91,8 @@ def mirror(image, vertical=True):
     components = image.GetNumberOfScalarComponents()
     data = img(w, h, components=components)
 
-    for x in xrange(w):
-        for y in xrange(h):
+    for x in range(w):
+        for y in range(h):
             if vertical:
                 new_x = x
                 new_y = h - y - 1
@@ -100,7 +100,7 @@ def mirror(image, vertical=True):
                 new_x = w - x - 1
                 new_y = y
 
-            for c in xrange(components):
+            for c in range(components):
                 data.SetScalarComponentFromFloat(
                     new_x,
                     new_y,
@@ -143,7 +143,7 @@ def antialias_mask(mask, fade=.85, passes=3):
     # We'll use this mask to make the aliasing changes, so antialiased
     # cells don't effect their neighbors
 
-    for _ in xrange(passes):
+    for _ in range(passes):
         antialiased = [[] for col in mask]
 
         for col_ind, col in enumerate(mask):
@@ -180,7 +180,7 @@ def antialias_mask(mask, fade=.85, passes=3):
 
 
 def triangle_mask(width, height):
-    grid = [[0 for _ in xrange(height)] for _ in xrange(width)]
+    grid = [[0 for _ in range(height)] for _ in range(width)]
 
     for col_ind, col in enumerate(grid):
         if col_ind >= (width - 2) / 2.0:
@@ -198,7 +198,7 @@ def triangle_mask(width, height):
 
 
 def rounded_rect_mask(width, height, radius):
-    grid = [[1 for _ in xrange(height)] for _ in xrange(width)]
+    grid = [[1 for _ in range(height)] for _ in range(width)]
 
     for col_ind, col in enumerate(grid):
         if col_ind > radius and col_ind < width - radius:
@@ -259,7 +259,7 @@ def print_cols(cols):
         row = ""
         for col in cols:
             row = "%s %d" % (row, col[counter])
-        print row
+        print(row)
         counter += 1
 
 

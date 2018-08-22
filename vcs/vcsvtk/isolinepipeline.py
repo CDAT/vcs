@@ -10,8 +10,8 @@ class IsolinePipeline(Pipeline2D):
 
     """Implementation of the Pipeline interface for VCS isoline plots."""
 
-    def __init__(self, gm, context_):
-        super(IsolinePipeline, self).__init__(gm, context_)
+    def __init__(self, gm, context_, plot_keyargs):
+        super(IsolinePipeline, self).__init__(gm, context_, plot_keyargs)
         self._needsCellData = False
 
     def extendAttribute(self, attributes, default):
@@ -58,26 +58,26 @@ class IsolinePipeline(Pipeline2D):
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
 
-        for i, l in enumerate(self._contourLevels):
+        for i, lv_tmp in enumerate(self._contourLevels):
             if i == 0:
                 W = linewidth[i]
                 S = linetype[i]
                 C = [self._contourColors[i]]
-                if l == 1.e20:
+                if lv_tmp == 1.e20:
                     L = [-1.e20]
                 else:
-                    L = [l]
+                    L = [lv_tmp]
             else:
                 if W == linewidth[i] and S == linetype[i]:
                     # Ok same style and width, lets keep going
-                    L.append(l)
+                    L.append(lv_tmp)
                     C.append(self._contourColors[i])
                 else:
                     tmpLevels.append(L)
                     tmpColors.append(C)
                     tmpLineWidths.append(W)
                     tmpLineTypes.append(S)
-                    L = [l]
+                    L = [lv_tmp]
                     C = [self._contourColors[i]]
                     W = linewidth[i]
                     S = linetype[i]
@@ -176,7 +176,7 @@ class IsolinePipeline(Pipeline2D):
                         elif vcs.queries.istextorientation(tc):
                             to = tc.name
                             tt = "default"
-                        elif isinstance(tc, (str, unicode)):
+                        elif isinstance(tc, str):
                             sp = tc.split(":::")
                             if len(sp) == 2:
                                 tt = sp[0]
@@ -257,7 +257,7 @@ class IsolinePipeline(Pipeline2D):
             # (we need one for each mapper because of cmaera flips)
             dataset_renderer, xScale, yScale = self._context().fitToViewport(
                 act, vp,
-                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSet.GetBounds(),
+                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
                 geo=self._vtkGeoTransform,
                 priority=self._template.data.priority,
                 create_renderer=(dataset_renderer is None))
@@ -283,7 +283,7 @@ class IsolinePipeline(Pipeline2D):
             # (we need one for each mapper because of cmaera flips)
             self._context().fitToViewport(
                 act, vp,
-                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSet.GetBounds(),
+                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
                 geo=self._vtkGeoTransform,
                 priority=self._template.data.priority,
                 create_renderer=True)
@@ -298,6 +298,7 @@ class IsolinePipeline(Pipeline2D):
         kwargs = {"vtk_backend_grid": self._vtkDataSet,
                   "dataset_bounds": self._vtkDataSetBounds,
                   "plotting_dataset_bounds": plotting_dataset_bounds,
+                  "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
                   "vtk_backend_geo": self._vtkGeoTransform}
         if ("ratio_autot_viewport" in self._resultDict):
             kwargs["ratio_autot_viewport"] = vp
@@ -306,13 +307,11 @@ class IsolinePipeline(Pipeline2D):
             self._data1,
             self._gm, t, z, **kwargs))
 
-        if self._context().canvas._continents is None:
-            self._useContinents = False
-        if self._useContinents:
-            projection = vcs.elements["projection"][self._gm.projection]
-            continents_renderer, xScale, yScale = self._context().plotContinents(
-                plotting_dataset_bounds, projection,
-                self._dataWrapModulo,
-                vp, self._template.data.priority,
-                vtk_backend_grid=self._vtkDataSet,
-                dataset_bounds=self._vtkDataSetBounds)
+        projection = vcs.elements["projection"][self._gm.projection]
+        kwargs['xaxisconvert'] = self._gm.xaxisconvert
+        kwargs['yaxisconvert'] = self._gm.yaxisconvert
+        if self._data1.getAxis(-1).isLongitude() and self._data1.getAxis(-2).isLatitude():
+            self._context().plotContinents(self._plot_kargs.get("continents", self._useContinents),
+                                           plotting_dataset_bounds, projection,
+                                           self._dataWrapModulo,
+                                           vp, self._template.data.priority, **kwargs)

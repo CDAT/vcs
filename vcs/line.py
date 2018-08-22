@@ -22,16 +22,17 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
 import vcs
 import genutil
-from xmldocs import scriptdocs
+from .xmldocs import scriptdocs, listdoc
 
 
 def process_src(nm, code):
     try:
         f = Tl(nm)
-    except:
+    except Exception:
         f = vcs.elements["line"][nm]
     atts = {}
     # ltyp: line type
@@ -49,10 +50,10 @@ def process_src(nm, code):
             for V in v.split(","):
                 try:
                     vals.append(int(V))
-                except:
+                except Exception:
                     vals.append(float(V))
             atts[a] = vals
-    if "lci" not in atts.keys():
+    if "lci" not in list(atts.keys()):
         sp = code.split(",")
         atts["lci"] = int(sp[2])
         atts["ltyp"] = abs(int(sp[0])-1)
@@ -70,10 +71,9 @@ def process_src(nm, code):
         f.projection = code[i + 11:j]
 
 
-class Tl(object):
+class Tl(vcs.bestMatch):
 
-    """
-    The Line object allows the manipulation of line type, width, color index,
+    """The Line object allows the manipulation of line type, width, color index,
     view port, world coordinates, and (x,y) points.
 
     This class is used to define an line table entry used in VCS, or it
@@ -84,23 +84,22 @@ class Tl(object):
 
         .. code-block:: python
 
-            # VCS Canvas Constructor
-            a=vcs.init()
-            # Show predefined line objects
-            a.show('line')
-            # Will list all the line attribute values
-            ln.list()
-            # Updates the VCS Canvas at user's request
-            a.update()
+            >>> a=vcs.init() # VCS Canvas Constructor
+            >>> a.show('line') # Show predefined line objects
+            *******************Line Names List**********************
+            ...
+            *******************End Line Names List**********************
+            >>> a.getline('red').list() # show properties of 'red' line
+             ---------- ... ----------
+            ...
+            >>> a.update() # manually update canvas
 
     .. describe:: Create a new instance of line:
 
         .. code-block:: python
 
-            # Copies content of 'red' to 'new'
-            ln=a.createline('new','red')
-            # Copies content of 'default' to 'new'
-            ln=a.createline('new')
+            >>> ln=a.createline('new','red') # Copies 'red' to 'new'
+            >>> ln=a.createline('new2') # Copies 'default' to 'new2'
 
     .. describe:: Modify an existing line:
 
@@ -108,69 +107,50 @@ class Tl(object):
 
             .. code-block:: python
 
-                ln=a.getline('red')
+                >>> ln=a.getline('red')
 
         * Set line color:
 
             .. code-block:: python
 
-                # Range from 1 to 256
-                ln.color=100
+                >>> ln.color=100 # Range from 1 to 256
 
         * Set line width:
 
             .. code-block:: python
 
-                # Range from 1 to 300
-                ln.width=100
+                >>> ln.width=100 # Range from 1 to 300
 
         * Specify the line type:
 
             .. code-block:: python
 
-                # Same as ln.type=0
-                 ln.type='solid'
-                 # Same as ln.type=1
-                 ln.type='dash'
-                 # Same as ln.type=2
-                 ln.type='dot'
-                 # Same as ln.type=3
-                 ln.type='dash-dot'
-                 # Same as ln.type=4
-                 ln.type='long-dash'
+                >>> ln.type='solid' # Same as ln.type=0
+                >>> ln.type='dash' # Same as ln.type=1
+                >>> ln.type='dot' # Same as ln.type=2
+                >>> ln.type='dash-dot' # Same as ln.type=3
+                >>> ln.type='long-dash' # Same as ln.type=4
 
         * Set the graphics priority on the canvas:
 
             .. code-block:: python
 
-                ln.priority=1
-                # FloatType [0,1]x[0,1]
-                ln.viewport=[0, 1.0, 0,1.0]
-                # FloatType [#,#]x[#,#]
-                ln.worldcoordinate=[0,1.0,0,1.0]
+                >>> ln.priority=1
+                >>> ln.viewport=[0, 1.0, 0,1.0] # float [0,1]x[0,1]
+                >>> ln.worldcoordinate=[0,1.0,0,1.0] # float [#,#]x[#,#]
 
         * Set line x and y values:
 
             .. code-block:: python
 
-                # List of FloatTypes
-                ln.x=[[0,.1,.2], [.3,.4,.5]]
-                # List of FloatTypes
-                ln.y=[[.5,.4,.3], [.2,.1,0]]
+                >>> ln.x=[[0,.1,.2], [.3,.4,.5]] # List of floats
+                >>> ln.y=[[.5,.4,.3], [.2,.1,0]] # List of floats
+
+    .. ln.x and ln.y above cause ln to be unplottable. Need a better example.
+    .. Use doctests in this class as a model for converting other class docstrings to use doctests.
     """
     __slots__ = [
         's_name',
-        'name',
-        'color',
-        'priority',
-        'type',
-        'width',
-        'viewport',
-        'worldcoordinate',
-        'x',
-        'y',
-        'projection',
-        'colormap',
         '_color',
         '_priority',
         '_type',
@@ -292,7 +272,7 @@ class Tl(object):
                 self,
                 'x',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:
@@ -318,7 +298,7 @@ class Tl(object):
                 self,
                 'y',
                 value)
-        except:
+        except Exception:
             # ok it was not, so it maybe a list of list of numbers ?
             val = []
             for v in value:
@@ -343,7 +323,7 @@ class Tl(object):
                 # appropriate Python Object.                              #
                 ###########################################################
                 #                                                         #
-        if Tl_name in vcs.elements["line"].keys():
+        if Tl_name in list(vcs.elements["line"].keys()):
             raise ValueError("lineobject '%' already exists" % Tl_name)
         self._name = Tl_name
         if isinstance(Tl_name_src, Tl):
@@ -361,21 +341,21 @@ class Tl(object):
             self._y = None
             self._colormap = None
         else:
-            if Tl_name_src not in vcs.elements["line"].keys():
+            if Tl_name_src not in list(vcs.elements["line"].keys()):
                 raise ValueError(
                     "The line source '%s' does not exists" %
                     Tl_name_src)
             src = vcs.elements["line"][Tl_name_src]
-            self.type = src.type
-            self.projection = src.projection
-            self.width = src.width
-            self.color = src.color
-            self.priority = src.priority
-            self.viewport = src.viewport
-            self.worldcoordinate = src.worldcoordinate
-            self.x = src.x
-            self.y = src.y
-            self.colormap = src.colormap
+            self._type = src._type
+            self._projection = src._projection
+            self._width = src._width
+            self._color = src._color
+            self._priority = src._priority
+            self._viewport = src._viewport
+            self._worldcoordinate = src._worldcoordinate
+            self._x = src._x
+            self._y = src._y
+            self._colormap = src._colormap
         vcs.elements["line"][Tl_name] = self
 
     ##########################################################################
@@ -386,19 +366,20 @@ class Tl(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Line (Tl) member (attribute) listings ----------"
-        print "secondary method =", self.s_name
-        print "name =", self.name
-        print "type =", self.type
-        print "width =", self.width
-        print "color =", self.color
-        print "priority =", self.priority
-        print "viewport =", self.viewport
-        print "worldcoordinate =", self.worldcoordinate
-        print "x =", self.x
-        print "y =", self.y
-        print "projection =", self.projection
-        print "colormap =", self.colormap
+        print("---------- Line (Tl) member (attribute) listings ----------")
+        print("secondary method =", self.s_name)
+        print("name =", self.name)
+        print("type =", self.type)
+        print("width =", self.width)
+        print("color =", self.color)
+        print("priority =", self.priority)
+        print("viewport =", self.viewport)
+        print("worldcoordinate =", self.worldcoordinate)
+        print("x =", self.x)
+        print("y =", self.y)
+        print("projection =", self.projection)
+        print("colormap =", self.colormap)
+    list.__doc__ = listdoc.format(name="line", parent="")
 
     ##########################################################################
     #                                                                           #
@@ -406,9 +387,6 @@ class Tl(object):
     #                                                                           #
     ##########################################################################
     def script(self, script_filename=None, mode=None):
-        """
-        docstring moved to xmldocs
-"""
         if (script_filename is None):
             raise ValueError(
                 'Error - Must provide an output script file name.')
@@ -428,7 +406,7 @@ class Tl(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[
@@ -449,8 +427,7 @@ class Tl(object):
                 fp.write("v=vcs.init()\n\n")
 
             unique_name = '__Tl__' + self.name
-            fp.write(
-                "#----------Line (Tl) member (attribute) listings ----------\n")
+            fp.write("#----------Line (Tl) member (attribute) listings ----------\n")
             fp.write("tl_list=v.listelements('line')\n")
             fp.write("if ('%s' in tl_list):\n" % self.name)
             fp.write("   %s = v.getline('%s')\n" % (unique_name, self.name))
@@ -461,16 +438,14 @@ class Tl(object):
             fp.write("%s.color = %s\n" % (unique_name, self.color))
             fp.write("%s.priority = %d\n" % (unique_name, self.priority))
             fp.write("%s.viewport = %s\n" % (unique_name, self.viewport))
-            fp.write(
-                "%s.worldcoordinate = %s\n" %
-                (unique_name, self.worldcoordinate))
+            fp.write("%s.worldcoordinate = %s\n" % (unique_name, self.worldcoordinate))
             fp.write("%s.x = %s\n" % (unique_name, self.x))
             fp.write("%s.y = %s\n\n" % (unique_name, self.y))
-            fp.write("%s.projection = %s\n\n" % (unique_name, self.projection))
-            fp.write(
-                "%s.colormap = '%s'\n\n" %
-                (unique_name, repr(
-                    self.colormap)))
+            fp.write("%s.projection = '%s'\n\n" % (unique_name, self.projection))
+            if self.colormap is not None:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, repr(self.colormap)))
+            else:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, self.colormap))
         else:
             # Json type
             mode += "+"

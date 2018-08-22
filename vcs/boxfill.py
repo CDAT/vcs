@@ -12,18 +12,13 @@
 # Description:	Python command wrapper for VCS's boxfill graphics method.     #
 # Version:      5.0							      #
 ###############################################################################
-#
-#
-#
-###############################################################################
-#                                                                             #
-# Import: VCS C extension module.                                             #
-#                                                                             #
-###############################################################################
+
+
+from __future__ import print_function
 import vcs
 import cdtime
-import VCS_validation_functions
-import xmldocs
+from . import VCS_validation_functions
+from . import xmldocs
 import numpy
 import warnings
 
@@ -34,7 +29,7 @@ def process_src(nm, code):
 
     try:
         gm = Gfb(nm)
-    except:
+    except Exception:
         gm = vcs.elements["boxfill"][nm]
     # process attributes with = as assignement
     for att in ["projection",
@@ -49,6 +44,7 @@ def process_src(nm, code):
                 "color_1", "color_2",
                 "fillareastyle", "fillareaindices",
                 "fillareacolors", "fillareaopacity",
+                "fillareapixelspacing", "fillareapixelscale",
                 "legend",
                 "ext_1", "ext_2",
                 "missing",
@@ -73,15 +69,15 @@ def process_src(nm, code):
         try:
             # int will be converted
             setattr(gm, nm, int(sp[1]))
-        except:
+        except Exception:
             try:
                 # int and floats will be converted
                 setattr(gm, nm, eval(sp[1]))
-            except:
+            except Exception:
                 # strings
                 try:
                     setattr(gm, nm, sp[1])
-                except:
+                except Exception:
                     pass  # oh well we stick to default value
     # Datawc
     idwc = code.find("datawc(")
@@ -128,16 +124,14 @@ def process_src(nm, code):
 # class Gfb(graphics_method_core):
 
 
-class Gfb(object):
+class Gfb(vcs.bestMatch):
 
-    __doc__ = """
-    The boxfill graphics method (Gfb) displays a two-dimensional data array
-    by surrounding each data value by a colored grid box.
+    __doc__ = """The boxfill graphics method (Gfb) displays a two-dimensional
+    data array by surrounding each data value by a colored grid box.
 
     This class is used to define a boxfill table entry used in VCS, or it
     can be used to change some or all of the attributes in an existing
     boxfill table entry.
-
 
     .. describe:: General use of a boxfill:
 
@@ -304,89 +298,109 @@ class Gfb(object):
 
         * Attribute descriptions:
 
+            * Universally considered attributes:
 
-            .. py:attribute:: boxfill_type (str)
+                .. py:attribute:: boxfill_type (str)
 
-                Type of boxfill legend. One of 'linear', 'log10', or 'custom'. See examples above for usage.
+                    Type of boxfill legend. One of 'linear', 'log10', or 'custom'.
+                    See examples above for usage.
+                    Relevant attributes per type noted in attribute descriptions.
 
-            .. py:attribute:: level_1 (float)
+                .. py:attribute:: missing (int)
 
-                Used in conjunction with boxfill_type linear/log10. Sets the value of the legend's first level
+                    Color to use for missing value or values not in defined ranges.
 
-            .. py:attribute:: level_2 (float)
+            * boxfill_type 'linear'/'log10' relevant attributes:
 
-                Used in conjunction with boxfill_type linear/log10, sets the value of the legend's end level
+                .. py:attribute:: level_1 (float)
 
-            .. py:attribute:: color_1 (float)
+                    Used in conjunction with boxfill_type linear/log10.
+                    Sets the value of the legend's first level
 
-                Used in conjunction with boxfill_type linear/log10, sets the legend's color range first value
+                .. py:attribute:: level_2 (float)
 
-            .. py:attribute:: color_2 (float)
+                    Used in conjunction with boxfill_type linear/log10,
+                    sets the value of the legend's end level.
 
-                Used in conjunction with boxfill_type linear/log10, sets the legend's color range lasst value
+                .. py:attribute:: color_1 (float)
 
-            .. py:attribute:: levels (list of floats)
+                    Used in conjunction with boxfill_type linear/log10,
+                    sets the first value of the legend's color range.
 
-                Used in conjunction for boxfill_type custom, sets the levels range to use, can be
-                either a list of contiguous levels, or list of tuples indicating first
-                and last value of the range.
+                .. py:attribute:: color_2 (float)
 
-            .. py:attribte:: fillareacolors (list)
+                    Used in conjunction with boxfill_type linear/log10.
+                    Sets the last value of the legend's color range.
 
-                Used in conjunction for boxfill_type custom colors to use for each level
+                .. py:attribute:: legend ({float:str})
 
-            .. py:attribute:: legend ({float:str})
+                    Used in conjunction with boxfill_type linear/log10.
+                    replaces the legend values in the dictionary keys with their
+                    associated string.
 
-                Used in conjunction with boxfill_type linear/log10, replaces the
-                legend values in the dictionary keys with their associated string.
+                .. py:attribute:: ext_1 (str)
 
-            .. py:attribute:: ext_1 (str)
+                    Draws an extension arrow on right side of a boxfill
+                    (values less than first range value)
 
-                Draws an extension arrow on right side (values less than first range value)
+                .. py:attribute:: ext_2 (str)
 
-            .. py:attribute:: ext_2 (str)
+                    Draws an extension arrow on left side of a boxfill
+                    (values greater than last range value)
 
-                Draws an extension arrow on left side (values greater than last range value)
+            * boxfill_type 'custom' relevant attributes:
 
-            .. py:attribute:: missing (int)
+                .. py:attribute:: levels (list of floats)
 
-                Color to use for missing value or values not in defined ranges.
+                    Used in conjunction with boxfill_type custom.
+                    Sets the levels range to use.
+                    Can be either a list of contiguous levels, or list of tuples
+                    indicating first and last value of the range.
+
+                .. py:attribute:: fillareacolors (list)
+
+                    Used in conjunction with boxfill_type custom.
+                    Specifies colors to use for each level.
+
+            * More boxfill attributes:
 
             %s
+
+            .. pragma: skip-doctest
             """ % xmldocs.graphics_method_core  # noqa
 
     def rename(self, newname):
-        """
-        Renames the boxfill in the VCS name table.
+        """Renames the boxfill in the VCS name table.
 
         .. note::
 
             This function will not rename the 'default' boxfill.
-            If rename is called on the 'default' boxfill, newname is associated with default in the VCS name table,
-            but the boxfill's name will not be changed, and will behave in all ways as a 'default' boxfill.
+            If rename is called on the 'default' boxfill, newname is associated
+            with default in the VCS name table, but the boxfill's name will not
+            be changed, and will behave in all ways as a 'default' boxfill.
 
         :Example:
 
             .. doctest:: gfb_rename
 
-                >>> b=vcs.createboxfill()
-                >>> b.name
-                '...'
-                >>> vcs.listelements('boxfill') # list will include the name show above
-                [...]
+                >>> b=vcs.createboxfill('bar')
+                >>> l=vcs.listelements('boxfill') # list of boxfills
+                >>> 'bar' in l # shows l contains new boxfill
+                True
                 >>> b.rename('foo')
-                >>> b.name
-                'foo'
-                >>> vcs.listelements('boxfill') # list will include 'foo', but not the old name
-                [...'foo'...]
+                >>> l=vcs.listelements('boxfill') # new list of boxfills
+                >>> 'foo' in l # new name is in list
+                True
+                >>> 'bar' in l # old name is not
+                False
 
         :param newname: The new name you want given to the boxfill
-        :type newname:
+        :type newname: str
         """
         if newname == "default":
             raise Exception(
                 "You cannot overwrite the default boxfill graphic method")
-        if newname in vcs.elements["boxfill"].keys():
+        if newname in list(vcs.elements["boxfill"].keys()):
             raise Exception(
                 "Sorry %s boxfill graphic method already exists" %
                 newname)
@@ -401,43 +415,8 @@ class Gfb(object):
         return
 
     __slots__ = [
-        'colormap',
-        '_colormap',
-        '__doc__',
-        'name',
         'g_name',
-        'xaxisconvert',
-        'yaxisconvert',
-        'levels',
-        'fillareacolors',
-        'fillareastyle',
-        'fillareaindices',
-        'fillareaopacity',
-        'ext_1',
-        'ext_2',
-        'missing',
-        'projection',
-        'xticlabels1',
-        'xticlabels2',
-        'yticlabels1',
-        'yticlabels2',
-        'xmtics1',
-        'xmtics2',
-        'ymtics1',
-        'ymtics2',
-        'datawc_x1',
-        'datawc_x2',
-        'datawc_y1',
-        'datawc_y2',
-        'boxfill_type',
-        'color_1',
-        'color_2',
-        'level_1',
-        'level_2',
-        'legend',
-        'boxfill_type',
-        'datawc_timeunits',
-        'datawc_calendar',
+        '_colormap',
         '_name',
         '_xaxisconvert',
         '_yaxisconvert',
@@ -446,6 +425,8 @@ class Gfb(object):
         '_fillareastyle',
         '_fillareaindices',
         '_fillareaopacity',
+        '_fillareapixelspacing',
+        '_fillareapixelscale',
         '_ext_1',
         '_ext_2',
         '_missing',
@@ -470,7 +451,6 @@ class Gfb(object):
         '_level_2',
         '_datawc_timeunits',
         '_datawc_calendar',
-        'info',
     ]
     colormap = VCS_validation_functions.colormap
 # Removed from doc string
@@ -485,8 +465,8 @@ class Gfb(object):
         if isinstance(Gfb_name_src, Gfb):
             Gfb_name_src = Gfb_name_src.name
         if Gfb_name == "default" and Gfb_name_src != "default":
-            raise "You can not alter the 'default' boxfill method"
-        if Gfb_name in vcs.elements["boxfill"].keys():
+            raise Exception("You can not alter the 'default' boxfill method")
+        if Gfb_name in list(vcs.elements["boxfill"].keys()):
             raise Exception(
                 "Error boxfill method '%s' already exists" %
                 Gfb_name)
@@ -517,6 +497,8 @@ class Gfb(object):
             self._fillareaindices = [1, ]
             self._fillareaopacity = []
             self._fillareacolors = None
+            self._fillareapixelspacing = None
+            self._fillareapixelscale = None
             self._levels = ([1.e20, 1.e20])
             self._level_1 = 1.e20
             self._level_2 = 1.e20
@@ -552,6 +534,8 @@ class Gfb(object):
             self._fillareaindices = src.fillareaindices
             self._fillareacolors = src.fillareacolors
             self._fillareaopacity = src.fillareaopacity
+            self._fillareapixelspacing = src.fillareapixelspacing
+            self._fillareapixelscale = src.fillareapixelscale
             self._levels = src.levels
             self._level_1 = src.level_1
             self._level_2 = src.level_2
@@ -663,6 +647,8 @@ class Gfb(object):
     fillareastyle = property(_getfillareastyle, _setfillareastyle)
 
     fillareaopacity = VCS_validation_functions.fillareaopacity
+    fillareapixelspacing = VCS_validation_functions.fillareapixelspacing
+    fillareapixelscale = VCS_validation_functions.fillareapixelscale
 
     ext_1 = VCS_validation_functions.ext_1
     ext_2 = VCS_validation_functions.ext_2
@@ -809,12 +795,12 @@ class Gfb(object):
     def colors(self, color1=0, color2=255):
         self.color_1 = color1
         self.color_2 = color2
-    colors.__doc__ = xmldocs.colorsdoc
+    colors.__doc__ = xmldocs.colorsdoc % {"name": "boxfill", "data": "array"}
 
     def exts(self, ext1='n', ext2='y'):
         self.ext_1 = ext1
         self.ext_2 = ext2
-    exts.__doc__ = xmldocs.extsdoc
+    exts.__doc__ = xmldocs.extsdoc.format(name="boxfill", data="array")
 #
 # Doesn't make sense to inherit. This would mean more coding in C.
 # I put this code back.
@@ -823,39 +809,59 @@ class Gfb(object):
     def xticlabels(self, xtl1='', xtl2=''):
         self.xticlabels1 = xtl1
         self.xticlabels2 = xtl2
-    xticlabels.__doc__ = xmldocs.xticlabelsdoc
+    xticlabels.__doc__ = xmldocs.xticlabelsdoc % {"name": "boxfill", "data": "f('u')"}
 
     def xmtics(self, xmt1='', xmt2=''):
         self.xmtics1 = xmt1
         self.xmtics2 = xmt2
-    xmtics.__doc__ = xmldocs.xmticsdoc
+    xmtics.__doc__ = xmldocs.xmticsdoc.format(name="boxfill")
 
     def yticlabels(self, ytl1='', ytl2=''):
         self.yticlabels1 = ytl1
         self.yticlabels2 = ytl2
-    yticlabels.__doc__ = xmldocs.yticlabelsdoc
+    yticlabels.__doc__ = xmldocs.yticlabelsdoc % {"name": "boxfill", "data": "f('u')"}
 
     def ymtics(self, ymt1='', ymt2=''):
         self.ymtics1 = ymt1
         self.ymtics2 = ymt2
-    ymtics.__doc__ = xmldocs.ymticsdoc
+    ymtics.__doc__ = xmldocs.xmticsdoc.format(name="boxfill")
 
     def datawc(self, dsp1=1e20, dsp2=1e20, dsp3=1e20, dsp4=1e20):
-        """
-
-"""
         self.datawc_y1 = dsp1
         self.datawc_y2 = dsp2
         self.datawc_x1 = dsp3
         self.datawc_x2 = dsp4
-    datawc.__doc__ = xmldocs.datawcdoc
+    datawc.__doc__ = xmldocs.datawcdoc.format(name="boxfill")
 
     def xyscale(self, xat='linear', yat='linear'):
         self.xaxisconvert = xat
         self.yaxisconvert = yat
-    xyscale.__doc__ = xmldocs.xyscaledoc % (('boxfill',) * 2)
+    xyscale.__doc__ = xmldocs.xyscaledoc.format(name='boxfill')
 
     def getlevels(self, varmin, varmax):
+        """Given a minimum and a maximum, will generate levels for the boxfill
+        starting at varmin and ending at varmax.
+
+        :Example:
+
+            .. doctest:: boxfill_getlevels
+
+                >>> b=vcs.createboxfill()
+                >>> lvls = b.getlevels(0,100) # 257 levels from 0-100
+                >>> b.levels = list(lvls) # set boxfill's levels attribute
+
+        :param varmin: The smallest number desired for the boxfill's levels
+            attribute.
+        :type varmin: float
+
+        :param varmax: The largest number desired for the boxfill's levels
+            attribute.
+        :type varmin: float
+
+        :return: A numpy array of 257 floats, evenly distributed from varmin to
+            varmax.
+        :rtype: numpy.ndarray
+        """
         if self.boxfill_type == "custom":
             return self.levels
 
@@ -886,6 +892,8 @@ class Gfb(object):
             high_end += .00001
             return [low_end, high_end]
         float_epsilon = numpy.finfo(numpy.float32).eps
+        if float_epsilon > (high_end-low_end):
+            float_epsilon = numpy.finfo(numpy.float64).eps
         contourLevels = numpy.arange(low_end, high_end + float_epsilon, dx)
 
         return contourLevels
@@ -933,41 +941,43 @@ class Gfb(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Boxfill (Gfb) member (attribute) listings ----------"
-        print "graphics method =", self.g_name
-        print "name =", self.name
-        print "projection =", self.projection
-        print "xticlabels1 =", self.xticlabels1
-        print "xticlabels2 =", self.xticlabels2
-        print "xmtics1 =", self.xmtics1
-        print "xmtics2 =", self.xmtics2
-        print "yticlabels1 =", self.yticlabels1
-        print "yticlabels2 =", self.yticlabels2
-        print "ymtics1 = ", self.ymtics1
-        print "ymtics2 = ", self.ymtics2
-        print "datawc_x1 =", self.datawc_x1
-        print "datawc_y1 = ", self.datawc_y1
-        print "datawc_x2 = ", self.datawc_x2
-        print "datawc_y2 = ", self.datawc_y2
-        print "datawc_timeunits = ", self.datawc_timeunits
-        print "datawc_calendar = ", self.datawc_calendar
-        print "xaxisconvert = ", self.xaxisconvert
-        print "yaxisconvert = ", self.yaxisconvert
-        print "boxfill_type = ", self.boxfill_type
-        print "level_1 = ", self.level_1
-        print "level_2 = ", self.level_2
-        print "levels = ", self.levels
-        print "color_1 = ", self.color_1
-        print "color_2 = ", self.color_2
-        print "fillareacolors = ", self.fillareacolors
-        print "fillareastyle = ", self.fillareastyle
-        print "fillareaindices = ", self.fillareaindices
-        print "fillareaopacity = ", self.fillareaopacity
-        print "legend = ", self.legend
-        print "ext_1 = ", self.ext_1
-        print "ext_2 = ", self.ext_2
-        print "missing = ", self.missing
-    list.__doc__ = xmldocs.listdoc
+        print("---------- Boxfill (Gfb) member (attribute) listings ----------")
+        print("graphics method =", self.g_name)
+        print("name =", self.name)
+        print("projection =", self.projection)
+        print("xticlabels1 =", self.xticlabels1)
+        print("xticlabels2 =", self.xticlabels2)
+        print("xmtics1 =", self.xmtics1)
+        print("xmtics2 =", self.xmtics2)
+        print("yticlabels1 =", self.yticlabels1)
+        print("yticlabels2 =", self.yticlabels2)
+        print("ymtics1 = ", self.ymtics1)
+        print("ymtics2 = ", self.ymtics2)
+        print("datawc_x1 =", self.datawc_x1)
+        print("datawc_y1 = ", self.datawc_y1)
+        print("datawc_x2 = ", self.datawc_x2)
+        print("datawc_y2 = ", self.datawc_y2)
+        print("datawc_timeunits = ", self.datawc_timeunits)
+        print("datawc_calendar = ", self.datawc_calendar)
+        print("xaxisconvert = ", self.xaxisconvert)
+        print("yaxisconvert = ", self.yaxisconvert)
+        print("boxfill_type = ", self.boxfill_type)
+        print("level_1 = ", self.level_1)
+        print("level_2 = ", self.level_2)
+        print("levels = ", self.levels)
+        print("color_1 = ", self.color_1)
+        print("color_2 = ", self.color_2)
+        print("fillareacolors = ", self.fillareacolors)
+        print("fillareastyle = ", self.fillareastyle)
+        print("fillareaindices = ", self.fillareaindices)
+        print("fillareaopacity = ", self.fillareaopacity)
+        print("fillareapixelspacing = ", self.fillareapixelspacing)
+        print("fillareapixelscale = ", self.fillareapixelscale)
+        print("legend = ", self.legend)
+        print("ext_1 = ", self.ext_1)
+        print("ext_2 = ", self.ext_2)
+        print("missing = ", self.missing)
+    list.__doc__ = xmldocs.listdoc.format(name="boxfill", parent="")
     ###########################################################################
     #                                                                         #
     # Script out primary boxfill graphics method in VCS to a file.            #
@@ -994,7 +1004,7 @@ class Gfb(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[
@@ -1015,98 +1025,51 @@ class Gfb(object):
                 fp.write("v=vcs.init()\n\n")
 
             unique_name = '__Gfb__' + self.name
-            fp.write(
-                "#----------Boxfill (Gfb) member (attribute) listings ----------\n")
+            fp.write("#----------Boxfill (Gfb) member (attribute) listings ----------\n")
             fp.write("gfb_list=v.listelements('boxfill')\n")
             fp.write("if ('%s' in gfb_list):\n" % self.name)
             fp.write("   %s = v.getboxfill('%s')\n" % (unique_name, self.name))
             fp.write("else:\n")
-            fp.write(
-                "   %s = v.createboxfill('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.createboxfill('%s')\n" % (unique_name, self.name))
             # Common core graphics method attributes
             fp.write("%s.projection = '%s'\n" % (unique_name, self.projection))
-            fp.write(
-                "%s.xticlabels1 = '%s'\n" %
-                (unique_name, self.xticlabels1))
-            fp.write(
-                "%s.xticlabels2 = '%s'\n" %
-                (unique_name, self.xticlabels2))
+            fp.write("%s.xticlabels1 = '%s'\n" % (unique_name, self.xticlabels1))
+            fp.write("%s.xticlabels2 = '%s'\n" % (unique_name, self.xticlabels2))
             fp.write("%s.xmtics1 = '%s'\n" % (unique_name, self.xmtics1))
             fp.write("%s.xmtics2 = '%s'\n" % (unique_name, self.xmtics2))
-            fp.write(
-                "%s.yticlabels1 = '%s'\n" %
-                (unique_name, self.yticlabels1))
-            fp.write(
-                "%s.yticlabels2 = '%s'\n" %
-                (unique_name, self.yticlabels2))
+            fp.write("%s.yticlabels1 = '%s'\n" % (unique_name, self.yticlabels1))
+            fp.write("%s.yticlabels2 = '%s'\n" % (unique_name, self.yticlabels2))
             fp.write("%s.ymtics1 = '%s'\n" % (unique_name, self.ymtics1))
             fp.write("%s.ymtics2 = '%s'\n" % (unique_name, self.ymtics2))
-            if isinstance(self.datawc_x1, (int, long, float)):
+            if isinstance(self.datawc_x1, (int, float)):
                 fp.write("%s.datawc_x1 = %g\n" % (unique_name, self.datawc_x1))
             else:
-                fp.write(
-                    "%s.datawc_x1 = '%s'\n" %
-                    (unique_name, self.datawc_x1))
-            if isinstance(self.datawc_y1, (int, long, float)):
+                fp.write("%s.datawc_x1 = '%s'\n" % (unique_name, self.datawc_x1))
+            if isinstance(self.datawc_y1, (int, float)):
                 fp.write("%s.datawc_y1 = %g\n" % (unique_name, self.datawc_y1))
             else:
-                fp.write(
-                    "%s.datawc_y1 = '%s'\n" %
-                    (unique_name, self.datawc_y1))
-            if isinstance(self.datawc_x2, (int, long, float)):
+                fp.write("%s.datawc_y1 = '%s'\n" % (unique_name, self.datawc_y1))
+            if isinstance(self.datawc_x2, (int, float)):
                 fp.write("%s.datawc_x2 = %g\n" % (unique_name, self.datawc_x2))
             else:
-                fp.write(
-                    "%s.datawc_x2 = '%s'\n" %
-                    (unique_name, self.datawc_x2))
-            if isinstance(self.datawc_y2, (int, long, float)):
+                fp.write("%s.datawc_x2 = '%s'\n" % (unique_name, self.datawc_x2))
+            if isinstance(self.datawc_y2, (int, float)):
                 fp.write("%s.datawc_y2 = %g\n" % (unique_name, self.datawc_y2))
             else:
-                fp.write(
-                    "%s.datawc_y2 = '%s'\n" %
-                    (unique_name, self.datawc_y2))
-            fp.write(
-                "%s.xaxisconvert = '%s'\n" %
-                (unique_name, self.xaxisconvert))
-            fp.write(
-                "%s.yaxisconvert = '%s'\n" %
-                (unique_name, self.yaxisconvert))
+                fp.write("%s.datawc_y2 = '%s'\n" % (unique_name, self.datawc_y2))
+            fp.write("%s.xaxisconvert = '%s'\n" % (unique_name, self.xaxisconvert))
+            fp.write("%s.yaxisconvert = '%s'\n" % (unique_name, self.yaxisconvert))
             # Unique attribute for boxfill
-            fp.write(
-                "%s.boxfill_type = '%s'\n" %
-                (unique_name, self.boxfill_type))
+            fp.write("%s.boxfill_type = '%s'\n" % (unique_name, self.boxfill_type))
             fp.write("%s.level_1 = %g\n" % (unique_name, self.level_1))
             fp.write("%s.level_2 = %g\n" % (unique_name, self.level_2))
             fp.write("%s.levels = %s\n" % (unique_name, self.levels))
             fp.write("%s.color_1 = %g\n" % (unique_name, self.color_1))
             fp.write("%s.color_2 = %g\n" % (unique_name, self.color_2))
-            fp.write(
-                "%s.fillareacolors = %s\n" %
-                (unique_name, self.fillareacolors))
-            fp.write(
-                "%s.fillareastyle = '%s'\n" %
-                (unique_name, self.fillareastyle))
-            fp.write(
-                "%s.fillareaindices = %s\n" %
-                (unique_name, self.fillareaindices))
-            fp.write(
-                "%s.fillareaopacity = %s\n" %
-                (unique_name, self.fillareaopacity))
-            fp.write("%s.legend = %s\n" % (unique_name, self.legend))
-            fp.write("%s.ext_1 = '%s'\n" % (unique_name, self.ext_1))
-            fp.write("%s.ext_2 = '%s'\n" % (unique_name, self.ext_2))
-            fp.write("%s.missing = %g\n" % (unique_name, self.missing))
-            fp.write(
-                "%s.datawc_calendar = %g\n" %
-                (unique_name, self.datawc_calendar))
-            fp.write(
-                "%s.datawc_timeunits = '%s'\n\n" %
-                (unique_name, self.datawc_timeunits))
-            fp.write(
-                "%s.colormap = '%s'\n\n" %
-                (unique_name, repr(
-                    self.colormap)))
+            if self.colormap is not None:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, repr(self.colormap)))
+            else:
+                fp.write("%s.colormap = %s\n\n" % (unique_name, self.colormap))
         else:
             # Json type
             mode += "+"

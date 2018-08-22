@@ -22,9 +22,10 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
 import vcs
-from xmldocs import scriptdocs
+from .xmldocs import scriptdocs, listdoc
 
 
 def process_src(nm, code):
@@ -32,7 +33,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates boxfill gm from it
     try:
         to = To(nm)
-    except:
+    except Exception:
         to = vcs.elements["textorientation"][nm]
     # process attributes with = as assignement
     sp = code.split(",")
@@ -48,7 +49,7 @@ def process_src(nm, code):
 # Text Orientation (To) Class.                                              #
 #                                                                           #
 #############################################################################
-class To(object):
+class To(vcs.bestMatch):
 
     """
     The (To) Text Orientation lists text attribute set names that define the font, spacing,
@@ -151,15 +152,11 @@ class To(object):
                 to.valign='base'
                 # Same as tovalign=4
                 to.valign='bottom'
+
+    .. pragma: skip-doctest TODO: convert examples to doctests
     """
     __slots__ = [
         's_name',
-        'name',
-        'height',
-        'angle',
-        'path',
-        'halign',
-        'valign',
         '_name',
         '_height',
         '_angle',
@@ -211,17 +208,18 @@ class To(object):
             vals)
     path = property(_getpath, _setpath)
 
-    def _gethalign(self):
+    @property
+    def halign(self):
         return self._halign
 
-    def _sethalign(self, value):
+    @halign.setter
+    def halign(self, value):
         vals = ["left", "center", "right"]
         self._halign = VCS_validation_functions.checkInStringsListInt(
             self,
             'halign',
             value,
             vals)
-    halign = property(_gethalign, _sethalign)
 
     def _getvalign(self):
         return self._valign
@@ -250,7 +248,7 @@ class To(object):
         # back the appropriate Python Object.                       #
         #############################################################
         #                                                           #
-        if To_name in vcs.elements["textorientation"].keys():
+        if To_name in list(vcs.elements["textorientation"].keys()):
             raise ValueError(
                 "textorientation object '%' already exists" %
                 To_name)
@@ -265,16 +263,16 @@ class To(object):
             self._halign = "left"
             self._valign = "half"
         else:
-            if To_name_src not in vcs.elements["textorientation"].keys():
+            if To_name_src not in list(vcs.elements["textorientation"].keys()):
                 raise ValueError(
                     "source textorientation '%s' does not exists" %
                     To_name_src)
             src = vcs.elements["textorientation"][To_name_src]
-            self.height = src.height
-            self.angle = src.angle
-            self.path = src.path
-            self.halign = src.halign
-            self.valign = src.valign
+            self._height = src._height
+            self._angle = src._angle
+            self._path = src._path
+            self._halign = src._halign
+            self._valign = src._valign
         vcs.elements["textorientation"][To_name] = self
 
     ##########################################################################
@@ -285,14 +283,15 @@ class To(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Text Orientation (To) member (attribute) listings ----------"
-        print "secondary method =", self.s_name
-        print "name =", self.name
-        print "height =", self.height
-        print "angle =", self.angle
-        print "path =", self.path
-        print "halign =", self.halign
-        print "valign =", self.valign
+        print("---------- Text Orientation (To) member (attribute) listings ----------")
+        print("secondary method =", self.s_name)
+        print("name =", self.name)
+        print("height =", self.height)
+        print("angle =", self.angle)
+        print("path =", self.path)
+        print("halign =", self.halign)
+        print("valign =", self.valign)
+    list.__doc__ = listdoc.format(name="textorientation", parent="")
 
     ##########################################################################
     #                                                                           #
@@ -319,7 +318,7 @@ class To(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[
@@ -340,22 +339,26 @@ class To(object):
                 fp.write("v=vcs.init()\n\n")
 
             unique_name = '__To__' + self.name
-            fp.write(
-                "#----------Text Orientation (To) member (attribute) listings ----------\n")
+            fp.write("#----------Text Orientation (To) member (attribute) listings ----------\n")
             fp.write("to_list=v.listelements('textorientation')\n")
             fp.write("if ('%s' in to_list):\n" % self.name)
-            fp.write(
-                "   %s = v.gettextorientation('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.gettextorientation('%s')\n" % (unique_name, self.name))
             fp.write("else:\n")
-            fp.write(
-                "   %s = v.createtextorientation('%s')\n" %
-                (unique_name, self.name))
+            fp.write("   %s = v.createtextorientation('%s')\n" % (unique_name, self.name))
             fp.write("%s.height = %g\n" % (unique_name, self.height))
             fp.write("%s.angle = %g\n" % (unique_name, self.angle))
-            fp.write("%s.path = '%s'\n" % (unique_name, self.path))
-            fp.write("%s.halign = '%s'\n" % (unique_name, self.halign))
-            fp.write("%s.valign = '%s'\n\n" % (unique_name, self.valign))
+            if type(self.path) is str:
+                fp.write("%s.path = '%s'\n" % (unique_name, self.path))
+            else:
+                fp.write("%s.path = %s\n" % (unique_name, self.path))
+            if type(self.halign) is str:
+                fp.write("%s.halign = '%s'\n" % (unique_name, self.halign))
+            else:
+                fp.write("%s.halign = %s\n" % (unique_name, self.halign))
+            if type(self.valign) is str:
+                fp.write("%s.valign = '%s'\n\n" % (unique_name, self.valign))
+            else:
+                fp.write("%s.valign = %s\n\n" % (unique_name, self.valign))
             fp.close()
         else:
             # Json type

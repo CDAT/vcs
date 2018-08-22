@@ -4,6 +4,16 @@ import cdtime
 import numpy
 import genutil
 
+try:
+    basestring
+except NameError:
+    basestring = str
+
+try:
+    long  # noqa
+except Exception:
+    long = int
+
 
 class PPE(Exception):
 
@@ -23,9 +33,9 @@ class PPE(Exception):
 
 
 def color2vcs(col):
-    if isinstance(col, unicode):
+    if isinstance(col, basestring):
         col = str(col)
-    if isinstance(col, str):
+    if isinstance(col, basestring):
         r, g, b = genutil.colors.str2rgb(col)
         if r is None:
             raise ValueError("Invalid color: %s" % col)
@@ -97,7 +107,7 @@ def checkContinents(self, value):
         "river",
         "other7"]
     path = None
-    if isinstance(value, int):
+    if isinstance(value, (int, long)):
         if value == 0:
             path = None
         elif 0 < value < 7:
@@ -122,7 +132,7 @@ def checkContinents(self, value):
                                 "data_continent_other%d" % value)
             if not os.path.exists(path):
                 raise ValueError("Couldn't find continents file at %s" % path)
-    elif isinstance(value, (str, unicode)):
+    elif isinstance(value, basestring):
         if os.path.exists(os.path.expanduser(value)):
             path = value
         else:
@@ -140,16 +150,16 @@ def checkContType(self, name, value):
 
 def checkLine(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, basestring):
         value = str(value)
-    if not isinstance(value, (str, vcs.line.Tl)):
+    if not isinstance(value, (basestring, vcs.line.Tl)):
         checkedRaise(
             self,
             value,
             ValueError,
             name +
             ' must be an line primitive or the name of an exiting one.')
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         if value not in vcs.listelements('line'):
             checkedRaise(
                 self,
@@ -165,7 +175,7 @@ def checkLine(self, name, value):
 def isNumber(value, min=None, max=None):
     """ Checks if value is a Number, optionaly can check if min<value<max
     """
-    if not isinstance(value, (int, long, float, numpy.floating)):
+    if not isinstance(value, (int, float, long, numpy.int_, numpy.floating)):
         return False
     if min is not None and value < min:
         return -1
@@ -176,6 +186,11 @@ def isNumber(value, min=None, max=None):
 
 def checkNumber(self, name, value, minvalue=None, maxvalue=None):
     checkName(self, name, value)
+    if isinstance(value, numpy.ndarray) and value.ndim == 0 and not numpy.ma.is_masked(value):
+        try:
+            value = float(value)
+        except Exception:
+            pass
     n = isNumber(value, min=minvalue, max=maxvalue)
     if n is False:
         checkedRaise(self, value, ValueError, name + ' must be a number')
@@ -201,7 +216,7 @@ def checkNumber(self, name, value, minvalue=None, maxvalue=None):
 def checkInt(self, name, value, minvalue=None, maxvalue=None):
     checkName(self, name, value)
     n = checkNumber(self, name, value, minvalue=minvalue, maxvalue=maxvalue)
-    if not isinstance(n, int):
+    if not isinstance(n, (int, long)):
         checkedRaise(self, value, ValueError, name + ' must be an integer')
     return n
 
@@ -235,11 +250,12 @@ def checkListOfNumbers(self, name, value, minvalue=None,
             ' must have at most ' +
             str(maxelements) +
             ' elements')
-    for v in value:
+    value = list(value)
+    for i, v in enumerate(value):
         if ints:
             checkInt(self, name, v, minvalue=minvalue, maxvalue=maxvalue)
         else:
-            checkNumber(self, name, v, minvalue=minvalue, maxvalue=maxvalue)
+            value[i] = checkNumber(self, name, v, minvalue=minvalue, maxvalue=maxvalue)
     return list(value)
 
 
@@ -262,7 +278,7 @@ def checkFont(self, name, value):
         value = int(value)
         # try to see if font exists
         vcs.getfontname(value)
-    elif isinstance(value, str):
+    elif isinstance(value, basestring):
         value = vcs.getfontnumber(value)
     else:
         nms = vcs.listelements("font")
@@ -278,7 +294,7 @@ def checkFont(self, name, value):
 
 
 def checkMarker(self, name, value):
-    import queries
+    from . import queries
     checkName(self, name, value)
     oks = [
         None,
@@ -346,7 +362,7 @@ def checkMarker(self, name, value):
             value = 'square_fill'
         elif value in ('hurricane', 18):
             value = 'hurricane'
-        elif isinstance(value, str) and value[0] == "w" and int(value[1:]) in range(103):
+        elif isinstance(value, basestring) and value[0] == "w" and int(value[1:]) in range(103):
             value = value
         elif value in range(100, 203):
             value = "w%.2i" % (value - 100)
@@ -367,7 +383,7 @@ def checkMarker(self, name, value):
 
 def checkMarkersList(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, int):
+    if isinstance(value, (int, long)):
         value = list(value)
     value = checkListTuple(self, name, value)
     hvalue = []
@@ -420,7 +436,7 @@ def checkName(self, name, value):
 
 def checkname(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         if value != '__removed_from_VCS__':
             self.rename(self.name, value)
             return value
@@ -433,9 +449,9 @@ def checkname(self, name, value):
 
 def checkString(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         return value
-    elif isinstance(value, unicode):
+    elif isinstance(value, basestring):
         return str(value)
     else:
         checkedRaise(
@@ -462,7 +478,7 @@ def checkCallable(self, name, value):
 
 
 def checkFillAreaStyle(self, name, value):
-    import queries
+    from . import queries
     checkName(self, name, value)
     if ((value in ('solid', 'hatch', 'pattern', 'hallow', 0, 1, 2, 3)) or
             (queries.isfillarea(value) == 1)):
@@ -489,9 +505,9 @@ def checkFillAreaStyle(self, name, value):
 
 def checkAxisConvert(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str) and (
+    if isinstance(value, basestring) and (
             value.lower() in ('linear', 'log10', 'ln', 'exp', 'area_wt')):
         return value.lower()
     else:
@@ -506,9 +522,9 @@ def checkAxisConvert(self, name, value):
 
 def checkBoxfillType(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str) and (
+    if isinstance(value, basestring) and (
             value.lower() in ('linear', 'log10', 'custom')):
         return value.lower()
     elif value in [0, 1, 2]:
@@ -526,9 +542,9 @@ def checkBoxfillType(self, name, value):
 def checkIntFloat(self, name, value):
     try:
         value = value.tolist()  # converts MA/MV/numpy
-    except:
+    except Exception:
         pass
-    if isinstance(value, (int, float, numpy.floating)):
+    if isinstance(value, (int, long, float, numpy.int_, numpy.floating)):
         return float(value)
     else:
         checkedRaise(
@@ -549,6 +565,7 @@ def checkBoolean(self, name, value):
                  "The '%s' attribute must be either True of False, got %s."
                  % (name, value))
 
+
 fuzzy_boolean_true_strings = ['on', '1', 'true', 'y', 'yes']
 fuzzy_boolean_false_strings = ['off', '0', 'false', 'n', 'no']
 fuzzy_boolean_valid_value_string = "True/False, 'True'/'False', 1/0, " \
@@ -556,17 +573,17 @@ fuzzy_boolean_valid_value_string = "True/False, 'True'/'False', 1/0, " \
 
 
 def checkFuzzyBoolean(self, name, value):
-    """Checks if a value can be interpreted as true or false.
-
+    __doc__ = "Checks if a value can be interpreted as true or false.\n"
+    __doc__ += """
     Accepted values are %s.
     """ % fuzzy_boolean_valid_value_string
     checkName(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         if value.lower() in fuzzy_boolean_true_strings:
             return True
         elif value.lower() in fuzzy_boolean_false_strings:
             return False
-    elif isinstance(value, int):
+    elif isinstance(value, (int, long)):
         if value == 1:
             return True
         elif value == 0:
@@ -598,11 +615,11 @@ def checkOnOff(self, name, value, return_string=0):
     See also: checkFuzzyBoolean.
     """
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, basestring):
         value = str(value)
     if value is None:
         value = 0
-    elif isinstance(value, str):
+    elif isinstance(value, basestring):
         if value.lower() in ['on', '1', 'y', 'yes']:
             value = 1
         elif value.lower() in ['off', '0', 'n', 'no']:
@@ -654,11 +671,11 @@ def checkYesNo(self, name, value):
     See also: checkFuzzyBoolean.
     """
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, basestring):
         value = str(value)
     if value is None:
         value = 'n'
-    elif isinstance(value, str):
+    elif isinstance(value, basestring):
         if value.lower() in ['on', '1', 'y', 'yes']:
             value = 'y'
         elif value.lower() in ['off', '0', 'n', 'no']:
@@ -731,9 +748,9 @@ def checkListTuple(self, name, value):
 
 def checkColor(self, name, value, NoneOk=False):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         # Ok it is a string let's see if that is a valid color name
         r, g, b = vcs.str2rgb(value)
         if r is None:  # ok not a valid color
@@ -742,7 +759,7 @@ def checkColor(self, name, value, NoneOk=False):
         return r / 2.55, g / 2.55, b / 2.55, 100.
     if value is None and NoneOk:
         return value
-    if isinstance(value, int) and value in range(0, 256):
+    if isinstance(value, (int, long)) and value in range(0, 256):
         return value
     elif isinstance(value, (list, tuple)):  # for r,g,b,a tuples
         value = checkListOfNumbers(self, name, value,
@@ -796,9 +813,9 @@ def checkIsolineLevels(self, name, value):
 
 
 def checkIndex(self, name, value):
-    import queries
+    from . import queries
     checkName(self, name, value)
-    if ((value not in range(1, 21)) and
+    if ((value not in list(range(1, 21))) and
             (queries.isfillarea(value) == 0)):
         checkedRaise(
             self,
@@ -911,7 +928,7 @@ def checkLineType(self, name, value):
 
 def checkLineTypeList(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, int):
+    if isinstance(value, (int, long)):
         value = list(value)
     value = checkListTuple(self, name, value)
     hvalue = []
@@ -922,9 +939,9 @@ def checkLineTypeList(self, name, value):
 
 def checkTextTable(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         if value not in vcs.listelements("texttable"):
             checkedRaise(
                 self,
@@ -944,9 +961,9 @@ def checkTextTable(self, name, value):
 
 def checkTextOrientation(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         if value not in vcs.listelements("textorientation"):
             checkedRaise(
                 self,
@@ -966,9 +983,9 @@ def checkTextOrientation(self, name, value):
 
 
 def checkTextsList(self, name, value, storeName=False):
-    import queries
+    from . import queries
     checkName(self, name, value)
-    if isinstance(value, int):
+    if isinstance(value, (int, long)):
         value = list(value)
     value = checkListTuple(self, name, value)
     hvalue = []
@@ -981,7 +998,7 @@ def checkTextsList(self, name, value, storeName=False):
             hvalue.append(v)
         elif queries.istextcombined(v):
             hvalue.append(v)
-        elif isinstance(v, str):
+        elif isinstance(v, basestring):
             if v in vcs.listelements("textcombined"):
                 if storeName:
                     hvalue.append(vcs.gettextcombined(v).name)
@@ -1015,7 +1032,7 @@ def checkLegend(self, name, value):
     elif isNumber(value):
         try:
             value = value.tolist()
-        except:
+        except Exception:
             pass
         return {value: repr(value)}
     elif isinstance(value, (list, tuple)):
@@ -1032,7 +1049,7 @@ def checkLegend(self, name, value):
         return ret
     elif value is None:
         return None
-    elif isinstance(value, str):  # ok maybe a vcs list
+    elif isinstance(value, basestring):  # ok maybe a vcs list
         return value
     else:
         checkedRaise(
@@ -1043,33 +1060,12 @@ def checkLegend(self, name, value):
             name +
             ' attribute should be a dictionary, a list of number or the name of a vcs list')
 
-# def checkListTupleDictionaryNone(self,name,value):
-# checkName(self,name,value)
-# if isinstance(value,int) or isinstance(value,float) \
-# or isinstance(value,list) or isinstance(value,tuple) or isinstance(value,dict):
-# if isinstance(value,int) or isinstance(value,float):
-# value=list((value,))
-# elif isinstance(value,list) or isinstance(value,tuple):
-# value=list(value)
-# if isinstance(value,list):
-# d={}
-# for i in range(len(value)):
-# d[value[i]]=repr(value[i])
-# else:
-# d=value
-# return d
-# elif value is None:
-# return value
-# else:
-# checkedRaise(self,value,ValueError, 'The '+name+' attribute must be a
-# List, Tuple, Dictionary, or None'
-
 
 def checkExt(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         if value.strip().lower() in ('y', "yes",):
             return True
         elif value.strip().lower() in ('n', "no",):
@@ -1103,9 +1099,9 @@ def checkProjection(self, name, value):
     checkName(self, name, value)
     if isinstance(value, vcs.projection.Proj):
         return value.name
-    elif isinstance(value, (str, unicode)):
+    elif isinstance(value, basestring):
         value = str(value)
-        if value not in vcs.elements["projection"].keys():
+        if value not in list(vcs.elements["projection"].keys()):
             checkedRaise(
                 self,
                 value,
@@ -1127,7 +1123,7 @@ def checkTicks(self, name, value):
     if value is None:
         value = ""
     value = checkStringDictionary(self, name, value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         if value.strip() in ["", "*"]:
             return value.strip()
         if value not in vcs.elements["list"]:
@@ -1142,9 +1138,9 @@ def checkTicks(self, name, value):
 
 def checkStringDictionary(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, basestring):
         return str(value)
-    elif isinstance(value, str) or isinstance(value, dict):
+    elif isinstance(value, basestring) or isinstance(value, dict):
         return value
     else:
         checkedRaise(
@@ -1182,16 +1178,15 @@ def DMS2deg(val):
     mn = float(s[3:6])
     sec = float(s[6:9])
     r = val - ival
-# print deg,mn,sec,r
     return deg + mn / 60. + sec / 3600. + r / 3600.
 
 
 def checkProjParameters(self, name, value):
     if self._type > 200 and self._type < 400:
         try:
-            import vcs2vtk
+            from . import vcs2vtk
             return vcs2vtk.checkProjParameters(self, name, value)
-        except:
+        except Exception:
             pass
     if not (isinstance(value, list) or isinstance(value, tuple)):
         checkedRaise(
@@ -1210,11 +1205,9 @@ def checkProjParameters(self, name, value):
             if (not(i == 3 and (self.type in [9, 15, 20, 22, 30])) and
                 (not(i == 4 and (self.type == 20 or (self.type == 22 and value[12] == 1) or
                                  self.type == 30)))):
-                # print i,value[i]
                 value[i] = deg2DMS(value[i])
     for i in range(8, 12):
         if self._type in [20, 30] and abs(value[i]) < 10000:
-            # print i,value[i]
             value[i] = deg2DMS(value[i])
     return value
 
@@ -1244,18 +1237,18 @@ def checkCalendar(self, name, value):
 
 def checkTimeUnits(self, name, value):
     checkName(self, name, value)
-    if isinstance(value, unicode):
+    if isinstance(value, basestring):
         value = str(value)
-    if not isinstance(value, str):
+    if not isinstance(value, basestring):
         checkedRaise(self, value, ValueError, 'time units must be a string')
     a = cdtime.reltime(1, 'days since 1900')
     try:
         a.torel(value)
-    except:
+    except Exception:
         checkedRaise(self, value, ValueError, value + ' is invalid time units')
     sp = value.split('since')[1]
     b = cdtime.s2c(sp)
-    if b == cdtime.comptime(0, 1):
+    if b.cmp(cdtime.comptime(0, 1)) == 0:
         checkedRaise(self, value, ValueError, sp + ' is invalid date')
     return value
 
@@ -1264,12 +1257,12 @@ def checkDatawc(self, name, value):
     checkName(self, name, value)
     if isNumber(value):
         value = float(value), 0
-    elif isinstance(value, str):
+    elif isinstance(value, basestring):
         t = cdtime.s2c(value)
-        if t != cdtime.comptime(0, 1):
+        if t.cmp(cdtime.comptime(0, 1)) != 0:
             t = t.torel(self.datawc_timeunits, self.datawc_calendar)
             value = float(t.value), 1
-        else:
+        else:  # Bad string led to 0-1-1
             checkedRaise(
                 self,
                 value,
@@ -1310,9 +1303,9 @@ def checkInStringsListInt(self, name, value, values):
                 str1 = str1 + "'" + v + "', "
             i = i + 1
     err = str1[:-2] + ')' + str2[:-2] + ')'
-    if isinstance(value, unicode):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = value.lower()
         if value not in val:
             checkedRaise(self, value, ValueError, err)
@@ -1338,9 +1331,9 @@ def checkProjType(self, name, value):
     checkName(self, name, value)
     if vcs.queries.isprojection(value):
         value = value.type
-    if isinstance(value, unicode):
+    if isinstance(value, basestring):
         value = str(value)
-    if isinstance(value, str):
+    if isinstance(value, basestring):
         value = value.strip().lower()
         if value in ['utm', 'state plane']:
             checkedRaise(
@@ -1350,7 +1343,7 @@ def checkProjType(self, name, value):
                 "Projection Type: " +
                 value +
                 " not supported yet")
-    if -3 <= value < 0:
+    if isinstance(value, (int, long)) and (-3 <= value < 0):
         return value
 
     if self._type == - \
@@ -1432,9 +1425,9 @@ def checkProjType(self, name, value):
         # VTK BACKEND
         checkedvalue = "THAT DID NOT WORK"
         try:
-            import vcs2vtk
+            from . import vcs2vtk
             checkedvalue = vcs2vtk.checkProjType(self, name, value)
-        except:
+        except Exception:
             pass
         if checkedvalue == "THAT DID NOT WORK":
             checkedRaise(self, value, Exception, err)
@@ -1619,8 +1612,9 @@ def getProjType(self):
     elif value == -3:
         return "polar (non gctp)"
     elif 200 < value < 400:
-        import vcs2vtk
+        from . import vcs2vtk
         return vcs2vtk.getProjType(value)
+
 
 proj_ok_parameters = {
     'smajor': [[3, 4, 5, 6, 7, 8, 9, 20, 22, 23], 0, []],
@@ -1665,7 +1659,7 @@ def setProjParameter(self, name, value):
     checkName(self, name, value)
     param = self.parameters
     ok = proj_ok_parameters
-    for nm in ok.keys():
+    for nm in list(ok.keys()):
         vals = ok[nm]
         oktypes = vals[0]
         position = vals[1]
@@ -1715,7 +1709,7 @@ def _getpriority(self):
 
 def _setpriority(self, value):
     self._priority = checkInt(self, "priority", value)
-priority = property(_getpriority, _setpriority)
+priority = property(_getpriority, _setpriority)  # noqa
 
 
 @property
@@ -1757,7 +1751,7 @@ def _getX2(self):
 
 def _setX2(self, value):
     self._x2 = checkNumber(self, "x2", value, 0., 1.)
-x2 = property(_getX2, _setX2, "x position in % of page")
+x2 = property(_getX2, _setX2, "x position in % of page")  # noqa
 
 
 def _getX(self):
@@ -1766,7 +1760,7 @@ def _getX(self):
 
 def _setX(self, value):
     self._x = checkNumber(self, "x", value, 0., 1.)
-x = property(_getX, _setX, "x position in % of page")
+x = property(_getX, _setX, "x position in % of page")  # noqa
 
 
 def _getY1(self):
@@ -1775,7 +1769,7 @@ def _getY1(self):
 
 def _setY1(self, value):
     self._y1 = checkNumber(self, "y1", value, 0., 1.)
-y1 = property(_getY1, _setY1, "y1 position in % of page")
+y1 = property(_getY1, _setY1, "y1 position in % of page")  # noqa
 
 
 def _getY2(self):
@@ -1784,7 +1778,7 @@ def _getY2(self):
 
 def _setY2(self, value):
     self._y2 = checkNumber(self, "y2", value, 0., 1.)
-y2 = property(_getY2, _setY2, "y2 position in % of page")
+y2 = property(_getY2, _setY2, "y2 position in % of page")  # noqa
 
 
 def _getY(self):
@@ -1793,7 +1787,7 @@ def _getY(self):
 
 def _setY(self, value):
     self._y = checkNumber(self, "y", value, 0., 1.)
-y = property(_getY, _setY, "y position in % of page")
+y = property(_getY, _setY, "y position in % of page")  # noqa
 
 
 def _gettexttable(self):
@@ -1802,7 +1796,7 @@ def _gettexttable(self):
 
 def _settextable(self, value):
     self._texttable = checkTextTable(self, "textable", value)
-texttable = property(_gettexttable, _settextable, "texttable")
+texttable = property(_gettexttable, _settextable, "texttable")  # noqa
 
 
 def _gettextorientation(self):
@@ -1811,10 +1805,7 @@ def _gettextorientation(self):
 
 def _settexorientation(self, value):
     self._textorientation = checkTextOrientation(self, "texorientation", value)
-textorientation = property(
-    _gettextorientation,
-    _settexorientation,
-    "textorientation")
+textorientation = property(_gettextorientation, _settexorientation, "textorientation")  # noqa
 
 
 def _getLine(self):
@@ -1823,7 +1814,7 @@ def _getLine(self):
 
 def _setLine(self, value):
     self._line = checkLine(self, "line", value)
-line = property(_getLine, _setLine, "line properties")
+line = property(_getLine, _setLine, "line properties")  # noqa
 
 
 def _getcolormap(self):
@@ -1836,9 +1827,9 @@ def _setcolormap(self, value):
         return
     if isinstance(value, vcs.colormap.Cp):
         value = value.name
-    if isinstance(value, unicode):
+    if isinstance(value, basestring):
         value = str(value)
-    if not isinstance(value, str):
+    if not isinstance(value, basestring):
         checkedRaise(
             self,
             value,
@@ -1846,7 +1837,7 @@ def _setcolormap(self, value):
     if value not in vcs.elements["colormap"]:
         checkedRaise(self, value, "The colormap '%s' does not exists" % value)
     self._colormap = value
-colormap = property(_getcolormap, _setcolormap)
+colormap = property(_getcolormap, _setcolormap)  # noqa
 
 
 @property
@@ -1911,7 +1902,7 @@ def levels(self, value):
 
 
 def _getlegend(self):
-    if isinstance(self._legend, str):
+    if isinstance(self._legend, basestring):
         return vcs.elements["list"].get(self._legend, None)
     else:
         return self._legend
@@ -1920,7 +1911,7 @@ def _getlegend(self):
 def _setlegend(self, value):
     value = checkLegend(self, 'legend', value)
     self._legend = value
-legend = property(_getlegend, _setlegend)
+legend = property(_getlegend, _setlegend)  # noqa
 
 
 def _getprojection(self):
@@ -1930,7 +1921,7 @@ def _getprojection(self):
 def _setprojection(self, value):
     value = checkProjection(self, 'projection', value)
     self._projection = value
-projection = property(_getprojection, _setprojection)
+projection = property(_getprojection, _setprojection)  # noqa
 
 #
 #
@@ -1957,6 +1948,7 @@ def add_level_ext_1(self, ext_value):
         if isinstance(self.levels[0], list) and self.levels[0][
                 0] < -9.E19:  # remove from tuple of lists
             self.levels.pop(0)
+            return self.levels
         if isinstance(self.levels, (tuple, list)):       # remove from list
             ret_tup = []
             for i in range(len(self.levels)):
@@ -2013,7 +2005,7 @@ def add_level_ext_2(self, ext_value):
         if isinstance(self.levels[-1], list):  # remove from tuple of lists
             if self.levels[-1][1] > 9.e19:
                 self.levels.pop(-1)
-                return
+                return self.levels
         if isinstance(self.levels, (tuple, list)):       # remove from list
             ret_tup = []
             for i in range(len(self.levels) - 1):
@@ -2079,7 +2071,7 @@ def _getwc(self):
 def _setwc(self, value):
     value = checkListOfNumbers(self, 'worldcoordinate', value, maxelements=4)
     self._worldcoordinate = value
-worldcoordinate = property(_getwc, _setwc)
+worldcoordinate = property(_getwc, _setwc)  # noqa
 
 
 def _getvp(self):
@@ -2095,7 +2087,7 @@ def _setvp(self, value):
         minvalue=0.,
         maxvalue=1.)
     self._viewport = value
-viewport = property(_getvp, _setvp)
+viewport = property(_getvp, _setvp)  # noqa
 
 
 def _getfillareaopacity(self):
@@ -2109,7 +2101,7 @@ def _setfillareaopacity(self, value):
             'fillareaopacity',
             value)
         self._fillareaopacity = value
-fillareaopacity = property(_getfillareaopacity, _setfillareaopacity)
+fillareaopacity = property(_getfillareaopacity, _setfillareaopacity)  # noqa
 
 
 def _getfillareacolors(self):
@@ -2123,4 +2115,35 @@ def _setfillareacolors(self, value):
             'fillareacolors',
             value)
     self._fillareacolors = value
-fillareacolors = property(_getfillareacolors, _setfillareacolors)
+fillareacolors = property(_getfillareacolors, _setfillareacolors)  # noqa
+
+
+def _getfillareapixelspacing(self):
+    return self._fillareapixelspacing
+
+
+def _setfillareapixelspacing(self, value):
+    if value is not None:
+        value = checkListOfNumbers(
+            self,
+            'fillareapixelspacing',
+            value,
+            minelements=2,
+            maxelements=2,
+            ints=True)
+    self._fillareapixelspacing = value
+fillareapixelspacing = property(_getfillareapixelspacing, _setfillareapixelspacing)  # noqa
+
+
+def _getfillareapixelscale(self):
+    return self._fillareapixelscale
+
+
+def _setfillareapixelscale(self, value):
+    if value is not None:
+        value = checkNumber(
+            self,
+            'fillareapixelscale',
+            value)
+    self._fillareapixelscale = value
+fillareapixelscale = property(_getfillareapixelscale, _setfillareapixelscale)  # noqa

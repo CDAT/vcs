@@ -22,8 +22,9 @@
 #
 #
 #
-import VCS_validation_functions
-
+from __future__ import print_function
+from . import VCS_validation_functions
+import vcs
 #############################################################################
 #                                                                           #
 # Template text (Pbl) Class.                                                #
@@ -31,9 +32,9 @@ import VCS_validation_functions
 #############################################################################
 
 
-class Pbl(object):
+class Pbl(vcs.bestMatch):
 
-    '''
+    """
     The Template text object allows the manipulation of line type, width, and color index.
 
     This class is used to define a line table entry used in VCS, or it
@@ -42,7 +43,7 @@ class Pbl(object):
 
     :Example:
 
-::
+    ::
 
     # Basic Usage Overview:
 
@@ -84,19 +85,13 @@ class Pbl(object):
      ln.type='dash-dot'
      # Same as ln.type=4
      ln.type='long-dash'
-'''
+    """
     ##########################################################################
     #                                                                           #
     # Initialize the line attributes.                                           #
     #                                                                           #
     ##########################################################################
     __slots__ = [
-        "priority",
-        "x1",
-        "x2",
-        "y1",
-        "y2",
-        "line",
         "member",
         "_priority",
         "_x1",
@@ -178,13 +173,13 @@ class Pbl(object):
     #                                                                           #
     ##########################################################################
     def list(self):
-        print "member = ", self.member
-        print "     priority =", self.priority
-        print "     x1 =", self.x1
-        print "     y1 =", self.y1
-        print "     x2 =", self.x2
-        print "     y2 =", self.y2
-        print "     line =", self.line
+        print("member = ", self.member)
+        print("     priority =", self.priority)
+        print("     x1 =", self.x1)
+        print("     y1 =", self.y1)
+        print("     x2 =", self.x2)
+        print("     y2 =", self.y2)
+        print("     line =", self.line)
 
 
 ##########################################################################

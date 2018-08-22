@@ -12,16 +12,59 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+from __future__ import print_function
 import sys, os
+import subprocess
+import glob
+import shlex
+
+os.environ["UVCDAT_ANONYMOUS_LOG"] = "False"
+
+# First we need to create the jupyter links from gms to Notebooks
+
+jupyters = glob.glob("Jupyter/*.ipynb")
+if not os.path.exists(os.path.join("API","graphics","Jupyter")):
+    os.makedirs(os.path.join("API","graphics","Jupyter"))
+
+matches = {}
+for gm in ["boxfill","isofill","meshfill","isoline","streamline","vector",
+           "taylor","1d","xyvsx","yxvsx","scatter","xvsy","dv3d","unified1d"]:
+    for jup in jupyters:
+        match = subprocess.Popen(shlex.split("more {}".format(jup)), stdout=subprocess.PIPE)
+        match = str(match.communicate()[0].strip())
+        found = match.find("create{}".format(gm)) != -1
+        found = found or (match.find("get{}".format(gm)) != -1)
+        if found:  # we have a match
+            if gm in ["1d","xyvsy","yxvsx","scatter","xvsy","unified1d"]:
+                gm_name = "unified1D"
+            else:
+                gm_name = gm
+            tmp = matches.get(gm_name,set())
+            tmp.add(jup)
+            matches[gm_name] = tmp
+
+for gm in matches:
+    with open(os.path.join("API","graphics","{}_notebooks.rst".format(gm)),"w") as nb:
+        print(".. toctree::\n      :maxdepth: 0\n",file=nb)
+        for jup in sorted(matches[gm]):
+            print("    ",jup,file=nb)
+
+            if not os.path.exists(os.path.join("API","graphics",jup)):
+                os.symlink(os.path.join("..","..","..",jup),
+                           os.path.join("API","graphics",jup))
+
 #import sphinx_bootstrap_theme
 
+"""
 # on_rtd is whether we are on readthedocs.org
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
 if not on_rtd:  # only import and set the theme if we're building docs locally
     import sphinx_rtd_theme
-    html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+"""
+html_theme = 'agogo'
+#import easydev
+#html_theme_path = [easydev.get_path_sphinx_themes()]
 
 # otherwise, readthedocs.org uses their theme by default, so no need to specify it
 
@@ -38,11 +81,92 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.mathjax', 'sphinx.ext.ifconfig', 'sphinx.ext.viewcode', 'sphinx.ext.extlinks', 'sphinx.ext.doctest']
+
+extensions = [#'easydev.copybutton',
+              'sphinx.ext.autodoc',
+              'sphinx.ext.todo',
+              'sphinx.ext.coverage',
+              'sphinx.ext.mathjax',
+              'sphinx.ext.ifconfig',
+              'sphinx.ext.viewcode',
+              'sphinx.ext.extlinks',
+              'sphinx.ext.doctest',
+              'sphinx.ext.intersphinx',
+              'sphinx.ext.graphviz',
+              'sphinx.ext.napoleon',
+              'nbsphinx',
+              'sphinx.ext.mathjax',
+              ]
+
+jscopybutton_path = "copybutton.js"
+
+try:
+    from easydev.copybutton import get_copybutton_path
+    from easydev.copybutton import copy_javascript_into_static_path
+    copy_javascript_into_static_path("_build/html/_static", get_copybutton_path())
+except Exception:
+    print("could not copy the copybutton javascript")
+
 
 # turn off doctests of autodoc included files (these are tested elsewhere)
-doctest_test_doctest_blocks = None
+# doctest_test_doctest_blocks = None
+doctest_path = sys.path
 
+# Not currently doctesting VCS with sphinx due to some conflicting name errors across tests
+# in the same python instance.
+# Setup and cleanup might be able to fix it, but I couldn't get it to work
+doctest_global_setup = """
+import vcs, cdms2, os
+ex = ex1 = ex2 = None
+__examples = [ex, ex1, ex2]
+# Copy vcs.elements so we can do a diff later.
+# check if it already exists so we don't overwrite the first copy
+for d in vcs.listelements("display"):
+    try:
+        disp = vcs.elements["display"][d]
+    except:
+        continue
+    if disp._parent is not None:
+        disp._parent.clear()
+vcs.reset()
+try:
+    elts
+except:
+    elts = {}
+    for key in vcs.elements.keys():
+        if type(vcs.elements[key]) == dict:
+            elts[key]=dict(vcs.elements[key])
+        else:
+            elts[key]=vcs.elements[key]
+    """
+
+doctest_global_cleanup = """
+import glob, sys, vcs
+for d in vcs.listelements("display"):
+    try:
+        disp = vcs.elements["display"][d]
+    except:
+        continue
+    if disp._parent is not None:
+        disp._parent.clear()
+vcs.reset()
+f=open("dt_cleanup_log", "a+", 1)
+log=[]
+gb = glob.glob
+patterns = ["example.*", "*.json", "*.svg", "ex_*", "my*", "filename.*"]
+files = []
+for pattern in patterns:
+    fnames = gb(pattern)
+    for name in fnames:
+        files.append(name)
+for file in files:
+    try:
+        os.remove(file)
+    except:
+        log.append("COULD NOT delete file: " + file + "\\n")
+f.writelines(log)
+f.flush()
+"""
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['templates']
 
@@ -56,8 +180,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'VCS'
-copyright = '2016, LLNL'
+project = u'VCS'
+copyright = u'2016, LLNL'
+author = u'LLNL AIMS Team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -66,11 +191,12 @@ copyright = '2016, LLNL'
 # These are set to None here, but this is overridden in CMakeLists.txt via -D
 # flags to set them explicitly using a variable defined there.
 #
-# The short X.Y version.
-version = '0.1'
 
 # The full version, including alpha/beta/rc tags.
-release = '0.1.0'
+release = str(subprocess.Popen(['git', 'describe','--tags'],stdout=subprocess.PIPE).communicate()[0].strip())
+
+# The short X.Y version.
+version = ".".join(release.split(".")[:2])
 
 # The language for content autogenerated by Sphinx. Refer to documentation
 # for a list of supported languages.
@@ -84,7 +210,7 @@ release = '0.1.0'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = []
+exclude_patterns = ['_build', '**.ipynb_checkpoints']
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None
@@ -124,9 +250,7 @@ extlinks = {"root": ("http://localhost:8080%s" if on_rtd else "%s", None)}
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {
-#   'bootswatch_theme': "readable"
-#}
+# html_theme_options = { "stickysidebar" : "true" }
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
@@ -168,7 +292,7 @@ html_static_path = ['static']
 #html_additional_pages = {}
 
 # If false, no module index is generated.
-html_domain_indices = False
+html_domain_indices = True
 
 # If false, no index is generated.
 #html_use_index = True
@@ -197,7 +321,7 @@ todo_include_todos = False
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'VCSDoc'
+htmlhelp_basename = 'vcsdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -211,28 +335,28 @@ latex_elements = {
 
 # Additional stuff for the LaTeX preamble.
 #'preamble': '',
+'classoptions': ',oneside'
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'vcs.tex', 'VCS Documentation',
-   'LLNL', 'manual'),
+    ("API/vcs", 'vcs.tex', u'VCS API Documentation',
+     u'AIMS Team', 'manual'),
 ]
-
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
 #latex_logo = None
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
-#latex_use_parts = False
+#latex_toplevel_sectioning = 'section'
 
 # If true, show page references after internal links.
-#latex_show_pagerefs = False
+latex_show_pagerefs = True
 
 # If true, show URL addresses after external links.
-#latex_show_urls = False
+latex_show_urls = 'no'
 
 # Documents to append as an appendix to all manuals.
 #latex_appendices = []
@@ -260,9 +384,9 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'vcs', 'vcs Documentation',
-   'LLNL', 'vcs', 'Visualization library',
-   'Miscellaneous'),
+    (master_doc, 'VCS', u'VCS Documentation',
+     author, 'VCS', 'Visualization Control System',
+     'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.

@@ -4,10 +4,10 @@ import warnings
 import numpy
 import os
 import time
-import thread
+import _thread
 import threading
 import glob
-from error import vcsError
+from .error import vcsError
 
 
 def showerror(msg):
@@ -19,7 +19,7 @@ def showerror(msg):
 # Animate wrapper for VCS.                                                  #
 #                                                                           #
 #############################################################################
-class animate_obj_old(object):
+class animate_obj_old(vcs.bestMatch):
 
     """
     Animate the contents of the VCS Canvas. The animation can also be controlled from
@@ -28,15 +28,6 @@ class animate_obj_old(object):
     See the `animation GUI documentation`_
 
     .. _animation GUI documentation: http://www-pcmdi.llnl.gov/software/vcs
-
-    :Example:
-
-        .. doctest:: animate_helper_obj_old
-
-                >>> a=vcs.init()
-                >>> a.plot(array,'default','isofill','quick')
-                >>> a.animate()
-
     """
 
     ##########################################################################
@@ -104,7 +95,7 @@ class animate_obj_old(object):
         try:
             if (parent is not None) and (parent.iso_spacing == 'Log'):
                 do_min_max = 'no'
-        except:
+        except Exception:
             pass
 
         # Draw specified continental outlines if needed.
@@ -127,11 +118,11 @@ class animate_obj_old(object):
                 for i in range(len(self.vcs_self.animate_info)):
                     try:
                         minv.append(min[i])
-                    except:
+                    except Exception:
                         minv.append(min[-1])
                     try:
                         maxv.append(max[i])
-                    except:
+                    except Exception:
                         maxv.append(max[-1])
             else:
                 for i in range(len(self.vcs_self.animate_info)):
@@ -144,14 +135,14 @@ class animate_obj_old(object):
             for i in range(len(self.vcs_self.animate_info)):
                 try:
                     self.set_animation_min_max(minv[i], maxv[i], i)
-                except:
+                except Exception:
                     # if it is default, then you cannot set the min and max, so
                     # pass.
                     pass
 
         if save_file is None or save_file.split('.')[-1].lower() == 'ras':
             if thread_it:
-                thread.start_new_thread(
+                _thread.start_new_thread(
                     self.vcs_self.canvas.animate_init, (save_file,))
             else:
                 self.vcs_self.canvas.animate_init(save_file)
@@ -206,7 +197,9 @@ class animate_obj_old(object):
                     gtype = animation_info["gtype"][i].lower()
                     gname = animation_info["gname"][i]
                     gm = None  # for flake8 to be happy
+                    loc = locals()
                     exec("gm = new_vcs.get%s('%s')" % (gtype, gname))
+                    gm = loc["gm"]
                     for j in index:
                         slab = slab[j]
                     new_vcs.plot(slab, gm, new_vcs.gettemplate(template), bg=1)
@@ -305,7 +298,7 @@ class animate_obj_old(object):
                 elif (gtype == "vector"):
                     gm = self.vcs_self.getvector(animation_info['gname'][i])
                     gm.reference = self.save_mean_veloc[i]
-        except:
+        except Exception:
             pass
 
     ##########################################################################
@@ -393,7 +386,7 @@ class animate_obj_old(object):
             return
 
         if thread_it == 1:
-            thread.start_new_thread(
+            _thread.start_new_thread(
                 self.vcs_self.canvas.animate_load, (load_file,))
         else:
             self.vcs_self.canvas.animate_init(load_file)
@@ -458,7 +451,7 @@ class animate_obj_old(object):
     # Value ranges from 0 to 100                                                 #
     ##########################################################################
     def pause(self, value=1):
-        if (((not isinstance(value, int))) or (value not in range(0, 101))):
+        if (((not isinstance(value, int))) or (value not in list(range(0, 101)))):
             raise vcsError(
                 "Pause value must be between an integer between 0 and 100.")
 
@@ -470,7 +463,7 @@ class animate_obj_old(object):
     # Value ranges from 0 to 20                                                  #
     ##########################################################################
     def zoom(self, value=1):
-        if (((not isinstance(value, int))) or (value not in range(1, 21))):
+        if (((not isinstance(value, int))) or (value not in list(range(1, 21)))):
             raise vcsError(
                 "Zoom value must be between an integer between 1 and 20.")
 
@@ -485,7 +478,7 @@ class animate_obj_old(object):
     # Value ranges from -100 to 100						#
     ##########################################################################
     def horizontal(self, value=0):
-        if (((not isinstance(value, int))) or (value not in range(-100, 101))):
+        if (((not isinstance(value, int))) or (value not in list(range(-100, 101)))):
             raise vcsError(
                 "Horizontal pan value must be between an integer between -100 and 100.")
 
@@ -500,7 +493,7 @@ class animate_obj_old(object):
     # Value ranges from -100 to 100						#
     ##########################################################################
     def vertical(self, value=0):
-        if (((not isinstance(value, int))) or (value not in range(-100, 101))):
+        if (((not isinstance(value, int))) or (value not in list(range(-100, 101)))):
             raise vcsError(
                 "Vertical pan value must be between an integer between -100 and 100.")
 
@@ -515,7 +508,7 @@ class animate_obj_old(object):
     # Value 1 -> forward, 2 -> backward       	                                #
     ##########################################################################
     def direction(self, value=1):
-        if (((not isinstance(value, int))) or (value not in range(1, 3))):
+        if (((not isinstance(value, int))) or (value not in list(range(1, 3)))):
             raise vcsError(
                 "Direction value must be between either 1='forward' or 2='backward'.")
 
@@ -601,7 +594,7 @@ class RT:
     def start(self):
         self.runnnig = True
         while self.running:
-            self.next()
+            next(self)
             time.sleep(1. / self.parent.frames_per_second)
 
     def stop(self):
@@ -611,19 +604,19 @@ class RT:
 # http://stackoverflow.com/questions/323972/is-there-any-way-to-kill-a-thread-in-python
 
 
-class StoppableThread(threading.Thread, object):
+class StoppableThread(threading.Thread):
 
     def __init__(self):
-        threading.Thread.__init__(self)
-        self._stop = threading.Event()
+        super(StoppableThread, self).__init__()
+        self._stopper = threading.Event()
         self._running = threading.Event()
         self._running.set()
 
     def stop(self):
-        self._stop.set()
+        self._stopper.set()
 
     def is_stopped(self):
-        return self._stop.isSet()
+        return self._stopper.isSet()
 
     def pause(self):
         self._running.clear()
@@ -635,7 +628,7 @@ class StoppableThread(threading.Thread, object):
         self._running.wait()
 
 
-class AnimationCreateParams(object):
+class AnimationCreateParams(vcs.bestMatch):
 
     def __init__(self, a_min=None, a_max=None, axis=0):
         self.a_min = a_min
@@ -684,7 +677,7 @@ class AnimationCreate(StoppableThread):
             self.controller.signals.created.emit()
 
 
-class AnimationPlaybackParams(object):
+class AnimationPlaybackParams(vcs.bestMatch):
 
     def __init__(self):
         self.zoom_factor = 1.0
@@ -884,36 +877,36 @@ class AnimationController(animate_obj_old):
         maxv = []
         if (self.create_params.a_min is None or
                 self.create_params.a_max is None):
-            for i in xrange(len(self.animate_info)):
+            for i in range(len(self.animate_info)):
                 minv.append(1.0e77)
                 maxv.append(-1.0e77)
-            for i in xrange(len(self.animate_info)):
+            for i in range(len(self.animate_info)):
                 dpy, slab = self.animate_info[i]
                 mins, maxs = vcs.minmax(slab)
                 minv[i] = float(numpy.minimum(float(minv[i]), float(mins)))
                 maxv[i] = float(numpy.maximum(float(maxv[i]), float(maxs)))
         elif (isinstance(self.create_params.a_min, list) or
               isinstance(self.create_params.a_max, list)):
-            for i in xrange(len(self.animate_info)):
+            for i in range(len(self.animate_info)):
                 try:
                     minv.append(self.create_params.a_min[i])
-                except:
+                except Exception:
                     minv.append(self.create_params.a_min[-1])
                 try:
                     maxv.append(self.create_params.a_max[i])
-                except:
+                except Exception:
                     maxv.append(self.create_params.a_max[-1])
         else:
-            for i in xrange(len(self.animate_info)):
+            for i in range(len(self.animate_info)):
                 minv.append(self.create_params.a_min)
                 maxv.append(self.create_params.a_max)
         # Set the min an max for each plot in the page. If the same graphics method is used
         # to display the plots, then the last min and max setting of the
         # data set will be used.
-        for i in xrange(len(self.animate_info)):
+        for i in range(len(self.animate_info)):
             try:
                 self.set_animation_min_max(minv[i], maxv[i], i)
-            except:
+            except Exception:
                 # if it is default, then you cannot set the min and max, so
                 # pass.
                 pass
@@ -931,7 +924,7 @@ class AnimationController(animate_obj_old):
                 try:
                     g = slabs[0].getGrid()
                     NXY = len(g.shape)
-                except:
+                except Exception:
                     # No grid so slab1 rnk will tell us
                     NXY = slabs[1].ndim - 2  # lat/lon/vertices
             elif disp.g_type in ["G1D"]:
@@ -957,9 +950,9 @@ class AnimationController(animate_obj_old):
             if alen is None:
                 alen = I[1][0].shape[self.create_params.axis]
             else:
-                l = I[1][0].shape[self.create_params.axis]
-                if l != alen:
-                    alen = numpy.minimum(alen, l)
+                len_tmp = I[1][0].shape[self.create_params.axis]
+                if len_tmp != alen:
+                    alen = numpy.minimum(alen, len_tmp)
                     truncated = True
         if truncated:
             warnings.warn("Because of inconsistent shapes over axis: %i, the "

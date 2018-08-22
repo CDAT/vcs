@@ -22,7 +22,9 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
+import vcs
 #############################################################################
 #                                                                           #
 # Template text (Pyl) Class.                                                #
@@ -30,7 +32,7 @@ import VCS_validation_functions
 #############################################################################
 
 
-class Pyl(object):
+class Pyl(vcs.bestMatch):
 
     """
     The Template text object allows the manipulation of line type, width, and color index.
@@ -107,10 +109,6 @@ class Pyl(object):
     #                                                                           #
     ##########################################################################
     __slots__ = [
-        "priority",
-        "x",
-        "texttable",
-        "textorientation",
         "member",
         "_priority",
         "_x",
@@ -154,11 +152,11 @@ class Pyl(object):
     #                                                                           #
     ##########################################################################
     def list(self):
-        print "member = ", self.member
-        print "     priority =", self.priority
-        print "     x =", self.x
-        print "     texttable =", self.texttable
-        print "     textorientation =", self.textorientation
+        print("member = ", self.member)
+        print("     priority =", self.priority)
+        print("     x =", self.x)
+        print("     texttable =", self.texttable)
+        print("     textorientation =", self.textorientation)
 
 
 ##########################################################################

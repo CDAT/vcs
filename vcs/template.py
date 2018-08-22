@@ -1,6 +1,17 @@
-# Adapted for numpy/ma/cdms2 by convertcdms.py
 """
+# Adapted for numpy/ma/cdms2 by convertcdms.py
 # Template (P) module
+
+    .. _list: https://docs.python.org/2/library/functions.html#list
+    .. _tuple: https://docs.python.org/2/library/functions.html#tuple
+    .. _dict: https://docs.python.org/2/library/stdtypes.html#mapping-types-dict
+    .. _None: https://docs.python.org/2/library/constants.html?highlight=none#None
+    .. _str: https://docs.python.org/2/library/functions.html?highlight=str#str
+    .. _bool: https://docs.python.org/2/library/functions.html?highlight=bool#bool
+    .. _float: https://docs.python.org/2/library/functions.html?highlight=float#float
+    .. _int: https://docs.python.org/2/library/functions.html?highlight=float#int
+    .. _long: https://docs.python.org/2/library/functions.html?highlight=float#long
+    .. _file: https://docs.python.org/2/library/functions.html?highlight=open#file
 """
 ###############################################################################
 #                                                                             #
@@ -22,23 +33,24 @@
 #
 #
 #
+from __future__ import print_function
 import copy
 import vcs
 import numpy
-from Ptext import *  # noqa
-from Pformat import *  # noqa
-from Pxtickmarks import *  # noqa
-from Pytickmarks import *  # noqa
-from Pxlabels import *  # noqa
-from Pylabels import *  # noqa
-from Pboxeslines import *  # noqa
-from Plegend import *  # noqa
-from Pdata import *  # noqa
+from .Ptext import *  # noqa
+from .Pformat import *  # noqa
+from .Pxtickmarks import *  # noqa
+from .Pytickmarks import *  # noqa
+from .Pxlabels import *  # noqa
+from .Pylabels import *  # noqa
+from .Pboxeslines import *  # noqa
+from .Plegend import *  # noqa
+from .Pdata import *  # noqa
 import inspect
 import cdutil
-from projection import round_projections
-from projection import elliptical_projections
-from xmldocs import scriptdocs
+from .projection import round_projections
+from .projection import elliptical_projections
+from .xmldocs import scriptdocs, listdoc
 
 # Following for class properties
 
@@ -75,7 +87,7 @@ def process_src(nm, code):
     # Takes VCS script code (string) as input and generates boxfill gm from it
     try:
         t = P(nm)
-    except:
+    except Exception:
         t = vcs.elements["template"][nm]
     for sub in ["File", "Function", "LogicalMask", "Transform", "name", "title", "units",
                 "crdate", "crtime", "comment#1",
@@ -120,11 +132,10 @@ def process_src(nm, code):
             tatt = getattr(t, tnm)
             try:
                 setattr(tatt, nm, eval(val))  # int float should be ok here
-            except:
+            except Exception:
                 try:
                     setattr(tatt, nm, val)  # strings here
-                except:
-                    # print "COULD NOT SET %s.%s.%s to %s" %
+                except Exception:
                     # (t.name,tnm,nm,val)
                     pass
     i = code.find("Orientation(")
@@ -136,10 +147,9 @@ def process_src(nm, code):
 # Template (P) graphics method Class.                                       #
 #                                                                           #
 #############################################################################
-class P(object):
+class P(vcs.bestMatch):
 
-    """
-    The template primary method (P) determines the location of each picture
+    """The template primary method (P) determines the location of each picture
     segment, the space to be allocated to it, and related properties relevant
     to its display.
 
@@ -182,23 +192,18 @@ class P(object):
         .. code-block:: python
 
              temp=a.gettemplate('hovmuller')
-"""
-    __slots__ = ["name", "_name", "_p_name", "p_name",
-                 "_orientation", "_orientation", "_file", "file",
-                 "_function", "function",
-                 "_logicalmask", "logicalmask",
-                 "_transformation", "transformation",
-                 "source", "_source", "dataname", "_dataname",
-                 "title", "_title", "units", "_units", "_crdate", "crdate",
-                 "crtime", "_crtime", "_comment1", "comment1",
-                 "comment2", "_comment2", "_comment3", "comment3",
-                 "_comment4", "comment4",
-                 "xname", "yname", "zname", "tname", "xunits", "yunits", "zunits", "tunits",
-                 "xvalue", "zvalue", "yvalue", "tvalue",
-                 "mean", "min", "max", "xtic1", "xtic2", "xmintic1", "xmintic2",
-                 "ytic1", "ytic2", "ymintic1", "ymintic2",
-                 "xlabel1", "xlabel2", "box1", "box2", "box3", "box4",
-                 "ylabel1", "ylabel2", "line1", "line2", "line3", "line4", "legend", "data",
+    .. pragma: skip-doctest TODO convert examples to working doctests
+    """
+    __slots__ = ["_name", "p_name",
+                 "_orientation", "_file",
+                 "_function",
+                 "_logicalmask",
+                 "_transformation",
+                 "_source", "_dataname",
+                 "_title", "_units", "_crdate",
+                 "_crtime", "_comment1",
+                 "_comment2", "_comment3",
+                 "_comment4",
                  "_xname", "_yname", "_zname", "_tname",
                  "_xunits", "_yunits", "_zunits", "_tunits",
                  "_xvalue", "_zvalue", "_yvalue", "_tvalue",
@@ -247,7 +252,7 @@ class P(object):
             raise "Invalid source template: %s" % Pic_name_src
         if isinstance(Pic_name_src, P):
             Pic_name_src = Pic_name_src.name
-        if Pic_name in vcs.elements["template"].keys():
+        if Pic_name in list(vcs.elements["template"].keys()):
             raise ValueError("Template %s already exists" % Pic_name)
 
         self._name = Pic_name
@@ -439,7 +444,7 @@ class P(object):
         else:
             if isinstance(Pic_name_src, P):
                 Pic_name_src = P.name
-            if Pic_name_src not in vcs.elements["template"].keys():
+            if Pic_name_src not in list(vcs.elements["template"].keys()):
                 raise ValueError(
                     "The source template '%s' does not seem to exists" %
                     Pic_name_src)
@@ -524,15 +529,21 @@ class P(object):
         vcs.elements["template"][Pic_name] = self
 
     def list(self, single=None):
+        """
+        %s
+
+        :param single: String value indicating which properties to list
+        :type single: str
+        """
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
 
         if (single is None):
-            print "----------Template (P) member " +\
-                "(attribute) listings ----------"
-            print "method =", self.p_name
-            print "name =", self.name
-            print "orientation =", self.orientation
+            print("---------- Template (P) member " +
+                  "(attribute) listings ----------")
+            print("method =", self.p_name)
+            print("name =", self.name)
+            print("orientation =", self.orientation)
             self.file.list()
             self.function.list()
             self.logicalmask.list()
@@ -746,6 +757,7 @@ class P(object):
             self.legend.list()
         elif (single == 'data'):
             self.data.list()
+    list.__doc__ = list.__doc__ % (listdoc.format(name="template", parent=""))
 
     ###########################################################################
     #                                                                         #
@@ -772,7 +784,7 @@ class P(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == "py":
             mode = mode + '+'
             py_type = script_filename[
@@ -1002,12 +1014,13 @@ class P(object):
     # Adding the drawing functionnality to plot all these attributes on the
     # Canvas
     def drawTicks(self, slab, gm, x, axis, number,
-                  vp, wc, bg=False, X=None, Y=None, **kargs):
-        """
-        Draws the ticks for the axis x number number
+                  vp, wc, bg=False, X=None, Y=None, mintic=False, **kargs):
+        """Draws the ticks for the axis x number number
         using the label passed by the graphic  method
         vp and wc are from the actual canvas, they have
         been reset when they get here...
+
+        .. pragma: skip-doctest TODO add example/doctest
         """
 
         kargs["donotstoredisplay"] = True
@@ -1021,7 +1034,10 @@ class P(object):
         dx = dx / (vp[1] - vp[0])
         dy = dy / (vp[3] - vp[2])
         # get the actual labels
-        loc = copy.copy(getattr(gm, axis + 'ticlabels' + number))
+        if mintic is False:
+            loc = copy.copy(getattr(gm, axis + 'ticlabels' + number))
+        else:
+            loc = copy.copy(getattr(gm, axis + 'mtics' + number))
         # Are they set or do we need to it ?
         if (loc is None or loc == '*'):
                 # well i guess we have to do it !
@@ -1034,7 +1050,7 @@ class P(object):
             loc = vcs.mkscale(x1, x2)
             loc = vcs.mklabels(loc)
             if number == '2':
-                for t in loc.keys():
+                for t in list(loc.keys()):
                     loc[t] = ''
         if isinstance(loc, str):
             loc = copy.copy(vcs.elements["list"].get(loc, {}))
@@ -1046,7 +1062,7 @@ class P(object):
             dw1, dw2 = wc[0], wc[1]
         else:
             dw1, dw2 = wc[2], wc[3]
-        for k in loc.keys():
+        for k in list(loc.keys()):
             if dw2 > dw1:
                 if not(dw1 <= k <= dw2):
                     del(loc[k])
@@ -1054,53 +1070,58 @@ class P(object):
                 if not (dw1 >= k >= dw2):
                     del(loc[k])
         # The ticks
-        obj = getattr(self, axis + 'tic' + number)
-        # the labels
-        objlabl = getattr(self, axis + 'label' + number)
+        if mintic is False:
+            obj = getattr(self, axis + 'tic' + number)
+        else:
+            obj = getattr(self, axis + 'mintic' + number)
         # the following to make sure we have a unique name,
         # i put them together assuming it would be faster
         ticks = x.createline(source=obj.line)
         ticks.projection = gm.projection
         ticks.priority = obj.priority
-        tt = x.createtext(
-            Tt_source=objlabl.texttable,
-            To_source=objlabl.textorientation)
-        tt.projection = gm.projection
-        tt.priority = objlabl.priority
+        if mintic is False:
+            # the labels
+            objlabl = getattr(self, axis + 'label' + number)
+            tt = x.createtext(
+                Tt_source=objlabl.texttable,
+                To_source=objlabl.textorientation)
+            tt.projection = gm.projection
+            tt.priority = objlabl.priority
         if vcs.elements["projection"][gm.projection].type != "linear":
             ticks.viewport = vp
             ticks.worldcoordinate = wc
-            tt.worldcoordinate = wc
-            if axis == "y":
-                tt.viewport = vp
-                # TODO: Transform axes names through geographic projections
-                # In that case the if goes and only the statement stays
-                if ("ratio_autot_viewport" not in kargs):
-                    tt.viewport[0] = objlabl.x
-                if vcs.elements["projection"][
-                        tt.projection].type in round_projections:
-                    tt.priority = 0
-            else:
-                if vcs.elements["projection"][
-                        tt.projection].type in round_projections:
-                    xmn, xmx = vcs.minmax(self.data.x1, self.data.x2)
-                    ymn, ymx = vcs.minmax(self.data.y1, self.data.y2)
-                    xwiden = .02
-                    ywiden = .02
-                    xmn -= xwiden
-                    xmx += xwiden
-                    ymn -= ywiden
-                    ymx += ywiden
-                    vp = [
-                        max(0., xmn), min(xmx, 1.), max(0, ymn), min(ymx, 1.)]
-                    tt.viewport = vp
-                    pass
-                else:
+            if mintic is False:
+                tt.worldcoordinate = wc
+                if axis == "y":
                     tt.viewport = vp
                     # TODO: Transform axes names through geographic projections
                     # In that case the if goes and only the statement stays
                     if ("ratio_autot_viewport" not in kargs):
-                        tt.viewport[2] = objlabl.y
+                        tt.viewport[0] = objlabl.x
+                    if vcs.elements["projection"][
+                            tt.projection].type in round_projections:
+                        tt.priority = 0
+                else:
+                    if vcs.elements["projection"][
+                            tt.projection].type in round_projections:
+                        xmn, xmx = vcs.minmax(self.data.x1, self.data.x2)
+                        ymn, ymx = vcs.minmax(self.data.y1, self.data.y2)
+                        xwiden = .02
+                        ywiden = .02
+                        xmn -= xwiden
+                        xmx += xwiden
+                        ymn -= ywiden
+                        ymx += ywiden
+                        vp = [
+                            max(0., xmn), min(xmx, 1.), max(0, ymn), min(ymx, 1.)]
+                        tt.viewport = vp
+                        pass
+                    else:
+                        tt.viewport = vp
+                        # TODO: Transform axes names through geographic projections
+                        # In that case the if goes and only the statement stays
+                        if ("ratio_autot_viewport" not in kargs):
+                            tt.viewport[2] = objlabl.y
 
         # initialize the list of values
         tstring = []
@@ -1109,7 +1130,10 @@ class P(object):
         tys = []
         txs = []
         loc2 = loc
-        loc = getattr(gm, axis + 'ticlabels' + number)
+        if mintic is False:
+            loc = getattr(gm, axis + 'ticlabels' + number)
+        else:
+            loc = getattr(gm, axis + "mtics" + number)
         if loc == '*' or loc is None:
             loc = loc2
         if isinstance(loc, str):
@@ -1117,42 +1141,46 @@ class P(object):
         # set the x/y/text values
         xmn, xmx = vcs.minmax(wc[0], wc[1])
         ymn, ymx = vcs.minmax(wc[2], wc[3])
-        for l in loc.keys():
+        for l_tmp in list(loc.keys()):
             if axis == 'x':
-                if xmn <= l <= xmx:
+                if xmn <= l_tmp <= xmx:
                     if vcs.elements["projection"][
                             gm.projection].type == "linear":
                         xs.append(
-                            [(l - wc[0]) / dx +
-                                vp[0], (l - wc[0]) / dx +
+                            [(l_tmp - wc[0]) / dx +
+                                vp[0], (l_tmp - wc[0]) / dx +
                                 vp[0]])
                         ys.append([obj.y1, obj.y2])
-                        txs.append((l - wc[0]) / dx + vp[0])
-                        tys.append(objlabl.y)
+                        if mintic is False:
+                            txs.append((l_tmp - wc[0]) / dx + vp[0])
+                            tys.append(objlabl.y)
                     elif vcs.elements["projection"][gm.projection].type in elliptical_projections:
                         pass
                     else:
-                        xs.append([l, l])
+                        xs.append([l_tmp, l_tmp])
                         end = wc[
                             2] + (wc[3] - wc[2]) *\
                             (obj.y2 - obj.y1) /\
                             (self.data._y2 - self._data.y1)
                         ys.append([wc[2], end])
-                        txs.append(l)
-                        tys.append(wc[3])
-                    tstring.append(loc[l])
+                        if mintic is False:
+                            txs.append(l_tmp)
+                            tys.append(wc[3])
+                    if mintic is False:
+                        tstring.append(loc[l_tmp])
             elif axis == 'y':
-                if ymn <= l <= ymx:
+                if ymn <= l_tmp <= ymx:
                     if vcs.elements["projection"][
                             gm.projection].type == "linear":
                         ys.append(
-                            [(l - wc[2]) / dy +
-                                vp[2], (l - wc[2]) / dy + vp[2]])
+                            [(l_tmp - wc[2]) / dy +
+                                vp[2], (l_tmp - wc[2]) / dy + vp[2]])
                         xs.append([obj.x1, obj.x2])
-                        tys.append((l - wc[2]) / dy + vp[2])
-                        txs.append(objlabl.x)
+                        if mintic is False:
+                            tys.append((l_tmp - wc[2]) / dy + vp[2])
+                            txs.append(objlabl.x)
                     else:
-                        ys.append([l, l])
+                        ys.append([l_tmp, l_tmp])
                         end = wc[
                             0] + (wc[1] - wc[0]) *\
                             (obj._x2 - obj._x1) /\
@@ -1162,49 +1190,12 @@ class P(object):
                                 end < -180.:
                             end = wc[0]
                         xs.append([wc[0], end])
-                        tys.append(l)
-                        txs.append(wc[0])
-                    tstring.append(loc[l])
-        # now does the mini ticks
-        mintics = getattr(gm, axis + 'mtics' + number)
-        if mintics != '':
-            if isinstance(mintics, str):
-                mintics = vcs.elements["list"][mintics]
-            obj = getattr(self, axis + 'mintic' + number)
-            if obj.priority > 0:
-                ynum = getattr(self._data, "_y%s" % number)
-                xnum = getattr(self._data, "_x%s" % number)
-                for l in mintics.keys():
-                    if axis == 'x':
-                        if xmn <= l <= xmx:
-                            if vcs.elements["projection"][
-                                    gm.projection].type == "linear":
-                                xs.append(
-                                    [(l - wc[0]) / dx +
-                                        vp[0], (l - wc[0]) / dx + vp[0]])
-                                ys.append([obj.y1, obj.y2])
-                            else:
-                                xs.append([l, l])
-                                ys.append([wc[2],
-                                           wc[2] + (wc[3] - wc[2]) *
-                                           (obj._y - ynum) /
-                                           (self._data._y2 - self._data._y1)])
-                    elif axis == 'y':
-                        if ymn <= l <= ymx:
-                            if vcs.elements["projection"][
-                                    gm.projection].type == "linear":
-                                ys.append(
-                                    [(l - wc[2]) / dy +
-                                        vp[2], (l - wc[2]) / dy + vp[2]])
-                                xs.append([obj.x1, obj.x2])
-                            else:
-                                ys.append([l, l])
-                                xs.append([wc[0],
-                                           wc[0] +
-                                           (wc[1] - wc[0]) * (obj._x - xnum) /
-                                           (self._data._x2 - self._data._x1)])
-
-        if txs != []:
+                        if mintic is False:
+                            tys.append(l_tmp)
+                            txs.append(wc[0])
+                    if mintic is False:
+                        tstring.append(loc[l_tmp])
+        if mintic is False and txs != []:
             tt.string = tstring
             tt.x = txs
             tt.y = tys
@@ -1214,23 +1205,30 @@ class P(object):
             ticks._y = ys
             displays.append(x.line(ticks, bg=bg, **kargs))
         del(vcs.elements["line"][ticks.name])
-        sp = tt.name.split(":::")
-        del(vcs.elements["texttable"][sp[0]])
-        del(vcs.elements["textorientation"][sp[1]])
-        del(vcs.elements["textcombined"][tt.name])
+        if mintic is False:
+            sp = tt.name.split(":::")
+            del(vcs.elements["texttable"][sp[0]])
+            del(vcs.elements["textorientation"][sp[1]])
+            del(vcs.elements["textcombined"][tt.name])
         return displays
 
     def blank(self, attribute=None):
-        """
-        This function turns off elements of a template object.
+        """This function turns off elements of a template object.
 
+        :param attribute: String or list, indicating the elements of a template
+            which should be turned off. If attribute is left blank, or is None,
+            all elements of the template will be turned off.
+        :type attribute: `None`_ or  `str`_ or `list`_
 
-    :param attribute: String or list, indicating the elements of a template which should be turned off.
-                      If attribute is left blank, or is None, all elements of the template will be turned off.
-    :type attribute: None, str, list
+        .. pragma: skip-doctest TODO add example/doctest
         """
         if attribute is None:
-            attribute = self.__slots__
+            attribute = list(self.__slots__)
+            props = []
+            for attr in dir(self.__class__):
+                if isinstance(getattr(self.__class__, attr), property):
+                    props.append(attr)
+            attribute += props
         elif isinstance(attribute, str):
             attribute = [attribute, ]
         elif not isinstance(attribute, (list, tuple)):
@@ -1241,29 +1239,30 @@ class P(object):
                 elt = getattr(self, a)
                 if hasattr(elt, "priority"):
                     elt.priority = 0
-            except:
+            except Exception:
                 pass
 
     def reset(self, sub_name, v1, v2, ov1=None, ov2=None):
-        """
-        This function resets all the attributes having a
+        """This function resets all the attributes having a
         sub-attribute with the specified name.
 
         .. note::
+
             Respect how far from original position you are
-            i.e. you move to x1,x2 from old_x1, old_x2
+            i.e. if you move to x1,x2 from old_x1, old_x2
             if your current x1 value is not == to old_x1_value,
-            then respect how far from it you  were
+            then respect how far from it you were
 
         Example:
 
-            Create template 'example1' which inherits from 'default' template
-            t = vcs.createtemplate('example1', 'default')
-            Set x1 value to 0.15 and x2 value to 0.5
-            t.reset('x',0.15,0.5,t.data.x1,t.data.x2)
+            .. doctest:: template_reset
+
+                >>> t=vcs.createtemplate('t_reset') # inherits from 'default'
+                >>> data, data2 = t.data.x1, t.data.x2
+                >>> t.reset('x',0.15,0.5,data,data2) # Set x1 to 0.15, x2 to 0.5
 
         :param sub_name: String indicating the name of the sub-attribute to be reset.
-                         For example, sub-name='x' would cause the x1 ans x2 attributes to be set.
+            For example, sub_name='x' would cause the x1 ans x2 attributes to be set.
         :type sub_name: str
 
         :param v1: Float value to used to set the sub_name1 attribute.
@@ -1272,10 +1271,12 @@ class P(object):
         :param v2: Float value used to set the sub_name2 attribute.
         :type v2: float
 
-        :param ov1: Float value of the old sub-name1 attribute value. Used to compute an offset ratio.
+        :param ov1: Float value of the old sub-name1 attribute value.
+            Used to compute an offset ratio.
         :type ov1: float
 
-        :param ov2: Float value of the old sub-name1 attribute value. Used to compute an offset ratio.
+        :param ov2: Float value of the old sub-name1 attribute value.
+            Used to compute an offset ratio.
         :type ov2: float
         """
 
@@ -1293,39 +1294,40 @@ class P(object):
         for a in attr:
             v = getattr(self, a)
             try:
-                subattr = vars(v).keys()
-            except:
-                try:
-                    subattr = v.__slots__
-                    delta = 0.
-                    if sub_name + '1' in subattr:
-                        ov = getattr(v, sub_name + '1')
-                        if ov1 is not None:
-                            delta = (ov - ov1) * ratio
-                        setattr(v, sub_name + '1', min(1, max(0, v1 + delta)))
-                    delta = 0.
-                    if sub_name + '2' in subattr:
+                subattr = list(v.__slots__)
+                props = []
+                for attr in dir(v.__class__):
+                    if isinstance(getattr(v.__class__, attr), property):
+                        props.append(attr)
+                subattr += props
+                delta = 0.
+                if sub_name + '1' in subattr:
+                    ov = getattr(v, sub_name + '1')
+                    if ov1 is not None:
+                        delta = (ov - ov1) * ratio
+                    setattr(v, sub_name + '1', min(1, max(0, v1 + delta)))
+                delta = 0.
+                if sub_name + '2' in subattr:
+                    ov = getattr(v, sub_name + '2')
+                    if ov2 is not None:
+                        delta = (ov - ov2) * ratio
+                    setattr(v, sub_name + '2', min(1, max(0, v2 + delta)))
+                delta = 0.
+                if sub_name in subattr:
+                    ov = getattr(v, sub_name)
+                    if ov1 is not None:
+                        delta = (ov - ov1) * ratio
+                    setattr(v, sub_name, min(1, max(0, v1 + delta)))
+                    if a[-1] == '2':
                         ov = getattr(v, sub_name + '2')
                         if ov2 is not None:
                             delta = (ov - ov2) * ratio
-                        setattr(v, sub_name + '2', min(1, max(0, v2 + delta)))
-                    delta = 0.
-                    if sub_name in subattr:
-                        ov = getattr(v, sub_name)
-                        if ov1 is not None:
-                            delta = (ov - ov1) * ratio
-                        setattr(v, sub_name, min(1, max(0, v1 + delta)))
-                        if a[-1] == '2':
-                            ov = getattr(v, sub_name + '2')
-                            if ov2 is not None:
-                                delta = (ov - ov2) * ratio
-                            setattr(v, sub_name, min(1, max(0, v2 + delta)))
-                except:
-                    pass
+                        setattr(v, sub_name, min(1, max(0, v2 + delta)))
+            except Exception:
+                pass
 
     def move(self, p, axis):
-        """
-        Move a template by p% along the axis 'x' or 'y'.
+        """Move a template by p% along the axis 'x' or 'y'.
         Positive values of p mean movement toward right/top
         Negative values of p mean movement toward left/bottom
         The reference point is t.data.x1/y1
@@ -1334,18 +1336,20 @@ class P(object):
 
             .. doctest:: template_move
 
-                >>> t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+                >>> t=vcs.createtemplate('t_move') # inherits default template
                 >>> t.move(0.2,'x') # Move everything right by 20%
                 >>> t.move(0.2,'y') # Move everything up by 20%
 
-        :param p: Float indicating the percentage by which the template should move. i.e. 0.2 = 20%.
+        :param p: Float indicating the percentage by which the template should
+            move. i.e. 0.2 = 20%.
         :type p: float
 
-        :param axis: One of ['x', 'y']. The axis along which the template will move.
+        :param axis: The axis on which the template will move.
+            One of ['x', 'y'].
         :type axis: str
         """
         if axis not in ['x', 'y']:
-            raise 'Error you can move the template only the x or y axis'
+            raise Exception('Error you can move the template only the x or y axis')
         # p/=100.
         ov1 = getattr(self.data, axis + '1')
         ov2 = getattr(self.data, axis + '2')
@@ -1354,20 +1358,21 @@ class P(object):
         self.reset(axis, v1, v2, ov1, ov2)
 
     def moveto(self, x, y):
-        """
-        Move a template to point (x,y), adjusting all attributes so data.x1 = x, and data.y1 = y.
+        """Move a template to point (x,y), adjusting all attributes so data.x1 = x, and data.y1 = y.
 
         :Example:
 
             .. doctest:: template_moveto
 
-                >>> t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
-                >>> t.moveto(0.2, 0.2) # Move everything so that data.x1= 0.2 and data.y1= 0.2
+                >>> t=vcs.createtemplate('t_move2') # inherits default template
+                >>> t.moveto(0.2, 0.2) # Move template so x1 and y1 are 0.2
 
-        :param x: Float representing the new coordinate of the template's data.x1 attribute.
+        :param x: Float representing the new coordinate of the template's
+            data.x1 attribute.
         :type x: float
 
-        :param y: Float representing the new coordinate of the template's data.y1 attribute.
+        :param y: Float representing the new coordinate of the template's
+            data.y1 attribute.
         :type y: float
         """
         # p/=100.
@@ -1383,20 +1388,18 @@ class P(object):
         self.reset('y', v1, v2, ov1, ov2)
 
     def scale(self, scale, axis='xy', font=-1):
-        """
-        Scale a template along the axis 'x' or 'y' by scale
-        Positive values of scale mean increase
-        Negative values of scale mean decrease
-        The reference point is t.data.x1/y1
+        """Scale a template along the axis 'x' or 'y' by scale
+        Positive values of scale mean increase.
+        Negative values of scale mean decrease.
+        The reference point is the template's x1 and y1 data.
 
         :Example:
 
             .. doctest:: template_scale
 
-
-                >>> t = vcs.createtemplate('example1', 'default') # Create template 'example1', inherits from 'default'
+                >>> t=vcs.createtemplate('t_scale') # inherits default template
                 >>> t.scale(0.5) # Halves the template size
-                >>> t.scale(1.2) # Upsize everything to 20% more than the original size
+                >>> t.scale(1.2) # Increases size by 20%
                 >>> t.scale(2,'x') # Double the x axis
 
         :param scale: Float representing the factor by which to scale the template.
@@ -1406,13 +1409,13 @@ class P(object):
         :type axis: str
 
         :param font: Integer flag indicating what should be done with the template's fonts. One of [-1, 0, 1].
-                    0: means do not scale the fonts. 1: means scale the fonts.
-                    -1: means do not scale the fonts unless axis='xy'
+            0: means do not scale the fonts. 1: means scale the fonts.
+            -1: means do not scale the fonts unless axis='xy'
         :type font: int
 
         """
         if axis not in ['x', 'y', 'xy']:
-            raise 'Error you can move the template only the x or y axis'
+            raise Exception('Error you can move the template only the x or y axis')
         # p/=100.
         if axis == 'xy':
             axis = ['x', 'y']
@@ -1428,105 +1431,177 @@ class P(object):
             self.scalefont(scale)
 
     def scalefont(self, scale):
-        """
-        Scales the template font by scale.
+        """Scales the template font by scale.
 
-        Example:
+        :Example:
 
-            Create template 'example1' which inherits from 'default' template
-            t = vcs.createtemplate('example1', 'default')
-            reduces the fonts size by 2
-            t.scalefont(0.5)
+            .. doctest:: template_scalefont
+
+                >>> t=vcs.createtemplate('t_scfnt') # inherits default template
+                >>> t.scalefont(0.5) # reduces the fonts size by 2
 
         :param scale: Float representing the factor by which to scale the template's font size.
         :type scale: float
         """
+        props = []
+        for attr in dir(self.__class__):
+            if isinstance(getattr(self.__class__, attr), property):
+                props.append(attr)
         try:
-            attr = vars(self).keys()
-        except:
+            attr = list(vars(self).keys())
+        except Exception:
             attr = self.__slots__
+            attr = list(attr)+props
+
+        if len(attr) == 0:
+            attr = list(self.__slots__)+props
+
         for a in attr:
+            if a[0] == "_":
+                continue
             try:
                 v = getattr(self, a)
                 to = getattr(v, 'textorientation')
                 if self._scaledFont is False:  # first time let's copy it
                     to = vcs.createtextorientation(source=to)
-                to.height = to.height * scale
+                    to.height = to.height * scale
                 setattr(v, 'textorientation', to)
-            except:
+            except Exception:
                 pass
+        self._scaledFont = True
 
     def drawLinesAndMarkersLegend(self, canvas,
                                   linecolors, linetypes, linewidths,
                                   markercolors, markertypes, markersizes,
-                                  strings, scratched=None, bg=False, render=True):
-        """
-        Draws a legend with line/marker/text inside a template legend box
-        Auto adjust text size to make it fit inside the box
-        Auto arrange the elements to fill the box nicely
+                                  strings, scratched=None, stringscolors=None,
+                                  stacking="horizontal", bg=False, render=True,
+                                  smallestfontsize=None, backgroundcolor=None):
+        """Draws a legend with line/marker/text inside a template legend box.
+        Auto adjusts text size to make it fit inside the box.
+        Auto arranges the elements to fill the box nicely.
 
         :Example:
 
             .. doctest:: template_drawLinesAndMarkersLegend
 
-                >>> import vcs
                 >>> x = vcs.init()
                 >>> t = vcs.createtemplate()
-                >>> t.drawLinesAndMarkersLegend(x,
-                ...     ["red","blue","green"], ["solid","dash","dot"],[1,4,8],
-                ...     ["blue","green","red"], ["cross","square","dot"],[3,4,5],
-                ...     ["sample A","type B","thing C"],True)
+                >>> l_colors=["red","blue","green"]
+                >>> l_types=["solid","dash","dot"]
+                >>> l_widths=[1,4,8]
+                >>> m_colors=["blue","green","red"]
+                >>> m_types=["cross","square","dot"]
+                >>> m_sizes=[3,4,5]
+                >>> strings=["sample A","type B","thing C"]
+                >>> scratch=[True,False,True]
+                >>> t.drawLinesAndMarkersLegend(x, l_colors, l_types, l_widths,
+                ...     m_colors, m_types, m_sizes, strings, scratch)
                 >>> x.png("sample")
 
         :param canvas: a VCS canvas object onto which to draw the legend
         :type canvas: vcs.Canvas.Canvas
 
-        :param linecolors: list containing the colors of each line to draw
-        :type linecolors: list of either colorInt, (r,g,b,opacity), or string color names
+        :param linecolors: A list containing the colors of each line to draw.
+            Colors are represented as either an int from 0-255, an rgba tuple,
+            or a string color name.
+        :type linecolors: `list`_
 
-        :param linetypes: list containing the type of each line to draw
-        :type linetypes: list on int of line stype strings
+        :param linetypes: A list containing the type of each line to draw.
+            Line types are represented as either integers or strings.
+            See :py:class:`vcs.line.Tl` for more information.
+        :type linetypes: `list`_
 
-        :param linewidths: list containing each line width
-        :type linewidths: list of float
+        :param linewidths: A list containing floats each representing the
+            width of each line.
+        :type linewidths: `list`_
 
-        :param markercolors: list of the markers colors to draw
-        :type markercolors: list of either colorInt, (r,g,b,opacity), or string color names
+        :param markercolors: A list of the markers colors to draw.
+            Colors are represented as either an int from 0-255, an rgba tuple,
+            or a string color name.
+        :type markercolors: `list`_
 
-        :param markertypes: list of the marker types to draw
-        :type markertypes: list of int or  string of marker names
+        :param markertypes: A list of the marker types to draw.
+            Marker types are represented as either integers or strings.
+            See :py:class:`vcs.marker.Tm` for more information.
+        :type markertypes: `list`_
 
-        :param markersizes: list of the size of each marker to draw
-        :type markersizes: list of float
+        :param markersizes: A list of floats representing marker sizes.
+        :type markersizes: `list`_
 
-        :param strings: list of the string to draw next to each line/marker
-        :type strings: list of string
+        :param strings: A list of strings to draw next to each line/marker.
+        :type strings: `list`_
 
-        :param scratched: None (off) or list. list contains False where no scratch is needed
-                      For scratched provide True or line type to use for scratch
-                      color will match that of text
-        :type scratched: None or list of bool
+        :param scratched: A list indicating which strings should be "scratched"
+            off in the template.
 
-        :param bg: do we draw in background or foreground
+            To "scratch" a string, the corresponding location in the scratched
+            list must contain either True or the line type to use for the
+            scratch. A value of False at a given index will leave the
+            corresponding index of strings untouched.
+
+            Size of the scratched list must be equal to the size of the strings
+            list.
+
+            Scratch color will match that of text.
+
+            If scratched is None, or is not provided, no strings will be
+            scratched.
+        :type scratched: `None`_ or `list`_
+
+        :param stringscolors: A list of the strings colors to draw.
+            Colors are represented as either an int from 0-255, an rgba tuple,
+            or a string color name.
+        :type stringscolors: `list`_
+
+        :param stacking: Prefered direction to stack element ('horizontal' or 'vertical')
+        :type stringscolors: `string`_
+
+        :param bg: Boolean value indicating whether or not to draw in the
+            background. Defaults to False.
         :type bg: bool
 
-        :param render: do we render or not (so it less flashy)
+        :param render: Boolean value indicating whether or not to render.
+            Defaults to True.
         :type render: bool
+
+        :param smallestfontsize: Integer value indicating the smallest font size we can use for rendering
+            None means no limit, 0 means use original size. Downscaling will still be used by algorigthm
+            to try to fit everything in the legend box.
+        :type smallestfintsize: `int`_
+
+        :param backgroundcolor: A list indicating the background color of the legended box.
+            Colors are represented as either an int from 0-255, an rgba tuple,
+            or a string color name.
+        :type markercolors: `list`_
         """
         return vcs.utils.drawLinesAndMarkersLegend(canvas,
                                                    self.legend,
                                                    linecolors, linetypes, linewidths,
                                                    markercolors, markertypes, markersizes,
-                                                   strings, scratched, bg, render)
+                                                   strings, scratched, stringscolors, stacking, bg,
+                                                   render, smallestfontsize, backgroundcolor)
 
     def drawAttributes(self, x, slab, gm, bg=False, **kargs):
-        """Draws attribtes of slab onto a canvas
+        """Draws attributes of slab onto a canvas
+
+        :Example:
+
+            .. doctest:: templates_drawAttributes
+
+                >>> a=vcs.init()
+                >>> import cdms2 # We need cdms2 to create a slab
+                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
+                >>> s = f('clt') # use the data file to create a slab
+                >>> t=a.gettemplate()
+                >>> b=a.getboxfill() # boxfill gm
+                >>> t.drawAttributes(a,s,b) # shows attributes of s on canvas
+                [...]
 
         :param x: vcs canvas onto which attributes will be drawn
         :type x: vcs.Canvas.Canvas
 
         :param slab: slab to get attributes from
-        :type slab: cdms2.tvariable.TransientVariable, numpy.ndarray
+        :type slab: cdms2.tvariable.TransientVariable or numpy.ndarray
         """
         displays = []
         # figures out the min and max and set them as atributes...
@@ -1570,10 +1645,10 @@ class P(object):
                                 float(cdutil.averager(slab,
                                                       axis=" ".join(["(%s)" %
                                                                      S for S in slab.getAxisIds()])))
-                        except:
+                        except Exception:
                             try:
                                 meanstring = 'Mean %.4g' % slab.mean()
-                            except:
+                            except Exception:
                                 meanstring = 'Mean %.4g' % numpy.mean(slab.filled())
                     tt.string = meanstring
                 else:
@@ -1601,12 +1676,10 @@ class P(object):
 
     def plot(self, x, slab, gm, bg=False, min=None,
              max=None, X=None, Y=None, **kargs):
-        """
-        This plots the template stuff on the Canvas.
+        """This plots the template stuff on the Canvas.
         It needs a slab and a graphic method.
 
-        :returns: A list containing all the displays used
-        :rtype: list
+        .. pragma: skip-doctest TODO add example/doctest
         """
 
         displays = []
@@ -1673,50 +1746,21 @@ class P(object):
 
         # Do the tickmarks/labels
         if not isinstance(gm, vcs.taylor.Gtd):
-            displays += self.drawTicks(slab,
-                                       gm,
-                                       x,
-                                       axis='x',
-                                       number='1',
-                                       vp=vp2,
-                                       wc=wc2,
-                                       bg=bg,
-                                       X=X,
-                                       Y=Y,
-                                       **kargs)
-            displays += self.drawTicks(slab,
-                                       gm,
-                                       x,
-                                       axis='x',
-                                       number='2',
-                                       vp=vp2,
-                                       wc=wc2,
-                                       bg=bg,
-                                       X=X,
-                                       Y=Y,
-                                       **kargs)
-            displays += self.drawTicks(slab,
-                                       gm,
-                                       x,
-                                       axis='y',
-                                       number='1',
-                                       vp=vp2,
-                                       wc=wc2,
-                                       bg=bg,
-                                       X=X,
-                                       Y=Y,
-                                       **kargs)
-            displays += self.drawTicks(slab,
-                                       gm,
-                                       x,
-                                       axis='y',
-                                       number='2',
-                                       vp=vp2,
-                                       wc=wc2,
-                                       bg=bg,
-                                       X=X,
-                                       Y=Y,
-                                       **kargs)
+            for axis in ["x", "y"]:
+                for number in ["1", "2"]:
+                    for mintic in [False, True]:
+                        displays += self.drawTicks(slab,
+                                                   gm,
+                                                   x,
+                                                   axis=axis,
+                                                   number=number,
+                                                   vp=vp2,
+                                                   wc=wc2,
+                                                   bg=bg,
+                                                   X=X,
+                                                   Y=Y,
+                                                   mintic=mintic,
+                                                   **kargs)
 
         if X is None:
             X = slab.getAxis(-1)
@@ -1731,40 +1775,40 @@ class P(object):
             for num in ["1", "2"]:
                 e = getattr(self, tp + num)
                 if e.priority != 0:
-                    l = x.createline(source=e.line)
+                    ln_tmp = x.createline(source=e.line)
                     if hasattr(gm, "projection"):
-                        l.projection = gm.projection
+                        ln_tmp.projection = gm.projection
                     if vcs.elements["projection"][
-                            l.projection].type != "linear":
-                        l.worldcoordinate = wc2[:4]
-                        l.viewport = kargs.get("ratio_autot_viewport",
-                                               [e._x1, e._x2, e._y1, e._y2])
+                            ln_tmp.projection].type != "linear":
+                        ln_tmp.worldcoordinate = wc2[:4]
+                        ln_tmp.viewport = kargs.get("ratio_autot_viewport",
+                                                    [e._x1, e._x2, e._y1, e._y2])
                         dx = (e._x2 - e._x1) / \
                             (self.data.x2 - self.data.x1) * (wc2[1] - wc2[0])
                         dy = (e._y2 - e._y1) / \
                             (self.data.y2 - self.data.y1) * (wc2[3] - wc2[2])
                         if tp == "line":
-                            l._x = [wc2[0], wc2[0] + dx]
-                            l._y = [wc2[2], wc2[2] + dy]
+                            ln_tmp._x = [wc2[0], wc2[0] + dx]
+                            ln_tmp._y = [wc2[2], wc2[2] + dy]
                         elif tp == "box" and \
-                                vcs.elements["projection"][l.projection].type in\
+                                vcs.elements["projection"][ln_tmp.projection].type in\
                                 round_projections:
-                            l._x = [[wc2[0], wc2[1]], [wc2[0], wc2[1]]]
-                            l._y = [wc2[3], wc2[3]], [wc2[2], wc2[2]]
+                            ln_tmp._x = [[wc2[0], wc2[1]], [wc2[0], wc2[1]]]
+                            ln_tmp._y = [[wc2[3], wc2[3]], [wc2[2], wc2[2]]]
                         else:
-                            l._x = [
+                            ln_tmp._x = [
                                 wc2[0],
                                 wc2[0] + dx,
                                 wc2[0] + dx,
                                 wc2[0],
                                 wc2[0]]
-                            l._y = [wc2[2], wc2[2], wc2[3], wc2[3], wc2[2]]
+                            ln_tmp._y = [wc2[2], wc2[2], wc2[3], wc2[3], wc2[2]]
                     else:
-                        l._x = [e._x1, e._x2, e._x2, e._x1, e._x1]
-                        l._y = [e._y1, e._y1, e._y2, e._y2, e._y1]
-                    l._priority = e._priority
-                    displays.append(x.plot(l, bg=bg, ratio="none", **kargs))
-                    del(vcs.elements["line"][l.name])
+                        ln_tmp._x = [e._x1, e._x2, e._x2, e._x1, e._x1]
+                        ln_tmp._y = [e._y1, e._y1, e._y2, e._y2, e._y1]
+                    ln_tmp._priority = e._priority
+                    displays.append(x.plot(ln_tmp, bg=bg, ratio="none", **kargs))
+                    del(vcs.elements["line"][ln_tmp.name])
 
         # x.mode=m
         # I think i have to use dict here because it's a valid value
@@ -1777,9 +1821,10 @@ class P(object):
     def drawColorBar(self, colors, levels, legend=None, ext_1='n',
                      ext_2='n', x=None, bg=False, priority=None,
                      cmap=None, style=['solid'], index=[1],
-                     opacity=[], **kargs):
+                     opacity=[], pixelspacing=[15, 15], pixelscale=12, **kargs):
         """
         This function, draws the colorbar, it needs:
+
         colors : The colors to be plotted
         levels : The levels that each color represent
         legend : To overwrite, saying just draw box at
@@ -1788,6 +1833,22 @@ class P(object):
         x : the canvas where to plot it
         bg: background mode ?
         returns a list of displays used
+        :param colors:
+        :param levels:
+        :param legend:
+        :param ext_1:
+        :param ext_2:
+        :param x:
+        :param bg:
+        :param priority:
+        :param cmap:
+        :param style:
+        :param index:
+        :param opacity:
+        :param kargs:
+        :return:
+
+        .. pragma: skip-doctest TODO add example/doctest. And more documentation...
         """
 
         kargs["donotstoredisplay"] = True
@@ -1903,7 +1964,6 @@ class P(object):
                     ])
             else:
                 # Draws a normal box
-                # print i,boxLength,thick,startLength,startThick
                 L.append([startLength + boxLength * (i + adjust),
                           startLength + boxLength * (i + adjust + 1),
                           startLength + boxLength * (i + adjust + 1),
@@ -1923,6 +1983,8 @@ class P(object):
             opacity = [None, ] * len(colors)
         fa.opacity = opacity
         fa.priority = priority
+        fa.pixelspacing = pixelspacing
+        fa.pixelscale = pixelscale
         if cmap is not None:
             fa.colormap = cmap
         # assigning directly since we gen it we know it's good
@@ -2026,8 +2088,6 @@ class P(object):
         txt = x.createtext(
             To_source=self.legend.textorientation,
             Tt_source=self.legend.texttable)
-        ln._priority = priority + 1
-        txt.priority = priority + 1
         txt.string = St
         if isinstance(legend, list):
             if isHorizontal:
@@ -2060,30 +2120,43 @@ class P(object):
     def ratio_linear_projection(self, lon1, lon2, lat1, lat2,
                                 Rwished=None, Rout=None,
                                 box_and_ticks=0, x=None):
-        """
-        Computes ratio to shrink the data area of a template in order
-        that the overall area
-        has the least possible deformation in linear projection
+        """Computes ratio to shrink the data area of a template such that the
+        overall area has the least possible deformation in linear projection
 
-        Version: 1.1
-        Notes: Thanks to Karl Taylor for the equation of "optimal" ratio
+        .. note::
 
-        Necessary arguments:
-          lon1, lon2: in degrees_east  : Longitude spanned by plot
-          lat1, lat2: in degrees_north : Latitude  spanned by plot
+            lon1/lon2 must be specified in degrees east.
+            lat1/lat2 must be specified in degrees north.
 
-        Optional arguments:
-          Rwished: Ratio y/x wished, None=automagic
-          Rout: Ratio of output (default is US Letter=11./8.5)
-                Also you can pass a string: "A4","US LETTER", "X"/"SCREEN",
-                the latest uses the window information
-          box_and_ticks: Also redefine box and ticks to the new region
-        Returned:
-          vcs template object
+        :Example:
 
-        Usage example:
-          #USA
-          t.ratio_linear_projection(-135,-50,20,50)
+            .. doctest:: template_P_ratio_linear_projection
+
+                >>> t=vcs.gettemplate()
+                >>> t.ratio_linear_projection(-135,-50,20,50) # USA
+
+        :param lon1: Start longitude for plot.
+        :type lon1: `float`_ or `int`_
+
+        :param lon2: End longitude for plot
+        :type lon2: `float`_ or `int`_
+
+        :param lat1: Start latitude for plot.
+        :type lat1: `float`_ or `int`_
+
+        :param lat2: End latitude for plot
+        :type lat2: `float`_ or `int`_
+
+        :param Rwished: Ratio y/x wished.
+            If None, ratio will be determined automatically.
+        :type Rwished: `float`_ or `int`_
+
+        :param Rout: Ratio of output (default is US Letter=11./8.5)
+            Also you can pass a string: "A4","US LETTER", "X"/"SCREEN",
+            the latest uses the window information
+            box_and_ticks: Also redefine box and ticks to the new region.
+            If None, Rout will be determined automatically.
+        :type Rout: `float`_ or `int`_
         """
 
         # Converts lat/lon to rad
@@ -2113,26 +2186,29 @@ class P(object):
         return
 
     def ratio(self, Rwished, Rout=None, box_and_ticks=0, x=None):
-        """
-        Computes ratio to shrink the data area of a template
+        """Computes ratio to shrink the data area of a template
         to have an y/x ratio of Rwished
         has the least possible deformation in linear projection
 
-        Version: 1.1
+        :Example:
 
-        Necessary arguments:
-          Rwished: Ratio y/x wished
-        Optional arguments:
-          Rout: Ratio of output (default is US Letter=11./8.5)
-                Also you can pass a string: "A4","US LETTER",
-                "X"/"SCREEN", the latest uses the window information
-          box_and_ticks: Also redefine box and ticks to the new region
-        Returned:
-          vcs template object
+            .. doctest:: template_P_ratio
 
-        Usage example:
-          # y is twice x
-          t.ratio(2)
+                >>> t=vcs.gettemplate()
+                >>> t.ratio(2) # y is twice x
+
+        :param Rwished: Ratio y/x wished.
+            Rwished MUST be provided.
+        :type Rwished: `float`_ or `int`_
+
+        :param Rout: Ratio of output (default is US Letter=11./8.5).
+            Also you can pass a string: "A4","US LETTER",
+            "X"/"SCREEN", the latest uses the window information
+            box_and_ticks: Also redefine box and ticks to the new region
+        :type Rout: str or None
+
+        :returns: vcs template object
+        :rtype: vcs.template.P
         """
         if x is None:
             x = vcs.init()
@@ -2158,7 +2234,7 @@ class P(object):
             try:
                 info = x.canvasinfo()
                 Rout = float(info['width']) / float(info['height'])
-            except:
+            except Exception:
                 Rout = 1. / .758800507
                 if x.isportrait():
                     Rout = 1. / Rout
@@ -2250,9 +2326,9 @@ class P(object):
             # Axis Names
             self.xname.y = max(0, min(1, self.xlabel1._y - x_scale * x_label_name_diff))
             self.yname.x = max(0, min(1, self.ylabel1._x - y_scale * y_label_name_diff))
-            self.data._ratio = -Rwished
+            self.data.ratio = -Rwished
         else:
-            self.data._ratio = Rwished
+            self.data.ratio = Rwished
 
         del(vcs.elements["template"][t.name])
         return

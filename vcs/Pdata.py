@@ -22,10 +22,12 @@
 #
 #
 #
-import VCS_validation_functions
+from __future__ import print_function
+from . import VCS_validation_functions
+import vcs
 
 
-class Pds(object):
+class Pds(vcs.bestMatch):
 
     """
     The Template text object allows the manipulation of line type, width, and color index.
@@ -102,19 +104,13 @@ class Pds(object):
     #                                                                           #
     ##########################################################################
     __slots__ = [
-        "priority",
-        "x1",
-        "x2",
-        "y1",
-        "y2",
-        "ratio",
         "member",
         "_priority",
         "_x1",
         "_x2",
         "_y1",
         "_y2",
-        "_ratio"]
+        "ratio"]
 
     def __init__(self, member):
         #    def __init__(self, template, member=None):
@@ -151,12 +147,12 @@ class Pds(object):
     #                                                                           #
     ##########################################################################
     def list(self):
-        print "member = ", self.member
-        print "     priority =", self.priority
-        print "     x1 =", self.x1
-        print "     y1 =", self.y1
-        print "     x2 =", self.x2
-        print "     y2 =", self.y2
+        print("member = ", self.member)
+        print("     priority =", self.priority)
+        print("     x1 =", self.x1)
+        print("     y1 =", self.y1)
+        print("     x2 =", self.x2)
+        print("     y2 =", self.y2)
 
 
 ##########################################################################

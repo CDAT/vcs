@@ -1,5 +1,5 @@
 from .pipeline2d import Pipeline2D
-import fillareautils
+from . import fillareautils
 
 import numpy
 import vcs
@@ -10,8 +10,8 @@ class IsofillPipeline(Pipeline2D):
 
     """Implementation of the Pipeline interface for VCS isofill plots."""
 
-    def __init__(self, gm, context_):
-        super(IsofillPipeline, self).__init__(gm, context_)
+    def __init__(self, gm, context_, plot_keyargs):
+        super(IsofillPipeline, self).__init__(gm, context_, plot_keyargs)
         self._needsCellData = False
 
     def _updateContourLevelsAndColors(self):
@@ -34,6 +34,7 @@ class IsofillPipeline(Pipeline2D):
 
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
+        fareapixelspacing, fareapixelscale = self._patternSpacingAndScale()
 
         for i, l in enumerate(tmpLevels):
             # Ok here we are trying to group together levels can be, a join
@@ -112,7 +113,6 @@ class IsofillPipeline(Pipeline2D):
 
         # And now we need actors to actually render this thing
         actors = []
-        patternActors = []
         ct = 0
         vp = self._resultDict.get('ratio_autot_viewport',
                                   [self._template.data.x1, self._template.data.x2,
@@ -130,41 +130,39 @@ class IsofillPipeline(Pipeline2D):
             else:
                 actors.append([act, plotting_dataset_bounds])
 
+            # create a new renderer for this mapper
+            # (we need one for each mapper because of cmaera flips)
+            # Note that fitToViewport is called on the actor before calling any
+            # patterns code so that patterns are generated for the transformed
+            # data set
+            dataset_renderer, xScale, yScale = self._context().fitToViewport(
+                act, vp,
+                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
+                geo=self._vtkGeoTransform,
+                priority=self._template.data.priority,
+                create_renderer=(mapper is self._maskedDataMapper or dataset_renderer is None),
+                add_actor=(style == "solid"))
+
+            if mapper is not self._maskedDataMapper:
                 # Since pattern creation requires a single color, assuming the first
                 c = self.getColorIndexOrRGBA(_colorMap, tmpColors[ct][0])
 
-                # The isofill actor is scaled by the camera, so we need to use this size
-                # instead of window size for scaling the pattern.
-                viewsize = (x2 - x1, y2 - y1)
                 patact = fillareautils.make_patterned_polydata(mapper.GetInput(),
                                                                fillareastyle=style,
                                                                fillareaindex=tmpIndices[ct],
                                                                fillareacolors=c,
                                                                fillareaopacity=tmpOpacities[ct],
-                                                               size=viewsize)
+                                                               fillareapixelspacing=fareapixelspacing,
+                                                               fillareapixelscale=fareapixelscale,
+                                                               size=self._context().renWin.GetSize(),
+                                                               renderer=dataset_renderer)
 
                 if patact is not None:
-                    patternActors.append(patact)
+                    actors.append([patact, plotting_dataset_bounds])
+                    dataset_renderer.AddActor(patact)
 
                 # increment the count
                 ct += 1
-
-            # create a new renderer for this mapper
-            # (we need one for each mapper because of cmaera flips)
-            dataset_renderer, xScale, yScale = self._context().fitToViewport(
-                act, vp,
-                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSet.GetBounds(),
-                geo=self._vtkGeoTransform,
-                priority=self._template.data.priority,
-                create_renderer=(mapper is self._maskedDataMapper or dataset_renderer is None))
-        for act in patternActors:
-            self._context().fitToViewport(
-                act, vp,
-                wc=plotting_dataset_bounds, geoBounds=self._vtkDataSet.GetBounds(),
-                geo=self._vtkGeoTransform,
-                priority=self._template.data.priority,
-                create_renderer=True)
-            actors.append([act, plotting_dataset_bounds])
 
         self._resultDict["vtk_backend_actors"] = actors
 
@@ -176,6 +174,7 @@ class IsofillPipeline(Pipeline2D):
         kwargs = {"vtk_backend_grid": self._vtkDataSet,
                   "dataset_bounds": self._vtkDataSetBounds,
                   "plotting_dataset_bounds": plotting_dataset_bounds,
+                  "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
                   "vtk_backend_geo": self._vtkGeoTransform}
         if ("ratio_autot_viewport" in self._resultDict):
             kwargs["ratio_autot_viewport"] = vp
@@ -206,21 +205,26 @@ class IsofillPipeline(Pipeline2D):
                     # need exts
                     self._contourLevels.append(1.e20)
 
+        # Compensate for the different viewport size of the colorbar
+        legendpixspacing = [int(fareapixelspacing[0] / (vp[1] - vp[0])),
+                            int(fareapixelspacing[1] / (vp[3] - vp[2]))]
+        legendpixscale = fareapixelscale / (vp[1] - vp[0])
+
         self._resultDict.update(
             self._context().renderColorBar(self._template, self._contourLevels,
                                            self._contourColors, legend,
                                            self.getColorMap(),
                                            style=style,
                                            index=self._gm.fillareaindices,
-                                           opacity=self._gm.fillareaopacity))
+                                           opacity=self._gm.fillareaopacity,
+                                           pixelspacing=legendpixspacing,
+                                           pixelscale=legendpixscale))
 
-        if self._context().canvas._continents is None:
-            self._useContinents = False
-        if self._useContinents:
-            projection = vcs.elements["projection"][self._gm.projection]
-            continents_renderer, xScale, yScale = self._context().plotContinents(
-                plotting_dataset_bounds, projection,
-                self._dataWrapModulo,
-                vp, self._template.data.priority,
-                vtk_backend_grid=self._vtkDataSet,
-                dataset_bounds=self._vtkDataSetBounds)
+        projection = vcs.elements["projection"][self._gm.projection]
+        kwargs['xaxisconvert'] = self._gm.xaxisconvert
+        kwargs['yaxisconvert'] = self._gm.yaxisconvert
+        if self._data1.getAxis(-1).isLongitude() and self._data1.getAxis(-2).isLatitude():
+            self._context().plotContinents(self._plot_kargs.get("continents", self._useContinents),
+                                           plotting_dataset_bounds, projection,
+                                           self._dataWrapModulo,
+                                           vp, self._template.data.priority, **kwargs)

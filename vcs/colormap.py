@@ -1,5 +1,16 @@
 """
 # Colormap (Cp) module
+
+    .. _list: https://docs.python.org/2/library/functions.html#list
+    .. _tuple: https://docs.python.org/2/library/functions.html#tuple
+    .. _dict: https://docs.python.org/2/library/stdtypes.html#mapping-types-dict
+    .. _None: https://docs.python.org/2/library/constants.html?highlight=none#None
+    .. _str: https://docs.python.org/2/library/functions.html?highlight=str#str
+    .. _bool: https://docs.python.org/2/library/functions.html?highlight=bool#bool
+    .. _float: https://docs.python.org/2/library/functions.html?highlight=float#float
+    .. _int: https://docs.python.org/2/library/functions.html?highlight=float#int
+    .. _long: https://docs.python.org/2/library/functions.html?highlight=float#long
+    .. _file: https://docs.python.org/2/library/functions.html?highlight=open#file
 """
 ##########################################################################
 #                                                                               #
@@ -22,10 +33,13 @@
 #
 #
 #############################################################################
-from UserDict import UserDict
+try:
+    from collections import UserDict
+except Exception:
+    from UserDict import UserDict
 import vcs
 import copy
-import xmldocs
+from . import xmldocs
 
 
 def process_src(nm, code):
@@ -138,7 +152,7 @@ class RGB_Table(UserDict):
     def __setitem__(self, key, value):
         if (self.name == 'default'):
             raise ValueError('You cannot modify the default colormap.')
-        if (key not in range(0, 256)):
+        if (key not in list(range(0, 256))):
             raise ValueError('Cell index must be in the range 0 to 255.')
         if isinstance(value, (list, tuple)):
             value = list(value)
@@ -156,7 +170,7 @@ class RGB_Table(UserDict):
         self.data[key] = value
 
     def __getitem__(self, key):
-        if (key not in range(0, 256)):
+        if (key not in list(range(0, 256))):
             raise ValueError('Cell index must be in the range 0 to 255.')
         return self.data[key]
 #
@@ -168,7 +182,7 @@ class RGB_Table(UserDict):
 #############################################################################
 
 
-class Cp(object):
+class Cp(vcs.bestMatch):
 
     """
     The Colormap object allows the manipulation of the colormap index R,G,B values.
@@ -231,8 +245,9 @@ class Cp(object):
                 # R, G, B values range from 0 to 100, where 0 is low intensity and 100 is highest intensity
                 cp.color=17,0,0,100
 
+    .. pragma: skip-doctest
     """
-    __slots__ = ["s_name", "name", "_name", "index", "_index"]
+    __slots__ = ["s_name", "_name", "_index"]
 
     def getname(self):
         return self._name
@@ -251,14 +266,14 @@ class Cp(object):
         return self._index
 
     def setindex(self, value):
-        # usually we cannot set index, but there is an exception for lading
+        # usually we cannot set index, but there is an exception for loading
         # from json files
-        if not(isinstance(value, dict) and value.keys() == [u'data', ]):
+        if not(isinstance(value, dict) and list(value.keys()) == ['data', ]):
             raise Exception("invalid")
         else:
             d2 = {}
-            d = value[u'data']
-            for k in d.keys():
+            d = value['data']
+            for k in list(d.keys()):
                 if len(d[k]) == 3:  # Old style only r,g,b no a
                     d[k] += [100.]
                 d2[int(k)] = d[k]
@@ -300,31 +315,30 @@ class Cp(object):
 
     # Set a colorcell RGB
     def setcolorcell(self, index, red, green, blue, alpha=100.):
-        """
-        Sets the R,G,B,A values of a colorcell
+        """Sets the R,G,B,A values of a colorcell
 
         :Example:
 
             .. doctest:: colormap_setcolorcell
 
                 >>> a = vcs.init() # Create a vcs Canvas
-                >>> cmap = a.createcolormap('example', 'default') # Create a colormap
+                >>> cmap = a.createcolormap('scc_cmap') # Create a colormap
                 >>> cmap.setcolorcell(40,80,95,1.0) # Set RGBA values
 
         :param index: Integer from 0-255.
-        :type index: int
+        :type index: `int`_
 
         :param red: Integer from 0-255 representing the concentration of red in the colorcell.
-        :type red: int
+        :type red: `int`_
 
         :param green: Integer from 0-255 representing the concentration of green in the colorcell.
-        :type green: int
+        :type green: `int`_
 
         :param blue: Integer from 0-255 representing the concentration of blue in the colorcell.
-        :type blue: int
+        :type blue: `int`_
 
         :param alpha: Float representing the percentage of opacity in the colorcell.
-        :type alpha: float
+        :type alpha: `float`_
         """
         self.index[index] = [red, green, blue, alpha]
 
@@ -338,15 +352,15 @@ class Cp(object):
             .. doctest:: colormap_getcolorcell
 
                 >>> a=vcs.init() # Create a vcs Canvas
-                >>> cmap = a.createcolormap('example', 'default') # Create a colormap
+                >>> cmap = a.createcolormap('gcc_cmap') # Create a colormap
                 >>> cmap.getcolorcell(1) # Get RGBA values
-                [0, 0, 0, 100.0]
+                [26, 0, 33, 100]
 
         :param index: Index of a cell in the colormap. Must be an integer from 0-255.
-        :type index: int
+        :type index: `int`_
 
         :returns: A list containing the red, green, blue, and alpha values of the colorcell at the given index.
-        :rtype: list
+        :rtype: `list`_
         """
         return self.index[index]
 
@@ -358,10 +372,11 @@ class Cp(object):
     def list(self):
         if (self.name == '__removed_from_VCS__'):
             raise ValueError('This instance has been removed from VCS.')
-        print "", "----------Colormap (Cp) member (attribute) listings ----------"
-        print "secondary method =", self.s_name
-        print "name =", self.name
-        print "index =", self.index
+        print("---------- Colormap (Cp) member (attribute) listings ----------")
+        print("secondary method =", self.s_name)
+        print("name =", self.name)
+        print("index =", self.index)
+    list.__doc__ = xmldocs.listdoc.format(name="colormap", parent="")
 
     ##########################################################################
     #                                                                           #
@@ -388,7 +403,7 @@ class Cp(object):
         else:
             scr_type = scr_type[-1]
         if scr_type == '.scr':
-            raise DeprecationWarning("scr script are no longer generated")
+            raise vcs.VCSDeprecationWarning("scr script are no longer generated")
         elif scr_type == ".py":
             mode = mode + '+'
             py_type = script_filename[

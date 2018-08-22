@@ -1,7 +1,7 @@
 from vcs import vtk_ui
 from vcs.vtk_ui import behaviors
 from vcs.colorpicker import ColorPicker
-import priority
+from . import priority
 
 
 class LineEditor(
@@ -126,7 +126,7 @@ class LineEditor(
 
         self.handles = []
 
-        points = zip(self.line.x[self.index], self.line.y[self.index])
+        points = list(zip(self.line.x[self.index], self.line.y[self.index]))
 
         for point in points:
             h = vtk_ui.Handle(
@@ -186,7 +186,7 @@ class LineEditor(
         # Hack to make draggable work a little better with double click
         self.drag_origin = None
         if self.in_bounds(x, y):
-            points = zip(self.line.x[self.index], self.line.y[self.index])
+            points = list(zip(self.line.x[self.index], self.line.y[self.index]))
             for ind, point in enumerate(points):
                 x1, _ = point
                 x2, _ = points[ind + 1]
@@ -207,7 +207,7 @@ class LineEditor(
 
 def inside_line(line, x, y, screen_height, index=None):
     if index is None:
-        indices = range(len(line.x))
+        indices = list(range(len(line.x)))
     else:
         indices = [index]
 
@@ -216,7 +216,7 @@ def inside_line(line, x, y, screen_height, index=None):
             if ind != index:
                 continue
 
-        points = zip(line.x[ind], line.y[ind])
+        points = list(zip(line.x[ind], line.y[ind]))
         width = line.width[ind]
         offset = width / float(screen_height) * 2
         for p_ind, point in enumerate(points):

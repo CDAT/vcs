@@ -1,5 +1,10 @@
 from genutil.colors import rgb2str, str2rgb  # noqa
 
+try:
+    basestring
+except NameError:
+    basestring = str
+
 
 def matplotlib2vcs(cmap, vcs_name=None):
     """
@@ -8,10 +13,10 @@ def matplotlib2vcs(cmap, vcs_name=None):
     Optional second argument: vcs_name, name of the resulting vcs colormap
 
     :param cmap: A matplotlib colormap or string name of a matplotlib colormap
-    :type cmap: str , matplotlib colormap
+    :type cmap: :py:class:`str` , matplotlib.cm
 
     :param vcs_name: String to set the name of the generated VCS colormap
-    :type vcs_name: str
+    :type vcs_name: :py:class:`str`
 
     :returns: A VCS colormap object
     :rtype: vcs.colormap.Cp
@@ -19,10 +24,10 @@ def matplotlib2vcs(cmap, vcs_name=None):
     import vcs
     import matplotlib.cm
     import warnings
-    if isinstance(cmap, (str, unicode)):
+    if isinstance(cmap, basestring):
         try:
             cmap = matplotlib.cm.get_cmap(cmap)
-        except:
+        except Exception:
             raise RuntimeError("Could not retrieve matplotlib colormap: %s" % cmap)
 
     if vcs_name is None:
@@ -37,8 +42,18 @@ def matplotlib2vcs(cmap, vcs_name=None):
             "%s colormap name was already existing, your colormap name will be: %s" %
             (vcs_name, vcs_name_final))
     vcs_cmap = vcs.createcolormap(vcs_name_final)
-    cmap_rgbs = cmap(range(0, cmap.N))
+    cmap_rgbs = cmap(list(range(0, cmap.N)))
     for i in range(0, min(cmap.N, 256)):
         vcs_cmap.setcolorcell(i, *([int(x * 100) for x in cmap_rgbs[i][:4]]))
 
     return vcs_cmap
+
+
+def loadmatplotlibcolormaps():
+    """
+    Convert all matplotlib colormaps to vcs colormaps
+    """
+    import matplotlib.pyplot as plt
+    mpl_cmaps = sorted(m for m in plt.cm.datad if not m.endswith("_r"))
+    for cmap in mpl_cmaps:
+        matplotlib2vcs(cmap)

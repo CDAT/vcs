@@ -1,5 +1,5 @@
 from vcs.vtk_ui import behaviors
-import priority
+from . import priority
 
 
 class PointEditor(

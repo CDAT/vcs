@@ -1,0 +1,39 @@
+#cvi_tooltip {
+    display:none;
+    position:absolute;
+    padding:4px 8px;
+    color: #666666;
+    text-shadow: white 0px 1px 0px;
+    background: #ffdd00;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(255,255,255)), to(rgb(255,224,0)));
+    background-image: -moz-linear-gradient(top, rgb(255,255,255), rgb(255,224,0));
+    font: 100% Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    border: 1px solid orange;
+    max-width: 240px;
+    min-width: 30px;
+    border-radius: 8px;
+    -moz-border-radius: 8px;    
+    -khtml-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    box-shadow: rgba(40,20,0,.66) 0px 0px 8px;
+    -moz-box-shadow: rgba(40,20,0,.66) 0px 0px 8px;
+    -webkit-box-shadow: rgba(40,20,0,.66) 0px 0px 8px;
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+}
+#cvi_tooltip  b {color: #333333; }
+#cvi_tooltip  i {font-family: Times, serif; }
+#cvi_tooltip  big {text-transform: uppercase; }
+#cvi_tooltip  hr {
+    color: orange; 
+    border-color: orange; 
+    background-color: orange; 
+}
+#thumbnail {
+    margin: 0 auto;
+    width: 200px; 
+    min-height: 200px;
+}

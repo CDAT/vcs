@@ -1,5 +1,5 @@
 from vtk import vtkHandleWidget, vtkPointHandleRepresentation2D
-from widget import Widget
+from .widget import Widget
 
 
 class Handle(Widget):

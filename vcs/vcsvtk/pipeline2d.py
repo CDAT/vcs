@@ -1,7 +1,7 @@
 from .pipeline import Pipeline
 from .. import vcs2vtk
 
-import fillareautils
+from . import fillareautils
 import numpy
 import vcs
 import vtk
@@ -40,6 +40,10 @@ class IPipeline2D(Pipeline):
             pipeline.
         - _vtkDataSetBounds: The bounds of _vtkDataSet, in lon/lat space, as
             tuple(float xMin, float xMax, float yMin, float yMax)
+        - _vtkDataSetBoundsNoMask : The bounds of _vtkDataSet in Cartesian space
+            before masking. These are used instead of the dataset bounds
+            because masking can change the dataset bounds which results in a dataset
+            that looks incomplete.
         - _vtkPolyDataFilter: A vtkAlgorithm that produces a polydata
             representation of the data.
         - _colorMap: The vcs colormap object used to color the scalar data.
@@ -52,11 +56,12 @@ class IPipeline2D(Pipeline):
             the plot needs point scalars
         - _needsVectors: True if the plot needs vectors, false if it needs scalars
         - _scalarRange: The range of _data1 as tuple(float min, float max)
+        - _vectorRange: The range of the vector magnitude formed from _data1, _data2
         - _maskedDataMapper: The mapper used to render masked data.
     """
 
-    def __init__(self, gm, context_):
-        super(IPipeline2D, self).__init__(gm, context_)
+    def __init__(self, gm, context_, plot_keyargs):
+        super(IPipeline2D, self).__init__(gm, context_, plot_keyargs)
 
         # TODO This should be replaced by getters that retrieve the info
         # needed, or document the members of the map somewhere. Much of this
@@ -82,6 +87,7 @@ class IPipeline2D(Pipeline):
         self._needsCellData = None
         self._needsVectors = False
         self._scalarRange = None
+        self._vectorRange = [0.0, 0.0]
         self._maskedDataMapper = None
 
     def _updateScalarData(self):
@@ -102,10 +108,13 @@ class IPipeline2D(Pipeline):
     def _updateContourLevelsAndColorsGeneric(self):
         # Contour values:
         self._contourLevels = self._gm.levels
+        if (self._needsVectors):
+            valueRange = self._vectorRange
+        else:
+            valueRange = self._scalarRange
         if numpy.allclose(self._contourLevels[0], [0., 1.e20]) or \
                 numpy.allclose(self._contourLevels, 1.e20):
-            levs2 = vcs.mkscale(self._scalarRange[0],
-                                self._scalarRange[1])
+            levs2 = vcs.mkscale(valueRange[0], valueRange[1])
             if len(levs2) == 1:  # constant value ?
                 levs2 = [levs2[0], levs2[0] + .00001]
             self._contourLevels = []
@@ -164,8 +173,8 @@ class Pipeline2D(IPipeline2D):
 
     """Common VTK pipeline functionality for 2D VCS plot."""
 
-    def __init__(self, gm, context_):
-        super(Pipeline2D, self).__init__(gm, context_)
+    def __init__(self, gm, context_, plot_keyargs):
+        super(Pipeline2D, self).__init__(gm, context_, plot_keyargs)
 
     def _patternCreation(self, vtkFilter, color, style, index, opacity):
         """ Creates pattern things """
@@ -227,34 +236,34 @@ class Pipeline2D(IPipeline2D):
                     L = [self._scalarRange[0] - 1., self._contourLevels[0][1]]
                 else:
                     L = list(self._contourLevels[i])
-                I = indices[i]
-                O = opacities[i]
+                Ind = indices[i]
+                Opc = opacities[i]
             else:
                 if l[0] == L[-1] and\
                         ((style == 'solid') or
-                            (I == indices[i] and C[-1] == self._contourColors[i] and
-                             O == opacities[i])):
+                            (Ind == indices[i] and C[-1] == self._contourColors[i] and
+                             Opc == opacities[i])):
                     # Ok same type lets keep going
                     if numpy.allclose(l[1], 1.e20):
                         L.append(self._scalarRange[1] + 1.)
                     else:
                         L.append(l[1])
                     C.append(self._contourColors[i])
-                    tmpOpacities.append(O)
-                    O = opacities[i]
+                    tmpOpacities.append(Opc)
+                    Opc = opacities[i]
                 else:  # ok we need new contouring
                     tmpLevels.append(L)
                     tmpColors.append(C)
-                    tmpIndices.append(I)
-                    tmpOpacities.append(O)
+                    tmpIndices.append(Ind)
+                    tmpOpacities.append(Opc)
                     C = [self._contourColors[i]]
                     L = self._contourLevels[i]
-                    I = indices[i]
-                    O = opacities[i]
+                    Ind = indices[i]
+                    Opc = opacities[i]
         tmpLevels.append(L)
         tmpColors.append(C)
-        tmpIndices.append(I)
-        tmpOpacities.append(O)
+        tmpIndices.append(Ind)
+        tmpOpacities.append(Opc)
 
         result = {
             "tmpLevels": tmpLevels,
@@ -286,6 +295,10 @@ class Pipeline2D(IPipeline2D):
         plotBasedDualGrid = kargs.get('plot_based_dual_grid', True)
         self._updateVTKDataSet(plotBasedDualGrid)
 
+        if (self._needsVectors):
+            vectors = self._vtkDataSet.GetPointData().GetVectors()
+            vectors.GetRange(self._vectorRange, -1)
+
         # Update the results:
         self._resultDict["vtk_backend_grid"] = self._vtkDataSet
         self._resultDict["vtk_backend_geo"] = self._vtkGeoTransform
@@ -296,6 +309,7 @@ class Pipeline2D(IPipeline2D):
         self._updateContourLevelsAndColors()
 
         # Generate a mapper to render masked data:
+        self._vtkDataSetBoundsNoMask = self._vtkDataSet.GetBounds()
         self._createMaskedDataMapper()
 
         # Create the polydata filter:
@@ -315,7 +329,12 @@ class Pipeline2D(IPipeline2D):
 
     def _updateScalarData(self):
         """Overrides baseclass implementation."""
-        self._data1 = self._context().trimData2D(self._originalData1)
+        data1 = self._originalData1.clone()
+        X = self.convertAxis(data1.getAxis(-1), "x")
+        Y = self.convertAxis(data1.getAxis(-2), "y")
+        data1.setAxis(-1, X)
+        data1.setAxis(-2, Y)
+        self._data1 = self._context().trimData2D(data1)
         self._data2 = self._context().trimData2D(self._originalData2)
 
     def _updateVTKDataSet(self, plotBasedDualGrid):
@@ -367,7 +386,7 @@ class Pipeline2D(IPipeline2D):
         plotting_dataset_bounds = self.getPlottingBounds()
         surface_renderer, xScale, yScale = self._context().fitToViewport(
             act, vp,
-            wc=plotting_dataset_bounds, geoBounds=self._vtkDataSet.GetBounds(),
+            wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
             geo=self._vtkGeoTransform,
             priority=self._template.data.priority,
             create_renderer=True)
@@ -415,3 +434,16 @@ class Pipeline2D(IPipeline2D):
                                               self._data1.getAxis(-1),
                                               self._data1.getAxis(-2)),
                 self._vtkDataSetBounds, self._vtkGeoTransform)
+
+    def _patternSpacingAndScale(self):
+        """Return the pattern pixel spacing and scale if specified or compute
+        new values based on the render window size"""
+        pixelspacing = self._gm.fillareapixelspacing
+        if pixelspacing is None:
+            size = self._context().renWin.GetSize()
+            sp = int(0.015 * min(size[0], size[1]))
+            pixelspacing = 2 * [sp if sp > 1 else 1]
+        pixelscale = self._gm.fillareapixelscale
+        if pixelscale is None:
+            pixelscale = 1.0 * min(pixelspacing[0], pixelspacing[1])
+        return pixelspacing, pixelscale
