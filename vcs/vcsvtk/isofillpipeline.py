@@ -7,6 +7,9 @@ import vcs
 import vtk
 
 
+plotcount = 0
+
+
 class IsofillPipeline(Pipeline2D):
 
     """Implementation of the Pipeline interface for VCS isofill plots."""
@@ -20,6 +23,7 @@ class IsofillPipeline(Pipeline2D):
 
     def _plotInternal(self):
         """Overrides baseclass implementation."""
+        global plotcount
 
         preppedCountours = self._prepContours()
         tmpLevels = preppedCountours["tmpLevels"]
@@ -32,12 +36,6 @@ class IsofillPipeline(Pipeline2D):
         cots = []
         mappers = []
         _colorMap = self.getColorMap()
-
-        # Transform the input data
-        T = vtk.vtkTransform()
-        T.Scale(self._context_xScale, self._context_yScale, 1.)
-        self._vtkDataSetFittedToViewport = vcs2vtk.applyTransformationToDataset(T, self._vtkDataSetFittedToViewport)
-        self._vtkDataSetBoundsNoMask = self._vtkDataSetFittedToViewport.GetBounds()
 
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
@@ -134,33 +132,20 @@ class IsofillPipeline(Pipeline2D):
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
-        drawAreaBounds = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
-                            self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
-                            self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
+        # drawAreaBounds = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
+        #                     self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
+        #                     self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
+
+        drawAreaBounds = vtk.vtkRectd(x1, y1, x2 - x1, y2 - y1)
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
         vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
 
-        cam = dataset_renderer.GetActiveCamera()
-        cam.ParallelProjectionOn()
-        # We increase the parallel projection parallelepiped with 1/1000 so that
-        # it does not overlap with the outline of the dataset. This resulted in
-        # system dependent display of the outline.
-        cam.SetParallelScale(self._context_yd * 1.001)
-        cd = cam.GetDistance()
-        cam.SetPosition(self._context_xc, self._context_yc, cd)
-        cam.SetFocalPoint(self._context_xc, self._context_yc, 0.)
-        if self._vtkGeoTransform is None:
-            if self._context_flipY:
-                cam.Elevation(180.)
-                cam.Roll(180.)
-                pass
-            if self._context_flipX:
-                cam.Azimuth(180.)
+        # FIXME: Handle self._context.flipX and flipY
 
-        # mIdx = 0
+        mIdx = 0
 
         for mapper in mappers:
             act = vtk.vtkActor()
@@ -218,12 +203,17 @@ class IsofillPipeline(Pipeline2D):
                                                                fillareapixelspacing=fareapixelspacing,
                                                                fillareapixelscale=fareapixelscale,
                                                                size=self._context().renWin.GetSize(),
-                                                               screenGeom=self._context().renWin.GetSize())
+                                                               screenGeom=[geom[2], geom[3]],
+                                                               vpScale=[self._context_xScale, self._context_yScale])
 
                 if patact is not None:
                     patMapper = patact.GetMapper()
                     patMapper.Update()
                     patPoly = patMapper.GetInput()
+
+                    # fname = 'isofill-patterns-{0}-{1}'.format(plotcount, mIdx)
+                    # mIdx += 1
+                    # vcs2vtk.debugWriteGrid(patPoly, fname)
 
                     patItem = vtk.vtkPolyDataItem()
                     patItem.SetPolyData(patPoly)
@@ -311,3 +301,5 @@ class IsofillPipeline(Pipeline2D):
                                            plotting_dataset_bounds, projection,
                                            self._dataWrapModulo,
                                            vp, self._template.data.priority, **kwargs)
+
+        plotcount += 1

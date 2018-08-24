@@ -1586,28 +1586,28 @@ def prepFillarea(context, renWin, farea, cmap=None):
     # create a new renderer for this mapper
     # (we need one for each mapper because of camera flips)
     # if not dataset_renderer:
-    xScale, yScale, xc, yc, yd, flipX, flipY = context.computeScaleToFitViewport(
-        vp,
-        wc=wc,
-        geoBounds=None,
-        geo=None)
+    # xScale, yScale, xc, yc, yd, flipX, flipY = context.computeScaleToFitViewport(
+    #     vp,
+    #     wc=wc,
+    #     geoBounds=None,
+    #     geo=None)
 
-    cam = ren.GetActiveCamera()
-    cam.ParallelProjectionOn()
-    # We increase the parallel projection parallelepiped with 1/1000 so that
-    # it does not overlap with the outline of the dataset. This resulted in
-    # system dependent display of the outline.
-    cam.SetParallelScale(yd * 1.001)
-    cd = cam.GetDistance()
-    cam.SetPosition(xc, yc, cd)
-    cam.SetFocalPoint(xc, yc, 0.)
+    # cam = ren.GetActiveCamera()
+    # cam.ParallelProjectionOn()
+    # # We increase the parallel projection parallelepiped with 1/1000 so that
+    # # it does not overlap with the outline of the dataset. This resulted in
+    # # system dependent display of the outline.
+    # cam.SetParallelScale(yd * 1.001)
+    # cd = cam.GetDistance()
+    # cam.SetPosition(xc, yc, cd)
+    # cam.SetFocalPoint(xc, yc, 0.)
 
-    if flipY:
-        cam.Elevation(180.)
-        cam.Roll(180.)
-        pass
-    if flipX:
-        cam.Azimuth(180.)
+    # if flipY:
+    #     cam.Elevation(180.)
+    #     cam.Roll(180.)
+    #     pass
+    # if flipX:
+    #     cam.Azimuth(180.)
 
 
     if st == 'solid':
@@ -1622,8 +1622,8 @@ def prepFillarea(context, renWin, farea, cmap=None):
         item.SetMappedColors(colorArray)
         area.GetDrawAreaItem().AddItem(item)
 
-    transform = vtk.vtkTransform()
-    transform.Scale(xScale, yScale, 1.)
+    # transform = vtk.vtkTransform()
+    # transform.Scale(xScale, yScale, 1.)
 
     # newWc = [wc[0] * xScale, wc[1] * xScale, wc[2] * yScale, wc[3] * yScale]
     # rect = vtk.vtkRectd(newWc[0], newWc[2], newWc[1] - newWc[0], newWc[3] - newWc[2])
@@ -1637,7 +1637,7 @@ def prepFillarea(context, renWin, farea, cmap=None):
                 pd.GetPoints(), farea.projection, farea.worldcoordinate)
             pd.SetPoints(proj_points)
 
-            pd = applyTransformationToDataset(transform, pd)
+            # pd = applyTransformationToDataset(transform, pd)
 
             # transformFilter = vtk.vtkTransformFilter()
             # transformFilter.SetInputData(pd)
@@ -1647,6 +1647,10 @@ def prepFillarea(context, renWin, farea, cmap=None):
             colors.GetTypedTuple(i, cellcolor)
             pcolor = [indC * 100. / 255.0 for indC in cellcolor]
             # act = fillareautils.make_patterned_polydata(transformFilter.GetOutput(),
+            screenGeom = [
+                (farea.x[i][1] - farea.x[i][0]) * renWinWidth,
+                (farea.y[i][2] - farea.y[i][1]) * renWinHeight
+            ]
             act = fillareautils.make_patterned_polydata(pd,
                                                         st,
                                                         fillareaindex=farea.index[i],
@@ -1654,8 +1658,8 @@ def prepFillarea(context, renWin, farea, cmap=None):
                                                         fillareaopacity=pcolor[3],
                                                         fillareapixelspacing=farea.pixelspacing,
                                                         fillareapixelscale=farea.pixelscale,
-                                                        size=renWin.GetSize(),
-                                                        screenGeom=renWin.GetSize())
+                                                        size=[renWinWidth, renWinHeight],
+                                                        screenGeom=screenGeom)
             if act is not None:
                 patMapper = act.GetMapper()
                 patMapper.Update()

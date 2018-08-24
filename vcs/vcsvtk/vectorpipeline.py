@@ -89,6 +89,7 @@ class VectorPipeline(Pipeline2D):
         polydata = self._vtkDataSetFittedToViewport
 
         plotting_dataset_bounds = self.getPlottingBounds()
+        x1, x2, y1, y2 = plotting_dataset_bounds
         vp = self._resultDict.get('ratio_autot_viewport',
                                   [self._template.data.x1, self._template.data.x2,
                                    self._template.data.y1, self._template.data.y2])
@@ -148,9 +149,11 @@ class VectorPipeline(Pipeline2D):
 
         # newBounds = polydata.GetBounds()
 
-        drawAreaBounds = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
-                            self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
-                            self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
+        # drawAreaBounds = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
+        #                     self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
+        #                     self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
+
+        drawAreaBounds = vtk.vtkRectd(x1, y1, x2 - x1, y2 - y1)
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
