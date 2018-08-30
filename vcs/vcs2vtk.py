@@ -130,6 +130,17 @@ def applyTransformationToDataset(T, data):
     return outputData
 
 
+def generateSolidColorArray(numTuples, color):
+    np_colors = numpy.empty([numTuples, 4])
+    np_colors[:,0] = color[0]
+    np_colors[:,1] = color[1]
+    np_colors[:,2] = color[2]
+    np_colors[:,3] = color[3]
+    return VN.numpy_to_vtk(num_array=np_colors,
+                             deep=True,
+                             array_type=vtk.VTK_UNSIGNED_CHAR)
+
+
 def applyAttributesFromVCStmpl(tmpl, tmplattribute, txtobj=None):
     tatt = getattr(tmpl, tmplattribute)
     if txtobj is None:

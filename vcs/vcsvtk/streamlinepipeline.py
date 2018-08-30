@@ -278,7 +278,13 @@ class StreamlinePipeline(Pipeline2D):
             lineAttrs = lineDataset.GetPointData()
             lineData = lineAttrs.GetArray("vector")
 
-            lineColors = lut.MapScalars(lineData, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+            if lineData:
+                lineColors = lut.MapScalars(lineData, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+            else:
+                print('WARNING: streamline pipeline: lineDataset does not have "vector" array on point data, using solid color')
+                numTuples = lineDataset.GetNumberOfPoints()
+                color = [0, 0, 0, 255]
+                lineColors = vcs2vtk.generateSolidColorArray(numTuples, color)
 
             glyphMapper.ScalarVisibilityOn()
             glyphMapper.SetLookupTable(lut)
@@ -288,7 +294,14 @@ class StreamlinePipeline(Pipeline2D):
 
             glyphAttrs = glyphDataset.GetPointData()
             glyphData = glyphAttrs.GetArray("VectorMagnitude")
-            glyphColors = lut.MapScalars(glyphData, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+
+            if glyphData:
+                glyphColors = lut.MapScalars(glyphData, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+            else:
+                print('WARNING: streamline pipeline: glyphDataset does not have "VectorMagnitude" array on point data, using solid color')
+                numTuples = glyphDataset.GetNumberOfPoints()
+                color = [0, 0, 0, 255]
+                glyphColors = vcs2vtk.generateSolidColorArray(numTuples, color)
         else:
             mapper.ScalarVisibilityOff()
             glyphMapper.ScalarVisibilityOff()

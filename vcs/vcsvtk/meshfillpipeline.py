@@ -243,11 +243,24 @@ class MeshfillPipeline(Pipeline2D):
                     attrs = poly.GetCellData()
                 else:
                     attrs = poly.GetPointData()
+
                 data = attrs.GetScalars()
-                lut = mapper.GetLookupTable()
-                scalarRange = mapper.GetScalarRange()
-                lut.SetRange(scalarRange)
-                mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+
+                if data:
+                    lut = mapper.GetLookupTable()
+                    scalarRange = mapper.GetScalarRange()
+                    lut.SetRange(scalarRange)
+                    mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                else:
+                    loc = 'point'
+                    numTuples = poly.GetNumberOfPoints()
+                    if self._needsCellData:
+                        loc = 'cell'
+                        numTuples = poly.GetNumberOfCells()
+                    print('WARNING: meshfill pipeline: poly does not have Scalars array on {0} data, using solid color'.format(loc))
+                    color = [0, 0, 0, 255]
+                    mappedColors = vcs2vtk.generateSolidColorArray(numTuples, color)
+
                 mappedColors.SetName('Colors')
 
                 item = vtk.vtkPolyDataItem()

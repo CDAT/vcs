@@ -163,17 +163,22 @@ class IsofillPipeline(Pipeline2D):
             if style == "solid":
                 if mapper is self._maskedDataMapper:
                     # FIXME: Not quite sure how I got away without this in the other cases
-                    mappedColors = vtk.vtkUnsignedCharArray()
-                    mappedColors.SetNumberOfComponents(4)
-                    for i in range(poly.GetNumberOfCells()):
-                        mappedColors.InsertNextTypedTuple([0, 0, 0, 255])
+                    numTuples = poly.GetNumberOfCells()
+                    color = [0, 0, 0, 255]
+                    mappedColors = vcs2vtk.generateSolidColorArray(numTuples, color)
                 else:
                     attrs = poly.GetCellData()
                     data = attrs.GetScalars()
-                    lut = mapper.GetLookupTable()
-                    scalarRange = mapper.GetScalarRange()
-                    lut.SetRange(scalarRange)
-                    mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                    if data:
+                        lut = mapper.GetLookupTable()
+                        scalarRange = mapper.GetScalarRange()
+                        lut.SetRange(scalarRange)
+                        mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                    else:
+                        print('WARNING: isofill pipeline: poly does not have Scalars array on cell data, using solid color')
+                        numTuples = poly.GetNumberOfCells()
+                        color = [0, 0, 0, 255]
+                        mappedColors = vcs2vtk.generateSolidColorArray(numTuples, color)
 
                     # fname = 'isofill-solid-%d' % mIdx
                     # vcs2vtk.debugWriteGrid(poly, fname)
