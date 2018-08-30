@@ -44,12 +44,7 @@ def affine(value, inMin, inMax, outMin, outMax):
     return ((float(value - inMin) / float(inMax - inMin)) * (outMax - outMin)) + outMin
 
 
-def computeDiffPoints(dataRange, screenGeom):
-    sp1 = [0.0, 0.0]
-    side = 1 / math.sqrt(2)
-    sp2 = [side, side]
-    sp2 = [1.0, 1.0]
-
+def computeDiffPoints(sp1, sp2, dataRange, screenGeom):
     dp1 = [
         affine(sp1[0], 0, screenGeom[0], 0, dataRange[0]),
         affine(sp1[1], 0, screenGeom[1], 0, dataRange[1])
@@ -68,7 +63,9 @@ def computeDiffPoints(dataRange, screenGeom):
 
 def computeResolutionAndScale(dataRange, screenGeom, vpScale=[1.0, 1.0],
                               pxScale=None, pxSpacing=None, threshold=1e-6):
-    diffwpoints = computeDiffPoints(dataRange, screenGeom)
+    pt1 = [0.0, 0.0]
+    pt2 = [1.0, 1.0]
+    diffwpoints = computeDiffPoints(pt1, pt2, dataRange, screenGeom)
     diffwpoints = [1.0 if i < threshold else i for i in diffwpoints]
     max_dw = max(*diffwpoints)
     diffwpoints = [max_dw * vpScale[1], max_dw * vpScale[0]]
@@ -99,7 +96,10 @@ def computeResolutionAndScale(dataRange, screenGeom, vpScale=[1.0, 1.0],
 
 
 def computeMarkerScale(dataRange, screenGeom, pxScale=None, threshold=1e-6):
-    diffwpoints = computeDiffPoints(dataRange, screenGeom)
+    pt1 = [0.0, 0.0]
+    side = 1 / math.sqrt(2)
+    pt2 = [side, side]
+    diffwpoints = computeDiffPoints(pt1, pt2, dataRange, screenGeom)
     diffwpoints = [1.0 if i < threshold else i for i in diffwpoints]
     scale = min(*diffwpoints)
     if pxScale:

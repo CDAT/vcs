@@ -104,11 +104,11 @@ class StreamlinePipeline(Pipeline2D):
             if self._context_flipX:
                 cam.Azimuth(180.)
 
-        # drawAreaBounds = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
-        #                     self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
-        #                     self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
+        drawAreaBounds = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
+                            self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
+                            self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
 
-        drawAreaBounds = vtk.vtkRectd(x1, y1, x2 - x1, y2 - y1)
+        # drawAreaBounds = vtk.vtkRectd(x1, y1, x2 - x1, y2 - y1)
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
@@ -277,6 +277,7 @@ class StreamlinePipeline(Pipeline2D):
 
             lineAttrs = lineDataset.GetPointData()
             lineData = lineAttrs.GetArray("vector")
+
             lineColors = lut.MapScalars(lineData, vtk.VTK_COLOR_MODE_DEFAULT, 0)
 
             glyphMapper.ScalarVisibilityOn()
