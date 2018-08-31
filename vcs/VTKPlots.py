@@ -939,12 +939,6 @@ class VTKVCSBackend(object):
                 plot.onClosing(cell)
 
     def plotContinents(self, continentType, wc, projection, wrap, vp, priority, **kargs):
-        print('plotting continents')
-        print('  projection type is ', projection.type)
-        # print(projection.list())
-        # print('wc = ', wc)
-        # print('vp = ', vp)
-
         if continentType in [0, None]:
             return
         continents_path = self.canvas._continentspath(continentType)
@@ -968,8 +962,6 @@ class VTKVCSBackend(object):
 
         vtk_dataset_bounds_no_mask = kargs.get(
             "vtk_dataset_bounds_no_mask", None)
-        # print('Plotting continents')
-        print('vtk_dataset_bounds_no_mask = ', vtk_dataset_bounds_no_mask)
 
         contLine = self.canvas.getcontinentsline()
 
@@ -1001,6 +993,12 @@ class VTKVCSBackend(object):
         # area = kargs.get("vtk_backend_pipeline_context_area", None)
         viewportScale = kargs.get("vtk_backend_viewport_scale", None)
         contBounds = kargs.get("vtk_backend_draw_area_bounds", None)
+
+        print('plotting continents')
+        print('  projection type is {0}'.format(projection.type))
+        print('  vtk_dataset_bounds_no_mask = {0}'.format(vtk_dataset_bounds_no_mask))
+        print('  vtk_backend_viewport_scale = {0}'.format(viewportScale))
+        print('  vtk_backend_draw_area_bounds = {0}'.format(contBounds))
 
         area = vtk.vtkContextArea()
         view.GetScene().AddItem(area)

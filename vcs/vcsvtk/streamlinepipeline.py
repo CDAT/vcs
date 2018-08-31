@@ -51,6 +51,25 @@ class StreamlinePipeline(Pipeline2D):
             if self._gm.linecolor is not None:
                 lcolor = self._gm.linecolor
 
+        # The unscaled continent bounds were fine in the presence of axis
+        # conversion, so save them here
+        continentBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask, self._context_flipX, self._context_flipY)
+
+        # Only scaling the data in the presence of axis conversion changes
+        # the seed points in any other cases, and thus results in plots
+        # different from the baselines but still fundamentally sound, it
+        # seems.  Always scaling the data results in no differences in the
+        # plots between Context2D and the old baselines.
+
+        # if self._gm.xaxisconvert != 'linear' or self._gm.yaxisconvert != 'linear':
+        if True:
+            # Transform the input data
+            T = vtk.vtkTransform()
+            T.Scale(self._context_xScale, self._context_yScale, 1.)
+
+            self._vtkDataSetFittedToViewport = vcs2vtk.applyTransformationToDataset(T, self._vtkDataSetFittedToViewport)
+            self._vtkDataSetBoundsNoMask = self._vtkDataSetFittedToViewport.GetBounds()
+
         # self._vtkPolyDataFilter.Update()
         # polydata = self._vtkPolyDataFilter.GetOutput()
 
@@ -104,9 +123,7 @@ class StreamlinePipeline(Pipeline2D):
             if self._context_flipX:
                 cam.Azimuth(180.)
 
-        drawAreaBounds = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
-                            self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
-                            self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
+        drawAreaBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask, self._context_flipX, self._context_flipY)
 
         # drawAreaBounds = vtk.vtkRectd(x1, y1, x2 - x1, y2 - y1)
 
@@ -314,15 +331,21 @@ class StreamlinePipeline(Pipeline2D):
 
             fixedColor = [int((r / 100.) * 255), int((g / 100.) * 255), int((b / 100.) * 255), 255]
 
-            lineColors = vtk.vtkUnsignedCharArray()
-            lineColors.SetNumberOfComponents(4)
-            for i in range(lineDataset.GetNumberOfPoints()):
-                lineColors.InsertNextTypedTuple(fixedColor)
+            numTuples = lineDataset.GetNumberOfPoints()
+            lineColors = vcs2vtk.generateSolidColorArray(numTuples, fixedColor)
 
-            glyphColors = vtk.vtkUnsignedCharArray()
-            glyphColors.SetNumberOfComponents(4)
-            for i in range(glyphDataset.GetNumberOfPoints()):
-                glyphColors.InsertNextTypedTuple(fixedColor)
+            # lineColors = vtk.vtkUnsignedCharArray()
+            # lineColors.SetNumberOfComponents(4)
+            # for i in range(lineDataset.GetNumberOfPoints()):
+            #     lineColors.InsertNextTypedTuple(fixedColor)
+
+            numTuples = glyphDataset.GetNumberOfPoints()
+            glyphColors = vcs2vtk.generateSolidColorArray(numTuples, fixedColor)
+
+            # glyphColors = vtk.vtkUnsignedCharArray()
+            # glyphColors.SetNumberOfComponents(4)
+            # for i in range(glyphDataset.GetNumberOfPoints()):
+            #     glyphColors.InsertNextTypedTuple(fixedColor)
 
         # Add the streamlines
         lineItem = vtk.vtkPolyDataItem()
@@ -353,7 +376,7 @@ class StreamlinePipeline(Pipeline2D):
             "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
             'vtk_backend_geo': self._vtkGeoTransform,
             # "vtk_backend_pipeline_context_area": area,
-            "vtk_backend_draw_area_bounds": drawAreaBounds,
+            "vtk_backend_draw_area_bounds": continentBounds,
             "vtk_backend_viewport_scale": [
                 self._context_xScale,
                 self._context_yScale

@@ -79,6 +79,23 @@ projDict = {"polar stereographic": "stere",
 for i in range(len(projNames)):
     projDict[i] = projNames[i]
 
+def computeDrawAreaBounds(bounds, flipX=False, flipY=False):
+    if flipX:
+        lowerLeftX = bounds[1]
+        width = bounds[0] - bounds[1]
+    else:
+        lowerLeftX = bounds[0]
+        width = bounds[1] - bounds[0]
+
+    if flipY:
+        lowerLeftY = bounds[3]
+        height = bounds[2] - bounds[3]
+    else:
+        lowerLeftY = bounds[2]
+        height = bounds[3] - bounds[2]
+
+    return vtk.vtkRectd(lowerLeftX, lowerLeftY, width, height)
+
 
 def configureContextArea(area, dataBounds, screenGeom):
     area.SetDrawAreaBounds(dataBounds)

@@ -85,9 +85,6 @@ class VectorPipeline(Pipeline2D):
         arrow.SetOutputPointsPrecision(vtk.vtkAlgorithm.DOUBLE_PRECISION)
         arrow.FilledOff()
 
-        # polydata = self._vtkPolyDataFilter.GetOutput()
-        polydata = self._vtkDataSetFittedToViewport
-
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
         vp = self._resultDict.get('ratio_autot_viewport',
@@ -109,7 +106,27 @@ class VectorPipeline(Pipeline2D):
         #     create_renderer=True,
         #     add_actor=False)
 
+        # The unscaled continent bounds were fine in the presence of axis
+        # conversion, so save them here
+        continentBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask, self._context_flipX, self._context_flipY)
 
+        # Only scaling the data in the presence of axis conversion changes
+        # the seed points in any other cases, and thus results in plots
+        # different from the baselines but still fundamentally sound, it
+        # seems.  Always scaling the data results in no differences in the
+        # plots between Context2D and the old baselines.
+
+        # if self._gm.xaxisconvert != 'linear' or self._gm.yaxisconvert != 'linear':
+        if True:
+            # Transform the input data
+            T = vtk.vtkTransform()
+            T.Scale(self._context_xScale, self._context_yScale, 1.)
+
+            self._vtkDataSetFittedToViewport = vcs2vtk.applyTransformationToDataset(T, self._vtkDataSetFittedToViewport)
+            self._vtkDataSetBoundsNoMask = self._vtkDataSetFittedToViewport.GetBounds()
+
+        # polydata = self._vtkPolyDataFilter.GetOutput()
+        polydata = self._vtkDataSetFittedToViewport
 
         # view and interactive area
         view = self._context().contextView
@@ -149,9 +166,7 @@ class VectorPipeline(Pipeline2D):
 
         # newBounds = polydata.GetBounds()
 
-        drawAreaBounds = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
-                            self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
-                            self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
+        drawAreaBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask, self._context_flipX, self._context_flipY)
 
         # drawAreaBounds = vtk.vtkRectd(x1, y1, x2 - x1, y2 - y1)
 
@@ -274,7 +289,7 @@ class VectorPipeline(Pipeline2D):
             # "vtk_dataset_bounds_no_mask": newBounds,
             'vtk_backend_geo': self._vtkGeoTransform,
             # "vtk_backend_pipeline_context_area": area,
-            "vtk_backend_draw_area_bounds": drawAreaBounds,
+            "vtk_backend_draw_area_bounds": continentBounds,
             "vtk_backend_viewport_scale": [
                 self._context_xScale,
                 self._context_yScale

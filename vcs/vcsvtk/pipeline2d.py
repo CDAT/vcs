@@ -461,12 +461,14 @@ class Pipeline2D(IPipeline2D):
                 vcs.utils.getworldcoordinates(self._gm,
                                               self._data1.getAxis(-1),
                                               self._data1.getAxis(-2)),
+                # self._vtkDataSetBoundsNoMask, self._dataWrapModulo)
                 self._vtkDataSetBounds, self._dataWrapModulo)
         else:
             return vcs2vtk.getPlottingBounds(
                 vcs.utils.getworldcoordinates(self._gm,
                                               self._data1.getAxis(-1),
                                               self._data1.getAxis(-2)),
+                # self._vtkDataSetBoundsNoMask, self._vtkGeoTransform)
                 self._vtkDataSetBounds, self._vtkGeoTransform)
 
     def _patternSpacingAndScale(self):

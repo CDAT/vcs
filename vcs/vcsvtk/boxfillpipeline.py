@@ -79,21 +79,13 @@ class BoxfillPipeline(Pipeline2D):
         # dataOriginX, dataOriginY, dataWidth, dataHeight = (0, 0, 0, 0)
 
         if self._vtkGeoTransform:
-        # if True:
             x1 = self._vtkDataSetBoundsNoMask[0]
             x2 = self._vtkDataSetBoundsNoMask[1]
             y1 = self._vtkDataSetBoundsNoMask[2]
             y2 = self._vtkDataSetBoundsNoMask[3]
-        # else:
-        #     x1 *= self._context_xScale
-        #     x2 *= self._context_xScale
-        #     y1 *= self._context_yScale
-        #     y2 *= self._context_yScale
-
-        dataOriginX = x1
-        dataOriginY = y1
-        dataWidth = x2 - x1
-        dataHeight = y2 - y1
+            drawAreaBounds = vcs2vtk.computeDrawAreaBounds([x1, x2, y1, y2], self._context_flipX, self._context_flipY)
+        else:
+            drawAreaBounds = vcs2vtk.computeDrawAreaBounds([x1, x2, y1, y2])
 
         # And now we need actors to actually render this thing
         actors = []
@@ -106,11 +98,6 @@ class BoxfillPipeline(Pipeline2D):
             [self._template.data.x1, self._template.data.x2,
              self._template.data.y1, self._template.data.y2])
 
-        print('boxfillpipeline viewport: ', vp)
-        print('boxfillpipeline dataset bounds (no mask): ', self._vtkDataSetBoundsNoMask)
-        print('boxfillpipeline draw area bounds: [%f, %f, %f, %f]' % (x1, x2, y1, y2))
-        print('boxfillpipeline scale: [xscale, yscale] = [%f, %f]' % (self._context_xScale, self._context_yScale))
-
         fareapixelspacing, fareapixelscale = self._patternSpacingAndScale()
 
         # view and interactive area
@@ -119,7 +106,14 @@ class BoxfillPipeline(Pipeline2D):
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
-        drawAreaBounds = vtk.vtkRectd(dataOriginX, dataOriginY, dataWidth, dataHeight)
+
+
+        print('boxfillpipeline')
+        print('  viewport = {0}'.format(vp))
+        print('  dataset bounds (no mask) = {0}'.format(self._vtkDataSetBoundsNoMask))
+        print('  draw area bounds: {0}'.format(drawAreaBounds))
+        print('  scale: [xscale, yscale] = [{0}, {1}]'.format(self._context_xScale, self._context_yScale))
+        print('  flipX = {0}, flipY = {1}'.format(self._context_flipX, self._context_flipY))
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))

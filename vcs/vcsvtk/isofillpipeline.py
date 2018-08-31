@@ -32,6 +32,8 @@ class IsofillPipeline(Pipeline2D):
         tmpOpacities = preppedCountours["tmpOpacities"]
         style = self._gm.fillareastyle
 
+        print('isofillpipeline, flipX = {0}, flipY = {1}'.format(self._context_flipX, self._context_flipY))
+
         luts = []
         cots = []
         mappers = []
@@ -132,9 +134,7 @@ class IsofillPipeline(Pipeline2D):
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
-        drawAreaBounds = vtk.vtkRectd(self._vtkDataSetBoundsNoMask[0], self._vtkDataSetBoundsNoMask[2],
-                            self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0],
-                            self._vtkDataSetBoundsNoMask[3] - self._vtkDataSetBoundsNoMask[2])
+        drawAreaBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask, self._context_flipX, self._context_flipY)
 
         # drawAreaBounds = vtk.vtkRectd(x1, y1, x2 - x1, y2 - y1)
 
