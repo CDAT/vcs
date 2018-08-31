@@ -28,11 +28,11 @@ aliases:
        conda config --set always_yes yes --set changeps1 no
        conda update -y -q conda
        conda config --set anaconda_upload no
-       if [ $PY_VER = "py2" ]
-       then
+       if [ $PY_VER = "py2" ] then
           conda create -q -n $PY_VER $CHANNELS $PKGS "python<3"
        else
           conda create -q -n $PY_VER -c cdat/label/linatest $CHANNELS $PKGS "python>3" nbsphinx easydev
+       fi 
 
   - &setup_vcs
     name: setup_vcs
