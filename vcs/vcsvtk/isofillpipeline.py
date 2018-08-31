@@ -161,24 +161,63 @@ class IsofillPipeline(Pipeline2D):
             item = None
 
             if style == "solid":
-                if mapper is self._maskedDataMapper:
-                    # FIXME: Not quite sure how I got away without this in the other cases
+
+                ### The commented block below should work, if the _needsCellData flag
+                ### is set up properly.  But it seems it must not be, because if I use
+                ### this block then the isofill isn't colored correctly.
+
+                # if self._needsCellData:
+                #     loc = 'cell'
+                #     attrs = poly.GetCellData()
+                #     scalarMode = vtk.VTK_SCALAR_MODE_USE_CELL_DATA
+                #     numTuples = poly.GetNumberOfCells()
+                # else:
+                #     loc = 'point'
+                #     attrs = poly.GetPointData()
+                #     scalarMode = vtk.VTK_SCALAR_MODE_USE_POINT_DATA
+                #     numTuples = poly.GetNumberOfPoints()
+
+                # data = attrs.GetScalars()
+
+                # if data:
+                #     lut = mapper.GetLookupTable()
+                #     range = mapper.GetScalarRange()
+                #     lut.SetRange(range)
+                #     mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                # else:
+                #     print('WARNING: isofill pipeline: poly does not have Scalars array on {0} data, using solid color'.format(loc))
+                #     color = [0, 0, 0, 255]
+                #     mappedColors = vcs2vtk.generateSolidColorArray(numTuples, color)
+
+                ### The commented block below would normally keep the missing data
+                ### from being colored correctly as it was configured in putmaskongrid
+                ### so the missing_opacity tests fail with it
+
+                # if mapper is self._maskedDataMapper:
+                #     # FIXME: Not quite sure how I got away without this in the other cases
+                #     numTuples = poly.GetNumberOfCells()
+                #     color = [0, 0, 0, 255]
+                #     mappedColors = vcs2vtk.generateSolidColorArray(numTuples, color)
+                # else:
+
+                ### The block below just forces the celldata assumption on everything,
+                ### which doesn't seem right either, but it fixed the missing_opacity
+                ### test without seeming to cause any new failures
+
+                attrs = poly.GetCellData()
+                data = attrs.GetScalars()
+                if data:
+                    lut = mapper.GetLookupTable()
+                    scalarRange = mapper.GetScalarRange()
+                    lut.SetRange(scalarRange)
+                    mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                else:
+                    print('WARNING: isofill pipeline: poly does not have Scalars array on cell data, using solid color')
                     numTuples = poly.GetNumberOfCells()
                     color = [0, 0, 0, 255]
                     mappedColors = vcs2vtk.generateSolidColorArray(numTuples, color)
-                else:
-                    attrs = poly.GetCellData()
-                    data = attrs.GetScalars()
-                    if data:
-                        lut = mapper.GetLookupTable()
-                        scalarRange = mapper.GetScalarRange()
-                        lut.SetRange(scalarRange)
-                        mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
-                    else:
-                        print('WARNING: isofill pipeline: poly does not have Scalars array on cell data, using solid color')
-                        numTuples = poly.GetNumberOfCells()
-                        color = [0, 0, 0, 255]
-                        mappedColors = vcs2vtk.generateSolidColorArray(numTuples, color)
+
+                scalarMode = vtk.VTK_SCALAR_MODE_USE_CELL_DATA
 
                     # fname = 'isofill-solid-%d' % mIdx
                     # vcs2vtk.debugWriteGrid(poly, fname)
@@ -186,7 +225,7 @@ class IsofillPipeline(Pipeline2D):
 
                 item = vtk.vtkPolyDataItem()
                 item.SetPolyData(poly)
-                item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                item.SetScalarMode(scalarMode)
                 item.SetMappedColors(mappedColors)
                 area.GetDrawAreaItem().AddItem(item)
 
