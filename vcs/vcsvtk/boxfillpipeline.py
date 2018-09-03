@@ -106,10 +106,9 @@ class BoxfillPipeline(Pipeline2D):
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
-
-
         print('boxfillpipeline')
         print('  viewport = {0}'.format(vp))
+        print('  graphics method bounds = [{0}, {1}, {2}, {3}]'.format(gm.datawc_x1, gm.datawc_x2, gm.datawc_y1, gm.datawc_y2))
         print('  dataset bounds (no mask) = {0}'.format(self._vtkDataSetBoundsNoMask))
         print('  draw area bounds: {0}'.format(drawAreaBounds))
         print('  scale: [xscale, yscale] = [{0}, {1}]'.format(self._context_xScale, self._context_yScale))
@@ -127,23 +126,6 @@ class BoxfillPipeline(Pipeline2D):
             act.SetMapper(mapper)
             mapper.Update()
             poly = mapper.GetInput()
-
-            cam = dataset_renderer.GetActiveCamera()
-            cam.ParallelProjectionOn()
-            # We increase the parallel projection parallelepiped with 1/1000 so that
-            # it does not overlap with the outline of the dataset. This resulted in
-            # system dependent display of the outline.
-            cam.SetParallelScale(self._context_yd * 1.001)
-            cd = cam.GetDistance()
-            cam.SetPosition(self._context_xc, self._context_yc, cd)
-            cam.SetFocalPoint(self._context_xc, self._context_yc, 0.)
-            if self._vtkGeoTransform is None:
-                if self._context_flipY:
-                    cam.Elevation(180.)
-                    cam.Roll(180.)
-                    pass
-                if self._context_flipX:
-                    cam.Azimuth(180.)
 
             if _style == "solid":
                 if self._needsCellData:

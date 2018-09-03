@@ -142,23 +142,6 @@ class VectorPipeline(Pipeline2D):
 
         # print('boxfillpipeline._plotInternal(): xScale = %f, yScale = %f, xc = %f, yc = %f, yd = %f, flipX = %s, flipY = %s' % (xScale, yScale, xc, yc, yd, flipX, flipY))
 
-        cam = dataset_renderer.GetActiveCamera()
-        cam.ParallelProjectionOn()
-        # We increase the parallel projection parallelepiped with 1/1000 so that
-        # it does not overlap with the outline of the dataset. This resulted in
-        # system dependent display of the outline.
-        cam.SetParallelScale(self._context_yd * 1.001)
-        cd = cam.GetDistance()
-        cam.SetPosition(self._context_xc, self._context_yc, cd)
-        cam.SetFocalPoint(self._context_xc, self._context_yc, 0.)
-        if self._vtkGeoTransform is None:
-            if self._context_flipY:
-                cam.Elevation(180.)
-                cam.Roll(180.)
-                pass
-            if self._context_flipX:
-                cam.Azimuth(180.)
-
         # Transform the input data
         # T = vtk.vtkTransform()
         # T.Scale(xScale, yScale, 1.)

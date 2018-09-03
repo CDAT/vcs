@@ -80,6 +80,11 @@ for i in range(len(projNames)):
     projDict[i] = projNames[i]
 
 def computeDrawAreaBounds(bounds, flipX=False, flipY=False):
+    # FIXME: we may need something similar to this:
+    # FIXME:
+    # FIXME:     https://github.com/CDAT/vcs/blob/5bc0c4f856937c1bfc70ee06ba062e5f4539e430/vcs/VTKPlots.py#L1569
+    # FIXME:
+    # FIXME: to fix the issue with drawing of "box1" (plot data outline)
     if flipX:
         lowerLeftX = bounds[1]
         width = bounds[0] - bounds[1]

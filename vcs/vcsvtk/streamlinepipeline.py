@@ -106,23 +106,6 @@ class StreamlinePipeline(Pipeline2D):
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
-        cam = dataset_renderer.GetActiveCamera()
-        cam.ParallelProjectionOn()
-        # We increase the parallel projection parallelepiped with 1/1000 so that
-        # it does not overlap with the outline of the dataset. This resulted in
-        # system dependent display of the outline.
-        cam.SetParallelScale(self._context_yd * 1.001)
-        cd = cam.GetDistance()
-        cam.SetPosition(self._context_xc, self._context_yc, cd)
-        cam.SetFocalPoint(self._context_xc, self._context_yc, 0.)
-        if self._vtkGeoTransform is None:
-            if self._context_flipY:
-                cam.Elevation(180.)
-                cam.Roll(180.)
-                pass
-            if self._context_flipX:
-                cam.Azimuth(180.)
-
         drawAreaBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask, self._context_flipX, self._context_flipY)
 
         # drawAreaBounds = vtk.vtkRectd(x1, y1, x2 - x1, y2 - y1)
