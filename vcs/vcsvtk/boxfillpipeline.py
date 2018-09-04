@@ -108,11 +108,11 @@ class BoxfillPipeline(Pipeline2D):
 
         print('boxfillpipeline')
         print('  viewport = {0}'.format(vp))
-        print('  graphics method bounds = [{0}, {1}, {2}, {3}]'.format(gm.datawc_x1, gm.datawc_x2, gm.datawc_y1, gm.datawc_y2))
+        print('  graphics method bounds = [{0}, {1}, {2}, {3}]'.format(self._gm.datawc_x1, self._gm.datawc_x2, self._gm.datawc_y1, self._gm.datawc_y2))
         print('  dataset bounds (no mask) = {0}'.format(self._vtkDataSetBoundsNoMask))
-        print('  draw area bounds: {0}'.format(drawAreaBounds))
+        print('  draw area bounds = {0}'.format(drawAreaBounds))
         print('  scale: [xscale, yscale] = [{0}, {1}]'.format(self._context_xScale, self._context_yScale))
-        print('  flipX = {0}, flipY = {1}'.format(self._context_flipX, self._context_flipY))
+        print('  [flipX, flipY] = [{0}, {1}]'.format(self._context_flipX, self._context_flipY))
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
