@@ -15,7 +15,7 @@ aliases:
   - &get_testdata
     name: get_testdata
     command: | 
-      ls -l  workspace
+      ls -l workspace
       git clone git://github.com/cdat/uvcdat-testdata
 
   - &create_conda_env
@@ -28,10 +28,10 @@ aliases:
        conda config --set always_yes yes --set changeps1 no
        conda update -y -q conda
        conda config --set anaconda_upload no
-       if [ $PY_VER = "py2" ] then
+       if [[ $PY_VER = "py2" ]]; then
           conda create -q -n $PY_VER $CHANNELS $PKGS "python<3"
        else
-          conda create -q -n $PY_VER -c cdat/label/linatest $CHANNELS $PKGS "python>3" nbsphinx easydev
+          conda create -q -n $PY_VER $CHANNELS $PKGS "python>3" nbsphinx easydev
        fi 
 
   - &setup_vcs
@@ -48,11 +48,10 @@ aliases:
        export CDAT_ANONYMOUS_LOG=False
        export CDAT_SETUP_PATH=${HOME}
        source activate $PY_VER
-       # TEMPORARY 
-       python run_tests.py -H -v2 -n 2 --checkout-baseline --no-vtk-ui $COVERAGE tests/test_vcs_textbox.py tests/test_vcs_setcolormap.py
+       python run_tests.py -H -v2 -n 2 --checkout-baseline --no-vtk-ui $COVERAGE
        RESULT=$?
        echo "*** $PY_VER test result: "${RESULT} 
-       if [ $PY_VER = 'py3' ] then
+       if [[ $PY_VER = 'py3' ]]; then
           cd docs
           make doctest
           DOC_RESULT=$?
@@ -63,8 +62,10 @@ aliases:
 
   - &conda_upload
     name: conda_upload
+    environment:
+       CHANNELS: "-c cdat/label/nightly -c conda-forge -c cdat"
     command: |
-       if [[ $CIRCLE_BRANCH != 'master' ]]; then
+       if [[ $CIRCLE_BRANCH != 'add_coverage' ]]; then
           exit 0
        fi
        export PATH=${HOME}/project/$WORKDIR/miniconda/bin:$PATH
@@ -76,14 +77,22 @@ aliases:
        export PKG_NAME=vcs
        export USER=cdat
        export VERSION=8.0
-       export LABEL=nightly
-       python ./prep_for_build.py -l $VERSION
-       if [ $PY_VER = 'py2' ] then
-          conda build $PKG_NAME -c cdat/label/nightly -c conda-forge -c cdat --python=2.7
+       export LABEL=linatest
+       python ./prep_for_build.py -l $VERSION -b 'add_coverage'
+       if [[ $PY_VER = 'py2' ]]; then
+          conda build $PKG_NAME $CHANNELS --python=2.7
        else
-          conda build $PKG_NAME -c cdat/label/nightly -c conda-forge -c cdat --python=3.6
+          conda build $PKG_NAME $CHANNELS --python=3.6
        fi
        anaconda -t $CONDA_UPLOAD_TOKEN upload -u $USER -l $LABEL $CONDA_BLD_PATH/$OS/$PKG_NAME-$VERSION.`date +%Y*`0.tar.bz2 --force
+
+  - &run_coveralls
+    name: run_coveralls
+    command: |
+       export PATH=$WORKDIR/miniconda/bin:$PATH
+       source activate $PY_VER
+       coveralls
+       source deactivate
 
 jobs:
   macos_vcs_py2:
@@ -134,7 +143,7 @@ jobs:
     machine:
       image: circleci/classic:latest
     environment:
-      WORKDIR: "workspace/test_linux_vcs"
+      WORKDIR: "workspace/test_linux_vcs_py2"
       OS: "linux-64"
       PY_VER: "py2"
     steps:
@@ -156,10 +165,10 @@ jobs:
     machine:
       image: circleci/classic:latest
     environment:
-      WORKDIR: "workspace/test_linux_vcs"
+      WORKDIR: "workspace/test_linux_vcs_py3"
       OS: "linux-64"
       PY_VER: "py3"
-      COVERAGE: "-c tests/coverage.json"
+      COVERAGE: "-c tests/coverage.json --coverage-from-repo"
     steps:
       - checkout
       - run: *setup_miniconda
@@ -167,6 +176,7 @@ jobs:
       - run: *create_conda_env
       - run: *setup_vcs
       - run: *run_vcs_tests
+      - run: *run_coveralls
       - run: *conda_upload
       - store_artifacts:
           path: tests_html
@@ -179,14 +189,13 @@ workflows:
   version: 2
   vcs:
     jobs:
-      #- macos_vcs_py2
-      #- macos_vcs_py3:
-      #     requires:
-      #        - macos_vcs_py2
-      #- linux_vcs_py2
-      #- linux_vcs_py3:
-      #     requires:
-      #        - linux_vcs_py2
-      - linux_vcs_py3
+      - macos_vcs_py2
+      - macos_vcs_py3:
+           requires:
+              - macos_vcs_py2
+      - linux_vcs_py2
+      - linux_vcs_py3:
+           requires:
+              - linux_vcs_py2
 
 
