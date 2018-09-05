@@ -419,6 +419,8 @@ class VTKVCSBackend(object):
         #     ren = renderers.GetNextItem()
         if self.contextView:
             self.contextView.GetScene().ClearItems()
+            r, g, b = [c / 255. for c in self.canvas.backgroundcolor]
+            self.contextView.GetRenderer().SetBackground(r, g, b)
         self._animationActorTransforms = {}
         self.showGUI(render=False)
 
@@ -447,9 +449,12 @@ class VTKVCSBackend(object):
         self.vcsInteractorStyle.On()
 
     def createRenWin(self, *args, **kargs):
+        if self.contextView is None:
+            self.contextView = vtk.vtkContextView()
+
         if self.renWin is None:
-            # Create the usual rendering stuff.
-            self.renWin = vtk.vtkRenderWindow()
+            self.renWin = self.contextView.GetRenderWindow()
+
             self.renWin.SetWindowName("VCS Canvas %i" % self.canvas._canvas_id)
             self.renWin.SetAlphaBitPlanes(1)
             # turning on Stencil for Labels on iso plots
@@ -468,23 +473,21 @@ class VTKVCSBackend(object):
             self.initialSize(width, height)
 
         if self.renderer is None:
-            self.renderer = self.createRenderer()
+            self.renderer = self.contextView.GetRenderer()
+            r, g, b = [c / 255. for c in self.canvas.backgroundcolor]
+            self.renderer.SetBackground(r, g, b)
             self.createDefaultInteractor(self.renderer)
-            self.renWin.AddRenderer(self.renderer)
+
         if self.bg:
             self.renWin.SetOffScreenRendering(True)
-        if self.contextView is None:
-            self.contextView = vtk.vtkContextView()
-            self.contextView.SetRenderWindow(self.renWin)
+
         if "open" in kargs and kargs["open"]:
             self.renWin.Render()
 
     def createRenderer(self, *args, **kargs):
-        # For now always use the canvas background
-        ren = vtk.vtkRenderer()
-        r, g, b = self.canvas.backgroundcolor
-        ren.SetBackground(r / 255., g / 255., b / 255.)
-        return ren
+        if not self.renderer:
+            self.createRenWin(*args, **kargs)
+        return self.renderer
 
     def update(self, *args, **kargs):
         self._lastSize = None

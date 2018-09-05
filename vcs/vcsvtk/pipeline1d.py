@@ -121,11 +121,9 @@ class Pipeline1D(Pipeline):
             if self._gm.marker is not None and m.priority > 0:
                 self._context().canvas.plot(m, donotstoredisplay=True)
 
-        ren2 = self._context().createRenderer()
-        self._context().setLayer(ren2, ln_tmp.priority)
-        self._context().renWin.AddRenderer(ren2)
+        ren = self._context().contextView.GetRenderer()
         tmpl.plot(self._context().canvas, data, self._gm, bg=self._context().bg,
-                  renderer=ren2, X=X, Y=Y)
+                  renderer=ren, X=X, Y=Y)
         if hasattr(data1, "_yname"):
             del(data1._yname)
         del(vcs.elements["line"][ln_tmp.name])
