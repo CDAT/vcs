@@ -155,6 +155,9 @@ class VectorPipeline(Pipeline2D):
 
         print('vectorpipeline')
         print('  viewport = {0}'.format(vp))
+        print('  projection type = {0}'.format(vcs.elements["projection"][self._gm.projection].type))
+        print('  vtkGeoTransform = {0}'.format(self._vtkGeoTransform.GetClassName() if self._vtkGeoTransform else 'None'))
+        print('  plotting bounds = {0}'.format(plotting_dataset_bounds))
         print('  graphics method bounds = [{0}, {1}, {2}, {3}]'.format(self._gm.datawc_x1, self._gm.datawc_x2, self._gm.datawc_y1, self._gm.datawc_y2))
         print('  dataset bounds (no mask) = {0}'.format(self._vtkDataSetBoundsNoMask))
         print('  draw area bounds = {0}'.format(drawAreaBounds))

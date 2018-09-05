@@ -66,11 +66,11 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
 
     def test_areawt(self):
         for method in [
-                # vcs.createboxfill,
-                # vcs.createisofill,
-                # vcs.createisoline,
-                # vcs.createmeshfill,
-                # vcs.createvector,
+                vcs.createboxfill,
+                vcs.createisofill,
+                vcs.createisoline,
+                vcs.createmeshfill,
+                vcs.createvector,
                 vcs.createstreamline,
                        ]:
             self.axisConvertGmAreaWt(method)
