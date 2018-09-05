@@ -1023,7 +1023,7 @@ class P(vcs.bestMatch):
         .. pragma: skip-doctest TODO add example/doctest
         """
 
-        # print('axis, number = ', axis, number)
+        print('\ndrawTicks => axis = {0}, number = {1}, mintics = {2}'.format(axis, number, mintic))
 
         kargs["donotstoredisplay"] = True
         if X is None:
@@ -1205,9 +1205,9 @@ class P(vcs.bestMatch):
         if xs != []:
             ticks._x = xs
             ticks._y = ys
-            # if axis == 'y' and int(number) == 2 and ticks.priority != 0:
-            #     print('here are the "ticks":')
-            #     print(ticks.list())
+            # print('Here are the "ticks":')
+            # ticks.list()
+            # print('\n')
             displays.append(x.line(ticks, bg=bg, **kargs))
 
         del(vcs.elements["line"][ticks.name])
@@ -1815,6 +1815,8 @@ class P(vcs.bestMatch):
                         ln_tmp._x = [e._x1, e._x2, e._x2, e._x1, e._x1]
                         ln_tmp._y = [e._y1, e._y1, e._y2, e._y2, e._y1]
                     ln_tmp._priority = e._priority
+                    print('drawing lines for {0}'.format(tp + num))
+                    ln_tmp.list()
                     displays.append(x.plot(ln_tmp, bg=bg, ratio="none", **kargs))
                     del(vcs.elements["line"][ln_tmp.name])
 

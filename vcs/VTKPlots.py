@@ -1295,6 +1295,7 @@ class VTKVCSBackend(object):
     def put_img_on_canvas(
             self, filename, zoom=1, xOffset=0, yOffset=0,
             units="percent", fitToHeight=True, *args, **kargs):
+        print('I am in put_img_on_canvas(), filename = {0}'.format(filename))
         self.createRenWin()
         winSize = self.renWin.GetSize()
         self.hideGUI()

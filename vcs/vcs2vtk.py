@@ -102,6 +102,29 @@ def computeDrawAreaBounds(bounds, flipX=False, flipY=False):
     return vtk.vtkRectd(lowerLeftX, lowerLeftY, width, height)
 
 
+def adjustBounds(bounds, xScale, yScale):
+    # Scale the bounds, keeping the same center point
+    centerX = (bounds[1] + bounds[0]) / 2.0
+    centerY = (bounds[3] + bounds[2]) / 2.0
+    width = bounds[1] - bounds[0]
+    height = bounds[3] - bounds[2]
+
+    newWidth = width * xScale
+    newHeight = height * yScale
+
+    newBounds = [bounds[i] for i in range(len(bounds))]
+
+    halfWidth = newWidth / 2.0
+    halfHeight = newHeight / 2.0
+
+    newBounds[0] = centerX - halfWidth
+    newBounds[1] = centerX + halfWidth
+    newBounds[2] = centerY - halfHeight
+    newBounds[3] = centerY + halfHeight
+
+    return newBounds
+
+
 def configureContextArea(area, dataBounds, screenGeom):
     area.SetDrawAreaBounds(dataBounds)
     area.SetGeometry(screenGeom)
@@ -2052,7 +2075,7 @@ def getStipple(line_type):
         raise Exception("Unknown line type: '%s'" % line_type)
 
 
-def getProjectedBoundsForWorldCoords(wc, proj, subdiv=25):
+def getProjectedBoundsForWorldCoords(wc, proj, subdiv=50):
     if vcs.elements['projection'][proj].type == 'linear':
         return wc
 
@@ -2086,7 +2109,7 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
     global prepLineCount
 
     projBounds = getProjectedBoundsForWorldCoords(line.worldcoordinate, line.projection)
-    # print('projBounds: ', projBounds)
+    print('projBounds = {0}'.format(projBounds))
 
     number_lines = prepPrimitive(line)
     if number_lines == 0:
@@ -2104,7 +2127,8 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
     if isinstance(cmap, str):
         cmap = vcs.elements["colormap"][cmap]
 
-    # print('the line: ', line.list())
+    print('Prepping a line')
+    line.list()
 
     for i in range(number_lines):
 
@@ -2195,10 +2219,11 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
         #     wc = line.worldcoordinate
 
         wc = projBounds
-
+        # wc = adjustBounds(wc, 1.02, 1.02)
         rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
 
         [renWinWidth, renWinHeight] = plotsContext.renWin.GetSize()
+        # vp = adjustBounds(vp, 1.02, 1.02)
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
         area.SetDrawAreaBounds(rect)
@@ -2235,9 +2260,10 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
 
         #     linesPoly = applyTransformationToDataset(T, linesPoly)
 
-        # gridFileName = 'lines-%d-%d' % (prepLineCount, lineDataCount)
-        # debugWriteGrid(linesPoly, gridFileName)
-        # lineDataCount += 1
+        gridFileName = 'lines-%d-%d' % (prepLineCount, lineDataCount)
+        debugWriteGrid(linesPoly, gridFileName)
+        lineDataCount += 1
+        print('***WROTE LINE AS GRID -> {0}'.format(gridFileName))
 
         intValue = vtk.vtkIntArray()
         intValue.SetNumberOfComponents(1)
