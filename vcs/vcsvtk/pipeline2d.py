@@ -418,8 +418,8 @@ class Pipeline2D(IPipeline2D):
         self._context_xc = xc
         self._context_yc = yc
         self._context_yd = yd
-        self._context_flipX = flipX
-        self._context_flipY = flipY
+        self._context_flipX = flipX if not self._vtkGeoTransform else None
+        self._context_flipY = flipY if not self._vtkGeoTransform else None
 
         # self._resultDict['surface_renderer'] = surface_renderer
         self._resultDict['surface_scale'] = (xScale, yScale)
