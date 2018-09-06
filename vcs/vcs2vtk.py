@@ -2109,7 +2109,7 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
     global prepLineCount
 
     projBounds = getProjectedBoundsForWorldCoords(line.worldcoordinate, line.projection)
-    print('projBounds = {0}'.format(projBounds))
+    # print('projBounds = {0}'.format(projBounds))
 
     number_lines = prepPrimitive(line)
     if number_lines == 0:
@@ -2127,8 +2127,8 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
     if isinstance(cmap, str):
         cmap = vcs.elements["colormap"][cmap]
 
-    print('Prepping a line')
-    line.list()
+    # print('Prepping a line')
+    # line.list()
 
     for i in range(number_lines):
 
@@ -2260,10 +2260,10 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
 
         #     linesPoly = applyTransformationToDataset(T, linesPoly)
 
-        gridFileName = 'lines-%d-%d' % (prepLineCount, lineDataCount)
-        debugWriteGrid(linesPoly, gridFileName)
-        lineDataCount += 1
-        print('***WROTE LINE AS GRID -> {0}'.format(gridFileName))
+        # gridFileName = 'lines-%d-%d' % (prepLineCount, lineDataCount)
+        # debugWriteGrid(linesPoly, gridFileName)
+        # lineDataCount += 1
+        # print('***WROTE LINE AS GRID -> {0}'.format(gridFileName))
 
         intValue = vtk.vtkIntArray()
         intValue.SetNumberOfComponents(1)
