@@ -166,6 +166,7 @@ class MeshfillPipeline(Pipeline2D):
                 # lineMapper.SetLookupTable(wireLUT)
 
                 lineMappers.append(lineMapper)
+                print('BOOM')
             mappers.extend(lineMappers)
 
         # And now we need actors to actually render this thing
@@ -216,6 +217,7 @@ class MeshfillPipeline(Pipeline2D):
 
             wireframe = False
             if hasattr(mapper, "_useWireFrame"):
+                print('BONG')
                 # prop = act.GetProperty()
                 # prop.SetRepresentationToWireframe()
                 wireframe = True
@@ -230,7 +232,27 @@ class MeshfillPipeline(Pipeline2D):
             #     create_renderer=(dataset_renderer is None),
             #     add_actor=(wireframe or (style == "solid")))
 
-            if style == "solid":
+            if wireframe:
+                print('This should be a wireframe item')
+
+                item = vtk.vtkPolyDataItem()
+                item.SetPolyData(poly)
+
+                colorArray = vtk.vtkUnsignedCharArray()
+                colorArray.SetNumberOfComponents(4)
+                for i in range(poly.GetNumberOfCells()):
+                    colorArray.InsertNextTypedTuple(wireColor)
+
+                # fname = 'meshfill-wireframe-mapper-%d' % mIdx
+                # vcs2vtk.debugWriteGrid(poly, fname)
+                # mIdx += 1
+
+                item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                item.SetMappedColors(colorArray)
+                area.GetDrawAreaItem().AddItem(item)
+            elif style == "solid":
+                if wireframe:
+                    print('Oh I am hiding as a solid')
                 if self._needsCellData:
                     attrs = poly.GetCellData()
                 else:
@@ -264,22 +286,6 @@ class MeshfillPipeline(Pipeline2D):
                     item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
 
                 item.SetMappedColors(mappedColors)
-                area.GetDrawAreaItem().AddItem(item)
-            elif wireframe:
-                item = vtk.vtkPolyDataItem()
-                item.SetPolyData(poly)
-
-                colorArray = vtk.vtkUnsignedCharArray()
-                colorArray.SetNumberOfComponents(4)
-                for i in range(poly.GetNumberOfCells()):
-                    colorArray.InsertNextTypedTuple(wireColor)
-
-                # fname = 'meshfill-wireframe-mapper-%d' % mIdx
-                # vcs2vtk.debugWriteGrid(poly, fname)
-                # mIdx += 1
-
-                item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
-                item.SetMappedColors(colorArray)
                 area.GetDrawAreaItem().AddItem(item)
 
             # TODO See comment in boxfill.
