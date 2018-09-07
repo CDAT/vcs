@@ -289,10 +289,10 @@ class StreamlinePipeline(Pipeline2D):
             lineAttrs = lineDataset.GetPointData()
             lineData = lineAttrs.GetArray("vector")
 
-            if lineData:
+            if lineData and numLevels:
                 lineColors = lut.MapScalars(lineData, vtk.VTK_COLOR_MODE_DEFAULT, 0)
             else:
-                print('WARNING: streamline pipeline: lineDataset does not have "vector" array on point data, using solid color')
+                print('WARNING: streamline pipeline cannot map scalars for "lineData", using solid color')
                 numTuples = lineDataset.GetNumberOfPoints()
                 color = [0, 0, 0, 255]
                 lineColors = vcs2vtk.generateSolidColorArray(numTuples, color)
@@ -306,10 +306,10 @@ class StreamlinePipeline(Pipeline2D):
             glyphAttrs = glyphDataset.GetPointData()
             glyphData = glyphAttrs.GetArray("VectorMagnitude")
 
-            if glyphData:
+            if glyphData and numLevels:
                 glyphColors = lut.MapScalars(glyphData, vtk.VTK_COLOR_MODE_DEFAULT, 0)
             else:
-                print('WARNING: streamline pipeline: glyphDataset does not have "VectorMagnitude" array on point data, using solid color')
+                print('WARNING: streamline pipeline cannot map scalars for "glyphData", using solid color')
                 numTuples = glyphDataset.GetNumberOfPoints()
                 color = [0, 0, 0, 255]
                 glyphColors = vcs2vtk.generateSolidColorArray(numTuples, color)
