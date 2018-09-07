@@ -1023,8 +1023,6 @@ class P(vcs.bestMatch):
         .. pragma: skip-doctest TODO add example/doctest
         """
 
-        # print('\ndrawTicks => axis = {0}, number = {1}, mintics = {2}'.format(axis, number, mintic))
-
         kargs["donotstoredisplay"] = True
         if X is None:
             X = slab.getAxis(-1)
@@ -1205,9 +1203,9 @@ class P(vcs.bestMatch):
         if xs != []:
             ticks._x = xs
             ticks._y = ys
-            # print('Here are the "ticks":')
-            # ticks.list()
-            # print('\n')
+            print('\ndrawTicks => axis = {0}, number = {1}, mintics = {2}'.format(axis, number, mintic))
+            ticks.list()
+            print('\n')
             displays.append(x.line(ticks, bg=bg, **kargs))
 
         del(vcs.elements["line"][ticks.name])
@@ -1746,6 +1744,8 @@ class P(vcs.bestMatch):
         if Y is None:
             Y = slab.getAxis(-2)
         wc2 = vcs.utils.getworldcoordinates(gm, X, Y)
+        import pdb
+        pdb.set_trace()
         wc2 = kargs.get("plotting_dataset_bounds", wc2)
         vp2 = [self.data._x1, self.data._x2, self.data._y1, self.data._y2]
         vp2 = kargs.get("ratio_autot_viewport", vp2)
@@ -1815,8 +1815,9 @@ class P(vcs.bestMatch):
                         ln_tmp._x = [e._x1, e._x2, e._x2, e._x1, e._x1]
                         ln_tmp._y = [e._y1, e._y1, e._y2, e._y2, e._y1]
                     ln_tmp._priority = e._priority
-                    # print('drawing lines for {0}'.format(tp + num))
-                    # ln_tmp.list()
+                    print('\ndrawing {0}{1} lines'.format(tp, num))
+                    ln_tmp.list()
+                    print('\n')
                     displays.append(x.plot(ln_tmp, bg=bg, ratio="none", **kargs))
                     del(vcs.elements["line"][ln_tmp.name])
 

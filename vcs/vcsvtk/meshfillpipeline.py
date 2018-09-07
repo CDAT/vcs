@@ -166,7 +166,6 @@ class MeshfillPipeline(Pipeline2D):
                 # lineMapper.SetLookupTable(wireLUT)
 
                 lineMappers.append(lineMapper)
-                print('BOOM')
             mappers.extend(lineMappers)
 
         # And now we need actors to actually render this thing
@@ -217,7 +216,6 @@ class MeshfillPipeline(Pipeline2D):
 
             wireframe = False
             if hasattr(mapper, "_useWireFrame"):
-                print('BONG')
                 # prop = act.GetProperty()
                 # prop.SetRepresentationToWireframe()
                 wireframe = True
@@ -251,8 +249,6 @@ class MeshfillPipeline(Pipeline2D):
                 item.SetMappedColors(colorArray)
                 area.GetDrawAreaItem().AddItem(item)
             elif style == "solid":
-                if wireframe:
-                    print('Oh I am hiding as a solid')
                 if self._needsCellData:
                     attrs = poly.GetCellData()
                 else:

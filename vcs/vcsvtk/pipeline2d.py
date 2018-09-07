@@ -467,11 +467,17 @@ class Pipeline2D(IPipeline2D):
                                                     self._data1.getAxis(-1),
                                                     self._data1.getAxis(-2))
 
+        print('pipeline2d.getPlottingBounds()')
+        print('  - data bounds: {0}'.format(dataBounds))
+        print('  - world coordinates: {0}'.format(worldCoords))
+
         if (self._vtkGeoTransform):
+            print('    - geo transform: YES')
             return vcs2vtk.getWrappedBounds(worldCoords,
                                             dataBounds,
                                             self._dataWrapModulo)
         else:
+            print('    - geo transform: NO')
             return vcs2vtk.getPlottingBounds(worldCoords,
                                              dataBounds,
                                              self._vtkGeoTransform)
