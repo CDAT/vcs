@@ -15,6 +15,7 @@ from .vcsvtk import fillareautils
 import sys
 import numbers
 
+from .template import vcs_debug_boxes_lines_ticks as debugLines
 
 _DEBUG_VTK = True
 prepLineCount = 0
@@ -2127,8 +2128,9 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
     if isinstance(cmap, str):
         cmap = vcs.elements["colormap"][cmap]
 
-    print('Prepping a line')
-    line.list()
+    if debugLines:
+        print('Prepping a line')
+        line.list()
 
     for i in range(number_lines):
 
@@ -2219,12 +2221,23 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
         #     wc = line.worldcoordinate
 
         wc = projBounds
-        # wc = adjustBounds(wc, 1.02, 1.02)
+
+        if debugLines:
+            print('\nLine is prepped:')
+            print('  projBounds = {0}'.format(projBounds))
+            print('  vp = {0}'.format(vp))
+
+        wc = adjustBounds(wc, 1.1, 1.1)
         rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
 
         [renWinWidth, renWinHeight] = plotsContext.renWin.GetSize()
-        # vp = adjustBounds(vp, 1.02, 1.02)
+        vp = adjustBounds(vp, 1.1, 1.1)
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+
+        if debugLines:
+            print('  adjusted projBounds = {0}'.format(wc))
+            print('  adjusted viewport = {0}'.format(vp))
+            print('\n')
 
         area.SetDrawAreaBounds(rect)
         area.SetGeometry(geom)
@@ -2260,10 +2273,11 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
 
         #     linesPoly = applyTransformationToDataset(T, linesPoly)
 
-        gridFileName = 'lines-%d-%d' % (prepLineCount, lineDataCount)
-        debugWriteGrid(linesPoly, gridFileName)
-        lineDataCount += 1
-        print('***WROTE LINE AS GRID -> {0}'.format(gridFileName))
+        if debugLines:
+            gridFileName = 'lines-%d-%d' % (prepLineCount, lineDataCount)
+            debugWriteGrid(linesPoly, gridFileName)
+            lineDataCount += 1
+            print('***WROTE LINE AS GRID -> {0}'.format(gridFileName))
 
         intValue = vtk.vtkIntArray()
         intValue.SetNumberOfComponents(1)
