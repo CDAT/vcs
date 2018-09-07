@@ -809,10 +809,10 @@ class VTKVCSBackend(object):
                 #     newWc[2] = newWc[3]
                 #     newWc[3] = tmp
 
-                print('plotting markers')
-                print('  computed viewport scaling: {0}'.format([xScale, yScale]))
-                print('  original wc: {0}'.format(wc))
-                print('  scaled wc: {0}'.format(newWc))
+                # print('plotting markers')
+                # print('  computed viewport scaling: {0}'.format([xScale, yScale]))
+                # print('  original wc: {0}'.format(wc))
+                # print('  scaled wc: {0}'.format(newWc))
 
                 rect = vtk.vtkRectd(newWc[0], newWc[2], newWc[1] - newWc[0], newWc[3] - newWc[2])
                 vcs2vtk.configureContextArea(area, rect, geom)

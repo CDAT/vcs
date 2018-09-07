@@ -169,15 +169,12 @@ class BoxfillPipeline(Pipeline2D):
 
                 print('boxfillpipeline adding a context item')
 
-            # TODO We shouldn't need this conditional branch, the 'else' body
-            # should be used and GetMapper called to get the mapper as needed.
-            # If this is needed for other reasons, we need a comment explaining
-            # why.
-            if mapper is self._maskedDataMapper:
-                actors.append([item, self._maskedDataMapper, plotting_dataset_bounds])
-            else:
-                actors.append([item, plotting_dataset_bounds])
+                if mapper is self._maskedDataMapper:
+                    actors.append([item, self._maskedDataMapper, plotting_dataset_bounds])
+                else:
+                    actors.append([item, plotting_dataset_bounds])
 
+            if mapper is not self._maskedDataMapper:
                 if self._gm.boxfill_type == "custom":
                     # Patterns/hatches creation for custom boxfill plots
                     patact = None

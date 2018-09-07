@@ -456,20 +456,25 @@ class Pipeline2D(IPipeline2D):
         """gm.datawc if it is set or dataset_bounds if there is not geographic projection
            wrapped bounds otherwise
         """
+        # if self._vtkDataSetBoundsNoMask:
+        #     dataBounds = self._vtkDataSetBoundsNoMask
+        # else:
+        #     dataBounds = self._vtkDataSetBounds
+
+        dataBounds = self._vtkDataSetBounds
+
+        worldCoords = vcs.utils.getworldcoordinates(self._gm,
+                                                    self._data1.getAxis(-1),
+                                                    self._data1.getAxis(-2))
+
         if (self._vtkGeoTransform):
-            return vcs2vtk.getWrappedBounds(
-                vcs.utils.getworldcoordinates(self._gm,
-                                              self._data1.getAxis(-1),
-                                              self._data1.getAxis(-2)),
-                # self._vtkDataSetBoundsNoMask, self._dataWrapModulo)
-                self._vtkDataSetBounds, self._dataWrapModulo)
+            return vcs2vtk.getWrappedBounds(worldCoords,
+                                            dataBounds,
+                                            self._dataWrapModulo)
         else:
-            return vcs2vtk.getPlottingBounds(
-                vcs.utils.getworldcoordinates(self._gm,
-                                              self._data1.getAxis(-1),
-                                              self._data1.getAxis(-2)),
-                # self._vtkDataSetBoundsNoMask, self._vtkGeoTransform)
-                self._vtkDataSetBounds, self._vtkGeoTransform)
+            return vcs2vtk.getPlottingBounds(worldCoords,
+                                             dataBounds,
+                                             self._vtkGeoTransform)
 
     def _patternSpacingAndScale(self):
         """Return the pattern pixel spacing and scale if specified or compute
