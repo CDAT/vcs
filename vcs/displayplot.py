@@ -118,7 +118,6 @@ class Dp(vcs.bestMatch):
                 if self._widget is not None:
                     self._widget.close()
                 self._widget = cdat_notebook.GMWidget(value=b_dict)
-
                 def refresh(o):
                     for k, v in self._widget.value.iteritems():
                         try:
@@ -131,7 +130,7 @@ class Dp(vcs.bestMatch):
                     IPython.display.display(self)
                 self._widget.observe(refresh, names="value")
                 IPython.display.display(self._widget)
-        except ImportError:
+        except Exception as err:
             pass
         return st
 # TODO: html,json,jpeg,png,svg,latex
