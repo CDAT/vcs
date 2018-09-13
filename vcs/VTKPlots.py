@@ -181,6 +181,7 @@ class VTKVCSBackend(object):
                         break
                     renderer.SetDraw(False)
                 surfaceRenderer.SetDraw(True)
+
                 selection = selector.Select()
                 renderers.InitTraversal()
                 while(True):
@@ -835,7 +836,7 @@ class VTKVCSBackend(object):
 
 
                 # actors = vcs2vtk.prepMarker(ren, gm, cmap=self.canvas.colormap)
-                actors = vcs2vtk.prepMarker(gm, [renWinWidth, renWinHeight], scale=[xScale, yScale], cmap=self.canvas.colormap)
+                actors = vcs2vtk.prepMarker(gm, [geom[2], geom[3]], scale=[xScale, yScale], cmap=self.canvas.colormap)
                 returned["vtk_backend_marker_actors"] = actors
                 glyphBounds = [100000000.0, -100000000.0, 100000000.0, -100000000.0]
                 for g, pd, geo in actors:

@@ -105,7 +105,14 @@ def computeMarkerScale(dataRange, screenGeom, pxScale=None, threshold=1e-6):
     if pxScale:
         scale *= pxScale
 
+    scale = 1
+
     # print('computeMarkerScale: scale = {0}'.format(scale))
+    print('Computing marker scale')
+    print('  data range = {0}'.format(dataRange))
+    print('  screen geometry = {0}'.format(screenGeom))
+    print('  input scale factor = {0}'.format(pxScale))
+    print('    computed scale = {0}'.format(scale))
 
     return scale
 

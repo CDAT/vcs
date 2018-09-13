@@ -1770,7 +1770,7 @@ def prepGlyph(g, marker, screenGeom, index=0):
     dx = marker.worldcoordinate[1] - marker.worldcoordinate[0]
     dy = marker.worldcoordinate[3] - marker.worldcoordinate[2]
 
-    scale = fillareautils.computeMarkerScale([dx, dy], screenGeom, (s * 10), 1e-10)
+    scale = fillareautils.computeMarkerScale([dx, dy], screenGeom, (s * 1), 1e-10)
     finalScale = scale
 
     if t == 'dot':
