@@ -45,6 +45,8 @@ def affine(value, inMin, inMax, outMin, outMax):
 
 
 def computeDiffPoints(sp1, sp2, dataRange, screenGeom):
+    # Offsets into data range or screen don't matter
+    # because we're just computing differences
     dp1 = [
         affine(sp1[0], 0, screenGeom[0], 0, dataRange[0]),
         affine(sp1[1], 0, screenGeom[1], 0, dataRange[1])
@@ -95,23 +97,24 @@ def computeResolutionAndScale(dataRange, screenGeom, vpScale=[1.0, 1.0],
     return ([xres, yres], scale)
 
 
-def computeMarkerScale(dataRange, screenGeom, pxScale=None, threshold=1e-6):
+def computeMarkerScale(dataRange, screenGeom, pxScale=None):
     pt1 = [0.0, 0.0]
-    side = 1 / math.sqrt(2)
-    pt2 = [side, side]
+    pt2 = [pxScale, pxScale]
     diffwpoints = computeDiffPoints(pt1, pt2, dataRange, screenGeom)
-    diffwpoints = [1.0 if i < threshold else i for i in diffwpoints]
-    scale = min(*diffwpoints)
-    if pxScale:
-        scale *= pxScale
 
-    scale = 1
+    dataAspect = abs(float(dataRange[0]) / dataRange[1])
+    screenAspect = float(screenGeom[0]) / screenGeom[1]
+
+    scale = max(*diffwpoints)
+    if dataAspect > 1:
+        scale = min(*diffwpoints)
 
     # print('computeMarkerScale: scale = {0}'.format(scale))
     print('Computing marker scale')
-    print('  data range = {0}'.format(dataRange))
-    print('  screen geometry = {0}'.format(screenGeom))
-    print('  input scale factor = {0}'.format(pxScale))
+    print('  data range = {0}, aspect = {1}'.format(dataRange, dataAspect))
+    print('  screen geometry = {0}, aspect = {1}'.format(screenGeom, screenAspect))
+    print('  requested marker size = {0}'.format(pxScale))
+    print('  diffwpoints = [{0}]'.format(diffwpoints))
     print('    computed scale = {0}'.format(scale))
 
     return scale
