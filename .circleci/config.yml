@@ -22,16 +22,16 @@ aliases:
     name: create_conda_env
     environment:
        CHANNELS: "-c cdat/label/nightly -c conda-forge -c cdat"
-       PKGS: "cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime 'proj4<5' 'numpy>1.14' 'ffmpeg>4'" 
+       PKGS: "cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime 'proj4<5' 'numpy>1.14' " 
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
        conda config --set always_yes yes --set changeps1 no
        conda update -y -q conda
        conda config --set anaconda_upload no
        if [[ $PY_VER = "py2" ]]; then
-          conda create -q -n $PY_VER $CHANNELS $PKGS "python<3"
+          conda create -q -n $PY_VER $CHANNELS $PKGS $TEMP_PKGS "python<3"
        else
-          conda create -q -n $PY_VER $CHANNELS $PKGS "python>3" nbsphinx easydev
+          conda create -q -n $PY_VER $CHANNELS $PKGS $TEMP_PKGS "python>3" nbsphinx easydev
        fi 
 
   - &setup_vcs
@@ -102,6 +102,7 @@ jobs:
       WORKDIR: "workspace/test_macos_vcs_py2"
       OS: "osx-64"
       PY_VER: "py2"
+      TEMP_PKGS: "ffmpeg>4" "libpng>1.6.34" 
     steps:
       - checkout
       - run: *setup_miniconda
@@ -124,6 +125,7 @@ jobs:
       WORKDIR: "workspace/test_macos_vcs_py3"
       OS: "osx-64"
       PY_VER: "py3"
+      TEMP_PKGS: "ffmpeg>4" "libpng>1.6.34" 
     steps:
       - checkout
       - run: *setup_miniconda
