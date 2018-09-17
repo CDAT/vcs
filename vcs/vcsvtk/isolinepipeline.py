@@ -120,6 +120,10 @@ class IsolinePipeline(Pipeline2D):
             if backgroundOpacities:
                 while len(backgroundOpacities) < len(self._contourLevels):
                     backgroundOpacities.append(backgroundOpacities[-1])
+            else:
+                backgroundOpacities = [100.0 for lev in self._contourLevels]
+
+            print('isolinepipeline: backgroundOpacities = {0}'.format(backgroundOpacities))
 
         countLevels = 0
         vp = self._resultDict.get(
@@ -152,6 +156,11 @@ class IsolinePipeline(Pipeline2D):
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
         vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
+
+        # This render call is needed to work around a bug somewhere in the
+        # vtkContextTransform code, where the transformation represented by
+        # Map[To|From]Scene() isn't set up properly until after a render call.
+        self._context().renWin.Render();
 
         for i, l in enumerate(tmpLevels):
             numLevels = len(l)
@@ -219,15 +228,22 @@ class IsolinePipeline(Pipeline2D):
                                     tt = sp[0]
                                     to = "default"
 
+                        tt = vcs.createtexttable(None, tt)
+
                         colorOverride = colorOverrides[countLevels + idx]
                         if colorOverride is not None:
-                            tt = vcs.createtexttable(None, tt)
+                            # tt = vcs.createtexttable(None, tt)
                             tt.color = colorOverride
-                            tt = tt.name
+                            # tt = tt.name
+
+                        tt = tt.name
+
                         if backgroundColors is not None:
                             texttbl = vcs.gettexttable(tt)
                             texttbl.backgroundcolor = backgroundColors[countLevels + idx]
                         if backgroundOpacities is not None:
+                            # import pdb
+                            # pdb.set_trace()
                             texttbl = vcs.gettexttable(tt)
                             texttbl.backgroundopacity = backgroundOpacities[countLevels + idx]
                         tprop = vtk.vtkTextProperty()
@@ -242,19 +258,27 @@ class IsolinePipeline(Pipeline2D):
                     vcs2vtk.prepTextProperty(tprop,
                                              self._context().renWin.GetSize(),
                                              cmap=cmap)
+                    tprop.SetBackgroundOpacity(1.0)
                     tprops.AddItem(tprop)
                 textprops.append(tprops)
 
+                item = vtk.vtkLabeledContourPolyDataItem()
+                item.SetTextProperties(tprops)
+                item.SetTextPropertyMapping(tpropMap)
+                item.SetLabelVisibility(1)
+                item.SetSkipDistance(self._gm.labelskipdistance)
+
                 mapper = vtk.vtkLabeledContourMapper()
-                mapper.SetTextProperties(tprops)
-                mapper.SetTextPropertyMapping(tpropMap)
-                mapper.SetLabelVisibility(1)
-                mapper.SetSkipDistance(self._gm.labelskipdistance)
+                # mapper.SetTextProperties(tprops)
+                # mapper.SetTextPropertyMapping(tpropMap)
+                # mapper.SetLabelVisibility(1)
+                # mapper.SetSkipDistance(self._gm.labelskipdistance)
 
                 pdMapper = mapper.GetPolyDataMapper()
 
                 luts.append([lut, [l[0], l[-1], False]])
             else:  # No isoline labels:
+                item = vtk.vtkPolyDataItem()
                 mapper = vtk.vtkPolyDataMapper()
                 pdMapper = mapper
                 luts.append([lut, [l[0], l[-1], False]])
@@ -314,7 +338,7 @@ class IsolinePipeline(Pipeline2D):
             floatValue.InsertNextValue(tmpLineWidths[i])
             poly.GetFieldData().AddArray(floatValue)
 
-            item = vtk.vtkPolyDataItem()
+
             item.SetPolyData(poly)
             item.SetScalarMode(scalarMode)
             item.SetMappedColors(mappedColors)
