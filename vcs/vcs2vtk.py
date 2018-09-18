@@ -1666,8 +1666,8 @@ def prepFillarea(context, renWin, farea, cmap=None):
     # if flipX:
     #     cam.Azimuth(180.)
 
-
-    if st == 'solid':
+    # If we had at least one "solid" style area
+    if pts.GetNumberOfPoints() > 0:
         tris.Update()
         solidPoly = tris.GetOutput()
         item = vtk.vtkPolyDataItem()
