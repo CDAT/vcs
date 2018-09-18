@@ -27,6 +27,18 @@ from . import VCS_validation_functions
 import vcs
 from .xmldocs import listdoc  # noqa
 
+try:
+    basestring
+except Exception:
+    basestring = str
+
+
+class IPythonDisplay(object):
+    def __init__(self, png):
+        self.png = png
+    def _repr_png_(self):
+        return self.png
+    
 
 class Dp(vcs.bestMatch):
 
@@ -100,6 +112,7 @@ class Dp(vcs.bestMatch):
                  "_widget",
                  "extradisplays",
                  "ratio",
+                 "_display_target"
                  ]
 
     def _repr_png_(self):
@@ -111,6 +124,7 @@ class Dp(vcs.bestMatch):
         f.close()
         try:
             import IPython.display
+            """
             import cdat_notebook
             if self.g_type == "boxfill":
                 box = vcs.getboxfill(self.g_name)
@@ -130,7 +144,20 @@ class Dp(vcs.bestMatch):
                     IPython.display.display(self)
                 self._widget.observe(refresh, names="value")
                 IPython.display.display(self._widget)
+                """
+            if self._parent._display_target is None:  # no target specified
+                import sidecar  # if sidecar is here use it for target
+                self._parent._display_target = sidecar.Sidecar(
+                    title="VCS Canvas {:d}".format(self._parent.canvasid()))
+            elif isinstance(self._parent._display_target, basestring):
+                self._parent._display_target = sidecar.Sidecar(
+                    title=self._parent._display_target)
+            self._parent._display_target.clear_output()
+            with self._parent._display_target:
+                IPython.display.display(IPythonDisplay(st))
+                st = None
         except Exception as err:
+            print("EXCEPTINO:", err)
             pass
         return st
 # TODO: html,json,jpeg,png,svg,latex

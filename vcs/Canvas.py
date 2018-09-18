@@ -377,6 +377,7 @@ class Canvas(vcs.bestMatch):
         '__last_plot_keyargs',
         '_continents_line',
         '_savedcontinentstype',
+        '_display_target'
     ]
 
 #     def applicationFocusChanged(self, old, current ):
@@ -833,12 +834,13 @@ class Canvas(vcs.bestMatch):
             print(getattr(x, "__doc__", ""))
 
     def __init__(self, mode=1, pause_time=0, call_from_gui=0, size=None,
-                 backend="vtk", geometry=None, bg=None):
+                 backend="vtk", geometry=None, bg=None, display_target=None):
         self._canvas_id = vcs.next_canvas_id
         self.ParameterChanged = SIGNAL('ParameterChanged')
         vcs.next_canvas_id += 1
         self.colormap = None
         self.backgroundcolor = 255, 255, 255
+        self._display_target = display_target
 
         # displays plotted
         self.display_names = []
@@ -916,6 +918,15 @@ class Canvas(vcs.bestMatch):
             self.width = w
             self.height = h
 
+        # When in IpythonJupyter we should set bg to True no matter what the user snet us
+        try:
+            cfg = get_ipython().config 
+            print(cfg)
+            if 'IPKernelApp' in cfg:
+                bg2 = True
+        except NameError:
+            pass
+        print("CAlling with bg:",bg)
         if backend == "vtk":
             self.backend = VTKVCSBackend(self, bg=bg)
         elif isinstance(backend, vtk.vtkRenderWindow):
@@ -4208,6 +4219,9 @@ class Canvas(vcs.bestMatch):
             if not preserve_display:
                 del(vcs.elements["display"][nm])
         self.display_names = []
+        if self._display_target is not None and \
+            not isinstance(self._display_target, basestring):
+            self._display_target.clear_output()
         return
 
     def close(self, *args, **kargs):
@@ -4229,6 +4243,9 @@ class Canvas(vcs.bestMatch):
             self.endconfigure()
         a = self.backend.close(*args, **kargs)
         self.animate_info = []
+        if self._display_target is not None and \
+            not isinstance(self._display_target, basestring):
+            self._display_target.close()
 
         return a
 
@@ -4246,8 +4263,14 @@ class Canvas(vcs.bestMatch):
                 >>> a.destroy()
 
         """
+        self.close()
         import gc
 
+        if self._display_target is not None and \
+            not isinstance(self._display_target, basestring):
+            self._display_target.clear_output()
+            self._display_target.close()
+            del(self._display_target)
         del self
         gc.garbage
         gc.collect()
@@ -4495,6 +4518,9 @@ class Canvas(vcs.bestMatch):
         """
 
         a = self.backend.open(width, height, **kargs)
+        if self._display_target is not None and \
+            not isinstance(self._display_target, basestring):
+            self._display_target.open()
 
         return a
     open.__doc__ = open.__doc__ % (xmldocs.canvas_width, xmldocs.canvas_height)

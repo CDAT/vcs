@@ -310,7 +310,7 @@ canvaslist = []
 
 
 def init(mode=1, pause_time=0, call_from_gui=0, size=None, backend="vtk",
-         geometry=None, bg=None, sidecar=None):
+         geometry=None, bg=None, display_target=None):
     """Initialize and construct a VCS Canvas object.
 
     :Example:
@@ -333,14 +333,14 @@ def init(mode=1, pause_time=0, call_from_gui=0, size=None, backend="vtk",
     :param geometry: Size (in pixels) you want the canvas to be.
     :param bg: Initialize a canvas to render in "background" mode (without
         displaying a window
-    :param: sidecar: A jupyterlab sidecar object in which to render vcs pictures
+    :param: display_target: A jupyterlab notebook target object in which to render vcs pictures
         (only works in jupyterlab), if you pass True will create a new one for you
         sidecar gets attached to Canvas and can be reused for other Canvases to share it
     :type size: float or case-insensitive str
     :type backend: str, :py:class:`vtk.vtkRenderWindow`
     :type geometry: dict or tuple
     :type bg: bool
-    :type sidecar: bool, str, :py:class:sidecar.sidecar.Sidecar
+    :type display_target: None, bool, str, :py:class:sidecar.sidecar.Sidecar
     :return: An initialized canvas
     :rtype: vcs.Canvas.Canvas
     """
@@ -352,7 +352,7 @@ def init(mode=1, pause_time=0, call_from_gui=0, size=None, backend="vtk",
         backend=backend,
         geometry=geometry,
         bg=bg,
-        sidecar=sidecar)
+        display_target=None)
     global canvaslist
     canvaslist.append(canvas)
     return canvas
