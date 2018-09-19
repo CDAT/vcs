@@ -124,7 +124,6 @@ class Dp(vcs.bestMatch):
         f.close()
         try:
             import IPython.display
-            """
             import cdat_notebook
             if self.g_type == "boxfill":
                 box = vcs.getboxfill(self.g_name)
@@ -144,7 +143,6 @@ class Dp(vcs.bestMatch):
                     IPython.display.display(self)
                 self._widget.observe(refresh, names="value")
                 IPython.display.display(self._widget)
-                """
             if self._parent._display_target is None:  # no target specified
                 import sidecar  # if sidecar is here use it for target
                 self._parent._display_target = sidecar.Sidecar(
