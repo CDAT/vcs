@@ -67,6 +67,7 @@ try:
     basestring
 except Exception:
     basestring = str
+from IPython import get_ipython
 
 
 def rotate(x, y, xorigin, yorigin, angle):
@@ -920,13 +921,11 @@ class Canvas(vcs.bestMatch):
 
         # When in IpythonJupyter we should set bg to True no matter what the user snet us
         try:
-            cfg = get_ipython().config 
-            print(cfg)
+            cfg = get_ipython().config
             if 'IPKernelApp' in cfg:
-                bg2 = True
-        except NameError:
+                bg = True
+        except (AttributeError, NameError):
             pass
-        print("CAlling with bg:",bg)
         if backend == "vtk":
             self.backend = VTKVCSBackend(self, bg=bg)
         elif isinstance(backend, vtk.vtkRenderWindow):

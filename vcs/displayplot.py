@@ -149,15 +149,15 @@ class Dp(vcs.bestMatch):
                 import sidecar  # if sidecar is here use it for target
                 self._parent._display_target = sidecar.Sidecar(
                     title="VCS Canvas {:d}".format(self._parent.canvasid()))
-            elif isinstance(self._parent._display_target, basestring):
+            elif isinstance(self._parent._display_target, basestring) and \
+                    self._parent._display_target.lower() not in ["inline", "off", "no"]:
                 self._parent._display_target = sidecar.Sidecar(
                     title=self._parent._display_target)
             self._parent._display_target.clear_output()
             with self._parent._display_target:
                 IPython.display.display(IPythonDisplay(st))
                 st = None
-        except Exception as err:
-            print("EXCEPTINO:", err)
+        except Exception:
             pass
         return st
 # TODO: html,json,jpeg,png,svg,latex

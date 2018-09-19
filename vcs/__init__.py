@@ -335,12 +335,13 @@ def init(mode=1, pause_time=0, call_from_gui=0, size=None, backend="vtk",
         displaying a window
     :param: display_target: A jupyterlab notebook target object in which to render vcs pictures
         (only works in jupyterlab), if you pass True will create a new one for you
-        sidecar gets attached to Canvas and can be reused for other Canvases to share it
+        sidecar gets attached to Canvas and can be reused for other Canvases to share it.
+        Pass "inline", "off", or "no" to disable the target feature
     :type size: float or case-insensitive str
     :type backend: str, :py:class:`vtk.vtkRenderWindow`
     :type geometry: dict or tuple
     :type bg: bool
-    :type display_target: None, bool, str, :py:class:sidecar.sidecar.Sidecar
+    :type display_target: None, str, :py:class:sidecar.sidecar.Sidecar
     :return: An initialized canvas
     :rtype: vcs.Canvas.Canvas
     """
@@ -352,7 +353,7 @@ def init(mode=1, pause_time=0, call_from_gui=0, size=None, backend="vtk",
         backend=backend,
         geometry=geometry,
         bg=bg,
-        display_target=None)
+        display_target=display_target)
     global canvaslist
     canvaslist.append(canvas)
     return canvas
