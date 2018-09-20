@@ -186,16 +186,17 @@ class MeshfillPipeline(Pipeline2D):
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
-        drawAreaBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask, self._context_flipX, self._context_flipY)
-
-        # drawAreaBounds = vtk.vtkRectd(x1, y1, x2 - x1, y2 - y1)
+        adjusted_plotting_bounds = vcs2vtk.getProjectedBoundsForWorldCoords(plotting_dataset_bounds, self._gm.projection)
+        drawAreaBounds = vcs2vtk.computeDrawAreaBounds(adjusted_plotting_bounds)
 
         print('meshfillpipeline')
         print('  viewport = {0}'.format(vp))
         print('  projection type = {0}'.format(vcs.elements["projection"][self._gm.projection].type))
         print('  vtkGeoTransform = {0}'.format(self._vtkGeoTransform.GetClassName() if self._vtkGeoTransform else 'None'))
         print('  plotting bounds = {0}'.format(plotting_dataset_bounds))
+        print('  adjusted plotting bounds = {0}'.format(adjusted_plotting_bounds))
         print('  graphics method bounds = [{0}, {1}, {2}, {3}]'.format(self._gm.datawc_x1, self._gm.datawc_x2, self._gm.datawc_y1, self._gm.datawc_y2))
+        print('  dataset bounds = {0}'.format(self._vtkDataSetBounds))
         print('  dataset bounds (no mask) = {0}'.format(self._vtkDataSetBoundsNoMask))
         print('  draw area bounds = {0}'.format(drawAreaBounds))
         print('  scale: [xscale, yscale] = [{0}, {1}]'.format(self._context_xScale, self._context_yScale))
