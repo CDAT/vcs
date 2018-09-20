@@ -55,7 +55,7 @@ aliases:
           cd docs
           make doctest
           DOC_RESULT=$?
-          echo "**** $PY_VER doc test result: "${DOC_RESULT}
+          echo "*** $PY_VER doc test result: "${DOC_RESULT}
           RESULT=$(( $RESULT + $DOC_RESULT ))
        fi
        exit $RESULT
