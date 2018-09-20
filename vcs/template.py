@@ -1201,6 +1201,10 @@ class P(vcs.bestMatch):
             tt.string = tstring
             tt.x = txs
             tt.y = tys
+            if vcs_debug_boxes_lines_ticks:
+                print('\ndrawTicks (labels) => axis = {0}, number = {1}, mintics = {2}'.format(axis, number, mintic))
+                tt.list()
+                print('\n')
             displays.append(x.text(tt, bg=bg, ratio="none", **kargs))
         if xs != []:
             ticks._x = xs

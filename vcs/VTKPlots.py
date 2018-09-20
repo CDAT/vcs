@@ -1076,9 +1076,6 @@ class VTKVCSBackend(object):
 
     def renderTemplate(self, tmpl, data, gm, taxis,
                        zaxis, X=None, Y=None, draw_attributes=False, **kargs):
-        # import pdb
-        # pdb.set_trace()
-
         # view and interactive area
         view = self.contextView
 

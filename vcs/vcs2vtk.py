@@ -674,8 +674,10 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
         xm, xM, ym, yM, tmp, tmp2 = vg.GetPoints().GetBounds()
         projection = vcs.elements["projection"][gm.projection]
         vg.SetPoints(pts)
-        geo, geopts = project(pts, projection, getWrappedBounds(
-            wc, [xm, xM, ym, yM], wrap))
+        wrb = getWrappedBounds(wc, [xm, xM, ym, yM], wrap)
+        # wrb = [-180.0, 175.0, -90.0, 90.0]
+        print('\nGENGRID, wrapped bounds = {0}'.format(wrb))
+        geo, geopts = project(pts, projection, wrb)
         # proj4 returns inf for points that are not visible. Set those to a valid point
         # and hide them.
         ghost = vg.AllocatePointGhostArray()
@@ -1404,7 +1406,11 @@ def genTextActor(contextArea, string=None, x=None, y=None,
         if vcs.elements["projection"][tt.projection].type != "linear":
             _, pts = project(pts, tt.projection, tt.worldcoordinate, geo=geo)
             X, Y, tz = pts.GetPoint(0)
+            # print('genTextActor pos for {0}'.format(string[i]))
+            # print('  proj = {0}, tt.wc = {1}, geo = {2}'.format(vcs.elements["projection"][tt.projection].type, tt.worldcoordinate, geo.GetClassName() if geo else 'None'))
+            # print('  projected [{0}, {1}] to [{2}, {3}]'.format(x[i], y[i], X, Y))
             if wc is None:
+                print('    !!!BOOP!!!')
                 wc = tt.worldcoordinate
                 pts_wc = vtk.vtkPoints()
                 # Scan a bunch of points within wc
@@ -1420,6 +1426,8 @@ def genTextActor(contextArea, string=None, x=None, y=None,
                 wc = [wx.min(), wx.max(), wy.min(), wy.max()]
             renderer.SetWorldPoint(wc)
             X, Y = world2Renderer(renderer, X, Y, tt.viewport, wc)
+            # print('  wc = {0}'.format(wc))
+            # print('  final screen pos = [{0}, {1}]'.format(X, Y))
         else:
             X, Y = world2Renderer(
                 renderer, x[i], y[i], tt.viewport, tt.worldcoordinate)

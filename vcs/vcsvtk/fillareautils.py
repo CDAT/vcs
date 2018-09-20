@@ -110,12 +110,12 @@ def computeMarkerScale(dataRange, screenGeom, pxScale=None):
         scale = min(*diffwpoints)
 
     # print('computeMarkerScale: scale = {0}'.format(scale))
-    print('Computing marker scale')
-    print('  data range = {0}, aspect = {1}'.format(dataRange, dataAspect))
-    print('  screen geometry = {0}, aspect = {1}'.format(screenGeom, screenAspect))
-    print('  requested marker size = {0}'.format(pxScale))
-    print('  diffwpoints = [{0}]'.format(diffwpoints))
-    print('    computed scale = {0}'.format(scale))
+    # print('Computing marker scale')
+    # print('  data range = {0}, aspect = {1}'.format(dataRange, dataAspect))
+    # print('  screen geometry = {0}, aspect = {1}'.format(screenGeom, screenAspect))
+    # print('  requested marker size = {0}'.format(pxScale))
+    # print('  diffwpoints = [{0}]'.format(diffwpoints))
+    # print('    computed scale = {0}'.format(scale))
 
     return scale
 
