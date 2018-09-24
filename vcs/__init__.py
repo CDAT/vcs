@@ -11,13 +11,13 @@ Creator: `Dean Williams`_ (LLNL, AIMS Team)
 
 Lead Developer: `Charles Doutriaux`_ (LLNL, AIMS Team)
 
-Contributors: https://github.com/UV-CDAT/uvcdat/graphs/contributors
+Contributors: https://github.com/CDAT/cdat/graphs/contributors
 
-Support Email: uvcdat-support@llnl.gov
+Support Email: cdat-support@llnl.gov
 
-Project Site: http://uvcdat.llnl.gov/
+Project Site: http://cdat.llnl.gov/
 
-Project Repo: https://github.com/UV-CDAT/uvcdat/graphs/contributors
+Project Repo: https://github.com/CDAT/cdat/graphs/contributors
 
 .. _Dean Williams: http://computation.llnl.gov/about/our-people/highlights/dean-williams
 
@@ -92,6 +92,8 @@ class VCSDeprecationWarning(DeprecationWarning):
 # Python < 3 DeprecationWarning ignored by default
 # warnings.simplefilter('default')
 warnings.simplefilter("default", VCSDeprecationWarning)
+warnings.filterwarnings('ignore', message="Conversion of the second argument of issubdtype from `complex")
+warnings.filterwarnings('ignore', message="Using a non-tuple sequence for multidimensional indexing")
 
 _doValidation = True
 next_canvas_id = 1
