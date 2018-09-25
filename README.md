@@ -1,0 +1,2 @@
+[![CircleCI](https://circleci.com/gh/CDAT/vcs.svg?style=svg)](https://circleci.com/gh/CDAT/vcs)
+[![Coverage Status](https://coveralls.io/repos/github/CDAT/vcs/badge.svg?branch=master)](https://coveralls.io/github/CDAT/vcs?branch=master)
