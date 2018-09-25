@@ -2213,9 +2213,10 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
         # ptsBounds = pts.GetBounds()
         # print('polyBounds after projection (pts) = ', ptsBounds)
 
-        # polyBounds = linesPoly.GetBounds()
-        # print('polyBounds after projection (poly) = ', polyBounds)
-        # print('geoBounds = ', geoBounds)
+        polyBounds = linesPoly.GetBounds()
+        if debugLines:
+            print('lines bounds after projection (poly) = ', polyBounds)
+            print('geoBounds = ', geoBounds)
 
         view = plotsContext.contextView
 
@@ -2245,6 +2246,8 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
         if debugLines:
             print('  adjusted projBounds = {0}'.format(wc))
             print('  adjusted viewport = {0}'.format(vp))
+            print('  draw area bounds = {0}'.format(rect))
+            print('  screen geometry = {0}'.format(geom))
             print('\n')
 
         area.SetDrawAreaBounds(rect)
@@ -2267,19 +2270,6 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
         axisRight.SetMargins(0, 0)
         axisLeft.SetMargins(0, 0)
         axisBottom.SetMargins(0, 0)
-
-        # if geoTransform:
-        #     xScale, yScale, xc, yc, yd, flipX, flipY = plotsContext.computeScaleToFitViewport(
-        #         line.viewport,
-        #         wc=line.worldcoordinate,
-        #         geoBounds=geoBounds,
-        #         geo=geoTransform)
-
-        #     # Transform the input data
-        #     T = vtk.vtkTransform()
-        #     T.Scale(xScale, yScale, 1.)
-
-        #     linesPoly = applyTransformationToDataset(T, linesPoly)
 
         if debugLines:
             gridFileName = 'lines-%d-%d' % (prepLineCount, lineDataCount)

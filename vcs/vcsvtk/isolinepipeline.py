@@ -343,6 +343,7 @@ class IsolinePipeline(Pipeline2D):
             item.SetPolyData(poly)
             item.SetScalarMode(scalarMode)
             item.SetMappedColors(mappedColors)
+            mappedColors.FastDelete()
             area.GetDrawAreaItem().AddItem(item)
 
             actors.append([item, plotting_dataset_bounds])

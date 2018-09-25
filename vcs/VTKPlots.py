@@ -1982,6 +1982,7 @@ x.geometry(1200,800)
 
                             mappedColors = lut.MapScalars(colorByArray, vtk.VTK_COLOR_MODE_DEFAULT, 0)
                             beItem.SetMappedColors(mappedColors)
+                            mappedColors.FastDelete()
 
                     i += 1
 

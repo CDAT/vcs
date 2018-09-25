@@ -139,12 +139,14 @@ class BoxfillPipeline(Pipeline2D):
                     attrs = poly.GetPointData()
 
                 data = attrs.GetScalars()
+                deleteColors = False
 
                 if data:
                     lut = mapper.GetLookupTable()
                     range = mapper.GetScalarRange()
                     lut.SetRange(range)
                     mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                    deleteColors = True
                 else:
                     loc = 'point'
                     numTuples = poly.GetNumberOfPoints()
@@ -166,6 +168,8 @@ class BoxfillPipeline(Pipeline2D):
                     item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
 
                 item.SetMappedColors(mappedColors)
+                if deleteColors:
+                    mappedColors.FastDelete()
                 area.GetDrawAreaItem().AddItem(item)
 
                 print('boxfillpipeline adding a context item')

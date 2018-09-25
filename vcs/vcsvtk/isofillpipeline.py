@@ -212,6 +212,8 @@ class IsofillPipeline(Pipeline2D):
                 ### which doesn't seem right either, but it fixed the missing_opacity
                 ### test without seeming to cause any new failures
 
+                deleteColors = False
+
                 attrs = poly.GetCellData()
                 data = attrs.GetScalars()
                 if data:
@@ -219,6 +221,7 @@ class IsofillPipeline(Pipeline2D):
                     scalarRange = mapper.GetScalarRange()
                     lut.SetRange(scalarRange)
                     mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                    deleteColors = True
                 else:
                     print('WARNING: isofill pipeline: poly does not have Scalars array on cell data, using solid color')
                     numTuples = poly.GetNumberOfCells()
@@ -235,6 +238,8 @@ class IsofillPipeline(Pipeline2D):
                 item.SetPolyData(poly)
                 item.SetScalarMode(scalarMode)
                 item.SetMappedColors(mappedColors)
+                if deleteColors:
+                    mappedColors.FastDelete()
                 area.GetDrawAreaItem().AddItem(item)
 
                         # TODO see comment in boxfill.

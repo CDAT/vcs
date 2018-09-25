@@ -256,12 +256,14 @@ class MeshfillPipeline(Pipeline2D):
                     attrs = poly.GetPointData()
 
                 data = attrs.GetScalars()
+                deleteColors = False
 
                 if data:
                     lut = mapper.GetLookupTable()
                     scalarRange = mapper.GetScalarRange()
                     lut.SetRange(scalarRange)
                     mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                    deleteColors = True
                 else:
                     loc = 'point'
                     numTuples = poly.GetNumberOfPoints()
@@ -283,6 +285,9 @@ class MeshfillPipeline(Pipeline2D):
                     item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
 
                 item.SetMappedColors(mappedColors)
+                if deleteColors:
+                    print('Attempting to FastDelete the mappedColors array')
+                    mappedColors.FastDelete()
                 area.GetDrawAreaItem().AddItem(item)
 
             # TODO See comment in boxfill.

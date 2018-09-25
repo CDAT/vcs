@@ -255,8 +255,11 @@ class StreamlinePipeline(Pipeline2D):
         streamer.Update()
         lineDataset = streamer.GetOutput()
 
-        vcs2vtk.debugWriteGrid(glyphDataset, 'streamline-glyphs')
-        vcs2vtk.debugWriteGrid(lineDataset, 'streamline-lines')
+        # vcs2vtk.debugWriteGrid(glyphDataset, 'streamline-glyphs')
+        # vcs2vtk.debugWriteGrid(lineDataset, 'streamline-lines')
+
+        deleteLineColors = False
+        deleteGlyphColors = False
 
         # color the streamlines and glyphs
         cmap = self.getColorMap()
@@ -290,8 +293,10 @@ class StreamlinePipeline(Pipeline2D):
             lineAttrs = lineDataset.GetPointData()
             lineData = lineAttrs.GetArray("vector")
 
+
             if lineData and numLevels:
                 lineColors = lut.MapScalars(lineData, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                deleteLineColors = True
             else:
                 print('WARNING: streamline pipeline cannot map scalars for "lineData", using solid color')
                 numTuples = lineDataset.GetNumberOfPoints()
@@ -309,6 +314,7 @@ class StreamlinePipeline(Pipeline2D):
 
             if glyphData and numLevels:
                 glyphColors = lut.MapScalars(glyphData, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                deleteGlyphColors = True
             else:
                 print('WARNING: streamline pipeline cannot map scalars for "glyphData", using solid color')
                 numTuples = glyphDataset.GetNumberOfPoints()
@@ -347,6 +353,8 @@ class StreamlinePipeline(Pipeline2D):
         lineItem.SetPolyData(lineDataset)
         lineItem.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
         lineItem.SetMappedColors(lineColors)
+        if deleteLineColors:
+            lineColors.FastDelete()
         area.GetDrawAreaItem().AddItem(lineItem)
 
         # Add the glyphs
@@ -354,6 +362,8 @@ class StreamlinePipeline(Pipeline2D):
         glyphItem.SetPolyData(glyphDataset)
         glyphItem.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
         glyphItem.SetMappedColors(glyphColors)
+        if deleteGlyphColors:
+            glyphColors.FastDelete()
         area.GetDrawAreaItem().AddItem(glyphItem)
 
         plotting_dataset_bounds = self.getPlottingBounds()
