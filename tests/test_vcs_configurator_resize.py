@@ -27,4 +27,4 @@ class TestVSConfigurator(basevcstest.VCSBaseTest):
         png_writer.SetInputConnection(out_filter.GetOutputPort())
         png_writer.Write()
 
-        self.checkImage(fnm, pngReady=True)
+        self.checkImage(fnm, pngReady=True, threshold=15)
