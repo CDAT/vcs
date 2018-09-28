@@ -1360,6 +1360,22 @@ def prepTextProperty(p, winSize, to="default", tt="default", cmap=None,
     p.SetFontSize(int(to.height * winSize[1] / 800.))
 
 
+class TextActorWrapperItem(object):
+    def __init__(self, textActor):
+        self.textActor = textActor
+
+    def Initialize(self, vtkSelf):
+        pass
+
+    def Paint(self, vtkSelf, context2D):
+        pos = self.textActor.GetPosition()
+        text = self.textActor.GetInput()
+        textProp = self.textActor.GetTextProperty()
+
+        context2D.ApplyTextProp(textProp)
+        context2D.DrawString(pos[0], pos[1], text)
+
+
 # def genTextActor(renderer, string=None, x=None, y=None,
 def genTextActor(contextArea, string=None, x=None, y=None,
                  to='default', tt='default', cmap=None, geoBounds=None, geo=None):
@@ -1441,8 +1457,8 @@ def genTextActor(contextArea, string=None, x=None, y=None,
 
         # renderer.AddActor(t)
 
-        item = vtk.vtkPropItem()
-        item.SetPropObject(t)
+        item = vtk.vtkPythonItem()
+        item.SetPythonObject(TextActorWrapperItem(t))
         contextArea.GetDrawAreaItem().AddItem(item)
 
         actors.append(t)

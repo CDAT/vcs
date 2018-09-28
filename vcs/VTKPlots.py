@@ -728,10 +728,10 @@ class VTKVCSBackend(object):
                 vp = self.canvas._viewport
                 wc = self.canvas._worldcoordinate
 
-                rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
-
                 [renWinWidth, renWinHeight] = self.renWin.GetSize()
                 geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+
+                rect = vtk.vtkRectd(0.0, 0.0, float(renWinWidth), float(renWinHeight))
 
                 vcs2vtk.configureContextArea(area, rect, geom)
 
@@ -1085,10 +1085,10 @@ class VTKVCSBackend(object):
         vp = self.canvas._viewport
         wc = self.canvas._worldcoordinate
 
-        rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
-
         [renWinWidth, renWinHeight] = self.renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+
+        rect = vtk.vtkRectd(0.0, 0.0, float(renWinWidth), float(renWinHeight))
 
         vcs2vtk.configureContextArea(area, rect, geom)
 
