@@ -11,15 +11,15 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
         data = MV2.arange(10)
         data_pow = MV2.power(10, data)
         data_pow.id = "test"
-        # self.x.plot(data_pow, gm, bg=self.bg)
-        # self.checkImage("test_vcs_yaxisconvert_log10.png")
+        self.x.plot(data_pow, gm, bg=self.bg)
+        self.checkImage("test_vcs_yaxisconvert_log10.png")
 
         self.x.clear()
         gm.flip = True
         gm.yaxisconvert = "linear"
         gm.xaxisconvert="log10"
-        # self.x.plot(data_pow, gm, bg=self.bg)
-        # self.checkImage("test_vcs_xaxisconvert_log10_flip.png")
+        self.x.plot(data_pow, gm, bg=self.bg)
+        self.checkImage("test_vcs_xaxisconvert_log10_flip.png")
 
         self.x.clear()
         gm.flip = False
@@ -27,8 +27,8 @@ class TestVCSAxisConvert(basevcstest.VCSBaseTest):
         gm.yaxisconvert="ln"
         data_exp = MV2.exp(data)
         data_exp.id = "test"
-        # self.x.plot(data_exp, gm, bg=self.bg)
-        # self.checkImage("test_vcs_yaxisconvert_ln.png")
+        self.x.plot(data_exp, gm, bg=self.bg)
+        self.checkImage("test_vcs_yaxisconvert_ln.png")
 
         self.x.clear()
         gm.flip = False

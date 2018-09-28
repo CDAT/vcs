@@ -74,9 +74,8 @@ class TestVCSHatch(basevcstest.VCSBaseTest):
         self.checkImage(fnm + ".png")
 
     def testHatchPatterns(self):
-        # for gm in ["boxfill", "isofill", "meshfill"]:
-        gm = "isofill"
-        for style in ["hatch", "solid", "pattern"]:
-            self.gmPatternHatch(gm_type=gm, fill_style=style, contig=False)
-            self.gmPatternHatch(gm_type=gm, fill_style=style, contig=True)
-            self.gmPatternHatch(gm_type=gm, fill_style=style, lon1=0, lon2=360)
+        for gm in ["boxfill", "isofill", "meshfill"]:
+            for style in ["hatch", "solid", "pattern"]:
+                self.gmPatternHatch(gm_type=gm, fill_style=style, contig=False)
+                self.gmPatternHatch(gm_type=gm, fill_style=style, contig=True)
+                self.gmPatternHatch(gm_type=gm, fill_style=style, lon1=0, lon2=360)
