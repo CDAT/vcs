@@ -156,6 +156,7 @@ elements["xvsy"] = {}
 elements["scatter"] = {}
 elements["colormap"] = {}
 elements["display"] = {}
+elements["format"] = {}
 
 _protected_elements = {}
 for k in list(elements.keys()):
@@ -269,6 +270,36 @@ dv3d.Gf3Dvector("default")
 dv3d.Gf3Dscalar("default")
 dv3d.Gf3Dscalar("Hovmoller3D")
 dv3d.Gf3DDualScalar("default")
+
+# formats
+# see: https://pyformat.info/
+elements["format"]["default"] = ""
+# old % style equivalents
+elements["format"]["d"] = ""
+elements["format"]["s"] = "0!s"
+elements["format"]["r"] = "0!r"
+elements["format"]["a"] = "0!a"
+elements["format"]["g"] = ":g"
+elements["format"]["G"] = ":G"
+# convenience and thier old style?
+elements["format"]["0padded2digint"] = ":02d"
+elements["format"]["02d"] = ":02d"
+elements["format"]["0padded3digint"] = ":03d"
+elements["format"]["03d"] = ":03d"
+elements["format"]["0padded4digint"] = ":04d"
+elements["format"]["04d"] = ":04d"
+elements["format"]["spacepadded2digint"] = ":2d"
+elements["format"]["2d"] = ":02d"
+elements["format"]["spacepadded3digint"] = ":3d"
+elements["format"]["3d"] = ":3d"
+elements["format"]["spacepadded4digint"] = ":4d"
+elements["format"]["4d"] = ":4d"
+elements["format"]["float2dig"] = ":.2f"
+elements["format"]["2f"] = ":.2f"
+elements["format"]["float3dig"] = ":.3f"
+elements["format"]["3f"] = ":.3f"
+
+
 
 on = {'state': 1}
 off = {'state': 0}
