@@ -67,7 +67,6 @@ def applyFormat(value, format):
         >>> template =vcs.gettemplate()
         >>> vcs.template.applyFormat(3.45,template.mean.format)
         '3.45'
-        
 
     :param value: Input to be formatted
     :type fnm: `float`_ or `int`_ or `str`_ or `object`_
@@ -76,17 +75,18 @@ def applyFormat(value, format):
     :type format: `str`_
 
     :return: A string with formatted representation of value
-    :rtype: `str`_    
+    :rtype: `str`_
     """
     # Get the format
     # if is is a key in vcs existing formats then retrieve it
     # otherwise assuming user passed an actual format
-    format = vcs.elements["format"].get(format,format)
+    format = vcs.elements["format"].get(format, format)
     # Create the formatter string
     formatter = "{{{}}}".format(format)
     # format the value passed in
     formatted = formatter.format(value)
     return formatted
+
 
 def _getgen(self, name):
     return getattr(self, "_%s" % name)
@@ -1669,12 +1669,12 @@ class P(vcs.bestMatch):
                     fmt = self.min.format
                     if fmt == "default":  # backward compatibility
                         fmt = ":g"
-                    tt.string = 'Min {}'.format(applyFormat(smn, fmt)
+                    tt.string = 'Min {}'.format(applyFormat(smn, fmt))
                 elif s == 'max':
                     fmt = self.max.format
                     if fmt == "default":  # backward compatibility
                         fmt = ":g"
-                    tt.string = 'Max {}'.format(applyFormat(smx, fmt)
+                    tt.string = 'Max {}'.format(applyFormat(smx, fmt))
                 elif s == 'mean':
                     fmt = self.mean.format
                     if fmt == "default":  # backward compatibility
@@ -1684,8 +1684,8 @@ class P(vcs.bestMatch):
                     else:
                         try:
                             meanstring = float(cdutil.averager(slab,
-                                                      axis=" ".join(["(%s)" %
-                                                                     S for S in slab.getAxisIds()])))
+                                                               axis=" ".join(["(%s)" %
+                                                                                     S for S in slab.getAxisIds()])))
 
                         except Exception:
                             try:
@@ -1694,8 +1694,8 @@ class P(vcs.bestMatch):
                                 meanstring = slab.filled()
                     tt.string = "Mean {}".format(applyFormat(meanstring, fmt))
                 else:
-                    if hasattr(getattr(self,attribute), "format"):
-                        tt.string = applyFormat(getattr(slab, s), getattr(self,attribute).format)
+                    if hasattr(getattr(self, attribute), "format"):
+                        tt.string = applyFormat(getattr(slab, s), getattr(self, attribute).format)
                     else:
                         tt.string = str(getattr(slab, s))
                     kargs["donotstoredisplay"] = False

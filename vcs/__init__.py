@@ -299,8 +299,6 @@ elements["format"]["2f"] = ":.2f"
 elements["format"]["float3dig"] = ":.3f"
 elements["format"]["3f"] = ":.3f"
 
-
-
 on = {'state': 1}
 off = {'state': 0}
 
