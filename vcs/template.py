@@ -1484,10 +1484,10 @@ class P(vcs.bestMatch):
             attr = list(vars(self).keys())
         except Exception:
             attr = self.__slots__
-            attr = list(attr)+props
+            attr = list(attr) + props
 
         if len(attr) == 0:
-            attr = list(self.__slots__)+props
+            attr = list(self.__slots__) + props
 
         for a in attr:
             if a[0] == "_":
@@ -1685,7 +1685,7 @@ class P(vcs.bestMatch):
                         try:
                             meanstring = float(cdutil.averager(slab,
                                                                axis=" ".join(["(%s)" %
-                                                                                     S for S in slab.getAxisIds()])))
+                                                                              S for S in slab.getAxisIds()])))
 
                         except Exception:
                             try:
