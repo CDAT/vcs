@@ -124,7 +124,8 @@ class Dp(vcs.bestMatch):
         f.close()
         try:
             import IPython.display
-            import cdat_notebook
+            # import cdat_notebook
+            """
             if self.g_type == "boxfill":
                 box = vcs.getboxfill(self.g_name)
                 b_dict = vcs.utils.dumpToDict(box)[0]
@@ -143,6 +144,7 @@ class Dp(vcs.bestMatch):
                     IPython.display.display(self)
                 self._widget.observe(refresh, names="value")
                 IPython.display.display(self._widget)
+            """
             if self._parent._display_target is None:  # no target specified
                 import sidecar  # if sidecar is here use it for target
                 self._parent._display_target = sidecar.Sidecar(
@@ -155,7 +157,8 @@ class Dp(vcs.bestMatch):
             with self._parent._display_target:
                 IPython.display.display(IPythonDisplay(st))
                 st = None
-        except Exception:
+        except Exception as err:
+            print("ERRROR SIDECAR:",err)
             pass
         return st
 # TODO: html,json,jpeg,png,svg,latex
