@@ -51,6 +51,7 @@ import cdutil
 from .projection import round_projections
 from .projection import elliptical_projections
 from .xmldocs import scriptdocs, listdoc
+import warnings
 
 # Following for class properties
 
@@ -84,7 +85,12 @@ def applyFormat(value, format):
     # Create the formatter string
     formatter = "{{{}}}".format(format)
     # format the value passed in
-    formatted = formatter.format(value)
+    try:
+        formatted = formatter.format(value)
+    except:
+        print("TYPE:",type(value))
+        warnings.warn("Could not apply format {} to: `{!r}` of type {}. Leaving unchanged".format(formatter, value, type(value)))
+        formatted = "{}".format(value)
     return formatted
 
 
@@ -1694,8 +1700,8 @@ class P(vcs.bestMatch):
                                 meanstring = slab.filled()
                     tt.string = "Mean {}".format(applyFormat(meanstring, fmt))
                 else:
-                    if hasattr(getattr(self, attribute), "format"):
-                        tt.string = applyFormat(getattr(slab, s), getattr(self, attribute).format)
+                    if hasattr(sub, "format"):
+                        tt.string = applyFormat(getattr(slab, s), sub.format)
                     else:
                         tt.string = str(getattr(slab, s))
                     kargs["donotstoredisplay"] = False
