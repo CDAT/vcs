@@ -87,9 +87,9 @@ def applyFormat(value, format):
     # format the value passed in
     try:
         formatted = formatter.format(value)
-    except:
-        print("TYPE:",type(value))
-        warnings.warn("Could not apply format {} to: `{!r}` of type {}. Leaving unchanged".format(formatter, value, type(value)))
+    except Exception:
+        warnings.warn("Could not apply format {} to: `{!r}` of type {}. Leaving unchanged".format(
+            formatter, value, type(value)))
         formatted = "{}".format(value)
     return formatted
 
