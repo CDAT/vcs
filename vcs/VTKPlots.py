@@ -30,6 +30,26 @@ def updateNewElementsDict(display, master):
     return master
 
 
+class ImageDataWrapperItem(object):
+    def __init__(self, image, scale=1.0, offset=[0.0, 0.0]):
+        self.scale = scale
+        self.xOffset = offset[0]
+        self.yOffset = offset[1]
+        self.imageData = image
+
+    def Initialize(self, vtkSelf):
+        return True
+
+    def Paint(self, vtkSelf, context2D):
+        scalars = self.imageData.GetPointData().GetScalars()
+        if scalars:
+            context2D.DrawImage(self.xOffset, self.yOffset, self.scale, self.imageData)
+            return True
+
+        print('ERROR: vtkImageData has no active scalars, unable to draw image')
+        return False
+
+
 class VCSInteractorStyle(vtk.vtkInteractorStyleUser):
 
     def __init__(self, parent):
@@ -1293,33 +1313,32 @@ class VTKVCSBackend(object):
     def put_img_on_canvas(
             self, filename, zoom=1, xOffset=0, yOffset=0,
             units="percent", fitToHeight=True, *args, **kargs):
-        print('I am in put_img_on_canvas(), filename = {0}'.format(filename))
         self.createRenWin()
         winSize = self.renWin.GetSize()
         self.hideGUI()
+
         readerFactory = vtk.vtkImageReader2Factory()
         reader = readerFactory.CreateImageReader2(filename)
         reader.SetFileName(filename)
         reader.Update()
         imageData = reader.GetOutput()
-        a = vtk.vtkImageActor()
-        a.GetMapper().SetInputConnection(reader.GetOutputPort())
+
         origin = imageData.GetOrigin()
         spc = imageData.GetSpacing()
         ext = imageData.GetExtent()
-        ren = self.createRenderer()
-        cam = ren.GetActiveCamera()
-        cam.ParallelProjectionOn()
-        width = (ext[1] - ext[0]) * spc[0]
-        height = (ext[3] - ext[2]) * spc[1]
+
+        imageWidth = ((ext[1] - ext[0]) + 1) * spc[0]
+        imageHeight = ((ext[3] - ext[2]) + 1) * spc[1]
+
         if fitToHeight:
-            yd = height
+            yd = imageHeight
         else:
             yd = winSize[1]
-        d = cam.GetDistance()
+
         heightInWorldCoord = yd / zoom
         # window pixel in world (image) coordinates
         pixelInWorldCoord = heightInWorldCoord / winSize[1]
+
         if units[:7].lower() == "percent":
             xoff = winSize[0] * (xOffset / 100.) * pixelInWorldCoord
             yoff = winSize[1] * (yOffset / 100.) * pixelInWorldCoord
@@ -1330,16 +1349,40 @@ class VTKVCSBackend(object):
             raise RuntimeError(
                 "vtk put image does not understand %s for offset units" %
                 units)
-        xc = origin[0] + .5 * width
-        yc = origin[1] + .5 * height
-        cam.SetParallelScale(heightInWorldCoord * 0.5)
-        cam.SetFocalPoint(xc - xoff, yc - yoff, 0.)
-        cam.SetPosition(xc - xoff, yc - yoff, d)
+        xc = origin[0] + .5 * imageWidth
+        yc = origin[1] + .5 * imageHeight
 
-        ren.AddActor(a)
-        layer = max(self.renWin.GetNumberOfLayers() - 2, 0)
-        ren.SetLayer(layer)
-        self.renWin.AddRenderer(ren)
+        ctx2dScale = winSize[1] / heightInWorldCoord
+
+        # compute scaled width/height of image
+        sw = ctx2dScale * imageWidth
+        sh = ctx2dScale * imageHeight
+
+        # center of scaled image
+        imgCx = sw * 0.5
+        imgCy = sh * 0.5
+
+        # center of canvas
+        canCx = winSize[0] * 0.5
+        canCy = winSize[1] * 0.5
+
+        ctx2dxOff = (canCx - imgCx) + (xoff * ctx2dScale)
+        ctx2dyOff = (canCy - imgCy) + (yoff * ctx2dScale)
+
+        view = self.contextView
+
+        area = vtk.vtkContextArea()
+        view.GetScene().AddItem(area)
+
+        screenGeom = vtk.vtkRecti(0, 0, winSize[0], winSize[1])
+        dataBounds = vtk.vtkRectd(0.0, 0.0, winSize[0], winSize[1])
+
+        vcs2vtk.configureContextArea(area, dataBounds, screenGeom)
+
+        item = vtk.vtkPythonItem()
+        item.SetPythonObject(ImageDataWrapperItem(imageData, scale=ctx2dScale, offset=[ctx2dxOff, ctx2dyOff]))
+        area.GetDrawAreaItem().AddItem(item)
+
         self.showGUI(render=False)
         self.renWin.Render()
         return

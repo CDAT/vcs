@@ -1365,7 +1365,7 @@ class TextActorWrapperItem(object):
         self.textActor = textActor
 
     def Initialize(self, vtkSelf):
-        pass
+        return True
 
     def Paint(self, vtkSelf, context2D):
         pos = self.textActor.GetPosition()
@@ -1374,6 +1374,8 @@ class TextActorWrapperItem(object):
 
         context2D.ApplyTextProp(textProp)
         context2D.DrawString(pos[0], pos[1], text)
+
+        return False
 
 
 # def genTextActor(renderer, string=None, x=None, y=None,
