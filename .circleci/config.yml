@@ -3,7 +3,7 @@ version: 2
 checkout:
   post:
     - ./ci-support/checkout_merge_commit.sh
-        
+
 aliases:
   - &setup_miniconda
     name: setup_miniconda
@@ -11,10 +11,10 @@ aliases:
       mkdir -p workspace
       git clone -b validateNightly git@github.com:CDAT/cdat workspace/cdat
       python workspace/cdat/scripts/install_miniconda.py -w $WORKDIR -p 'py3'
-      
+
   - &get_testdata
     name: get_testdata
-    command: | 
+    command: |
       ls -l  workspace
       git clone git://github.com/cdat/uvcdat-testdata
 
@@ -25,8 +25,8 @@ aliases:
        conda config --set always_yes yes --set changeps1 no
        conda update -y -q conda
        conda config --set anaconda_upload no
-       conda create -q -n py2 -c cdat/label/nightly -c conda-forge -c cdat cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime "proj4<5" "numpy>1.14" "python<3"
-       conda create -q -n py3 -c cdat/label/nightly -c conda-forge -c cdat cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime "proj4<5" "numpy>1.14" "python>3" nbsphinx easydev
+       conda create -q -n py2 -c danlipsa -c cdat/label/nightly -c conda-forge -c cdat cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime "proj4<5" "numpy>1.14" "python<3"
+       conda create -q -n py3 -c danlipsa -c cdat/label/nightly -c conda-forge -c cdat cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime "proj4<5" "numpy>1.14" "python>3" nbsphinx easydev
 
   - &setup_vcs
     name: setup_vcs
@@ -44,9 +44,9 @@ aliases:
        export UVCDAT_ANONYMOUS_LOG=False
        export UVCDAT_SETUP_PATH=${HOME}
        source activate py2
-       python run_tests.py -H -v2 -n 2 --checkout-baseline --no-vtk-ui       
+       python run_tests.py -H -v2 -n 2 --checkout-baseline --no-vtk-ui
        RESULT=$?
-       echo "*** py2 test result: "${RESULT} 
+       echo "*** py2 test result: "${RESULT}
        source activate py3
        python run_tests.py -H -n 2 --checkout-baseline --no-vtk-ui
        PY3_RESULT=$?
