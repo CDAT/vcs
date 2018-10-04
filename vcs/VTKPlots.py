@@ -1,6 +1,7 @@
 import cdutil
 import warnings
 import vtk
+from vtk.util import numpy_support as VN
 import vcs
 from . import vcs2vtk
 import numpy
@@ -50,6 +51,56 @@ class ImageDataWrapperItem(object):
         return False
 
 
+class VcsLogoItem(object):
+    def __init__(self, image, opacity=1.0, scale=1.0, offset=[0.0, 0.0]):
+        self.scale = scale
+        self.opacity = opacity
+        self.xOffset = offset[0]
+        self.yOffset = offset[1]
+        self.imageData = image
+        self.ready = False
+
+    def Initialize(self, vtkSelf):
+        scalars = self.imageData.GetPointData().GetScalars()
+        if not scalars:
+            print('ERROR: vtkImageData has no active scalars, unable to draw logo')
+            self.ready = False
+        else:
+            self.ready = True
+            if self.opacity < 1.0:
+                self.ready = self.ApplyOpacityToScalars()
+
+        return self.ready
+
+    def ApplyOpacityToScalars(self):
+        # FIXME: This is the only way we can currently affect the opacity of
+        # FIXME: the logo, as the vtKContext2D API does not yet provide any
+        # FIXME: to set the opacity of a drawn image.  So we do is this way
+        # FIXME: until that API can be provided.
+        scalars = self.imageData.GetPointData().GetScalars()
+        numComps = scalars.GetNumberOfComponents()
+
+        if numComps != 4:
+            wrngMsg = """WARNING: VcsLogoItem ignoring opacity because
+            vtkImageData active scalars has {0} components instead of
+            4""".format(numComps)
+            print(wrngMsg)
+            return False
+
+        as_numpy = VN.vtk_to_numpy(scalars)
+        as_numpy[:,3] = as_numpy[:,3] * self.opacity
+
+        return True
+
+    def Paint(self, vtkSelf, context2D):
+        if self.ready:
+            context2D.DrawImage(self.xOffset, self.yOffset, self.scale, self.imageData)
+            return True
+
+        # print('ERROR: VcsLogoItem is unable to Paint(), see earlier warnings')
+        return False
+
+
 class VCSInteractorStyle(vtk.vtkInteractorStyleUser):
 
     def __init__(self, parent):
@@ -77,8 +128,8 @@ class VTKVCSBackend(object):
         self.plotRenderers = set()
         # Maps priorities to renderers
         self.text_renderers = {}
-        self.logoRenderer = None
-        self.logoRepresentation = None
+        self.logoContextItem = None
+        self.logoContextItemPython = None
         self.renderer = None
         self._renderers = {}
         self._plot_keywords = [
@@ -1706,7 +1757,7 @@ x.geometry(1200,800)
 
     def createLogo(self):
         if self.canvas.drawLogo:
-            if self.logoRepresentation is None:
+            if self.logoContextItem is None:
                 defaultLogoFile = os.path.join(
                     sys.prefix,
                     "share",
@@ -1716,25 +1767,41 @@ x.geometry(1200,800)
                 reader.SetFileName(defaultLogoFile)
                 reader.Update()
                 logo_input = reader.GetOutput()
-                self.logoRepresentation = vtk.vtkLogoRepresentation()
-                self.logoRepresentation.SetImage(logo_input)
-                self.logoRepresentation.ProportionalResizeOn()
-                self.logoRepresentation.SetPosition(0.895, 0.0)
-                self.logoRepresentation.SetPosition2(0.10, 0.05)
-                self.logoRepresentation.GetImageProperty().SetOpacity(.8)
-                self.logoRepresentation.GetImageProperty(
-                ).SetDisplayLocationToBackground()
-            if (self.logoRenderer is None):
-                self.logoRenderer = vtk.vtkRenderer()
-                self.logoRenderer.AddViewProp(self.logoRepresentation)
-            self.logoRepresentation.SetRenderer(self.logoRenderer)
+
+                imgExtent = logo_input.GetExtent()
+                imgWidth = imgExtent[1] - imgExtent[0] + 1.0
+                imgHeight = imgExtent[3] - imgExtent[2] + 1.0
+
+                item = vtk.vtkPythonItem()
+                pythonItem = VcsLogoItem(logo_input, opacity=0.8)
+                item.SetPythonObject(pythonItem)
+
+                position = [0.895, 0.0]
+                position2 = [0.10, 0.05]
+
+                view = self.contextView
+
+                area = vtk.vtkContextArea()
+                view.GetScene().AddItem(area)
+
+                [renWinWidth, renWinHeight] = self.renWin.GetSize()
+                dataBounds = vtk.vtkRectd(0.0, 0.0, imgWidth, imgHeight)
+                screenGeom = vtk.vtkRecti(
+                    int(position[0] * renWinWidth),
+                    int(position[1] * renWinHeight),
+                    int(position2[0] * renWinWidth),
+                    int(position2[1] * renWinHeight))
+
+                vcs2vtk.configureContextArea(area, dataBounds, screenGeom)
+                area.GetDrawAreaItem().AddItem(item)
+
+                self.logoContextItem = item
+                self.logoContextItemPython = pythonItem
 
     def scaleLogo(self):
         if self.canvas.drawLogo:
             if self.renWin is not None:
                 self.createLogo()
-                self.setLayer(self.logoRenderer, 1)
-                self.renWin.AddRenderer(self.logoRenderer)
 
     def _applyTransformationToMapperInput(self, T, mapper):
         mapper.Update()
