@@ -44,6 +44,7 @@ class TestVCSReadSCR(unittest.TestCase):
             'display': 0,
             'vector': 5,
             'scatter': 2,
+            'format':0,
             "streamline": 0}
         for k in list(vcs.elements.keys()):
             print("Cheking number of new elements for", k)
