@@ -1410,8 +1410,6 @@ def genTextActor(contextArea, string=None, x=None, y=None,
     if vcs.elements["projection"][tt.projection].type != "linear":
         if geoBounds is not None:
             wc = geoBounds[:4]
-            # renderer.SetViewport(tt.viewport[0],tt.viewport[2],tt.viewport[1],tt.viewport[3])
-            renderer.SetWorldPoint(wc)
         else:
             wc = None
 
@@ -1442,7 +1440,6 @@ def genTextActor(contextArea, string=None, x=None, y=None,
                 wx = as_numpy[:, 0]
                 wy = as_numpy[:, 1]
                 wc = [wx.min(), wx.max(), wy.min(), wy.max()]
-            renderer.SetWorldPoint(wc)
             X, Y = world2Renderer(renderer, X, Y, tt.viewport, wc)
             # print('  wc = {0}'.format(wc))
             # print('  final screen pos = [{0}, {1}]'.format(X, Y))
