@@ -91,41 +91,17 @@ class VectorPipeline(Pipeline2D):
                                   [self._template.data.x1, self._template.data.x2,
                                    self._template.data.y1, self._template.data.y2])
 
-        # Scale the input data before we build the pipeline
-        # tmpActor = vtk.vtkActor()
-        # tmpMapper = vtk.vtkPolyDataMapper()
-        # tmpMapper.SetInputData(polydata)
-        # tmpActor.SetMapper(tmpMapper)
-
-        # dataset_renderer, xScale, yScale = self._context().fitToViewport(
-        #     tmpActor, vp,
-        #     wc=plotting_dataset_bounds,
-        #     geoBounds=self._vtkDataSetBoundsNoMask,
-        #     geo=self._vtkGeoTransform,
-        #     priority=self._template.data.priority,
-        #     create_renderer=True,
-        #     add_actor=False)
-
         # The unscaled continent bounds were fine in the presence of axis
         # conversion, so save them here
-        continentBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask, self._context_flipX, self._context_flipY)
+        adjusted_plotting_bounds = vcs2vtk.getProjectedBoundsForWorldCoords(plotting_dataset_bounds, self._gm.projection)
+        continentBounds = vcs2vtk.computeDrawAreaBounds(adjusted_plotting_bounds)
 
-        # Only scaling the data in the presence of axis conversion changes
-        # the seed points in any other cases, and thus results in plots
-        # different from the baselines but still fundamentally sound, it
-        # seems.  Always scaling the data results in no differences in the
-        # plots between Context2D and the old baselines.
+        # Transform the input data
+        T = vtk.vtkTransform()
+        T.Scale(self._context_xScale, self._context_yScale, 1.)
+        self._vtkDataSetFittedToViewport = vcs2vtk.applyTransformationToDataset(T, self._vtkDataSetFittedToViewport)
+        self._vtkDataSetBoundsNoMask = self._vtkDataSetFittedToViewport.GetBounds()
 
-        # if self._gm.xaxisconvert != 'linear' or self._gm.yaxisconvert != 'linear':
-        if True:
-            # Transform the input data
-            T = vtk.vtkTransform()
-            T.Scale(self._context_xScale, self._context_yScale, 1.)
-
-            self._vtkDataSetFittedToViewport = vcs2vtk.applyTransformationToDataset(T, self._vtkDataSetFittedToViewport)
-            self._vtkDataSetBoundsNoMask = self._vtkDataSetFittedToViewport.GetBounds()
-
-        # polydata = self._vtkPolyDataFilter.GetOutput()
         polydata = self._vtkDataSetFittedToViewport
 
         # view and interactive area
@@ -134,24 +110,7 @@ class VectorPipeline(Pipeline2D):
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
-        # xScale, yScale, xc, yc, yd, flipX, flipY = self._context().computeScaleToFitViewport(
-        #     vp,
-        #     wc=plotting_dataset_bounds,
-        #     geoBounds=self._vtkDataSetBoundsNoMask,
-        #     geo=self._vtkGeoTransform)
-
-        # print('boxfillpipeline._plotInternal(): xScale = %f, yScale = %f, xc = %f, yc = %f, yd = %f, flipX = %s, flipY = %s' % (xScale, yScale, xc, yc, yd, flipX, flipY))
-
-        # Transform the input data
-        # T = vtk.vtkTransform()
-        # T.Scale(xScale, yScale, 1.)
-        # polydata = vcs2vtk.applyTransformationToDataset(T, polydata)
-
-        # newBounds = polydata.GetBounds()
-
         drawAreaBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask, self._context_flipX, self._context_flipY)
-
-        # drawAreaBounds = vtk.vtkRectd(x1, y1, x2 - x1, y2 - y1)
 
         print('vectorpipeline')
         print('  viewport = {0}'.format(vp))
@@ -222,7 +181,8 @@ class VectorPipeline(Pipeline2D):
                     norm = vtk.vtkMath.Norm(vectors.GetTuple(i), noOfComponents)
                     newValue = (((norm - minNorm) * newRange) / oldRange) + newRangeValues[0]
                     scalarArray.SetValue(i, newValue)
-                    polydata.GetPointData().SetScalars(scalarArray)
+
+                polydata.GetPointData().SetScalars(scalarArray)
                 maxNormInVp = newRangeValues[1] * scaleFactor
                 minNormInVp = newRangeValues[0] * scaleFactor
 
@@ -235,14 +195,6 @@ class VectorPipeline(Pipeline2D):
         if (maxNormInVp is None):
             maxNormInVp = maxNorm * scaleFactor
             # minNormInVp is left None, as it is displayed only for linear scaling.
-
-        # mapper = vtk.vtkPolyDataMapper()
-
-        # mapper.SetInputData(polydata)
-        # mapper.ScalarVisibilityOff()
-        # act = vtk.vtkActor()
-        # act.SetMapper(mapper)
-        # dataset_renderer.AddActor(act)
 
         cmap = self.getColorMap()
         if isinstance(lcolor, (list, tuple)):
@@ -301,8 +253,12 @@ class VectorPipeline(Pipeline2D):
         if (hasattr(self._data1, 'units')):
             unitString = self._data1.units
 
-        worldToViewportXScale = (vp[1] - vp[0]) /\
-            (self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0])
+        if self._vtkGeoTransform:
+            worldWidth = self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0]
+        else:
+            worldWidth = self._vtkDataSetBounds[1] - self._vtkDataSetBounds[0]
+
+        worldToViewportXScale = (vp[1] - vp[0]) / worldWidth
         maxNormInVp *= worldToViewportXScale
         if (minNormInVp):
             minNormInVp *= worldToViewportXScale
