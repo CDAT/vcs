@@ -156,6 +156,8 @@ class MeshfillPipeline(Pipeline2D):
             mapper.Update()
             poly = mapper.GetInput()
 
+            item = None
+
             wireframe = False
             if hasattr(mapper, "_useWireFrame"):
                 wireframe = True
@@ -213,10 +215,13 @@ class MeshfillPipeline(Pipeline2D):
                 area.GetDrawAreaItem().AddItem(item)
 
             # TODO See comment in boxfill.
-            if mapper is self._maskedDataMapper:
-                actors.append([item, self._maskedDataMapper, plotting_dataset_bounds])
-            else:
-                actors.append([item, plotting_dataset_bounds])
+            if item is not None:
+                if mapper is self._maskedDataMapper:
+                    actors.append([item, self._maskedDataMapper, plotting_dataset_bounds])
+                else:
+                    actors.append([item, plotting_dataset_bounds])
+
+            if mapper is not self._maskedDataMapper:
 
                 if not wireframe:
                     # Since pattern creation requires a single color, assuming the
