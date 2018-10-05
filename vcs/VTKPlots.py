@@ -5,6 +5,7 @@ from vtk.util import numpy_support as VN
 import vcs
 from . import vcs2vtk
 import numpy
+import math
 import os
 import traceback
 import sys
@@ -790,6 +791,16 @@ class VTKVCSBackend(object):
                 #     ren = self.createRenderer()
                 #     self.renWin.AddRenderer(ren)
                 #     self.setLayer(ren, 1)
+
+                if vcs.elements["projection"][tt.projection].type != "linear":
+                    plotting_bounds = kargs.get(
+                        "plotting_dataset_bounds", None)
+                    if plotting_bounds:
+                        newbounds = vcs2vtk.getProjectedBoundsForWorldCoords(
+                            plotting_bounds, tt.projection)
+                        if all([not math.isinf(b) for b in newbounds]):
+                            print("RESETTING BOUNDS FOR PLOTTED TEXT FROM {0} to {1}".format(bounds, newbounds))
+                            bounds = newbounds
 
                 view = self.contextView
 
