@@ -102,35 +102,6 @@ class MeshfillPipeline(Pipeline2D):
         if len(geos) > 0:
             self._resultDict["vtk_backend_geofilters"] = geos
 
-        """
-        numLevels = len(self._contourLevels)
-        if mappers == []:  # ok didn't need to have special banded contours
-            mapper = vtk.vtkPolyDataMapper()
-            mappers = [mapper]
-            # Colortable bit
-            # make sure length match
-            while len(self._contourColors) < numLevels:
-                self._contourColors.append(self._contourColors[-1])
-
-            lut = vtk.vtkLookupTable()
-            lut.SetNumberOfTableValues(numLevels)
-            for i in range(numLevels):
-                r, g, b, a = self._colorMap.index[self._contourColors[i]]
-                lut.SetTableValue(i, r / 100., g / 100., b / 100., a / 100.)
-
-            mapper.SetLookupTable(lut)
-            if numpy.allclose(self._contourLevels[0], -1.e20):
-                lmn = self._min - 1.
-            else:
-                lmn = self._contourLevels[0]
-            if numpy.allclose(self._contourLevels[-1], 1.e20):
-                lmx = self._max + 1.
-            else:
-                lmx = self._contourLevels[-1]
-            mapper.SetScalarRange(lmn, lmx)
-            self._resultDict["vtk_backend_luts"] = [[lut, [lmn, lmx, True]]]
-            """
-
         if self._maskedDataMapper is not None:
             # Note that this is different for meshfill -- others prepend.
             mappers.append(self._maskedDataMapper)
@@ -140,9 +111,6 @@ class MeshfillPipeline(Pipeline2D):
         # Add a second mapper for wireframe meshfill:
         if self._gm.mesh:
             lineMappers = []
-            # wireLUT = vtk.vtkLookupTable()
-            # wireLUT.SetNumberOfTableValues(1)
-            # wireLUT.SetTableValue(0, 0, 0, 0)
             for polyMapper in mappers:
                 edgeFilter = vtk.vtkExtractEdges()
                 edgeFilter.SetInputConnection(
@@ -154,17 +122,6 @@ class MeshfillPipeline(Pipeline2D):
 
                 lineMapper._useWireFrame = True
 
-                # # 'noqa' comments disable pep8 checking for these lines. There
-                # # is not a readable way to shorten them due to the unwieldly
-                # # method name.
-                # #
-                # # Setup depth resolution so lines stay above points:
-                # polyMapper.SetResolveCoincidentTopologyPolygonOffsetParameters(0, 1)  # noqa
-                # polyMapper.SetResolveCoincidentTopologyToPolygonOffset()
-                # lineMapper.SetResolveCoincidentTopologyPolygonOffsetParameters(1, 1)  # noqa
-                # lineMapper.SetResolveCoincidentTopologyToPolygonOffset()
-                # lineMapper.SetLookupTable(wireLUT)
-
                 lineMappers.append(lineMapper)
             mappers.extend(lineMappers)
 
@@ -174,11 +131,8 @@ class MeshfillPipeline(Pipeline2D):
             'ratio_autot_viewport',
             [self._template.data.x1, self._template.data.x2,
              self._template.data.y1, self._template.data.y2])
-        # dataset_renderer = None
-        # xScale, yScale = (1, 1)
         cti = 0
         ctj = 0
-
 
         # view and interactive area
         view = self._context().contextView
@@ -188,19 +142,6 @@ class MeshfillPipeline(Pipeline2D):
 
         adjusted_plotting_bounds = vcs2vtk.getProjectedBoundsForWorldCoords(plotting_dataset_bounds, self._gm.projection)
         drawAreaBounds = vcs2vtk.computeDrawAreaBounds(adjusted_plotting_bounds)
-
-        print('meshfillpipeline')
-        print('  viewport = {0}'.format(vp))
-        print('  projection type = {0}'.format(vcs.elements["projection"][self._gm.projection].type))
-        print('  vtkGeoTransform = {0}'.format(self._vtkGeoTransform.GetClassName() if self._vtkGeoTransform else 'None'))
-        print('  plotting bounds = {0}'.format(plotting_dataset_bounds))
-        print('  adjusted plotting bounds = {0}'.format(adjusted_plotting_bounds))
-        print('  graphics method bounds = [{0}, {1}, {2}, {3}]'.format(self._gm.datawc_x1, self._gm.datawc_x2, self._gm.datawc_y1, self._gm.datawc_y2))
-        print('  dataset bounds = {0}'.format(self._vtkDataSetBounds))
-        print('  dataset bounds (no mask) = {0}'.format(self._vtkDataSetBoundsNoMask))
-        print('  draw area bounds = {0}'.format(drawAreaBounds))
-        print('  scale: [xscale, yscale] = [{0}, {1}]'.format(self._context_xScale, self._context_yScale))
-        print('  [flipX, flipY] = [{0}, {1}]'.format(self._context_flipX, self._context_flipY))
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
@@ -217,23 +158,9 @@ class MeshfillPipeline(Pipeline2D):
 
             wireframe = False
             if hasattr(mapper, "_useWireFrame"):
-                # prop = act.GetProperty()
-                # prop.SetRepresentationToWireframe()
                 wireframe = True
 
-            # # create a new renderer for this mapper
-            # # (we need one for each mapper because of cmaera flips)
-            # dataset_renderer, xScale, yScale = self._context().fitToViewport(
-            #     act, vp,
-            #     wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
-            #     geo=self._vtkGeoTransform,
-            #     priority=self._template.data.priority,
-            #     create_renderer=(dataset_renderer is None),
-            #     add_actor=(wireframe or (style == "solid")))
-
             if wireframe:
-                print('This should be a wireframe item')
-
                 item = vtk.vtkPolyDataItem()
                 item.SetPolyData(poly)
 
@@ -241,10 +168,6 @@ class MeshfillPipeline(Pipeline2D):
                 colorArray.SetNumberOfComponents(4)
                 for i in range(poly.GetNumberOfCells()):
                     colorArray.InsertNextTypedTuple(wireColor)
-
-                # fname = 'meshfill-wireframe-mapper-%d' % mIdx
-                # vcs2vtk.debugWriteGrid(poly, fname)
-                # mIdx += 1
 
                 item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
                 item.SetMappedColors(colorArray)
@@ -286,7 +209,6 @@ class MeshfillPipeline(Pipeline2D):
 
                 item.SetMappedColors(mappedColors)
                 if deleteColors:
-                    print('Attempting to FastDelete the mappedColors array')
                     mappedColors.FastDelete()
                 area.GetDrawAreaItem().AddItem(item)
 
@@ -304,15 +226,6 @@ class MeshfillPipeline(Pipeline2D):
                         cti += 1
                     c = self.getColorIndexOrRGBA(_colorMap, tmpColors[cti][ctj])
 
-                    # Get the transformed contour data
-                    # transform = vtk.vtkTransform()
-                    # transform.Scale(xScale, yScale, 1.)
-                    # transformFilter = vtk.vtkTransformFilter()
-                    # transformFilter.SetInputData(mapper.GetInput())
-                    # transformFilter.SetTransform(transform)
-                    # transformFilter.Update()
-
-                    # patact = fillareautils.make_patterned_polydata(transformFilter.GetOutput(),
                     patact = fillareautils.make_patterned_polydata(poly,
                                                                    fillareastyle=style,
                                                                    fillareaindex=tmpIndices[cti],
@@ -325,7 +238,6 @@ class MeshfillPipeline(Pipeline2D):
                     ctj += 1
                 if patact is not None:
                     actors.append([patact, plotting_dataset_bounds])
-
 
                     patMapper = patact.GetMapper()
                     patMapper.Update()
@@ -342,9 +254,6 @@ class MeshfillPipeline(Pipeline2D):
 
                     actors.append([patItem, plotting_dataset_bounds])
 
-
-                    # dataset_renderer.AddActor(patact)
-
         t = self._originalData1.getTime()
         if self._originalData1.ndim > 2:
             z = self._originalData1.getAxis(-3)
@@ -357,7 +266,6 @@ class MeshfillPipeline(Pipeline2D):
             "plotting_dataset_bounds": plotting_dataset_bounds,
             "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
             "vtk_backend_geo": self._vtkGeoTransform,
-            # "vtk_backend_pipeline_context_area": area,
             "vtk_backend_draw_area_bounds": drawAreaBounds,
             "vtk_backend_viewport_scale": [
                 self._context_xScale,

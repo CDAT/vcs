@@ -7,8 +7,6 @@ import vtk
 
 from .. import vcs2vtk
 
-_callidx = 0
-
 
 class BoxfillPipeline(Pipeline2D):
 
@@ -62,7 +60,6 @@ class BoxfillPipeline(Pipeline2D):
         self._contourColors = list(range(self._gm.color_1, self._gm.color_2 + 1))
 
     def _plotInternal(self):
-        global _callidx
         """Overrides baseclass implementation."""
         # Special case for custom boxfills:
         if self._gm.boxfill_type != "custom":
@@ -75,8 +72,6 @@ class BoxfillPipeline(Pipeline2D):
 
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
-
-        # dataOriginX, dataOriginY, dataWidth, dataHeight = (0, 0, 0, 0)
 
         if self._vtkGeoTransform:
             x1 = self._vtkDataSetBoundsNoMask[0]
@@ -105,18 +100,6 @@ class BoxfillPipeline(Pipeline2D):
         dataset_renderer = view.GetRenderer()
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
-
-        print('boxfillpipeline')
-        print('  viewport = {0}'.format(vp))
-        print('  projection type = {0}'.format(vcs.elements["projection"][self._gm.projection].type))
-        print('  vtkGeoTransform = {0}'.format(self._vtkGeoTransform.GetClassName() if self._vtkGeoTransform else 'None'))
-        print('  plotting bounds = {0}'.format(plotting_dataset_bounds))
-        print('  graphics method bounds = [{0}, {1}, {2}, {3}]'.format(self._gm.datawc_x1, self._gm.datawc_x2, self._gm.datawc_y1, self._gm.datawc_y2))
-        print('  dataset bounds = {0}'.format(self._vtkDataSetBounds))
-        print('  dataset bounds (no mask) = {0}'.format(self._vtkDataSetBoundsNoMask))
-        print('  draw area bounds = {0}'.format(drawAreaBounds))
-        print('  scale: [xscale, yscale] = [{0}, {1}]'.format(self._context_xScale, self._context_yScale))
-        print('  [flipX, flipY] = [{0}, {1}]'.format(self._context_flipX, self._context_flipY))
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         # vp = vcs2vtk.adjustBounds(vp, 0.9, 0.9)
@@ -171,8 +154,6 @@ class BoxfillPipeline(Pipeline2D):
                 if deleteColors:
                     mappedColors.FastDelete()
                 area.GetDrawAreaItem().AddItem(item)
-
-                print('boxfillpipeline adding a context item')
 
                 if mapper is self._maskedDataMapper:
                     actors.append([item, self._maskedDataMapper, plotting_dataset_bounds])
@@ -300,8 +281,6 @@ class BoxfillPipeline(Pipeline2D):
                                            self._dataWrapModulo,
                                            vp, self._template.data.priority, **kwargs)
 
-        _callidx += 1
-
     def _plotInternalBoxfill(self):
         """Implements the logic to render a non-custom boxfill."""
         # Prep mapper
@@ -358,9 +337,6 @@ class BoxfillPipeline(Pipeline2D):
     def _plotInternalCustomBoxfill(self):
         """Implements the logic to render a custom boxfill."""
         self._mappers = []
-
-        # import pdb
-        # pdb.set_trace()
 
         self._customBoxfillArgs = self._prepContours()
         tmpLevels = self._customBoxfillArgs["tmpLevels"]

@@ -15,28 +15,22 @@ from .vcsvtk import fillareautils
 import sys
 import numbers
 
-from .template import vcs_debug_boxes_lines_ticks as debugLines
-
-_DEBUG_VTK = True
-prepLineCount = 0
-
 
 def debugWriteGrid(grid, name):
-    if (_DEBUG_VTK):
-        writer = vtk.vtkXMLDataSetWriter()
-        gridType = grid.GetDataObjectType()
-        if (gridType == vtk.VTK_STRUCTURED_GRID):
-            ext = ".vts"
-        elif (gridType == vtk.VTK_UNSTRUCTURED_GRID):
-            ext = ".vtu"
-        elif (gridType == vtk.VTK_POLY_DATA):
-            ext = ".vtp"
-        else:
-            print "Unknown grid type: %d" % gridType
-            ext = ".vtk"
-        writer.SetFileName(name + ext)
-        writer.SetInputData(grid)
-        writer.Write()
+    writer = vtk.vtkXMLDataSetWriter()
+    gridType = grid.GetDataObjectType()
+    if (gridType == vtk.VTK_STRUCTURED_GRID):
+        ext = ".vts"
+    elif (gridType == vtk.VTK_UNSTRUCTURED_GRID):
+        ext = ".vtu"
+    elif (gridType == vtk.VTK_POLY_DATA):
+        ext = ".vtp"
+    else:
+        print("Unknown grid type: {0}".format(gridType))
+        ext = ".vtk"
+    writer.SetFileName(name + ext)
+    writer.SetInputData(grid)
+    writer.Write()
 
 
 f = open(os.path.join(sys.prefix, "share", "vcs", "wmo_symbols.json"))
@@ -81,11 +75,6 @@ for i in range(len(projNames)):
     projDict[i] = projNames[i]
 
 def computeDrawAreaBounds(bounds, flipX=False, flipY=False):
-    # FIXME: we may need something similar to this:
-    # FIXME:
-    # FIXME:     https://github.com/CDAT/vcs/blob/5bc0c4f856937c1bfc70ee06ba062e5f4539e430/vcs/VTKPlots.py#L1569
-    # FIXME:
-    # FIXME: to fix the issue with drawing of "box1" (plot data outline)
     if flipX:
         lowerLeftX = bounds[1]
         width = bounds[0] - bounds[1]
@@ -675,8 +664,6 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
         projection = vcs.elements["projection"][gm.projection]
         vg.SetPoints(pts)
         wrb = getWrappedBounds(wc, [xm, xM, ym, yM], wrap)
-        # wrb = [-180.0, 175.0, -90.0, 90.0]
-        print('\nGENGRID, wrapped bounds = {0}'.format(wrb))
         geo, geopts = project(pts, projection, wrb)
         # proj4 returns inf for points that are not visible. Set those to a valid point
         # and hide them.
@@ -1422,11 +1409,7 @@ def genTextActor(contextArea, string=None, x=None, y=None,
         if vcs.elements["projection"][tt.projection].type != "linear":
             _, pts = project(pts, tt.projection, tt.worldcoordinate, geo=geo)
             X, Y, tz = pts.GetPoint(0)
-            # print('genTextActor pos for {0}'.format(string[i]))
-            # print('  proj = {0}, tt.wc = {1}, geo = {2}'.format(vcs.elements["projection"][tt.projection].type, tt.worldcoordinate, geo.GetClassName() if geo else 'None'))
-            # print('  projected [{0}, {1}] to [{2}, {3}]'.format(x[i], y[i], X, Y))
             if wc is None:
-                print('    !!!BOOP!!!')
                 wc = tt.worldcoordinate
                 pts_wc = vtk.vtkPoints()
                 # Scan a bunch of points within wc
@@ -1441,30 +1424,17 @@ def genTextActor(contextArea, string=None, x=None, y=None,
                 wy = as_numpy[:, 1]
                 wc = [wx.min(), wx.max(), wy.min(), wy.max()]
             X, Y = world2Renderer(renderer, X, Y, tt.viewport, wc)
-            # print('  wc = {0}'.format(wc))
-            # print('  final screen pos = [{0}, {1}]'.format(X, Y))
         else:
             X, Y = world2Renderer(
                 renderer, x[i], y[i], tt.viewport, tt.worldcoordinate)
         t.SetPosition(X, Y)
         t.SetInput(string[i])
 
-        # T=vtk.vtkTransform()
-        # T.Scale(1.,sz[1]/606.,1.)
-        # T.RotateY(to.angle)
-        # t.SetUserTransform(T)
-
-        # renderer.AddActor(t)
-
         item = vtk.vtkPythonItem()
         item.SetPythonObject(TextActorWrapperItem(t))
         contextArea.GetDrawAreaItem().AddItem(item)
 
         actors.append(t)
-
-    # if wc:
-    #     rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
-    #     contextArea.SetDrawAreaBounds(rect)
 
     return actors
 
@@ -1518,7 +1488,6 @@ def __build_pd__():
 
 def prepFillarea(context, renWin, farea, cmap=None):
     vp = farea.viewport
-    # print('fillarea viewport: [%f, %f, %f, %f]' % (vp[0], vp[1], vp[2], vp[3]))
 
     # view and interactive area
     view = context.contextView
@@ -1534,7 +1503,6 @@ def prepFillarea(context, renWin, farea, cmap=None):
 
     area.SetDrawAreaBounds(rect)
     area.SetGeometry(geom)
-    # area.SetFixedMargins(0, 0, 0, 0)
     area.SetFillViewport(False)
     area.SetShowGrid(False)
 
@@ -1646,49 +1614,6 @@ def prepFillarea(context, renWin, farea, cmap=None):
     tris = vtk.vtkTriangleFilter()
     tris.SetInputData(polygonPolyData)
 
-    # # Setup rendering
-    # m = vtk.vtkPolyDataMapper()
-    # m.SetInputConnection(tris.GetOutputPort())
-    # a = vtk.vtkActor()
-    # a.SetMapper(m)
-    # ren, xscale, yscale = context.fitToViewport(a,
-    #                                             farea.viewport,
-    #                                             wc=farea.worldcoordinate,
-    #                                             geoBounds=None,
-    #                                             geo=None,
-    #                                             priority=farea.priority,
-    #                                             create_renderer=True)
-    # actors.append((a, geo))
-    # transform = vtk.vtkTransform()
-    # transform.Scale(xscale, yscale, 1.)
-
-
-    # create a new renderer for this mapper
-    # (we need one for each mapper because of camera flips)
-    # if not dataset_renderer:
-    # xScale, yScale, xc, yc, yd, flipX, flipY = context.computeScaleToFitViewport(
-    #     vp,
-    #     wc=wc,
-    #     geoBounds=None,
-    #     geo=None)
-
-    # cam = ren.GetActiveCamera()
-    # cam.ParallelProjectionOn()
-    # # We increase the parallel projection parallelepiped with 1/1000 so that
-    # # it does not overlap with the outline of the dataset. This resulted in
-    # # system dependent display of the outline.
-    # cam.SetParallelScale(yd * 1.001)
-    # cd = cam.GetDistance()
-    # cam.SetPosition(xc, yc, cd)
-    # cam.SetFocalPoint(xc, yc, 0.)
-
-    # if flipY:
-    #     cam.Elevation(180.)
-    #     cam.Roll(180.)
-    #     pass
-    # if flipX:
-    #     cam.Azimuth(180.)
-
     # If we had at least one "solid" style area
     if pts.GetNumberOfPoints() > 0:
         tris.Update()
@@ -1702,13 +1627,6 @@ def prepFillarea(context, renWin, farea, cmap=None):
         item.SetMappedColors(colorArray)
         area.GetDrawAreaItem().AddItem(item)
 
-    # transform = vtk.vtkTransform()
-    # transform.Scale(xScale, yScale, 1.)
-
-    # newWc = [wc[0] * xScale, wc[1] * xScale, wc[2] * yScale, wc[3] * yScale]
-    # rect = vtk.vtkRectd(newWc[0], newWc[2], newWc[1] - newWc[0], newWc[3] - newWc[2])
-    # area.SetDrawAreaBounds(rect)
-
     # Patterns/hatches support
     for i, pd in pattern_polydatas:
         st = farea.style[i]
@@ -1717,20 +1635,15 @@ def prepFillarea(context, renWin, farea, cmap=None):
                 pd.GetPoints(), farea.projection, farea.worldcoordinate)
             pd.SetPoints(proj_points)
 
-            # pd = applyTransformationToDataset(transform, pd)
-
-            # transformFilter = vtk.vtkTransformFilter()
-            # transformFilter.SetInputData(pd)
-            # transformFilter.SetTransform(transform)
-            # transformFilter.Update()
             cellcolor = [0, 0, 0, 0]
             colors.GetTypedTuple(i, cellcolor)
             pcolor = [indC * 100. / 255.0 for indC in cellcolor]
-            # act = fillareautils.make_patterned_polydata(transformFilter.GetOutput(),
+
             screenGeom = [
                 (farea.x[i][1] - farea.x[i][0]) * renWinWidth,
                 (farea.y[i][2] - farea.y[i][1]) * renWinHeight
             ]
+
             act = fillareautils.make_patterned_polydata(pd,
                                                         st,
                                                         fillareaindex=farea.index[i],
@@ -1753,9 +1666,6 @@ def prepFillarea(context, renWin, farea, cmap=None):
 
                 item.SetMappedColors(colorArray)
                 area.GetDrawAreaItem().AddItem(item)
-
-                # ren.AddActor(act)
-                # actors.append((act, geo))
 
     return actors
 
@@ -1974,8 +1884,6 @@ def getMarkerColor(marker, c, cmap=None):
         color = cmap.index[c]
     else:
         color = c
-    # p.SetColor([C / 100. for C in color[:3]])
-    # p.SetOpacity(color[-1])
 
     retval = [int((C / 100.) * 255) for C in color]
 
@@ -2015,13 +1923,6 @@ def prepMarker(marker, screenGeom, scale=None, cmap=None):
         gs, pd = prepGlyph(g, marker, screenGeom=screenGeom, index=i)
         g.SetInputData(markers)
 
-        # a = vtk.vtkActor()
-        # m = vtk.vtkPolyDataMapper()
-        # m.SetInputConnection(g.GetOutputPort())
-        # m.Update()
-        # a.SetMapper(m)
-        # p = a.GetProperty()
-        # setMarkerColor(p, marker, c, cmap)
         g.Update()
         glyphs = g.GetOutput()
 
@@ -2103,9 +2004,6 @@ def getProjectedBoundsForWorldCoords(wc, proj, subdiv=50):
     if vcs.elements['projection'][proj].type == 'linear':
         return wc
 
-    # print('projection type %s' % vcs.elements['projection'][proj].type)
-
-    # wc = [ x1, x2, y1, y2 ]
     xs = numpy.linspace(wc[0], wc[1], subdiv).tolist()
     xs += [wc[1], ] * subdiv
     xs += numpy.linspace(wc[1], wc[0], subdiv).tolist()
@@ -2121,19 +2019,13 @@ def getProjectedBoundsForWorldCoords(wc, proj, subdiv=50):
     for idx in range(len(xs)):
         pts.InsertNextPoint(xs[idx], ys[idx], 0.0)
 
-    # print('pre-transform projected bounds: ', pts.GetBounds())
-
     geoTransform, pts = project(pts, proj, wc)
 
-    # return [-14243530.0, 14243530.0, -8625249.0, 8625249.0, 0.0, 0.0]
     return pts.GetBounds()
 
 
 def prepLine(plotsContext, line, geoBounds=None, cmap=None):
-    global prepLineCount
-
     projBounds = getProjectedBoundsForWorldCoords(line.worldcoordinate, line.projection)
-    # print('projBounds = {0}'.format(projBounds))
 
     number_lines = prepPrimitive(line)
     if number_lines == 0:
@@ -2150,10 +2042,6 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
 
     if isinstance(cmap, str):
         cmap = vcs.elements["colormap"][cmap]
-
-    if debugLines:
-        print('Prepping a line')
-        line.list()
 
     for i in range(number_lines):
 
@@ -2218,38 +2106,19 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
     for t, w in line_data:
         pts, _, linesPoly, colors = line_data[(t, w)]
 
-        # polyBounds = pts.GetBounds()
-        # print('polyBounds before projection = ', polyBounds)
-
         linesPoly.GetCellData().SetScalars(colors)
         geoTransform, pts = project(pts, line.projection, line.worldcoordinate)
         linesPoly.SetPoints(pts)
 
-        # ptsBounds = pts.GetBounds()
-        # print('polyBounds after projection (pts) = ', ptsBounds)
-
         polyBounds = linesPoly.GetBounds()
-        if debugLines:
-            print('lines bounds after projection (poly) = ', polyBounds)
-            print('geoBounds = ', geoBounds)
-
         view = plotsContext.contextView
 
         area = vtk.vtkContextArea()
         view.GetScene().AddItem(area)
 
         vp = line.viewport
-        # if geoTransform:
-        #     wc = polyBounds
-        # else:
-        #     wc = line.worldcoordinate
 
         wc = projBounds
-
-        if debugLines:
-            print('\nLine is prepped:')
-            print('  projBounds = {0}'.format(projBounds))
-            print('  vp = {0}'.format(vp))
 
         wc = adjustBounds(wc, 1.1, 1.1)
         rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
@@ -2258,39 +2127,7 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
         vp = adjustBounds(vp, 1.1, 1.1)
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
-        if debugLines:
-            print('  adjusted projBounds = {0}'.format(wc))
-            print('  adjusted viewport = {0}'.format(vp))
-            print('  draw area bounds = {0}'.format(rect))
-            print('  screen geometry = {0}'.format(geom))
-            print('\n')
-
-        area.SetDrawAreaBounds(rect)
-        area.SetGeometry(geom)
-
-        area.SetFillViewport(False)
-        area.SetShowGrid(False)
-
-        axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
-        axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
-        axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
-        axisTop = area.GetAxis(vtk.vtkAxis.TOP)
-
-        axisTop.SetVisible(False)
-        axisRight.SetVisible(False)
-        axisLeft.SetVisible(False)
-        axisBottom.SetVisible(False)
-
-        axisTop.SetMargins(0, 0)
-        axisRight.SetMargins(0, 0)
-        axisLeft.SetMargins(0, 0)
-        axisBottom.SetMargins(0, 0)
-
-        if debugLines:
-            gridFileName = 'lines-%d-%d' % (prepLineCount, lineDataCount)
-            debugWriteGrid(linesPoly, gridFileName)
-            lineDataCount += 1
-            print('***WROTE LINE AS GRID -> {0}'.format(gridFileName))
+        configureContextArea(area, rect, geom)
 
         intValue = vtk.vtkIntArray()
         intValue.SetNumberOfComponents(1)
@@ -2309,8 +2146,6 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
         item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
         item.SetMappedColors(colors)
         area.GetDrawAreaItem().AddItem(item)
-
-    prepLineCount += 1
 
     return actors
 

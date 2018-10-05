@@ -112,18 +112,6 @@ class VectorPipeline(Pipeline2D):
 
         drawAreaBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask, self._context_flipX, self._context_flipY)
 
-        print('vectorpipeline')
-        print('  viewport = {0}'.format(vp))
-        print('  projection type = {0}'.format(vcs.elements["projection"][self._gm.projection].type))
-        print('  vtkGeoTransform = {0}'.format(self._vtkGeoTransform.GetClassName() if self._vtkGeoTransform else 'None'))
-        print('  plotting bounds = {0}'.format(plotting_dataset_bounds))
-        print('  graphics method bounds = [{0}, {1}, {2}, {3}]'.format(self._gm.datawc_x1, self._gm.datawc_x2, self._gm.datawc_y1, self._gm.datawc_y2))
-        print('  dataset bounds = {0}'.format(self._vtkDataSetBounds))
-        print('  dataset bounds (no mask) = {0}'.format(self._vtkDataSetBoundsNoMask))
-        print('  draw area bounds = {0}'.format(drawAreaBounds))
-        print('  scale: [xscale, yscale] = [{0}, {1}]'.format(self._context_xScale, self._context_yScale))
-        print('  [flipX, flipY] = [{0}, {1}]'.format(self._context_flipX, self._context_flipY))
-
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
@@ -211,9 +199,6 @@ class VectorPipeline(Pipeline2D):
         # and set the arrows to be rendered.
 
         data = glyphFilter.GetOutput()
-        # mapper.SetInputData(data)
-
-
 
         item = vtk.vtkPolyDataItem()
         item.SetPolyData(data)
@@ -233,9 +218,7 @@ class VectorPipeline(Pipeline2D):
             'dataset_bounds': self._vtkDataSetBounds,
             'plotting_dataset_bounds': plotting_dataset_bounds,
             "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
-            # "vtk_dataset_bounds_no_mask": newBounds,
             'vtk_backend_geo': self._vtkGeoTransform,
-            # "vtk_backend_pipeline_context_area": area,
             "vtk_backend_draw_area_bounds": continentBounds,
             "vtk_backend_viewport_scale": [
                 self._context_xScale,

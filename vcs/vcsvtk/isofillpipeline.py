@@ -7,9 +7,6 @@ import vcs
 import vtk
 
 
-plotcount = 0
-
-
 class IsofillPipeline(Pipeline2D):
 
     """Implementation of the Pipeline interface for VCS isofill plots."""
@@ -23,8 +20,6 @@ class IsofillPipeline(Pipeline2D):
 
     def _plotInternal(self):
         """Overrides baseclass implementation."""
-        global plotcount
-
         preppedCountours = self._prepContours()
         tmpLevels = preppedCountours["tmpLevels"]
         tmpIndices = preppedCountours["tmpIndices"]
@@ -89,7 +84,6 @@ class IsofillPipeline(Pipeline2D):
 
         numLevels = len(self._contourLevels)
         if mappers == []:  # ok didn't need to have special banded contours
-            print('This seems like a weird case, do not get it')
             mapper = vtk.vtkPolyDataMapper()
             mappers = [mapper]
             # Colortable bit
@@ -135,25 +129,10 @@ class IsofillPipeline(Pipeline2D):
         adjusted_plotting_bounds = vcs2vtk.getProjectedBoundsForWorldCoords(plotting_dataset_bounds, self._gm.projection)
         drawAreaBounds = vcs2vtk.computeDrawAreaBounds(adjusted_plotting_bounds)
 
-        print('isofillpipeline')
-        print('  viewport = {0}'.format(vp))
-        print('  projection type = {0}'.format(vcs.elements["projection"][self._gm.projection].type))
-        print('  vtkGeoTransform = {0}'.format(self._vtkGeoTransform.GetClassName() if self._vtkGeoTransform else 'None'))
-        print('  plotting bounds = {0}'.format(plotting_dataset_bounds))
-        print('  adjusted plotting bounds = {0}'.format(adjusted_plotting_bounds))
-        print('  graphics method bounds = [{0}, {1}, {2}, {3}]'.format(self._gm.datawc_x1, self._gm.datawc_x2, self._gm.datawc_y1, self._gm.datawc_y2))
-        print('  dataset bounds = {0}'.format(self._vtkDataSetBounds))
-        print('  dataset bounds (no mask) = {0}'.format(self._vtkDataSetBoundsNoMask))
-        print('  draw area bounds = {0}'.format(drawAreaBounds))
-        print('  scale: [xscale, yscale] = [{0}, {1}]'.format(self._context_xScale, self._context_yScale))
-        print('  [flipX, flipY] = [{0}, {1}]'.format(self._context_flipX, self._context_flipY))
-
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
         vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
-
-        mIdx = 0
 
         for mapper in mappers:
             act = vtk.vtkActor()
@@ -162,56 +141,12 @@ class IsofillPipeline(Pipeline2D):
             poly = mapper.GetInput()
 
             if not poly:
-                print(' #$#$#$#$#$#$#$ => This must be that useless mapper we created above for some mysterious reason')
                 continue
 
             patact = None
             item = None
 
             if style == "solid":
-
-                ### The commented block below should work, if the _needsCellData flag
-                ### is set up properly.  But it seems it must not be, because if I use
-                ### this block then the isofill isn't colored correctly.
-
-                # if self._needsCellData:
-                #     loc = 'cell'
-                #     attrs = poly.GetCellData()
-                #     scalarMode = vtk.VTK_SCALAR_MODE_USE_CELL_DATA
-                #     numTuples = poly.GetNumberOfCells()
-                # else:
-                #     loc = 'point'
-                #     attrs = poly.GetPointData()
-                #     scalarMode = vtk.VTK_SCALAR_MODE_USE_POINT_DATA
-                #     numTuples = poly.GetNumberOfPoints()
-
-                # data = attrs.GetScalars()
-
-                # if data:
-                #     lut = mapper.GetLookupTable()
-                #     range = mapper.GetScalarRange()
-                #     lut.SetRange(range)
-                #     mappedColors = lut.MapScalars(data, vtk.VTK_COLOR_MODE_DEFAULT, 0)
-                # else:
-                #     print('WARNING: isofill pipeline: poly does not have Scalars array on {0} data, using solid color'.format(loc))
-                #     color = [0, 0, 0, 255]
-                #     mappedColors = vcs2vtk.generateSolidColorArray(numTuples, color)
-
-                ### The commented block below would normally keep the missing data
-                ### from being colored correctly as it was configured in putmaskongrid
-                ### so the missing_opacity tests fail with it
-
-                # if mapper is self._maskedDataMapper:
-                #     # FIXME: Not quite sure how I got away without this in the other cases
-                #     numTuples = poly.GetNumberOfCells()
-                #     color = [0, 0, 0, 255]
-                #     mappedColors = vcs2vtk.generateSolidColorArray(numTuples, color)
-                # else:
-
-                ### The block below just forces the celldata assumption on everything,
-                ### which doesn't seem right either, but it fixed the missing_opacity
-                ### test without seeming to cause any new failures
-
                 deleteColors = False
 
                 attrs = poly.GetCellData()
@@ -229,10 +164,6 @@ class IsofillPipeline(Pipeline2D):
                     mappedColors = vcs2vtk.generateSolidColorArray(numTuples, color)
 
                 scalarMode = vtk.VTK_SCALAR_MODE_USE_CELL_DATA
-
-                    # fname = 'isofill-solid-%d' % mIdx
-                    # vcs2vtk.debugWriteGrid(poly, fname)
-                    # mIdx += 1
 
                 item = vtk.vtkPolyDataItem()
                 item.SetPolyData(poly)
@@ -267,10 +198,6 @@ class IsofillPipeline(Pipeline2D):
                     patMapper = patact.GetMapper()
                     patMapper.Update()
                     patPoly = patMapper.GetInput()
-
-                    # fname = 'isofill-patterns-{0}-{1}'.format(plotcount, mIdx)
-                    # mIdx += 1
-                    # vcs2vtk.debugWriteGrid(patPoly, fname)
 
                     patItem = vtk.vtkPolyDataItem()
                     patItem.SetPolyData(patPoly)
@@ -358,5 +285,3 @@ class IsofillPipeline(Pipeline2D):
                                            plotting_dataset_bounds, projection,
                                            self._dataWrapModulo,
                                            vp, self._template.data.priority, **kwargs)
-
-        plotcount += 1

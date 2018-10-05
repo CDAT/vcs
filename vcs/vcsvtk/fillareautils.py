@@ -4,40 +4,7 @@ import vtk
 import vtk.util.numpy_support as ns
 import numpy as np
 
-"""
-> import vtk
-> import vtk.util.numpy_support as ns
-> import numpy as np
->
-> Array = np.empty([235,3])
-> vtkarr = ns.numpy_to_vtk(num_array=Array, deep=True,
-> array_type=vtk.VTK_DOUBLE)
->
-> >>> vtkarr.GetNumberOfTuples()
-> 235L
-> >>> vtkarr.GetNumberOfComponents()
-> 3
-"""
-
 from .patterns import pattern_list
-
-def debugWriteGrid(grid, name):
-    writer = vtk.vtkXMLDataSetWriter()
-    gridType = grid.GetDataObjectType()
-    if (gridType == vtk.VTK_STRUCTURED_GRID):
-        ext = ".vts"
-    elif (gridType == vtk.VTK_UNSTRUCTURED_GRID):
-        ext = ".vtu"
-    elif (gridType == vtk.VTK_POLY_DATA):
-        ext = ".vtp"
-    else:
-        print "Unknown grid type: %d" % gridType
-        ext = ".vtk"
-    writer.SetFileName(name + ext)
-    writer.SetInputData(grid)
-    writer.Write()
-
-_callidx = 0
 
 
 def affine(value, inMin, inMax, outMin, outMax):
@@ -85,15 +52,6 @@ def computeResolutionAndScale(dataRange, screenGeom, vpScale=[1.0, 1.0],
     if pxScale:
         scale = [pxScale * x for x in diffwpoints[:2]]
 
-    # print('computeResolutionAndScale')
-    # print('  dataRange: [{0}, {1}]'.format(dataRange[0], dataRange[1]))
-    # print('  screenGeom: [{0}, {1}]'.format(screenGeom[0], screenGeom[1]))
-    # print('  diffwpoints: [{0}, {1}]'.format(diffwpoints[0], diffwpoints[1]))
-    # print('  pxSpacing: [{0}, {1}]'.format(pxSpacing[0], pxSpacing[1]))
-    # print('  pxScale: {0}'.format(pxScale))
-    # print('  vpScale: [{0}, {1}]'.format(vpScale[0], vpScale[1]))
-    # print('  xres = %f, yres = %f, scale = [%f, %f]' % (xres, yres, scale[0], scale[1]))
-
     return ([xres, yres], scale)
 
 
@@ -109,14 +67,6 @@ def computeMarkerScale(dataRange, screenGeom, pxScale=None):
     if dataAspect > 1:
         scale = min(*diffwpoints)
 
-    # print('computeMarkerScale: scale = {0}'.format(scale))
-    # print('Computing marker scale')
-    # print('  data range = {0}, aspect = {1}'.format(dataRange, dataAspect))
-    # print('  screen geometry = {0}, aspect = {1}'.format(screenGeom, screenAspect))
-    # print('  requested marker size = {0}'.format(pxScale))
-    # print('  diffwpoints = [{0}]'.format(diffwpoints))
-    # print('    computed scale = {0}'.format(scale))
-
     return scale
 
 
@@ -125,7 +75,6 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
                             fillareaopacity=None,
                             fillareapixelspacing=None, fillareapixelscale=None,
                             size=None, screenGeom=None, vpScale=[1.0, 1.0]):
-    global _callidx
     if inputContours is None or fillareastyle == 'solid':
         return None
     if inputContours.GetNumberOfCells() == 0:
@@ -205,8 +154,6 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
     create_pattern(patternPolyData, [scale_max, scale_max],
                    fillareastyle, fillareaindex)
 
-    # debugWriteGrid(patternPolyData, 'uncut-pattern-scale-{0}-{1}'.format(scale[0], scale[1]))
-
     # Create pipeline to create a clipped polydata from the pattern plane.
     cutter = vtk.vtkCookieCutter()
     cutter.SetInputData(patternPolyData)
@@ -218,16 +165,6 @@ def make_patterned_polydata(inputContours, fillareastyle=None,
     # cell scalars
     map_colors(cutter.GetOutput(), fillareastyle,
                fillareacolors, fillareaopacity)
-
-    # cutter.Update()
-    # fname = 'cut-colored-pattern-%d' % _callidx
-    # print('fname: %s' % fname)
-    # print('  fillareastyle: %s' % fillareastyle)
-    # print('  fillareacolors: [%f, %f, %f, %f]' % (fillareacolors[0], fillareacolors[1], fillareacolors[2], fillareacolors[3]))
-    # print('  fillareaopacity: %f' % fillareaopacity)
-    # print('  pattern class: %s' % pattern_list[fillareaindex])
-    # debugWriteGrid(cutter.GetOutput(), fname)
-    # _callidx += 1
 
     mapper = vtk.vtkPolyDataMapper()
     mapper.SetInputConnection(cutter.GetOutputPort())
@@ -258,8 +195,7 @@ def map_colors(clippedPolyData, fillareastyle=None,
     colorNpArray[:,1] = color[1]
     colorNpArray[:,2] = color[2]
     colorNpArray[:,3] = color[3]
-    # for i in range(clippedPolyData.GetNumberOfCells()):
-    #     colorNpArray[i,:] = color
+
     colors = ns.numpy_to_vtk(num_array=colorNpArray,
                              deep=True,
                              array_type=vtk.VTK_UNSIGNED_CHAR)

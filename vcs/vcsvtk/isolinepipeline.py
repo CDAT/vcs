@@ -123,8 +123,6 @@ class IsolinePipeline(Pipeline2D):
             else:
                 backgroundOpacities = [100.0 for lev in self._contourLevels]
 
-            print('isolinepipeline: backgroundOpacities = {0}'.format(backgroundOpacities))
-
         countLevels = 0
         vp = self._resultDict.get(
             'ratio_autot_viewport',
@@ -140,19 +138,6 @@ class IsolinePipeline(Pipeline2D):
         adjusted_plotting_bounds = vcs2vtk.getProjectedBoundsForWorldCoords(plotting_dataset_bounds, self._gm.projection)
         drawAreaBounds = vcs2vtk.computeDrawAreaBounds(adjusted_plotting_bounds)
 
-        print('isolinepipeline')
-        print('  viewport = {0}'.format(vp))
-        print('  projection type = {0}'.format(vcs.elements["projection"][self._gm.projection].type))
-        print('  vtkGeoTransform = {0}'.format(self._vtkGeoTransform.GetClassName() if self._vtkGeoTransform else 'None'))
-        print('  plotting bounds = {0}'.format(plotting_dataset_bounds))
-        print('  adjusted plotting bounds = {0}'.format(adjusted_plotting_bounds))
-        print('  graphics method bounds = [{0}, {1}, {2}, {3}]'.format(self._gm.datawc_x1, self._gm.datawc_x2, self._gm.datawc_y1, self._gm.datawc_y2))
-        print('  dataset bounds = {0}'.format(self._vtkDataSetBounds))
-        print('  dataset bounds (no mask) = {0}'.format(self._vtkDataSetBoundsNoMask))
-        print('  draw area bounds = {0}'.format(drawAreaBounds))
-        print('  scale: [xscale, yscale] = [{0}, {1}]'.format(self._context_xScale, self._context_yScale))
-        print('  [flipX, flipY] = [{0}, {1}]'.format(self._context_flipX, self._context_flipY))
-
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
 
@@ -167,10 +152,6 @@ class IsolinePipeline(Pipeline2D):
             numLevels = len(l)
 
             cot = vtk.vtkContourFilter()
-            # if self._hasCellData:
-            #     cot.SetInputConnection(self._vtkPolyDataFilter.GetOutputPort())
-            # else:
-            #     cot.SetInputData(self._vtkDataSet)
 
             cot.SetInputData(self._vtkDataSetFittedToViewport)
             cot.SetNumberOfContours(numLevels)
@@ -233,9 +214,7 @@ class IsolinePipeline(Pipeline2D):
 
                         colorOverride = colorOverrides[countLevels + idx]
                         if colorOverride is not None:
-                            # tt = vcs.createtexttable(None, tt)
                             tt.color = colorOverride
-                            # tt = tt.name
 
                         tt = tt.name
 
@@ -243,8 +222,6 @@ class IsolinePipeline(Pipeline2D):
                             texttbl = vcs.gettexttable(tt)
                             texttbl.backgroundcolor = backgroundColors[countLevels + idx]
                         if backgroundOpacities is not None:
-                            # import pdb
-                            # pdb.set_trace()
                             texttbl = vcs.gettexttable(tt)
                             texttbl.backgroundopacity = backgroundOpacities[countLevels + idx]
                         tprop = vtk.vtkTextProperty()
@@ -270,11 +247,6 @@ class IsolinePipeline(Pipeline2D):
                 item.SetSkipDistance(self._gm.labelskipdistance)
 
                 mapper = vtk.vtkLabeledContourMapper()
-                # mapper.SetTextProperties(tprops)
-                # mapper.SetTextPropertyMapping(tpropMap)
-                # mapper.SetLabelVisibility(1)
-                # mapper.SetSkipDistance(self._gm.labelskipdistance)
-
                 pdMapper = mapper.GetPolyDataMapper()
 
                 luts.append([lut, [l[0], l[-1], False]])
@@ -296,26 +268,6 @@ class IsolinePipeline(Pipeline2D):
             poly = stripper.GetOutput()
             mappers.append(mapper)
             cots.append(cot)
-
-            # Create actor to add to scene
-            # act = vtk.vtkActor()
-            # act.SetMapper(mapper)
-            # # Set line properties here
-            # p = act.GetProperty()
-            # p.SetLineWidth(tmpLineWidths[i])
-            # vcs2vtk.stippleLine(p, tmpLineTypes[i])
-
-            # create a new renderer for this mapper
-            # (we need one for each mapper because of cmaera flips)
-            # dataset_renderer, xScale, yScale = self._context().fitToViewport(
-            #     act, vp,
-            #     wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
-            #     geo=self._vtkGeoTransform,
-            #     priority=self._template.data.priority,
-            #     create_renderer=(dataset_renderer is None))
-
-
-            vcs2vtk.debugWriteGrid(poly, 'isoline')
 
             if self._needsCellData:
                 attrs = poly.GetCellData()
@@ -377,7 +329,6 @@ class IsolinePipeline(Pipeline2D):
 
             actors.append([maskItem, self._maskedDataMapper, plotting_dataset_bounds])
 
-
         self._resultDict["vtk_backend_actors"] = actors
 
         t = self._originalData1.getTime()
@@ -391,7 +342,6 @@ class IsolinePipeline(Pipeline2D):
             "plotting_dataset_bounds": plotting_dataset_bounds,
             "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
             "vtk_backend_geo": self._vtkGeoTransform,
-            # "vtk_backend_pipeline_context_area": area,
             "vtk_backend_draw_area_bounds": drawAreaBounds,
             "vtk_backend_viewport_scale": [
                 self._context_xScale,

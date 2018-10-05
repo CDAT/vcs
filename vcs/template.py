@@ -52,8 +52,6 @@ from .projection import round_projections
 from .projection import elliptical_projections
 from .xmldocs import scriptdocs, listdoc
 
-vcs_debug_boxes_lines_ticks = False
-
 # Following for class properties
 
 
@@ -1201,18 +1199,10 @@ class P(vcs.bestMatch):
             tt.string = tstring
             tt.x = txs
             tt.y = tys
-            if vcs_debug_boxes_lines_ticks:
-                print('\ndrawTicks (labels) => axis = {0}, number = {1}, mintics = {2}'.format(axis, number, mintic))
-                tt.list()
-                print('\n')
             displays.append(x.text(tt, bg=bg, ratio="none", **kargs))
         if xs != []:
             ticks._x = xs
             ticks._y = ys
-            if vcs_debug_boxes_lines_ticks:
-                print('\ndrawTicks => axis = {0}, number = {1}, mintics = {2}'.format(axis, number, mintic))
-                ticks.list()
-                print('\n')
             displays.append(x.line(ticks, bg=bg, **kargs))
 
         del(vcs.elements["line"][ticks.name])
@@ -1820,10 +1810,6 @@ class P(vcs.bestMatch):
                         ln_tmp._x = [e._x1, e._x2, e._x2, e._x1, e._x1]
                         ln_tmp._y = [e._y1, e._y1, e._y2, e._y2, e._y1]
                     ln_tmp._priority = e._priority
-                    if vcs_debug_boxes_lines_ticks:
-                        print('\ndrawing {0}{1} lines'.format(tp, num))
-                        ln_tmp.list()
-                        print('\n')
                     displays.append(x.plot(ln_tmp, bg=bg, ratio="none", **kargs))
                     del(vcs.elements["line"][ln_tmp.name])
 
