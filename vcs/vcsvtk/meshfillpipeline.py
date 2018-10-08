@@ -241,23 +241,24 @@ class MeshfillPipeline(Pipeline2D):
                                                                    size=self._context().renWin.GetSize(),
                                                                    screenGeom=self._context().renWin.GetSize())
                     ctj += 1
-                if patact is not None:
-                    actors.append([patact, plotting_dataset_bounds])
 
-                    patMapper = patact.GetMapper()
-                    patMapper.Update()
-                    patPoly = patMapper.GetInput()
+                    if patact is not None:
+                        actors.append([patact, plotting_dataset_bounds])
 
-                    patItem = vtk.vtkPolyDataItem()
-                    patItem.SetPolyData(patPoly)
+                        patMapper = patact.GetMapper()
+                        patMapper.Update()
+                        patPoly = patMapper.GetInput()
 
-                    patItem.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
-                    colorArray = patPoly.GetCellData().GetArray('Colors')
+                        patItem = vtk.vtkPolyDataItem()
+                        patItem.SetPolyData(patPoly)
 
-                    patItem.SetMappedColors(colorArray)
-                    area.GetDrawAreaItem().AddItem(patItem)
+                        patItem.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                        colorArray = patPoly.GetCellData().GetArray('Colors')
 
-                    actors.append([patItem, plotting_dataset_bounds])
+                        patItem.SetMappedColors(colorArray)
+                        area.GetDrawAreaItem().AddItem(patItem)
+
+                        actors.append([patItem, plotting_dataset_bounds])
 
         t = self._originalData1.getTime()
         if self._originalData1.ndim > 2:
