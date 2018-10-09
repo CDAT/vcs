@@ -53,11 +53,13 @@ class ImageDataWrapperItem(object):
 
 
 class VcsLogoItem(object):
-    def __init__(self, image, opacity=1.0, scale=1.0, offset=[0.0, 0.0]):
+    def __init__(self, image, opacity=1.0, scale=1.0, offset=[0.0, 0.0],
+        transparentColor=[1.0, 1.0, 1.0]):
         self.scale = scale
         self.opacity = opacity
         self.xOffset = offset[0]
         self.yOffset = offset[1]
+        self.transparentColor = transparentColor
         self.imageData = image
         self.ready = False
 
@@ -95,7 +97,15 @@ class VcsLogoItem(object):
 
     def Paint(self, vtkSelf, context2D):
         if self.ready:
+            brush = context2D.GetBrush()
+            brushColor = [0.0, 0.0, 0.0, 0.0]
+            brush.GetColorF(brushColor)
+            print('previous brush color: {0}'.format(brushColor))
+            brush.SetColorF(self.transparentColor)
+
             context2D.DrawImage(self.xOffset, self.yOffset, self.scale, self.imageData)
+
+            brush.SetColorF(brushColor[:3])
             return True
 
         # print('ERROR: VcsLogoItem is unable to Paint(), see earlier warnings')
@@ -1535,7 +1545,9 @@ x.geometry(1200,800)
                 imgHeight = imgExtent[3] - imgExtent[2] + 1.0
 
                 item = vtk.vtkPythonItem()
-                pythonItem = VcsLogoItem(logo_input, opacity=0.8)
+                logoBgColor = [c / 255. for c in self.canvas.logo_transparentcolor]
+                pythonItem = VcsLogoItem(logo_input, opacity=0.8,
+                    transparentColor=logoBgColor)
                 item.SetPythonObject(pythonItem)
 
                 position = [0.895, 0.0]
