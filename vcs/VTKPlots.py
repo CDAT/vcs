@@ -100,7 +100,6 @@ class VcsLogoItem(object):
             brush = context2D.GetBrush()
             brushColor = [0.0, 0.0, 0.0, 0.0]
             brush.GetColorF(brushColor)
-            print('previous brush color: {0}'.format(brushColor))
             brush.SetColorF(self.transparentColor)
 
             context2D.DrawImage(self.xOffset, self.yOffset, self.scale, self.imageData)
