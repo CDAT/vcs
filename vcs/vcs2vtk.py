@@ -347,6 +347,7 @@ def setInfToValid(geoPoints, ghost):
         if (not math.isinf(point[0]) and not math.isinf(point[1])):
             validPoint[0] = point[0]
             validPoint[1] = point[1]
+            print('This will be our valid point replacement: {0}'.format(validPoint))
             break
     for i in range(geoPoints.GetNumberOfPoints()):
         point = geoPoints.GetPoint(i)
@@ -359,6 +360,10 @@ def setInfToValid(geoPoints, ghost):
                 newPoint[1] = validPoint[1]
             geoPoints.SetPoint(i, newPoint)
             ghost.SetValue(i, vtk.vtkDataSetAttributes.HIDDENPOINT)
+    msg = 'did not find any'
+    if anyInfinity == True:
+        msg = 'found some'
+    print('Finished checking for infs, we {0}'.format(msg))
     return anyInfinity
 
 
@@ -1084,6 +1089,10 @@ def doWrapData(data, wc, wrap=[0., 360], fastClip=True):
     if wrap is None:
         return data
 
+    print('Doing actual wrapping')
+    print('  wc = {0}'.format(wc))
+    print('  wrap = {0}'.format(wrap))
+
     # convert to poly data
     surface = vtk.vtkDataSetSurfaceFilter()
     surface.SetInputData(data)
@@ -1187,6 +1196,7 @@ def doWrapData(data, wc, wrap=[0., 360], fastClip=True):
         pointAttributes = result.GetPointData()
         pointAttributes.GetArray(vectorsName, index)
         pointAttributes.SetActiveAttribute(index, vtk.vtkDataSetAttributes.VECTORS)
+    print('  bounds after wrap = {0}'.format(result.GetBounds()))
     return result
 
 
@@ -2023,13 +2033,41 @@ def getProjectedBoundsForWorldCoords(wc, proj, subdiv=50):
     for idx in range(len(xs)):
         pts.InsertNextPoint(xs[idx], ys[idx], 0.0)
 
-    geoTransform, pts = project(pts, proj, wc)
+    geoTransform, xformPts = project(pts, proj, wc)
 
-    return pts.GetBounds()
+    # def printPoints(vtkPoints):
+    #     ptStr = ''
+    #     for ptIdx in range(vtkPoints.GetNumberOfPoints()):
+    #         point = vtkPoints.GetPoint(ptIdx)
+    #         ptStr = '{0}, {1}'.format(point, ptStr)
+    #     print(ptStr)
+
+    # print('Subdivided points')
+    # printPoints(pts)
+    # print('Transformed subdivided points')
+    # printPoints(xformPts)
+
+    return xformPts.GetBounds()
 
 
 def prepLine(plotsContext, line, geoBounds=None, cmap=None):
-    projBounds = getProjectedBoundsForWorldCoords(line.worldcoordinate, line.projection)
+    numDivisions = 50
+    if vcs.elements["projection"][line.projection].type == "aeqd":
+        numDivisions = 100
+
+    # print('Inside prepLine, about to get projected bounds for world coordinates')
+
+    projBounds = getProjectedBoundsForWorldCoords(
+        line.worldcoordinate, line.projection, subdiv=numDivisions)
+
+    # print('prepping a line')
+    # print('  projection type = {0}'.format(vcs.elements["projection"][line.projection].type))
+    # print('  wc = {0}'.format(line.worldcoordinate))
+    # print('  projected bounds = {0}'.format(projBounds))
+    # print('  vp = {0}'.format(line.viewport))
+    # print('  coords')
+    # print('    x = {0}'.format(line.x))
+    # print('    y = {0}'.format(line.y))
 
     number_lines = prepPrimitive(line)
     if number_lines == 0:

@@ -111,6 +111,79 @@ class VcsLogoItem(object):
         return False
 
 
+class PopupInfoItem(object):
+    def __init__(self, bgColor, fgColor, vp, text):
+        self.bgColor = bgColor
+        self.fgColor = fgColor
+        self.vp = vp
+        self.text = text
+        self.bgRectDims = None
+
+    def Initialize(self, vtkSelf):
+        return True
+
+    def Paint(self, vtkSelf, context2D):
+        # Compute the size of the rectangle behind the text
+        if not self.bgRectDims:
+            stringBounds = [0, 0, 0, 0]
+            context2D.ComputeStringBounds(self.text, stringBounds)
+            self.bgRectDims = stringBounds[2:]
+
+        rw, rh = self.bgRectDims
+
+        # Save the previous brush color
+        brush = context2D.GetBrush()
+        prevBrushColor = [0.0, 0.0, 0.0, 0.0]
+        prevBrushOpacity = brush.GetOpacityF()
+        brush.GetColorF(prevBrushColor)
+
+        # Save the previous pen color
+        pen = context2D.GetPen()
+        prevPenColor = [0.0, 0.0, 0.0]
+        pen.GetColorF(prevPenColor)
+
+        # Apply the quad color
+        brush.SetColorF(*self.fgColor)
+        brush.SetOpacityF(1.0)
+        pen.SetColorF(*self.fgColor)
+
+        x, y = self.vp[:2]
+
+        # Compute the quad vertices
+        xmin = x
+        xmax = x + rw
+        ymin = y
+        ymax = y + rh
+
+        context2D.DrawQuad(xmin, ymin,
+                           xmin, ymax,
+                           xmax, ymax,
+                           xmax, ymin)
+
+        pen.SetColorF(0.0, 0.0, 0.0)
+
+        textProp = context2D.GetTextProp()
+        prevJustification = textProp.GetJustification()
+        prevTextColor = textProp.GetColor()
+        textProp.SetColor(0, 0, 0)
+        textProp.SetJustificationToLeft()
+        context2D.ApplyTextProp(textProp)
+
+        hh = rh * 0.5
+        context2D.DrawString(x, y + hh, self.text)
+
+        textProp.SetColor(prevTextColor)
+        textProp.SetJustification(prevJustification)
+        context2D.ApplyTextProp(textProp)
+
+        # Restore pen/brush state
+        pen.SetColorF(prevPenColor)
+        brush.SetColorF(prevBrushColor[:3])
+        brush.SetOpacityF(prevBrushOpacity)
+
+        return True
+
+
 class VCSInteractorStyle(vtk.vtkInteractorStyleUser):
 
     def __init__(self, parent):
@@ -176,6 +249,8 @@ class VTKVCSBackend(object):
         # Initially set to 16x Multi-Sampled Anti-Aliasing
         self.antialiasing = 8
 
+        self.popupInfoContextArea = None
+
         if renWin is not None:
             self.renWin = renWin
             if renWin.GetInteractor() is None and self.bg is False:
@@ -224,6 +299,7 @@ class VTKVCSBackend(object):
                 self.renWin.Render()
 
     def renderEvent(self, caller, evt):
+        # print('renderEvent')
         renwin = self.renWin if (caller is None) else caller
         window_size = renwin.GetSize()
         if (window_size != self.renderWindowSize):
@@ -231,141 +307,142 @@ class VTKVCSBackend(object):
             self.renderWindowSize = window_size
 
     def leftButtonPressEvent(self, obj, event):
-        xy = self.renWin.GetInteractor().GetEventPosition()
-        sz = self.renWin.GetSize()
-        x = float(xy[0]) / sz[0]
-        y = float(xy[1]) / sz[1]
-        st = ""
+        print('leftButtonPressEvent')
+        pipelineItems = None
+        backendGrid = None
+        targetDisplay = None
+        st = ''
+
         for dnm in self.canvas.display_names:
             d = vcs.elements["display"][dnm]
             if d.array[0] is None:
                 continue
-            # Use the hardware selector to determine the cell id we clicked on
-            selector = vtk.vtkHardwareSelector()
-            if 'surface_renderer' in d.backend:
-                surfaceRenderer = d.backend['surface_renderer']
             else:
-                print('No "surface_renderer" in display backend')
+                targetDisplay = d
+                dataset = d.backend['vtk_backend_grid']
+                pipelineItems = d.backend['vtk_backend_actors']
+
+        if (pipelineItems is not None
+            and len(pipelineItems) > 0
+            and dataset is not None):
+            # Just the first vtkContextItem within the backend context area
+            # should have the transformation information required to map the
+            # screen coords to world coords
+            item = pipelineItems[0][0]
+
+            xy = self.renWin.GetInteractor().GetEventPosition()
+            # print('got click at [{0}, {1}]'.format(xy[0], xy[1]))
+
+            screenPos = vtk.vtkVector2f(xy[0], xy[1])
+            worldCoords = item.MapFromScene(screenPos)
+            # print('  world coords = {0}'.format(worldCoords))
+
+            cellLocator = vtk.vtkCellLocator()
+            cellLocator.SetDataSet(dataset)
+            cellLocator.BuildLocator()
+
+            testPoint = [worldCoords[0], worldCoords[1], 0.0]
+            closestPoint = [0, 0, 0]
+            distance = vtk.mutable(-1)
+            cellId = vtk.mutable(-1)
+            subId = vtk.mutable(-1)
+            cellLocator.FindClosestPoint(testPoint, closestPoint, cellId, subId, distance)
+
+            # print('Found something:')
+            # print('  cellId = {0}'.format(cellId))
+            # print('  closest point = {0}'.format(closestPoint))
+            # print('  subId = {0}'.format(subId))
+            # print('  distance = {0}'.format(distance))
+
+            globalIds = dataset.GetCellData().GetGlobalIds()
+            if globalIds:
+                # print('yes, we have globalIds')
+                globalId = [0]
+                globalIds.GetTypedTuple(cellId, globalId)
+                globalId = globalId[0]
+            else:
+                print('ERROR: no globalIds, cannot handle left button press')
                 return
-            dataset = d.backend['vtk_backend_grid']
-            if (surfaceRenderer and dataset):
-                selector.SetRenderer(surfaceRenderer)
-                selector.SetArea(xy[0], xy[1], xy[0], xy[1])
-                selector.SetFieldAssociation(
-                    vtk.vtkDataObject.FIELD_ASSOCIATION_CELLS)
-                # We only want to render the surface for selection
-                renderers = self.renWin.GetRenderers()
-                renderers.InitTraversal()
-                while(True):
-                    renderer = renderers.GetNextItem()
-                    if (renderer is None):
-                        break
-                    renderer.SetDraw(False)
-                surfaceRenderer.SetDraw(True)
 
-                selection = selector.Select()
-                renderers.InitTraversal()
-                while(True):
-                    renderer = renderers.GetNextItem()
-                    if (renderer is None):
-                        break
-                    renderer.SetDraw(True)
-                surfaceRenderer.SetDraw(False)
-                if (selection.GetNumberOfNodes() > 0):
-                    selectionNode = selection.GetNode(0)
-                    prop = selectionNode.GetProperties().Get(selectionNode.PROP())
-                    if (prop):
-                        cellIds = prop.GetMapper().GetInput().GetCellData().GetGlobalIds()
-                        if (cellIds):
-                            st += "Var: %s\n" % d.array[0].id
-                            # cell attribute
-                            a = selectionNode.GetSelectionData().GetArray(0)
-                            geometryId = a.GetValue(0)
-                            cellId = cellIds.GetValue(geometryId)
-                            attributes = dataset.GetCellData().GetScalars()
-                            if (attributes is None):
-                                attributes = dataset.GetCellData().GetVectors()
-                            elementId = cellId
+            st += "Var: %s\n" % targetDisplay.array[0].id
 
-                            geoTransform = d.backend['vtk_backend_geo']
-                            if (geoTransform):
-                                geoTransform.Inverse()
-                            # Use the world picker to get world coordinates
-                            # we deform the dataset, so we need to fix the
-                            # world picker using xScale, yScale
-                            xScale, yScale = d.backend['surface_scale']
-                            worldPicker = vtk.vtkWorldPointPicker()
-                            worldPicker.Pick(xy[0], xy[1], 0, surfaceRenderer)
-                            worldPosition = list(worldPicker.GetPickPosition())
-                            lonLat = worldPosition
-                            if (attributes is None):
-                                # if point dataset, return the value for the
-                                # closest point
-                                cell = dataset.GetCell(cellId)
-                                closestPoint = [0, 0, 0]
-                                subId = vtk.mutable(0)
-                                pcoords = [0, 0, 0]
-                                dist2 = vtk.mutable(0)
-                                weights = [0] * cell.GetNumberOfPoints()
-                                cell.EvaluatePosition(worldPosition, closestPoint,
-                                                      subId, pcoords, dist2, weights)
-                                indexMax = numpy.argmax(weights)
-                                pointId = cell.GetPointId(indexMax)
-                                attributes = dataset.GetPointData().GetScalars()
-                                if (attributes is None):
-                                    attributes = dataset.GetPointData().GetVectors()
-                                elementId = pointId
-                            if (geoTransform):
-                                geoTransform.InternalTransformPoint(
-                                    worldPosition, lonLat)
-                                geoTransform.Inverse()
-                            if (float("inf") not in lonLat):
-                                st += "X=%4.1f\nY=%4.1f\n" % (
-                                    lonLat[0], lonLat[1])
-                            # get the cell value or the closest point value
-                            if (attributes):
-                                if (attributes.GetNumberOfComponents() > 1):
-                                    v = attributes.GetTuple(elementId)
-                                    st += "Value: (%g, %g)" % (v[0], v[1])
-                                else:
-                                    value = attributes.GetValue(elementId)
-                                    st += "Value: %g" % value
+            attributes = dataset.GetCellData().GetScalars()
+            if (attributes is None):
+                attributes = dataset.GetCellData().GetVectors()
+            elementId = globalId
+
+            geoTransform = targetDisplay.backend['vtk_backend_geo']
+            if (geoTransform):
+                geoTransform.Inverse()
+
+            worldCoords = [worldCoords[0], worldCoords[1], 0.0]
+            lonLat = worldCoords
+            if (attributes is None):
+                # if point dataset, return the value for the
+                # closest point
+                cell = dataset.GetCell(globalId)
+                closestPoint = [0, 0, 0]
+                subId = vtk.mutable(0)
+                pcoords = [0, 0, 0]
+                dist2 = vtk.mutable(0)
+                weights = [0] * cell.GetNumberOfPoints()
+                cell.EvaluatePosition(worldCoords, closestPoint,
+                                      subId, pcoords, dist2, weights)
+                indexMax = numpy.argmax(weights)
+                pointId = cell.GetPointId(indexMax)
+                attributes = dataset.GetPointData().GetScalars()
+                if (attributes is None):
+                    attributes = dataset.GetPointData().GetVectors()
+                elementId = pointId
+            if (geoTransform):
+                geoTransform.InternalTransformPoint(
+                    worldCoords, lonLat)
+                geoTransform.Inverse()
+            if (float("inf") not in lonLat):
+                st += "X=%4.1f\nY=%4.1f\n" % (
+                    lonLat[0], lonLat[1])
+            # get the cell value or the closest point value
+            if (attributes):
+                if (attributes.GetNumberOfComponents() > 1):
+                    v = attributes.GetTuple(elementId)
+                    st += "Value: (%g, %g)" % (v[0], v[1])
+                else:
+                    value = attributes.GetValue(elementId)
+                    st += "Value: %g" % value
+
+            #print('st = {0}'.format(st))
 
         if st == "":
             return
-        ren = vtk.vtkRenderer()
-        ren.SetBackground(.96, .96, .86)
-        ren.SetViewport(x, y, min(x + .2, 1.), min(y + .2, 1))
-        ren.SetLayer(self.renWin.GetNumberOfLayers() - 1)
-        self.renWin.AddRenderer(ren)
-        a = vtk.vtkTextActor()
-        a.SetInput(st)
-        p = a.GetProperty()
-        p.SetColor(0, 0, 0)
-        bb = [0, 0, 0, 0]
-        a.GetBoundingBox(ren, bb)
-        ps = vtk.vtkPlaneSource()
-        ps.SetCenter(bb[0], bb[2], 0.)
-        ps.SetPoint1(bb[1], bb[2], 0.)
-        ps.SetPoint2(bb[0], bb[3], 0.)
-        ps.Update()
-        m2d = vtk.vtkPolyDataMapper2D()
-        m2d.SetInputConnection(ps.GetOutputPort())
-        a2d = vtk.vtkActor2D()
-        a2d.SetMapper(m2d)
-        a2d.GetProperty().SetColor(.93, .91, .67)
-        ren.AddActor(a2d)
-        ren.AddActor(a)
-        ren.ResetCamera()
-        self.clickRenderer = ren
-        self.renWin.Render()
+
+        if not self.popupInfoContextArea:
+            # print('Building the popup stuff')
+            self.popupInfoContextArea = vtk.vtkContextArea()
+            self.contextView.GetScene().AddItem(self.popupInfoContextArea)
+
+            [renWinWidth, renWinHeight] = self.renWin.GetSize()
+            screenGeom = vtk.vtkRecti(0, 0, renWinWidth, renWinHeight)
+            drawAreaBounds = vtk.vtkRectd(0.0, 0.0, float(renWinWidth), float(renWinHeight))
+            vcs2vtk.configureContextArea(self.popupInfoContextArea, drawAreaBounds, screenGeom)
+
+            popupPythonItem = PopupInfoItem(bgColor=[.96, .96, .86],
+                                            fgColor=[.93, .91, .67],
+                                            vp=[xy[0], xy[1], min(xy[0] + .2, 1.), min(xy[1] + .2, 1)],
+                                            text=st)
+            popupItem = vtk.vtkPythonItem()
+            popupItem.SetPythonObject(popupPythonItem)
+            self.popupInfoContextArea.GetDrawAreaItem().AddItem(popupItem)
+
+            self.renWin.Render()
 
     def leftButtonReleaseEvent(self, obj, event):
-        if self.clickRenderer is not None:
-            self.clickRenderer.RemoveAllViewProps()
-            self.renWin.RemoveRenderer(self.clickRenderer)
+        if self.popupInfoContextArea:
+            # print('Cleaning up the popup stuff')
+            self.popupInfoContextArea.ClearItems()
+            self.contextView.GetScene().RemoveItem(self.popupInfoContextArea)
+            self.popupInfoContextArea = None
+
             self.renWin.Render()
-            self.clickRenderer = None
 
     def configureEvent(self, obj, ev):
         if not self.renWin:
@@ -492,6 +569,12 @@ class VTKVCSBackend(object):
         self.hideGUI()
 
         if self.contextView:
+            if self.popupInfoContextArea:
+                # print('Cleaning up the popup stuff')
+                self.popupInfoContextArea.ClearItems()
+                self.contextView.GetScene().RemoveItem(self.popupInfoContextArea)
+                self.popupInfoContextArea = None
+
             self.contextView.GetScene().ClearItems()
             r, g, b = [c / 255. for c in self.canvas.backgroundcolor]
             self.contextView.GetRenderer().SetBackground(r, g, b)
@@ -507,7 +590,8 @@ class VTKVCSBackend(object):
         self._renderers = {}
 
     def createDefaultInteractor(self, ren=None):
-        defaultInteractor = self.renWin.GetInteractor()
+        # defaultInteractor = self.renWin.GetInteractor()
+        defaultInteractor = self.contextView.GetInteractor()
         if defaultInteractor is None:
             if self.bg:
                 # this is only used to pass event to vtk objects
@@ -874,6 +958,7 @@ class VTKVCSBackend(object):
         if not kargs.get("donotstoredisplay", False) and kargs.get(
                 "render", True):
             self.renWin.Render()
+
         return returned
 
     def setLayer(self, renderer, priority):
