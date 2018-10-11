@@ -658,12 +658,15 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
             vg = wrapDataSetX(vg)
             pts = vg.GetPoints()
             xm, xM, ym, yM, tmp, tmp2 = vg.GetPoints().GetBounds()
+            print('did wrapDataSetX, [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
         vg = doWrapData(vg, wc, wrap)
         pts = vg.GetPoints()
         xm, xM, ym, yM, tmp, tmp2 = vg.GetPoints().GetBounds()
+        print('did doWrapData, [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
         projection = vcs.elements["projection"][gm.projection]
         vg.SetPoints(pts)
         wrb = getWrappedBounds(wc, [xm, xM, ym, yM], wrap)
+        print('wrapped bounds = [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
         geo, geopts = project(pts, projection, wrb)
         # proj4 returns inf for points that are not visible. Set those to a valid point
         # and hide them.
@@ -684,6 +687,7 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
                         ym = p[1]
                     if (p[1] > yM):
                         yM = p[1]
+            print('bounds after removing infs = [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
             # hidden point don't work for polys or unstructured grids.
             # We remove the cells in this case.
             if (vg.GetExtentType() == vtk.VTK_PIECES_EXTENT):
