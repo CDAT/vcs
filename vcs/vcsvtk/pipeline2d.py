@@ -311,10 +311,11 @@ class Pipeline2D(IPipeline2D):
 
         # Create the polydata filter:
         self._vtkDataSetBoundsNoMask = self._vtkDataSet.GetBounds()
-        self._createPolyDataFilter()
 
         # Generate a mapper to render masked data:
         self._createMaskedDataMapper()
+
+        self._createPolyDataFilter()
 
         if (kargs.get('ratio', '0') == 'autot' and
                 # atot is implemented for linear plots at vcs level
@@ -374,12 +375,6 @@ class Pipeline2D(IPipeline2D):
             self._vtkPolyDataFilter.SetInputConnection(p2c.GetOutputPort())
         self._vtkPolyDataFilter.Update()
         self._resultDict["vtk_backend_filter"] = self._vtkPolyDataFilter
-        # create an actor and a renderer for the surface mesh.
-        # this is used for displaying point information using the hardware selection
-        mapper = vtk.vtkPolyDataMapper()
-        mapper.SetInputConnection(self._vtkPolyDataFilter.GetOutputPort())
-        act = vtk.vtkActor()
-        act.SetMapper(mapper)
         vp = self._resultDict.get(
             'ratio_autot_viewport',
             [self._template.data.x1, self._template.data.x2,
@@ -392,8 +387,8 @@ class Pipeline2D(IPipeline2D):
             geoBounds=self._vtkDataSetBoundsNoMask,
             geo=self._vtkGeoTransform)
 
-        act.GetMapper().Update()
-        self._vtkDataSetFittedToViewport = act.GetMapper().GetInput()
+        self._vtkPolyDataFilter.Update()
+        self._vtkDataSetFittedToViewport = self._vtkPolyDataFilter.GetOutput()
         self._vtkDataSetBoundsNoMask = self._vtkDataSetFittedToViewport.GetBounds()
 
         self._context_xScale = xScale
@@ -424,7 +419,8 @@ class Pipeline2D(IPipeline2D):
             color = self.getColorIndexOrRGBA(_colorMap, color)
 
         self._maskedDataMapper = vcs2vtk.putMaskOnVTKGrid(
-            self._data1, self._vtkDataSetFittedToViewport, color, self._hasCellData,
+            # self._data1, self._vtkDataSetFittedToViewport, color, self._hasCellData,
+            self._data1, self._vtkDataSet, color, self._hasCellData,
             deep=False)
 
         self._resultDict["vtk_backend_missing_mapper"] = (
