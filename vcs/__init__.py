@@ -220,7 +220,7 @@ for nm, fnt in [
 ]:
     pth = os.path.join(
         vcs_egg_path,
-        "vcs",
+        "fonts",
         fnt)
     if os.path.exists(pth):
         vcs.elements["font"][nm] = pth
