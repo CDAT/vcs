@@ -39,7 +39,7 @@ aliases:
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
        source activate $PY_VER
-       python setup.py install --old-and-unmanageable
+       python setup.py install
 
   - &run_vcs_tests
     name: run_vcs_tests

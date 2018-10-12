@@ -769,9 +769,7 @@ class Configurator(object):
             self.interactor,
             states=states,
             image=os.path.join(
-                sys.prefix,
-                "share",
-                "vcs",
+                vcs.vcs_egg_path,
                 "text_icon.png"),
             top=10,
             left=10,
@@ -783,9 +781,7 @@ class Configurator(object):
             self.interactor,
             states=states,
             image=os.path.join(
-                sys.prefix,
-                "share",
-                "vcs",
+                vcs.vcs_egg_path,
                 "marker_icon.png"),
             top=10,
             left=63,

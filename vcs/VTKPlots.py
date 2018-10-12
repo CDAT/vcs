@@ -1413,9 +1413,7 @@ x.geometry(1200,800)
         if self.canvas.drawLogo:
             if self.logoRepresentation is None:
                 defaultLogoFile = os.path.join(
-                    sys.prefix,
-                    "share",
-                    "vcs",
+                    vcs.vcs_egg_path,
                     "cdat.png")
                 reader = vtk.vtkPNGReader()
                 reader.SetFileName(defaultLogoFile)

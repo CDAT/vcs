@@ -128,7 +128,7 @@ class Logo(vcs.bestMatch):
             >>> import os, sys
             >>> x=vcs.init()
             >>> x.open()
-            >>> path=os.path.join(sys.prefix,"share","vcs","uvcdat.png")
+            >>> path=os.path.join(vcs.vcs_egg_path,"cdat.png")
             >>> logo1=vcs.utils.Logo(path)
             >>> logo1.x=.7
             >>> logo1.y=.8
@@ -2562,9 +2562,7 @@ def download_sample_data_files(path=None):
     import sys
     cdat_info.download_sample_data_files(
         os.path.join(
-            sys.prefix,
-            "share",
-            "vcs",
+            vcs.vcs_egg_path,
             "sample_files.txt"),
         path)
 
