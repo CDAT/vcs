@@ -17,6 +17,7 @@ import numpy
 import cdtime
 import warnings
 import vcs
+import json
 from . import boxfill
 from . import isofill
 from . import isoline
@@ -2533,7 +2534,7 @@ def png_read_metadata(path):
     numberOfTextChunks = reader.GetNumberOfTextChunks()
     m = {}
     for i in range(0, numberOfTextChunks):
-        m[reader.GetTextKey(i)] = reader.GetTextValue(i)
+        m[reader.GetTextKey(i)] = json.loads(reader.GetTextValue(i))
     return m
 
 

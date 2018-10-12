@@ -20,6 +20,8 @@ import warnings
 import numpy.ma
 import MV2
 import numpy
+import cdat_info
+import json
 from .queries import *  # noqa
 from . import boxfill
 from . import isofill
@@ -4837,7 +4839,7 @@ class Canvas(vcs.bestMatch):
             **kargs)
 
     def png(self, file, width=None, height=None,
-            units=None, draw_white_background=True, **args):
+            units=None, draw_white_background=True, provenance=False, **args):
         """PNG output, dimensions set via setbgoutputdimensions
 
         :Example:
@@ -4870,6 +4872,14 @@ class Canvas(vcs.bestMatch):
 
         W, H = self._compute_width_height(
             width, height, units, background=True)
+        if provenance:
+            prov = cdat_info.generateProvenance(history=True)
+            metadata = args.get("metadata",{})
+            provenance_in = metadata.get("provenance", None)
+            if provenance_in is not None:
+                prov["user_provenance"] = provenance_in
+            metadata["provenance"] = prov
+            args["metadata"] = metadata
         return self.backend.png(
             file, W, H, units, draw_white_background, **args)
     png.__doc__ = png.__doc__ % (xmldocs.output_file,

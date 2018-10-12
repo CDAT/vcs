@@ -10,6 +10,7 @@ import sys
 import cdms2
 import cdtime
 import inspect
+import json
 from . import VTKAnimate
 from . import vcsvtk
 
@@ -1298,7 +1299,7 @@ x.geometry(1200,800)
         # add text chunks to the writer
         m = args.get('metadata', {})
         for k, v in m.items():
-            writer.AddText(k, v)
+            writer.AddText(k, json.dumps(v))
         writer.Write()
         if user_dims is not None:
             self.canvas.width, self.canvas.height = user_dims
