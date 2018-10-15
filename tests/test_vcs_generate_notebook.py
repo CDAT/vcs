@@ -28,3 +28,32 @@ class NBTest(unittest.TestCase):
         self.checkNB("tests/test_vcs_generate_simple_plot.ipynb", "test_vcs_generate_simple_plot.ipynb")
         os.remove("test_vcs_generate_simple_plot.ipynb")
         os.remove("test_vcs_generate_simple_plot.png")
+
+    def testProvenanceFailIfNotDict(self):
+        x = vcs.init(bg=True)
+        x.plot([1., 2., 3.])
+        with self.assertRaises(RuntimeError):
+            x.png("test", provenance="NOT A DICT")
+
+    def testInsertProvenanceAsDict(self):
+        prov = {"myprov":4}
+        x=vcs.init()
+        x.plot([1,2,3])
+        x.png("test_insert_prov_from_dict", provenance=prov)
+        metadata = vcs.png_read_metadata("test_insert_prov_from_dict.png")
+        self.assertTrue("provenance" in metadata)
+        self.assertEqual(metadata["provenance"], prov)
+        os.remove("test_insert_prov_from_dict.png")
+
+
+    def testPreserveExistingProvenance(self):
+        prov = {"myprov":4}
+        metadata = {"provenance":prov}
+        x=vcs.init()
+        x.plot([1,2,3])
+        x.png("test_preserve_prov", metadata=metadata, provenance=True)
+        metadata_out = vcs.png_read_metadata("test_preserve_prov.png")
+        print(metadata_out["provenance"].keys())
+        self.assertTrue("user_provenance" in metadata_out["provenance"])
+        self.assertEqual(metadata_out["provenance"]["user_provenance"], prov)
+        os.remove("test_preserve_prov.png")

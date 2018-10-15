@@ -4872,14 +4872,17 @@ class Canvas(vcs.bestMatch):
 
         W, H = self._compute_width_height(
             width, height, units, background=True)
-        if provenance:
-            prov = cdat_info.generateProvenance(history=True)
+        if provenance is True:
+            provenance = cdat_info.generateProvenance(history=True)
+        if isinstance(provenance, dict):
             metadata = args.get("metadata",{})
             provenance_in = metadata.get("provenance", None)
             if provenance_in is not None:
-                prov["user_provenance"] = provenance_in
-            metadata["provenance"] = prov
+                provenance["user_provenance"] = provenance_in
+            metadata["provenance"] = provenance
             args["metadata"] = metadata
+        elif provenance is not False:
+            raise RuntimeError("provenance to vcs png must be boolean or dict, you passed: {}".format(provenance))
         return self.backend.png(
             file, W, H, units, draw_white_background, **args)
     png.__doc__ = png.__doc__ % (xmldocs.output_file,
