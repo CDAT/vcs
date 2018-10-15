@@ -201,7 +201,7 @@ class Logo(vcs.bestMatch):
                 >>> import os, sys
                 >>> x=vcs.init()
                 >>> x.open()
-                >>> path=os.path.join(sys.prefix,"share/vcs/uvcdat.png")
+                >>> path=os.path.join(vcs.vcs_egg_path, "uvcdat.png")
                 >>> logo1 = vcs.utils.Logo(path)
                 >>> logo1.x=.7
                 >>> logo1.y=.8
