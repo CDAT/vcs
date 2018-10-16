@@ -17,6 +17,7 @@ import numpy
 import cdtime
 import warnings
 import vcs
+import json
 from . import boxfill
 from . import isofill
 from . import isoline
