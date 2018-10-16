@@ -81,7 +81,7 @@ aliases:
        export PKG_NAME=vcs
        export USER=cdat
        export VERSION=8.0
-       export LABEL=main
+       export LABEL=nightly
        python ./prep_for_build.py -l $VERSION
        if [[ $PY_VER = 'py2' ]]; then
           conda build $PKG_NAME $CHANNELS --python=2.7

@@ -31,7 +31,6 @@ from . import unified1D
 from . import vector
 from . import marker
 from . import colormap
-import json
 import os
 import tempfile
 import cdms2
