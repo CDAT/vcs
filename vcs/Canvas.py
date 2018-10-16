@@ -21,7 +21,6 @@ import numpy.ma
 import MV2
 import numpy
 import cdat_info
-import json
 from .queries import *  # noqa
 from . import boxfill
 from . import isofill
