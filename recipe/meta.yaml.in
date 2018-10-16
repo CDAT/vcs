@@ -27,7 +27,10 @@ requirements:
 
 about:
     home:  http://github.com/cdat/vcs
-    summary: VCS Allows scientists to produce highly customized plots. Everything can be precisely and logically controlled.
+    summary: VCS Allows scientists to produce highly customized plots. Everything can be precisely and logically controlled. VCS is specialized toward Earth-science plots.
+    license: BSD
+    license_file: bsd-3-clause.txt
+
 
 
 
