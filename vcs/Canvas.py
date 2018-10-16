@@ -4875,7 +4875,7 @@ class Canvas(vcs.bestMatch):
         if provenance is True:
             provenance = cdat_info.generateProvenance(history=True)
         if isinstance(provenance, dict):
-            metadata = args.get("metadata",{})
+            metadata = args.get("metadata", {})
             provenance_in = metadata.get("provenance", None)
             if provenance_in is not None:
                 provenance["user_provenance"] = provenance_in

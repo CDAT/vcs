@@ -3,7 +3,6 @@ import datetime
 from . import editors
 from . import vtk_ui
 import os
-import sys
 import vtk
 from .vcs2vtk import vtkIterate
 import copy

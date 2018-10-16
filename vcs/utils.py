@@ -2559,7 +2559,6 @@ def download_sample_data_files(path=None):
     if path is None:
         path = vcs.sample_data
     import cdat_info
-    import sys
     cdat_info.download_sample_data_files(
         os.path.join(
             vcs.vcs_egg_path,
