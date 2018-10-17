@@ -93,7 +93,8 @@ class VectorPipeline(Pipeline2D):
 
         # The unscaled continent bounds were fine in the presence of axis
         # conversion, so save them here
-        adjusted_plotting_bounds = vcs2vtk.getProjectedBoundsForWorldCoords(plotting_dataset_bounds, self._gm.projection)
+        adjusted_plotting_bounds = vcs2vtk.getProjectedBoundsForWorldCoords(
+            plotting_dataset_bounds, self._gm.projection)
         continentBounds = vcs2vtk.computeDrawAreaBounds(adjusted_plotting_bounds)
 
         # Transform the input data
@@ -106,14 +107,17 @@ class VectorPipeline(Pipeline2D):
 
         # view and interactive area
         view = self._context().contextView
-        dataset_renderer = view.GetRenderer()
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
-        drawAreaBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask, self._context_flipX, self._context_flipY)
+        drawAreaBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask,
+                                                       self._context_flipX, self._context_flipY)
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
-        geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
+                            int(vp[2] * renWinHeight),
+                            int((vp[1] - vp[0]) * renWinWidth),
+                            int((vp[3] - vp[2]) * renWinHeight))
 
         vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
 
@@ -190,7 +194,7 @@ class VectorPipeline(Pipeline2D):
         else:
             r, g, b, a = cmap.index[lcolor]
         # act.GetProperty().SetColor(r / 100., g / 100., b / 100.)
-        vtk_color = [ int((c / 100.) * 255) for c in [r, g, b, a] ]
+        vtk_color = [int((c / 100.) * 255) for c in [r, g, b, a]]
 
         # Using the scaled data, set the glyph filter input
         glyphFilter.SetScaleFactor(scaleFactor)

@@ -131,22 +131,25 @@ class IsolinePipeline(Pipeline2D):
 
         # view and interactive area
         view = self._context().contextView
-        dataset_renderer = view.GetRenderer()
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
-        adjusted_plotting_bounds = vcs2vtk.getProjectedBoundsForWorldCoords(plotting_dataset_bounds, self._gm.projection)
+        adjusted_plotting_bounds = vcs2vtk.getProjectedBoundsForWorldCoords(
+            plotting_dataset_bounds, self._gm.projection)
         drawAreaBounds = vcs2vtk.computeDrawAreaBounds(adjusted_plotting_bounds)
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
-        geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
+                            int(vp[2] * renWinHeight),
+                            int((vp[1] - vp[0]) * renWinWidth),
+                            int((vp[3] - vp[2]) * renWinHeight))
 
         vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
 
         # This render call is needed to work around a bug somewhere in the
         # vtkContextTransform code, where the transformation represented by
         # Map[To|From]Scene() isn't set up properly until after a render call.
-        self._context().renWin.Render();
+        self._context().renWin.Render()
 
         for i, l in enumerate(tmpLevels):
             numLevels = len(l)
@@ -290,7 +293,6 @@ class IsolinePipeline(Pipeline2D):
             floatValue.SetName("LineWidth")
             floatValue.InsertNextValue(tmpLineWidths[i])
             poly.GetFieldData().AddArray(floatValue)
-
 
             item.SetPolyData(poly)
             item.SetScalarMode(scalarMode)

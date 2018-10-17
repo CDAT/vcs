@@ -53,7 +53,8 @@ class StreamlinePipeline(Pipeline2D):
 
         # The unscaled continent bounds were fine in the presence of axis
         # conversion, so save them here
-        continentBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask, self._context_flipX, self._context_flipY)
+        continentBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask,
+                                                        self._context_flipX, self._context_flipY)
 
         # Only scaling the data in the presence of axis conversion changes
         # the seed points in any other cases, and thus results in plots
@@ -77,14 +78,17 @@ class StreamlinePipeline(Pipeline2D):
 
         # view and interactive area
         view = self._context().contextView
-        dataset_renderer = view.GetRenderer()
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
-        drawAreaBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask, self._context_flipX, self._context_flipY)
+        drawAreaBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask,
+                                                       self._context_flipX, self._context_flipY)
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
-        geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
+                            int(vp[2] * renWinHeight),
+                            int((vp[1] - vp[0]) * renWinWidth),
+                            int((vp[3] - vp[2]) * renWinHeight))
 
         vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
 

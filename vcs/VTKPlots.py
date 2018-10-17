@@ -54,7 +54,7 @@ class ImageDataWrapperItem(object):
 
 class VcsLogoItem(object):
     def __init__(self, image, opacity=1.0, scale=1.0, offset=[0.0, 0.0],
-        transparentColor=[1.0, 1.0, 1.0]):
+                 transparentColor=[1.0, 1.0, 1.0]):
         self.scale = scale
         self.opacity = opacity
         self.xOffset = offset[0]
@@ -91,7 +91,7 @@ class VcsLogoItem(object):
             return False
 
         as_numpy = VN.vtk_to_numpy(scalars)
-        as_numpy[:,3] = as_numpy[:,3] * self.opacity
+        as_numpy[:, 3] = as_numpy[:, 3] * self.opacity
 
         return True
 
@@ -309,7 +309,7 @@ class VTKVCSBackend(object):
     def leftButtonPressEvent(self, obj, event):
         print('leftButtonPressEvent')
         pipelineItems = None
-        backendGrid = None
+        dataset = None
         targetDisplay = None
         st = ''
 
@@ -322,9 +322,9 @@ class VTKVCSBackend(object):
                 dataset = d.backend['vtk_backend_grid']
                 pipelineItems = d.backend['vtk_backend_actors']
 
-        if (pipelineItems is not None
-            and len(pipelineItems) > 0
-            and dataset is not None):
+        if (pipelineItems is not None and
+                len(pipelineItems) > 0 and
+                dataset is not None):
             # Just the first vtkContextItem within the backend context area
             # should have the transformation information required to map the
             # screen coords to world coords
@@ -410,7 +410,7 @@ class VTKVCSBackend(object):
                     value = attributes.GetValue(elementId)
                     st += "Value: %g" % value
 
-            #print('st = {0}'.format(st))
+            # print('st = {0}'.format(st))
 
         if st == "":
             return
@@ -867,10 +867,13 @@ class VTKVCSBackend(object):
             returned.update(self.plot3D(data1, data2, tpl, gm, ren, **kargs))
         elif gtype in ["text"]:
             if tt.priority != 0:
-                tt_key = (
-                    tt.priority, tuple(
-                        tt.viewport), tuple(
-                        tt.worldcoordinate), tt.projection)
+                # FIXME: May eventually want to use this key to store the context
+                # FIXME: area we create so that we don't have to recompute the projected
+                # FIXME: bounds.
+                # tt_key = (
+                #     tt.priority, tuple(
+                #         tt.viewport), tuple(
+                #         tt.worldcoordinate), tt.projection)
 
                 if vcs.elements["projection"][tt.projection].type != "linear":
                     plotting_bounds = kargs.get(
@@ -890,7 +893,10 @@ class VTKVCSBackend(object):
                 wc = self.canvas._worldcoordinate
 
                 [renWinWidth, renWinHeight] = self.renWin.GetSize()
-                geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+                geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
+                                    int(vp[2] * renWinHeight),
+                                    int((vp[1] - vp[0]) * renWinWidth),
+                                    int((vp[3] - vp[2]) * renWinHeight))
 
                 rect = vtk.vtkRectd(0.0, 0.0, float(renWinWidth), float(renWinHeight))
 
@@ -918,7 +924,10 @@ class VTKVCSBackend(object):
                 wc = gm.worldcoordinate
 
                 [renWinWidth, renWinHeight] = self.renWin.GetSize()
-                geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+                geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
+                                    int(vp[2] * renWinHeight),
+                                    int((vp[1] - vp[0]) * renWinWidth),
+                                    int((vp[3] - vp[2]) * renWinHeight))
 
                 xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
                     vp,
@@ -933,7 +942,7 @@ class VTKVCSBackend(object):
 
                 actors = vcs2vtk.prepMarker(gm, [geom[2], geom[3]], scale=[xScale, yScale], cmap=self.canvas.colormap)
                 returned["vtk_backend_marker_actors"] = actors
-                glyphBounds = [100000000.0, -100000000.0, 100000000.0, -100000000.0]
+
                 for g, pd, geo in actors:
                     item = vtk.vtkPolyDataItem()
                     item.SetPolyData(g)
@@ -1020,13 +1029,8 @@ class VTKVCSBackend(object):
             cpts = contData.GetPoints()
             # we use plotting coordinates for doing the projection so
             # that parameters such that central meridian are set correctly.
-            geo, gcpts = vcs2vtk.project(cpts, projection, wc)
+            _, gcpts = vcs2vtk.project(cpts, projection, wc)
             contData.SetPoints(gcpts)
-        else:
-            geo = None
-
-        vtk_dataset_bounds_no_mask = kargs.get(
-            "vtk_dataset_bounds_no_mask", None)
 
         contLine = self.canvas.getcontinentsline()
 
@@ -1052,7 +1056,10 @@ class VTKVCSBackend(object):
         view.GetScene().AddItem(area)
 
         [renWinWidth, renWinHeight] = self.renWin.GetSize()
-        geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
+                            int(vp[2] * renWinHeight),
+                            int((vp[1] - vp[0]) * renWinWidth),
+                            int((vp[3] - vp[2]) * renWinHeight))
 
         vcs2vtk.configureContextArea(area, contBounds, geom)
 
@@ -1088,7 +1095,7 @@ class VTKVCSBackend(object):
         area.GetDrawAreaItem().AddItem(item)
 
     def renderTemplate(self, tmpl, data, gm, taxis,
-                       zaxis, X=None, Y=None, draw_attributes=False, **kargs):
+                       zaxis, X=None, Y=None, **kargs):
         # view and interactive area
         view = self.contextView
 
@@ -1096,10 +1103,12 @@ class VTKVCSBackend(object):
         view.GetScene().AddItem(area)
 
         vp = self.canvas._viewport
-        wc = self.canvas._worldcoordinate
 
         [renWinWidth, renWinHeight] = self.renWin.GetSize()
-        geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
+                            int(vp[2] * renWinHeight),
+                            int((vp[1] - vp[0]) * renWinWidth),
+                            int((vp[3] - vp[2]) * renWinHeight))
 
         rect = vtk.vtkRectd(0.0, 0.0, float(renWinWidth), float(renWinHeight))
 
@@ -1107,28 +1116,14 @@ class VTKVCSBackend(object):
 
         # ok first basic template stuff, let's store the displays
         # because we need to return actors for min/max/mean
-        if draw_attributes:
-            savedVp = self.canvas._viewport
-            savedWc = self.canvas._worldcoordinate
-            self.canvas._viewport = [0, 1, 0, 1]
-            self.canvas._worldcoordinate = [0, 1, 0, 1]
-            displays = tmpl.drawAttributes(
-                self.canvas,
-                data,
-                gm,
-                bg=self.bg,
-                **kargs)
-            self.canvas._viewport = savedVp
-            self.canvas._worldcoordinate = savedWc
-        else:
-            displays = tmpl.plot(
-                self.canvas,
-                data,
-                gm,
-                bg=self.bg,
-                X=X,
-                Y=Y,
-                **kargs)
+        displays = tmpl.plot(
+            self.canvas,
+            data,
+            gm,
+            bg=self.bg,
+            X=X,
+            Y=Y,
+            **kargs)
         returned = {}
         for d in displays:
             if d is None:
@@ -1302,7 +1297,6 @@ class VTKVCSBackend(object):
         reader.Update()
         imageData = reader.GetOutput()
 
-        origin = imageData.GetOrigin()
         spc = imageData.GetSpacing()
         ext = imageData.GetExtent()
 
@@ -1328,8 +1322,6 @@ class VTKVCSBackend(object):
             raise RuntimeError(
                 "vtk put image does not understand %s for offset units" %
                 units)
-        xc = origin[0] + .5 * imageWidth
-        yc = origin[1] + .5 * imageHeight
 
         ctx2dScale = winSize[1] / heightInWorldCoord
 
@@ -1631,7 +1623,7 @@ x.geometry(1200,800)
                 item = vtk.vtkPythonItem()
                 logoBgColor = [c / 255. for c in self.canvas.logo_transparentcolor]
                 pythonItem = VcsLogoItem(logo_input, opacity=0.8,
-                    transparentColor=logoBgColor)
+                                         transparentColor=logoBgColor)
                 item.SetPythonObject(pythonItem)
 
                 position = [0.895, 0.0]
@@ -1666,7 +1658,6 @@ x.geometry(1200,800)
         Xrg = [float(wc[0]), float(wc[1])]
         Yrg = [float(wc[2]), float(wc[3])]
 
-        wc_used = (float(Xrg[0]), float(Xrg[1]), float(Yrg[0]), float(Yrg[1]))
         sc = self.renWin.GetSize()
 
         if Yrg[0] > Yrg[1]:
@@ -1783,12 +1774,10 @@ x.geometry(1200,800)
 
                         if coloring:
                             attrs = new_pd.GetPointData()
-                            numColors = new_pd.GetNumberOfPoints()
                             beItem.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
 
                             if coloring == 'cells':
                                 attrs = new_pd.GetCellData()
-                                numColors = new_pd.GetNumberOfCells()
                                 beItem.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
 
                             colorByArray = attrs.GetScalars()

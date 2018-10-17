@@ -74,6 +74,7 @@ projDict = {"polar stereographic": "stere",
 for i in range(len(projNames)):
     projDict[i] = projNames[i]
 
+
 def computeDrawAreaBounds(bounds, flipX=False, flipY=False):
     if flipX:
         lowerLeftX = bounds[1]
@@ -167,13 +168,13 @@ def applyTransformationToDataset(T, data):
 
 def generateSolidColorArray(numTuples, color):
     np_colors = numpy.empty([numTuples, 4])
-    np_colors[:,0] = color[0]
-    np_colors[:,1] = color[1]
-    np_colors[:,2] = color[2]
-    np_colors[:,3] = color[3]
+    np_colors[:, 0] = color[0]
+    np_colors[:, 1] = color[1]
+    np_colors[:, 2] = color[2]
+    np_colors[:, 3] = color[3]
     return VN.numpy_to_vtk(num_array=np_colors,
-                             deep=True,
-                             array_type=vtk.VTK_UNSIGNED_CHAR)
+                           deep=True,
+                           array_type=vtk.VTK_UNSIGNED_CHAR)
 
 
 def applyAttributesFromVCStmpl(tmpl, tmplattribute, txtobj=None):
@@ -347,7 +348,6 @@ def setInfToValid(geoPoints, ghost):
         if (not math.isinf(point[0]) and not math.isinf(point[1])):
             validPoint[0] = point[0]
             validPoint[1] = point[1]
-            print('This will be our valid point replacement: {0}'.format(validPoint))
             break
     for i in range(geoPoints.GetNumberOfPoints()):
         point = geoPoints.GetPoint(i)
@@ -360,10 +360,6 @@ def setInfToValid(geoPoints, ghost):
                 newPoint[1] = validPoint[1]
             geoPoints.SetPoint(i, newPoint)
             ghost.SetValue(i, vtk.vtkDataSetAttributes.HIDDENPOINT)
-    msg = 'did not find any'
-    if anyInfinity == True:
-        msg = 'found some'
-    print('Finished checking for infs, we {0}'.format(msg))
     return anyInfinity
 
 
@@ -1505,7 +1501,6 @@ def prepFillarea(context, renWin, farea, cmap=None):
 
     # view and interactive area
     view = context.contextView
-    ren = view.GetRenderer()
     area = vtk.vtkContextArea()
     view.GetScene().AddItem(area)
 
@@ -1513,7 +1508,10 @@ def prepFillarea(context, renWin, farea, cmap=None):
     rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
 
     [renWinWidth, renWinHeight] = renWin.GetSize()
-    geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+    geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
+                        int(vp[2] * renWinHeight),
+                        int((vp[1] - vp[0]) * renWinWidth),
+                        int((vp[3] - vp[2]) * renWinHeight))
 
     area.SetDrawAreaBounds(rect)
     area.SetGeometry(geom)
@@ -1709,10 +1707,6 @@ def prepGlyph(g, marker, screenGeom, index=0):
     t, s = marker.type[index], marker.size[index]
     gs = vtk.vtkGlyphSource2D()
     pd = None
-
-    point1 = [0.0, 0.0, 0.0]
-    side = 1 / math.sqrt(2)
-    point2 = [side, side, 0.0]
 
     dx = marker.worldcoordinate[1] - marker.worldcoordinate[0]
     dy = marker.worldcoordinate[3] - marker.worldcoordinate[2]
@@ -2143,8 +2137,6 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
             ln_tmp.GetPointIds().SetId(1, j + point_offset + 1)
             lines.InsertNextCell(ln_tmp)
 
-    lineDataCount = 0
-
     for t, w in line_data:
         pts, _, linesPoly, colors = line_data[(t, w)]
 
@@ -2152,7 +2144,6 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
         geoTransform, pts = project(pts, line.projection, line.worldcoordinate)
         linesPoly.SetPoints(pts)
 
-        polyBounds = linesPoly.GetBounds()
         view = plotsContext.contextView
 
         area = vtk.vtkContextArea()
@@ -2167,7 +2158,10 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
 
         [renWinWidth, renWinHeight] = plotsContext.renWin.GetSize()
         vp = adjustBounds(vp, 1.1, 1.1)
-        geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
+                            int(vp[2] * renWinHeight),
+                            int((vp[1] - vp[0]) * renWinWidth),
+                            int((vp[3] - vp[2]) * renWinHeight))
 
         configureContextArea(area, rect, geom)
 

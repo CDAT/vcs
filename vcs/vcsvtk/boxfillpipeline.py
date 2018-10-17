@@ -27,7 +27,6 @@ class BoxfillPipeline(Pipeline2D):
         self._customBoxfillArgs = {}
         self._needsCellData = True
 
-
     def _updateScalarData(self):
         """Overrides baseclass implementation."""
         # Update data1 if this is a log10 boxfill:
@@ -97,13 +96,15 @@ class BoxfillPipeline(Pipeline2D):
 
         # view and interactive area
         view = self._context().contextView
-        dataset_renderer = view.GetRenderer()
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         # vp = vcs2vtk.adjustBounds(vp, 0.9, 0.9)
-        geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
+                            int(vp[2] * renWinHeight),
+                            int((vp[1] - vp[0]) * renWinWidth),
+                            int((vp[3] - vp[2]) * renWinHeight))
 
         vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
 
@@ -136,7 +137,9 @@ class BoxfillPipeline(Pipeline2D):
                     if self._needsCellData:
                         loc = 'cell'
                         numTuples = poly.GetNumberOfCells()
-                    print('WARNING: boxfill pipeline: poly does not have Scalars array on {0} data, using solid color'.format(loc))
+                    msg = 'WARNING: boxfill pipeline: poly does not have Scalars'
+                    msg = msg + 'array on {0} data, using solid color'.format(loc)
+                    print(msg)
                     color = [0, 0, 0, 255]
                     mappedColors = vcs2vtk.generateSolidColorArray(numTuples, color)
 

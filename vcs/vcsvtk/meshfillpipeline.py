@@ -136,19 +136,20 @@ class MeshfillPipeline(Pipeline2D):
 
         # view and interactive area
         view = self._context().contextView
-        dataset_renderer = view.GetRenderer()
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
-        adjusted_plotting_bounds = vcs2vtk.getProjectedBoundsForWorldCoords(plotting_dataset_bounds, self._gm.projection)
+        adjusted_plotting_bounds = vcs2vtk.getProjectedBoundsForWorldCoords(
+            plotting_dataset_bounds, self._gm.projection)
         drawAreaBounds = vcs2vtk.computeDrawAreaBounds(adjusted_plotting_bounds)
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
-        geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
+                            int(vp[2] * renWinHeight),
+                            int((vp[1] - vp[0]) * renWinWidth),
+                            int((vp[3] - vp[2]) * renWinHeight))
 
         vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
-
-        mIdx = 0
 
         for mapper in mappers:
             act = vtk.vtkActor()
@@ -195,7 +196,9 @@ class MeshfillPipeline(Pipeline2D):
                     if self._needsCellData:
                         loc = 'cell'
                         numTuples = poly.GetNumberOfCells()
-                    print('WARNING: meshfill pipeline: poly does not have Scalars array on {0} data, using solid color'.format(loc))
+                    msg = 'WARNING: meshfill pipeline: poly does not have Scalars '
+                    msg = msg + 'array on {0} data, using solid color'.format(loc)
+                    print(msg)
                     color = [0, 0, 0, 255]
                     mappedColors = vcs2vtk.generateSolidColorArray(numTuples, color)
 

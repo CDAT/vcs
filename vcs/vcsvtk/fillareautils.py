@@ -1,5 +1,4 @@
 
-import math
 import vtk
 import vtk.util.numpy_support as ns
 import numpy as np
@@ -61,7 +60,7 @@ def computeMarkerScale(dataRange, screenGeom, pxScale=None):
     diffwpoints = computeDiffPoints(pt1, pt2, dataRange, screenGeom)
 
     dataAspect = abs(float(dataRange[0]) / dataRange[1])
-    screenAspect = float(screenGeom[0]) / screenGeom[1]
+    # screenAspect = float(screenGeom[0]) / screenGeom[1]
 
     scale = max(*diffwpoints)
     if dataAspect > 1:
@@ -191,10 +190,10 @@ def map_colors(clippedPolyData, fillareastyle=None,
     color.append(opacity)
 
     colorNpArray = np.empty([clippedPolyData.GetNumberOfCells(), 4])
-    colorNpArray[:,0] = color[0]
-    colorNpArray[:,1] = color[1]
-    colorNpArray[:,2] = color[2]
-    colorNpArray[:,3] = color[3]
+    colorNpArray[:, 0] = color[0]
+    colorNpArray[:, 1] = color[1]
+    colorNpArray[:, 2] = color[2]
+    colorNpArray[:, 3] = color[3]
 
     colors = ns.numpy_to_vtk(num_array=colorNpArray,
                              deep=True,

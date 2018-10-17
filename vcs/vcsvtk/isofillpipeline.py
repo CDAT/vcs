@@ -119,18 +119,20 @@ class IsofillPipeline(Pipeline2D):
                                   [self._template.data.x1, self._template.data.x2,
                                    self._template.data.y1, self._template.data.y2])
 
-
         # view and interactive area
         view = self._context().contextView
-        dataset_renderer = view.GetRenderer()
         area = vtk.vtkInteractiveArea()
         view.GetScene().AddItem(area)
 
-        adjusted_plotting_bounds = vcs2vtk.getProjectedBoundsForWorldCoords(plotting_dataset_bounds, self._gm.projection)
+        adjusted_plotting_bounds = vcs2vtk.getProjectedBoundsForWorldCoords(
+            plotting_dataset_bounds, self._gm.projection)
         drawAreaBounds = vcs2vtk.computeDrawAreaBounds(adjusted_plotting_bounds)
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
-        geom = vtk.vtkRecti(int(vp[0] * renWinWidth), int(vp[2] * renWinHeight), int((vp[1] - vp[0]) * renWinWidth), int((vp[3] - vp[2]) * renWinHeight))
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
+                            int(vp[2] * renWinHeight),
+                            int((vp[1] - vp[0]) * renWinWidth),
+                            int((vp[3] - vp[2]) * renWinHeight))
 
         vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
 
@@ -173,7 +175,6 @@ class IsofillPipeline(Pipeline2D):
                     mappedColors.FastDelete()
                 area.GetDrawAreaItem().AddItem(item)
 
-                        # TODO see comment in boxfill.
             if mapper is self._maskedDataMapper:
                 actors.append([item, self._maskedDataMapper, plotting_dataset_bounds])
             else:
