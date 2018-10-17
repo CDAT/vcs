@@ -1,11 +1,12 @@
 import basevcstest
 import vcs
 import warnings
-warnings.filterwarnings('error')
+#warnings.filterwarnings('error')
 
 
 class TestVCSBoxfill(basevcstest.VCSBaseTest):
     def testBoxfillNumberColorMoreNumberLevs(self):
+        print("SELF",self.clt)
         clt = self.clt("clt", latitude=(-90.0, 90.0), longitude=(-180., 175.), squeeze=1,
                        time=('1979-1-1 0:0:0.0', '1988-12-1 0:0:0.0'))
         boxfill = self.x.createboxfill()
@@ -17,13 +18,10 @@ class TestVCSBoxfill(basevcstest.VCSBaseTest):
         levels = list(range(20, 81, 5))
         boxfill.fillareacolors = vcs.getcolors(levels)
 
-        try:
+        warned = False
+        with warnings.catch_warnings(record=True) as w:
             self.x.plot(clt, boxfill, bg=self.bg)
-            failed = False
-        except Warning:
-            failed = True
-        except BaseException:
-            failed = False
-            raise
+            if len(w) > 1:
+                warned = True
 
-        self.assertTrue(failed, "This test did not issue warning as expected")
+        self.assertTrue(warned, "This test did not issue warning as expected")

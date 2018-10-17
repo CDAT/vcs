@@ -17,6 +17,7 @@ import numpy
 import cdtime
 import warnings
 import vcs
+import json
 from . import boxfill
 from . import isofill
 from . import isoline
@@ -31,7 +32,6 @@ from . import unified1D
 from . import vector
 from . import marker
 from . import colormap
-import json
 import os
 import tempfile
 import cdms2
@@ -127,7 +127,7 @@ class Logo(vcs.bestMatch):
             >>> import os, sys
             >>> x=vcs.init()
             >>> x.open()
-            >>> path=os.path.join(sys.prefix,"share","vcs","uvcdat.png")
+            >>> path=os.path.join(vcs.vcs_egg_path,"cdat.png")
             >>> logo1=vcs.utils.Logo(path)
             >>> logo1.x=.7
             >>> logo1.y=.8
@@ -200,7 +200,7 @@ class Logo(vcs.bestMatch):
                 >>> import os, sys
                 >>> x=vcs.init()
                 >>> x.open()
-                >>> path=os.path.join(sys.prefix,"share/vcs/uvcdat.png")
+                >>> path=os.path.join(vcs.vcs_egg_path, "uvcdat.png")
                 >>> logo1 = vcs.utils.Logo(path)
                 >>> logo1.x=.7
                 >>> logo1.y=.8
@@ -2533,7 +2533,7 @@ def png_read_metadata(path):
     numberOfTextChunks = reader.GetNumberOfTextChunks()
     m = {}
     for i in range(0, numberOfTextChunks):
-        m[reader.GetTextKey(i)] = reader.GetTextValue(i)
+        m[reader.GetTextKey(i)] = json.loads(reader.GetTextValue(i))
     return m
 
 
@@ -2558,12 +2558,9 @@ def download_sample_data_files(path=None):
     if path is None:
         path = vcs.sample_data
     import cdat_info
-    import sys
     cdat_info.download_sample_data_files(
         os.path.join(
-            sys.prefix,
-            "share",
-            "vcs",
+            vcs.vcs_egg_path,
             "sample_files.txt"),
         path)
 
