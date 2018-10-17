@@ -48,6 +48,8 @@ model for defining a plot, that is decomposed into three parts:
 """
 import warnings
 import difflib
+import pkg_resources
+vcs_egg_path = pkg_resources.resource_filename(pkg_resources.Requirement.parse("vcs"), "share/vcs")
 
 
 class bestMatch(object):
@@ -217,9 +219,8 @@ for nm, fnt in [
     ("DejaVuSansCondensed", "DejaVuSansCondensed.ttf"),
 ]:
     pth = os.path.join(
-        vcs.prefix,
-        "share",
-        "vcs",
+        vcs_egg_path,
+        "fonts",
         fnt)
     if os.path.exists(pth):
         vcs.elements["font"][nm] = pth
@@ -316,7 +317,7 @@ template.P("default")
 t = taylor.Gtd("default")
 
 
-pth = [vcs.prefix, 'share', 'vcs', 'initial.attributes']
+pth = [vcs_egg_path, 'initial.attributes']
 try:
     vcs.scriptrun(os.path.join(*pth))
 except BaseException:
