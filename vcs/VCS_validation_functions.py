@@ -120,9 +120,7 @@ def checkContinents(self, value):
             if not os.path.exists(path):
                     # fallback on installed with system one
                 path = os.path.join(
-                    vcs.prefix,
-                    "share",
-                    "vcs",
+                    vcs.vcs_egg_path,
                     "data_continent_%s" % nms[
                         value - 1])
         else:

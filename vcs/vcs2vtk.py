@@ -16,7 +16,7 @@ import sys
 import numbers
 
 
-f = open(os.path.join(sys.prefix, "share", "vcs", "wmo_symbols.json"))
+f = open(os.path.join(vcs.vcs_egg_path, "wmo_symbols.json"))
 wmo = json.load(f)
 
 projNames = [

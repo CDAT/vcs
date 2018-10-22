@@ -51,8 +51,47 @@ import cdutil
 from .projection import round_projections
 from .projection import elliptical_projections
 from .xmldocs import scriptdocs, listdoc
+import warnings
 
 # Following for class properties
+
+
+def applyFormat(value, format):
+    """
+    For template object that have a 'format' associated, formats the value appropriately
+    formats described at: http://pyformat.io
+:Example:
+
+    .. doctest:: template_applyFormat
+
+        >>> a=vcs.init(bg=True)
+        >>> template =vcs.gettemplate()
+        >>> vcs.template.applyFormat(3.45,template.mean.format)
+        '3.45'
+
+    :param value: Input to be formatted
+    :type fnm: `float`_ or `int`_ or `str`_ or `object`_
+
+    :param format: Format to use.
+    :type format: `str`_
+
+    :return: A string with formatted representation of value
+    :rtype: `str`_
+    """
+    # Get the format
+    # if is is a key in vcs existing formats then retrieve it
+    # otherwise assuming user passed an actual format
+    format = vcs.elements["format"].get(format, format)
+    # Create the formatter string
+    formatter = "{{{}}}".format(format)
+    # format the value passed in
+    try:
+        formatted = formatter.format(value)
+    except Exception:
+        warnings.warn("Could not apply format {} to: `{!r}` of type {}. Leaving unchanged".format(
+            formatter, value, type(value)))
+        formatted = "{}".format(value)
+    return formatted
 
 
 def _getgen(self, name):
@@ -1451,10 +1490,10 @@ class P(vcs.bestMatch):
             attr = list(vars(self).keys())
         except Exception:
             attr = self.__slots__
-            attr = list(attr)+props
+            attr = list(attr) + props
 
         if len(attr) == 0:
-            attr = list(self.__slots__)+props
+            attr = list(self.__slots__) + props
 
         for a in attr:
             if a[0] == "_":
@@ -1633,26 +1672,38 @@ class P(vcs.bestMatch):
                 # Now for the min/max/mean add the name in front
                 kargs["donotstoredisplay"] = False
                 if s == 'min':
-                    tt.string = 'Min %g' % (smn)
+                    fmt = self.min.format
+                    if fmt == "default":  # backward compatibility
+                        fmt = ":g"
+                    tt.string = 'Min {}'.format(applyFormat(smn, fmt))
                 elif s == 'max':
-                    tt.string = 'Max %g' % smx
+                    fmt = self.max.format
+                    if fmt == "default":  # backward compatibility
+                        fmt = ":g"
+                    tt.string = 'Max {}'.format(applyFormat(smx, fmt))
                 elif s == 'mean':
+                    fmt = self.mean.format
+                    if fmt == "default":  # backward compatibility
+                        fmt = ":.4g"
                     if not inspect.ismethod(getattr(slab, 'mean')):
-                        meanstring = 'Mean ' + str(getattr(slab, s))
+                        meanstring = getattr(slab, s)
                     else:
                         try:
-                            meanstring = 'Mean %.4g' % \
-                                float(cdutil.averager(slab,
-                                                      axis=" ".join(["(%s)" %
-                                                                     S for S in slab.getAxisIds()])))
+                            meanstring = float(cdutil.averager(slab,
+                                                               axis=" ".join(["(%s)" %
+                                                                              S for S in slab.getAxisIds()])))
+
                         except Exception:
                             try:
-                                meanstring = 'Mean %.4g' % slab.mean()
+                                meanstring = slab.mean()
                             except Exception:
-                                meanstring = 'Mean %.4g' % numpy.mean(slab.filled())
-                    tt.string = meanstring
+                                meanstring = slab.filled()
+                    tt.string = "Mean {}".format(applyFormat(meanstring, fmt))
                 else:
-                    tt.string = str(getattr(slab, s))
+                    if hasattr(sub, "format"):
+                        tt.string = applyFormat(getattr(slab, s), sub.format)
+                    else:
+                        tt.string = str(getattr(slab, s))
                     kargs["donotstoredisplay"] = False
                 tt.x = [sub.x]
                 tt.y = [sub.y]

@@ -25,7 +25,7 @@ class VCSTestReset(unittest.TestCase):
                 b = vcs.createmarker()
             elif gtype == "line":
                 b = vcs.createline()
-            elif gtype in ["display", "font", "fontNumber", "list"]:
+            elif gtype in ["display", "font", "fontNumber", "list", "format"]:
                 vcs.manageElements.reset()
                 continue
             else:
