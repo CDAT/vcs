@@ -114,7 +114,7 @@ jobs:
       - run: *create_conda_env
       - run: *setup_vcs
       - run: *run_vcs_tests
-      - run: *conda_upload
+        #- run: *conda_upload
       - store_artifacts:
           path: tests_html
           destination: tests_html
@@ -137,7 +137,7 @@ jobs:
       - run: *create_conda_env
       - run: *setup_vcs
       - run: *run_vcs_tests
-      - run: *conda_upload
+        #- run: *conda_upload
       - store_artifacts:
           path: tests_html
           destination: tests_html
@@ -159,7 +159,7 @@ jobs:
       - run: *create_conda_env
       - run: *setup_vcs
       - run: *run_vcs_tests
-      - run: *conda_upload
+        # - run: *conda_upload
       - store_artifacts:
           path: tests_html
           destination: tests_html

@@ -8,12 +8,16 @@ source:
 
 build:
   number: @BUILD_NUMBER@
+  noarch: python
+  script: python -m pip install --no-deps --ignore-installed .
+
  
 requirements:
   build:
     - python
     - setuptools
     - cdat_info
+    - pip
   run:
     - python
     - cdat_info
