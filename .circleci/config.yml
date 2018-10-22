@@ -194,9 +194,13 @@ jobs:
 
 workflows:
   version: 2
-  vcs_noarch_branch:
-    branches:
-       only: noarch
+  vcs:
     jobs:
-      - linux_vcs_py3
-
+      - macos_vcs_py2
+      - macos_vcs_py3:
+           requires:
+              - macos_vcs_py2
+      - linux_vcs_py2
+      - linux_vcs_py3:
+           requires:
+              - linux_vcs_py2
