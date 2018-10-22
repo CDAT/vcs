@@ -159,7 +159,7 @@ jobs:
       - run: *create_conda_env
       - run: *setup_vcs
       - run: *run_vcs_tests
-        # - run: *conda_upload
+      - run: *conda_upload
       - store_artifacts:
           path: tests_html
           destination: tests_html
@@ -184,7 +184,7 @@ jobs:
       - run: *setup_vcs
       - run: *run_vcs_tests
       - run: *run_coveralls
-      - run: *conda_upload
+      #- run: *conda_upload
       - store_artifacts:
           path: tests_html
           destination: tests_html
@@ -196,12 +196,21 @@ workflows:
   version: 2
   vcs:
     jobs:
-      - macos_vcs_py2
+      - macos_vcs_py2:
+         branches:
+           ignore:
+             - master
       - macos_vcs_py3:
-           requires:
+         branches:
+           ignore:
+             - master
+         requires:
               - macos_vcs_py2
       - linux_vcs_py2
       - linux_vcs_py3:
+         branches:
+           ignore:
+             - master
            requires:
               - linux_vcs_py2
 
