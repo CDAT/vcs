@@ -194,23 +194,19 @@ jobs:
 
 workflows:
   version: 2
-  vcs:
+  vcs_master_branch:
+    branches:
+       only: master
     jobs:
-      - macos_vcs_py2:
-         branches:
-           ignore:
-             - master
+      - linux_vcs_py3
+  vcs_other_branches:
+    jobs:
+      - macos_vcs_py2
       - macos_vcs_py3:
-         branches:
-           ignore:
-             - master
-         requires:
+           requires:
               - macos_vcs_py2
       - linux_vcs_py2
       - linux_vcs_py3:
-         branches:
-           ignore:
-             - master
            requires:
               - linux_vcs_py2
 
