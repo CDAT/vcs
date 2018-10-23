@@ -154,10 +154,6 @@ jobs:
   linux_vcs_py2:
     machine:
       image: circleci/classic:latest
-    filters:
-      branches:
-        ignore:
-          - master
     environment:
       WORKDIR: "workspace/test_linux_vcs_py2"
       OS: "linux-64"
@@ -178,6 +174,10 @@ jobs:
           destination: tests_png
 
   linux_vcs_py3:
+    filters:
+      branches:
+        ignore:
+          - master
     machine:
       image: circleci/classic:latest
     environment:
@@ -211,3 +211,5 @@ workflows:
               - macos_vcs_py2
       - linux_vcs_py2
       - linux_vcs_py3
+           requires:
+              - linux_vcs_py2
