@@ -83,12 +83,8 @@ aliases:
        export VERSION=8.0
        export LABEL=nightly
        python ./prep_for_build.py -l $VERSION
-       if [[ $PY_VER = 'py2' ]]; then
-          conda build $PKG_NAME $CHANNELS --python=2.7
-       else
-          conda build $PKG_NAME $CHANNELS --python=3.6
-       fi
-       anaconda -t $CONDA_UPLOAD_TOKEN upload -u $USER -l $LABEL $CONDA_BLD_PATH/$OS/$PKG_NAME-$VERSION.`date +%Y*`0.tar.bz2 --force
+       conda build $PKG_NAME $CHANNELS
+       anaconda -t $CONDA_UPLOAD_TOKEN upload -u $USER -l $LABEL $CONDA_BLD_PATH/noarch/$PKG_NAME-$VERSION.`date +%Y*`0.tar.bz2 --force
 
   - &run_coveralls
     name: run_coveralls
