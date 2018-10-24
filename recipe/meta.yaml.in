@@ -9,7 +9,7 @@ source:
 build:
   number: @BUILD_NUMBER@
   noarch: python
-  script: python -m pip install --no-deps --ignore-installed .
+  script: python setup.py install
 
  
 requirements:
