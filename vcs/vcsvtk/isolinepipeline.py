@@ -146,9 +146,9 @@ class IsolinePipeline(Pipeline2D):
 
         vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
 
-        # This render call is needed to work around a bug somewhere in the
-        # vtkContextTransform code, where the transformation represented by
-        # Map[To|From]Scene() isn't set up properly until after a render call.
+        # FIXME: This render call is needed to work around a bug somewhere in the
+        # FIXME: vtkContextTransform code, where the transformation represented by
+        # FIXME: Map[To|From]Scene() isn't set up properly until after a render call.
         self._context().renWin.Render()
 
         for i, l in enumerate(tmpLevels):

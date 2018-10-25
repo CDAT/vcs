@@ -308,7 +308,6 @@ class VTKVCSBackend(object):
             self.renderWindowSize = window_size
 
     def leftButtonPressEvent(self, obj, event):
-        print('leftButtonPressEvent')
         pipelineItems = None
         dataset = None
         targetDisplay = None
@@ -326,17 +325,21 @@ class VTKVCSBackend(object):
         if (pipelineItems is not None and
                 len(pipelineItems) > 0 and
                 dataset is not None):
+            # FIXME: This render call is needed to work around a bug somewhere in the
+            # FIXME: vtkContextTransform code, where the transformation represented by
+            # FIXME: Map[To|From]Scene() isn't set up properly until after a render call.
+            # FIXME: In this particular case, the issue only affected Python 3
+            self.renWin.Render()
+
             # Just the first vtkContextItem within the backend context area
             # should have the transformation information required to map the
             # screen coords to world coords
             item = pipelineItems[0][0]
 
             xy = self.renWin.GetInteractor().GetEventPosition()
-            # print('got click at [{0}, {1}]'.format(xy[0], xy[1]))
 
             screenPos = vtk.vtkVector2f(xy[0], xy[1])
             worldCoords = item.MapFromScene(screenPos)
-            # print('  world coords = {0}'.format(worldCoords))
 
             cellLocator = vtk.vtkCellLocator()
             cellLocator.SetDataSet(dataset)
@@ -349,15 +352,8 @@ class VTKVCSBackend(object):
             subId = vtk.mutable(-1)
             cellLocator.FindClosestPoint(testPoint, closestPoint, cellId, subId, distance)
 
-            # print('Found something:')
-            # print('  cellId = {0}'.format(cellId))
-            # print('  closest point = {0}'.format(closestPoint))
-            # print('  subId = {0}'.format(subId))
-            # print('  distance = {0}'.format(distance))
-
             globalIds = dataset.GetCellData().GetGlobalIds()
             if globalIds:
-                # print('yes, we have globalIds')
                 globalId = [0]
                 globalIds.GetTypedTuple(cellId, globalId)
                 globalId = globalId[0]
@@ -410,8 +406,6 @@ class VTKVCSBackend(object):
                 else:
                     value = attributes.GetValue(elementId)
                     st += "Value: %g" % value
-
-            # print('st = {0}'.format(st))
 
         if st == "":
             return
