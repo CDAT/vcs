@@ -8,7 +8,7 @@ source:
 
 build:
   number: @BUILD_NUMBER@
- 
+
 requirements:
   build:
     - python
@@ -24,6 +24,7 @@ requirements:
     - cdutil
     - requests
     - numpy
+    - ghostscript
 
 about:
     home:  http://github.com/cdat/vcs

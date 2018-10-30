@@ -13,6 +13,9 @@ import cdms2
 import cdtime
 import inspect
 import json
+import subprocess
+import tempfile
+import shutil
 from . import VTKAnimate
 from . import vcsvtk
 
@@ -1394,11 +1397,39 @@ class VTKVCSBackend(object):
 
     def postscript(self, file, width=None, height=None,
                    units=None, textAsPaths=True):
-        print('WARNING: postscript generation is not implemented')
-        # FIXME: We can implement this by exporting to pdf then using
-        # FIXME: ghostscript to convert to postscript via python subprocess
-        # return self.vectorGraphics("ps", file, width, height,
-        #                            units, textAsPaths)
+        # create a temporary path we can use to write the pdf
+        temporaryDirectoryName = tempfile.mkdtemp()
+        tempPdfPath = os.path.join(temporaryDirectoryName, 'intermediate.pdf')
+
+        # issue the call to create the pdf
+        self.pdf(tempPdfPath, width, height, units, textAsPaths)
+
+        # use supprocess.popen to use "pdf2ps" command-line on pdf file
+        pdf2psArgs = [
+            'pdf2ps',
+            tempPdfPath,
+            file
+        ]
+
+        proc = subprocess.Popen(pdf2psArgs,
+                                stdin=subprocess.PIPE,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+        proc.wait()
+
+        # We could checkout stdout and stderr, or just assume everything
+        # went fine.
+
+        # out = proc.stdout.read()
+        # if out != "":
+        #     print('pdf2ps output: {0}'.format(out))
+
+        # errors = proc.stderr.read()
+        # if errors != "":
+        #     print('pdf2ps errors: {0}'.format(errors))
+
+        # Delete the temporary path to clean up.
+        shutil.rmtree(temporaryDirectoryName)
 
     def pdf(self, file, width=None, height=None, units=None, textAsPaths=True):
         self.hideGUI()
