@@ -16,21 +16,30 @@ import sys
 import numbers
 
 
+DEBUG_MODE = False
+
+
 def debugWriteGrid(grid, name):
-    writer = vtk.vtkXMLDataSetWriter()
-    gridType = grid.GetDataObjectType()
-    if (gridType == vtk.VTK_STRUCTURED_GRID):
-        ext = ".vts"
-    elif (gridType == vtk.VTK_UNSTRUCTURED_GRID):
-        ext = ".vtu"
-    elif (gridType == vtk.VTK_POLY_DATA):
-        ext = ".vtp"
-    else:
-        print("Unknown grid type: {0}".format(gridType))
-        ext = ".vtk"
-    writer.SetFileName(name + ext)
-    writer.SetInputData(grid)
-    writer.Write()
+    if DEBUG_MODE:
+        writer = vtk.vtkXMLDataSetWriter()
+        gridType = grid.GetDataObjectType()
+        if (gridType == vtk.VTK_STRUCTURED_GRID):
+            ext = ".vts"
+        elif (gridType == vtk.VTK_UNSTRUCTURED_GRID):
+            ext = ".vtu"
+        elif (gridType == vtk.VTK_POLY_DATA):
+            ext = ".vtp"
+        else:
+            print("Unknown grid type: {0}".format(gridType))
+            ext = ".vtk"
+        writer.SetFileName(name + ext)
+        writer.SetInputData(grid)
+        writer.Write()
+
+
+def debugMsg(msg):
+    if DEBUG_MODE:
+        print(msg)
 
 
 f = open(os.path.join(vcs.vcs_egg_path, "wmo_symbols.json"))
@@ -659,15 +668,15 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
             vg = wrapDataSetX(vg)
             pts = vg.GetPoints()
             xm, xM, ym, yM, tmp, tmp2 = vg.GetPoints().GetBounds()
-            print('did wrapDataSetX, [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
+            debugMsg('did wrapDataSetX, [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
         vg = doWrapData(vg, wc, wrap)
         pts = vg.GetPoints()
         xm, xM, ym, yM, tmp, tmp2 = vg.GetPoints().GetBounds()
-        print('did doWrapData, [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
+        debugMsg('did doWrapData, [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
         projection = vcs.elements["projection"][gm.projection]
         vg.SetPoints(pts)
         wrb = getWrappedBounds(wc, [xm, xM, ym, yM], wrap)
-        print('wrapped bounds = [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
+        debugMsg('wrapped bounds = [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
         geo, geopts = project(pts, projection, wrb)
         # proj4 returns inf for points that are not visible. Set those to a valid point
         # and hide them.
@@ -688,7 +697,7 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
                         ym = p[1]
                     if (p[1] > yM):
                         yM = p[1]
-            print('bounds after removing infs = [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
+            debugMsg('bounds after removing infs = [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
             # hidden point don't work for polys or unstructured grids.
             # We remove the cells in this case.
             if (vg.GetExtentType() == vtk.VTK_PIECES_EXTENT):
@@ -1085,9 +1094,9 @@ def doWrapData(data, wc, wrap=[0., 360], fastClip=True):
     if wrap is None:
         return data
 
-    print('Doing actual wrapping')
-    print('  wc = {0}'.format(wc))
-    print('  wrap = {0}'.format(wrap))
+    debugMsg('Doing actual wrapping')
+    debugMsg('  wc = {0}'.format(wc))
+    debugMsg('  wrap = {0}'.format(wrap))
 
     # convert to poly data
     surface = vtk.vtkDataSetSurfaceFilter()
@@ -1192,7 +1201,7 @@ def doWrapData(data, wc, wrap=[0., 360], fastClip=True):
         pointAttributes = result.GetPointData()
         pointAttributes.GetArray(vectorsName, index)
         pointAttributes.SetActiveAttribute(index, vtk.vtkDataSetAttributes.VECTORS)
-    print('  bounds after wrap = {0}'.format(result.GetBounds()))
+    debugMsg('  bounds after wrap = {0}'.format(result.GetBounds()))
     return result
 
 
@@ -1651,10 +1660,16 @@ def prepFillarea(context, renWin, farea, cmap=None):
             colors.GetTypedTuple(i, cellcolor)
             pcolor = [indC * 100. / 255.0 for indC in cellcolor]
 
-            screenGeom = [
-                (farea.x[i][1] - farea.x[i][0]) * renWinWidth,
-                (farea.y[i][2] - farea.y[i][1]) * renWinHeight
-            ]
+            if len(farea.x[i]) >= 3:
+                screenGeom = [
+                    (farea.x[i][1] - farea.x[i][0]) * renWinWidth,
+                    (farea.y[i][2] - farea.y[i][1]) * renWinHeight
+                ]
+            else:
+                screenGeom = [
+                    (farea.viewport[1] - farea.viewport[0]) * renWinWidth,
+                    (farea.viewport[3] - farea.viewport[2]) * renWinHeight
+                ]
 
             act = fillareautils.make_patterned_polydata(pd,
                                                         st,
