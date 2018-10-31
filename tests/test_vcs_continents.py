@@ -53,13 +53,11 @@ class TestVCSContinents(basevcstest.VCSBaseTest):
                     bg=self.bg)
             elif cont_index == 3:
                 self.x.setcontinentsline(cont_line)
-                self.x.setcontinentstype(3)
-                self.x.plot(clt, template, boxfill, bg=self.bg)
+                self.x.plot(clt, template, boxfill, continents=3, bg=self.bg)
             elif i == 4:
-                self.x.setcontinentstype(0)
                 # Make sure absolute path works
                 path = os.path.join(
-                    vcs.prefix, "share", "vcs", "data_continent_political")
+                    vcs.vcs_egg_path, "data_continent_political")
                 self.x.plot(
                     clt,
                     template,
@@ -71,8 +69,7 @@ class TestVCSContinents(basevcstest.VCSBaseTest):
                 # Make sure the dotdirectory other* works
                 dotdir = vcs.getdotdirectory()
                 current_dotdir = os.environ.get(dotdir[1], dotdir[0])
-                os.environ["UVCDAT_DIR"] = os.path.join(
-                    vcs.prefix, "share", "vcs")
+                os.environ["UVCDAT_DIR"] = vcs.vcs_egg_path
                 # Should pick up the other7 continents
                 self.x.plot(
                     clt,

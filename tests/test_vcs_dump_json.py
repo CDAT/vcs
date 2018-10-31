@@ -1,3 +1,4 @@
+from __future__ import print_function
 import basevcstest
 import filecmp
 import os

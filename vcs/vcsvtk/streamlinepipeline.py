@@ -10,8 +10,8 @@ class StreamlinePipeline(Pipeline2D):
 
     """Implementation of the Pipeline interface for VCS streamline plots."""
 
-    def __init__(self, gm, context_):
-        super(StreamlinePipeline, self).__init__(gm, context_)
+    def __init__(self, gm, context_, plot_keyargs):
+        super(StreamlinePipeline, self).__init__(gm, context_, plot_keyargs)
         self._needsCellData = False
         self._needsVectors = True
 
@@ -52,6 +52,32 @@ class StreamlinePipeline(Pipeline2D):
 
         self._vtkPolyDataFilter.Update()
         polydata = self._vtkPolyDataFilter.GetOutput()
+
+        # Only need one fitToViewport call, where the mapper
+        # connected to the actor we pass has the self._vtkPolyDataFilter as its
+        # input.
+
+        tmpActor = vtk.vtkActor()
+        tmpMapper = vtk.vtkPolyDataMapper()
+        tmpMapper.SetInputData(polydata)
+        tmpActor.SetMapper(tmpMapper)
+
+        plotting_dataset_bounds = self.getPlottingBounds()
+        vp = self._resultDict.get('ratio_autot_viewport',
+                                  [self._template.data.x1, self._template.data.x2,
+                                   self._template.data.y1, self._template.data.y2])
+
+        dataset_renderer, xScale, yScale = self._context().fitToViewport(
+            tmpActor, vp,
+            wc=plotting_dataset_bounds,
+            geoBounds=self._vtkDataSetBoundsNoMask,
+            geo=self._vtkGeoTransform,
+            priority=self._template.data.priority,
+            create_renderer=True,
+            add_actor=False)
+
+        polydata = tmpMapper.GetInput()
+        plotting_dataset_bounds = self.getPlottingBounds()
 
         dataLength = polydata.GetLength()
 
@@ -95,7 +121,9 @@ class StreamlinePipeline(Pipeline2D):
 
         if (self._gm.evenlyspaced):
             streamer = vtk.vtkEvenlySpacedStreamlines2D()
-            streamer.SetStartPosition(self._gm.startseed)
+            startseed = self._gm.startseed \
+                if self._gm.startseed else polydata.GetCenter()
+            streamer.SetStartPosition(startseed)
             streamer.SetSeparatingDistance(self._gm.separatingdistance)
             streamer.SetSeparatingDistanceRatio(self._gm.separatingdistanceratio)
             streamer.SetClosedLoopMaximumDistance(self._gm.closedloopmaximumdistance)
@@ -223,18 +251,8 @@ class StreamlinePipeline(Pipeline2D):
                                   [self._template.data.x1, self._template.data.x2,
                                    self._template.data.y1, self._template.data.y2])
 
-        dataset_renderer, xScale, yScale = self._context().fitToViewport(
-            act, vp,
-            wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
-            geo=self._vtkGeoTransform,
-            priority=self._template.data.priority,
-            create_renderer=True)
-        glyph_renderer, xScale, yScale = self._context().fitToViewport(
-            glyphActor, vp,
-            wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
-            geo=self._vtkGeoTransform,
-            priority=self._template.data.priority,
-            create_renderer=False)
+        dataset_renderer.AddActor(act)
+        dataset_renderer.AddActor(glyphActor)
 
         kwargs = {'vtk_backend_grid': self._vtkDataSet,
                   'dataset_bounds': self._vtkDataSetBounds,
@@ -253,11 +271,12 @@ class StreamlinePipeline(Pipeline2D):
                                                None,
                                                self.getColorMap()))
 
-        if self._context().canvas._continents is None:
-            self._useContinents = False
-        if self._useContinents:
-            continents_renderer, xScale, yScale = self._context().plotContinents(
-                plotting_dataset_bounds, projection,
-                self._dataWrapModulo, vp, self._template.data.priority, **kwargs)
+        kwargs['xaxisconvert'] = self._gm.xaxisconvert
+        kwargs['yaxisconvert'] = self._gm.yaxisconvert
+        if self._data1.getAxis(-1).isLongitude() and self._data1.getAxis(-2).isLatitude():
+            self._context().plotContinents(self._plot_kargs.get("continents", self._useContinents),
+                                           plotting_dataset_bounds, projection,
+                                           self._dataWrapModulo, vp,
+                                           self._template.data.priority, **kwargs)
         self._resultDict["vtk_backend_actors"] = [[act, plotting_dataset_bounds]]
         self._resultDict["vtk_backend_luts"] = [[None, None]]

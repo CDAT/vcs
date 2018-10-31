@@ -20,7 +20,7 @@ import warnings
 import numpy.ma
 import MV2
 import numpy
-import cdutil
+import cdat_info
 from .queries import *  # noqa
 from . import boxfill
 from . import isofill
@@ -64,10 +64,28 @@ try:
     hasVCSAddons = True
 except Exception:
     hasVCSAddons = False
+try:
+    basestring
+except Exception:
+    basestring = str
+
+
+def rotate(x, y, xorigin, yorigin, angle):
+    # translate
+    xtr = x - xorigin
+    ytr = y - yorigin
+    angle = angle / 180. * numpy.pi
+    xout = xtr * numpy.cos(angle) - ytr * numpy.sin(angle)
+    yout = xtr * numpy.sin(angle) + ytr * numpy.cos(angle)
+
+    xout += xorigin
+    yout += yorigin
+    return xout, yout
 
 
 class JupyterFFMPEG(object):
-    def __init__(self, source, ffmpeg_result, width=640, height=420, controls=True):
+    def __init__(self, source, ffmpeg_result,
+                 width=640, height=420, controls=True):
         self.source = source
         self.width = width
         self.height = height
@@ -256,7 +274,8 @@ def _determine_arg_list(g_name, actual_args):
                 "Error in argument list for vcs %s  command." %
                 g_name)
 
-    if hasVCSAddons and isinstance(arglist[igraphics_method], vcsaddons.core.VCSaddon):
+    if hasVCSAddons and isinstance(
+            arglist[igraphics_method], vcsaddons.core.VCSaddon):
         if found_slabs != arglist[igraphics_method].g_nslabs:
             raise vcsError(
                 "%s requires %i slab(s)" %
@@ -344,8 +363,8 @@ class Canvas(vcs.bestMatch):
         'ParameterChanged',
         'colormap',
         'backgroundcolor',
-        'bgX',
-        'bgY',
+        'width',
+        'height',
         'display_names',
         '_dotdir',
         '_dotdirenv',
@@ -357,7 +376,6 @@ class Canvas(vcs.bestMatch):
         '_Canvas__last_plot_keyargs',
         '__last_plot_actual_args',
         '__last_plot_keyargs',
-        '_continents',
         '_continents_line',
         '_savedcontinentstype',
     ]
@@ -589,9 +607,6 @@ class Canvas(vcs.bestMatch):
 
         return tv
 
-    def savecontinentstype(self, value):
-        self._savedcontinentstype = value
-
     def onClosing(self, cell):
         if self.configurator:
             self.endconfigure()
@@ -784,23 +799,6 @@ class Canvas(vcs.bestMatch):
                 tv, 'date') and not hasattr(tv, 'time'):
             change_date_time(tv, 0)
 
-        # Draw continental outlines if specified.
-        contout = keyargs.get('continents', None)
-        if contout is None:
-            if (xdim >= 0 and ydim >= 0 and tv.getAxis(xdim).isLongitude() and tv.getAxis(ydim).isLatitude()) or\
-                    (self.isplottinggridded):
-                contout = self.getcontinentstype()
-            else:
-                contout = 0
-
-        if (isinstance(arglist[GRAPHICS_METHOD], str) and (arglist[GRAPHICS_METHOD]) == 'meshfill') or (
-                (xdim >= 0 and ydim >= 0 and (isinstance(contout, str) or contout >= 1))):
-            self.setcontinentstype(contout)
-            self.savecontinentstype(contout)
-        else:
-            self.setcontinentstype(0)
-            self.savecontinentstype(0)
-
         # Reverse axis direction if necessary
         xrev = keyargs.get('xrev', 0)
         if xrev == 1 and xdim >= 0:
@@ -889,7 +887,7 @@ class Canvas(vcs.bestMatch):
 
         if geometry is not None:
             # Extract width and height, create dict
-            if type(geometry) == dict:
+            if isinstance(geometry, dict):
                 for key in geometry:
                     if key not in ("width", "height"):
                         raise ValueError("Unexpected key %s in geometry" % key)
@@ -906,18 +904,21 @@ class Canvas(vcs.bestMatch):
                                                                             maxelements=2, ints=True)
             else:
                 raise ValueError("geometry should be list, tuple, or dict")
-            geometry = {"width": width, "height": height}
 
-        if geometry is not None and bg:
-            self.bgX = geometry["width"]
-            self.bgY = geometry["height"]
+            self.width = width
+            self.height = height
         else:
-            # default size for bg
-            self.bgX = 814
-            self.bgY = 606
+            w, h = 814, 606
+            if size is not None:
+                # What is the purpose of the 'size' argument?  Is it intended to forever
+                # constrain the aspect ratio of the plot?  What if size and geometry are
+                # both given, but are inconsistent?
+                w = h * size
+            self.width = w
+            self.height = h
 
         if backend == "vtk":
-            self.backend = VTKVCSBackend(self, geometry=geometry, bg=bg)
+            self.backend = VTKVCSBackend(self, bg=bg)
         elif isinstance(backend, vtk.vtkRenderWindow):
             self.backend = VTKVCSBackend(self, renWin=backend, bg=bg)
         else:
@@ -931,7 +932,6 @@ class Canvas(vcs.bestMatch):
 
         self.configurator = None
         self.setcontinentsline("default")
-        self.setcontinentstype(1)
 
 # Initial.attributes is being called in main.c, so it is not needed here!
 # Actually it is for taylordiagram graphic methods....
@@ -1420,13 +1420,14 @@ class Canvas(vcs.bestMatch):
                 >>> import cdms2 # Need cdms2 to create a slab
                 >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # get data file
                 >>> s = f('clt') # use data file to create a cdms2 slab
-                >>> a.scalar3d(ds,s) # Plot slab with defaults
+                >>> # Plot slab with defaults
+                >>> a.scalar3d(ds, s) # doctest:+SKIP
                 initCamera: Camera => (...)
                 <vcs.displayplot.Dp ...>
                 >>> a.clear() # Clear VCS canvas
-                     saved state data to file  <...>
                 >>> t = a.gettemplate('polar')
-                >>> a.scalar3d(s,ds,t) # Plot with 'polar' template
+                >>> # Plot with 'polar' template
+                >>> a.scalar3d(s, ds, t)  # doctest:+SKIP
                 initCamera: Camera => (...)
                 <vcs.displayplot.Dp ...>
         """
@@ -1466,15 +1467,16 @@ class Canvas(vcs.bestMatch):
                     >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # get data file
                     >>> s = f('u') # use data file to create a cdms2 slab
                     >>> s2 = f('v') # need two slabs, so get another
-                    >>> a.vector3d(dv3,s,s2) # Plot slabs
+                    >>> # Plot slabs
+                    >>> a.vector3d(dv3, s, s2)  # doctest:+SKIP
                     Sample rate: 6
                     Sample rate: 6
                     initCamera: Camera => (...)
                     <vcs.displayplot.Dp ...>
                     >>> a.clear() # Clear VCS canvas
-                         saved state data to file  <...>
                     >>> t = a.gettemplate('polar')
-                    >>> a.vector3d(s,s2,dv3,t) # Plot with 'polar' template
+                    >>> # Plot with 'polar' template
+                    >>> a.vector3d(s, s2, dv3, t)  # doctest:+SKIP
                     Sample rate: 6
                     Sample rate: 6
                     initCamera: Camera => (...)
@@ -1516,13 +1518,14 @@ class Canvas(vcs.bestMatch):
                     >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # get data file
                     >>> s = f('clt') # use data file to create a cdms2 slab
                     >>> s2 = f('v') # need two slabs, so get another
-                    >>> a.dual_scalar3d(ds3,s,s2) # Plot slabs
+                    >>> # Plot slabs
+                    >>> a.dual_scalar3d(ds3, s, s2)  # doctest:+SKIP
                     initCamera: Camera => (...)
                     <vcs.displayplot.Dp ...>
                     >>> a.clear() # Clear VCS canvas
-                         saved state data to file  <...>
                     >>> t = a.gettemplate('polar')
-                    >>> a.dual_scalar3d(s,s2,ds3,t) # Plot w/ 'polar' template
+                    >>> # Plot w/ 'polar' template
+                    >>> a.dual_scalar3d(s,s2,ds3,t)  # doctest:+SKIP
                     initCamera: Camera => (...)
                     <vcs.displayplot.Dp ...>
         """
@@ -1821,24 +1824,23 @@ class Canvas(vcs.bestMatch):
             .. doctest:: canvas_streamline
 
                 >>> a=vcs.init()
-                >>> a.show('streamline') # Show all the existing streamline
-                                         # graphics methods
+                >>> a.show('streamline') # Show all the existing streamline graphics methods
                 *******************Streamline Names List**********************
                 ...
-                *******************End Streamline Names List********************
+                *******************End Streamline Names List**********************
                 >>> import cdms2 # Need cdms2 to create a slab
                 >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open a data file
                 >>> slab1 = f('u') # use the data file to create a cdms2 slab
                 >>> slab2 = f('v') # streamline needs 2 slabs, so get another
+                >>> # plot streamline using slab and default
+                >>> # streamline
                 >>> a.streamline(slab1, slab2)
-                                   # plot streamline using slab and default
-                                   # streamline
                 <vcs.displayplot.Dp ...>
                 >>> a.clear() # Clear VCS canvas
                 >>> template=a.gettemplate('hovmuller')
+                >>> # Plot array using default streamline
+                >>> # and specified template
                 >>> a.streamline(slab1, slab2, template)
-                                   # Plot array using default streamline
-                                   # and specified template
                 <vcs.displayplot.Dp ...>
 
         :returns: A VCS displayplot object.
@@ -2293,7 +2295,11 @@ class Canvas(vcs.bestMatch):
             *******************Textorientation Names List**********************
             ...
             *******************End Textorientation Names List**********************
-            >>> vcs.createtext('qa_tta', 'qa', '7left_tto', '7left') # Create instance of 'std_tt' and '7left_to'
+            >>> if "qa_tta" in vcs.listelements("texttable"): vcs.reset()
+            ...
+            >>> if "7left_tto" in vcs.listelements("textorientation"): vcs.reset()
+            ...
+            >>> vcs.createtext('qa_tta', 'qa', '7left_tto', '7left') # Create instance of 'qa_tt' and '7left_to'
             <vcs.textcombined.Tc object at ...>
             >>> tc=a.gettext('qa_tta', '7left_tto')
             >>> tc.string='Text1' # Show the string "Text1" on the VCS Canvas
@@ -2339,7 +2345,7 @@ class Canvas(vcs.bestMatch):
     # Set alias for the secondary textcombined.
     text = textcombined
 
-    def gettextextent(self, textobject):
+    def gettextextent(self, textobject, angle=None):
         """Returns the coordinate of the box surrounding a text object once printed
 
         :Example:
@@ -2355,16 +2361,99 @@ class Canvas(vcs.bestMatch):
                 [[...]]
 
         :param textobject: A VCS text object
+        :param angle: If not None overwrites the textobject's angle (in degrees)
         :type textobject: vcs.textcombined.Tc
 
         :returns: list of floats containing the coordinates of the text object's bounding box.
+        coordinates are appropriate within the same viewport and worldcoordinate as the input textobject
         :rtype: `list`_
         """
         if not vcs.istext(textobject):
             raise vcsError('You must pass a text object')
         To = textobject.To_name
         Tt = textobject.Tt_name
-        return self.backend.gettextextent(To, Tt)
+        return self.backend.gettextextent(To, Tt, angle)
+
+    def gettextbox(self, textobject):
+        """Returns the coordinate of the exact and rotated box surrounding a text object once printed
+
+        :Example:
+
+            .. doctest:: canvas_gettextbox
+
+                >>> a=vcs.init()
+                >>> t=a.createtext()
+                >>> t.x=[.5]
+                >>> t.y=[.5]
+                >>> t.string=['Hello World']
+                >>> a.gettextbox(t)
+                [[...]]
+
+        :param textobject: A VCS text object
+        :type textobject: vcs.textcombined.Tc
+
+        :returns: 2 list of floats containing the coordinates of the text object's box. One for xs one for ys
+        coordinates are appropriate within the same viewport and worldcoordinate as the input textobject
+        :rtype: `list`_
+        """
+        if not vcs.istext(textobject):
+            raise vcsError('You must pass a text object')
+
+        # for rotation we need to normalize coordinates
+        text2 = vcs.createtext(
+            Tt_source=textobject.Tt_name,
+            To_source=textobject.To_name)
+        xs = numpy.array(textobject.x) / \
+            (text2.worldcoordinate[1] - text2.worldcoordinate[0])
+        ys = numpy.array(textobject.y) / \
+            (text2.worldcoordinate[3] - text2.worldcoordinate[2])
+        text2.x = xs.tolist()
+        text2.y = ys.tolist()
+
+        text2.worldcoordinate = [0, 1, 0, 1]
+
+        boundings = self.gettextextent(textobject)
+        noangles = self.gettextextent(text2, 0.)
+        out = []
+        for bounding, noangle in zip(boundings, noangles):
+            bxmid = (bounding[0] + bounding[1]) / 2.
+            bymid = (bounding[2] + bounding[3]) / 2.
+
+            xmid = (noangle[0] + noangle[1]) / 2.
+            ymid = (noangle[2] + noangle[3]) / 2.
+
+            slim = []
+            # first corner
+            slim.append(
+                rotate(
+                    noangle[0], noangle[2], xmid, ymid, -textobject.angle))
+            # second corner
+            slim.append(
+                rotate(
+                    noangle[1], noangle[2], xmid, ymid, -textobject.angle))
+            # third corner
+            slim.append(
+                rotate(
+                    noangle[1], noangle[3], xmid, ymid, -textobject.angle))
+            # fourth corner
+            slim.append(
+                rotate(
+                    noangle[0], noangle[3], xmid, ymid, -textobject.angle))
+            # Ok now we need to translte in the middle of the bounding box
+            xs = [p[0] for p in slim]
+            ys = [p[1] for p in slim]
+            outx = [bxmid +
+                    (x -
+                     xmid) *
+                    (textobject.worldcoordinate[1] -
+                     textobject.worldcoordinate[0]) for x in xs]
+            outy = [bymid +
+                    (y -
+                     ymid) *
+                    (textobject.worldcoordinate[3] -
+                     textobject.worldcoordinate[2]) for y in ys]
+            out.append([outx, outy])
+        return out
 
     def match_color(self, color, colormap=None):  # noqa
         return vcs.match_color(color, colormap)
@@ -2389,6 +2478,8 @@ class Canvas(vcs.bestMatch):
                 *******************Texttable Names List**********************
                 ...
                 *******************End Texttable Names List**********************
+                >>> if "draw_tt" in vcs.listelements("texttable"): vcs.reset()
+                >>> if "draw_tto" in vcs.listelements("textorientation"): vcs.reset()
                 >>> vcs.createtextcombined('draw_tt','qa', 'draw_tto', '7left')
                 <vcs.textcombined.Tc object at 0x...>
                 >>> msg=["Hello", "drawtextcombined!"]
@@ -2453,7 +2544,7 @@ class Canvas(vcs.bestMatch):
     drawtextcombined.__doc__ = drawtextcombined.__doc__ % (xmldocs.color, xmldocs.viewport, xmldocs.worldcoordinate,
                                                            xmldocs.x_y_coords, xmldocs.bg)
 
-    _plot_keywords_ = ['variable', 'grid', 'xaxis', 'xarray',  'xrev', 'yaxis', 'yarray', 'yrev', 'continents',
+    _plot_keywords_ = ['variable', 'grid', 'xaxis', 'xarray', 'xrev', 'yaxis', 'yarray', 'yrev', 'continents',
                        'xbounds', 'ybounds', 'zaxis', 'zarray', 'taxis', 'tarray', 'waxis', 'warray', 'bg', 'ratio',
                        'donotstoredisplay', 'render', 'continents_line', "display_name"]
 
@@ -2706,38 +2797,6 @@ class Canvas(vcs.bestMatch):
                                    plot_2_1D_input,
                                    plot_output)
 
-    def plot_filledcontinents(
-            self, slab, template_name, g_type, g_name, bg, ratio):
-        cf = cdutil.continent_fill.Gcf()
-        if g_type.lower() == 'boxfill':
-            g = self.getboxfill(g_name)
-        lons = slab.getLongitude()
-        lats = slab.getLatitude()
-
-        if lons is None or lats is None:
-            return
-        if g.datawc_x1 > 9.9E19:
-            cf.datawc_x1 = lons[0]
-        else:
-            cf.datawc_x1 = g.datawc_x1
-        if g.datawc_x2 > 9.9E19:
-            cf.datawc_x2 = lons[-1]
-        else:
-            cf.datawc_x2 = g.datawc_x2
-        if g.datawc_y1 > 9.9E19:
-            cf.datawc_y1 = lats[0]
-        else:
-            cf.datawc_y1 = g.datawc_y1
-        if g.datawc_y2 > 9.9E19:
-            cf.datawc_y2 = lats[-1]
-        else:
-            cf.datawc_y2 = g.datawc_y2
-        try:
-            self.gettemplate(template_name)
-            cf.plot(x=self, template=template_name, ratio=ratio)
-        except Exception as err:
-            print(err)
-
     def __new_elts(self, original, new):
         for e in list(vcs.elements.keys()):
             for k in list(vcs.elements[e].keys()):
@@ -2770,7 +2829,8 @@ class Canvas(vcs.bestMatch):
         assert arglist[0] is None or cdms2.isVariable(arglist[0])
         assert arglist[1] is None or cdms2.isVariable(arglist[1])
         assert isinstance(arglist[2], str)
-        if hasVCSAddons and not isinstance(arglist[3], vcsaddons.core.VCSaddon):
+        if hasVCSAddons and not isinstance(
+                arglist[3], vcsaddons.core.VCSaddon):
             assert isinstance(arglist[3], str)
         assert isinstance(arglist[4], str)
 
@@ -3172,17 +3232,22 @@ class Canvas(vcs.bestMatch):
                 if copy_tmpl is None:
                     copy_tmpl = vcs.createtemplate(source=arglist[2])
                     check_tmpl = copy_tmpl
-                if getattr(getattr(check_tmpl, p), 'priority') == 0:
-                    setattr(getattr(copy_tmpl, p), 'priority', 1)
+                if p == "id":
+                    pname = "dataname"
+                else:
+                    pname = p
+                if getattr(getattr(check_tmpl, pname), 'priority') == 0:
+                    setattr(getattr(copy_tmpl, pname), 'priority', 1)
                 if not isinstance(
                         k, list):  # not a list means only priority set
                     if isinstance(k, dict):
                         for kk in list(k.keys()):
-                            setattr(getattr(copy_tmpl, p), kk, k[kk])
+                            setattr(getattr(copy_tmpl, pname), kk, k[kk])
                     elif isinstance(k, int):
-                        setattr(getattr(copy_tmpl, p), 'priority', k)
+                        setattr(getattr(copy_tmpl, pname), 'priority', k)
                     elif isinstance(k, str):
                         slab_changed_attributes[p] = k
+                        setattr(arglist[0], p, k)
                 else:
                     # if hasattr(arglist[0],p):
                     # slab_changed_attributes[p]=getattr(arglist[0],p)
@@ -3190,11 +3255,11 @@ class Canvas(vcs.bestMatch):
                     # slab_created_attributes.append(p)
                     # setattr(arglist[0],p,k[0])
                     slab_changed_attributes[p] = k[0]
-                    setattr(getattr(copy_tmpl, p), 'x', k[1])
-                    setattr(getattr(copy_tmpl, p), 'y', k[2])
+                    setattr(getattr(copy_tmpl, pname), 'x', k[1])
+                    setattr(getattr(copy_tmpl, pname), 'y', k[2])
                     if isinstance(k[-1], type({})):
                         for kk in list(k[-1].keys()):
-                            setattr(getattr(copy_tmpl, p), kk, k[-1][kk])
+                            setattr(getattr(copy_tmpl, pname), kk, k[-1][kk])
 
                 del(keyargs[p])
             # Now Axis related keywords
@@ -3563,100 +3628,6 @@ class Canvas(vcs.bestMatch):
             except Exception:
                 pass
 
-        def clean_val(value):
-            if numpy.allclose(value, 0.):
-                return 0.
-            elif value < 0:
-                sign = -1
-                value = -value
-            else:
-                sign = 1
-            i = int(numpy.log10(value))
-            if i > 0:
-                j = i
-                k = 10.
-            else:
-                j = i - 1
-                k = 10.
-            v = int(value / numpy.power(k, j)) * numpy.power(k, j)
-            return v * sign
-
-        def mkdic(method, values):
-            if method == 'area_wt':
-                func = numpy.sin
-                func2 = numpy.arcsin
-            elif method == 'exp':
-                func = numpy.exp
-                func2 = numpy.log
-            elif method == 'ln':
-                func = numpy.log
-                func2 = numpy.exp
-            elif method == 'log10':
-                func = numpy.log10
-            vals = []
-            for v in values:
-                if method == 'area_wt':
-                    vals.append(func(v * numpy.pi / 180.))
-                else:
-                    vals.append(func(v))
-            min, max = vcs.minmax(vals)
-            levs = vcs.mkscale(min, max)
-# levs=vcs.mkevenlevels(min,max)
-            vals = []
-            for l in levs:
-                if method == 'log10':
-                    v = numpy.power(10, l)
-                elif method == 'area_wt':
-                    v = func2(l) / numpy.pi * 180.
-                else:
-                    v = func2(l)
-                vals.append(clean_val(v))
-            dic = vcs.mklabels(vals)
-            dic2 = {}
-            for k in list(dic.keys()):
-                try:
-                    if method == 'area_wt':
-                        dic2[func(k * numpy.pi / 180.)] = dic[k]
-                    else:
-                        dic2[func(k)] = dic[k]
-                except Exception:
-                    pass
-            return dic2
-
-        def set_convert_labels(copy_mthd, test=0):
-            did_something = False
-            for axc in ['x', 'y']:
-                try:
-                    mthd = getattr(copy_mthd, axc + 'axisconvert')
-                    if mthd != 'linear':
-                        for num in ['1', '2']:
-                            if getattr(
-                                    copy_mthd, axc + 'ticlabels' + num) == '*':
-                                if axc == 'x':
-                                    axn = -1
-                                else:
-                                    axn = -2
-                                dic = mkdic(mthd, arglist[0].getAxis(axn)[:])
-                                if test == 0:
-                                    setattr(
-                                        copy_mthd,
-                                        axc +
-                                        'ticlabels' +
-                                        num,
-                                        dic)
-                                did_something = True
-                except Exception:
-                    pass
-            return did_something
-
-        if set_convert_labels(check_mthd, test=1):
-            if copy_mthd is None:
-                try:
-                    copy_mthd = vcs.creategraphicsmethod(arglist[3], arglist[4])
-                except Exception:
-                    pass
-                check_mthd = copy_mthd
-                set_convert_labels(copy_mthd)
         if copy_mthd is None:
             try:
                 copy_mthd = vcs.creategraphicsmethod(arglist[3], arglist[4])
@@ -3745,7 +3716,7 @@ class Canvas(vcs.bestMatch):
         # get the background value
         bg = keyargs.get('bg', 0)
 
-        if isinstance(arglist[3], str) and arglist[
+        if isinstance(arglist[3], basestring) and arglist[
                 3].lower() == 'taylordiagram':
             for p in list(slab_changed_attributes.keys()):
                 if hasattr(arglist[0], p):
@@ -3777,7 +3748,6 @@ class Canvas(vcs.bestMatch):
             else:
                 nm, src = self.check_name_source(None, "default", "display")
                 dn = displayplot.Dp(nm)
-            dn.continents = self.getcontinentstype()
             dn.continents_line = self.getcontinentsline()
             dn.template = arglist[2]
             dn.g_type = arglist[3]
@@ -3793,9 +3763,16 @@ class Canvas(vcs.bestMatch):
             dn.newelements = self.__new_elts(original_elts, new_elts)
             dn._parent = self
 
+            """
+            try:
+                self.setcontinentstype(self._savedcontinentstype)
+            except Exception:
+                pass
+            """
             return dn
         else:  # not taylor diagram
-            if hasVCSAddons and isinstance(arglist[3], vcsaddons.core.VCSaddon):
+            if hasVCSAddons and isinstance(
+                    arglist[3], vcsaddons.core.VCSaddon):
                 gm = arglist[3]
             else:
                 tp = arglist[3]
@@ -3807,6 +3784,12 @@ class Canvas(vcs.bestMatch):
                     tp = "1d"
                 gm = vcs.elements[tp][arglist[4]]
                 if hasattr(gm, "priority") and gm.priority == 0:
+                    """
+                    try:  # not always saved
+                        self.setcontinentstype(self._savedcontinentstype)
+                    except Exception:
+                        pass
+                        """
                     return
             p = self.getprojection(gm.projection)
             if p.type in no_deformation_projections and (
@@ -3914,7 +3897,8 @@ class Canvas(vcs.bestMatch):
                 if doratio[-1] == 't' or template_origin == 'default':
                     box_and_ticks = 1
 
-                if hasVCSAddons and isinstance(arglist[3], vcsaddons.core.VCSaddon):
+                if hasVCSAddons and isinstance(
+                        arglist[3], vcsaddons.core.VCSaddon):
                     gm = arglist[3]
                 else:
                     tp = arglist[3]
@@ -4001,7 +3985,7 @@ class Canvas(vcs.bestMatch):
             if hasattr(self, '_isplottinggridded'):
                 del(self._isplottinggridded)
             # Get the continents for animation generation
-            self.animate.continents_value = self._continentspath()
+            # self.animate.continents_value = self._continentspath()
 
             # Get the option for doing graphics in the background.
             if bg:
@@ -4020,7 +4004,8 @@ class Canvas(vcs.bestMatch):
                         'Error - VECTOR components must be on the same grid.')
             if "bg" in keyargs:
                 del(keyargs["bg"])
-            if hasVCSAddons and isinstance(arglist[3], vcsaddons.core.VCSaddon):
+            if hasVCSAddons and isinstance(
+                    arglist[3], vcsaddons.core.VCSaddon):
                 if arglist[1] is None:
                     dn = arglist[3].plot(
                         arglist[0],
@@ -4057,7 +4042,6 @@ class Canvas(vcs.bestMatch):
                 if dn is not None:
                     dn._template_origin = template_origin
                     dn.ratio = keyargs.get("ratio", None)
-                    dn.continents = self.getcontinentstype()
                     dn.continents_line = self.getcontinentsline()
                     dn.newelements = self.__new_elts(original_elts, new_elts)
 
@@ -4363,10 +4347,9 @@ class Canvas(vcs.bestMatch):
 
                 >>> a=vcs.init()
                 >>> ci=a.canvasinfo()
-                >>> keys=a.canvasinfo().keys()
-                >>> keys.sort()
+                >>> keys=sorted(a.canvasinfo().keys())
                 >>> for key in keys:
-                ...     print key, str(ci[key])
+                ...     print(key, str(ci[key]))
                 depth ...
                 height ...
                 mapstate ...
@@ -4379,95 +4362,6 @@ class Canvas(vcs.bestMatch):
         :rtype: dict
         """
         return self.backend.canvasinfo(*args, **kargs)
-
-    def getcontinentstype(self, *args):
-        """Retrieve continents type from VCS; either an integer between 0 and 6 or the
-        path to a custom continentstype.
-
-        :Example:
-
-            .. doctest:: canvas_getcontinentstype
-
-                >>> a=vcs.init()
-                >>> a.setcontinentstype(6)
-                >>> a.getcontinentstype() # Get the continents type
-                6
-
-        :returns An int between 0 and 6, or the path to a custom continentstype
-        :rtype: `int`_ or system filepath
-        """
-        try:
-            return self._continents
-        except Exception:
-            return None
-
-    def pstogif(self, filename, *opt):
-        """In some cases, the user may want to save the plot out as a gif image. This
-        routine allows the user to convert a postscript file to a gif file.
-
-        :Example:
-
-            .. doctest:: canvas_pstogif
-
-                >>> a=vcs.init()
-                >>> array = [range(1, 11) for _ in range(1, 11)]
-                >>> a.plot(array)
-                <vcs.displayplot.Dp ...>
-                >>> a.pstogif('filename.ps') # convert the postscript file to a gif file
-                >>> a.pstogif('filename.ps','l') # convert the postscript file to a gif file (l=landscape)
-                >>> a.pstogif('filename.ps','p') # convert the postscript file to a gif file (p=portrait)
-
-        :param filename: String name of the desired output file
-        :type filename: `str`_
-
-        :param opt: One of 'l' or 'p', indicating landscape or portrait mode, respectively.
-        :type opt: `str`_
-        """
-        from os import popen
-
-        # Generate the VCS postscript file
-        if (filename[-3:] != '.ps'):
-            filename = filename + '.ps'
-
-        # Set the default orientation to landscape'
-        if len(opt) == 0:
-            orientation = 'l'
-        else:
-            orientation = opt[0]
-        # end of if len(orientation) == 0:
-
-        cmd1 = 'gs -r72x72 -q -sDEVICE=ppmraw -sOutputFile=- '
-        cmd2flip = ' | pnmflip -cw '
-        cmd3 = '| pnmcrop | ppmtogif > '
-
-        if orientation == 'l':
-            cmd = cmd1 + filename + cmd2flip + cmd3 + filename[:-2] + 'gif\n'
-        elif orientation == 'p':
-            cmd = cmd1 + filename + cmd3 + filename[:-2] + 'gif \n'
-        else:
-            cmd = '\n'
-        # end if orientation == 'l':
-        f = popen(cmd, 'w')
-        f.close()
-        return
-
-    def grid(self, *args):
-        """
-        Set the default plotting region for variables that have more dimension values
-        than the graphics method. This will also be used for animating plots over the
-        third and fourth dimensions.
-
-        .. attention::
-
-            This function does not currently work.
-            It will be implemented in the future.
-
-        .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
-        """
-
-        p = self.canvas.grid(*args)
-
-        return p
 
     def landscape(self, width=-99, height=-99, x=-99, y=-99, clear=0):
         """Change the VCS Canvas orientation to Landscape.
@@ -4538,7 +4432,8 @@ class Canvas(vcs.bestMatch):
 
         args = (width, height, x, y, clear)
         return self.backend.landscape(*args)
-    landscape.__doc__ = landscape.__doc__ % (xmldocs.canvas_width, xmldocs.canvas_height, xmldocs.canvas_clear)
+    landscape.__doc__ = landscape.__doc__ % (
+        xmldocs.canvas_width, xmldocs.canvas_height, xmldocs.canvas_clear)
 
     def listelements(self, *args):
         """Returns a sorted Python list of all VCS object names, or a list of
@@ -4684,7 +4579,8 @@ class Canvas(vcs.bestMatch):
 
         return p
 
-    portrait.__doc__ = portrait.__doc__ % (xmldocs.canvas_width, xmldocs.canvas_height, xmldocs.canvas_clear)
+    portrait.__doc__ = portrait.__doc__ % (
+        xmldocs.canvas_width, xmldocs.canvas_height, xmldocs.canvas_clear)
 
     def ffmpeg(self, movie, files, bitrate=1024, rate=None, options=None):
         """MPEG output from a list of valid files.
@@ -4727,11 +4623,11 @@ class Canvas(vcs.bestMatch):
                 <vcs.displayplot.Dp object at 0x...>
                 <vcs.displayplot.Dp object at 0x...>
                 >>> a.ffmpeg('m1.mpeg',png_files) # using list of files
-                True
+                <vcs.Canvas.JupyterFFMPEG object at 0x...>
                 >>> a.ffmpeg('m2.mpeg',png_files,bitrate=512) # 512kbit rate
-                True
+                <vcs.Canvas.JupyterFFMPEG object at 0x...>
                 >>> a.ffmpeg('m3.mpeg',png_files,rate=50) # 50 frames/second
-                True
+                <vcs.Canvas.JupyterFFMPEG object at 0x...>
 
         :param movie: Output video file name
         :type movie: `str`_
@@ -4747,7 +4643,7 @@ class Canvas(vcs.bestMatch):
         :type options: `str`_
 
         :returns: A object that Jupyter notebook can display
-        :rtype: `JupyterFFMPEG`_
+        :rtype: JupyterFFMPEG
 
         """
         args = ["ffmpeg", "-y"]
@@ -4887,8 +4783,8 @@ class Canvas(vcs.bestMatch):
             width, height, units)
 
         # in pixels?
-        self.bgX = W
-        self.bgY = H
+        self.width = W
+        self.height = H
         return
     # display ping
     setbgoutputdimensions.__doc__ = setbgoutputdimensions.__doc__ % (xmldocs.output_width, xmldocs.output_height,
@@ -4942,7 +4838,7 @@ class Canvas(vcs.bestMatch):
             **kargs)
 
     def png(self, file, width=None, height=None,
-            units=None, draw_white_background=True, **args):
+            units=None, draw_white_background=True, provenance=False, **args):
         """PNG output, dimensions set via setbgoutputdimensions
 
         :Example:
@@ -4975,9 +4871,23 @@ class Canvas(vcs.bestMatch):
 
         W, H = self._compute_width_height(
             width, height, units, background=True)
+        if provenance is True:
+            provenance = cdat_info.generateProvenance(history=True)
+        if isinstance(provenance, dict):
+            metadata = args.get("metadata", {})
+            provenance_in = metadata.get("provenance", None)
+            if provenance_in is not None:
+                provenance["user_provenance"] = provenance_in
+            metadata["provenance"] = provenance
+            args["metadata"] = metadata
+        elif provenance is not False:
+            raise RuntimeError("provenance to vcs png must be boolean or dict, you passed: {}".format(provenance))
         return self.backend.png(
             file, W, H, units, draw_white_background, **args)
-    png.__doc__ = png.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
+    png.__doc__ = png.__doc__ % (xmldocs.output_file,
+                                 xmldocs.output_width,
+                                 xmldocs.output_height,
+                                 xmldocs.output_units)
 
     def pdf(self, file, width=None, height=None, units='inches',
             textAsPaths=True):
@@ -5017,8 +4927,12 @@ class Canvas(vcs.bestMatch):
 
         if not file.split('.')[-1].lower() in ['pdf']:
             file += '.pdf'
-        return self.backend.pdf(file, width=W, height=H, units=units, textAsPaths=textAsPaths)
-    pdf.__doc__ = pdf.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
+        return self.backend.pdf(file, width=W, height=H,
+                                units=units, textAsPaths=textAsPaths)
+    pdf.__doc__ = pdf.__doc__ % (xmldocs.output_file,
+                                 xmldocs.output_width,
+                                 xmldocs.output_height,
+                                 xmldocs.output_units)
 
     def svg(self, file, width=None, height=None, units='inches',
             textAsPaths=True):
@@ -5058,8 +4972,12 @@ class Canvas(vcs.bestMatch):
 
         if not file.split('.')[-1].lower() in ['svg']:
             file += '.svg'
-        return self.backend.svg(file, width=W, height=H, units=units, textAsPaths=textAsPaths)
-    svg.__doc__ = svg.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
+        return self.backend.svg(file, width=W, height=H,
+                                units=units, textAsPaths=textAsPaths)
+    svg.__doc__ = svg.__doc__ % (xmldocs.output_file,
+                                 xmldocs.output_width,
+                                 xmldocs.output_height,
+                                 xmldocs.output_units)
 
     def _compute_margins(
             self, W, H, top_margin, bottom_margin, right_margin, left_margin, dpi):
@@ -5179,7 +5097,8 @@ class Canvas(vcs.bestMatch):
         """
         return self.backend.isopened()
 
-    def _compute_width_height(self, width, height, units, ps=False, background=False):
+    def _compute_width_height(
+            self, width, height, units, ps=False, background=False):
         dpi = 72.  # dot per inches
         if units in ["in", "inches"]:
             factor = 1.
@@ -5230,8 +5149,8 @@ class Canvas(vcs.bestMatch):
                         height = 8.5
                         width = self.size * height
             else:
-                width = self.bgX
-                height = self.bgY
+                width = self.width
+                height = self.height
         elif width is None:
             if self.size is None:
                 width = 1.2941176470588236 * height
@@ -5251,7 +5170,8 @@ class Canvas(vcs.bestMatch):
             H = tmp
         return W, H
 
-    def postscript(self, file, mode='r', orientation=None, width=None, height=None, units='inches', textAsPaths=True):
+    def postscript(self, file, mode='r', orientation=None,
+                   width=None, height=None, units='inches', textAsPaths=True):
         """Postscript output is another form of vector graphics. It is larger than its CGM output
         counter part, because it is stored out in ASCII format.
 
@@ -5306,7 +5226,8 @@ class Canvas(vcs.bestMatch):
         if not file.split('.')[-1].lower() in ['ps', 'eps']:
             file += '.ps'
         if mode == 'r':
-            return self.backend.postscript(file, W, H, units="pixels", textAsPaths=textAsPaths)
+            return self.backend.postscript(
+                file, W, H, units="pixels", textAsPaths=textAsPaths)
         else:
             n = random.randint(0, 10000000000000)
             psnm = '/tmp/' + '__VCS__tmp__' + str(n) + '.ps'
@@ -5444,7 +5365,8 @@ class Canvas(vcs.bestMatch):
         :param line: Line to use for drawing continents. Can be a string name of a line, or a VCS line object
         :type line: `str`_ or :py:class:`vcs.line.Tl`
         """
-        linename = VCS_validation_functions.checkLine(self, "continentsline", line)
+        linename = VCS_validation_functions.checkLine(
+            self, "continentsline", line)
         line = vcs.getline(linename)
         self._continents_line = line
 
@@ -5469,59 +5391,11 @@ class Canvas(vcs.bestMatch):
         else:
             return self._continents_line
 
-    def setcontinentstype(self, value):
-        """One has the option of using continental maps that are predefined or that
-        are user-defined. Predefined continental maps are either internal to VCS
-        or are specified by external files. User-defined continental maps are
-        specified by additional external files that must be read as input.
-
-        The continents-type values are integers ranging from 0 to 11, where:
-
-            * 0 signifies "No Continents"
-
-            * 1 signifies "Fine Continents"
-
-            * 2 signifies "Coarse Continents"
-
-            * 3 signifies "United States" (with "Fine Continents")
-
-            * 4 signifies "Political Borders" (with "Fine Continents")
-
-            * 5 signifies "Rivers" (with "Fine Continents")
-
-            * 6 uses a custom continent set
-
-        You can also pass a file by path.
-
-        :Example:
-
-            .. doctest:: canvas_setcontinentstype
-
-                >>> a=vcs.init()
-                >>> a.setcontinentstype(4) # "Political Borders"
-                >>> import cdms2 # We need cdms2 to create a slab
-                >>> f = cdms2.open(vcs.sample_data+'/clt.nc') # open data file
-                >>> v = f('v') # use the data file to create a slab
-                >>> a.plot(v,'default','isofill','quick') # map with borders
-                <vcs.displayplot.Dp ...>
-
-        :param value: Integer representing continent type, as specified in function description
-        :type value: `int`_
-        """
-        continent_path = VCS_validation_functions.checkContinents(self, value)
-        self._continents = value
-        if continent_path is not None and not os.path.exists(
-                continent_path):
-            warnings.warn(
-                "Continents file not found: %s, substituing with fine continents" %
-                continent_path)
-            self._continents = 1
-            return
-
-    def _continentspath(self):
+    def _continentspath(self, continentsPath):
         try:
-            path = VCS_validation_functions.checkContinents(self, self._continents)
-            if path is None and self._continents != 0:
+            path = VCS_validation_functions.checkContinents(
+                self, continentsPath)
+            if path is None and continentsPath != 0:
                 return VCS_validation_functions.checkContinents(self, 1)
             else:
                 return path
@@ -5562,9 +5436,12 @@ class Canvas(vcs.bestMatch):
     def gs(self, filename='noname.gs', device='png256',
            orientation=None, resolution='792x612'):
 
-        warnings.warn("Export to GhostScript is no longer supported", vcs.VCSDeprecationWarning)
+        warnings.warn(
+            "Export to GhostScript is no longer supported",
+            vcs.VCSDeprecationWarning)
 
-    def eps(self, file, mode='r', orientation=None, width=None, height=None, units='inches', textAsPaths=True):
+    def eps(self, file, mode='r', orientation=None, width=None,
+            height=None, units='inches', textAsPaths=True):
         """In some cases, the user may want to save the plot out as an Encapsulated
         PostScript image. This routine allows the user to save the VCS canvas output
         as an Encapsulated PostScript file.
@@ -5613,51 +5490,14 @@ class Canvas(vcs.bestMatch):
 
         os.popen("ps2epsi %s %s" % (tmpfile, file)).readlines()
         os.remove(tmpfile)
-    eps.__doc__ = eps.__doc__ % (xmldocs.output_file, xmldocs.output_width, xmldocs.output_height, xmldocs.output_units)
+    eps.__doc__ = eps.__doc__ % (xmldocs.output_file,
+                                 xmldocs.output_width,
+                                 xmldocs.output_height,
+                                 xmldocs.output_units)
 
     def show(self, *args):
         return vcs.show(*args)
     show.__doc__ = vcs.utils.show.__doc__
-
-    def isinfile(self, GM, file=None):
-        """Checks if a graphic method is stored in a file
-        if no file name is passed then looks into the initial.attributes file
-
-        :Example:
-
-            .. doctest:: canvas_isinfile
-
-                >>> a=vcs.init()
-                >>> box=a.getboxfill()
-                >>> a.scriptobject(box, 'deft_box.py')
-                >>> a.isinfile(box, 'deft_box.py')
-                1
-
-        :param GM: The graphics method to search for
-        :type GM: `str`_
-
-        :param file: String name of the file to search.
-            If None, VCS will search initial.attributes.
-        :type file: `str`_
-
-        :returns: 1 if the graphic method is stored in the file, nothing if it is not.
-
-        .. pragma: skip-doctest This function needs to be fixed
-        """
-        nm = GM.name
-        gm = GM.g_name
-        key = key = gm + '_' + nm + '('
-        if file is None:
-            file = os.path.join(
-                os.path.expanduser("~"),
-                self._dotdir,
-                'initial.attributes')
-        f = open(file, 'r')
-        for ln in f:
-            if ln.find(key) > -1:
-                f.close()
-                return 1
-        return
 
     def saveinitialfile(self):
         """At start-up, VCS reads a script file named initial.attributes that
@@ -5790,47 +5630,8 @@ class Canvas(vcs.bestMatch):
     getcolormap.__doc__ = vcs.manageElements.getcolormap.__doc__
 
     def addfont(self, path, name=""):
-        """Add a font to VCS.
-
-        :param path: Path to the font file you wish to add (must be .ttf)
-        :type path: `str`_
-
-        :param name: Name to use to represent the font.
-        :type name: `str`_
-
-        .. pragma: skip-doctest If you can reliably test it, please do.
-        """
-        if not os.path.exists(path):
-            raise ValueError('Error -  The font path does not exists')
-        if os.path.isdir(path):
-            dir_files = []
-            files = []
-            if name == "":
-                subfiles = os.listdir(path)
-                for file in subfiles:
-                    dir_files.append(os.path.join(path, file))
-            elif name == 'r':
-                for root, dirs, subfiles in os.walk(path):
-                    for file in subfiles:
-                        dir_files.append(os.path.join(root, file))
-            for f in dir_files:
-                if f.lower()[-3:]in ['ttf', 'pfa', 'pfb']:
-                    files.append([f, ""])
-        else:
-            files = [[path, name], ]
-
-        nms = []
-        for f in files:
-            fnm, name = f
-            i = max(vcs.elements["fontNumber"].keys()) + 1
-            vcs.elements["font"][name] = fnm
-            vcs.elements["fontNumber"][i] = name
-        if len(nms) == 0:
-            raise vcsError('No font Loaded')
-        elif len(nms) > 1:
-            return nms
-        else:
-            return nms[0]
+        return vcs.addfont(path, name)
+    addfont.__doc__ = vcs.manageElements.addfont.__doc__
 
     def getfontnumber(self, name):
         return vcs.getfontnumber(name)
@@ -5841,136 +5642,20 @@ class Canvas(vcs.bestMatch):
     getfontname.__doc__ = vcs.utils.getfontname.__doc__
 
     def getfont(self, font):
-        """Get the font name/number associated with a font number/name
-
-        :Example:
-
-            .. doctest:: canvas_getfont
-
-                >>> a=vcs.init()
-                >>> font_names=[]
-                >>> for i in range(1,17):
-                ...     font_names.append(str(a.getfont(i))) # font_names is now filled with all font names
-                >>> font_names
-                ['default', ...]
-                >>> font_numbers = []
-                >>> for name in font_names:
-                ...     font_numbers.append(a.getfont(name)) # font_numbers is now filled with all font numbers
-                >>> font_numbers
-                [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-
-        :param font: The font name/number
-        :type font: `int`_ or `str`_
-
-        :returns: If font parameter was a string, will return the integer
-            associated with that string.
-            If font parameter was an integer, will return the string
-            associated with that integer.
-        :rtype: `int`_ or str
-        """
-        if isinstance(font, int):
-            return self.getfontname(font)
-        elif isinstance(font, str):
-            return self.getfontnumber(font)
-        else:
-            raise vcsError("Error you must pass a string or int")
+        return vcs.getfont(font)
+    getfont.__doc__ = vcs.manageElements.getfont.__doc__
 
     def switchfonts(self, font1, font2):
-        """Switch the font numbers of two fonts.
-
-        :Example:
-
-            .. doctest:: canvas_switchfonts
-
-                >>> a=vcs.init()
-                >>> maths1 = a.getfontnumber('Maths1') # store font number
-                >>> maths2 = a.getfontnumber('Maths2') # store font number
-                >>> a.switchfonts('Maths1','Maths2') # switch font numbers
-                >>> new_maths1 = a.getfontnumber('Maths1')
-                >>> new_maths2 = a.getfontnumber('Maths2')
-                >>> maths1 == new_maths2 and maths2 == new_maths1 # check
-                True
-
-        :param font1: The first font
-        :type font1: `int`_ or str
-
-        :param font2: The second font
-        :type font2: `int`_ or str
-        """
-        if isinstance(font1, str):
-            index1 = self.getfont(font1)
-        elif isinstance(font1, (int, float)):
-            index1 = int(font1)
-            self.getfont(index1)  # make sure font exists
-        else:
-            raise vcsError(
-                "Error you must pass either a number or font name!, you passed for font 1: %s" %
-                font1)
-        if isinstance(font2, str):
-            index2 = self.getfont(font2)
-        elif isinstance(font2, (int, float)):
-            index2 = int(font2)
-            self.getfont(index2)  # make sure font exists
-        else:
-            raise vcsError(
-                "Error you must pass either a number or font name!, you passed for font 2: %s" %
-                font2)
-        tmp = vcs.elements['fontNumber'][index1]
-        vcs.elements['fontNumber'][index1] = vcs.elements['fontNumber'][index2]
-        vcs.elements['fontNumber'][index2] = tmp
+        vcs.switchfonts(font1, font2)
+    switchfonts.__doc__ = vcs.manageElements.switchfonts.__doc__
 
     def copyfontto(self, font1, font2):
-        """Copy 'font1' into 'font2'.
-
-        :param font1: Name/number of font to copy
-        :type font1: `str`_ or int
-
-        :param font2: Name/number of destination
-        :type font2: `str`_ or `int`_
-
-        .. attention::
-
-            This function does not currently work.
-            It will be added in the future.
-
-        .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
-        """
-        if isinstance(font1, str):
-            index1 = self.getfont(font1)
-        elif isinstance(font1, (int, float)):
-            index1 = int(font1)
-            self.getfont(index1)  # make sure font exists
-        else:
-            raise vcsError(
-                "Error you must pass either a number or font name!, you passed for font 1: %s" %
-                font1)
-        if isinstance(font2, str):
-            index2 = self.getfont(font2)
-        elif isinstance(font2, (int, float)):
-            index2 = int(font2)
-            self.getfont(index2)  # make sure font exists
-        else:
-            raise vcsError(
-                "Error you must pass either a number or font name!, you passed for font 2: %s" %
-                font2)
-        return self.canvas.copyfontto(*(index1, index2))
+        vcs.copyfontto(font1, font2)
+    copyfontto.__doc__ = vcs.manageElements.copyfontto.__doc__
 
     def setdefaultfont(self, font):
-        """Sets the passed/def show font as the default font for vcs
-
-        :param font: Font name or index to use as default
-        :type font: `str`_ or `int`_
-
-        .. attention::
-
-            This function does not currently work.
-            It will be implemented in the future.
-
-        .. pragma: skip-doctest REMOVE WHEN IT WORKS AGAIN!
-        """
-        if isinstance(font, str):
-            font = self.getfont(font)
-        return self.copyfontto(font, 1)
+        vcs.setdefaultfont(font)
+    setdefaultfont.__doc__ = vcs.manageElements.setdefaultfont.__doc__
 
     def orientation(self, *args, **kargs):
         """Return canvas orientation.

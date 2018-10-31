@@ -437,13 +437,16 @@ class Gs(vcs.bestMatch):
 
     """
        Position of the start seed. Used only for evenly spaced streamlines.
+       By default is set to None which is taken to mean the middle of the domain.
 
     """
     def _getstartseed(self):
         return self._startseed
 
     def _setstartseed(self, value):
-        value = VCS_validation_functions.checkListOfNumbers(self, 'startseed', value)
+        if (value):
+            value = VCS_validation_functions.checkListOfNumbers(
+                self, 'startseed', value)
         self._startseed = value
     startseed = property(_getstartseed, _setstartseed)
 
@@ -785,7 +788,7 @@ class Gs(vcs.bestMatch):
             self._fillareastyle = 'solid'
             self._evenlyspaced = True
             self._numberofseeds = 500
-            self._startseed = [0., 0., 0.]
+            self._startseed = None
             self._separatingdistance = 1
             self._separatingdistanceratio = 0.4
             self._closedloopmaximumdistance = 0.2
@@ -910,6 +913,7 @@ class Gs(vcs.bestMatch):
         print("ext_1 = ", self.ext_1)
         print("ext_2 = ", self.ext_2)
         print('fillareacolors =', self.fillareacolors)
+        print("linetype = ", self.linetype)
         print("linecolor = ", self.linecolor)
         print("linewidth = ", self.linewidth)
         print("reference = ", self.reference)
@@ -1054,7 +1058,7 @@ class Gs(vcs.bestMatch):
                      (unique_name, self.fillareastyle))
 
             # Unique attribute for streamline
-            fp.write("%s.line = %s\n" % (unique_name, self.line))
+            fp.write("%s.linetype = %s\n" % (unique_name, self.linetype))
             fp.write("%s.linecolor = %s\n" % (unique_name, self.linecolor))
             fp.write("%s.linewidth = %s\n" % (unique_name, self.linewidth))
             fp.write("%s.reference = %s\n\n" % (unique_name, self.reference))
@@ -1064,8 +1068,11 @@ class Gs(vcs.bestMatch):
                     self.colormap)))
             fp.write("%s.evenlyspaced = %r\n" % (unique_name, self.evenlyspaced))
             fp.write("%s.numberofseeds = %d\n" % (unique_name, self.numberofseeds))
-            fp.write("%s.startseed = [%d,%d,%d]\n" % (
-                unique_name, self.startseed[0], self.startseed[1], self.startseed[2]))
+            if self.startseed is not None:
+                fp.write("%s.startseed = [%d,%d,%d]\n" % (unique_name, self.startseed[0],
+                                                          self.startseed[1], self.startseed[2]))
+            else:
+                fp.write("%s.startseed = None\n")
             fp.write("%s.separatingdistance = %d\n" % (unique_name, self.separatingdistance))
             fp.write("%s.separatingdistanceratio = %d\n" % (unique_name, self.separatingdistanceratio))
             fp.write("%s.closedloopmaximumdistance = %d\n" % (unique_name, self.closedloopmaximumdistance))

@@ -22,7 +22,7 @@ class TestFlake8(unittest.TestCase):
         print()
         print()
         print()
-        P = subprocess.Popen(shlex.split("flake8 --show-source --statistics --ignore=F999,F405,E121,E123,E126,E226,E24,E704 --max-line-length=120 %s" % pth),
+        P = subprocess.Popen(shlex.split("flake8 --show-source --statistics --ignore=F999,F405,E121,E123,E126,E226,E24,E704,W504 --max-line-length=120 %s" % pth),
                              stdin=subprocess.PIPE,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)

@@ -48,6 +48,8 @@ model for defining a plot, that is decomposed into three parts:
 """
 import warnings
 import difflib
+import pkg_resources
+vcs_egg_path = pkg_resources.resource_filename(pkg_resources.Requirement.parse("vcs"), "share/vcs")
 
 
 class bestMatch(object):
@@ -156,6 +158,7 @@ elements["xvsy"] = {}
 elements["scatter"] = {}
 elements["colormap"] = {}
 elements["display"] = {}
+elements["format"] = {}
 
 _protected_elements = {}
 for k in list(elements.keys()):
@@ -183,6 +186,9 @@ for j in range(-80, 81, 20):
 dic[-90] = "90S"
 dic[90] = "90N"
 elements["list"]["Lat20"] = dic
+elements["list"]["Lat_wt"] = {-90.: "90S", -60: "60S", -45: "45S", -30: "30S", -15: "15S",
+                              0: "Eq",
+                              15: "15N", 30: "30S", 45: "45N", 60: "60N", 90: "90N"}
 
 i = 1
 for nm, fnt in [
@@ -202,11 +208,19 @@ for nm, fnt in [
     ("Maths3", "jsMath-wasy10.ttf"),
     ("Maths4", "blsy.ttf"),
     ("AvantGarde", "AvantGarde-Book_Bold.ttf"),
+    ("DejaVuSans-Bold", "DejaVuSans-Bold.ttf"),
+    ("DejaVuSans-BoldOblique", "DejaVuSans-BoldOblique.ttf"),
+    ("DejaVuSans-ExtraLight", "DejaVuSans-ExtraLight.ttf"),
+    ("DejaVuSans-Oblique", "DejaVuSans-Oblique.ttf"),
+    ("DejaVuSans", "DejaVuSans.ttf"),
+    ("DejaVuSansCondensed-Bold", "DejaVuSansCondensed-Bold.ttf"),
+    ("DejaVuSansCondensed-BoldOblique", "DejaVuSansCondensed-BoldOblique.ttf"),
+    ("DejaVuSansCondensed-Oblique", "DejaVuSansCondensed-Oblique.ttf"),
+    ("DejaVuSansCondensed", "DejaVuSansCondensed.ttf"),
 ]:
     pth = os.path.join(
-        vcs.prefix,
-        "share",
-        "vcs",
+        vcs_egg_path,
+        "fonts",
         fnt)
     if os.path.exists(pth):
         vcs.elements["font"][nm] = pth
@@ -258,6 +272,34 @@ dv3d.Gf3Dscalar("default")
 dv3d.Gf3Dscalar("Hovmoller3D")
 dv3d.Gf3DDualScalar("default")
 
+# formats
+# see: https://pyformat.info/
+elements["format"]["default"] = ""
+# old % style equivalents
+elements["format"]["d"] = ""
+elements["format"]["s"] = "0!s"
+elements["format"]["r"] = "0!r"
+elements["format"]["a"] = "0!a"
+elements["format"]["g"] = ":g"
+elements["format"]["G"] = ":G"
+# convenience and thier old style?
+elements["format"]["0padded2digint"] = ":02d"
+elements["format"]["02d"] = ":02d"
+elements["format"]["0padded3digint"] = ":03d"
+elements["format"]["03d"] = ":03d"
+elements["format"]["0padded4digint"] = ":04d"
+elements["format"]["04d"] = ":04d"
+elements["format"]["spacepadded2digint"] = ":2d"
+elements["format"]["2d"] = ":2d"
+elements["format"]["spacepadded3digint"] = ":3d"
+elements["format"]["3d"] = ":3d"
+elements["format"]["spacepadded4digint"] = ":4d"
+elements["format"]["4d"] = ":4d"
+elements["format"]["float2dig"] = ":.2f"
+elements["format"]["2f"] = ":.2f"
+elements["format"]["float3dig"] = ":.3f"
+elements["format"]["3f"] = ":.3f"
+
 on = {'state': 1}
 off = {'state': 0}
 
@@ -275,7 +317,7 @@ template.P("default")
 t = taylor.Gtd("default")
 
 
-pth = [vcs.prefix, 'share', 'vcs', 'initial.attributes']
+pth = [vcs_egg_path, 'initial.attributes']
 try:
     vcs.scriptrun(os.path.join(*pth))
 except BaseException:

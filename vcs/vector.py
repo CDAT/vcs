@@ -582,22 +582,6 @@ class Gv(vcs.bestMatch):
         self._linetype = value
     linetype = property(_getlinetype, _setlinetype)
 
-    def _getline(self):
-        print('DEPRECATED: Use linetype or setLineAttributes instead.')
-        return self._linetype
-
-    def _setline(self, ln):
-        from . import queries
-        print('DEPRECATED: Use linetype or setLineAttributes instead.')
-        if (queries.isline(ln) or
-                (isinstance(ln, basestring) and ln in vcs.elements["line"])):
-            ln = vcs.elements["line"][ln]
-            self.setLineAttributes(ln)
-        else:
-            self._linetype = ln
-
-    line = property(_getline, _setline)
-
     def setLineAttributes(self, line):
         """
         Set attributes linecolor, linewidth and linetype from line l.
@@ -629,10 +613,10 @@ class Gv(vcs.bestMatch):
     """
     One of the following strings:
       off - No scaling is performed on the vector values
-      constant - vector value *  self.scale
-      normalize - vector value /  max_norm
-      constantNNormalize - vector value * self.scale / max_norm
-      linear - map [min_norm, max_norm] to self.scalerange
+      constant: vector value *  self.scale
+      normalize: vector value /  max_norm
+      constantNNormalize: vector value * self.scale / max_norm
+      linear: map [min_norm, max_norm] to self.scalerange
       constantNLinear - map [min_norm, max_norm] to self.scalerange and then multiply by self.scale
     """
     def _getscaletype(self):

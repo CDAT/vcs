@@ -7,7 +7,7 @@ import cdms2
 import sys
 pth = os.path.dirname(__file__)
 sys.path.append(pth)
-import checkimage
+import cdat_info
 # import glob
 
 
@@ -54,21 +54,10 @@ class VCSBaseTest(unittest.TestCase):
         # if glob.glob(os.path.join(self.pngsdir,"*")) == []:
         #    shutil.rmtree(self.pngsdir)
 
-    def checkImage(self, fnm, src=None, threshold=checkimage.defaultThreshold,
+    def checkImage(self, fnm, src=None, threshold=cdat_info.defaultThreshold,
                    pngReady=False, pngPathSet=False):
-        if src is None:
-            src = os.path.join(self.basedir, os.path.basename(fnm))
-        if not pngPathSet:
-            fnm = os.path.join(self.pngsdir, fnm)
-        print("Test file  :", fnm)
-        print("Source file:", src)
-        if not pngReady:
-            self.x.png(
-                fnm,
-                width=self.x.bgX,
-                height=self.x.bgY,
-                units="pixels")
-        ret = checkimage.check_result_image(fnm, src, threshold)
+        ret = cdat_info.checkImage(fnm, self.x, self.basedir, self.pngsdir, src,
+                                    threshold, pngReady, pngPathSet)
         self.assertEqual(ret, 0)
         return ret
 

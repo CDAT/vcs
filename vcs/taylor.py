@@ -251,7 +251,7 @@ class TDMarker(vcs.bestMatch):
             self,
             'id_size',
             value,
-            minvalue=1,
+            minvalue=0,
             ints=False)
         if value is not None:
             self._id_size = value
@@ -303,7 +303,7 @@ class TDMarker(vcs.bestMatch):
             self,
             'size',
             value,
-            minvalue=1,
+            minvalue=0,
             ints=False)
         if value is not None:
             self._size = value
@@ -435,7 +435,7 @@ class TDMarker(vcs.bestMatch):
             if color is None:
                 color = 'black'
             if size is None:
-                size = 5
+                size = 0.7
             if line_color is None:
                 line_color = 'black'
             if line_size is None:
@@ -1243,7 +1243,7 @@ class Gtd(vcs.bestMatch):
             d0 = float(data[i][0])
             d1 = float(data[i][1])
 
-            s = int(self.Marker.size[i])
+            s = self.Marker.size[i]
             t = self.Marker.symbol[i]
             c = VCS_validation_functions.color2vcs(self.Marker.color[i])
             m = createnewvcsobj(canvas, 'marker', 'TD_')

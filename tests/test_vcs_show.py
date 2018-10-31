@@ -17,6 +17,7 @@ class TestVCS(basevcstest.VCSBaseTest):
                 'fillarea',
                 'font',
                 'fontNumber',
+                'format',
                 'isofill',
                 'isoline',
                 'line',
@@ -52,7 +53,8 @@ class TestVCS(basevcstest.VCSBaseTest):
                 13,
                 14,
                 15,
-                16])
+                16,
+                17, 18, 19, 20, 21, 22, 23, 24, 25])
         self.x.show("textcombined")
         before = self.x.listelements("textcombined")
         t = self.x.createtext()

@@ -137,11 +137,11 @@ class Pxt(vcs.bestMatch):
         elif member == "xmintic1":
             self.priority = 0
             self.y1 = 0.259999990463
-            self.y2 = 0.256999999285
+            self.y2 = 0.248999999285
         elif member == "xmintic2":
             self.priority = 0
             self.y1 = 0.860000014305
-            self.y2 = 0.860000014305
+            self.y2 = 0.868000014305
         self.line = "default"
 
     ##########################################################################

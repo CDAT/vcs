@@ -13,3 +13,4 @@ Graphics methods are VCS' objects for configuring your visualization's data repr
     taylor
     unified1D
     vector
+    streamline
