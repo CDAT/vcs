@@ -2168,11 +2168,16 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
 
         wc = projBounds
 
-        wc = adjustBounds(wc, 1.1, 1.1)
+        doAdjustBounds = True
+        boundsAdjustment = 1.005
+
+        if doAdjustBounds:
+            wc = adjustBounds(wc, boundsAdjustment, boundsAdjustment)
         rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
 
         [renWinWidth, renWinHeight] = plotsContext.renWin.GetSize()
-        vp = adjustBounds(vp, 1.1, 1.1)
+        if doAdjustBounds:
+            vp = adjustBounds(vp, boundsAdjustment, boundsAdjustment)
         geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
                             int(vp[2] * renWinHeight),
                             int((vp[1] - vp[0]) * renWinWidth),
