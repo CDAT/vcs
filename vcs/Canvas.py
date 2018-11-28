@@ -68,7 +68,12 @@ try:
     basestring
 except Exception:
     basestring = str
-from IPython import get_ipython
+try:
+    from IPython import get_ipython
+except Exception:
+    # Only needed if we are in IPython
+    # in which case we force bg=True
+    pass
 
 
 def rotate(x, y, xorigin, yorigin, angle):
