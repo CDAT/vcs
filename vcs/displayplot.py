@@ -28,7 +28,7 @@ import vcs
 from .xmldocs import listdoc  # noqa
 
 try:
-    basestring
+    basestring  # noqa
 except Exception:
     basestring = str
 
@@ -36,9 +36,10 @@ except Exception:
 class IPythonDisplay(object):
     def __init__(self, png):
         self.png = png
+
     def _repr_png_(self):
         return self.png
-    
+
 
 class Dp(vcs.bestMatch):
 
@@ -157,8 +158,7 @@ class Dp(vcs.bestMatch):
             with self._parent._display_target:
                 IPython.display.display(IPythonDisplay(st))
                 st = None
-        except Exception as err:
-            print("ERRROR SIDECAR:",err)
+        except Exception:
             pass
         return st
 # TODO: html,json,jpeg,png,svg,latex

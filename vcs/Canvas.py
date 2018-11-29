@@ -4225,7 +4225,7 @@ class Canvas(vcs.bestMatch):
                 del(vcs.elements["display"][nm])
         self.display_names = []
         if self._display_target is not None and \
-            not isinstance(self._display_target, basestring):
+                not isinstance(self._display_target, basestring):
             self._display_target.clear_output()
         return
 
@@ -4249,7 +4249,7 @@ class Canvas(vcs.bestMatch):
         a = self.backend.close(*args, **kargs)
         self.animate_info = []
         if self._display_target is not None and \
-            not isinstance(self._display_target, basestring):
+                not isinstance(self._display_target, basestring):
             self._display_target.close()
 
         return a
@@ -4272,7 +4272,7 @@ class Canvas(vcs.bestMatch):
         import gc
 
         if self._display_target is not None and \
-            not isinstance(self._display_target, basestring):
+                not isinstance(self._display_target, basestring):
             self._display_target.clear_output()
             self._display_target.close()
             del(self._display_target)
@@ -4524,7 +4524,7 @@ class Canvas(vcs.bestMatch):
 
         a = self.backend.open(width, height, **kargs)
         if self._display_target is not None and \
-            not isinstance(self._display_target, basestring):
+                not isinstance(self._display_target, basestring):
             self._display_target.open()
 
         return a

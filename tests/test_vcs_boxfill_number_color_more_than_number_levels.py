@@ -22,7 +22,7 @@ class TestVCSBoxfill(basevcstest.VCSBaseTest):
         with warnings.catch_warnings(record=True) as w:
             self.x.plot(clt, boxfill, bg=self.bg)
             for subw in w:
-                if "You asked for 7 lgridevels but provided 12 colors, extra ones will be ignored" in str(subw.message):
+                if "You asked for 7 levels but provided 12 colors, extra ones will be ignored" in str(subw.message):
                     warned = True
 
         self.assertTrue(warned, "This test did not issue warning as expected")
