@@ -48,7 +48,7 @@ aliases:
        export CDAT_ANONYMOUS_LOG=False
        export CDAT_SETUP_PATH=${HOME}
        source activate $PY_VER
-       python run_tests.py -H -v2 -n 2 --checkout-baseline --no-vtk-ui $COVERAGE
+       python run_tests.py -H -v2 --checkout-baseline --no-vtk-ui $COVERAGE
        RESULT=$?
        echo "*** $PY_VER test result: "${RESULT} 
        if [[ $PY_VER = 'py3' ]]; then
@@ -201,11 +201,12 @@ workflows:
   version: 2
   vcs:
     jobs:
-      - macos_vcs_py2
-      - macos_vcs_py3:
-           requires:
-              - macos_vcs_py2
-      - linux_vcs_py2
-      - linux_vcs_py3:
-           requires:
-              - linux_vcs_py2
+      #- macos_vcs_py2
+      #- macos_vcs_py3:
+      #     requires:
+      #        - macos_vcs_py2
+      #- linux_vcs_py2
+      - linux_vcs_py3
+      #- linux_vcs_py3:
+      #     requires:
+      #        - linux_vcs_py2
