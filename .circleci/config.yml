@@ -21,7 +21,7 @@ aliases:
   - &create_conda_env
     name: create_conda_env
     environment:
-       CHANNELS: "-c cdat/label/nightly -c conda-forge -c cdat"
+       CHANNELS: "-c doutriaux1/label/test -c cdat/label/nightly -c conda-forge -c cdat"
        PKGS: "cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime nbformat 'proj4<5' 'numpy>1.14' " 
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
@@ -29,7 +29,7 @@ aliases:
        conda update -y -q conda
        conda config --set anaconda_upload no
        if [[ $PY_VER = "py2" ]]; then
-          conda create -q -n 1 $PY_VER $CHANNELS $PKGS $TEMP_PKGS "python<3"
+          conda create -q -n $PY_VER $CHANNELS $PKGS $TEMP_PKGS "python<3"
        else
           conda create -q -n $PY_VER $CHANNELS $PKGS $TEMP_PKGS "python>3" nbsphinx easydev $COVERAGE_PKGS
        fi 
@@ -48,7 +48,7 @@ aliases:
        export CDAT_ANONYMOUS_LOG=False
        export CDAT_SETUP_PATH=${HOME}
        source activate $PY_VER
-       python run_tests.py -H -v2 --checkout-baseline --no-vtk-ui $COVERAGE
+       python run_tests.py -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $COVERAGE
        RESULT=$?
        echo "*** $PY_VER test result: "${RESULT} 
        if [[ $PY_VER = 'py3' ]]; then
