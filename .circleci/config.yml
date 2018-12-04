@@ -48,7 +48,17 @@ aliases:
        export CDAT_ANONYMOUS_LOG=False
        export CDAT_SETUP_PATH=${HOME}
        source activate $PY_VER
-       python run_tests.py -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $COVERAGE
+       # possibly turn off coverage
+       first=$(git cherry master -v | head -n1)
+       current=$(git log -n1 --pretty=oneline)
+       if [[ $first == $current || $current != *"no_coverage"*  ]]; then
+         echo "Possibly running with coverage"
+         ACTUAL_COVERAGE=$COVERAGE
+       else
+         echo "Commit turned off coverage"
+         ACTUAL_COVERAGE=""
+       fi
+       python run_tests.py -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $ACTUAL_COVERAGE
        RESULT=$?
        echo "*** $PY_VER test result: "${RESULT} 
        if [[ $PY_VER = 'py3' ]]; then
