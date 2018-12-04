@@ -29,7 +29,7 @@ aliases:
        conda update -y -q conda
        conda config --set anaconda_upload no
        if [[ $PY_VER = "py2" ]]; then
-          conda create -q -n $PY_VER $CHANNELS $PKGS $TEMP_PKGS "python<3"
+          conda create -q -n 1 $PY_VER $CHANNELS $PKGS $TEMP_PKGS "python<3"
        else
           conda create -q -n $PY_VER $CHANNELS $PKGS $TEMP_PKGS "python>3" nbsphinx easydev $COVERAGE_PKGS
        fi 
