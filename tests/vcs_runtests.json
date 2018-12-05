@@ -1,0 +1,11 @@
+{
+    "--no-vtk-ui": {
+        "action": "store_true", 
+        "default": false, 
+        "help": "do not vtk_ui tests", 
+        "type": null
+    }, 
+    "--vtk": {
+        "help": "conda channel and extras to use for vtk. Command will be 'conda install -c [VTK] vtk-cdat"
+    }
+}

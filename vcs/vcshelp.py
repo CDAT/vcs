@@ -32,7 +32,7 @@ def objecthelp(*arg):
 
     :Example:
 
-        .. doctest:: vcshelp_objecthelp
+        .. doctest:: vcs_vcshelp_objecthelp
 
             >>> fa=vcs.getfillarea()
             >>> vcs.objecthelp(fa) # print fillarea class documentation
@@ -56,7 +56,7 @@ def help(*arg):
             >>> vcs.help('fillareaobject') # show fillarea help
             The Fillarea class ...
             >>> vcs.help('getboxfill')
-
+            VCS ...
 
     :param arg: One or multiple strings containing the name(s) of object(s)
         and/or function(s) to view the documentation for.

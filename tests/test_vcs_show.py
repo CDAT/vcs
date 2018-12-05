@@ -17,6 +17,7 @@ class TestVCS(basevcstest.VCSBaseTest):
                 'fillarea',
                 'font',
                 'fontNumber',
+                'format',
                 'isofill',
                 'isoline',
                 'line',

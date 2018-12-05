@@ -1,0 +1,40 @@
+package:
+    name: vcs
+    version: "@VERSION@"
+
+source:
+    git_rev: @UVCDAT_BRANCH@
+    git_url: git://github.com/cdat/vcs.git
+
+build:
+  number: @BUILD_NUMBER@
+  noarch: python
+  script: python setup.py install
+
+ 
+requirements:
+  build:
+    - python
+    - setuptools
+    - cdat_info
+    - pip
+  run:
+    - python
+    - cdat_info
+    - genutil
+    - dv3d
+    - vtk-cdat
+    - cdms2
+    - cdutil
+    - requests
+    - numpy
+
+about:
+    home:  http://github.com/cdat/vcs
+    summary: VCS Allows scientists to produce highly customized plots. Everything can be precisely and logically controlled. VCS is specialized toward Earth-science plots.
+    license: BSD
+    license_file: bsd-3-clause.txt
+
+
+
+

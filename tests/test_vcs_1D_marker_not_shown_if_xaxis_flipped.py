@@ -19,7 +19,7 @@ class TestVCS1DBoxfill(basevcstest.VCSBaseTest):
         gm.datawc_x1 = 1000
         gm.datawc_x2 = 0
 
-        gm.markersize = 30
+        gm.markersize = 8
 
         self.x.plot(data, gm, bg=self.bg)
 

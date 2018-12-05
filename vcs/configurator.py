@@ -3,7 +3,6 @@ import datetime
 from . import editors
 from . import vtk_ui
 import os
-import sys
 import vtk
 from .vcs2vtk import vtkIterate
 import copy
@@ -769,9 +768,7 @@ class Configurator(object):
             self.interactor,
             states=states,
             image=os.path.join(
-                sys.prefix,
-                "share",
-                "vcs",
+                vcs.vcs_egg_path,
                 "text_icon.png"),
             top=10,
             left=10,
@@ -783,9 +780,7 @@ class Configurator(object):
             self.interactor,
             states=states,
             image=os.path.join(
-                sys.prefix,
-                "share",
-                "vcs",
+                vcs.vcs_egg_path,
                 "marker_icon.png"),
             top=10,
             left=63,
