@@ -21,7 +21,7 @@ aliases:
   - &create_conda_env
     name: create_conda_env
     environment:
-       CHANNELS: "-c doutriaux1/label/test -c cdat/label/nightly -c conda-forge -c cdat"
+       CHANNELS: "-c cdat/label/nightly -c conda-forge -c cdat"
        PKGS: "cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime nbformat 'proj4<5' 'numpy>1.14' " 
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
@@ -101,7 +101,14 @@ aliases:
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
        source activate $PY_VER
-       coveralls
+       # possibly turn off coverage
+       first=$(git cherry master -v | head -n1)
+       current=$(git log -n1 --pretty=oneline)
+       if [[ $first == $current || $current != *"no_coverage"*  ]]; then
+         coveralls
+       else
+         echo "Commit turned off coverage"
+       fi
        source deactivate
 
 jobs:
@@ -211,12 +218,11 @@ workflows:
   version: 2
   vcs:
     jobs:
-      #- macos_vcs_py2
-      #- macos_vcs_py3:
-      #     requires:
-      #        - macos_vcs_py2
-      #- linux_vcs_py2
-      - linux_vcs_py3
-      #- linux_vcs_py3:
-      #     requires:
-      #        - linux_vcs_py2
+      - macos_vcs_py2
+      - macos_vcs_py3:
+           requires:
+              - macos_vcs_py2
+      - linux_vcs_py2
+      - linux_vcs_py3:
+           requires:
+              - linux_vcs_py2
