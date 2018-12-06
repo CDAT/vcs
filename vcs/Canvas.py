@@ -5662,6 +5662,8 @@ class Canvas(vcs.bestMatch):
         nms = []
         for f in files:
             fnm, name = f
+            if name.strip() == "":
+                name = os.path.splitext(os.path.basename(fnm))[0]
             i = max(vcs.elements["fontNumber"].keys()) + 1
             vcs.elements["font"][name] = fnm
             vcs.elements["fontNumber"][i] = name
