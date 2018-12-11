@@ -1,2 +1,10 @@
+build:
+  image: latest
+
+python:
+  version: 3.6
+  setup_py_install: true
+
 conda:
-    file: cdat-v80-nox_py2.Linux.yaml
+    file: environment.yml
+
