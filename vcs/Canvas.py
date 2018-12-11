@@ -5660,8 +5660,50 @@ class Canvas(vcs.bestMatch):
     getcolormap.__doc__ = vcs.manageElements.getcolormap.__doc__
 
     def addfont(self, path, name=""):
-        return vcs.addfont(path, name)
-    addfont.__doc__ = vcs.manageElements.addfont.__doc__
+        """Add a font to VCS.
+
+        :param path: Path to the font file you wish to add (must be .ttf)
+        :type path: `str`_
+
+        :param name: Name to use to represent the font.
+        :type name: `str`_
+
+        .. pragma: skip-doctest If you can reliably test it, please do.
+        """
+        if not os.path.exists(path):
+            raise ValueError('Error -  The font path does not exists')
+        if os.path.isdir(path):
+            dir_files = []
+            files = []
+            if name == "":
+                subfiles = os.listdir(path)
+                for file in subfiles:
+                    dir_files.append(os.path.join(path, file))
+            elif name == 'r':
+                for root, dirs, subfiles in os.walk(path):
+                    for file in subfiles:
+                        dir_files.append(os.path.join(root, file))
+            for f in dir_files:
+                if f.lower()[-3:]in ['ttf', 'pfa', 'pfb']:
+                    files.append([f, ""])
+        else:
+            files = [[path, name], ]
+
+        nms = []
+        for f in files:
+            fnm, name = f
+            if name.strip() == "":
+                name = os.path.splitext(os.path.basename(fnm))[0]
+            i = max(vcs.elements["fontNumber"].keys()) + 1
+            vcs.elements["font"][name] = fnm
+            vcs.elements["fontNumber"][i] = name
+            nms.append(name)
+        if len(nms) == 0:
+            raise vcsError('No font Loaded')
+        elif len(nms) > 1:
+            return nms
+        else:
+            return nms[0]
 
     def getfontnumber(self, name):
         return vcs.getfontnumber(name)
