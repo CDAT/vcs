@@ -27,6 +27,19 @@ from . import VCS_validation_functions
 import vcs
 from .xmldocs import listdoc  # noqa
 
+try:
+    basestring  # noqa
+except Exception:
+    basestring = str
+
+
+class IPythonDisplay(object):
+    def __init__(self, png):
+        self.png = png
+
+    def _repr_png_(self):
+        return self.png
+
 
 class Dp(vcs.bestMatch):
 
@@ -97,8 +110,10 @@ class Dp(vcs.bestMatch):
                  "_continents_line",
                  "_backend",
                  "_newelements",
+                 "_widget",
                  "extradisplays",
                  "ratio",
+                 "_display_target"
                  ]
 
     def _repr_png_(self):
@@ -108,6 +123,43 @@ class Dp(vcs.bestMatch):
         f = open(tmp, "rb")
         st = f.read()
         f.close()
+        try:
+            import IPython.display
+            # import cdat_notebook
+            """
+            if self.g_type == "boxfill":
+                box = vcs.getboxfill(self.g_name)
+                b_dict = vcs.utils.dumpToDict(box)[0]
+                if self._widget is not None:
+                    self._widget.close()
+                self._widget = cdat_notebook.GMWidget(value=b_dict)
+                def refresh(o):
+                    for k, v in self._widget.value.iteritems():
+                        try:
+                            setattr(box, k, v)
+                        except:
+                            pass
+                    self._parent.update()
+                    self._parent.backend.renWin.Render()
+                    IPython.display.clear_output(wait=True)
+                    IPython.display.display(self)
+                self._widget.observe(refresh, names="value")
+                IPython.display.display(self._widget)
+            """
+            if self._parent._display_target is None:  # no target specified
+                import sidecar  # if sidecar is here use it for target
+                self._parent._display_target = sidecar.Sidecar(
+                    title="VCS Canvas {:d}".format(self._parent.canvasid()))
+            elif isinstance(self._parent._display_target, basestring) and \
+                    self._parent._display_target.lower() not in ["inline", "off", "no"]:
+                self._parent._display_target = sidecar.Sidecar(
+                    title=self._parent._display_target)
+            self._parent._display_target.clear_output()
+            with self._parent._display_target:
+                IPython.display.display(IPythonDisplay(st))
+                st = None
+        except Exception:
+            pass
         return st
 # TODO: html,json,jpeg,png,svg,latex
 
@@ -261,6 +313,7 @@ class Dp(vcs.bestMatch):
         self._name = Dp_name
         self.s_name = 'Dp'
         self._parent = parent
+        self._widget = None
         if self._name == "default":
             self._off = 0
             self._priority = 0

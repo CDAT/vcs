@@ -215,11 +215,9 @@ class Pipeline2D(IPipeline2D):
                    self._gm.name, self._gm.g_name,
                    repr(self._contourLevels)))
         elif len(self._contourLevels) < len(self._contourColors) - 1:
-            warnings.warn(
-                "You asked for %i lgridevels but provided %i colors, "
-                "extra ones will be ignored\nGraphic Method: %s of type %s"
-                % (len(self._contourLevels), len(self._contourColors),
-                   self._gm.name, self._gm.g_name))
+            warnings.warn("You asked for {} levels but provided {} colors, "
+                          "extra ones will be ignored\nGraphic Method: {} of type {}".format(
+                              len(self._contourLevels), len(self._contourColors), self._gm.name, self._gm.g_name))
         if len(opacities) < len(self._contourColors):
             # fill up the opacity values
             opacities += [None] * (len(self._contourColors) - len(opacities))

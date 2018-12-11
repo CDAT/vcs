@@ -48,7 +48,17 @@ aliases:
        export CDAT_ANONYMOUS_LOG=False
        export CDAT_SETUP_PATH=${HOME}
        source activate $PY_VER
-       python run_tests.py -H -v2 -n 2 --timeout=10000 --checkout-baseline --no-vtk-ui $COVERAGE
+       # possibly turn off coverage
+       first=$(git cherry master -v | head -n1)
+       current=$(git log -n1 --pretty=oneline)
+       if [[ $first == $current || $current != *"no_coverage"*  ]]; then
+         echo "Possibly running with coverage"
+         ACTUAL_COVERAGE=$COVERAGE
+       else
+         echo "Commit turned off coverage"
+         ACTUAL_COVERAGE=""
+       fi
+       python run_tests.py -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $ACTUAL_COVERAGE
        RESULT=$?
        echo "*** $PY_VER test result: "${RESULT} 
        if [[ $PY_VER = 'py3' ]]; then
@@ -91,7 +101,14 @@ aliases:
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
        source activate $PY_VER
-       coveralls
+       # possibly turn off coverage
+       first=$(git cherry master -v | head -n1)
+       current=$(git log -n1 --pretty=oneline)
+       if [[ $first == $current || $current != *"no_coverage"*  ]]; then
+         coveralls
+       else
+         echo "Commit turned off coverage"
+       fi
        source deactivate
 
 jobs:
@@ -180,7 +197,7 @@ jobs:
       WORKDIR: "workspace/test_linux_vcs_py3"
       OS: "linux-64"
       PY_VER: "py3"
-      COVERAGE: "-c tests/coverage.json --coverage-from-repo"
+      COVERAGE: "-c tests/coverage.json --coverage-from-egg"
       COVERAGE_PKGS: "coverage coveralls"
     steps:
       - checkout

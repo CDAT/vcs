@@ -11,13 +11,13 @@ Creator: `Dean Williams`_ (LLNL, AIMS Team)
 
 Lead Developer: `Charles Doutriaux`_ (LLNL, AIMS Team)
 
-Contributors: https://github.com/UV-CDAT/uvcdat/graphs/contributors
+Contributors: https://github.com/CDAT/cdat/graphs/contributors
 
-Support Email: uvcdat-support@llnl.gov
+Support Email: cdat-support@llnl.gov
 
-Project Site: http://uvcdat.llnl.gov/
+Project Site: http://cdat.llnl.gov/
 
-Project Repo: https://github.com/UV-CDAT/uvcdat/graphs/contributors
+Project Repo: https://github.com/CDAT/cdat/graphs/contributors
 
 .. _Dean Williams: http://computation.llnl.gov/about/our-people/highlights/dean-williams
 
@@ -94,6 +94,8 @@ class VCSDeprecationWarning(DeprecationWarning):
 # Python < 3 DeprecationWarning ignored by default
 # warnings.simplefilter('default')
 warnings.simplefilter("default", VCSDeprecationWarning)
+warnings.filterwarnings('ignore', message="Conversion of the second argument of issubdtype from `complex")
+warnings.filterwarnings('ignore', message="Using a non-tuple sequence for multidimensional indexing")
 
 _doValidation = True
 next_canvas_id = 1
@@ -340,7 +342,7 @@ canvaslist = []
 
 
 def init(mode=1, pause_time=0, call_from_gui=0, size=None, backend="vtk",
-         geometry=None, bg=None):
+         geometry=None, bg=None, display_target=None):
     """Initialize and construct a VCS Canvas object.
 
     :Example:
@@ -362,11 +364,16 @@ def init(mode=1, pause_time=0, call_from_gui=0, size=None, backend="vtk",
     :param backend: Which VCS backend to use
     :param geometry: Size (in pixels) you want the canvas to be.
     :param bg: Initialize a canvas to render in "background" mode (without
-        displaying a window)
+        displaying a window
+    :param: display_target: A jupyterlab notebook target object in which to render vcs pictures
+        (only works in jupyterlab), if you pass True will create a new one for you
+        sidecar gets attached to Canvas and can be reused for other Canvases to share it.
+        Pass "inline", "off", or "no" to disable the target feature
     :type size: float or case-insensitive str
     :type backend: str, :py:class:`vtk.vtkRenderWindow`
     :type geometry: dict or tuple
     :type bg: bool
+    :type display_target: None, str, :py:class:sidecar.sidecar.Sidecar
     :return: An initialized canvas
     :rtype: vcs.Canvas.Canvas
     """
@@ -377,7 +384,8 @@ def init(mode=1, pause_time=0, call_from_gui=0, size=None, backend="vtk",
         size=size,
         backend=backend,
         geometry=geometry,
-        bg=bg)
+        bg=bg,
+        display_target=display_target)
     global canvaslist
     canvaslist.append(canvas)
     return canvas
