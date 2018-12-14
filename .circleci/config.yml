@@ -123,8 +123,7 @@ jobs:
       WORKDIR: "workspace/test_macos_vcs_py2"
       OS: "osx-64"
       PY_VER: "py2"
-      #TEMP_PKGS: "'ffmpeg>4' 'libpng>1.6.34'"
-      TEMP_PKGS: "'libpng>1.6.34'"
+      TEMP_PKGS: "'ffmpeg>4' 'libpng>1.6.34'"
     steps:
       - checkout
       - run: *setup_miniconda
@@ -150,7 +149,7 @@ jobs:
       WORKDIR: "workspace/test_macos_vcs_py3"
       OS: "osx-64"
       PY_VER: "py3"
-      TEMP_PKGS: "'libpng>1.6.34'"
+      TEMP_PKGS: "'ffmpeg>4' 'libpng>1.6.34'"
     steps:
       - checkout
       - run: *setup_miniconda
