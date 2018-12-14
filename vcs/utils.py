@@ -1074,7 +1074,7 @@ def loadTemplate(nm, vals):
                     v = str(v)
                 setattr(A, a, v)
         except Exception:
-            setattr(t,k,v)
+            setattr(t, k, v)
 
 
 def loadVCSItem(typ, nm, json_dict={}):
