@@ -1068,10 +1068,13 @@ def loadTemplate(nm, vals):
         t = vcs.createtemplate(nm)
     for k, v in vals.items():
         A = getattr(t, k)
-        for a, v in v.items():
-            if isinstance(v, basestring):
-                v = str(v)
-            setattr(A, a, v)
+        try:
+            for a, v in v.items():
+                if isinstance(v, basestring):
+                    v = str(v)
+                setattr(A, a, v)
+        except Exception:
+            setattr(t, k, v)
 
 
 def loadVCSItem(typ, nm, json_dict={}):
