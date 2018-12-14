@@ -21,7 +21,7 @@ aliases:
   - &create_conda_env
     name: create_conda_env
     environment:
-       CHANNELS: "-c danlipsa -c cdat/label/nightly -c conda-forge -c cdat"
+       CHANNELS: "-c cdat/label/nightly -c conda-forge -c cdat"
        PKGS: "cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime nbformat 'proj4<5' 'numpy>1.14' ghostscript"
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
