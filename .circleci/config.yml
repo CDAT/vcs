@@ -115,10 +115,6 @@ jobs:
   macos_vcs_py2:
     macos:
       xcode: "9.2.0"
-    filters:
-      branches:
-        ignore:
-          - master
     environment:
       WORKDIR: "workspace/test_macos_vcs_py2"
       OS: "osx-64"
@@ -141,10 +137,6 @@ jobs:
   macos_vcs_py3:
     macos:
       xcode: "9.2.0"
-    filters:
-      branches:
-        ignore:
-          - master
     environment:
       WORKDIR: "workspace/test_macos_vcs_py3"
       OS: "osx-64"
@@ -178,7 +170,6 @@ jobs:
       - run: *create_conda_env
       - run: *setup_vcs
       - run: *run_vcs_tests
-      - run: *conda_upload
       - store_artifacts:
           path: tests_html
           destination: tests_html
@@ -187,10 +178,6 @@ jobs:
           destination: tests_png
 
   linux_vcs_py3:
-    filters:
-      branches:
-        ignore:
-          - master
     machine:
       image: circleci/classic:latest
     environment:
@@ -207,6 +194,7 @@ jobs:
       - run: *setup_vcs
       - run: *run_vcs_tests
       - run: *run_coveralls
+      - run: *conda_upload
       - store_artifacts:
           path: tests_html
           destination: tests_html
