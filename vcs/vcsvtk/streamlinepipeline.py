@@ -1,5 +1,6 @@
 from __future__ import division
 from .pipeline2d import Pipeline2D
+from .. import vcs2vtk
 import vcs
 import numpy
 import vtk
@@ -50,34 +51,46 @@ class StreamlinePipeline(Pipeline2D):
             if self._gm.linecolor is not None:
                 lcolor = self._gm.linecolor
 
-        self._vtkPolyDataFilter.Update()
-        polydata = self._vtkPolyDataFilter.GetOutput()
+        # The unscaled continent bounds were fine in the presence of axis
+        # conversion, so save them here
+        continentBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask,
+                                                        self._context_flipX, self._context_flipY)
 
-        # Only need one fitToViewport call, where the mapper
-        # connected to the actor we pass has the self._vtkPolyDataFilter as its
-        # input.
+        # Only scaling the data in the presence of axis conversion changes
+        # the seed points in any other cases, and thus results in plots
+        # different from the baselines but still fundamentally sound, it
+        # seems.  Always scaling the data results in no differences in the
+        # plots between Context2D and the old baselines.
 
-        tmpActor = vtk.vtkActor()
-        tmpMapper = vtk.vtkPolyDataMapper()
-        tmpMapper.SetInputData(polydata)
-        tmpActor.SetMapper(tmpMapper)
+        # Transform the input data
+        T = vtk.vtkTransform()
+        T.Scale(self._context_xScale, self._context_yScale, 1.)
 
+        self._vtkDataSetFittedToViewport = vcs2vtk.applyTransformationToDataset(T, self._vtkDataSetFittedToViewport)
+        self._vtkDataSetBoundsNoMask = self._vtkDataSetFittedToViewport.GetBounds()
+
+        polydata = self._vtkDataSetFittedToViewport
         plotting_dataset_bounds = self.getPlottingBounds()
+        x1, x2, y1, y2 = plotting_dataset_bounds
         vp = self._resultDict.get('ratio_autot_viewport',
                                   [self._template.data.x1, self._template.data.x2,
                                    self._template.data.y1, self._template.data.y2])
 
-        dataset_renderer, xScale, yScale = self._context().fitToViewport(
-            tmpActor, vp,
-            wc=plotting_dataset_bounds,
-            geoBounds=self._vtkDataSetBoundsNoMask,
-            geo=self._vtkGeoTransform,
-            priority=self._template.data.priority,
-            create_renderer=True,
-            add_actor=False)
+        # view and interactive area
+        view = self._context().contextView
+        area = vtk.vtkInteractiveArea()
+        view.GetScene().AddItem(area)
 
-        polydata = tmpMapper.GetInput()
-        plotting_dataset_bounds = self.getPlottingBounds()
+        drawAreaBounds = vcs2vtk.computeDrawAreaBounds(self._vtkDataSetBoundsNoMask,
+                                                       self._context_flipX, self._context_flipY)
+
+        [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
+                            int(vp[2] * renWinHeight),
+                            int((vp[1] - vp[0]) * renWinWidth),
+                            int((vp[3] - vp[2]) * renWinHeight))
+
+        vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
 
         dataLength = polydata.GetLength()
 
@@ -193,14 +206,18 @@ class StreamlinePipeline(Pipeline2D):
         glyph.SetColorModeToColorByVector()
 
         glyphMapper = vtk.vtkPolyDataMapper()
-        glyphMapper.SetInputConnection(glyph.GetOutputPort())
         glyphActor = vtk.vtkActor()
-        glyphActor.SetMapper(glyphMapper)
 
         mapper = vtk.vtkPolyDataMapper()
-        mapper.SetInputConnection(streamer.GetOutputPort())
         act = vtk.vtkActor()
-        act.SetMapper(mapper)
+
+        glyph.Update()
+        glyphDataset = glyph.GetOutput()
+        streamer.Update()
+        lineDataset = streamer.GetOutput()
+
+        deleteLineColors = False
+        deleteGlyphColors = False
 
         # color the streamlines and glyphs
         cmap = self.getColorMap()
@@ -231,11 +248,35 @@ class StreamlinePipeline(Pipeline2D):
             mapper.SetScalarModeToUsePointFieldData()
             mapper.SelectColorArray("vector")
 
+            lineAttrs = lineDataset.GetPointData()
+            lineData = lineAttrs.GetArray("vector")
+
+            if lineData and numLevels:
+                lineColors = lut.MapScalars(lineData, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                deleteLineColors = True
+            else:
+                print('WARNING: streamline pipeline cannot map scalars for "lineData", using solid color')
+                numTuples = lineDataset.GetNumberOfPoints()
+                color = [0, 0, 0, 255]
+                lineColors = vcs2vtk.generateSolidColorArray(numTuples, color)
+
             glyphMapper.ScalarVisibilityOn()
             glyphMapper.SetLookupTable(lut)
             glyphMapper.UseLookupTableScalarRangeOn()
             glyphMapper.SetScalarModeToUsePointFieldData()
             glyphMapper.SelectColorArray("VectorMagnitude")
+
+            glyphAttrs = glyphDataset.GetPointData()
+            glyphData = glyphAttrs.GetArray("VectorMagnitude")
+
+            if glyphData and numLevels:
+                glyphColors = lut.MapScalars(glyphData, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                deleteGlyphColors = True
+            else:
+                print('WARNING: streamline pipeline cannot map scalars for "glyphData", using solid color')
+                numTuples = glyphDataset.GetNumberOfPoints()
+                color = [0, 0, 0, 255]
+                glyphColors = vcs2vtk.generateSolidColorArray(numTuples, color)
         else:
             mapper.ScalarVisibilityOff()
             glyphMapper.ScalarVisibilityOff()
@@ -246,19 +287,49 @@ class StreamlinePipeline(Pipeline2D):
             act.GetProperty().SetColor(r / 100., g / 100., b / 100.)
             glyphActor.GetProperty().SetColor(r / 100., g / 100., b / 100.)
 
+            fixedColor = [int((r / 100.) * 255), int((g / 100.) * 255), int((b / 100.) * 255), 255]
+
+            numTuples = lineDataset.GetNumberOfPoints()
+            lineColors = vcs2vtk.generateSolidColorArray(numTuples, fixedColor)
+
+            numTuples = glyphDataset.GetNumberOfPoints()
+            glyphColors = vcs2vtk.generateSolidColorArray(numTuples, fixedColor)
+
+        # Add the streamlines
+        lineItem = vtk.vtkPolyDataItem()
+        lineItem.SetPolyData(lineDataset)
+        lineItem.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
+        lineItem.SetMappedColors(lineColors)
+        if deleteLineColors:
+            lineColors.FastDelete()
+        area.GetDrawAreaItem().AddItem(lineItem)
+
+        # Add the glyphs
+        glyphItem = vtk.vtkPolyDataItem()
+        glyphItem.SetPolyData(glyphDataset)
+        glyphItem.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
+        glyphItem.SetMappedColors(glyphColors)
+        if deleteGlyphColors:
+            glyphColors.FastDelete()
+        area.GetDrawAreaItem().AddItem(glyphItem)
+
         plotting_dataset_bounds = self.getPlottingBounds()
         vp = self._resultDict.get('ratio_autot_viewport',
                                   [self._template.data.x1, self._template.data.x2,
                                    self._template.data.y1, self._template.data.y2])
 
-        dataset_renderer.AddActor(act)
-        dataset_renderer.AddActor(glyphActor)
-
-        kwargs = {'vtk_backend_grid': self._vtkDataSet,
-                  'dataset_bounds': self._vtkDataSetBounds,
-                  'plotting_dataset_bounds': plotting_dataset_bounds,
-                  "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
-                  'vtk_backend_geo': self._vtkGeoTransform}
+        kwargs = {
+            'vtk_backend_grid': self._vtkDataSet,
+            'dataset_bounds': self._vtkDataSetBounds,
+            'plotting_dataset_bounds': plotting_dataset_bounds,
+            "vtk_dataset_bounds_no_mask": self._vtkDataSetBoundsNoMask,
+            'vtk_backend_geo': self._vtkGeoTransform,
+            "vtk_backend_draw_area_bounds": continentBounds,
+            "vtk_backend_viewport_scale": [
+                self._context_xScale,
+                self._context_yScale
+            ]
+        }
         if ('ratio_autot_viewport' in self._resultDict):
             kwargs["ratio_autot_viewport"] = vp
         self._resultDict.update(self._context().renderTemplate(
@@ -278,5 +349,5 @@ class StreamlinePipeline(Pipeline2D):
                                            plotting_dataset_bounds, projection,
                                            self._dataWrapModulo, vp,
                                            self._template.data.priority, **kwargs)
-        self._resultDict["vtk_backend_actors"] = [[act, plotting_dataset_bounds]]
+        self._resultDict["vtk_backend_actors"] = [[lineItem, plotting_dataset_bounds]]
         self._resultDict["vtk_backend_luts"] = [[None, None]]

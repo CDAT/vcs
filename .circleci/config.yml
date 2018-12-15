@@ -3,7 +3,7 @@ version: 2
 checkout:
   post:
     - ./ci-support/checkout_merge_commit.sh
-        
+
 aliases:
   - &setup_miniconda
     name: setup_miniconda
@@ -11,10 +11,10 @@ aliases:
       mkdir -p workspace
       git clone -b validateNightly git@github.com:CDAT/cdat workspace/cdat
       python workspace/cdat/scripts/install_miniconda.py -w $WORKDIR -p 'py3'
-      
+
   - &get_testdata
     name: get_testdata
-    command: | 
+    command: |
       ls -l workspace
       git clone git://github.com/cdat/uvcdat-testdata
 
@@ -22,7 +22,7 @@ aliases:
     name: create_conda_env
     environment:
        CHANNELS: "-c cdat/label/nightly -c conda-forge -c cdat"
-       PKGS: "cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime nbformat 'proj4<5' 'numpy>1.14' " 
+       PKGS: "cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime nbformat 'vtk-cdat>8.1' 'proj4<5' 'numpy>1.14' ghostscript"
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
        conda config --set always_yes yes --set changeps1 no
@@ -32,7 +32,7 @@ aliases:
           conda create -q -n $PY_VER $CHANNELS $PKGS $TEMP_PKGS "python<3"
        else
           conda create -q -n $PY_VER $CHANNELS $PKGS $TEMP_PKGS "python>3" nbsphinx easydev $COVERAGE_PKGS
-       fi 
+       fi
 
   - &setup_vcs
     name: setup_vcs
@@ -60,7 +60,7 @@ aliases:
        fi
        python run_tests.py -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $ACTUAL_COVERAGE
        RESULT=$?
-       echo "*** $PY_VER test result: "${RESULT} 
+       echo "*** $PY_VER test result: "${RESULT}
        if [[ $PY_VER = 'py3' ]]; then
           cd docs
           make doctest
@@ -123,7 +123,7 @@ jobs:
       WORKDIR: "workspace/test_macos_vcs_py2"
       OS: "osx-64"
       PY_VER: "py2"
-      TEMP_PKGS: "'ffmpeg>4' 'libpng>1.6.34'" 
+      TEMP_PKGS: "'ffmpeg>4' 'libpng>1.6.34'"
     steps:
       - checkout
       - run: *setup_miniconda
@@ -149,7 +149,7 @@ jobs:
       WORKDIR: "workspace/test_macos_vcs_py3"
       OS: "osx-64"
       PY_VER: "py3"
-      TEMP_PKGS: "'ffmpeg>4' 'libpng>1.6.34'" 
+      TEMP_PKGS: "'ffmpeg>4' 'libpng>1.6.34'"
     steps:
       - checkout
       - run: *setup_miniconda

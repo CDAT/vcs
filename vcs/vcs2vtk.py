@@ -16,6 +16,32 @@ import sys
 import numbers
 
 
+DEBUG_MODE = False
+
+
+def debugWriteGrid(grid, name):
+    if DEBUG_MODE:
+        writer = vtk.vtkXMLDataSetWriter()
+        gridType = grid.GetDataObjectType()
+        if (gridType == vtk.VTK_STRUCTURED_GRID):
+            ext = ".vts"
+        elif (gridType == vtk.VTK_UNSTRUCTURED_GRID):
+            ext = ".vtu"
+        elif (gridType == vtk.VTK_POLY_DATA):
+            ext = ".vtp"
+        else:
+            print("Unknown grid type: {0}".format(gridType))
+            ext = ".vtk"
+        writer.SetFileName(name + ext)
+        writer.SetInputData(grid)
+        writer.Write()
+
+
+def debugMsg(msg):
+    if DEBUG_MODE:
+        print(msg)
+
+
 f = open(os.path.join(vcs.vcs_egg_path, "wmo_symbols.json"))
 wmo = json.load(f)
 
@@ -56,6 +82,108 @@ projDict = {"polar stereographic": "stere",
             }
 for i in range(len(projNames)):
     projDict[i] = projNames[i]
+
+
+def computeDrawAreaBounds(bounds, flipX=False, flipY=False):
+    if flipX:
+        lowerLeftX = bounds[1]
+        width = bounds[0] - bounds[1]
+    else:
+        lowerLeftX = bounds[0]
+        width = bounds[1] - bounds[0]
+
+    if flipY:
+        lowerLeftY = bounds[3]
+        height = bounds[2] - bounds[3]
+    else:
+        lowerLeftY = bounds[2]
+        height = bounds[3] - bounds[2]
+
+    return vtk.vtkRectd(lowerLeftX, lowerLeftY, width, height)
+
+
+def adjustBounds(bounds, xScale, yScale):
+    # Scale the bounds, keeping the same center point
+    centerX = (bounds[1] + bounds[0]) / 2.0
+    centerY = (bounds[3] + bounds[2]) / 2.0
+    width = bounds[1] - bounds[0]
+    height = bounds[3] - bounds[2]
+
+    newWidth = width * xScale
+    newHeight = height * yScale
+
+    newBounds = [bounds[i] for i in range(len(bounds))]
+
+    halfWidth = newWidth / 2.0
+    halfHeight = newHeight / 2.0
+
+    newBounds[0] = centerX - halfWidth
+    newBounds[1] = centerX + halfWidth
+    newBounds[2] = centerY - halfHeight
+    newBounds[3] = centerY + halfHeight
+
+    return newBounds
+
+
+def configureContextArea(area, dataBounds, screenGeom):
+    area.SetDrawAreaBounds(dataBounds)
+    area.SetGeometry(screenGeom)
+    area.SetFillViewport(False)
+    area.SetShowGrid(False)
+
+    axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
+    axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
+    axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
+    axisTop = area.GetAxis(vtk.vtkAxis.TOP)
+
+    axisLeft.SetVisible(False)
+    axisRight.SetVisible(False)
+    axisBottom.SetVisible(False)
+    axisTop.SetVisible(False)
+
+    axisLeft.SetMargins(0, 0)
+    axisRight.SetMargins(0, 0)
+    axisBottom.SetMargins(0, 0)
+    axisTop.SetMargins(0, 0)
+
+
+def growBounds(previousBounds, newBounds):
+    nextBounds = [i for i in previousBounds]
+
+    if newBounds[0] < previousBounds[0]:
+        nextBounds[0] = newBounds[0]
+    if newBounds[1] > previousBounds[1]:
+        nextBounds[1] = newBounds[1]
+    if newBounds[2] < previousBounds[2]:
+        nextBounds[2] = newBounds[2]
+    if newBounds[3] > previousBounds[3]:
+        nextBounds[3] = newBounds[3]
+
+    return nextBounds
+
+
+def applyTransformationToDataset(T, data):
+    vectors = data.GetPointData().GetVectors()
+    data.GetPointData().SetActiveVectors(None)
+    transformFilter = vtk.vtkTransformFilter()
+    transformFilter.SetInputData(data)
+    transformFilter.SetTransform(T)
+    transformFilter.Update()
+    outputData = transformFilter.GetOutput()
+    data.GetPointData().SetVectors(vectors)
+    outputData.GetPointData().SetVectors(vectors)
+    return outputData
+
+
+def generateSolidColorArray(numTuples, color):
+    np_colors = numpy.empty([numTuples, 4])
+    np_colors[:, 0] = color[0]
+    np_colors[:, 1] = color[1]
+    np_colors[:, 2] = color[2]
+    np_colors[:, 3] = color[3]
+    return VN.numpy_to_vtk(num_array=np_colors,
+                           deep=True,
+                           array_type=vtk.VTK_UNSIGNED_CHAR)
 
 
 def applyAttributesFromVCStmpl(tmpl, tmplattribute, txtobj=None):
@@ -540,13 +668,16 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
             vg = wrapDataSetX(vg)
             pts = vg.GetPoints()
             xm, xM, ym, yM, tmp, tmp2 = vg.GetPoints().GetBounds()
+            debugMsg('did wrapDataSetX, [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
         vg = doWrapData(vg, wc, wrap)
         pts = vg.GetPoints()
         xm, xM, ym, yM, tmp, tmp2 = vg.GetPoints().GetBounds()
+        debugMsg('did doWrapData, [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
         projection = vcs.elements["projection"][gm.projection]
         vg.SetPoints(pts)
-        geo, geopts = project(pts, projection, getWrappedBounds(
-            wc, [xm, xM, ym, yM], wrap))
+        wrb = getWrappedBounds(wc, [xm, xM, ym, yM], wrap)
+        debugMsg('wrapped bounds = [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
+        geo, geopts = project(pts, projection, wrb)
         # proj4 returns inf for points that are not visible. Set those to a valid point
         # and hide them.
         ghost = vg.AllocatePointGhostArray()
@@ -566,6 +697,7 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
                         ym = p[1]
                     if (p[1] > yM):
                         yM = p[1]
+            debugMsg('bounds after removing infs = [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
             # hidden point don't work for polys or unstructured grids.
             # We remove the cells in this case.
             if (vg.GetExtentType() == vtk.VTK_PIECES_EXTENT):
@@ -962,6 +1094,10 @@ def doWrapData(data, wc, wrap=[0., 360], fastClip=True):
     if wrap is None:
         return data
 
+    debugMsg('Doing actual wrapping')
+    debugMsg('  wc = {0}'.format(wc))
+    debugMsg('  wrap = {0}'.format(wrap))
+
     # convert to poly data
     surface = vtk.vtkDataSetSurfaceFilter()
     surface.SetInputData(data)
@@ -1065,6 +1201,7 @@ def doWrapData(data, wc, wrap=[0., 360], fastClip=True):
         pointAttributes = result.GetPointData()
         pointAttributes.GetArray(vectorsName, index)
         pointAttributes.SetActiveAttribute(index, vtk.vtkDataSetAttributes.VECTORS)
+    debugMsg('  bounds after wrap = {0}'.format(result.GetBounds()))
     return result
 
 
@@ -1229,8 +1366,30 @@ def prepTextProperty(p, winSize, to="default", tt="default", cmap=None,
     p.SetFontSize(int(to.height * winSize[1] / 800.))
 
 
-def genTextActor(renderer, string=None, x=None, y=None,
+class TextActorWrapperItem(object):
+    def __init__(self, textActor):
+        self.textActor = textActor
+
+    def Initialize(self, vtkSelf):
+        return True
+
+    def Paint(self, vtkSelf, context2D):
+        pos = self.textActor.GetPosition()
+        text = self.textActor.GetInput()
+        textProp = self.textActor.GetTextProperty()
+
+        context2D.ApplyTextProp(textProp)
+        context2D.DrawString(pos[0], pos[1], text)
+
+        return False
+
+
+# def genTextActor(renderer, string=None, x=None, y=None,
+def genTextActor(contextArea, string=None, x=None, y=None,
                  to='default', tt='default', cmap=None, geoBounds=None, geo=None):
+
+    renderer = contextArea.GetDrawAreaItem().GetScene().GetRenderer()
+
     if isinstance(to, str):
         to = vcs.elements["textorientation"][to]
     if isinstance(tt, str):
@@ -1257,8 +1416,6 @@ def genTextActor(renderer, string=None, x=None, y=None,
     if vcs.elements["projection"][tt.projection].type != "linear":
         if geoBounds is not None:
             wc = geoBounds[:4]
-            # renderer.SetViewport(tt.viewport[0],tt.viewport[2],tt.viewport[1],tt.viewport[3])
-            renderer.SetWorldPoint(wc)
         else:
             wc = None
 
@@ -1285,19 +1442,19 @@ def genTextActor(renderer, string=None, x=None, y=None,
                 wx = as_numpy[:, 0]
                 wy = as_numpy[:, 1]
                 wc = [wx.min(), wx.max(), wy.min(), wy.max()]
-            renderer.SetWorldPoint(wc)
             X, Y = world2Renderer(renderer, X, Y, tt.viewport, wc)
         else:
             X, Y = world2Renderer(
                 renderer, x[i], y[i], tt.viewport, tt.worldcoordinate)
         t.SetPosition(X, Y)
         t.SetInput(string[i])
-        # T=vtk.vtkTransform()
-        # T.Scale(1.,sz[1]/606.,1.)
-        # T.RotateY(to.angle)
-        # t.SetUserTransform(T)
-        renderer.AddActor(t)
+
+        item = vtk.vtkPythonItem()
+        item.SetPythonObject(TextActorWrapperItem(t))
+        contextArea.GetDrawAreaItem().AddItem(item)
+
         actors.append(t)
+
     return actors
 
 
@@ -1349,6 +1506,41 @@ def __build_pd__():
 
 
 def prepFillarea(context, renWin, farea, cmap=None):
+    vp = farea.viewport
+
+    # view and interactive area
+    view = context.contextView
+    area = vtk.vtkContextArea()
+    view.GetScene().AddItem(area)
+
+    wc = farea.worldcoordinate
+    rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
+
+    [renWinWidth, renWinHeight] = renWin.GetSize()
+    geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
+                        int(vp[2] * renWinHeight),
+                        int((vp[1] - vp[0]) * renWinWidth),
+                        int((vp[3] - vp[2]) * renWinHeight))
+
+    area.SetDrawAreaBounds(rect)
+    area.SetGeometry(geom)
+    area.SetFillViewport(False)
+    area.SetShowGrid(False)
+
+    axisLeft = area.GetAxis(vtk.vtkAxis.LEFT)
+    axisRight = area.GetAxis(vtk.vtkAxis.RIGHT)
+    axisBottom = area.GetAxis(vtk.vtkAxis.BOTTOM)
+    axisTop = area.GetAxis(vtk.vtkAxis.TOP)
+    axisTop.SetVisible(False)
+    axisRight.SetVisible(False)
+    axisLeft.SetVisible(False)
+    axisBottom.SetVisible(False)
+
+    axisTop.SetMargins(0, 0)
+    axisRight.SetMargins(0, 0)
+    axisLeft.SetMargins(0, 0)
+    axisBottom.SetMargins(0, 0)
+
     n = prepPrimitive(farea)
     if n == 0:
         return []
@@ -1443,21 +1635,18 @@ def prepFillarea(context, renWin, farea, cmap=None):
     tris = vtk.vtkTriangleFilter()
     tris.SetInputData(polygonPolyData)
 
-    # Setup rendering
-    m = vtk.vtkPolyDataMapper()
-    m.SetInputConnection(tris.GetOutputPort())
-    a = vtk.vtkActor()
-    a.SetMapper(m)
-    ren, xscale, yscale = context.fitToViewport(a,
-                                                farea.viewport,
-                                                wc=farea.worldcoordinate,
-                                                geoBounds=None,
-                                                geo=None,
-                                                priority=farea.priority,
-                                                create_renderer=True)
-    actors.append((a, geo))
-    transform = vtk.vtkTransform()
-    transform.Scale(xscale, yscale, 1.)
+    # If we had at least one "solid" style area
+    if pts.GetNumberOfPoints() > 0:
+        tris.Update()
+        solidPoly = tris.GetOutput()
+        item = vtk.vtkPolyDataItem()
+        item.SetPolyData(solidPoly)
+
+        item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+        colorArray = solidPoly.GetCellData().GetArray('Colors')
+
+        item.SetMappedColors(colorArray)
+        area.GetDrawAreaItem().AddItem(item)
 
     # Patterns/hatches support
     for i, pd in pattern_polydatas:
@@ -1466,25 +1655,44 @@ def prepFillarea(context, renWin, farea, cmap=None):
             geo, proj_points = project(
                 pd.GetPoints(), farea.projection, farea.worldcoordinate)
             pd.SetPoints(proj_points)
-            transformFilter = vtk.vtkTransformFilter()
-            transformFilter.SetInputData(pd)
-            transformFilter.SetTransform(transform)
-            transformFilter.Update()
+
             cellcolor = [0, 0, 0, 0]
             colors.GetTypedTuple(i, cellcolor)
             pcolor = [indC * 100. / 255.0 for indC in cellcolor]
-            act = fillareautils.make_patterned_polydata(transformFilter.GetOutput(),
+
+            if len(farea.x[i]) >= 3:
+                screenGeom = [
+                    (farea.x[i][1] - farea.x[i][0]) * renWinWidth,
+                    (farea.y[i][2] - farea.y[i][1]) * renWinHeight
+                ]
+            else:
+                screenGeom = [
+                    (farea.viewport[1] - farea.viewport[0]) * renWinWidth,
+                    (farea.viewport[3] - farea.viewport[2]) * renWinHeight
+                ]
+
+            act = fillareautils.make_patterned_polydata(pd,
                                                         st,
                                                         fillareaindex=farea.index[i],
                                                         fillareacolors=pcolor,
                                                         fillareaopacity=pcolor[3],
                                                         fillareapixelspacing=farea.pixelspacing,
                                                         fillareapixelscale=farea.pixelscale,
-                                                        size=renWin.GetSize(),
-                                                        renderer=ren)
+                                                        size=[renWinWidth, renWinHeight],
+                                                        screenGeom=screenGeom)
             if act is not None:
-                ren.AddActor(act)
-                actors.append((act, geo))
+                patMapper = act.GetMapper()
+                patMapper.Update()
+                patPoly = patMapper.GetInput()
+
+                item = vtk.vtkPolyDataItem()
+                item.SetPolyData(patPoly)
+
+                item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                colorArray = patPoly.GetCellData().GetArray('Colors')
+
+                item.SetMappedColors(colorArray)
+                area.GetDrawAreaItem().AddItem(item)
 
     return actors
 
@@ -1510,20 +1718,16 @@ def genPoly(coords, pts, filled=True, scale=1.):
     return poly
 
 
-def prepGlyph(ren, g, marker, index=0):
+def prepGlyph(g, marker, screenGeom, index=0):
     t, s = marker.type[index], marker.size[index]
     gs = vtk.vtkGlyphSource2D()
     pd = None
 
-    point1 = [0.0, 0.0, 0.0]
-    side = 1 / math.sqrt(2)
-    point2 = [side, side, 0.0]
-
     dx = marker.worldcoordinate[1] - marker.worldcoordinate[0]
     dy = marker.worldcoordinate[3] - marker.worldcoordinate[2]
 
-    unused, scale = fillareautils.computeResolutionAndScale(ren, point1, point2, dx, dy, (s * 10), None, 1e-10)
-    finalScale = scale[0]
+    scale = fillareautils.computeMarkerScale([dx, dy], screenGeom, (s * 10))
+    finalScale = scale
 
     if t == 'dot':
         gs.SetGlyphTypeToCircle()
@@ -1691,7 +1895,7 @@ def prepGlyph(ren, g, marker, index=0):
     return gs, pd
 
 
-def setMarkerColor(p, marker, c, cmap=None):
+def getMarkerColor(marker, c, cmap=None):
     # Color
     if marker.colormap is not None:
         cmap = marker.colormap
@@ -1703,11 +1907,13 @@ def setMarkerColor(p, marker, c, cmap=None):
         color = cmap.index[c]
     else:
         color = c
-    p.SetColor([C / 100. for C in color[:3]])
-    p.SetOpacity(color[-1])
+
+    retval = [int((C / 100.) * 255) for C in color]
+
+    return retval
 
 
-def prepMarker(ren, marker, cmap=None):
+def prepMarker(marker, screenGeom, scale=None, cmap=None):
     n = prepPrimitive(marker)
     if n == 0:
         return []
@@ -1728,19 +1934,36 @@ def prepMarker(ren, marker, cmap=None):
         geo, pts = project(pts, marker.projection, marker.worldcoordinate)
         markers.SetPoints(pts)
 
+        if scale:
+            # Scale the dataset before using it to make glyphs in an attempt
+            # to keep the glyphs from being stretched
+            T = vtk.vtkTransform()
+            T.Scale(scale[0], scale[1], 1.)
+            markers = applyTransformationToDataset(T, markers)
+
         #  Type
         # Ok at this point generates the source for glpyh
-        gs, pd = prepGlyph(ren, g, marker, index=i)
+        gs, pd = prepGlyph(g, marker, screenGeom=screenGeom, index=i)
         g.SetInputData(markers)
 
-        a = vtk.vtkActor()
-        m = vtk.vtkPolyDataMapper()
-        m.SetInputConnection(g.GetOutputPort())
-        m.Update()
-        a.SetMapper(m)
-        p = a.GetProperty()
-        setMarkerColor(p, marker, c, cmap)
-        actors.append((g, gs, pd, a, geo))
+        g.Update()
+        glyphs = g.GetOutput()
+
+        cellData = glyphs.GetCellData()
+        numCells = glyphs.GetNumberOfCells()
+
+        vtk_color = getMarkerColor(marker, c, cmap)
+
+        colors = vtk.vtkUnsignedCharArray()
+        colors.SetName('Colors')
+        colors.SetNumberOfComponents(4)
+
+        for j in range(numCells):
+            colors.InsertNextTypedTuple(vtk_color)
+
+        cellData.AddArray(colors)
+
+        actors.append((glyphs, pd, geo))
 
     return actors
 
@@ -1777,7 +2000,84 @@ def stippleLine(prop, line_type):
         raise Exception("Unknown line type: '%s'" % line_type)
 
 
-def prepLine(renWin, line, cmap=None):
+def getStipple(line_type):
+    """
+        vtkPen has:
+            SOLID_LINE,
+            DASH_LINE,
+            DOT_LINE,
+            DASH_DOT_LINE,
+            DASH_DOT_DOT_LINE
+    """
+    if line_type == 'long-dash':
+        return vtk.vtkPen.DASH_DOT_DOT_LINE
+    elif line_type == 'dot':
+        return vtk.vtkPen.DENSE_DOT_LINE
+    elif line_type == 'dash':
+        return vtk.vtkPen.DASH_LINE
+    elif line_type == 'dash-dot':
+        return vtk.vtkPen.DASH_DOT_LINE
+    elif line_type == 'solid':
+        return vtk.vtkPen.SOLID_LINE
+    else:
+        raise Exception("Unknown line type: '%s'" % line_type)
+
+
+def getProjectedBoundsForWorldCoords(wc, proj, subdiv=50):
+    if vcs.elements['projection'][proj].type == 'linear':
+        return wc
+
+    xs = numpy.linspace(wc[0], wc[1], subdiv).tolist()
+    xs += [wc[1], ] * subdiv
+    xs += numpy.linspace(wc[1], wc[0], subdiv).tolist()
+    xs += [wc[0], ] * subdiv
+
+    ys = [wc[2], ] * subdiv
+    ys += numpy.linspace(wc[2], wc[3], subdiv).tolist()
+    ys += [wc[3], ] * subdiv
+    ys += numpy.linspace(wc[3], wc[2], subdiv).tolist()
+
+    pts = vtk.vtkPoints()
+
+    for idx in range(len(xs)):
+        pts.InsertNextPoint(xs[idx], ys[idx], 0.0)
+
+    geoTransform, xformPts = project(pts, proj, wc)
+
+    # def printPoints(vtkPoints):
+    #     ptStr = ''
+    #     for ptIdx in range(vtkPoints.GetNumberOfPoints()):
+    #         point = vtkPoints.GetPoint(ptIdx)
+    #         ptStr = '{0}, {1}'.format(point, ptStr)
+    #     print(ptStr)
+
+    # print('Subdivided points')
+    # printPoints(pts)
+    # print('Transformed subdivided points')
+    # printPoints(xformPts)
+
+    return xformPts.GetBounds()
+
+
+def prepLine(plotsContext, line, geoBounds=None, cmap=None):
+    numDivisions = 50
+    if vcs.elements["projection"][line.projection].type == "aeqd":
+        numDivisions = 100
+
+    # print('Inside prepLine, about to get projected bounds for world coordinates')
+
+    projBounds = getProjectedBoundsForWorldCoords(
+        line.worldcoordinate, line.projection, subdiv=numDivisions)
+
+    # print('prepping a line')
+    # print('  projection type = {0}'.format(vcs.elements["projection"][line.projection].type))
+    # print('  wc = {0}'.format(line.worldcoordinate))
+    # print('  projected bounds = {0}'.format(projBounds))
+    # print('  vp = {0}'.format(line.viewport))
+    # print('  coords')
+    # print('    x = {0}'.format(line.x))
+    # print('    y = {0}'.format(line.y))
+
     number_lines = prepPrimitive(line)
     if number_lines == 0:
         return []
@@ -1856,19 +2156,52 @@ def prepLine(renWin, line, cmap=None):
         pts, _, linesPoly, colors = line_data[(t, w)]
 
         linesPoly.GetCellData().SetScalars(colors)
-        geo, pts = project(pts, line.projection, line.worldcoordinate)
+        geoTransform, pts = project(pts, line.projection, line.worldcoordinate)
         linesPoly.SetPoints(pts)
 
-        a = vtk.vtkActor()
-        m = vtk.vtkPolyDataMapper()
-        m.SetInputData(linesPoly)
-        a.SetMapper(m)
+        view = plotsContext.contextView
 
-        p = a.GetProperty()
-        p.SetLineWidth(w)
+        area = vtk.vtkContextArea()
+        view.GetScene().AddItem(area)
 
-        stippleLine(p, t)
-        actors.append((a, geo))
+        vp = line.viewport
+
+        wc = projBounds
+
+        doAdjustBounds = True
+        boundsAdjustment = 1.005
+
+        if doAdjustBounds:
+            wc = adjustBounds(wc, boundsAdjustment, boundsAdjustment)
+        rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
+
+        [renWinWidth, renWinHeight] = plotsContext.renWin.GetSize()
+        if doAdjustBounds:
+            vp = adjustBounds(vp, boundsAdjustment, boundsAdjustment)
+        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
+                            int(vp[2] * renWinHeight),
+                            int((vp[1] - vp[0]) * renWinWidth),
+                            int((vp[3] - vp[2]) * renWinHeight))
+
+        configureContextArea(area, rect, geom)
+
+        intValue = vtk.vtkIntArray()
+        intValue.SetNumberOfComponents(1)
+        intValue.SetName("StippleType")
+        intValue.InsertNextValue(getStipple(t))
+        linesPoly.GetFieldData().AddArray(intValue)
+
+        floatValue = vtk.vtkFloatArray()
+        floatValue.SetNumberOfComponents(1)
+        floatValue.SetName("LineWidth")
+        floatValue.InsertNextValue(w)
+        linesPoly.GetFieldData().AddArray(floatValue)
+
+        item = vtk.vtkPolyDataItem()
+        item.SetPolyData(linesPoly)
+        item.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+        item.SetMappedColors(colors)
+        area.GetDrawAreaItem().AddItem(item)
 
     return actors
 

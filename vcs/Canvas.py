@@ -369,6 +369,7 @@ class Canvas(vcs.bestMatch):
         'ParameterChanged',
         'colormap',
         'backgroundcolor',
+        'logo_transparentcolor',
         'width',
         'height',
         'display_names',
@@ -847,6 +848,7 @@ class Canvas(vcs.bestMatch):
         vcs.next_canvas_id += 1
         self.colormap = None
         self.backgroundcolor = 255, 255, 255
+        self.logo_transparentcolor = 255, 255, 255
         self._display_target = display_target
 
         # displays plotted
@@ -4046,6 +4048,7 @@ class Canvas(vcs.bestMatch):
                         nm, src = self.check_name_source(
                             None, "default", "display")
                         dn = displayplot.Dp(nm, parent=self)
+
                     dn.template = arglist[2]
                     dn.g_type = arglist[3]
                     dn.g_name = arglist[4]

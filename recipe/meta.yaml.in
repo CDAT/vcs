@@ -28,6 +28,7 @@ requirements:
     - cdutil
     - requests
     - numpy
+    - ghostscript
 
 about:
     home:  http://github.com/cdat/vcs

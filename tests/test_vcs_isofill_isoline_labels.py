@@ -22,6 +22,7 @@ class TestVCSIsofill(basevcstest.VCSBaseTest):
                 texts.append(text)
         isoline.text = texts
         isoline.linecolors = colors
+        isoline.labelbackgroundopacities = [0.0 for color in colors]
 
         # Plot the isolines with labels
         self.x.plot(data, isoline, bg=self.bg)

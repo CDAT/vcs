@@ -187,7 +187,8 @@ class Pipeline2D(IPipeline2D):
                                                     fillareastyle=style,
                                                     fillareaindex=index,
                                                     fillareacolors=c,
-                                                    fillareaopacity=opacity)
+                                                    fillareaopacity=opacity,
+                                                    screenGeom=self.context_.renWin.GetSize())
         if act is not None:
             self._patternActors.append(act)
         return
@@ -306,11 +307,12 @@ class Pipeline2D(IPipeline2D):
         # Determine and format the contouring information:
         self._updateContourLevelsAndColors()
 
-        # Generate a mapper to render masked data:
+        # Create the polydata filter:
         self._vtkDataSetBoundsNoMask = self._vtkDataSet.GetBounds()
+
+        # Generate a mapper to render masked data:
         self._createMaskedDataMapper()
 
-        # Create the polydata filter:
         self._createPolyDataFilter()
 
         if (kargs.get('ratio', '0') == 'autot' and
@@ -371,27 +373,31 @@ class Pipeline2D(IPipeline2D):
             self._vtkPolyDataFilter.SetInputConnection(p2c.GetOutputPort())
         self._vtkPolyDataFilter.Update()
         self._resultDict["vtk_backend_filter"] = self._vtkPolyDataFilter
-        # create an actor and a renderer for the surface mesh.
-        # this is used for displaying point information using the hardware selection
-        mapper = vtk.vtkPolyDataMapper()
-        mapper.SetInputConnection(self._vtkPolyDataFilter.GetOutputPort())
-        act = vtk.vtkActor()
-        act.SetMapper(mapper)
         vp = self._resultDict.get(
             'ratio_autot_viewport',
             [self._template.data.x1, self._template.data.x2,
              self._template.data.y1, self._template.data.y2])
         plotting_dataset_bounds = self.getPlottingBounds()
-        surface_renderer, xScale, yScale = self._context().fitToViewport(
-            act, vp,
-            wc=plotting_dataset_bounds, geoBounds=self._vtkDataSetBoundsNoMask,
-            geo=self._vtkGeoTransform,
-            priority=self._template.data.priority,
-            create_renderer=True)
-        self._resultDict['surface_renderer'] = surface_renderer
+
+        xScale, yScale, xc, yc, yd, flipX, flipY = self._context().computeScaleToFitViewport(
+            vp,
+            wc=plotting_dataset_bounds,
+            geoBounds=self._vtkDataSetBoundsNoMask,
+            geo=self._vtkGeoTransform)
+
+        self._vtkPolyDataFilter.Update()
+        self._vtkDataSetFittedToViewport = self._vtkPolyDataFilter.GetOutput()
+        self._vtkDataSetBoundsNoMask = self._vtkDataSetFittedToViewport.GetBounds()
+
+        self._context_xScale = xScale
+        self._context_yScale = yScale
+        self._context_xc = xc
+        self._context_yc = yc
+        self._context_yd = yd
+        self._context_flipX = flipX if not self._vtkGeoTransform else None
+        self._context_flipY = flipY if not self._vtkGeoTransform else None
+
         self._resultDict['surface_scale'] = (xScale, yScale)
-        if (surface_renderer):
-            surface_renderer.SetDraw(False)
 
     def _updateFromGenGridDict(self, genGridDict):
         """Overrides baseclass implementation."""
@@ -409,7 +415,9 @@ class Pipeline2D(IPipeline2D):
         _colorMap = self.getColorMap()
         if color is not None:
             color = self.getColorIndexOrRGBA(_colorMap, color)
+
         self._maskedDataMapper = vcs2vtk.putMaskOnVTKGrid(
+            # self._data1, self._vtkDataSetFittedToViewport, color, self._hasCellData,
             self._data1, self._vtkDataSet, color, self._hasCellData,
             deep=False)
 
@@ -420,18 +428,19 @@ class Pipeline2D(IPipeline2D):
         """gm.datawc if it is set or dataset_bounds if there is not geographic projection
            wrapped bounds otherwise
         """
+        dataBounds = self._vtkDataSetBounds
+        worldCoords = vcs.utils.getworldcoordinates(self._gm,
+                                                    self._data1.getAxis(-1),
+                                                    self._data1.getAxis(-2))
+
         if (self._vtkGeoTransform):
-            return vcs2vtk.getWrappedBounds(
-                vcs.utils.getworldcoordinates(self._gm,
-                                              self._data1.getAxis(-1),
-                                              self._data1.getAxis(-2)),
-                self._vtkDataSetBounds, self._dataWrapModulo)
+            return vcs2vtk.getWrappedBounds(worldCoords,
+                                            dataBounds,
+                                            self._dataWrapModulo)
         else:
-            return vcs2vtk.getPlottingBounds(
-                vcs.utils.getworldcoordinates(self._gm,
-                                              self._data1.getAxis(-1),
-                                              self._data1.getAxis(-2)),
-                self._vtkDataSetBounds, self._vtkGeoTransform)
+            return vcs2vtk.getPlottingBounds(worldCoords,
+                                             dataBounds,
+                                             self._vtkGeoTransform)
 
     def _patternSpacingAndScale(self):
         """Return the pattern pixel spacing and scale if specified or compute
