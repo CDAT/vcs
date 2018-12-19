@@ -215,6 +215,7 @@ class VTKVCSBackend(object):
         self.plotRenderers = set()
         # Maps priorities to renderers
         self.text_renderers = {}
+        self.logoContextArea = None
         self.logoContextItem = None
         self.logoContextItemPython = None
         self.renderer = None
@@ -576,6 +577,14 @@ class VTKVCSBackend(object):
             self.contextView.GetScene().ClearItems()
             r, g, b = [c / 255. for c in self.canvas.backgroundcolor]
             self.contextView.GetRenderer().SetBackground(r, g, b)
+
+            if self.logoContextItem:
+                self.logoContextArea.ClearItems()
+                self.contextView.GetScene().RemoveItem(self.logoContextArea)
+                self.logoContextArea = None
+                self.logoContextItem = None
+                self.logoContextItemPython = None
+
         self._animationActorTransforms = {}
 
         self.showGUI(render=False)
@@ -1653,22 +1662,43 @@ x.geometry(1200,800)
                 position = [0.895, 0.0]
                 position2 = [0.10, 0.05]
 
+                [renWinWidth, renWinHeight] = self.renWin.GetSize()
+                vpLowerLeftX = position[0] * renWinWidth
+                vpLowerLeftY = position[1] * renWinHeight
+                vpWidth = position2[0] * renWinWidth
+                vpHeight = position2[1] * renWinHeight
+
+                imgAspect = float(imgWidth) / imgHeight
+                vpAspect = vpWidth / vpHeight
+
+                if vpAspect > imgAspect:
+                    # We'll use the full vp height and adjust it's width so that it's
+                    # aspect ratio matches that of the image (so no stretching of the
+                    # image occurs).  The image should be centered, so we'll offset
+                    # position x value by half the difference.
+                    vpWidth = vpHeight * imgAspect
+                    halfDiff = ((position2[0] * renWinWidth) - vpWidth) / 2.0
+                    vpLowerLeftX += halfDiff
+                else:
+                    # Similar to above, but in this case we choose to keep the vp width
+                    # and adjust it's height.
+                    vpHeight = vpWidth / imgAspect
+                    halfDiff = ((position2[1] * renWinHeight) - vpHeight) / 2.0
+                    vpLowerLeftY += halfDiff
+
                 view = self.contextView
 
                 area = vtk.vtkContextArea()
                 view.GetScene().AddItem(area)
 
-                [renWinWidth, renWinHeight] = self.renWin.GetSize()
                 dataBounds = vtk.vtkRectd(0.0, 0.0, imgWidth, imgHeight)
-                screenGeom = vtk.vtkRecti(
-                    int(position[0] * renWinWidth),
-                    int(position[1] * renWinHeight),
-                    int(position2[0] * renWinWidth),
-                    int(position2[1] * renWinHeight))
+                screenGeom = vtk.vtkRecti(int(vpLowerLeftX), int(vpLowerLeftY),
+                                          int(vpWidth), int(vpHeight))
 
                 vcs2vtk.configureContextArea(area, dataBounds, screenGeom)
                 area.GetDrawAreaItem().AddItem(item)
 
+                self.logoContextArea = area
                 self.logoContextItem = item
                 self.logoContextItemPython = pythonItem
 
