@@ -101,10 +101,10 @@ class BoxfillPipeline(Pipeline2D):
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
         # vp = vcs2vtk.adjustBounds(vp, 0.9, 0.9)
-        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
-                            int(vp[2] * renWinHeight),
-                            int((vp[1] - vp[0]) * renWinWidth),
-                            int((vp[3] - vp[2]) * renWinHeight))
+        geom = vtk.vtkRecti(int(round(vp[0] * renWinWidth)),
+                            int(round(vp[2] * renWinHeight)),
+                            int(round((vp[1] - vp[0]) * renWinWidth)),
+                            int(round((vp[3] - vp[2]) * renWinHeight)))
 
         vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
 

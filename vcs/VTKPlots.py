@@ -900,10 +900,10 @@ class VTKVCSBackend(object):
                 wc = self.canvas._worldcoordinate
 
                 [renWinWidth, renWinHeight] = self.renWin.GetSize()
-                geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
-                                    int(vp[2] * renWinHeight),
-                                    int((vp[1] - vp[0]) * renWinWidth),
-                                    int((vp[3] - vp[2]) * renWinHeight))
+                geom = vtk.vtkRecti(int(round(vp[0] * renWinWidth)),
+                                    int(round(vp[2] * renWinHeight)),
+                                    int(round((vp[1] - vp[0]) * renWinWidth)),
+                                    int(round((vp[3] - vp[2]) * renWinHeight)))
 
                 rect = vtk.vtkRectd(0.0, 0.0, float(renWinWidth), float(renWinHeight))
 
@@ -931,10 +931,10 @@ class VTKVCSBackend(object):
                 wc = gm.worldcoordinate
 
                 [renWinWidth, renWinHeight] = self.renWin.GetSize()
-                geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
-                                    int(vp[2] * renWinHeight),
-                                    int((vp[1] - vp[0]) * renWinWidth),
-                                    int((vp[3] - vp[2]) * renWinHeight))
+                geom = vtk.vtkRecti(int(round(vp[0] * renWinWidth)),
+                                    int(round(vp[2] * renWinHeight)),
+                                    int(round((vp[1] - vp[0]) * renWinWidth)),
+                                    int(round((vp[3] - vp[2]) * renWinHeight)))
 
                 xScale, yScale, xc, yc, yd, flipX, flipY = self.computeScaleToFitViewport(
                     vp,
@@ -1063,10 +1063,10 @@ class VTKVCSBackend(object):
         view.GetScene().AddItem(area)
 
         [renWinWidth, renWinHeight] = self.renWin.GetSize()
-        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
-                            int(vp[2] * renWinHeight),
-                            int((vp[1] - vp[0]) * renWinWidth),
-                            int((vp[3] - vp[2]) * renWinHeight))
+        geom = vtk.vtkRecti(int(round(vp[0] * renWinWidth)),
+                            int(round(vp[2] * renWinHeight)),
+                            int(round((vp[1] - vp[0]) * renWinWidth)),
+                            int(round((vp[3] - vp[2]) * renWinHeight)))
 
         vcs2vtk.configureContextArea(area, contBounds, geom)
 
@@ -1112,10 +1112,10 @@ class VTKVCSBackend(object):
         vp = self.canvas._viewport
 
         [renWinWidth, renWinHeight] = self.renWin.GetSize()
-        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
-                            int(vp[2] * renWinHeight),
-                            int((vp[1] - vp[0]) * renWinWidth),
-                            int((vp[3] - vp[2]) * renWinHeight))
+        geom = vtk.vtkRecti(int(round(vp[0] * renWinWidth)),
+                            int(round(vp[2] * renWinHeight)),
+                            int(round((vp[1] - vp[0]) * renWinWidth)),
+                            int(round((vp[3] - vp[2]) * renWinHeight)))
 
         rect = vtk.vtkRectd(0.0, 0.0, float(renWinWidth), float(renWinHeight))
 
@@ -1692,8 +1692,10 @@ x.geometry(1200,800)
                 view.GetScene().AddItem(area)
 
                 dataBounds = vtk.vtkRectd(0.0, 0.0, imgWidth, imgHeight)
-                screenGeom = vtk.vtkRecti(int(vpLowerLeftX), int(vpLowerLeftY),
-                                          int(vpWidth), int(vpHeight))
+                screenGeom = vtk.vtkRecti(int(round(vpLowerLeftX)),
+                                          int(round(vpLowerLeftY)),
+                                          int(round(vpWidth)),
+                                          int(round(vpHeight)))
 
                 vcs2vtk.configureContextArea(area, dataBounds, screenGeom)
                 area.GetDrawAreaItem().AddItem(item)
