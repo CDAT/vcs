@@ -915,12 +915,14 @@ def checkLineType(self, name, value):
         hvalue = 'dash-dot'
     elif value in ('long-dash', 4):
         hvalue = 'long-dash'
+    elif value in ('sparse-dot', 5):
+        hvalue = 'sparse-dot'
     else:
         checkedRaise(
             self,
             value,
             ValueError,
-            'Expecting ("solid", "dash", "dot", "dash-dot", "long-dash") or (0, 1, 2, 3, 4)')
+            'Expecting ("solid", "dash", "dot", "dash-dot", "long-dash", "sparse-dot") or (0, 1, 2, 3, 4, 5)')
     return hvalue
 
 

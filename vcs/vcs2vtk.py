@@ -2011,6 +2011,8 @@ def getStipple(line_type):
     """
     if line_type == 'long-dash':
         return vtk.vtkPen.DASH_DOT_DOT_LINE
+    elif line_type == 'sparse-dot':
+        return vtk.vtkPen.DOT_LINE
     elif line_type == 'dot':
         return vtk.vtkPen.DENSE_DOT_LINE
     elif line_type == 'dash':

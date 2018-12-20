@@ -9,8 +9,8 @@ class TestVCSLine(basevcstest.VCSBaseTest):
     def testVCSLinePatterns(self):
         s = self.clt('clt')
         iso = self.x.createisoline()
-        iso.level = [5, 50, 70, 95]
-        iso.linetypes = ['dot', 'dash', 'dash-dot', 'long-dash']
+        iso.level = [5, 25, 50, 70, 95]
+        iso.linetypes = ['dot', 'sparse-dot', 'dash', 'dash-dot', 'long-dash']
         self.x.plot(s, iso, continents=0, bg=self.bg)
         name = "test_vcs_line_patterns.png"
         self.checkImage(name)

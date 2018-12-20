@@ -85,10 +85,10 @@ class StreamlinePipeline(Pipeline2D):
                                                        self._context_flipX, self._context_flipY)
 
         [renWinWidth, renWinHeight] = self._context().renWin.GetSize()
-        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
-                            int(vp[2] * renWinHeight),
-                            int((vp[1] - vp[0]) * renWinWidth),
-                            int((vp[3] - vp[2]) * renWinHeight))
+        geom = vtk.vtkRecti(int(round(vp[0] * renWinWidth)),
+                            int(round(vp[2] * renWinHeight)),
+                            int(round((vp[1] - vp[0]) * renWinWidth)),
+                            int(round((vp[3] - vp[2]) * renWinHeight)))
 
         vcs2vtk.configureContextArea(area, drawAreaBounds, geom)
 
