@@ -1517,10 +1517,10 @@ def prepFillarea(context, renWin, farea, cmap=None):
     rect = vtk.vtkRectd(wc[0], wc[2], wc[1] - wc[0], wc[3] - wc[2])
 
     [renWinWidth, renWinHeight] = renWin.GetSize()
-    geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
-                        int(vp[2] * renWinHeight),
-                        int((vp[1] - vp[0]) * renWinWidth),
-                        int((vp[3] - vp[2]) * renWinHeight))
+    geom = vtk.vtkRecti(int(round(vp[0] * renWinWidth)),
+                        int(round(vp[2] * renWinHeight)),
+                        int(round((vp[1] - vp[0]) * renWinWidth)),
+                        int(round((vp[3] - vp[2]) * renWinHeight)))
 
     area.SetDrawAreaBounds(rect)
     area.SetGeometry(geom)
@@ -2180,10 +2180,10 @@ def prepLine(plotsContext, line, geoBounds=None, cmap=None):
         [renWinWidth, renWinHeight] = plotsContext.renWin.GetSize()
         if doAdjustBounds:
             vp = adjustBounds(vp, boundsAdjustment, boundsAdjustment)
-        geom = vtk.vtkRecti(int(vp[0] * renWinWidth),
-                            int(vp[2] * renWinHeight),
-                            int((vp[1] - vp[0]) * renWinWidth),
-                            int((vp[3] - vp[2]) * renWinHeight))
+        geom = vtk.vtkRecti(int(round(vp[0] * renWinWidth)),
+                            int(round(vp[2] * renWinHeight)),
+                            int(round((vp[1] - vp[0]) * renWinWidth)),
+                            int(round((vp[3] - vp[2]) * renWinHeight)))
 
         configureContextArea(area, rect, geom)
 
