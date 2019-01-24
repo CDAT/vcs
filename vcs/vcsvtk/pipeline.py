@@ -91,11 +91,8 @@ class Pipeline(object):
         t = self._originalData1.getTime()
         z = self._originalData1.getLevel()
 
-        print("Ok first cut:", t, z)
         if self._originalData1.ndim > 2 and z is None:
             z = self._originalData1.getAxis(-3)
-        print("Ok z inow: ", z)
         if self._originalData1.ndim > 3 and t is None:
             t = self._originalData1.getAxis(-4)
-        print("Ok t inow: ", t)
         return z, t
