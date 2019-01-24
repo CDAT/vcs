@@ -1123,6 +1123,8 @@ class VTKVCSBackend(object):
 
         # ok first basic template stuff, let's store the displays
         # because we need to return actors for min/max/mean
+        kargs["taxis"] = taxis
+        kargs["zaxis"] = zaxis
         displays = tmpl.plot(
             self.canvas,
             data,

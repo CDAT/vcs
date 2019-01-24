@@ -1752,40 +1752,46 @@ class P(vcs.bestMatch):
         kargs["donotstoredisplay"] = True
         if not isinstance(gm, vcs.taylor.Gtd):
             nms = ["x", "y", "z", "t"]
-            for i, ax in enumerate(slab.getAxisList()[::-1]):
-                if nms[i] in ["x", "y"] and hasattr(gm, "projection") and \
+            for i, ax in enumerate(slab.getAxisList()[-2:][::-1]+[kargs.get("zaxis",None), kargs.get("taxis", None)]):
+                if (hasattr(gm, "projection") and \
                         vcs.elements["projection"][gm.projection].type \
-                        in round_projections:
+                        in round_projections) or ax is None:
                     continue
-                nm = nms[i] + "name"
-                sub = getattr(self, nm)
-                tt = x.createtext(
-                    None,
-                    sub.texttable,
-                    None,
-                    sub.textorientation)
-                if i == 0 and gm.g_name == "G1d":
-                    if gm.flip or hasattr(slab, "_yname"):
-                        tt.string = [slab.id]
-                    else:
-                        tt.string = [ax.id]
-                elif i == 1 and gm.g_name == "G1d":
-                    if hasattr(slab, "_yname"):
-                        tt.string = [slab._yname]
-                    else:
-                        tt.string = [ax.id]
-                else:
-                    tt.string = [ax.id]
-                tt.x = [sub.x, ]
-                tt.y = [sub.y, ]
-                tt.priority = sub._priority
-                # This is the name of the axis. It should be transformed
-                # through geographic projection but it is not at the moment
-                displays.append(x.text(tt, bg=bg, **kargs))
-                sp = tt.name.split(":::")
-                del(vcs.elements["texttable"][sp[0]])
-                del(vcs.elements["textorientation"][sp[1]])
-                del(vcs.elements["textcombined"][tt.name])
+                for att in ["name", "units", "value"]:
+                    nm = nms[i] + att
+                    sub = getattr(self, nm)
+                    tt = x.createtext(
+                        None,
+                        sub.texttable,
+                        None,
+                        sub.textorientation)
+                    if att == "name":
+                        if i == 0 and gm.g_name == "G1d":
+                            if gm.flip or hasattr(slab, "_yname"):
+                                tt.string = [slab.id]
+                            else:
+                                tt.string = [ax.id]
+                        elif i == 1 and gm.g_name == "G1d":
+                            if hasattr(slab, "_yname"):
+                                tt.string = [slab._yname]
+                            else:
+                                tt.string = [ax.id]
+                        else:
+                            tt.string = [ax.id]
+                    elif att == "units":
+                        tt.string = [getattr(ax,"units","")]
+                    else:  # value
+                        tt.string = "{:g}".format(ax[0])
+                    tt.x = [sub.x, ]
+                    tt.y = [sub.y, ]
+                    tt.priority = sub._priority
+                    # This is the name of the axis. It should be transformed
+                    # through geographic projection but it is not at the moment
+                    displays.append(x.text(tt, bg=bg, **kargs))
+                    sp = tt.name.split(":::")
+                    del(vcs.elements["texttable"][sp[0]])
+                    del(vcs.elements["textorientation"][sp[1]])
+                    del(vcs.elements["textcombined"][tt.name])
 
         if X is None:
             X = slab.getAxis(-1)

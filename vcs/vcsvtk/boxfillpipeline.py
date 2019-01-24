@@ -208,11 +208,8 @@ class BoxfillPipeline(Pipeline2D):
 
         self._resultDict["vtk_backend_actors"] = actors
 
-        t = self._originalData1.getTime()
-        if self._originalData1.ndim > 2:
-            z = self._originalData1.getAxis(-3)
-        else:
-            z = None
+        z, t = self.getZandT()
+
         kwargs = {
             "vtk_backend_grid": self._vtkDataSet,
             "dataset_bounds": self._vtkDataSetBounds,
