@@ -21,7 +21,7 @@ workdir = os.getcwd()
 runner = VCSTestRunner(test_suite_name, options=["--no-vtk-ui", "--vtk"],
                        options_files=["tests/vcs_runtests.json"],
                        get_sample_data=True,
-                       test_data_files_info="Share/test_data_files.txt")
+                       test_data_files_info="share/test_data_files.txt")
 ret_code = runner.run(workdir)
 
 sys.exit(ret_code)
