@@ -37,6 +37,7 @@ from __future__ import print_function
 import copy
 import vcs
 import numpy
+import cdtime
 from .Ptext import *  # noqa
 from .Pformat import *  # noqa
 from .Pxtickmarks import *  # noqa
@@ -1781,7 +1782,16 @@ class P(vcs.bestMatch):
                     elif att == "units":
                         tt.string = [getattr(ax,"units","")]
                     else:  # value
-                        tt.string = "{:g}".format(ax[0])
+                        # First see if it is a time
+                        try:
+                            stringValue = cdtime.reltime(ax[0], ax.units)
+                            try:  # try to use axis value
+                                stringValue = str(stringValue.tocomp(ax.getCalendar()))
+                            except:  # fallback on default calendar
+                                stringValue = str(stringValue.tocomp())
+                        except:
+                            stringValue = "{:g}".format(ax[0])
+                        tt.string = stringValue
                     tt.x = [sub.x, ]
                     tt.y = [sub.y, ]
                     tt.priority = sub._priority

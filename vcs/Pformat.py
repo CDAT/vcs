@@ -133,15 +133,18 @@ class Pf(vcs.bestMatch):
         if member == "xvalue":
             self.x = 0.800000011921
             self.y = 0.941999971867
+            self.priority = 0
         elif member == "yvalue":
             self.x = 0.800000011921
             self.y = 0.922999978065
+            self.priority = 0
         elif member == "zvalue":
             self.x = 0.800000011921
             self.y = 0.902999997139
         elif member == "tvalue":
             self.x = 0.800000011921
             self.y = 0.883000016212
+            self.priority = 0
         elif member == "mean":
             self.x = 0.0500000007451
             self.y = 0.899999976158
