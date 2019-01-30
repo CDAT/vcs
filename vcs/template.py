@@ -1429,8 +1429,7 @@ class P(vcs.bestMatch):
 
     def scale(self, scale, axis='xy', font=-1):
         """Scale a template along the axis 'x' or 'y' by scale
-        Positive values of scale mean increase.
-        Negative values of scale mean decrease.
+        Values of scale greater than 1. mean increase.
         The reference point is the template's x1 and y1 data.
 
         :Example:
@@ -1612,7 +1611,7 @@ class P(vcs.bestMatch):
         :param backgroundcolor: A list indicating the background color of the legended box.
             Colors are represented as either an int from 0-255, an rgba tuple,
             or a string color name.
-        :type markercolors: `list`_
+        :type backgroundcolor: `list`_
         """
         return vcs.utils.drawLinesAndMarkersLegend(canvas,
                                                    self.legend,
@@ -1975,21 +1974,21 @@ class P(vcs.bestMatch):
         T = []  # thickness
         # computes the fillarea coordinates
         iext = 0  # To know if we changed the dims
-        if (ext_1 == 'y' or ext_2 == 'y'):  # and boxLength < self.legend.arrow * length:
+        if (ext_1 in ['y', 1, True] or ext_2 in ['y', 1, True]):  # and boxLength < self.legend.arrow * length:
             iext = 1  # one mins changed ext_1
             arrowLength = self.legend.arrow * length
-            if ext_1 == 'y' and ext_2 == 'y':
+            if ext_1 in ['y', 1, True] and ext_2 in ['y', 1, True]:
                 boxLength = (length - 2. * arrowLength) / (nbox - 2.)
                 iext = 3  # changed both side
             else:
                 boxLength = (length - arrowLength) / (nbox - 1.)
-                if ext_2 == 'y':
+                if ext_2 in ['y', 1, True]:
                     iext = 2
 
         # Loops thru the boxes (i.e colors NOT actual boxes drawn)
         adjust = 0
         for i in range(nbox):
-            if ext_1 == 'y' and i == 0:
+            if ext_1 in ['y', 1, True] and i == 0:
                 # Draws the little arrow at the begining
                 # Make sure the triangle goes back to first point
                 # Because used to close the extension
@@ -2008,7 +2007,7 @@ class P(vcs.bestMatch):
                 if iext == 1 or iext == 3:
                     startLength = startLength + arrowLength
                     adjust = -1
-            elif ext_2 == 'y' and i == nbox - 1:
+            elif ext_2 in ['y', 1, True] and i == nbox - 1:
                 # Draws the little arrow at the end
                 L.append([
                     startLength + boxLength * (i + adjust),
@@ -2063,13 +2062,13 @@ class P(vcs.bestMatch):
         Lt = []  # Length ticks location
         St = []  # String location
         levelsLength = length  # length of the levels area
-        if ext_1 == 'y':
+        if ext_1 in ['y', 1, True]:
             Tl.append(T[0])
             Ll.append(L[0])
             levels.pop(0)
             if iext == 1 or iext == 3:
                 levelsLength = levelsLength - arrowLength
-        if ext_2 == 'y':
+        if ext_2 in ['y', 1, True]:
             Tl.append(T[-1])
             Ll.append(L[-1])
             levels.pop(-1)
@@ -2244,7 +2243,7 @@ class P(vcs.bestMatch):
         self.ratio(Rwished, Rout, box_and_ticks, x)
         return
 
-    def ratio(self, Rwished, Rout=None, box_and_ticks=0, x=None):
+    def ratio(self, Rwished, Rout=None, box_and_ticks=True, x=None):
         """Computes ratio to shrink the data area of a template
         to have an y/x ratio of Rwished
         has the least possible deformation in linear projection
@@ -2260,11 +2259,14 @@ class P(vcs.bestMatch):
             Rwished MUST be provided.
         :type Rwished: `float`_ or `int`_
 
-        :param Rout: Ratio of output (default is US Letter=11./8.5).
+        :param Rout: Ratio of output (default is SCREEN).
             Also you can pass a string: "A4","US LETTER",
             "X"/"SCREEN", the latest uses the window information
             box_and_ticks: Also redefine box and ticks to the new region
         :type Rout: str or None
+
+        :param box_and_ticks: Also scale the boxes and ticks default True
+        :type box_and_ticks: `int` or `bool`
 
         :returns: vcs template object
         :rtype: vcs.template.P
