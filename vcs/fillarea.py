@@ -387,14 +387,14 @@ class Tf(vcs.bestMatch):
     #
     #
     def __init__(self, Tf_name=None, Tf_name_src='default'):
-                    #
-                    #
-                    # Initialize the fillarea class and its members           #
-                    # The getTfmember function retrieves the values of the    #
-                    # fillarea members in the C structure and passes back the #
-                    # appropriate Python Object.                              #
-                    #
-                    #
+        #
+        #
+        # Initialize the fillarea class and its members           #
+        # The getTfmember function retrieves the values of the    #
+        # fillarea members in the C structure and passes back the #
+        # appropriate Python Object.                              #
+        #
+        #
         if isinstance(Tf_name_src, Tf):
             Tf_name_src = Tf_name_src.name
         if Tf_name_src != "default" and Tf_name_src not in list(vcs.elements[

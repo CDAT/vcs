@@ -183,12 +183,16 @@ class Pt(vcs.bestMatch):
         elif member == "tname":
             self.x = 0.
             self.y = 0.995000004768
+            self.priority = 0
         elif member == "xunits":
             self.x = 0.600000023842
-            self.y = 0.277000010014
+            self.y = 0.21
+            self.priority = 0
         elif member == "yunits":
-            self.x = 0.019999999553
+            self.x = 0.006
             self.y = 0.658999979496
+            self.textorientation = "defup"
+            self.priority = 0
         elif member == "zunits":
             self.x = 0.
             self.y = 0.995000004768

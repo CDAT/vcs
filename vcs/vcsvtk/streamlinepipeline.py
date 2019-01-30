@@ -25,12 +25,8 @@ class StreamlinePipeline(Pipeline2D):
         """Overrides baseclass implementation."""
         # Preserve time and z axis for plotting these inof in rendertemplate
         projection = vcs.elements["projection"][self._gm.projection]
-        taxis = self._originalData1.getTime()
 
-        if self._originalData1.ndim > 2:
-            zaxis = self._originalData1.getAxis(-3)
-        else:
-            zaxis = None
+        zaxis, taxis = self.getZandT()
 
         # Streamline color
         if (not self._gm.coloredbyvector):

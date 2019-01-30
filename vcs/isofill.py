@@ -574,14 +574,14 @@ class Gfi(vcs.bestMatch):
     levels = VCS_validation_functions.levels
 
     def __init__(self, Gfi_name, Gfi_name_src='default'):
-                #
-                #
-                # Initialize the isofill class and its members            #
-                # The getGfimember function retrieves the values of the   #
-                # isofill members in the C structure and passes back the  #
-                # appropriate Python Object.                              #
-                #
-                #
+        #
+        #
+        # Initialize the isofill class and its members            #
+        # The getGfimember function retrieves the values of the   #
+        # isofill members in the C structure and passes back the  #
+        # appropriate Python Object.                              #
+        #
+        #
         if not isinstance(Gfi_name, str):
             raise ValueError("Isofill name must be a string")
         if Gfi_name in list(vcs.elements["isofill"].keys()):

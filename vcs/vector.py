@@ -644,15 +644,15 @@ class Gv(vcs.bestMatch):
     scalerange = property(_getscalerange, _setscalerange)
 
     def __init__(self, Gv_name, Gv_name_src='default'):
-                #                                                         #
-                ###########################################################
-                # Initialize the vector class and its members             #
-                #                                                         #
-                # The getGvmember function retrieves the values of the    #
-                # vector members in the C structure and passes back the   #
-                # appropriate Python Object.                              #
-                ###########################################################
-                #                                                         #
+        #                                                         #
+        ###########################################################
+        # Initialize the vector class and its members             #
+        #                                                         #
+        # The getGvmember function retrieves the values of the    #
+        # vector members in the C structure and passes back the   #
+        # appropriate Python Object.                              #
+        ###########################################################
+        #                                                         #
         if Gv_name in vcs.elements["vector"]:
             raise ValueError("The vector method '%s' already exists" % Gv_name)
         self.g_name = 'Gv'

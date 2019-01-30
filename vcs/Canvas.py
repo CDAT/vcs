@@ -714,9 +714,9 @@ class Canvas(vcs.bestMatch):
         isgridded = (grid is not None)
 
         # Set the default graphics method if not already set.
+        # See _determine_arg_list
         if arglist[GRAPHICS_METHOD] == "default" or\
                 (arglist[GRAPHICS_METHOD] == 'boxfill' and arglist[GRAPHICS_METHOD + 1] == "default"):
-                        # See _determine_arg_list
 
             if grid is None:
                 if tv.ndim == 1:
@@ -2823,13 +2823,13 @@ class Canvas(vcs.bestMatch):
 
     def __plot(self, arglist, keyargs):
 
-            # This routine has five arguments in arglist from _determine_arg_list
-            # It adds one for bg and passes those on to Canvas.plot as its sixth
-            # arguments.
+        # This routine has five arguments in arglist from _determine_arg_list
+        # It adds one for bg and passes those on to Canvas.plot as its sixth
+        # arguments.
 
-            # First of all let's remember which elets we have before comin in here
-            # so that anything added (temp objects) can be removed at clear
-            # time
+        # First of all let's remember which elets we have before comin in here
+        # so that anything added (temp objects) can be removed at clear
+        # time
         original_elts = {}
         new_elts = {}
         for k in list(vcs.elements.keys()):

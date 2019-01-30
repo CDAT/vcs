@@ -195,7 +195,7 @@
     "y": 0.922999978065
    }, 
    "tname": {
-    "priority": 1, 
+    "priority": 0, 
     "textorientation": "default", 
     "texttable": "default", 
     "x": 0.0, 
@@ -217,7 +217,7 @@
    }, 
    "tvalue": {
     "format": "default", 
-    "priority": 1, 
+    "priority": 0, 
     "textorientation": "default", 
     "texttable": "default", 
     "x": 0.800000011921, 
@@ -274,15 +274,15 @@
     "y2": 0.871999979019
    }, 
    "xunits": {
-    "priority": 1, 
+    "priority": 0, 
     "textorientation": "default", 
     "texttable": "default", 
     "x": 0.600000023842, 
-    "y": 0.277000010014
+    "y": 0.21
    }, 
    "xvalue": {
     "format": "default", 
-    "priority": 1, 
+    "priority": 0, 
     "textorientation": "default", 
     "texttable": "default", 
     "x": 0.800000011921, 
@@ -332,15 +332,15 @@
     "x2": 0.959999978542
    }, 
    "yunits": {
-    "priority": 1, 
-    "textorientation": "default", 
+    "priority": 0, 
+    "textorientation": "defup", 
     "texttable": "default", 
-    "x": 0.019999999553, 
+    "x": 0.006, 
     "y": 0.658999979496
    }, 
    "yvalue": {
     "format": "default", 
-    "priority": 1, 
+    "priority": 0, 
     "textorientation": "default", 
     "texttable": "default", 
     "x": 0.800000011921, 

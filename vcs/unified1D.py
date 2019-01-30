@@ -652,15 +652,15 @@ class G1d(vcs.bestMatch):
     g_type = property(_gtype, None, None, "the 1d graphics method type")
 
     def __init__(self, name, name_src='default'):
-            #                                                         #
-            ###########################################################
-            # Initialize the Yxvsx class and its members              #
-            #                                                         #
-            # The getGYxmember function retrieves the values of the   #
-            # Yxvsx members in the C structure and passes back the    #
-            # appropriate Python Object.                              #
-            ###########################################################
-            #                                                         #
+        #                                                         #
+        ###########################################################
+        # Initialize the Yxvsx class and its members              #
+        #                                                         #
+        # The getGYxmember function retrieves the values of the   #
+        # Yxvsx members in the C structure and passes back the    #
+        # appropriate Python Object.                              #
+        ###########################################################
+        #                                                         #
         if name in vcs.elements["1d"]:
             raise ValueError("The 1D method '%s' already exists")
         self.g_name = 'G1d'

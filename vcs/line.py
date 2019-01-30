@@ -315,14 +315,14 @@ class Tl(vcs.bestMatch):
     #                                                                           #
     ##########################################################################
     def __init__(self, Tl_name, Tl_name_src='default'):
-                #                                                         #
-                ###########################################################
-                # Initialize the line class and its members               #
-                # The getTlmember function retrieves the values of the    #
-                # line members in the C structure and passes back the     #
-                # appropriate Python Object.                              #
-                ###########################################################
-                #                                                         #
+        #                                                         #
+        ###########################################################
+        # Initialize the line class and its members               #
+        # The getTlmember function retrieves the values of the    #
+        # line members in the C structure and passes back the     #
+        # appropriate Python Object.                              #
+        ###########################################################
+        #                                                         #
         if Tl_name in list(vcs.elements["line"].keys()):
             raise ValueError("lineobject '%' already exists" % Tl_name)
         self._name = Tl_name

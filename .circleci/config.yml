@@ -22,16 +22,17 @@ aliases:
     name: create_conda_env
     environment:
        CHANNELS: "-c cdat/label/nightly -c conda-forge -c cdat"
-       PKGS: "cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime nbformat 'vtk-cdat>8.1' 'proj4<5' 'numpy>1.14' ghostscript"
+       PKGS: "cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime nbformat 'vtk-cdat<8.2.0.rc2.289.8.0.2019.01.28.16' 'proj4<5' 'numpy>1.14' ghostscript"
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
        conda config --set always_yes yes --set changeps1 no
        conda update -y -q conda
+       conda install -n base "conda<4.6"
        conda config --set anaconda_upload no
        if [[ $PY_VER = "py2" ]]; then
-          conda create -q -n $PY_VER $CHANNELS $PKGS $TEMP_PKGS "python<3"
+          conda create -q -n $PY_VER $CUSTOM_CHANNELS $CHANNELS $PKGS $TEMP_PKGS "python<3"
        else
-          conda create -q -n $PY_VER $CHANNELS $PKGS $TEMP_PKGS "python>3" nbsphinx easydev $COVERAGE_PKGS
+          conda create -q -n $PY_VER $CUSTOM_CHANNELS $CHANNELS $PKGS $TEMP_PKGS "python>3" nbsphinx easydev $COVERAGE_PKGS
        fi
 
   - &setup_vcs
@@ -70,6 +71,14 @@ aliases:
        fi
        exit $RESULT
 
+  - &templink
+    name: templink
+    command: |
+       export PATH=$WORKDIR/miniconda/bin:$PATH
+       source activate $PY_VER
+       rm ${WORKDIR}/miniconda/envs/$PY_VER/bin/python
+       ln -s $(pwd)/$WORKDIR/miniconda/envs/$PY_VER/bin/vtkpython $(pwd)/$WORKDIR/miniconda/envs/$PY_VER/bin/python
+        
   - &conda_upload
     name: conda_upload
     environment:
@@ -120,6 +129,7 @@ jobs:
       OS: "osx-64"
       PY_VER: "py2"
       TEMP_PKGS: "'ffmpeg>4' 'libpng>1.6.34'"
+      CUSTOM_CHANNELS: "-c danlipsa"
     steps:
       - checkout
       - run: *setup_miniconda
@@ -142,11 +152,13 @@ jobs:
       OS: "osx-64"
       PY_VER: "py3"
       TEMP_PKGS: "'ffmpeg>4' 'libpng>1.6.34'"
+      CUSTOM_CHANNELS: "-c danlipsa"
     steps:
       - checkout
       - run: *setup_miniconda
       - run: *get_testdata
       - run: *create_conda_env
+      - run: *templink
       - run: *setup_vcs
       - run: *run_vcs_tests
       - store_artifacts:

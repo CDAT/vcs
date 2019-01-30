@@ -118,7 +118,7 @@ def checkContinents(self, value):
                 "data_continent_%s" % nms[value - 1])
 
             if not os.path.exists(path):
-                    # fallback on installed with system one
+                # fallback on installed with system one
                 path = os.path.join(
                     vcs.vcs_egg_path,
                     "data_continent_%s" % nms[
@@ -365,7 +365,7 @@ def checkMarker(self, name, value):
         elif value in range(100, 203):
             value = "w%.2i" % (value - 100)
         elif (queries.ismarker(value) == 1):
-                value = value.name
+            value = value.name
 
     else:
         checkedRaise(

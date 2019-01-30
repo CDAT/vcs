@@ -1952,7 +1952,7 @@ def setTicksandLabels(gm, copy_gm, datawc_x1, datawc_x2,
             if isinstance(lbls, basestring) and lbls != "*":
                 mticks = vcs.elements["list"][lbls]
             if lbls is None or lbls == "*":
-                if location is "x" and x == "longitude" and abs(
+                if location == "x" and x == "longitude" and abs(
                         datawc_x2 - datawc_x1) > 30:
                     ticks = transformTicks(
                         vcs.elements["list"]["Lon30"], x_forward)

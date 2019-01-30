@@ -301,14 +301,14 @@ class Dp(vcs.bestMatch):
     #                                                                           #
     ##########################################################################
     def __init__(self, Dp_name, Dp_name_src='default', parent=None):
-            #                                                                           #
-            ###################################################################
-            # Initialize the display plot's class and its members                       #
-            # The getDpmember function retrieves the values of the                      #
-            # display plot members in the C structure and passes back the               #
-            # appropriate Python Object.                                                #
-            ###################################################################
-            #                                                                           #
+        #                                                                           #
+        ###################################################################
+        # Initialize the display plot's class and its members                       #
+        # The getDpmember function retrieves the values of the                      #
+        # display plot members in the C structure and passes back the               #
+        # appropriate Python Object.                                                #
+        ###################################################################
+        #                                                                           #
         self.extradisplays = []
         self._name = Dp_name
         self.s_name = 'Dp'

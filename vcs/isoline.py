@@ -886,14 +886,14 @@ class Gi(vcs.bestMatch):
     clockwise = property(_getclockwise, _setclockwise)
 
     def __init__(self, Gi_name, Gi_name_src='default'):
-                #                                                         #
-                ###########################################################
-                # Initialize the isoline class and its members            #
-                # The getGimember function retrieves the values of the   #
-                # isoline members in the C structure and passes back the  #
-                # appropriate Python Object.                              #
-                ###########################################################
-                #                                                         #
+        #                                                         #
+        ###########################################################
+        # Initialize the isoline class and its members            #
+        # The getGimember function retrieves the values of the   #
+        # isoline members in the C structure and passes back the  #
+        # appropriate Python Object.                              #
+        ###########################################################
+        #                                                         #
         if not isinstance(Gi_name, str):
             raise ValueError("Isoline name must be a string")
         if Gi_name in list(vcs.elements["isoline"].keys()):

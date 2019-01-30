@@ -86,3 +86,13 @@ class Pipeline(object):
             viewportBounds[0] = (xMiddle - xSizeHalf) / windowSize[0]
             viewportBounds[1] = (xMiddle + xSizeHalf) / windowSize[0]
         return viewportBounds
+
+    def getZandT(self):
+        t = self._originalData1.getTime()
+        z = self._originalData1.getLevel()
+
+        if self._originalData1.ndim > 2 and z is None:
+            z = self._originalData1.getAxis(-3)
+        if self._originalData1.ndim > 3 and t is None:
+            t = self._originalData1.getAxis(-4)
+        return z, t

@@ -744,15 +744,15 @@ class Gs(vcs.bestMatch):
         vcs.setLineAttributes(self, line)
 
     def __init__(self, Gs_name, Gs_name_src='default'):
-                #                                                         #
-                ###########################################################
-                # Initialize the streamline class and its members             #
-                #                                                         #
-                # The getGsmember function retrieves the values of the    #
-                # streamline members in the C structure and passes back the   #
-                # appropriate Python Object.                              #
-                ###########################################################
-                #                                                         #
+        #                                                         #
+        ###########################################################
+        # Initialize the streamline class and its members             #
+        #                                                         #
+        # The getGsmember function retrieves the values of the    #
+        # streamline members in the C structure and passes back the   #
+        # appropriate Python Object.                              #
+        ###########################################################
+        #                                                         #
         if Gs_name in vcs.elements["streamline"]:
             raise ValueError(
                 "The streamline method '%s' already exists" % Gs_name)
