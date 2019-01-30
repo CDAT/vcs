@@ -597,12 +597,12 @@ class Gfm(vcs.bestMatch):
     wrap = property(_getwrap, _setwrap)
 
     def __init__(self, Gfm_name, Gfm_name_src='default'):
-                ###########################################################
-                # Initialize the meshfill class and its members            #
-                # The getGfmmember function retrieves the values of the   #
-                # meshfill members in the C structure and passes back the  #
-                # appropriate Python Object.                              #
-                ###########################################################
+        ###########################################################
+        # Initialize the meshfill class and its members            #
+        # The getGfmmember function retrieves the values of the   #
+        # meshfill members in the C structure and passes back the  #
+        # appropriate Python Object.                              #
+        ###########################################################
 
         if not isinstance(Gfm_name, str):
             raise ValueError("meshfill name must be a string")

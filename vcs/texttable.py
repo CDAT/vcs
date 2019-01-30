@@ -399,15 +399,15 @@ class Tt(vcs.bestMatch):
     #                                                                           #
     ##########################################################################
     def __init__(self, Tt_name=None, Tt_name_src='default'):
-                #                                                           #
-                #############################################################
-                # Initialize the text table class and its members           #
-                #                                                           #
-                # The getTtmember function retrieves the values of the      #
-                # text table members in the C structure and passes back the #
-                # appropriate Python Object.                                #
-                #############################################################
-                #                                                           #
+        #                                                           #
+        #############################################################
+        # Initialize the text table class and its members           #
+        #                                                           #
+        # The getTtmember function retrieves the values of the      #
+        # text table members in the C structure and passes back the #
+        # appropriate Python Object.                                #
+        #############################################################
+        #                                                           #
         if (Tt_name is None):
             raise ValueError('Must provide a text table name.')
         if Tt_name in list(vcs.elements["texttable"].keys()):

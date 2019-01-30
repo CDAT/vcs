@@ -275,15 +275,15 @@ class P(vcs.bestMatch):
 
     # Initialize the template attributes.                                     #
     def __init__(self, Pic_name=None, Pic_name_src='default'):
-            #                                                         #
-            ###########################################################
-            # Initialize the template class and its members           #
-            #                                                         #
-            # The getPmember function retrieves the values of the     #
-            # template members in the C structure and passes back the #
-            # appropriate Python Object.                              #
-            ###########################################################
-            #                                                         #
+        #                                                         #
+        ###########################################################
+        # Initialize the template class and its members           #
+        #                                                         #
+        # The getPmember function retrieves the values of the     #
+        # template members in the C structure and passes back the #
+        # appropriate Python Object.                              #
+        ###########################################################
+        #                                                         #
         if (Pic_name is None):
             raise ValueError('Must provide a template name.')
         if Pic_name_src != "default" and Pic_name_src not in vcs.elements[

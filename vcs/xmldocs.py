@@ -432,7 +432,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
         # section for manageElements 'get' methods
             if method == 'get':
                 example1 = """>>> ex=vcs.get%(name)s(%(sp_parent)s)  # '%(parent)s' %(name)s"""
-                if d['tc'] is not '':
+                if d['tc'] != '':
                     example1 = d['tc'] + example1
                 # set up d['plot'] and d['plot2']
                 plot = ''
@@ -441,7 +441,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
                 d['slabs'] = ''
                 d['args'] = ''
                 if numslabs > 0:
-                    if obj_name is "taylordiagram":
+                    if obj_name == "taylordiagram":
                         d['slabs'] = """
             >>> slab1 = [[0, 1, 2, 3, 4], [0.1, 0.2, 0.3, 0.4, 0.5]] # data"""
                     else:
@@ -475,7 +475,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             >>> a.plot(ex2%(args)s) # plot %(name)s
             <vcs.displayplot.Dp ...>"""
                 if obj_name.find('3d') >= 0:
-                    if obj_name is "3d_vector":
+                    if obj_name == "3d_vector":
                         plot = ""
 #            >>> a.plot(ex%(args)s) # plot %(name)s
 #            Sample rate: 6
@@ -490,7 +490,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
 #            <vcs.displayplot.Dp ...>
 #            """
 
-                if d['slabs'] is not '':
+                if d['slabs'] != '':
                     plot = d['slabs'] + plot
                 example1 += plot
                 d['example'] = example1 % d
@@ -537,7 +537,7 @@ def populate_docstrings(type_dict, target_dict, docstring, method):
             >>> vcs.queries.is%(name)s(ex)
             1
             """
-                if d['tc'] is not '':
+                if d['tc'] != '':
                     example = d['tc'] + example
                 d['example'] = example % d
             target_dict[obj_name] = docstring % d

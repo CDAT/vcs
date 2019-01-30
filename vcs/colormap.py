@@ -286,15 +286,15 @@ class Cp(vcs.bestMatch):
     ##########################################################################
 
     def __init__(self, Cp_name, Cp_name_src='default'):
-            #                                                             #
-            ###############################################################
-            # Initialize the colormap class and its members               #
-            #                                                             #
-            # The getCpmember function retrieves the values of the        #
-            # colormap members in the C structure and passes back the     #
-            # appropriate Python Object.                                  #
-            ###############################################################
-            #                                                             #
+        #                                                             #
+        ###############################################################
+        # Initialize the colormap class and its members               #
+        #                                                             #
+        # The getCpmember function retrieves the values of the        #
+        # colormap members in the C structure and passes back the     #
+        # appropriate Python Object.                                  #
+        ###############################################################
+        #                                                             #
         self.s_name = 'Cp'
         self._name = Cp_name
         if Cp_name == "default":
