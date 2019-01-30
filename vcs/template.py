@@ -1753,8 +1753,8 @@ class P(vcs.bestMatch):
         kargs["donotstoredisplay"] = True
         if not isinstance(gm, vcs.taylor.Gtd):
             nms = ["x", "y", "z", "t"]
-            for i, ax in enumerate(slab.getAxisList()[-2:][::-1]+[kargs.get("zaxis",None), kargs.get("taxis", None)]):
-                if (hasattr(gm, "projection") and \
+            for i, ax in enumerate(slab.getAxisList()[-2:][::-1] + [kargs.get("zaxis", None), kargs.get("taxis", None)]):
+                if (hasattr(gm, "projection") and
                         vcs.elements["projection"][gm.projection].type \
                         in round_projections) or ax is None:
                     continue
