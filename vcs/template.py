@@ -1079,7 +1079,7 @@ class P(vcs.bestMatch):
             loc = copy.copy(getattr(gm, axis + 'mtics' + number))
         # Are they set or do we need to it ?
         if (loc is None or loc == '*'):
-                # well i guess we have to do it !
+            # well i guess we have to do it !
             if axis == 'x':
                 x1 = wc[0]
                 x2 = wc[1]
