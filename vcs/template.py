@@ -1753,9 +1753,10 @@ class P(vcs.bestMatch):
         kargs["donotstoredisplay"] = True
         if not isinstance(gm, vcs.taylor.Gtd):
             nms = ["x", "y", "z", "t"]
-            for i, ax in enumerate(slab.getAxisList()[-2:][::-1] + [kargs.get("zaxis", None), kargs.get("taxis", None)]):
+            for i, ax in enumerate(slab.getAxisList()[-2:][::-1] +
+                                   [kargs.get("zaxis", None), kargs.get("taxis", None)]):
                 if (hasattr(gm, "projection") and
-                        vcs.elements["projection"][gm.projection].type \
+                        vcs.elements["projection"][gm.projection].type
                         in round_projections) or ax is None:
                     continue
                 for att in ["name", "units", "value"]:
@@ -1780,16 +1781,16 @@ class P(vcs.bestMatch):
                         else:
                             tt.string = [ax.id]
                     elif att == "units":
-                        tt.string = [getattr(ax,"units","")]
+                        tt.string = [getattr(ax, "units", "")]
                     else:  # value
                         # First see if it is a time
                         try:
                             stringValue = cdtime.reltime(ax[0], ax.units)
                             try:  # try to use axis value
                                 stringValue = str(stringValue.tocomp(ax.getCalendar()))
-                            except:  # fallback on default calendar
+                            except Exception:  # fallback on default calendar
                                 stringValue = str(stringValue.tocomp())
-                        except:
+                        except Exception:
                             stringValue = "{:g}".format(ax[0])
                         tt.string = stringValue
                     tt.x = [sub.x, ]
