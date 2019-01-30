@@ -77,7 +77,7 @@ aliases:
        export PATH=$WORKDIR/miniconda/bin:$PATH
        source activate $PY_VER
        rm ${WORKDIR}/miniconda/envs/$PY_VER/bin/python
-       ln -s $WORKDIR/miniconda/envs/$PY_VER/bin/vtkpython $WORKDIR/miniconda/envs/$PY_VER/bin/python
+       ln -s $(pwd)/$WORKDIR/miniconda/envs/$PY_VER/bin/vtkpython $(pwd)/$WORKDIR/miniconda/envs/$PY_VER/bin/python
         
   - &conda_upload
     name: conda_upload
