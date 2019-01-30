@@ -210,10 +210,3 @@ workflows:
   vcs:
     jobs:
       - macos_vcs_py3:
-#           requires:
-#      - macos_vcs_py2
-#              - macos_vcs_py2
-#      - linux_vcs_py2
-#      - linux_vcs_py3:
-#           requires:
-#              - linux_vcs_py2
