@@ -158,7 +158,6 @@ jobs:
       - run: *setup_miniconda
       - run: *get_testdata
       - run: *create_conda_env
-      - run: *templink
       - run: *setup_vcs
       - run: *run_vcs_tests
       - store_artifacts:
