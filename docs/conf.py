@@ -22,7 +22,7 @@ os.environ["UVCDAT_ANONYMOUS_LOG"] = "False"
 
 # First we need to create the jupyter links from gms to Notebooks
 
-jupyters = glob.glob("Jupyter/*.ipynb")
+jupyters = glob.glob("Jupyter-notebooks/*.ipynb")
 if not os.path.exists(os.path.join("API","graphics","Jupyter")):
     os.makedirs(os.path.join("API","graphics","Jupyter"))
 

@@ -1,0 +1,3 @@
+[submodule "docs/Jupyter-notebooks"]
+	path = docs/Jupyter-notebooks
+	url = git://github.com/cdat/Jupyter-notebooks
