@@ -245,7 +245,7 @@ class VectorPipeline(Pipeline2D):
             minNormInVp *= worldToViewportXScale
         vcs.utils.drawVectorLegend(
             self._context().canvas, self._template.legend, lcolor, lstyle, lwidth,
-            unitString, maxNormInVp, maxNorm, minNormInVp, minNorm)
+            unitString, maxNormInVp, maxNorm, minNormInVp, minNorm, reference=self._gm.reference)
 
         kwargs['xaxisconvert'] = self._gm.xaxisconvert
         kwargs['yaxisconvert'] = self._gm.yaxisconvert

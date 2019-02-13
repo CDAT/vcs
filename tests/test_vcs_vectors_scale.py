@@ -6,7 +6,7 @@ import cdms2
 
 
 class TestVCSVectorScale(basevcstest.VCSBaseTest):
-    def coreTest(self, scalingType, scale=None, scalerange=None):
+    def coreTest(self, scalingType, scale=None, scalerange=None, ref=None):
         u = cdms2.createAxis(np.array([[1, 1, 0, 1, 1, 1, 0, 1],
                                        [1, 1, 0, 1, 1, 1, 0, 1],
                                        [1, 1, 0, 1, 1, 1, 0, 1],
@@ -32,11 +32,15 @@ class TestVCSVectorScale(basevcstest.VCSBaseTest):
             gv.scalerange = scalerange
         if scale is not None:
             gv.scale = scale
+        if ref is not None:
+            gv.reference = ref
         self.x.plot(u, v, gv, bg=self.bg, ratio=1)
         label = scalingType
         if (scalingType == "constant"):
             label += "_" + str(scale)
         outFilename = 'test_vcs_vectors_scale_%s.png' % label
+        if ref is not None:
+            outFilename = 'test_vcs_vectors_scale_%s_ref_%s.png' % (label, ref)
         self.checkImage(outFilename)
         self.x.clear()
 
@@ -50,4 +54,8 @@ class TestVCSVectorScale(basevcstest.VCSBaseTest):
         # test clamping
         self.coreTest("constant", scale=0.1)
         self.coreTest("constant", scale=2)
+        # test reference
+        self.coreTest("constant", scale=0.5, ref=1)
+        self.coreTest("constant", scale=0.1, ref=5)
+        self.coreTest("constant", scale=2, ref=0.5)
     testVCSVectorScalingOptions.vectors = 1
