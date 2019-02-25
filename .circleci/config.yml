@@ -218,3 +218,4 @@ workflows:
   vcs:
     jobs:
       - macos_vcs_py3:
+      - linux_vcs_py3:
