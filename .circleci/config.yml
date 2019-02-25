@@ -128,7 +128,7 @@ jobs:
       OS: "osx-64"
       PY_VER: "py2"
       TEMP_PKGS: "'ffmpeg>4' 'libpng>1.6.34'"
-      CUSTOM_CHANNELS: "-c danlipsa"
+      CUSTOM_CHANNELS: ""
     steps:
       - checkout
       - run: *setup_miniconda
@@ -145,13 +145,13 @@ jobs:
 
   macos_vcs_py3:
     macos:
-      xcode: "9.2.0"
+      xcode: "10.2.0"
     environment:
       WORKDIR: "workspace/test_macos_vcs_py3"
       OS: "osx-64"
       PY_VER: "py3"
       TEMP_PKGS: "'ffmpeg>4' 'libpng>1.6.34'"
-      CUSTOM_CHANNELS: "-c danlipsa"
+      CUSTOM_CHANNELS: ""
     steps:
       - checkout
       - run: *setup_miniconda
@@ -217,11 +217,11 @@ workflows:
   version: 2
   vcs:
     jobs:
-      - macos_vcs_py2
+#      - macos_vcs_py2
       - macos_vcs_py3:
-           requires:
-              - macos_vcs_py2
-      - linux_vcs_py2
-      - linux_vcs_py3:
-           requires:
-              - linux_vcs_py2
+#           requires:
+#              - macos_vcs_py2
+#      - linux_vcs_py2
+#      - linux_vcs_py3:
+#           requires:
+#              - linux_vcs_py2
