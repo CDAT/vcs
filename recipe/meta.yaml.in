@@ -23,6 +23,7 @@ requirements:
     - cdat_info
     - genutil
     - dv3d
+    - libcdms >=3.1.2
     - vtk-cdat >8.1
     - cdms2
     - cdutil

@@ -308,7 +308,10 @@ class Gv(vcs.bestMatch):
 
             .. code-block:: python
 
-                # Can be an integer or float
+                # Can be an integer or float.  Setting the reference attribute
+                # overrides the default behavior of picking a reasonable size
+                # for the vector legend arrow.  This may result in a very large
+                # or very small arrow, depending on the value of vc.reference.
                 vc.reference=4
     """
     __slots__ = [
@@ -772,7 +775,7 @@ class Gv(vcs.bestMatch):
         print("datawc_calendar = ", self.datawc_calendar)
         print("xaxisconvert = ", self.xaxisconvert)
         print("yaxisconvert = ", self.yaxisconvert)
-        print("line = ", self.line)
+        print("linetype = ", self.linetype)
         print("linecolor = ", self.linecolor)
         print("linewidth = ", self.linewidth)
         print("scale = ", self.scale)

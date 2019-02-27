@@ -2838,7 +2838,8 @@ def _createLegendString(value, unit):
 def drawVectorLegend(canvas, templateLegend,
                      linecolor, linetype, linewidth,
                      unitString, maxNormInVp=1., maxNorm=1.,
-                     minNormInVp=0., minNorm=0., bg=False, render=True):
+                     minNormInVp=0., minNorm=0., bg=False, render=True,
+                     reference=1e20):
     """Draws a legend with vector line/text inside a template legend box
     Auto adjust text size to make it fit inside the box
 
@@ -2895,7 +2896,18 @@ def drawVectorLegend(canvas, templateLegend,
     :param render: Boolean value indicating whether or not to render the new
         lines.
     :type render: `bool`_
+
+    : param reference: Desired length of reference vector in plot legend.  The
+        default is to choose a reasonable size for the max vector in the legend
+        based on the amount of space available.  This behavior can be
+        overridden by providing the "reference" parameter, and then the size of
+        the arrow will be computed to match.  Be aware this may cause the arrow
+        to be very large (not fitting nicely within the legend) or very small,
+        even invisible.
+    : type reference: `float`_
     """
+
+    useReferenceValue = not numpy.allclose(reference, 1e20)
 
     # Figure out space length
     text = vcs.createtext(To_source=templateLegend.textorientation,
@@ -2903,6 +2915,8 @@ def drawVectorLegend(canvas, templateLegend,
     text.x = .5
     text.y = .5
     maxLegendString = _createLegendString(maxNorm, unitString)
+    if useReferenceValue:
+        maxLegendString = _createLegendString(reference, unitString)
     text.string = maxLegendString
     maxExt = canvas.gettextextent(text)[0]
 
@@ -2912,27 +2926,30 @@ def drawVectorLegend(canvas, templateLegend,
 
     # space between line and label - one character long
     spaceLength = (maxExt[1] - maxExt[0]) / len(maxLegendString)
-    # line vector - min 2 and max 15 characters long
-    minMaxNormLineLength = 2 * spaceLength
-    maxMaxNormLineLength = 15 * spaceLength
-    # clamp lineLegth between 2 and 15 spaceLength
     maxLineLength = maxNormInVp
-    minLineLength = minNormInVp
-    ratio = 1.0
-    if (maxLineLength < minMaxNormLineLength):
-        while (maxLineLength < minMaxNormLineLength):
-            maxLineLength *= 2
-            ratio *= 2
-    elif (maxLineLength > maxMaxNormLineLength):
-        while (maxLineLength > maxMaxNormLineLength):
-            maxLineLength /= 2
-            ratio /= 2
+    if useReferenceValue:
+        maxLineLength = (maxNormInVp * reference) / maxNorm
+    else:
+        # line vector - min 2 and max 15 characters long
+        minMaxNormLineLength = 2 * spaceLength
+        maxMaxNormLineLength = 15 * spaceLength
+        # clamp lineLegth between 2 and 15 spaceLength
+        ratio = 1.0
+        if (maxLineLength < minMaxNormLineLength):
+            while (maxLineLength < minMaxNormLineLength):
+                maxLineLength *= 2
+                ratio *= 2
+        elif (maxLineLength > maxMaxNormLineLength):
+            while (maxLineLength > maxMaxNormLineLength):
+                maxLineLength /= 2
+                ratio /= 2
 
-    # update maxLegendString with the clamped value
-    if (ratio != 1):
-        maxLegendString = _createLegendString(maxNorm * ratio, unitString)
-        text.string = maxLegendString
-        maxExt = canvas.gettextextent(text)[0]
+        # update maxLegendString with the clamped value
+        if (ratio != 1):
+            maxLegendString = _createLegendString(maxNorm * ratio, unitString)
+            text.string = maxLegendString
+            maxExt = canvas.gettextextent(text)[0]
+    minLineLength = minNormInVp
 
     maxLegendLength = maxExt[1] - maxExt[0]
     maxheight = maxExt[3] - maxExt[2]
