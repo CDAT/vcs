@@ -12,9 +12,10 @@ dependencies:
   - bleach=3.1.0=py_0
   - bzip2=1.0.6=h14c3975_1002
   - ca-certificates=2018.11.29=ha4d7672_0
-  - cdat_info=8.0.2019.02.13.00.32.gb6530fa=py_0
-  - cdtime=3.1.2.2019.02.09.12.03.gba9e0cb=py36ha5dfbcb_0
-  - cdutil=8.0.2018.11.12.19.20.g3bd6383=py_0
+  - cdat_info
+  - cdtime=3.1.2
+  - cdms2=3.1.2
+  - cdutil
   - certifi=2018.11.29=py36_1000
   - cffi=1.12.0=py36h9745a5d_0
   - chardet=3.0.4=py36_1003
@@ -53,8 +54,8 @@ dependencies:
   - jupyter_core=4.4.0=py_0
   - krb5=1.16.3=hc83ff2d_1000
   - lapack=3.6.1=ha44fe06_2
-  - libcdms=3.1.2.2019.02.09.03.57.g8f1cefe=h9ac9557_0
-  - libcf=3.0.2018.06.28.01.19.g994aa30=py36h14c3975_0
+  - libcdms=3.1.2
+  - libcf
   - libcurl=7.64.0=h01ee5af_0
   - libdrs=3.1.2.2019.02.09.01.20.g0c04b0c=h9ac9557_0
   - libdrs_f=3.1.2.2019.02.09.01.20.g0c04b0c=h9ac9557_0
@@ -118,16 +119,13 @@ dependencies:
   - traitlets=4.3.2=py36_1000
   - udunits2=2.2.27.6=h4e0c4b3_1001
   - urllib3=1.24.1=py36_1000
-  - vcs=8.0.2019.01.08.22.36.gc8a83637=py_0
-  - vtk-cdat=8.2.0.rc2.289.8.0.2019.01.16.12.48.g14c0bb6=py36h413fb2d_0
+  - vcs
+  - vtk-cdat
   - webencodings=0.5.1=py_1
   - wheel=0.33.0=py36_0
   - x264=1!152.20180717=h14c3975_1001
   - xz=5.2.4=h14c3975_1001
   - zeromq=4.2.5=hf484d3e_1006
   - zlib=1.2.11=h14c3975_1004
-  - pip:
-    - cdms2==3.0.0
-    - regrid2==3.0.0
 prefix: /home/doutriaux1/miniconda/envs/rtd
 
