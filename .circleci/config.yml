@@ -58,7 +58,7 @@ aliases:
          echo "Commit turned off coverage"
          ACTUAL_COVERAGE=""
        fi
-       python run_tests.py -n 2 -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $ACTUAL_COVERAGE
+       python run_tests.py -n 4 -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $ACTUAL_COVERAGE
        RESULT=$?
        echo "**** $PY_VER test result: "${RESULT}
        if [[ $PY_VER = 'py3' ]]; then
