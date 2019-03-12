@@ -163,8 +163,6 @@ jobs:
   linux_vcs_py2:
     docker:
       - image: circleci/python:latest
-    #machine:
-    #  image: circleci/classic:latest
     resource_class: large
     environment:
       WORKDIR: "workspace/test_linux_vcs_py2"
@@ -187,8 +185,6 @@ jobs:
   linux_vcs_py3:
     docker:
       - image: circleci/python:latest
-    #machine:
-    #  image: circleci/classic:latest
     resource_class: large
     environment:
       WORKDIR: "workspace/test_linux_vcs_py3"
@@ -218,5 +214,5 @@ workflows:
     jobs:
       #- macos_vcs_py2
       #- macos_vcs_py3
-      #- linux_vcs_py2
+      - linux_vcs_py2
       - linux_vcs_py3
