@@ -161,8 +161,10 @@ jobs:
           destination: tests_png
 
   linux_vcs_py2:
-    machine:
-      image: circleci/classic:latest
+    docker:
+      - image: circleci/python:latest
+    #machine:
+    #  image: circleci/classic:latest
     resource_class: large
     environment:
       WORKDIR: "workspace/test_linux_vcs_py2"
@@ -183,8 +185,10 @@ jobs:
           destination: tests_png
 
   linux_vcs_py3:
-    machine:
-      image: circleci/classic:latest
+    docker:
+      - image: circleci/python:latest
+    #machine:
+    #  image: circleci/classic:latest
     resource_class: large
     environment:
       WORKDIR: "workspace/test_linux_vcs_py3"
