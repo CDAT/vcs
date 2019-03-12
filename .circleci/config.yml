@@ -190,8 +190,8 @@ jobs:
       WORKDIR: "workspace/test_linux_vcs_py3"
       OS: "linux-64"
       PY_VER: "py3"
-      COVERAGE: "-c tests/coverage.json --coverage-from-egg"
-      COVERAGE_PKGS: "coverage coveralls"
+      #COVERAGE: "-c tests/coverage.json --coverage-from-egg"
+      #COVERAGE_PKGS: "coverage coveralls"
     steps:
       - checkout
       - run: *setup_miniconda
