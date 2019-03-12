@@ -114,7 +114,8 @@ aliases:
 jobs:
   macos_vcs_py2:
     macos:
-      xcode: "9.2.0"
+      xcode: "10.2.0"
+    resource_class: large
     environment:
       WORKDIR: "workspace/test_macos_vcs_py2"
       OS: "osx-64"
@@ -138,6 +139,7 @@ jobs:
   macos_vcs_py3:
     macos:
       xcode: "10.2.0"
+    resource_class: large
     environment:
       WORKDIR: "workspace/test_macos_vcs_py3"
       OS: "osx-64"
@@ -161,6 +163,7 @@ jobs:
   linux_vcs_py2:
     machine:
       image: circleci/classic:latest
+    resource_class: large
     environment:
       WORKDIR: "workspace/test_linux_vcs_py2"
       OS: "linux-64"
@@ -182,6 +185,7 @@ jobs:
   linux_vcs_py3:
     machine:
       image: circleci/classic:latest
+    resource_class: large
     environment:
       WORKDIR: "workspace/test_linux_vcs_py3"
       OS: "linux-64"
@@ -209,10 +213,6 @@ workflows:
   vcs:
     jobs:
       - macos_vcs_py2
-      - macos_vcs_py3:
-           requires:
-              - macos_vcs_py2
+      - macos_vcs_py3
       - linux_vcs_py2
-      - linux_vcs_py3:
-           requires:
-              - linux_vcs_py2
+      - linux_vcs_py3
