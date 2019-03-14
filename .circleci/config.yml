@@ -139,7 +139,6 @@ jobs:
   macos_vcs_py3:
     macos:
       xcode: "10.2.0"
-    resource_class: large
     environment:
       WORKDIR: "workspace/test_macos_vcs_py3"
       OS: "osx-64"
@@ -190,8 +189,8 @@ jobs:
       WORKDIR: "workspace/test_linux_vcs_py3"
       OS: "linux-64"
       PY_VER: "py3"
-      #COVERAGE: "-c tests/coverage.json --coverage-from-egg"
-      #COVERAGE_PKGS: "coverage coveralls"
+      COVERAGE: "-c tests/coverage.json --coverage-from-egg"
+      COVERAGE_PKGS: "coverage coveralls"
     steps:
       - checkout
       - run: *setup_miniconda
@@ -213,6 +212,6 @@ workflows:
   vcs:
     jobs:
       #- macos_vcs_py2
-      #- macos_vcs_py3
+      - macos_vcs_py3
       - linux_vcs_py2
       - linux_vcs_py3
