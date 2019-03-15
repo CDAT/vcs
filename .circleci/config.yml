@@ -51,11 +51,11 @@ aliases:
        # possibly turn off coverage
        first=$(git cherry master -v | head -n1)
        current=$(git log -n1 --pretty=oneline)
-       if [[ $first == $current || $current != *"no_coverage"*  ]]; then
-         echo "Possibly running with coverage"
+       if [[ $first == $current || $current == *"do coverage"* || $CIRCLE_BRANCH == 'master'  ]]; then
+         echo "Running with coverage"
          ACTUAL_COVERAGE=$COVERAGE
        else
-         echo "Commit turned off coverage"
+         echo "Running w/o coverage"
          ACTUAL_COVERAGE=""
        fi
        python run_tests.py -n 4 -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $ACTUAL_COVERAGE
