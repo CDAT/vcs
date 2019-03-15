@@ -51,16 +51,16 @@ aliases:
        # possibly turn off coverage
        first=$(git cherry master -v | head -n1)
        current=$(git log -n1 --pretty=oneline)
-       if [[ $first == $current || $current != *"no_coverage"*  ]]; then
-         echo "Possibly running with coverage"
+       if [[ $first == $current || $current == *"do coverage"* || $CIRCLE_BRANCH == 'master'  ]]; then
+         echo "Running with coverage"
          ACTUAL_COVERAGE=$COVERAGE
        else
-         echo "Commit turned off coverage"
+         echo "Running w/o coverage"
          ACTUAL_COVERAGE=""
        fi
-       python run_tests.py -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $ACTUAL_COVERAGE
+       python run_tests.py -n 4 -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $ACTUAL_COVERAGE
        RESULT=$?
-       echo "*** $PY_VER test result: "${RESULT}
+       echo "**** $PY_VER test result: "${RESULT}
        if [[ $PY_VER = 'py3' ]]; then
           cd docs
           make doctest
@@ -114,7 +114,8 @@ aliases:
 jobs:
   macos_vcs_py2:
     macos:
-      xcode: "9.2.0"
+      xcode: "10.2.0"
+    resource_class: large
     environment:
       WORKDIR: "workspace/test_macos_vcs_py2"
       OS: "osx-64"
@@ -159,8 +160,9 @@ jobs:
           destination: tests_png
 
   linux_vcs_py2:
-    machine:
-      image: circleci/classic:latest
+    docker:
+      - image: circleci/python:latest
+    resource_class: large
     environment:
       WORKDIR: "workspace/test_linux_vcs_py2"
       OS: "linux-64"
@@ -180,8 +182,9 @@ jobs:
           destination: tests_png
 
   linux_vcs_py3:
-    machine:
-      image: circleci/classic:latest
+    docker:
+      - image: circleci/python:latest
+    resource_class: large
     environment:
       WORKDIR: "workspace/test_linux_vcs_py3"
       OS: "linux-64"
@@ -208,11 +211,7 @@ workflows:
   version: 2
   vcs:
     jobs:
-      - macos_vcs_py2
-      - macos_vcs_py3:
-           requires:
-              - macos_vcs_py2
+      #- macos_vcs_py2
+      - macos_vcs_py3
       - linux_vcs_py2
-      - linux_vcs_py3:
-           requires:
-              - linux_vcs_py2
+      - linux_vcs_py3
