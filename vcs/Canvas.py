@@ -4054,6 +4054,8 @@ class Canvas(vcs.bestMatch):
                     dn.g_name = arglist[4]
                     dn.array = arglist[:2]
                     dn.backend = returned_kargs
+                    if "continents" in keyargs:
+                        dn._continents = keyargs["continents"]
                 else:
                     dn = None
 
