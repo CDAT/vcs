@@ -1331,7 +1331,7 @@ def prepTextProperty(p, winSize, to="default", tt="default", cmap=None,
     else:
         c = colorIndex
     p.SetColor([C / 100. for C in c[:3]])
-    p.SetOpacity(c[-1])
+    p.SetOpacity(c[-1] / 100.)
     bcolorIndex = tt.backgroundcolor if tt.backgroundcolor else 255
     if isinstance(bcolorIndex, int):
         bc = cmap.index[bcolorIndex]
