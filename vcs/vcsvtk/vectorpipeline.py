@@ -198,6 +198,12 @@ class VectorPipeline(Pipeline2D):
 
         data = glyphFilter.GetOutput()
 
+        floatValue = vtk.vtkFloatArray()
+        floatValue.SetNumberOfComponents(1)
+        floatValue.SetName("LineWidth")
+        floatValue.InsertNextValue(lwidth)
+        data.GetFieldData().AddArray(floatValue)
+
         item = vtk.vtkPolyDataItem()
         item.SetPolyData(data)
 
