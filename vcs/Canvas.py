@@ -4682,6 +4682,7 @@ class Canvas(vcs.bestMatch):
 
         """
         args = ["ffmpeg", "-y"]
+        test_file = None
 
         if rate is not None:
             args.extend(("-framerate", str(rate)))
