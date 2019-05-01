@@ -34,8 +34,12 @@ from . import textorientation
 from . import textcombined
 from . import template
 from . import displayplot
-import vtk
-from .VTKPlots import VTKVCSBackend
+try:
+    import vtk
+    from .VTKPlots import VTKVCSBackend
+    HAS_VTK = True
+except:
+    HAS_VTK = False
 from weakref import WeakSet, WeakKeyDictionary
 
 from .error import vcsError
@@ -934,9 +938,9 @@ class Canvas(vcs.bestMatch):
                 bg = True
         except (AttributeError, NameError):
             pass
-        if backend == "vtk":
+        if HAS_VTK and backend == "vtk":
             self.backend = VTKVCSBackend(self, bg=bg)
-        elif isinstance(backend, vtk.vtkRenderWindow):
+        elif HAS_VTK and isinstance(backend, vtk.vtkRenderWindow):
             self.backend = VTKVCSBackend(self, renWin=backend, bg=bg)
         else:
             warnings.warn(
