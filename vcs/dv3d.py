@@ -7,7 +7,13 @@ from . import VCS_validation_functions
 import multiprocessing
 import vcs
 import time
-from DV3D.ConfigurationFunctions import ConfigManager
+import warnings
+try:
+    from DV3D.ConfigurationFunctions import ConfigManager
+    HAS_DV3D = True
+except Exception:
+    HAS_DV3D = False
+
 from .xmldocs import toggle_surface, toggle_volume, xslider, yslider, zslider, verticalscaling, scalecolormap  # noqa
 from .xmldocs import scaletransferfunction, toggleclipping, isosurfacevalue, scaleopacity, basemapopacity, camera, scriptdocs  # noqa
 
@@ -123,6 +129,9 @@ class Gfdv3d(object):
     # can we add a scriptdocs[g_name] here and have each derived class pick up the documentation correctly?
 
     def __init__(self, Gfdv3d_name, Gfdv3d_name_src='default'):
+        if not HAS_DV3D:
+            warnings.warn("Could not find DV3D module, you will not be able to use DV3D's graphic methods")
+            return
         if not isinstance(Gfdv3d_name, str):
             raise ValueError("DV3D name must be a string")
         if Gfdv3d_name in list(vcs.elements[self.g_name].keys()):

@@ -36,7 +36,11 @@ import os
 import tempfile
 import cdms2
 import genutil
-import vtk
+try:
+    import vtk
+    HAS_VTK = True
+except Exception:
+    HAS_VTK = False
 import struct
 from .clickMap import mapPng, getPngDimensions, meshToPngCoords, vcsToHtml, axisToPngCoords  # noqa
 try:
@@ -2530,6 +2534,9 @@ def rgba_color(color, colormap):
 
 
 def png_read_metadata(path):
+    if not HAS_VTK:
+        warnings.warn("You need vtk to read metadata from png")
+        return {}
     reader = vtk.vtkPNGReader()
     reader.SetFileName(path)
     reader.Update()

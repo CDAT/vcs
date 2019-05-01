@@ -1,12 +1,15 @@
 import vcs
 import datetime
-from . import editors
-from . import vtk_ui
 import os
-import vtk
-from .vcs2vtk import vtkIterate
 import copy
-
+try:
+    import vtk
+    from . import editors
+    from . import vtk_ui
+    from .vcs2vtk import vtkIterate
+    HAS_VTK = True
+except Exception:
+    HAS_VTK = False
 CREATING_FILL = "fill"
 CREATING_LINE = "line"
 CREATING_MARKER = "marker"
