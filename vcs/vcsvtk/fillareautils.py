@@ -63,8 +63,7 @@ def computeMarkerScale(dataRange, screenGeom, pxScale=None):
     # screenAspect = float(screenGeom[0]) / screenGeom[1]
 
     scale = max(*diffwpoints)
-    print("DA")
-    if dataAspect < 1:
+    if dataAspect > 1:
         scale = min(*diffwpoints)
 
     # Make markers smaller
