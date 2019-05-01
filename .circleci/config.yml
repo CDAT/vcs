@@ -31,7 +31,7 @@ aliases:
        if [[ $PY_VER = "py2" ]]; then
           conda create -q -n $PY_VER $CUSTOM_CHANNELS $CHANNELS $PKGS $TEMP_PKGS "python<3"
        else
-          conda create -q -n $PY_VER $CUSTOM_CHANNELS $CHANNELS $PKGS $TEMP_PKGS "python=3.6" sphinxcontrib-websupport nbsphinx easydev $COVERAGE_PKGS
+          conda create -q -n $PY_VER $CUSTOM_CHANNELS $CHANNELS $PKGS $TEMP_PKGS "python=3.7" sphinxcontrib-websupport nbsphinx easydev $COVERAGE_PKGS
        fi
 
   - &setup_vcs
