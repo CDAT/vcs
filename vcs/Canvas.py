@@ -38,7 +38,7 @@ try:
     import vtk
     from .VTKPlots import VTKVCSBackend
     HAS_VTK = True
-except:
+except Exception:
     HAS_VTK = False
 from weakref import WeakSet, WeakKeyDictionary
 

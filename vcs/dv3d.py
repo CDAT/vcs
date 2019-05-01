@@ -11,7 +11,7 @@ import warnings
 try:
     from DV3D.ConfigurationFunctions import ConfigManager
     HAS_DV3D = True
-except:
+except Exception:
     HAS_DV3D = False
 
 from .xmldocs import toggle_surface, toggle_volume, xslider, yslider, zslider, verticalscaling, scalecolormap  # noqa

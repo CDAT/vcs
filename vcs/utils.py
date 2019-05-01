@@ -39,7 +39,7 @@ import genutil
 try:
     import vtk
     HAS_VTK = True
-except:
+except Exception:
     HAS_VTK = False
 import struct
 from .clickMap import mapPng, getPngDimensions, meshToPngCoords, vcsToHtml, axisToPngCoords  # noqa

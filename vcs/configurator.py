@@ -8,7 +8,7 @@ try:
     from . import vtk_ui
     from .vcs2vtk import vtkIterate
     HAS_VTK = True
-except:
+except Exception:
     HAS_VTK = False
 CREATING_FILL = "fill"
 CREATING_LINE = "line"
