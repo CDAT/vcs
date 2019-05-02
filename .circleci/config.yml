@@ -21,7 +21,7 @@ aliases:
   - &create_conda_env
     name: create_conda_env
     environment:
-       CHANNELS: "-c cdat/label/nightly -c conda-forge -c cdat"
+       CHANNELS: "-c cdat/label/nightly -c conda-forge"
        PKGS: "cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime nbformat 'proj4<5' numpy ghostscript vtk-cdat"
     command: |
        export PATH=$WORKDIR/miniconda/bin:$PATH
@@ -31,7 +31,7 @@ aliases:
        if [[ $PY_VER = "py2" ]]; then
           conda create -q -n $PY_VER $CUSTOM_CHANNELS $CHANNELS $PKGS $TEMP_PKGS "python<3"
        else
-          conda create -q -n $PY_VER $CUSTOM_CHANNELS $CHANNELS $PKGS $TEMP_PKGS "python=3.6" sphinxcontrib-websupport nbsphinx easydev $COVERAGE_PKGS
+          conda create -q -n $PY_VER $CUSTOM_CHANNELS $CHANNELS $PKGS $TEMP_PKGS "python=3.7" sphinxcontrib-websupport nbsphinx easydev $COVERAGE_PKGS
        fi
 
   - &setup_vcs
@@ -73,7 +73,7 @@ aliases:
   - &conda_upload
     name: conda_upload
     environment:
-       CHANNELS: "-c cdat/label/nightly -c conda-forge -c cdat"
+       CHANNELS: "-c cdat/label/nightly -c conda-forge"
     command: |
        if [[ $CIRCLE_BRANCH != 'master' ]]; then
           exit 0
@@ -90,7 +90,7 @@ aliases:
        ln -s ../recipe vcs
        export PKG_NAME=vcs
        export USER=cdat
-       export VERSION=8.0
+       export VERSION=8.1
        export LABEL=nightly
        python ./prep_for_build.py -l $VERSION
        conda build $PKG_NAME $CHANNELS
@@ -167,6 +167,7 @@ jobs:
       WORKDIR: "workspace/test_linux_vcs_py2"
       OS: "linux-64"
       PY_VER: "py2"
+      CUSTOM_CHANNELS: ""
     steps:
       - checkout
       - run: *setup_miniconda
@@ -191,6 +192,7 @@ jobs:
       PY_VER: "py3"
       COVERAGE: "-c tests/coverage.json --coverage-from-egg"
       COVERAGE_PKGS: "coverage coveralls"
+      CUSTOM_CHANNELS: ""
     steps:
       - checkout
       - run: *setup_miniconda
