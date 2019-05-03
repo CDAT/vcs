@@ -250,7 +250,7 @@ extlinks = {"root": ("http://localhost:8080%s" if on_rtd else "%s", None)}
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-# html_theme_options = { "stickysidebar" : "true" }
+html_theme_options = { "stickysidebar" : "true", "headerbg" : "#01796F" }
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
