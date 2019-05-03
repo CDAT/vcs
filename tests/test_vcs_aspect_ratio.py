@@ -31,9 +31,9 @@ class TestVCSAspectRatio(basevcstest.VCSBaseTest):
             else:
                 orient = "port"
             fnm = "aspect_ratio_%s_%s.png" % (orient, ratio)
-            X.png(fnm, bg=self.bg)
-            print "fnm:",fnm
-            ret +=  self.checkImage(fnm, pngReady=True)
+            #X.png(fnm, bg=self.bg)
+            print("fnm:",fnm)
+            ret += self.checkImage(fnm)
         return ret
 
 
