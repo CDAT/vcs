@@ -469,21 +469,50 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
             continents = True
             wrap = [0., 360.]
             if grid is None:
-                m = g.getMesh()
-                xm = m[:, 1].min()
-                xM = m[:, 1].max()
-                ym = m[:, 0].min()
-                yM = m[:, 0].max()
-                numberOfCells = m.shape[0]
-                # For vtk we need to reorder things
-                m2 = numpy.ascontiguousarray(numpy.transpose(m, (0, 2, 1)))
-                m2.resize((m2.shape[0] * m2.shape[1], m2.shape[2]))
-                m2 = m2[..., ::-1]
-                # here we add dummy levels, might want to reconsider converting
-                # "trimData" to "reOrderData" and use actual levels?
-                m3 = numpy.concatenate(
-                    (m2, numpy.zeros(
-                        (m2.shape[0], 1))), axis=1)
+                try:
+                    m = g.getMesh()
+                    xm = m[:, 1].min()
+                    xM = m[:, 1].max()
+                    ym = m[:, 0].min()
+                    yM = m[:, 0].max()
+                    numberOfCells = m.shape[0]
+                    # For vtk we need to reorder things
+                    m2 = numpy.ascontiguousarray(numpy.transpose(m, (0, 2, 1)))
+                    m2.resize((m2.shape[0] * m2.shape[1], m2.shape[2]))
+                    m2 = m2[..., ::-1]
+                    # here we add dummy levels, might want to reconsider converting
+                    # "trimData" to "reOrderData" and use actual levels?
+                    m3 = numpy.concatenate(
+                        (m2, numpy.zeros(
+                            (m2.shape[0], 1))), axis=1)
+                except Exception:  # ok no mesh, so unstructured grid point data
+                    vg = vtk.vtkUnstructuredGrid()
+                    lat = g.getLatitude().asma()
+                    lon = g.getLongitude().asma()
+                    pts = vtk.vtkPoints()
+                    for i in range(len(lat)):
+                        pts.InsertNextPoint(float(lon[i]),float(lat[i]),0.)
+                    vg.SetPoints(pts)
+
+
+                    
+                    xm, xM, ym, yM = lon.min(),lon.max(),lat.min(),lat.max()
+                    wc = [gm.datawc_x1, gm.datawc_x2, gm.datawc_y1, gm.datawc_y2]
+                    geo, geopts = project(pts, projection, getWrappedBounds(wc, [xm, xM, ym, yM], wrap))
+                    out = {"vtk_backend_grid": vg,
+                           "xm": xm,
+                           "xM": xM,
+                           "ym": ym,
+                           "yM": yM,
+                           "continents": continents,
+                           "wrap": wrap,
+                           "geo": geo,
+                           "cellData": False,
+                           "data": data1,
+                           "data2": data2
+                           }
+                    return out
+
         # Could still be meshfill with mesh data
         # Ok probably should do a test for hgrid before sending data2
         if isinstance(gm, meshfill.Gfm) and data2 is not None:
