@@ -99,7 +99,7 @@ aliases:
     name: run_coveralls
     command: |
        export PATH=$HOME/miniconda/bin:$PATH
-       source activate $PY_VER
+       source activate cdat
        # possibly turn off coverage
        first=$(git cherry master -v | head -n1)
        current=$(git log -n1 --pretty=oneline)
