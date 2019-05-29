@@ -5,7 +5,6 @@ aliases:
   - &get_testdata
     name: get_testdata
     command: |
-      ls -l workspace
       git clone git://github.com/cdat/uvcdat-testdata
 
   - &create_conda_env
