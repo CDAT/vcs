@@ -22,6 +22,10 @@ DEBUG_MODE = False
 def debugWriteGrid(grid, name):
     if DEBUG_MODE:
         writer = vtk.vtkXMLDataSetWriter()
+        if (grid.GetClassName() == "vtkPoints"):
+            poly = vtk.vtkPolyData()
+            poly.SetPoints(grid)
+            grid = poly
         gridType = grid.GetDataObjectType()
         if (gridType == vtk.VTK_STRUCTURED_GRID):
             ext = ".vts"
@@ -344,7 +348,7 @@ def getBoundsList(axis, hasCellData, dualGrid):
         return None
 
 
-def setInfToValid(geoPoints, ghost):
+def setInfToValid(geoPoints, ghost=None):
     '''
     Set infinity points to a point that already exists in the list.
     We also hide infinity points in the ghost array.
@@ -368,7 +372,8 @@ def setInfToValid(geoPoints, ghost):
             if (math.isinf(point[1])):
                 newPoint[1] = validPoint[1]
             geoPoints.SetPoint(i, newPoint)
-            ghost.SetValue(i, vtk.vtkDataSetAttributes.HIDDENPOINT)
+            if (ghost):
+                ghost.SetValue(i, vtk.vtkDataSetAttributes.HIDDENPOINT)
     return anyInfinity
 
 
@@ -2029,35 +2034,19 @@ def getProjectedBoundsForWorldCoords(wc, proj, subdiv=50):
     if vcs.elements['projection'][proj].type == 'linear':
         return wc
 
-    xs = numpy.linspace(wc[0], wc[1], subdiv).tolist()
-    xs += [wc[1], ] * subdiv
-    xs += numpy.linspace(wc[1], wc[0], subdiv).tolist()
-    xs += [wc[0], ] * subdiv
-
-    ys = [wc[2], ] * subdiv
-    ys += numpy.linspace(wc[2], wc[3], subdiv).tolist()
-    ys += [wc[3], ] * subdiv
-    ys += numpy.linspace(wc[3], wc[2], subdiv).tolist()
+    # the border in Cartesian space may not corespond to the border
+    # in the projected space.
+    x = numpy.linspace(wc[0], wc[1], subdiv)
+    y = numpy.linspace(wc[2], wc[3], subdiv)
+    xy = numpy.transpose([numpy.tile(x, len(y)), numpy.repeat(y, len(x))])
 
     pts = vtk.vtkPoints()
-
-    for idx in range(len(xs)):
-        pts.InsertNextPoint(xs[idx], ys[idx], 0.0)
+    for idx in range(len(xy)):
+        pts.InsertNextPoint(xy[idx][0], xy[idx][1], 0.0)
 
     geoTransform, xformPts = project(pts, proj, wc)
-
-    # def printPoints(vtkPoints):
-    #     ptStr = ''
-    #     for ptIdx in range(vtkPoints.GetNumberOfPoints()):
-    #         point = vtkPoints.GetPoint(ptIdx)
-    #         ptStr = '{0}, {1}'.format(point, ptStr)
-    #     print(ptStr)
-
-    # print('Subdivided points')
-    # printPoints(pts)
-    # print('Transformed subdivided points')
-    # printPoints(xformPts)
-
+    setInfToValid(xformPts)
+    debugWriteGrid(xformPts, "points")
     return xformPts.GetBounds()
 
 
