@@ -347,7 +347,6 @@ class Pipeline2D(IPipeline2D):
         else:
             dualGrid = False
         genGridDict = vcs2vtk.genGrid(self._data1, self._data2, self._gm,
-                                      deep=False,
                                       grid=self._vtkDataSet,
                                       geo=self._vtkGeoTransform, genVectors=self._needsVectors,
                                       dualGrid=dualGrid)

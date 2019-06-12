@@ -74,11 +74,6 @@ class VectorPipeline(Pipeline2D):
         if self._gm.linecolor is not None:
             lcolor = self._gm.linecolor
 
-        arrow = vtk.vtkGlyphSource2D()
-        arrow.SetGlyphTypeToArrow()
-        arrow.SetOutputPointsPrecision(vtk.vtkAlgorithm.DOUBLE_PRECISION)
-        arrow.FilledOff()
-
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
         vp = self._resultDict.get('ratio_autot_viewport',
@@ -126,6 +121,11 @@ class VectorPipeline(Pipeline2D):
             scaleFactor = scale * self._gm.scale
         else:
             scaleFactor = 1.0
+
+        arrow = vtk.vtkGlyphSource2D()
+        arrow.SetGlyphTypeToArrow()
+        arrow.SetOutputPointsPrecision(vtk.vtkAlgorithm.DOUBLE_PRECISION)
+        arrow.FilledOff()
 
         glyphFilter = vtk.vtkGlyph2D()
         glyphFilter.SetInputArrayToProcess(1, 0, 0, 0, "vector")

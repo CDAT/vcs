@@ -458,7 +458,7 @@ def removeHiddenPointsOrCells(grid, celldata=False):
     attributes.SetActiveAttribute(globalIdsIndex, attributes.GLOBALIDS)
 
 
-def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
+def genGrid(data1, data2, gm, grid=None, geo=None, genVectors=False,
             dualGrid=False):
     continents = False
     wrap = None
@@ -618,7 +618,7 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
     # attribute data
     gridForAttribute = grid if grid else vg
     if genVectors:
-        attribute = generateVectorArray(data1, data2, gridForAttribute)
+        attribute = generateVectorArray(data1, data2)
     else:
         attribute = numpy_to_vtk_wrapper(data1.filled(0.).flat,
                                          deep=False)
@@ -636,7 +636,7 @@ def genGrid(data1, data2, gm, deep=True, grid=None, geo=None, genVectors=False,
         # First create the points/vertices (in vcs terms)
         pts = vtk.vtkPoints()
         # Convert nupmy array to vtk ones
-        ppV = numpy_to_vtk_wrapper(m3, deep=deep)
+        ppV = numpy_to_vtk_wrapper(m3, deep=False)
         pts.SetData(ppV)
         ptsBounds = pts.GetBounds()
         xRange = ptsBounds[1] - ptsBounds[0]
@@ -2035,6 +2035,7 @@ def getProjectedBoundsForWorldCoords(wc, proj, subdiv=50):
     if vcs.elements['projection'][proj].type == 'linear':
         return wc
 
+    # get a grid of points over the whole domain as
     # the border in Cartesian space may not corespond to the border
     # in the projected space.
     x = numpy.linspace(wc[0], wc[1], subdiv)
@@ -2047,7 +2048,6 @@ def getProjectedBoundsForWorldCoords(wc, proj, subdiv=50):
 
     geoTransform, xformPts = project(pts, proj, wc)
     setInfToValid(xformPts)
-    debugWriteGrid(xformPts, "points")
     return xformPts.GetBounds()
 
 
@@ -2276,7 +2276,7 @@ def starPoints(radius_outer, x, y, number_points=5):
     return points
 
 
-def generateVectorArray(data1, data2, vtk_grid):
+def generateVectorArray(data1, data2):
     u = numpy.ma.ravel(data1)
     v = numpy.ma.ravel(data2)
     sh = list(u.shape)
