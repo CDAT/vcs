@@ -674,15 +674,12 @@ def genGrid(data1, data2, gm, grid=None, geo=None, genVectors=False,
             vg = wrapDataSetX(vg)
             pts = vg.GetPoints()
             xm, xM, ym, yM, tmp, tmp2 = vg.GetPoints().GetBounds()
-            debugMsg('did wrapDataSetX, [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
         vg = doWrapData(vg, wc, wrap)
         pts = vg.GetPoints()
         xm, xM, ym, yM, tmp, tmp2 = vg.GetPoints().GetBounds()
-        debugMsg('did doWrapData, [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
         projection = vcs.elements["projection"][gm.projection]
         vg.SetPoints(pts)
         wrb = getWrappedBounds(wc, [xm, xM, ym, yM], wrap)
-        debugMsg('wrapped bounds = [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
         geo, geopts = project(pts, projection, wrb)
         # proj4 returns inf for points that are not visible. Set those to a valid point
         # and hide them.
@@ -703,7 +700,6 @@ def genGrid(data1, data2, gm, grid=None, geo=None, genVectors=False,
                         ym = p[1]
                     if (p[1] > yM):
                         yM = p[1]
-            debugMsg('bounds after removing infs = [xm, xM, ym, yM] = [{0}, {1}, {2}, {3}]'.format(xm, xM, ym, yM))
             # hidden point don't work for polys or unstructured grids.
             # We remove the cells in this case.
             if (vg.GetExtentType() == vtk.VTK_PIECES_EXTENT):
@@ -1100,10 +1096,6 @@ def doWrapData(data, wc, wrap=[0., 360], fastClip=True):
     if wrap is None:
         return data
 
-    debugMsg('Doing actual wrapping')
-    debugMsg('  wc = {0}'.format(wc))
-    debugMsg('  wrap = {0}'.format(wrap))
-
     # convert to poly data
     surface = vtk.vtkDataSetSurfaceFilter()
     surface.SetInputData(data)
@@ -1207,7 +1199,6 @@ def doWrapData(data, wc, wrap=[0., 360], fastClip=True):
         pointAttributes = result.GetPointData()
         pointAttributes.GetArray(vectorsName, index)
         pointAttributes.SetActiveAttribute(index, vtk.vtkDataSetAttributes.VECTORS)
-    debugMsg('  bounds after wrap = {0}'.format(result.GetBounds()))
     return result
 
 
