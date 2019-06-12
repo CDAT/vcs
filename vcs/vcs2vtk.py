@@ -683,30 +683,30 @@ def genGrid(data1, data2, gm, grid=None, geo=None, genVectors=False,
         geo, geopts = project(pts, projection, wrb)
         # proj4 returns inf for points that are not visible. Set those to a valid point
         # and hide them.
-        ghost = vg.AllocatePointGhostArray()
-        if (setInfToValid(geopts, ghost)):
-            # if there are hidden points, we recompute the bounds
-            xm = ym = sys.float_info.max
-            xM = yM = - sys.float_info.max
-            for i in range(pts.GetNumberOfPoints()):
-                if (ghost.GetValue(i) & vtk.vtkDataSetAttributes.HIDDENPOINT == 0):
-                    # point not hidden
-                    p = pts.GetPoint(i)
-                    if (p[0] < xm):
-                        xm = p[0]
-                    if (p[0] > xM):
-                        xM = p[0]
-                    if (p[1] < ym):
-                        ym = p[1]
-                    if (p[1] > yM):
-                        yM = p[1]
-            # hidden point don't work for polys or unstructured grids.
-            # We remove the cells in this case.
-            if (vg.GetExtentType() == vtk.VTK_PIECES_EXTENT):
-                removeHiddenPointsOrCells(vg, celldata=False)
-
-        # Sets the vertics into the grid
-        vg.SetPoints(geopts)
+        if (geo):
+            ghost = vg.AllocatePointGhostArray()
+            if (setInfToValid(geopts, ghost)):
+                # if there are hidden points, we recompute the bounds
+                xm = ym = sys.float_info.max
+                xM = yM = - sys.float_info.max
+                for i in range(pts.GetNumberOfPoints()):
+                    if (ghost.GetValue(i) & vtk.vtkDataSetAttributes.HIDDENPOINT == 0):
+                        # point not hidden
+                        p = pts.GetPoint(i)
+                        if (p[0] < xm):
+                            xm = p[0]
+                        if (p[0] > xM):
+                            xM = p[0]
+                        if (p[1] < ym):
+                            ym = p[1]
+                        if (p[1] > yM):
+                            yM = p[1]
+                # hidden point don't work for polys or unstructured grids.
+                # We remove the cells in this case.
+                if (vg.GetExtentType() == vtk.VTK_PIECES_EXTENT):
+                    removeHiddenPointsOrCells(vg, celldata=False)
+            # Sets the vertics into the grid
+            vg.SetPoints(geopts)
     else:
         xm, xM, ym, yM, tmp, tmp2 = grid.GetPoints().GetBounds()
         vg = grid
