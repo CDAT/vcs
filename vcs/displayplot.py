@@ -28,6 +28,44 @@ import vcs
 from .xmldocs import listdoc  # noqa
 
 try:
+    import ipywidgets as widgets
+    import logging
+
+    class OutputWidgetHandler(logging.Handler):
+        """ Custom logging handler sending logs to an output widget """
+
+        def __init__(self, *args, **kwargs):
+            super(OutputWidgetHandler, self).__init__(*args, **kwargs)
+            layout = {
+                'width': '100%',
+                'height': '160px',
+                'border': '1px solid black'
+            }
+            self.out = widgets.Output(layout=layout)
+
+        def emit(self, record):
+            """ Overload of logging.Handler method """
+            formatted_record = self.format(record)
+            new_output = {
+                'name': 'stdout',
+                'output_type': 'stream',
+                'text': formatted_record+'\n'
+            }
+            self.out.outputs = (new_output, ) + self.out.outputs
+
+        def show_logs(self):
+            """ Show the logs """
+            IPython.display(self.out)
+
+        def clear_logs(self):
+            """ Clear the current logs """
+            self.out.clear_output()
+
+
+except Exception:  # no widgets
+    pass
+
+try:
     basestring  # noqa
 except Exception:
     basestring = str
@@ -125,6 +163,7 @@ class Dp(vcs.bestMatch):
         f.close()
         try:
             import IPython.display
+            import ipywidgets as widgets
             # import cdat_notebook
             """
             if self.g_type == "boxfill":
@@ -156,7 +195,34 @@ class Dp(vcs.bestMatch):
                     title=self._parent._display_target)
             self._parent._display_target.clear_output()
             with self._parent._display_target:
+                data = self.array[0]
+
+                out = widgets.Output(layout={'border': '1px solid black'})
+                IPython.display.display(out)
+
+                sliders = []
+                for dim in data.getAxisList():
+                    sliders.append(widgets.FloatSlider(
+                        value=dim[0],
+                        min=dim[0],
+                        max=dim[-1],
+                        step=1,
+                        description='{}:'.format(dim.id),
+                        disabled=False,
+                        continuous_update=False,
+                        orientation='horizontal',
+                        readout=True,
+                        readout_format='d'
+                    ))
+
+                def handle_slider_change(change):
+                    #self._parent.backend.update_input(self.backend, self.array[0](time=change["new"]))
+                    with out:
+                        print("CHANGE:", change["new"])
+                sliders[0].observe(handle_slider_change,names="values")
+                IPython.display.display(*sliders)
                 IPython.display.display(IPythonDisplay(st))
+
                 st = None
         except Exception:
             pass
