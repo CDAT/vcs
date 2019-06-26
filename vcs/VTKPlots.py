@@ -1249,37 +1249,6 @@ class VTKVCSBackend(object):
                 pixelscale=pixelscale)
         return {}
 
-    def cleanupData(self, data):
-        data[:] = numpy.ma.masked_invalid(data, numpy.nan)
-        return data
-
-    def pickFrame(self, data, dimensions_on_plot, frame=0):
-        """Select a specific frame by looping over extra dimensions
-        """
-        print("pick frame requested", dimensions_on_plot, frame)
-        # Ok we have a slab, let's figure which slice it is
-        args = []
-        Ntot = 1
-        for a in data.getAxisList()[:-dimensions_on_plot][::-1]:
-            n = frame // Ntot % len(a)
-            Ntot *= len(a)
-            args.append(slice(n, n + 1))
-        args = args[::-1]
-        print("pick frame args", args)
-        return self.cleanupData(data(*args))
-        
-    def trimData1D(self, data, frame=0):
-        if data is None:
-            return None
-        return self.pickFrame(data, dimensions_on_plot=1, frame=frame)
-
-    # ok now trying to figure the actual data to plot
-    def trimData2D(self, data, frame=0):
-        if data is None:
-            return None
-        if not cdms2.isVariable(data):
-            data = cdms2.MV2.array(data)
-        return self.pickFrame(data, dimensions_on_plot=2, frame=frame)
         
     def put_png_on_canvas(
             self, filename, zoom=1, xOffset=0, yOffset=0,
