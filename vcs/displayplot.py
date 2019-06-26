@@ -124,22 +124,16 @@ class Dp(vcs.bestMatch):
                  "_display_target"
                  ]
 
-    def handle_slider_change(self, change, sliders, name, out):
-        with out:
-            print("UPDATING:", name, change["new"])
+    def handle_slider_change(self, change, sliders, name):
         for disp_name in self._parent.display_names:
             disp = vcs.elements["display"][disp_name]
             if name in disp.array[0].getAxisIds():
-                with out:
-                    print("found dim {} on array {} of disp {}".format(name, disp.array[0].id, disp))
                 disp._parent.backend.update_input(disp.backend, disp.array[0](time=change["new"]))
         tmp = tempfile.mktemp() + ".png"
         self._parent.png(tmp)
         f = open(tmp, "rb")
         st = f.read()
         f.close()
-        with out:
-            print("CLEARING TARGET", sliders)
         self._parent._display_target.clear_output()
         with self._parent._display_target:
             IPython.display.display(*sliders)
@@ -160,15 +154,11 @@ class Dp(vcs.bestMatch):
                     title=self._parent._display_target)
             self._parent._display_target.clear_output()
             with self._parent._display_target:
-                out = ipywidgets.Output(layout={'border': '1px solid black'})
-                IPython.display.display(out)
                 dimensions = set()
 
                 for disp_name in self._parent.display_names:
                     disp = vcs.elements["display"][disp_name]
                     gm_info = vcs.graphicsmethodinfo(vcs.getgraphicsmethod(disp.g_type, disp.g_name))
-                    with out:
-                        print("GM:", gm_info)
                     data = disp.array[0]
 
                     sliders = []
