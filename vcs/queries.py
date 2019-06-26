@@ -132,7 +132,7 @@ def graphicsmethodlist():
             'vector', 'streamline', 'xvsy', 'xyvsy', 'yxvsx', 'taylordiagram',
             '1d', '3d_scalar', '3d_dual_scalar', '3d_vector']
 
-def graphicsmethodinfo(gobj):
+def graphicsmethodinfo(obj):
     """For a given graphic method returns a dictionary with information about it
     such as number of slabs expected, dimensions used for the plot etc...
     """

@@ -25,43 +25,13 @@
 #
 from . import VCS_validation_functions
 import vcs
+import tempfile
 from .xmldocs import listdoc  # noqa
+from functools import partial
 
 try:
-    import ipywidgets as widgets
-    import logging
-
-    class OutputWidgetHandler(logging.Handler):
-        """ Custom logging handler sending logs to an output widget """
-
-        def __init__(self, *args, **kwargs):
-            super(OutputWidgetHandler, self).__init__(*args, **kwargs)
-            layout = {
-                'width': '100%',
-                'height': '160px',
-                'border': '1px solid black'
-            }
-            self.out = widgets.Output(layout=layout)
-
-        def emit(self, record):
-            """ Overload of logging.Handler method """
-            formatted_record = self.format(record)
-            new_output = {
-                'name': 'stdout',
-                'output_type': 'stream',
-                'text': formatted_record+'\n'
-            }
-            self.out.outputs = (new_output, ) + self.out.outputs
-
-        def show_logs(self):
-            """ Show the logs """
-            IPython.display(self.out)
-
-        def clear_logs(self):
-            """ Clear the current logs """
-            self.out.clear_output()
-
-
+    import IPython.display
+    import ipywidgets
 except Exception:  # no widgets
     pass
 
@@ -154,37 +124,32 @@ class Dp(vcs.bestMatch):
                  "_display_target"
                  ]
 
-    def _repr_png_(self):
-        import tempfile
+    def handle_slider_change(self, change, sliders, name, out):
+        with out:
+            print("UPDATING:", name, change["new"])
+        for disp_name in self._parent.display_names:
+            disp = vcs.elements["display"][disp_name]
+            if name in disp.array[0].getAxisIds():
+                with out:
+                    print("found dim {} on array {} of disp {}".format(name, disp.array[0].id, disp))
+                disp._parent.backend.update_input(disp.backend, disp.array[0](time=change["new"]))
         tmp = tempfile.mktemp() + ".png"
         self._parent.png(tmp)
         f = open(tmp, "rb")
         st = f.read()
         f.close()
-        try:
+        with out:
+            print("CLEARING TARGET", sliders)
+        self._parent._display_target.clear_output()
+        with self._parent._display_target:
+            IPython.display.display(*sliders)
+            IPython.display.display(IPythonDisplay(st))
+
+    def _repr_png_(self):
+        st = None
+        # try:
+        if 1:
             import IPython.display
-            import ipywidgets as widgets
-            # import cdat_notebook
-            """
-            if self.g_type == "boxfill":
-                box = vcs.getboxfill(self.g_name)
-                b_dict = vcs.utils.dumpToDict(box)[0]
-                if self._widget is not None:
-                    self._widget.close()
-                self._widget = cdat_notebook.GMWidget(value=b_dict)
-                def refresh(o):
-                    for k, v in self._widget.value.iteritems():
-                        try:
-                            setattr(box, k, v)
-                        except:
-                            pass
-                    self._parent.update()
-                    self._parent.backend.renWin.Render()
-                    IPython.display.clear_output(wait=True)
-                    IPython.display.display(self)
-                self._widget.observe(refresh, names="value")
-                IPython.display.display(self._widget)
-            """
             if self._parent._display_target is None:  # no target specified
                 import sidecar  # if sidecar is here use it for target
                 self._parent._display_target = sidecar.Sidecar(
@@ -195,37 +160,52 @@ class Dp(vcs.bestMatch):
                     title=self._parent._display_target)
             self._parent._display_target.clear_output()
             with self._parent._display_target:
-                data = self.array[0]
-
-                out = widgets.Output(layout={'border': '1px solid black'})
+                out = ipywidgets.Output(layout={'border': '1px solid black'})
                 IPython.display.display(out)
+                dimensions = set()
 
-                sliders = []
-                for dim in data.getAxisList():
-                    sliders.append(widgets.FloatSlider(
-                        value=dim[0],
-                        min=dim[0],
-                        max=dim[-1],
-                        step=1,
-                        description='{}:'.format(dim.id),
-                        disabled=False,
-                        continuous_update=False,
-                        orientation='horizontal',
-                        readout=True,
-                        readout_format='d'
-                    ))
-
-                def handle_slider_change(change):
-                    #self._parent.backend.update_input(self.backend, self.array[0](time=change["new"]))
+                for disp_name in self._parent.display_names:
+                    disp = vcs.elements["display"][disp_name]
+                    gm_info = vcs.graphicsmethodinfo(vcs.getgraphicsmethod(disp.g_type, disp.g_name))
                     with out:
-                        print("CHANGE:", change["new"])
+                        print("GM:", gm_info)
+                    data = disp.array[0]
+
+                    sliders = []
+                    funcs = []
+                    for dim in data.getAxisList()[:-gm_info["dimensions_used_on_plot"]]:
+                        if not dim in dimensions:
+                            sliders.append(ipywidgets.FloatSlider(
+                                value=dim[0],
+                                min=dim[0],
+                                max=dim[-1],
+                                step=1,
+                                description='{}:'.format(dim.id),
+                                disabled=False,
+                                continuous_update=False,
+                                orientation='horizontal',
+                                readout=True,
+                                readout_format='d'
+                            ))
+                            funcs.append(partial(self.handle_slider_change, name=dim.id))
+                for i, sl in enumerate(sliders):
+                    sl.observe(partial(funcs[i], sliders=sliders, out=out), names="value")
                 IPython.display.display(*sliders)
-                sliders[0].observe(handle_slider_change,names="values")
+                tmp = tempfile.mktemp() + ".png"
+                self._parent.png(tmp)
+                f = open(tmp, "rb")
+                st = f.read()
+                f.close()
                 IPython.display.display(IPythonDisplay(st))
 
-                st = None
-        except Exception:
-            pass
+                return None
+        # except Exception:
+        #     pass
+        tmp = tempfile.mktemp() + ".png"
+        self._parent.png(tmp)
+        f = open(tmp, "rb")
+        st = f.read()
+        f.close()
         return st
 # TODO: html,json,jpeg,png,svg,latex
 
