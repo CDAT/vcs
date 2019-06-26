@@ -255,6 +255,8 @@ def _determine_arg_list(g_name, actual_args):
             arglist[igraphics_method] = graphicsmethodtype(args[i])
             arglist[igraphics_option] = args[i].name
             found_graphics_method = found_graphics_method + 1
+        elif args[i] is None:
+            pass
         else:
             raise vcsError("Unknown type %s of argument to plotting command." %
                            type(args[i]))
@@ -2567,7 +2569,7 @@ class Canvas(vcs.bestMatch):
 
     _plot_keywords_ = ['variable', 'grid', 'xaxis', 'xarray', 'xrev', 'yaxis', 'yarray', 'yrev', 'continents',
                        'xbounds', 'ybounds', 'zaxis', 'zarray', 'taxis', 'tarray', 'waxis', 'warray', 'bg', 'ratio',
-                       'donotstoredisplay', 'render', 'continents_line', "display_name"]
+                       'donotstoredisplay', 'render', 'continents_line', "display_name", "frame"]
 
     _deprecated_plot_keywords_ = ["time", "units", "file_comment", "xname", "yname", "zname", "tname", "wname",
                                   "xunits", "yunits", "zunits", "tunits", "wunits", "comment1", "comment2", "comment3",
@@ -2733,7 +2735,7 @@ class Canvas(vcs.bestMatch):
 
                         ratio = 1.5|"autot"|"auto"
 
-                * Plot the actual grid or the dual grid
+                * Plot the actual grid or the dual grid (VTK backend only)
 
                     .. code-block:: python
 
@@ -2751,6 +2753,18 @@ class Canvas(vcs.bestMatch):
 
                         # if 1, create images in the background (not on canvas)
                         bg = 0|1
+
+                * Data with extra dimensions, picking the frame to plot:
+
+                    .. code-block:: python
+
+                        # if not 0 will use extra dimensions to figure which slice of data is expected
+                        # extra dimensions are used in reverse order, e.g
+                        # array of dims time, lev, lat, lon will plot lat/lon slices and frame "1"
+                        # will display the second level for the first time
+                        # Negative values are ok and start from last frame (frame=-1)
+                        frame = 0
+
 
         :Example:
 

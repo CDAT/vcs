@@ -5,9 +5,10 @@ import os
 import vcs
 import cdms2
 import sys
+import cdat_info
+
 pth = os.path.dirname(__file__)
 sys.path.append(pth)
-import cdat_info
 # import glob
 
 
@@ -40,11 +41,11 @@ class VCSBaseTest(unittest.TestCase):
         if not os.path.exists(self.pngsdir):
             try:
                 os.makedirs(self.pngsdir)
-            except:
+            except Exception:
                 pass
         self.basedir = os.path.join("uvcdat-testdata", "baselines", "vcs")
         self.basedatadir = os.path.join("uvcdat-testdata", "data")
-        self.clt = cdms2.open(os.path.join(vcs.sample_data, "clt.nc"))
+        self.clt = cdms2.open(os.path.join(cdat_info.get_sampledata_path(), "clt.nc"))
 
     def tearDown(self):
         os.chdir(self.orig_cwd)
@@ -57,7 +58,7 @@ class VCSBaseTest(unittest.TestCase):
     def checkImage(self, fnm, src=None, threshold=cdat_info.defaultThreshold,
                    pngReady=False, pngPathSet=False):
         ret = cdat_info.checkImage(fnm, self.x, self.basedir, self.pngsdir, src,
-                                    threshold, pngReady, pngPathSet)
+                                   threshold, pngReady, pngPathSet)
         self.assertEqual(ret, 0)
         return ret
 

@@ -143,6 +143,7 @@ def process_src(nm, code):
         if i == -1:
             # not set in this case
             continue
+        print("SUB:", sub)
         sc = code[i + len(sub) + 1:]
         j = sc.find(")")
         sc = sc[:j]

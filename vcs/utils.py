@@ -2251,7 +2251,7 @@ def monotonic(x):
     return numpy.all(dx <= 0) or numpy.all(dx >= 0)
 
 
-def getgraphicsmethod(type, name):
+def getgraphicsmethod(type, name="default"):
     """Retrieves an existing graphics method, given by type and name.
 
     :Example:

@@ -219,8 +219,8 @@ class Dp(vcs.bestMatch):
                     #self._parent.backend.update_input(self.backend, self.array[0](time=change["new"]))
                     with out:
                         print("CHANGE:", change["new"])
-                sliders[0].observe(handle_slider_change,names="values")
                 IPython.display.display(*sliders)
+                sliders[0].observe(handle_slider_change,names="values")
                 IPython.display.display(IPythonDisplay(st))
 
                 st = None
