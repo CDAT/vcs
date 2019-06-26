@@ -285,12 +285,10 @@ class Pipeline2D(IPipeline2D):
         self._vtkGeoTransform = transform
 
         # Preprocess the input scalar data:
-        print("OKKKKK NOW WE ARE REQUESTING SCALAR THING")
         self._updateScalarData()
         self._min = self._data1.min()
         self._max = self._data1.max()
         self._scalarRange = vcs.minmax(self._data1)
-        print("SCALAR RANBGE:", self._scalarRange, self._data1.shape)
 
         # Create/update the VTK dataset.
         plotBasedDualGrid = kargs.get('plot_based_dual_grid', True)
@@ -337,8 +335,8 @@ class Pipeline2D(IPipeline2D):
         data1.setAxis(-1, X)
         data1.setAxis(-2, Y)
         frame = self._plot_kargs.get("frame", 0)
-        self._data1 = self._context().trimData2D(data1, frame=frame)
-        self._data2 = self._context().trimData2D(self._originalData2, frame=frame)
+        self._data1 = vcs.utils.trimData2D(data1, frame=frame)
+        self._data2 = vcs.utils.trimData2D(self._originalData2, frame=frame)
 
     def _updateVTKDataSet(self, plotBasedDualGrid):
         """

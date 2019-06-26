@@ -3016,3 +3016,44 @@ def drawVectorLegend(canvas, templateLegend,
         text.priority = templateLegend.priority
 
     canvas.plot(text, bg=bg, render=render)
+
+
+def cleanupData(data):
+    data[:] = numpy.ma.masked_invalid(data, numpy.nan)
+    return data
+
+
+def pickFrame(data, dimensions_on_plot, frame=0):
+    """Select a specific frame by looping over extra dimensions
+    """
+    # Ok we have a slab, let's figure which slice it is
+    Nframes = 1
+    for length in data.shape[:-dimensions_on_plot]:
+        Nframes *= length
+    if frame < 0:
+        # Negative frame we need to figure out the max frame and remove from it
+        frame = Nframes + frame
+    ax = data.getAxisList()[:-dimensions_on_plot][::-1]
+    last = frame % len(ax[0])
+    args = [slice(last, last + 1)]
+    Ntot = 1
+    for a in ax[:-1]:
+        Ntot *= len(a)
+        n = frame // Ntot
+        args.append(slice(n, n + 1))
+    args = args[::-1]
+    return cleanupData(data(*args))
+    
+
+def trimData1D(data, frame=0):
+    if data is None:
+        return None
+    return pickFrame(data, dimensions_on_plot=1, frame=frame)
+
+
+def trimData2D(data, frame=0):
+    if data is None:
+        return None
+    if not cdms2.isVariable(data):
+        data = cdms2.MV2.array(data)
+    return pickFrame(data, dimensions_on_plot=2, frame=frame)

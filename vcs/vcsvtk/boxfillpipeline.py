@@ -40,8 +40,8 @@ class BoxfillPipeline(Pipeline2D):
             data[:] = numpy.ma.log10(data[:])
 
         frame = self._plot_kargs.get("frame", 0)
-        self._data1 = self._context().trimData2D(data, frame=frame)
-        self._data2 = self._context().trimData2D(self._originalData2, frame=frame)
+        self._data1 = vcs.utils.trimData2D(data, frame=frame)
+        self._data2 = vcs.utils.trimData2D(self._originalData2, frame=frame)
 
     def _updateContourLevelsAndColors(self):
         """Overrides baseclass implementation."""
