@@ -3034,6 +3034,8 @@ def pickFrame(data, dimensions_on_plot, frame=0):
         # Negative frame we need to figure out the max frame and remove from it
         frame = Nframes + frame
     ax = data.getAxisList()[:-dimensions_on_plot][::-1]
+    if len(ax) == 0:
+        return cleanupData(data)
     last = frame % len(ax[0])
     args = [slice(last, last + 1)]
     Ntot = 1
@@ -3042,7 +3044,9 @@ def pickFrame(data, dimensions_on_plot, frame=0):
         n = frame // Ntot
         args.append(slice(n, n + 1))
     args = args[::-1]
-    return cleanupData(data(*args))
+    out = cleanupData(data(*args))
+    print("RETURNING TYPE:", out.getAxisList())
+    return out
 
 
 def trimData1D(data, frame=0):

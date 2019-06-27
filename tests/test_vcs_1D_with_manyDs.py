@@ -5,7 +5,7 @@ import basevcstest
 import numpy
 import MV2
 import os
-
+import vcs
 
 class TestVCS1DMany(basevcstest.VCSBaseTest):
     def test1DMany(self):
@@ -15,6 +15,8 @@ class TestVCS1DMany(basevcstest.VCSBaseTest):
 
         one = self.x.create1d()
 
+        print("glob min mac::", vcs.minmax(d))
+        print("plt minmax: ", vcs.minmax(d[0]))
         self.x.plot(d, one, bg=self.bg)
 
         fnm = "test_vcs_1D_with_manyDs.png"
