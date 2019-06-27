@@ -1249,7 +1249,6 @@ class VTKVCSBackend(object):
                 pixelscale=pixelscale)
         return {}
 
-        
     def put_png_on_canvas(
             self, filename, zoom=1, xOffset=0, yOffset=0,
             units="percent", fitToHeight=True, *args, **kargs):

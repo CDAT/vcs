@@ -31,7 +31,9 @@ class BoxfillPipeline(Pipeline2D):
         """Overrides baseclass implementation."""
         # Update data1 if this is a log10 boxfill:
         data = self._originalData1.clone()
+        print("IN BOXFILL TRIM :", data.getLevel(), data.shape)
         X = self.convertAxis(data.getAxis(-1), "x")
+        print("X is back with:", X)
         Y = self.convertAxis(data.getAxis(-2), "y")
         data.setAxis(-1, X)
         data.setAxis(-2, Y)

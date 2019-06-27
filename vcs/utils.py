@@ -3045,7 +3045,6 @@ def pickFrame(data, dimensions_on_plot, frame=0):
         args.append(slice(n, n + 1))
     args = args[::-1]
     out = cleanupData(data(*args))
-    print("RETURNING TYPE:", out.getAxisList())
     return out
 
 

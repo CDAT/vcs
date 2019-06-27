@@ -141,8 +141,7 @@ class Dp(vcs.bestMatch):
 
     def _repr_png_(self):
         st = None
-        # try:
-        if 1:
+        try:
             import IPython.display
             if self._parent._display_target is None:  # no target specified
                 import sidecar  # if sidecar is here use it for target
@@ -189,8 +188,8 @@ class Dp(vcs.bestMatch):
                 IPython.display.display(IPythonDisplay(st))
 
                 return None
-        # except Exception:
-        #     pass
+        except Exception:
+            pass
         tmp = tempfile.mktemp() + ".png"
         self._parent.png(tmp)
         f = open(tmp, "rb")

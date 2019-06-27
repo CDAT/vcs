@@ -27,14 +27,15 @@ class Pipeline(object):
     def plot(self, data1, data2, template, grid, transform, **kargs):
         raise NotImplementedError("Missing override.")
 
-    def convertAxis(self, axis, location):
+    def convertAxis(self, axis, location, direction="forward"):
         """Convert axis to log/area_wgt, etc..."""
         _convert = getattr(
             self._gm,
             "{}axisconvert".format(location),
             "linear")
+        print("CONVERTING TO:", _convert)
         _bounds = axis.getBounds()
-        _func = vcs.utils.axisConvertFunctions[_convert]["forward"]
+        _func = vcs.utils.axisConvertFunctions[_convert][direction]
         _axis = _func(axis[:])
         _axis = cdms2.createAxis(_axis, id=axis.id)
         if _bounds is not None:
@@ -95,4 +96,16 @@ class Pipeline(object):
             z = self._data1.getAxis(-3)
         if self._data1.ndim > 3 and t is None:
             t = self._data1.getAxis(-4)
+
+        try:  # Not all method have original data
+            if self._originalData1.getAxis(-1).isLevel():
+                z = self.convertAxis(z, "x", "invert")
+            if self._originalData1.getAxis(-2).isLevel():
+                z = self.convertAxis(z, "y", "invert")
+            if self._originalData1.getAxis(-1).isTime():
+                t = self.convertAxis(t, "x", "invert")
+            if self._originalData1.getAxis(-2).isTime():
+                t = self.convertAxis(t, "y", "invert")
+        except Exception:
+            pass
         return z, t
