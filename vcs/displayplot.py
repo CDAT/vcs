@@ -164,7 +164,7 @@ class Dp(vcs.bestMatch):
                     sliders = []
                     funcs = []
                     for dim in data.getAxisList()[:-gm_info["dimensions_used_on_plot"]]:
-                        if not dim in dimensions:
+                        if dim not in dimensions:
                             sliders.append(ipywidgets.FloatSlider(
                                 value=dim[0],
                                 min=dim[0],
@@ -179,7 +179,7 @@ class Dp(vcs.bestMatch):
                             ))
                             funcs.append(partial(self.handle_slider_change, name=dim.id))
                 for i, sl in enumerate(sliders):
-                    sl.observe(partial(funcs[i], sliders=sliders, out=out), names="value")
+                    sl.observe(partial(funcs[i], sliders=sliders), names="value")
                 IPython.display.display(*sliders)
                 tmp = tempfile.mktemp() + ".png"
                 self._parent.png(tmp)

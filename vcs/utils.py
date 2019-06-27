@@ -3043,7 +3043,7 @@ def pickFrame(data, dimensions_on_plot, frame=0):
         args.append(slice(n, n + 1))
     args = args[::-1]
     return cleanupData(data(*args))
-    
+
 
 def trimData1D(data, frame=0):
     if data is None:

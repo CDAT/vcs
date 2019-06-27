@@ -132,6 +132,7 @@ def graphicsmethodlist():
             'vector', 'streamline', 'xvsy', 'xyvsy', 'yxvsx', 'taylordiagram',
             '1d', '3d_scalar', '3d_dual_scalar', '3d_vector']
 
+
 def graphicsmethodinfo(obj):
     """For a given graphic method returns a dictionary with information about it
     such as number of slabs expected, dimensions used for the plot etc...
@@ -156,6 +157,7 @@ def graphicsmethodinfo(obj):
         info["dimensions_used_on_plot"] = 1
         info["max_number_of_arrays"] = 2  # scatter plots or x/y axis
     return info
+
 
 def graphicsmethodtype(gobj):
     """Check the type of a graphics object.

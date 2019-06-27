@@ -27,8 +27,6 @@ class Pipeline1D(Pipeline):
         frame = self._plot_kargs.get("frame", 0)
         self._data1 = vcs.utils.trimData1D(data1, frame=frame)
         Y = self._data1(squeeze=1)
-        print("Y SHAPE NOW:", Y.shape)
-        #data = _data1  # For template
         if data2 is None:
             X = Y.getAxis(0)
         else:
@@ -54,8 +52,6 @@ class Pipeline1D(Pipeline):
         Xs = X[:].tolist()
         Ys = Y[:].tolist()
 
-        print("Xs:", Xs)
-        print("Ys:", Ys)
         xs = []
         ys = []
         prev = None
@@ -127,9 +123,6 @@ class Pipeline1D(Pipeline):
             if self._gm.marker is not None and m.priority > 0:
                 self._context().canvas.plot(m, donotstoredisplay=True)
 
-        #ren = self._context().contextView.GetRenderer()
-        #tmpl.plot(self._context().canvas, data, self._gm, bg=self._context().bg,
-        #          renderer=ren, X=X, Y=Y)
         if hasattr(data1, "_yname"):
             del(data1._yname)
         del(vcs.elements["line"][ln_tmp.name])
@@ -160,5 +153,5 @@ class Pipeline1D(Pipeline):
         self._context().renderTemplate(
             tmpl,
             self._data1,
-            self._gm, t, z) #, **kwargs)
+            self._gm, t, z)
         return {}
