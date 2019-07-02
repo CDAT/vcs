@@ -33,7 +33,6 @@ class Pipeline(object):
             self._gm,
             "{}axisconvert".format(location),
             "linear")
-        print("CONVERTING TO:", _convert)
         _bounds = axis.getBounds()
         _func = vcs.utils.axisConvertFunctions[_convert][direction]
         _axis = _func(axis[:])

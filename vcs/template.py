@@ -1691,7 +1691,6 @@ class P(vcs.bestMatch):
                     else:
                         try:
                             tmp = slab(squeeze=1)
-                            print("TMP SHAPE:", tmp.shape, tmp.getAxisIds())
                             meanstring = float(cdutil.averager(tmp,
                                                                axis=" ".join(["(%s)" %
                                                                               S for S in tmp.getAxisIds()])))

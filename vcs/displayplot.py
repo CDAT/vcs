@@ -124,11 +124,48 @@ class Dp(vcs.bestMatch):
                  "_display_target"
                  ]
 
-    def handle_slider_change(self, change, sliders, name):
+    def handle_slider_change(self, change, widgets, name):
+        if self._parent._display_target.out is None:
+            debug = False
+        else:
+            debug = True
+        if debug:
+            with self._parent._display_target.out:
+                print("ok updating slider nasmed", name, "with", change["new"])
         for disp_name in self._parent.display_names:
             disp = vcs.elements["display"][disp_name]
+            kw = {'squeeze':1}
+            kw = {}
             if name in disp.array[0].getAxisIds():
-                disp._parent.backend.update_input(disp.backend, disp.array[0](time=change["new"]))
+                kw[name] = slice(change["new"], change["new"]+1)
+                # we need to check if any other slider needs update
+                for ax in disp.array[0].getAxisList():
+                    if debug:
+                        with self._parent._display_target.out:
+                            print("ok ", name, "vs", ax.id)
+                    if ax.id == name:
+                        continue
+                    for widget in widgets:
+                        slider = widget.children[0]
+                        if ax.id == slider.description:
+                            kw[ax.id] = slice(slider.value, slider.value+1)
+
+                if debug:
+                    with self._parent._display_target.out:
+                        print("ok ", name, "with", kw)
+                disp._parent.backend.update_input(disp.backend, disp.array[0](**kw))
+        for widget in widgets:
+            slider, label = widget.children
+            sp = slider.description
+            if debug:
+                with self._parent._display_target.out:
+                    print("OPk looking at:", name, slider.description, sp, sp == name)
+            if sp == name:
+                value = label.values[change["new"]]
+                label.value = "{}".format(value)
+                if debug:
+                    with self._parent._display_target.out:
+                        print("Ok new value:", value, label.value)
         tmp = tempfile.mktemp() + ".png"
         self._parent.png(tmp)
         f = open(tmp, "rb")
@@ -136,11 +173,14 @@ class Dp(vcs.bestMatch):
         f.close()
         self._parent._display_target.clear_output()
         with self._parent._display_target:
-            IPython.display.display(*sliders)
+            if debug:
+                IPython.display.display(self._parent._display_target.out)
+            IPython.display.display(*widgets)
             IPython.display.display(IPythonDisplay(st))
 
     def _repr_png_(self):
         st = None
+        debug = False
         try:
             import IPython.display
             if self._parent._display_target is None:  # no target specified
@@ -153,6 +193,10 @@ class Dp(vcs.bestMatch):
                     title=self._parent._display_target)
             self._parent._display_target.clear_output()
             with self._parent._display_target:
+                if debug:
+                    self._parent._display_target.out = ipywidgets.Output(layout={'border': '1px solid black'})
+                else:
+                    self._parent._display_target.out = None
                 dimensions = set()
 
                 for disp_name in self._parent.display_names:
@@ -160,26 +204,37 @@ class Dp(vcs.bestMatch):
                     gm_info = vcs.graphicsmethodinfo(vcs.getgraphicsmethod(disp.g_type, disp.g_name))
                     data = disp.array[0]
 
-                    sliders = []
+                    widgets = []
                     funcs = []
                     for dim in data.getAxisList()[:-gm_info["dimensions_used_on_plot"]]:
                         if dim not in dimensions:
-                            sliders.append(ipywidgets.FloatSlider(
-                                value=dim[0],
-                                min=dim[0],
-                                max=dim[-1],
+                            if dim.isTime():
+                                values = dim.asComponentTime()
+                            else:
+                                values = ["{}{}".format(value, dim.units) for value in dim[:]]
+                            slider = ipywidgets.IntSlider(
+                                value=0,
+                                min=0,
+                                max=len(dim)-1,
                                 step=1,
-                                description='{}:'.format(dim.id),
+                                description='{}'.format(dim.id),
                                 disabled=False,
                                 continuous_update=False,
                                 orientation='horizontal',
                                 readout=True,
                                 readout_format='d'
-                            ))
+                            )
+                            label = ipywidgets.Label(str(values[0]))
+                            label.values = values
+                            box = ipywidgets.HBox([slider, label])
+                            widgets.append(box)
                             funcs.append(partial(self.handle_slider_change, name=dim.id))
-                for i, sl in enumerate(sliders):
-                    sl.observe(partial(funcs[i], sliders=sliders), names="value")
-                IPython.display.display(*sliders)
+                for i, wdgt in enumerate(widgets):
+                    slider = wdgt.children[0]
+                    slider.observe(partial(funcs[i], widgets=widgets), names="value")
+                if debug:
+                    IPython.display.display(self._parent._display_target.out)
+                IPython.display.display(*widgets)
                 tmp = tempfile.mktemp() + ".png"
                 self._parent.png(tmp)
                 f = open(tmp, "rb")
