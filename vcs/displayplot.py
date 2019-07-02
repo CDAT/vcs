@@ -134,7 +134,6 @@ class Dp(vcs.bestMatch):
                 print("ok updating slider nasmed", name, "with", change["new"])
         for disp_name in self._parent.display_names:
             disp = vcs.elements["display"][disp_name]
-            kw = {'squeeze':1}
             kw = {}
             if name in disp.array[0].getAxisIds():
                 kw[name] = slice(change["new"], change["new"]+1)
@@ -152,7 +151,7 @@ class Dp(vcs.bestMatch):
 
                 if debug:
                     with self._parent._display_target.out:
-                        print("ok ", name, "with", kw)
+                        print("ok ", disp.array[0].id, "with", kw)
                 disp._parent.backend.update_input(disp.backend, disp.array[0](**kw))
         for widget in widgets:
             slider, label = widget.children
