@@ -232,7 +232,7 @@ class Pipeline2D(IPipeline2D):
                     C = [(0., 0., 0., 100.)]
                 if numpy.allclose(self._contourLevels[0][0], -1.e20):
                     # ok it's an extension arrow
-                    L = [self._scalarRange[0] - 1., self._contourLevels[0][1]]
+                    L = [-1.e20, self._contourLevels[0][1]]
                 else:
                     L = list(self._contourLevels[i])
                 Ind = indices[i]
@@ -244,7 +244,7 @@ class Pipeline2D(IPipeline2D):
                              Opc == opacities[i])):
                     # Ok same type lets keep going
                     if numpy.allclose(l[1], 1.e20):
-                        L.append(self._scalarRange[1] + 1.)
+                        L.append(1.e20)
                     else:
                         L.append(l[1])
                     C.append(self._contourColors[i])
