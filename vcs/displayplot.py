@@ -41,6 +41,30 @@ except Exception:
     basestring = str
 
 
+def get_update_array_kw(disp, array, widgets, debug_target=None):
+    if array is None:
+        return {}
+    if debug_target is not None:
+        with debug_target:
+            print("ok looking at kewwords for", array.id)
+    kw = {}
+    for ax in array.getAxisList():
+        if debug_target is not None:
+            with debug_target:
+                print("ok ", ax.id)
+        for widget in widgets:
+            slider = widget.children[0]
+            if debug_target is not None:
+                with debug_target:
+                    print("\tvs", slider.description)
+            if ax.id == slider.description:
+                kw[ax.id] = slice(slider.value, slider.value + 1)
+    if debug_target is not None:
+        with debug_target:
+            print("ok we should update", array.id, "with", kw)
+    return kw
+
+
 class IPythonDisplay(object):
     def __init__(self, png):
         self.png = png
@@ -134,25 +158,71 @@ class Dp(vcs.bestMatch):
                 print("ok updating slider nasmed", name, "with", change["new"])
         for disp_name in self._parent.display_names:
             disp = vcs.elements["display"][disp_name]
-            kw = {}
-            if name in disp.array[0].getAxisIds():
-                kw[name] = slice(change["new"], change["new"]+1)
-                # we need to check if any other slider needs update
-                for ax in disp.array[0].getAxisList():
-                    if debug:
-                        with self._parent._display_target.out:
-                            print("ok ", name, "vs", ax.id)
-                    if ax.id == name:
-                        continue
-                    for widget in widgets:
-                        slider = widget.children[0]
-                        if ax.id == slider.description:
-                            kw[ax.id] = slice(slider.value, slider.value+1)
-
+            if debug:
+                with self._parent._display_target.out:
+                    print("ok looking at arrays", disp.array)
+            if disp.array[0] is None:
+                continue
+            if name not in disp.array[0].getAxisIds():
                 if debug:
                     with self._parent._display_target.out:
-                        print("ok ", disp.array[0].id, "with", kw)
-                disp._parent.backend.update_input(disp.backend, disp.array[0](**kw))
+                        print("skipping array:", disp.array)
+                continue
+            if debug:
+                debug_target = self._parent._display_target.out
+            else:
+                debug_target = None
+            kw1 = get_update_array_kw(disp, disp.array[0], widgets, debug_target)
+            kw2 = get_update_array_kw(disp, disp.array[1], widgets, debug_target)
+            # Ok in some case (u/v e.g) same dims but different name on 2nd array
+            if disp.array[1] is not None:
+                for axId in kw1:
+                    if axId not in kw2:  # probably should be there as wll
+                        ax = disp.array[0].getAxis(disp.array[0].getAxisIndex(axId))
+                        if debug:
+                            with self._parent._display_target.out:
+                                print("Examing axis:", axId, "vs", ax, hasattr(ax, "axis"))
+                        if hasattr(ax, "axis"):  # special dim (T,Z,Y,X)
+                            if debug:
+                                with self._parent._display_target.out:
+                                    print("Examing axis:", axId, "vs", ax.axis)
+                            for ax2 in disp.array[1].getAxisList():
+                                if debug:
+                                    with self._parent._display_target.out:
+                                        print("Examing axis:", axId, "vs", ax2.id)
+                                if hasattr(ax2, "axis") and ax2.axis == ax.axis:
+                                    kw2[ax2.id] = kw1[ax.id]
+            if debug:
+                with self._parent._display_target.out:
+                    print("kws", kw1, kw2)
+            if len(kw1) != 0:
+                if debug:
+                    with self._parent._display_target.out:
+                        print("updating :", disp.array[0].id, kw1)
+                new1 = disp.array[0](**kw1)
+                if debug:
+                    with self._parent._display_target.out:
+                        print("updated :", new1.shape)
+            else:
+                new1 = disp.array[0]
+            if len(kw2) != 0:
+                if debug:
+                    with self._parent._display_target.out:
+                        print("updating 2:", kw2)
+                new2 = disp.array[1](**kw2)
+                if debug:
+                    with self._parent._display_target.out:
+                        print("updated 2:", new2.shape)
+            else:
+                if debug:
+                    with self._parent._display_target.out:
+                        print("not updating 2:", disp.array[1])
+                new2 = disp.array[1]
+            if kw1 is not {} or kw2 is not {}:
+                if debug:
+                    with self._parent._display_target.out:
+                        print("calling update")
+                disp._parent.backend.update_input(disp.backend, new1, new2)
         for widget in widgets:
             slider, label = widget.children
             sp = slider.description
@@ -202,6 +272,8 @@ class Dp(vcs.bestMatch):
                     disp = vcs.elements["display"][disp_name]
                     gm_info = vcs.graphicsmethodinfo(vcs.getgraphicsmethod(disp.g_type, disp.g_name))
                     data = disp.array[0]
+                    if data is None:
+                        continue
 
                     widgets = []
                     funcs = []
