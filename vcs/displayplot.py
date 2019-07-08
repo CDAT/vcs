@@ -260,6 +260,7 @@ class Dp(vcs.bestMatch):
 
     def generate_sliders(self, debug):
         dimensions = set()
+        widgets = []
         for disp_name in self._parent.display_names:
             disp = vcs.elements["display"][disp_name]
             gm_info = vcs.graphicsmethodinfo(vcs.getgraphicsmethod(disp.g_type, disp.g_name))
@@ -267,7 +268,6 @@ class Dp(vcs.bestMatch):
             if data is None:
                 continue
 
-            widgets = []
             funcs = []
             for dim in data.getAxisList()[:-gm_info["dimensions_used_on_plot"]]:
                 if dim not in dimensions:
