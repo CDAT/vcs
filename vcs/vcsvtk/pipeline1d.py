@@ -49,8 +49,14 @@ class Pipeline1D(Pipeline):
         Y = self.convertAxis(cdms2.createAxis(Y), "y")
 
         ln_tmp = self._context().canvas.createline()
-        Xs = X[:].tolist()
-        Ys = Y[:].tolist()
+        try:  # Need to squeeze or list it too deep
+            Xs = X[:](squeeze=1).tolist()
+        except Exception:
+            Xs = X[:].tolist()
+        try:  # Need to squeeze or list it too deep
+            Ys = Y[:](squeeze=1).tolist()
+        except Exception:
+            Ys = Y[:].tolist()
 
         xs = []
         ys = []
