@@ -217,8 +217,9 @@ def setArray(grid, array, arrayName, isCellData, isScalars):
     pedigreeId = attributes.GetPedigreeIds()
     if (pedigreeId):
         vtkarray = attributes.GetArray(arrayName)
-        for i in range(0, vtkarray.GetNumberOfTuples()):
-            vtkarray.SetValue(i, array[pedigreeId.GetValue(i)])
+        if vtkarray is not None:
+            for i in range(0, vtkarray.GetNumberOfTuples()):
+                vtkarray.SetValue(i, array[pedigreeId.GetValue(i)])
     else:
         vtkarray = numpy_to_vtk_wrapper(array, deep=False)
         vtkarray.SetName(arrayName)

@@ -1735,11 +1735,9 @@ x.geometry(1200,800)
         if "vtk_backend_grid" in vtkobjects:
             # Ok ths is where we update the input data
             vg = vtkobjects["vtk_backend_grid"]
-            attributes = vg.GetCellData().GetScalars()
-            if (attributes is not None):
-                vcs2vtk.setArray(vg, array1.filled(0).flat, "scalar",
-                                 isCellData=vg.GetCellData().GetScalars(),
-                                 isScalars=True)
+            vcs2vtk.setArray(vg, array1.filled(0).flat, "scalar",
+                             isCellData=vg.GetCellData().GetScalars(),
+                             isScalars=True)
 
             if "vtk_backend_filter" in vtkobjects:
                 vtkobjects["vtk_backend_filter"].Update()

@@ -335,8 +335,6 @@ class Dp(vcs.bestMatch):
             f.close()
             self._parent._display_target_image.value = st
             return None
-    #except Exception:
-        #    pass
         tmp = tempfile.mktemp() + ".png"
         self._parent.png(tmp)
         f = open(tmp, "rb")
