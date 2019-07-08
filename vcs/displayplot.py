@@ -31,9 +31,22 @@ from functools import partial
 
 try:
     import IPython.display
-    import ipywidgets
-except Exception:  # no widgets
-    pass
+    HAVE_IPY = True
+    try:
+        import sidecar
+        HAVE_SIDECAR = True
+    except Exception:
+        HAVE_SIDECAR = False
+    try:
+        import ipywidgets
+        HAVE_IPYWIDGETS = True
+    except Exception:  # no widgets
+        HAVE_IPYWIDGETS = False
+except Exception:  # no IPython
+    HAVE_IPY = False
+    HAVE_SIDECAR = False
+    HAVE_IPYWIDGETS = False
+
 
 try:
     basestring  # noqa
@@ -63,14 +76,6 @@ def get_update_array_kw(disp, array, widgets, debug_target=None):
         with debug_target:
             print("ok we should update", array.id, "with", kw)
     return kw
-
-
-class IPythonDisplay(object):
-    def __init__(self, png):
-        self.png = png
-
-    def _repr_png_(self):
-        return self.png
 
 
 class Dp(vcs.bestMatch):
@@ -149,27 +154,29 @@ class Dp(vcs.bestMatch):
                  ]
 
     def handle_slider_change(self, change, widgets, name):
-        if self._parent._display_target.out is None:
+        if not HAVE_IPYWIDGETS:  # No need to go further
+            return
+        if self._parent._display_target_out is None:
             debug = False
         else:
             debug = True
         if debug:
-            with self._parent._display_target.out:
+            with self._parent._display_target_out:
                 print("ok updating slider nasmed", name, "with", change["new"])
         for disp_name in self._parent.display_names:
             disp = vcs.elements["display"][disp_name]
             if debug:
-                with self._parent._display_target.out:
+                with self._parent._display_target_out:
                     print("ok looking at arrays", disp.array)
             if disp.array[0] is None:
                 continue
             if name not in disp.array[0].getAxisIds():
                 if debug:
-                    with self._parent._display_target.out:
+                    with self._parent._display_target_out:
                         print("skipping array:", disp.array)
                 continue
             if debug:
-                debug_target = self._parent._display_target.out
+                debug_target = self._parent._display_target_out
             else:
                 debug_target = None
             kw1 = get_update_array_kw(disp, disp.array[0], widgets, debug_target)
@@ -180,142 +187,156 @@ class Dp(vcs.bestMatch):
                     if axId not in kw2:  # probably should be there as wll
                         ax = disp.array[0].getAxis(disp.array[0].getAxisIndex(axId))
                         if debug:
-                            with self._parent._display_target.out:
+                            with self._parent._display_target_out:
                                 print("Examing axis:", axId, "vs", ax, hasattr(ax, "axis"))
                         if hasattr(ax, "axis"):  # special dim (T,Z,Y,X)
                             if debug:
-                                with self._parent._display_target.out:
+                                with self._parent._display_target_out:
                                     print("Examing axis:", axId, "vs", ax.axis)
                             for ax2 in disp.array[1].getAxisList():
                                 if debug:
-                                    with self._parent._display_target.out:
+                                    with self._parent._display_target_out:
                                         print("Examing axis:", axId, "vs", ax2.id)
                                 if hasattr(ax2, "axis") and ax2.axis == ax.axis:
                                     kw2[ax2.id] = kw1[ax.id]
             if debug:
-                with self._parent._display_target.out:
+                with self._parent._display_target_out:
                     print("kws", kw1, kw2)
             if len(kw1) != 0:
                 if debug:
-                    with self._parent._display_target.out:
+                    with self._parent._display_target_out:
                         print("updating :", disp.array[0].id, kw1)
                 new1 = disp.array[0](**kw1)
                 if debug:
-                    with self._parent._display_target.out:
+                    with self._parent._display_target_out:
                         print("updated :", new1.shape)
             else:
                 new1 = disp.array[0]
             if len(kw2) != 0:
                 if debug:
-                    with self._parent._display_target.out:
+                    with self._parent._display_target_out:
                         print("updating 2:", kw2)
                 new2 = disp.array[1](**kw2)
                 if debug:
-                    with self._parent._display_target.out:
+                    with self._parent._display_target_out:
                         print("updated 2:", new2.shape)
             else:
                 if debug:
-                    with self._parent._display_target.out:
+                    with self._parent._display_target_out:
                         print("not updating 2:", disp.array[1])
                 new2 = disp.array[1]
             if kw1 is not {} or kw2 is not {}:
                 if debug:
-                    with self._parent._display_target.out:
+                    with self._parent._display_target_out:
                         print("calling update")
                 disp._parent.backend.update_input(disp.backend, new1, new2)
         for widget in widgets:
             slider, label = widget.children
             sp = slider.description
             if debug:
-                with self._parent._display_target.out:
+                with self._parent._display_target_out:
                     print("OPk looking at:", name, slider.description, sp, sp == name)
             if sp == name:
                 value = label.values[change["new"]]
                 label.value = "{}".format(value)
                 if debug:
-                    with self._parent._display_target.out:
+                    with self._parent._display_target_out:
                         print("Ok new value:", value, label.value)
+        if debug:
+            with self._parent._display_target_out:
+                print("Ok about to dump png")
         tmp = tempfile.mktemp() + ".png"
         self._parent.png(tmp)
         f = open(tmp, "rb")
         st = f.read()
         f.close()
-        self._parent._display_target.clear_output()
-        with self._parent._display_target:
-            if debug:
-                IPython.display.display(self._parent._display_target.out)
-            IPython.display.display(*widgets)
-            IPython.display.display(IPythonDisplay(st))
+        if debug:
+            IPython.display.display(self._parent._display_target_out)
+        IPython.display.display(*widgets)
+        self._parent._display_target_image.value = st
+        if debug:
+            with self._parent._display_target_out:
+                print("Ok update")
+
+    def generate_sliders(self, debug):
+        dimensions = set()
+        for disp_name in self._parent.display_names:
+            disp = vcs.elements["display"][disp_name]
+            gm_info = vcs.graphicsmethodinfo(vcs.getgraphicsmethod(disp.g_type, disp.g_name))
+            data = disp.array[0]
+            if data is None:
+                continue
+
+            widgets = []
+            funcs = []
+            for dim in data.getAxisList()[:-gm_info["dimensions_used_on_plot"]]:
+                if dim not in dimensions:
+                    if dim.isTime():
+                        values = dim.asComponentTime()
+                    else:
+                        values = ["{}{}".format(value, dim.units) for value in dim[:]]
+                    slider = ipywidgets.IntSlider(
+                        value=0,
+                        min=0,
+                        max=len(dim)-1,
+                        step=1,
+                        description='{}'.format(dim.id),
+                        disabled=False,
+                        continuous_update=False,
+                        orientation='horizontal',
+                        readout=True,
+                        readout_format='d'
+                    )
+                    label = ipywidgets.Label(str(values[0]))
+                    label.values = values
+                    box = ipywidgets.HBox([slider, label])
+                    widgets.append(box)
+                    funcs.append(partial(self.handle_slider_change, name=dim.id))
+        for i, wdgt in enumerate(widgets):
+            slider = wdgt.children[0]
+            slider.observe(partial(funcs[i], widgets=widgets), names="value")
+        if debug:
+            IPython.display.display(self._parent._display_target_out)
+        return widgets
 
     def _repr_png_(self):
         st = None
         debug = False
-        try:
-            import IPython.display
-            if self._parent._display_target is None:  # no target specified
-                import sidecar  # if sidecar is here use it for target
-                self._parent._display_target = sidecar.Sidecar(
-                    title="VCS Canvas {:d}".format(self._parent.canvasid()))
-            elif isinstance(self._parent._display_target, basestring) and \
-                    self._parent._display_target.lower() not in ["inline", "off", "no"]:
-                self._parent._display_target = sidecar.Sidecar(
-                    title=self._parent._display_target)
-            self._parent._display_target.clear_output()
-            with self._parent._display_target:
+        if not HAVE_IPYWIDGETS:
+            debug = False
+        if HAVE_IPY:
+            if HAVE_SIDECAR:
+                print("HAVE SD")
+                if self._parent._display_target is None:  # no target specified
+                    self._parent._display_target = sidecar.Sidecar(
+                        title="VCS Canvas {:d}".format(self._parent.canvasid()))
+                elif isinstance(self._parent._display_target, basestring) and \
+                        self._parent._display_target.lower() not in ["inline", "off", "no"]:
+                    self._parent._display_target = sidecar.Sidecar(
+                        title=self._parent._display_target)
+            self._parent._display_target_image = ipywidgets.Image()
+            IPython.display.clear_output()
+            if HAVE_IPYWIDGETS:
                 if debug:
-                    self._parent._display_target.out = ipywidgets.Output(layout={'border': '1px solid black'})
+                    self._parent._display_target_out = ipywidgets.Output(layout={'border': '1px solid black'})
                 else:
-                    self._parent._display_target.out = None
-                dimensions = set()
-
-                for disp_name in self._parent.display_names:
-                    disp = vcs.elements["display"][disp_name]
-                    gm_info = vcs.graphicsmethodinfo(vcs.getgraphicsmethod(disp.g_type, disp.g_name))
-                    data = disp.array[0]
-                    if data is None:
-                        continue
-
-                    widgets = []
-                    funcs = []
-                    for dim in data.getAxisList()[:-gm_info["dimensions_used_on_plot"]]:
-                        if dim not in dimensions:
-                            if dim.isTime():
-                                values = dim.asComponentTime()
-                            else:
-                                values = ["{}{}".format(value, dim.units) for value in dim[:]]
-                            slider = ipywidgets.IntSlider(
-                                value=0,
-                                min=0,
-                                max=len(dim)-1,
-                                step=1,
-                                description='{}'.format(dim.id),
-                                disabled=False,
-                                continuous_update=False,
-                                orientation='horizontal',
-                                readout=True,
-                                readout_format='d'
-                            )
-                            label = ipywidgets.Label(str(values[0]))
-                            label.values = values
-                            box = ipywidgets.HBox([slider, label])
-                            widgets.append(box)
-                            funcs.append(partial(self.handle_slider_change, name=dim.id))
-                for i, wdgt in enumerate(widgets):
-                    slider = wdgt.children[0]
-                    slider.observe(partial(funcs[i], widgets=widgets), names="value")
-                if debug:
-                    IPython.display.display(self._parent._display_target.out)
-                IPython.display.display(*widgets)
-                tmp = tempfile.mktemp() + ".png"
-                self._parent.png(tmp)
-                f = open(tmp, "rb")
-                st = f.read()
-                f.close()
-                IPython.display.display(IPythonDisplay(st))
-
-                return None
-        except Exception:
-            pass
+                    self._parent._display_target_out = None
+                widgets = self.generate_sliders(debug)
+                vbox = ipywidgets.VBox(widgets + [self._parent._display_target_image])
+                if HAVE_SIDECAR:
+                    with self._parent._display_target:
+                        IPython.display.display(vbox)
+                else:
+                    IPython.display.display(vbox)
+            tmp = tempfile.mktemp() + ".png"
+            self._parent.png(tmp)
+            f = open(tmp, "rb")
+            st = f.read()
+            f.close()
+            self._parent._display_target_image.value = st
+            return None
+    #except Exception:
+        #    pass
         tmp = tempfile.mktemp() + ".png"
         self._parent.png(tmp)
         f = open(tmp, "rb")

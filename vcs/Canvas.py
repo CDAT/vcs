@@ -391,7 +391,9 @@ class Canvas(vcs.bestMatch):
         '__last_plot_keyargs',
         '_continents_line',
         '_savedcontinentstype',
-        '_display_target'
+        '_display_target',
+        '_display_target_out',
+        '_display_target_image'
     ]
 
 #     def applicationFocusChanged(self, old, current ):

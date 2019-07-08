@@ -47,7 +47,6 @@ class MeshfillPipeline(Pipeline2D):
         luts = []
         geos = []
         wholeDataMin, wholeDataMax = vcs.minmax(self._data1)
-        print("MAX MIN:", wholeDataMin, wholeDataMax)
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
         # We need to do the convertion thing
