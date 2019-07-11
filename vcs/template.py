@@ -1689,9 +1689,10 @@ class P(vcs.bestMatch):
                         meanstring = getattr(slab, s)
                     else:
                         try:
-                            meanstring = float(cdutil.averager(slab,
+                            tmp = slab(squeeze=1)
+                            meanstring = float(cdutil.averager(tmp,
                                                                axis=" ".join(["(%s)" %
-                                                                              S for S in slab.getAxisIds()])))
+                                                                              S for S in tmp.getAxisIds()])))
 
                         except Exception:
                             try:

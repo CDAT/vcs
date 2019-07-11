@@ -19,7 +19,8 @@ class MeshfillPipeline(Pipeline2D):
     def _updateScalarData(self):
         """Overrides baseclass implementation."""
         # We don't trim _data2 for meshfill:
-        self._data1 = self._context().trimData2D(self._originalData1)
+        frame = self._plot_kargs.get("frame", 0)
+        self._data1 = vcs.utils.trimData2D(self._originalData1, frame=frame)
         _convert = self._gm.yaxisconvert
         _func = vcs.utils.axisConvertFunctions[_convert]["forward"]
         self._data2 = self._originalData2
@@ -45,7 +46,7 @@ class MeshfillPipeline(Pipeline2D):
         mappers = []
         luts = []
         geos = []
-        wholeDataMin, wholeDataMax = vcs.minmax(self._originalData1)
+        wholeDataMin, wholeDataMax = vcs.minmax(self._data1)
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
         # We need to do the convertion thing

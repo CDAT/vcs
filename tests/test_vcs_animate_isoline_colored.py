@@ -12,8 +12,6 @@ class TestVCSAnimateIsoline(basevcstest.VCSBaseTest):
         gm.level = levs
         # add dummy values to levs to get the correct number of cols
         cols = vcs.getcolors(levs + [56, ])
-        print(levs)
-        print(cols)
         gm.textcolors = cols
         gm.linecolors = cols
         self.x.plot(s, gm, bg=self.bg)

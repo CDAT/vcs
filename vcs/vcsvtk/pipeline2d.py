@@ -232,7 +232,7 @@ class Pipeline2D(IPipeline2D):
                     C = [(0., 0., 0., 100.)]
                 if numpy.allclose(self._contourLevels[0][0], -1.e20):
                     # ok it's an extension arrow
-                    L = [self._scalarRange[0] - 1., self._contourLevels[0][1]]
+                    L = [-1.e20, self._contourLevels[0][1]]
                 else:
                     L = list(self._contourLevels[i])
                 Ind = indices[i]
@@ -244,7 +244,7 @@ class Pipeline2D(IPipeline2D):
                              Opc == opacities[i])):
                     # Ok same type lets keep going
                     if numpy.allclose(l[1], 1.e20):
-                        L.append(self._scalarRange[1] + 1.)
+                        L.append(1.e20)
                     else:
                         L.append(l[1])
                     C.append(self._contourColors[i])
@@ -334,8 +334,9 @@ class Pipeline2D(IPipeline2D):
         Y = self.convertAxis(data1.getAxis(-2), "y")
         data1.setAxis(-1, X)
         data1.setAxis(-2, Y)
-        self._data1 = self._context().trimData2D(data1)
-        self._data2 = self._context().trimData2D(self._originalData2)
+        frame = self._plot_kargs.get("frame", 0)
+        self._data1 = vcs.utils.trimData2D(data1, frame=frame)
+        self._data2 = vcs.utils.trimData2D(self._originalData2, frame=frame)
 
     def _updateVTKDataSet(self, plotBasedDualGrid):
         """

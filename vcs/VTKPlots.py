@@ -49,7 +49,8 @@ class ImageDataWrapperItem(object):
     def Paint(self, vtkSelf, context2D):
         scalars = self.imageData.GetPointData().GetScalars()
         if scalars:
-            context2D.DrawImage(self.xOffset, self.yOffset, self.scale, self.imageData)
+            context2D.DrawImage(self.xOffset, self.yOffset,
+                                self.scale, self.imageData)
             return True
 
         print('ERROR: vtkImageData has no active scalars, unable to draw image')
@@ -106,7 +107,8 @@ class VcsLogoItem(object):
             brush.GetColorF(brushColor)
             brush.SetColorF(self.transparentColor)
 
-            context2D.DrawImage(self.xOffset, self.yOffset, self.scale, self.imageData)
+            context2D.DrawImage(self.xOffset, self.yOffset,
+                                self.scale, self.imageData)
 
             brush.SetColorF(brushColor[:3])
             return True
@@ -354,7 +356,8 @@ class VTKVCSBackend(object):
             distance = vtk.mutable(-1)
             cellId = vtk.mutable(-1)
             subId = vtk.mutable(-1)
-            cellLocator.FindClosestPoint(testPoint, closestPoint, cellId, subId, distance)
+            cellLocator.FindClosestPoint(
+                testPoint, closestPoint, cellId, subId, distance)
 
             globalIds = dataset.GetCellData().GetGlobalIds()
             if globalIds:
@@ -421,12 +424,15 @@ class VTKVCSBackend(object):
 
             [renWinWidth, renWinHeight] = self.renWin.GetSize()
             screenGeom = vtk.vtkRecti(0, 0, renWinWidth, renWinHeight)
-            drawAreaBounds = vtk.vtkRectd(0.0, 0.0, float(renWinWidth), float(renWinHeight))
-            vcs2vtk.configureContextArea(self.popupInfoContextArea, drawAreaBounds, screenGeom)
+            drawAreaBounds = vtk.vtkRectd(
+                0.0, 0.0, float(renWinWidth), float(renWinHeight))
+            vcs2vtk.configureContextArea(
+                self.popupInfoContextArea, drawAreaBounds, screenGeom)
 
             popupPythonItem = PopupInfoItem(bgColor=[.96, .96, .86],
                                             fgColor=[.93, .91, .67],
-                                            vp=[xy[0], xy[1], min(xy[0] + .2, 1.), min(xy[1] + .2, 1)],
+                                            vp=[xy[0], xy[1], min(
+                                                xy[0] + .2, 1.), min(xy[1] + .2, 1)],
                                             text=st)
             popupItem = vtk.vtkPythonItem()
             popupItem.SetPythonObject(popupPythonItem)
@@ -746,7 +752,8 @@ class VTKVCSBackend(object):
         if hasattr(vtkmodules.vtkRenderingOpenGL2Python, "vtkXOpenGLRenderWindow") and\
                 isinstance(self.renWin, vtkmodules.vtkRenderingOpenGL2Python.vtkXOpenGLRenderWindow):
             if os.environ.get("DISPLAY", None) is None:
-                raise RuntimeError("No DISPLAY set. Set your DISPLAY env variable or install mesalib conda package")
+                raise RuntimeError(
+                    "No DISPLAY set. Set your DISPLAY env variable or install mesalib conda package")
 
         # Gets user physical screen dimensions
         if isinstance(width, int) and isinstance(height, int):
@@ -905,7 +912,8 @@ class VTKVCSBackend(object):
                                     int(round((vp[1] - vp[0]) * renWinWidth)),
                                     int(round((vp[3] - vp[2]) * renWinHeight)))
 
-                rect = vtk.vtkRectd(0.0, 0.0, float(renWinWidth), float(renWinHeight))
+                rect = vtk.vtkRectd(0.0, 0.0, float(
+                    renWinWidth), float(renWinHeight))
 
                 vcs2vtk.configureContextArea(area, rect, geom)
 
@@ -916,7 +924,8 @@ class VTKVCSBackend(object):
                     cmap=self.canvas.colormap, geoBounds=bounds, geo=vtk_backend_geo)
         elif gtype == "line":
             if gm.priority != 0:
-                vcs2vtk.prepLine(self, gm, geoBounds=bounds, cmap=self.canvas.colormap)
+                vcs2vtk.prepLine(self, gm, geoBounds=bounds,
+                                 cmap=self.canvas.colormap)
                 # FIXME: we may need to keeep track of the context items generated here
                 # returned["vtk_backend_line_actors"] = actors
 
@@ -942,12 +951,15 @@ class VTKVCSBackend(object):
                     geoBounds=None,
                     geo=None)
 
-                newWc = [wc[0] * xScale, wc[1] * xScale, wc[2] * yScale, wc[3] * yScale]
+                newWc = [wc[0] * xScale, wc[1] * xScale,
+                         wc[2] * yScale, wc[3] * yScale]
 
-                rect = vtk.vtkRectd(newWc[0], newWc[2], newWc[1] - newWc[0], newWc[3] - newWc[2])
+                rect = vtk.vtkRectd(
+                    newWc[0], newWc[2], newWc[1] - newWc[0], newWc[3] - newWc[2])
                 vcs2vtk.configureContextArea(area, rect, geom)
 
-                actors = vcs2vtk.prepMarker(gm, [geom[2], geom[3]], scale=[xScale, yScale], cmap=self.canvas.colormap)
+                actors = vcs2vtk.prepMarker(gm, [geom[2], geom[3]], scale=[
+                                            xScale, yScale], cmap=self.canvas.colormap)
                 returned["vtk_backend_marker_actors"] = actors
 
                 for g, pd, geo in actors:
@@ -1027,8 +1039,10 @@ class VTKVCSBackend(object):
         continents_path = self.canvas._continentspath(continentType)
         if continents_path is None:
             return (None, 1, 1)
-        xforward = vcs.utils.axisConvertFunctions[kargs.get('xaxisconvert', 'linear')]['forward']
-        yforward = vcs.utils.axisConvertFunctions[kargs.get('yaxisconvert', 'linear')]['forward']
+        xforward = vcs.utils.axisConvertFunctions[kargs.get(
+            'xaxisconvert', 'linear')]['forward']
+        yforward = vcs.utils.axisConvertFunctions[kargs.get(
+            'yaxisconvert', 'linear')]['forward']
         contData = vcs2vtk.prepContinents(continents_path, xforward, yforward)
         contData = vcs2vtk.doWrapData(contData, wc, fastClip=False)
 
@@ -1078,7 +1092,8 @@ class VTKVCSBackend(object):
             if len(color) == 4:
                 color_arr.InsertNextTypedTuple(color)
             else:
-                color_arr.InsertNextTypedTuple([color[0], color[1], color[2], 255])
+                color_arr.InsertNextTypedTuple(
+                    [color[0], color[1], color[2], 255])
 
         contData.GetCellData().AddArray(color_arr)
 
@@ -1249,44 +1264,6 @@ class VTKVCSBackend(object):
                 pixelscale=pixelscale)
         return {}
 
-    def cleanupData(self, data):
-        data[:] = numpy.ma.masked_invalid(data, numpy.nan)
-        return data
-
-    def trimData1D(self, data):
-        if data is None:
-            return None
-        while len(data.shape) > 1:
-            data = data[0]
-        return self.cleanupData(data)
-
-    # ok now trying to figure the actual data to plot
-    def trimData2D(self, data):
-        if data is None:
-            return None
-        try:
-            g = data.getGrid()
-            gaxes = list(g.getAxisList())
-            daxes = list(data.getAxisList())
-            if daxes[len(daxes) - len(gaxes):] == gaxes:
-                # Ok it is gridded and the grid axes are last
-                return self.cleanupData(
-                    data(*(slice(0, 1),) * (len(daxes) - len(gaxes)), squeeze=1))
-            else:
-                # Ok just return the last two dims
-                return self.cleanupData(
-                    data(*(slice(0, 1),) * (len(daxes) - 2), squeeze=1))
-        except Exception:
-            daxes = list(data.getAxisList())
-            if cdms2.isVariable(data):
-                return self.cleanupData(
-                    data(*(slice(0, 1),) * (len(daxes) - 2)))
-            else:  # numpy arrays are not callable
-                op = ()
-                for i in range(numpy.rank(data) - 2):
-                    op.append(slice(0, 1))
-                return self.cleanupData(data[op])
-
     def put_png_on_canvas(
             self, filename, zoom=1, xOffset=0, yOffset=0,
             units="percent", fitToHeight=True, *args, **kargs):
@@ -1360,7 +1337,8 @@ class VTKVCSBackend(object):
         vcs2vtk.configureContextArea(area, dataBounds, screenGeom)
 
         item = vtk.vtkPythonItem()
-        item.SetPythonObject(ImageDataWrapperItem(imageData, scale=ctx2dScale, offset=[ctx2dxOff, ctx2dyOff]))
+        item.SetPythonObject(ImageDataWrapperItem(
+            imageData, scale=ctx2dScale, offset=[ctx2dxOff, ctx2dyOff]))
         area.GetDrawAreaItem().AddItem(item)
 
         self.showGUI(render=False)
@@ -1656,7 +1634,8 @@ x.geometry(1200,800)
                 imgHeight = imgExtent[3] - imgExtent[2] + 1.0
 
                 item = vtk.vtkPythonItem()
-                logoBgColor = [c / 255. for c in self.canvas.logo_transparentcolor]
+                logoBgColor = [
+                    c / 255. for c in self.canvas.logo_transparentcolor]
                 pythonItem = VcsLogoItem(logo_input, opacity=0.8,
                                          transparentColor=logoBgColor)
                 item.SetPythonObject(pythonItem)
@@ -1832,18 +1811,21 @@ x.geometry(1200,800)
 
                         if coloring:
                             attrs = new_pd.GetPointData()
-                            beItem.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
+                            beItem.SetScalarMode(
+                                vtk.VTK_SCALAR_MODE_USE_POINT_DATA)
 
                             if coloring == 'cells':
                                 attrs = new_pd.GetCellData()
-                                beItem.SetScalarMode(vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
+                                beItem.SetScalarMode(
+                                    vtk.VTK_SCALAR_MODE_USE_CELL_DATA)
 
                             colorByArray = attrs.GetScalars()
 
                             if scalarRange:
                                 lut.SetRange(scalarRange[0], scalarRange[1])
 
-                            mappedColors = lut.MapScalars(colorByArray, vtk.VTK_COLOR_MODE_DEFAULT, 0)
+                            mappedColors = lut.MapScalars(
+                                colorByArray, vtk.VTK_COLOR_MODE_DEFAULT, 0)
                             beItem.SetMappedColors(mappedColors)
                             mappedColors.FastDelete()
 

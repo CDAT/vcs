@@ -133,6 +133,32 @@ def graphicsmethodlist():
             '1d', '3d_scalar', '3d_dual_scalar', '3d_vector']
 
 
+def graphicsmethodinfo(obj):
+    """For a given graphic method returns a dictionary with information about it
+    such as number of slabs expected, dimensions used for the plot etc...
+    """
+    if not isgraphicsmethod(obj):
+        return {}
+    info = {}
+    info["type"] = graphicsmethodtype(obj)
+    info["min_number_of_arrays"] = 1
+    info["max_number_of_arrays"] = 1
+    info["dimensions_used_on_plot"] = 2
+    if info["type"] in ["vector", "streamline"]:
+        info["min_number_of_arrays"] = 2
+        info["max_number_of_arrays"] = 2
+    elif info["type"] == "meshfill":
+        info["max_number_of_arrays"] = 2
+        # when it plots it has beeen transformed to generic grid 1D
+        info["dimensions_used_on_plot"] = 1
+    elif info["type"] in ['3d_scalar', '3d_dual_scalar', '3d_vector']:
+        info["dimensions_used_on_plot"] = 3
+    elif info["type"] in ["1d"]:
+        info["dimensions_used_on_plot"] = 1
+        info["max_number_of_arrays"] = 2  # scatter plots or x/y axis
+    return info
+
+
 def graphicsmethodtype(gobj):
     """Check the type of a graphics object.
 

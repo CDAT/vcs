@@ -3,7 +3,7 @@ import os
 import vcs
 import cdms2
 import numpy
-
+import genutil
 
 class TestVCSAxisConvert(basevcstest.VCSBaseTest):
     def axisConvertGmLinear(self, method):
