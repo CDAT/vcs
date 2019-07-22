@@ -260,6 +260,7 @@ class Dp(vcs.bestMatch):
 
     def generate_sliders(self, debug):
         dimensions = set()
+        funcs = []
         widgets = []
         for disp_name in self._parent.display_names:
             disp = vcs.elements["display"][disp_name]
@@ -267,14 +268,13 @@ class Dp(vcs.bestMatch):
             data = disp.array[0]
             if data is None:
                 continue
-
-            funcs = []
             for dim in data.getAxisList()[:-gm_info["dimensions_used_on_plot"]]:
-                if dim not in dimensions:
+                units = getattr(dim, "units", None)
+                if (dim.id, units, dim[0], dim[-1]) not in dimensions:
                     if dim.isTime():
                         values = dim.asComponentTime()
                     else:
-                        values = ["{}{}".format(value, dim.units) for value in dim[:]]
+                        values = ["{}{}".format(value, units) for value in dim[:]]
                     slider = ipywidgets.IntSlider(
                         value=0,
                         min=0,
@@ -292,6 +292,7 @@ class Dp(vcs.bestMatch):
                     box = ipywidgets.HBox([slider, label])
                     widgets.append(box)
                     funcs.append(partial(self.handle_slider_change, name=dim.id))
+                dimensions.add((dim.id, units, dim[0], dim[-1]))
         for i, wdgt in enumerate(widgets):
             slider = wdgt.children[0]
             slider.observe(partial(funcs[i], widgets=widgets), names="value")
@@ -306,7 +307,6 @@ class Dp(vcs.bestMatch):
             debug = False
         if HAVE_IPY:
             if HAVE_SIDECAR:
-                print("HAVE SD")
                 if self._parent._display_target is None:  # no target specified
                     self._parent._display_target = sidecar.Sidecar(
                         title="VCS Canvas {:d}".format(self._parent.canvasid()))
@@ -315,7 +315,6 @@ class Dp(vcs.bestMatch):
                     self._parent._display_target = sidecar.Sidecar(
                         title=self._parent._display_target)
             self._parent._display_target_image = ipywidgets.Image()
-            IPython.display.clear_output()
             if HAVE_IPYWIDGETS:
                 if debug:
                     self._parent._display_target_out = ipywidgets.Output(layout={'border': '1px solid black'})
@@ -327,7 +326,10 @@ class Dp(vcs.bestMatch):
                     with self._parent._display_target:
                         IPython.display.display(vbox)
                 else:
+                    IPython.display.clear_output()
                     IPython.display.display(vbox)
+            else:
+                IPython.display.clear_output()
             tmp = tempfile.mktemp() + ".png"
             self._parent.png(tmp)
             f = open(tmp, "rb")
