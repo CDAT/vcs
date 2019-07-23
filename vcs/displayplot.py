@@ -324,6 +324,7 @@ class Dp(vcs.bestMatch):
                 vbox = ipywidgets.VBox(widgets + [self._parent._display_target_image])
                 if HAVE_SIDECAR:
                     with self._parent._display_target:
+                        IPython.display.clear_output()
                         IPython.display.display(vbox)
                 else:
                     IPython.display.clear_output()
