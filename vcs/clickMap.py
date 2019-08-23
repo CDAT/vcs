@@ -34,7 +34,7 @@ def createAreaTag(parameters):
 
 
 def mapPng(image, areas, targets=[], tooltips=[], classes=[],
-           extras=[], width=None, height=None, name=None):
+           extras=[], width=None, height=None, name=None, id_image=None):
     """Return <map> and <img> code to map area of an image to various targets
 
     areas coords are assumed to be already mapped to witdth/height if passed
@@ -90,6 +90,9 @@ def mapPng(image, areas, targets=[], tooltips=[], classes=[],
     :param name: name <map> tag to use
     :type name: `str`_
 
+    :param id_image: id_image <img> tag for image to use
+    :type name: `str`_
+
     :return: A string containing the html code for mapping to image
     :rtype: `str`_
     """
@@ -103,6 +106,8 @@ def mapPng(image, areas, targets=[], tooltips=[], classes=[],
         height = ""
     if name is None:
         name = "map_%i" % random.randint(0, 999999)
+    if id_image is None:
+        id_image = "img_%i" % random.randint(0, 999999)
     # HTML5 requires both to be identical
     st = "<map id='%s' name='%s'>\n" % (name, name)
 
@@ -134,8 +139,8 @@ def mapPng(image, areas, targets=[], tooltips=[], classes=[],
     area_tags = list(map(createAreaTag, params))
     st += "".join(area_tags)
     st += "</map>\n"
-    st += "<div><img class='mapper' src='%s' %s %s usemap='#%s'></div>" % (
-        image, width, height, name)
+    st += "<div><img id='%s' class='mapper' src='%s' %s %s usemap='#%s'></div>" % (
+        id_image, image, width, height, name)
     return st
 
 
