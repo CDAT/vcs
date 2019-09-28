@@ -1,21 +1,10 @@
 version: 2
 
-checkout:
-  post:
-    - ./ci-support/checkout_merge_commit.sh
-
 aliases:
-  - &setup_miniconda
-    name: setup_miniconda
-    command: |
-      mkdir -p workspace
-      git clone -b validateNightly git@github.com:CDAT/cdat workspace/cdat
-      python workspace/cdat/scripts/install_miniconda.py -w $WORKDIR -p 'py3'
 
   - &get_testdata
     name: get_testdata
     command: |
-      ls -l workspace
       git clone git://github.com/cdat/uvcdat-testdata
 
   - &create_conda_env
@@ -24,30 +13,40 @@ aliases:
        CHANNELS: "-c cdat/label/nightly -c conda-forge"
        PKGS: "cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime nbformat 'proj4<5' numpy ghostscript vtk-cdat"
     command: |
-       export PATH=$WORKDIR/miniconda/bin:$PATH
-       conda config --set always_yes yes --set changeps1 no
-       conda update -y -q conda
-       conda config --set anaconda_upload no
-       if [[ $PY_VER = "py2" ]]; then
-          conda create -q -n $PY_VER $CUSTOM_CHANNELS $CHANNELS $PKGS $TEMP_PKGS "python<3"
-       else
-          conda create -q -n $PY_VER $CUSTOM_CHANNELS $CHANNELS $PKGS $TEMP_PKGS "python=3.7" sphinxcontrib-websupport nbsphinx easydev $COVERAGE_PKGS
-       fi
+      if [ -d ${HOME}/miniconda ]; then
+        export PATH=$HOME/miniconda/bin:$PATH
+        echo "Found miniconda directory"
+      else
+        echo "miniconda directory not found, installing conda"
+        mkdir -p workspace
+        git clone -b validateNightly --depth 1 git@github.com:CDAT/cdat workspace/cdat
+        ls workspace/cdat
+        python workspace/cdat/scripts/install_miniconda.py -w $HOME -p 'py3.7'
+        export PATH=$HOME/miniconda/bin:$PATH
+        conda config --set always_yes yes --set changeps1 no
+        conda update -y -q conda
+        conda config --set anaconda_upload no
+        if [[ $PY_VER = "py2" ]]; then
+          conda create -q -n cdat $CUSTOM_CHANNELS $CHANNELS $PKGS $TEMP_PKGS "python<3"
+        else
+          conda create -q -n cdat $CUSTOM_CHANNELS $CHANNELS $PKGS $TEMP_PKGS "python=3.7" sphinxcontrib-websupport nbsphinx easydev $COVERAGE_PKGS
+        fi
+      fi
 
   - &setup_vcs
     name: setup_vcs
     command: |
-       export PATH=$WORKDIR/miniconda/bin:$PATH
-       source activate $PY_VER
+       export PATH=$HOME/miniconda/bin:$PATH
+       source activate cdat
        python setup.py install
 
   - &run_vcs_tests
     name: run_vcs_tests
     command: |
-       export PATH=$WORKDIR/miniconda/bin:$PATH
+       export PATH=$HOME/miniconda/bin:$PATH
        export CDAT_ANONYMOUS_LOG=False
        export CDAT_SETUP_PATH=${HOME}
-       source activate $PY_VER
+       source activate cdat
        # possibly turn off coverage
        first=$(git cherry master -v | head -n1)
        current=$(git log -n1 --pretty=oneline)
@@ -58,7 +57,7 @@ aliases:
          echo "Running w/o coverage"
          ACTUAL_COVERAGE=""
        fi
-       python run_tests.py -n 4 -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $ACTUAL_COVERAGE
+       python run_tests.py -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $ACTUAL_COVERAGE
        RESULT=$?
        echo "**** $PY_VER test result: "${RESULT}
        if [[ $PY_VER = 'py3' ]]; then
@@ -78,7 +77,7 @@ aliases:
        if [[ $CIRCLE_BRANCH != 'master' ]]; then
           exit 0
        fi
-       export PATH=${HOME}/project/$WORKDIR/miniconda/bin:$PATH
+       export PATH=${HOME}/miniconda/bin:$PATH
        conda install conda-build anaconda-client
        conda config --set anaconda_upload no
        export CONDA_BLD_PATH=`pwd`/conda_build
@@ -99,8 +98,8 @@ aliases:
   - &run_coveralls
     name: run_coveralls
     command: |
-       export PATH=$WORKDIR/miniconda/bin:$PATH
-       source activate $PY_VER
+       export PATH=$HOME/miniconda/bin:$PATH
+       source activate cdat
        # possibly turn off coverage
        first=$(git cherry master -v | head -n1)
        current=$(git log -n1 --pretty=oneline)
@@ -124,9 +123,14 @@ jobs:
       CUSTOM_CHANNELS: ""
     steps:
       - checkout
-      - run: *setup_miniconda
+      - restore_cache:
+          keys:
+            - macos_py2-2019-05-29
       - run: *get_testdata
       - run: *create_conda_env
+      - save_cache:
+          key: macos_py2-2019-05-29
+          paths: /Users/distiller/miniconda
       - run: *setup_vcs
       - run: *run_vcs_tests
       - store_artifacts:
@@ -147,9 +151,14 @@ jobs:
       CUSTOM_CHANNELS: ""
     steps:
       - checkout
-      - run: *setup_miniconda
+      - restore_cache:
+          keys:
+            - macos_py3-2019-05-29
       - run: *get_testdata
       - run: *create_conda_env
+      - save_cache:
+          key: macos_py3-2019-05-29
+          paths: /Users/distiller/miniconda
       - run: *setup_vcs
       - run: *run_vcs_tests
       - store_artifacts:
@@ -170,9 +179,14 @@ jobs:
       CUSTOM_CHANNELS: ""
     steps:
       - checkout
-      - run: *setup_miniconda
+      - restore_cache:
+          keys:
+            - linux_py2-2019-05-29
       - run: *get_testdata
       - run: *create_conda_env
+      - save_cache:
+          key: linux_py2-2019-05-29
+          paths: /home/circleci/miniconda
       - run: *setup_vcs
       - run: *run_vcs_tests
       - store_artifacts:
@@ -195,9 +209,14 @@ jobs:
       CUSTOM_CHANNELS: ""
     steps:
       - checkout
-      - run: *setup_miniconda
+      - restore_cache:
+          keys:
+            - linux_py3-2019-05-29
       - run: *get_testdata
       - run: *create_conda_env
+      - save_cache:
+          key: linux_py3-2019-05-29
+          paths: /home/circleci/miniconda
       - run: *setup_vcs
       - run: *run_vcs_tests
       - run: *run_coveralls
