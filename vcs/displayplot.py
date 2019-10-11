@@ -306,7 +306,7 @@ class Dp(vcs.bestMatch):
         if not HAVE_IPYWIDGETS:
             debug = False
         if HAVE_IPY:
-            sidecar_on=True
+            sidecar_on = True
             if HAVE_SIDECAR:
                 if self._parent._display_target is None:  # no target specified
                     self._parent._display_target = sidecar.Sidecar(
@@ -316,7 +316,7 @@ class Dp(vcs.bestMatch):
                         self._parent._display_target = sidecar.Sidecar(
                             title=self._parent._display_target)
                     else:
-                        sidecar_on=False
+                        sidecar_on = False
             self._parent._display_target_image = ipywidgets.Image()
             if HAVE_IPYWIDGETS:
                 if debug:
