@@ -306,14 +306,17 @@ class Dp(vcs.bestMatch):
         if not HAVE_IPYWIDGETS:
             debug = False
         if HAVE_IPY:
+            sidecar_on = True
             if HAVE_SIDECAR:
                 if self._parent._display_target is None:  # no target specified
                     self._parent._display_target = sidecar.Sidecar(
                         title="VCS Canvas {:d}".format(self._parent.canvasid()))
-                elif isinstance(self._parent._display_target, basestring) and \
-                        self._parent._display_target.lower() not in ["inline", "off", "no"]:
-                    self._parent._display_target = sidecar.Sidecar(
-                        title=self._parent._display_target)
+                elif isinstance(self._parent._display_target, basestring):
+                    if self._parent._display_target.lower() not in ["inline", "off", "no"]:
+                        self._parent._display_target = sidecar.Sidecar(
+                            title=self._parent._display_target)
+                    else:
+                        sidecar_on = False
             self._parent._display_target_image = ipywidgets.Image()
             if HAVE_IPYWIDGETS:
                 if debug:
@@ -322,7 +325,7 @@ class Dp(vcs.bestMatch):
                     self._parent._display_target_out = None
                 widgets = self.generate_sliders(debug)
                 vbox = ipywidgets.VBox(widgets + [self._parent._display_target_image])
-                if HAVE_SIDECAR:
+                if HAVE_SIDECAR and sidecar_on:
                     with self._parent._display_target:
                         IPython.display.clear_output()
                         IPython.display.display(vbox)
