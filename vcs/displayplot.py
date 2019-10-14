@@ -35,39 +35,20 @@ def check_module_imported(module):
         return True
     return False
 
+#Import IPython.display and ipywidgets if not imported already
+try:
+    import IPython.display
+except ModuleNotFoundError:
+    pass
+try:
+    import ipywidgets
+except ModuleNotFoundError:
+    pass
+
+#Save whether modules were successfully imported
 HAVE_IPY = check_module_imported("IPython.display")
 HAVE_IPYWIDGETS = check_module_imported("ipywidgets")
 HAVE_SIDECAR = check_module_imported("sidecar")
-
-#Import IPython.display and ipywidgets if not imported already
-if not HAVE_IPY:
-    try:
-        import IPython.display
-        if not HAVE_IPYWIDGETS:
-            try:
-                import ipywidgets
-            except ModuleNotFoundError:
-                pass
-    except ModuleNotFoundError:
-        pass
-
-#try:
-#    import IPython.display
-#    HAVE_IPY = True
-#    try:
-#        import sidecar
-#        HAVE_SIDECAR = True
-#    except Exception:
-#        HAVE_SIDECAR = False
-#    try:
-#        import ipywidgets
-#        HAVE_IPYWIDGETS = True
-#    except Exception:  # no widgets
-#        HAVE_IPYWIDGETS = False
-#except Exception:  # no IPython
-#    HAVE_IPY = False
-#    HAVE_SIDECAR = False
-#    HAVE_IPYWIDGETS = False
 
 try:
     basestring  # noqa
