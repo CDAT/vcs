@@ -24,29 +24,38 @@
 #
 #
 from . import VCS_validation_functions
+import sys
 import vcs
 import tempfile
 from .xmldocs import listdoc  # noqa
 from functools import partial
 
-try:
-    import IPython.display
-    HAVE_IPY = True
-    try:
-        import sidecar
-        HAVE_SIDECAR = True
-    except Exception:
-        HAVE_SIDECAR = False
-    try:
-        import ipywidgets
-        HAVE_IPYWIDGETS = True
-    except Exception:  # no widgets
-        HAVE_IPYWIDGETS = False
-except Exception:  # no IPython
-    HAVE_IPY = False
-    HAVE_SIDECAR = False
-    HAVE_IPYWIDGETS = False
+def check_module_imported(module):
+    if module in sys.modules:
+        return True
+    return False
 
+HAVE_IPY = check_module_imported("IPython.display")
+HAVE_IPYWIDGETS = check_module_imported("ipywidgets")
+HAVE_SIDECAR = check_module_imported("sidecar")
+
+#try:
+#    import IPython.display
+#    HAVE_IPY = True
+#    try:
+#        import sidecar
+#        HAVE_SIDECAR = True
+#    except Exception:
+#        HAVE_SIDECAR = False
+#    try:
+#        import ipywidgets
+#        HAVE_IPYWIDGETS = True
+#    except Exception:  # no widgets
+#        HAVE_IPYWIDGETS = False
+#except Exception:  # no IPython
+#    HAVE_IPY = False
+#    HAVE_SIDECAR = False
+#    HAVE_IPYWIDGETS = False
 
 try:
     basestring  # noqa
@@ -59,7 +68,7 @@ def get_update_array_kw(disp, array, widgets, debug_target=None):
         return {}
     if debug_target is not None:
         with debug_target:
-            print("ok looking at kewwords for", array.id)
+            print("ok looking at keywords for", array.id)
     kw = {}
     for ax in array.getAxisList():
         if debug_target is not None:
