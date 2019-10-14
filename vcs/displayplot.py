@@ -39,6 +39,18 @@ HAVE_IPY = check_module_imported("IPython.display")
 HAVE_IPYWIDGETS = check_module_imported("ipywidgets")
 HAVE_SIDECAR = check_module_imported("sidecar")
 
+#Import IPython.display and ipywidgets if not imported already
+if not HAVE_IPY:
+    try:
+        import IPython.display
+        if not HAVE_IPYWIDGETS:
+            try:
+                import ipywidgets
+            except ModuleNotFoundError:
+                pass
+    except ModuleNotFoundError:
+        pass
+
 #try:
 #    import IPython.display
 #    HAVE_IPY = True
