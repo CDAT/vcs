@@ -24,37 +24,25 @@
 #
 #
 from . import VCS_validation_functions
-import sys
 import vcs
 import tempfile
 from .xmldocs import listdoc  # noqa
 from functools import partial
 
-# Import IPython.display and ipywidgets if not imported already
-try:
-    import IPython.display
-except ImportError:
-    pass
-try:
-    import ipywidgets
+
+# Will attempt to import module, returns module and true if successful
+def try_import_module(module, sub_modules=None):
     try:
-        import sidecar
+        return __import__(module, fromlist=sub_modules), True
     except ImportError:
-        pass
-except ImportError:
-    pass
-
-
-def check_module_imported(module):
-    if module in sys.modules:
-        return True
-    return False
+        return None, False
 
 
 # Save whether modules were successfully imported
-HAVE_IPY = check_module_imported("IPython.display")
-HAVE_IPYWIDGETS = check_module_imported("ipywidgets")
-HAVE_SIDECAR = check_module_imported("sidecar")
+IPython, HAVE_IPY = try_import_module("IPython", ["display"])
+ipywidgets, HAVE_IPYWIDGETS = try_import_module("ipywidgets")
+sidecar, HAVE_SIDECAR = try_import_module("sidecar")
+
 
 try:
     basestring  # noqa
