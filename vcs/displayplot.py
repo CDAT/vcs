@@ -38,11 +38,11 @@ def check_module_imported(module):
 #Import IPython.display and ipywidgets if not imported already
 try:
     import IPython.display
-except ModuleNotFoundError:
+except ImportError:
     pass
 try:
     import ipywidgets
-except ModuleNotFoundError:
+except ImportError:
     pass
 
 #Save whether modules were successfully imported
