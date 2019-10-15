@@ -37,13 +37,19 @@ except ImportError:
     pass
 try:
     import ipywidgets
+    try:
+        import sidecar
+    except ImportError:
+        pass
 except ImportError:
     pass
+
 
 def check_module_imported(module):
     if module in sys.modules:
         return True
     return False
+
 
 # Save whether modules were successfully imported
 HAVE_IPY = check_module_imported("IPython.display")
@@ -495,19 +501,19 @@ class Dp(vcs.bestMatch):
         "dictionary of things the backend wants to be able to reuse")
 
     ##########################################################################
-    #                                                                           #
-    # Initialize the display plot attributes.                                   #
-    #                                                                           #
+    #                                                                        #
+    # Initialize the display plot attributes.                                #
+    #                                                                        #
     ##########################################################################
     def __init__(self, Dp_name, Dp_name_src='default', parent=None):
-        #                                                                           #
+        #                                                                 #
         ###################################################################
-        # Initialize the display plot's class and its members                       #
-        # The getDpmember function retrieves the values of the                      #
-        # display plot members in the C structure and passes back the               #
-        # appropriate Python Object.                                                #
+        # Initialize the display plot's class and its members             #
+        # The getDpmember function retrieves the values of the            #
+        # display plot members in the C structure and passes back the     #
+        # appropriate Python Object.                                      #
         ###################################################################
-        #                                                                           #
+        #                                                                 #
         self.extradisplays = []
         self._name = Dp_name
         self.s_name = 'Dp'
@@ -539,9 +545,9 @@ class Dp(vcs.bestMatch):
 
         vcs.elements["display"][self._name] = self
     ##########################################################################
-    #                                                                           #
-    # List out display plot members (attributes).                               #
-    #                                                                           #
+    #                                                                        #
+    # List out display plot members (attributes).                            #
+    #                                                                        #
     ##########################################################################
 
     def list(self):
