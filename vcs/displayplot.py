@@ -30,12 +30,7 @@ import tempfile
 from .xmldocs import listdoc  # noqa
 from functools import partial
 
-def check_module_imported(module):
-    if module in sys.modules:
-        return True
-    return False
-
-#Import IPython.display and ipywidgets if not imported already
+# Import IPython.display and ipywidgets if not imported already
 try:
     import IPython.display
 except ImportError:
@@ -45,7 +40,12 @@ try:
 except ImportError:
     pass
 
-#Save whether modules were successfully imported
+def check_module_imported(module):
+    if module in sys.modules:
+        return True
+    return False
+
+# Save whether modules were successfully imported
 HAVE_IPY = check_module_imported("IPython.display")
 HAVE_IPYWIDGETS = check_module_imported("ipywidgets")
 HAVE_SIDECAR = check_module_imported("sidecar")
@@ -181,16 +181,20 @@ class Dp(vcs.bestMatch):
                 debug_target = self._parent._display_target_out
             else:
                 debug_target = None
-            kw1 = get_update_array_kw(disp, disp.array[0], widgets, debug_target)
-            kw2 = get_update_array_kw(disp, disp.array[1], widgets, debug_target)
+            kw1 = get_update_array_kw(
+                disp, disp.array[0], widgets, debug_target)
+            kw2 = get_update_array_kw(
+                disp, disp.array[1], widgets, debug_target)
             # Ok in some case (u/v e.g) same dims but different name on 2nd array
             if disp.array[1] is not None:
                 for axId in kw1:
                     if axId not in kw2:  # probably should be there as wll
-                        ax = disp.array[0].getAxis(disp.array[0].getAxisIndex(axId))
+                        ax = disp.array[0].getAxis(
+                            disp.array[0].getAxisIndex(axId))
                         if debug:
                             with self._parent._display_target_out:
-                                print("Examing axis:", axId, "vs", ax, hasattr(ax, "axis"))
+                                print("Examing axis:", axId, "vs",
+                                      ax, hasattr(ax, "axis"))
                         if hasattr(ax, "axis"):  # special dim (T,Z,Y,X)
                             if debug:
                                 with self._parent._display_target_out:
@@ -198,7 +202,8 @@ class Dp(vcs.bestMatch):
                             for ax2 in disp.array[1].getAxisList():
                                 if debug:
                                     with self._parent._display_target_out:
-                                        print("Examing axis:", axId, "vs", ax2.id)
+                                        print("Examing axis:",
+                                              axId, "vs", ax2.id)
                                 if hasattr(ax2, "axis") and ax2.axis == ax.axis:
                                     kw2[ax2.id] = kw1[ax.id]
             if debug:
@@ -237,7 +242,8 @@ class Dp(vcs.bestMatch):
             sp = slider.description
             if debug:
                 with self._parent._display_target_out:
-                    print("OPk looking at:", name, slider.description, sp, sp == name)
+                    print("OPk looking at:", name,
+                          slider.description, sp, sp == name)
             if sp == name:
                 value = label.values[change["new"]]
                 label.value = "{}".format(value)
@@ -266,7 +272,8 @@ class Dp(vcs.bestMatch):
         widgets = []
         for disp_name in self._parent.display_names:
             disp = vcs.elements["display"][disp_name]
-            gm_info = vcs.graphicsmethodinfo(vcs.getgraphicsmethod(disp.g_type, disp.g_name))
+            gm_info = vcs.graphicsmethodinfo(
+                vcs.getgraphicsmethod(disp.g_type, disp.g_name))
             data = disp.array[0]
             if data is None:
                 continue
@@ -276,7 +283,8 @@ class Dp(vcs.bestMatch):
                     if dim.isTime():
                         values = dim.asComponentTime()
                     else:
-                        values = ["{}{}".format(value, units) for value in dim[:]]
+                        values = ["{}{}".format(value, units)
+                                  for value in dim[:]]
                     slider = ipywidgets.IntSlider(
                         value=0,
                         min=0,
@@ -293,7 +301,8 @@ class Dp(vcs.bestMatch):
                     label.values = values
                     box = ipywidgets.HBox([slider, label])
                     widgets.append(box)
-                    funcs.append(partial(self.handle_slider_change, name=dim.id))
+                    funcs.append(
+                        partial(self.handle_slider_change, name=dim.id))
                 dimensions.add((dim.id, units, dim[0], dim[-1]))
         for i, wdgt in enumerate(widgets):
             slider = wdgt.children[0]
@@ -322,11 +331,13 @@ class Dp(vcs.bestMatch):
             self._parent._display_target_image = ipywidgets.Image()
             if HAVE_IPYWIDGETS:
                 if debug:
-                    self._parent._display_target_out = ipywidgets.Output(layout={'border': '1px solid black'})
+                    self._parent._display_target_out = ipywidgets.Output(
+                        layout={'border': '1px solid black'})
                 else:
                     self._parent._display_target_out = None
                 widgets = self.generate_sliders(debug)
-                vbox = ipywidgets.VBox(widgets + [self._parent._display_target_image])
+                vbox = ipywidgets.VBox(
+                    widgets + [self._parent._display_target_image])
                 if HAVE_SIDECAR and sidecar_on:
                     with self._parent._display_target:
                         IPython.display.clear_output()
