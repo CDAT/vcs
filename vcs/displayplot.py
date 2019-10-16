@@ -29,23 +29,19 @@ import tempfile
 from .xmldocs import listdoc  # noqa
 from functools import partial
 
-try:
-    import IPython.display
-    HAVE_IPY = True
+
+# Will attempt to import module, returns module and true if successful
+def try_import_module(module, sub_modules=None):
     try:
-        import sidecar
-        HAVE_SIDECAR = True
-    except Exception:
-        HAVE_SIDECAR = False
-    try:
-        import ipywidgets
-        HAVE_IPYWIDGETS = True
-    except Exception:  # no widgets
-        HAVE_IPYWIDGETS = False
-except Exception:  # no IPython
-    HAVE_IPY = False
-    HAVE_SIDECAR = False
-    HAVE_IPYWIDGETS = False
+        return __import__(module, fromlist=sub_modules), True
+    except ImportError:
+        return None, False
+
+
+# Save whether modules were successfully imported
+IPython, HAVE_IPY = try_import_module("IPython", ["display"])
+ipywidgets, HAVE_IPYWIDGETS = try_import_module("ipywidgets")
+sidecar, HAVE_SIDECAR = try_import_module("sidecar")
 
 
 try:
@@ -59,7 +55,7 @@ def get_update_array_kw(disp, array, widgets, debug_target=None):
         return {}
     if debug_target is not None:
         with debug_target:
-            print("ok looking at kewwords for", array.id)
+            print("ok looking at keywords for", array.id)
     kw = {}
     for ax in array.getAxisList():
         if debug_target is not None:
@@ -179,16 +175,20 @@ class Dp(vcs.bestMatch):
                 debug_target = self._parent._display_target_out
             else:
                 debug_target = None
-            kw1 = get_update_array_kw(disp, disp.array[0], widgets, debug_target)
-            kw2 = get_update_array_kw(disp, disp.array[1], widgets, debug_target)
+            kw1 = get_update_array_kw(
+                disp, disp.array[0], widgets, debug_target)
+            kw2 = get_update_array_kw(
+                disp, disp.array[1], widgets, debug_target)
             # Ok in some case (u/v e.g) same dims but different name on 2nd array
             if disp.array[1] is not None:
                 for axId in kw1:
                     if axId not in kw2:  # probably should be there as wll
-                        ax = disp.array[0].getAxis(disp.array[0].getAxisIndex(axId))
+                        ax = disp.array[0].getAxis(
+                            disp.array[0].getAxisIndex(axId))
                         if debug:
                             with self._parent._display_target_out:
-                                print("Examing axis:", axId, "vs", ax, hasattr(ax, "axis"))
+                                print("Examing axis:", axId, "vs",
+                                      ax, hasattr(ax, "axis"))
                         if hasattr(ax, "axis"):  # special dim (T,Z,Y,X)
                             if debug:
                                 with self._parent._display_target_out:
@@ -196,7 +196,8 @@ class Dp(vcs.bestMatch):
                             for ax2 in disp.array[1].getAxisList():
                                 if debug:
                                     with self._parent._display_target_out:
-                                        print("Examing axis:", axId, "vs", ax2.id)
+                                        print("Examing axis:",
+                                              axId, "vs", ax2.id)
                                 if hasattr(ax2, "axis") and ax2.axis == ax.axis:
                                     kw2[ax2.id] = kw1[ax.id]
             if debug:
@@ -235,7 +236,8 @@ class Dp(vcs.bestMatch):
             sp = slider.description
             if debug:
                 with self._parent._display_target_out:
-                    print("OPk looking at:", name, slider.description, sp, sp == name)
+                    print("OPk looking at:", name,
+                          slider.description, sp, sp == name)
             if sp == name:
                 value = label.values[change["new"]]
                 label.value = "{}".format(value)
@@ -264,7 +266,8 @@ class Dp(vcs.bestMatch):
         widgets = []
         for disp_name in self._parent.display_names:
             disp = vcs.elements["display"][disp_name]
-            gm_info = vcs.graphicsmethodinfo(vcs.getgraphicsmethod(disp.g_type, disp.g_name))
+            gm_info = vcs.graphicsmethodinfo(
+                vcs.getgraphicsmethod(disp.g_type, disp.g_name))
             data = disp.array[0]
             if data is None:
                 continue
@@ -274,7 +277,8 @@ class Dp(vcs.bestMatch):
                     if dim.isTime():
                         values = dim.asComponentTime()
                     else:
-                        values = ["{}{}".format(value, units) for value in dim[:]]
+                        values = ["{}{}".format(value, units)
+                                  for value in dim[:]]
                     slider = ipywidgets.IntSlider(
                         value=0,
                         min=0,
@@ -291,7 +295,8 @@ class Dp(vcs.bestMatch):
                     label.values = values
                     box = ipywidgets.HBox([slider, label])
                     widgets.append(box)
-                    funcs.append(partial(self.handle_slider_change, name=dim.id))
+                    funcs.append(
+                        partial(self.handle_slider_change, name=dim.id))
                 dimensions.add((dim.id, units, dim[0], dim[-1]))
         for i, wdgt in enumerate(widgets):
             slider = wdgt.children[0]
@@ -320,11 +325,13 @@ class Dp(vcs.bestMatch):
             self._parent._display_target_image = ipywidgets.Image()
             if HAVE_IPYWIDGETS:
                 if debug:
-                    self._parent._display_target_out = ipywidgets.Output(layout={'border': '1px solid black'})
+                    self._parent._display_target_out = ipywidgets.Output(
+                        layout={'border': '1px solid black'})
                 else:
                     self._parent._display_target_out = None
                 widgets = self.generate_sliders(debug)
-                vbox = ipywidgets.VBox(widgets + [self._parent._display_target_image])
+                vbox = ipywidgets.VBox(
+                    widgets + [self._parent._display_target_image])
                 if HAVE_SIDECAR and sidecar_on:
                     with self._parent._display_target:
                         IPython.display.clear_output()
@@ -482,19 +489,19 @@ class Dp(vcs.bestMatch):
         "dictionary of things the backend wants to be able to reuse")
 
     ##########################################################################
-    #                                                                           #
-    # Initialize the display plot attributes.                                   #
-    #                                                                           #
+    #                                                                        #
+    # Initialize the display plot attributes.                                #
+    #                                                                        #
     ##########################################################################
     def __init__(self, Dp_name, Dp_name_src='default', parent=None):
-        #                                                                           #
+        #                                                                 #
         ###################################################################
-        # Initialize the display plot's class and its members                       #
-        # The getDpmember function retrieves the values of the                      #
-        # display plot members in the C structure and passes back the               #
-        # appropriate Python Object.                                                #
+        # Initialize the display plot's class and its members             #
+        # The getDpmember function retrieves the values of the            #
+        # display plot members in the C structure and passes back the     #
+        # appropriate Python Object.                                      #
         ###################################################################
-        #                                                                           #
+        #                                                                 #
         self.extradisplays = []
         self._name = Dp_name
         self.s_name = 'Dp'
@@ -526,9 +533,9 @@ class Dp(vcs.bestMatch):
 
         vcs.elements["display"][self._name] = self
     ##########################################################################
-    #                                                                           #
-    # List out display plot members (attributes).                               #
-    #                                                                           #
+    #                                                                        #
+    # List out display plot members (attributes).                            #
+    #                                                                        #
     ##########################################################################
 
     def list(self):
