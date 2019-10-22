@@ -24,8 +24,8 @@ requirements:
     - genutil
     - dv3d
     - libcdms >=3.1.2
-    - vtk-cdat >8.1
-    - cdms2
+    - vtk-cdat >=8.2.0.8.2
+    - cdms2 >=3.1.4
     - cdutil
     - requests
     - numpy
