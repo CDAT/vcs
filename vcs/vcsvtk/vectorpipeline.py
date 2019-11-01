@@ -121,10 +121,7 @@ class VectorPipeline(Pipeline2D):
         arrow.FilledOff()
 
         glyphFilter = vtk.vtkGlyph2D()
-        if self._vtkGeoTransform:
-            glyphFilter.SetInputArrayToProcess(1, 0, 0, 0, "projected_vector")
-        else:
-            glyphFilter.SetInputArrayToProcess(1, 0, 0, 0, "vector")
+        glyphFilter.SetInputArrayToProcess(1, 0, 0, 0, "vector")
         glyphFilter.SetSourceConnection(arrow.GetOutputPort())
         glyphFilter.SetVectorModeToUseVector()
 

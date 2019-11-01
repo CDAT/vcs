@@ -698,6 +698,7 @@ def genGrid(data1, data2, gm, grid=None, geo=None, genVectors=False,
                 # points are in lon lat, vectors are in meters / s so:
                 # 1. convert vectors in lon lat
                 vectors = vg.GetPointData().GetVectors()
+                vectors.SetName("original_vector")
                 ptsData = pts.GetData()
                 vectorsLonLat = vectors.NewInstance()
                 vectorsLonLat.SetNumberOfComponents(
@@ -716,7 +717,7 @@ def genGrid(data1, data2, gm, grid=None, geo=None, genVectors=False,
                     radiusLat = equatorialRadius * math.cos(t)
                     vectorLonLat = [0.0, 0.0, 0.0]
                     vectorLonLat[0] = \
-                        vector[0] * 360.0 / (math.pi * (radiusLat ** 2))
+                        vector[0] * 360.0 / (2 * math.pi * radiusLat)
                     # ellipse circumference Ramanujan approximation
                     h = ((equatorialRadius - polarRadius) /
                          (equatorialRadius + polarRadius)) ** 2
@@ -739,11 +740,11 @@ def genGrid(data1, data2, gm, grid=None, geo=None, genVectors=False,
                 newVector = numpy_to_vtk_wrapper(
                     numpy.subtract(VN.vtk_to_numpy(geoVectorsHead.GetData()),
                                    VN.vtk_to_numpy(geopts.GetData())))
-
-                newVector.SetName("projected_vector")
+                # 5. replace the vector array
+                newVector.SetName("vector")
                 setInfToValid(newVector, ghost=None, validPoint=[0, 0, 0])
                 vg.GetPointData().AddArray(newVector)
-                vg.GetPointData().SetActiveVectors("projected_vector")
+                vg.GetPointData().SetActiveVectors("vector")
             ghost = vg.AllocatePointGhostArray()
             if (setInfToValid(geopts, ghost)):
                 # if there are hidden points, we recompute the bounds
