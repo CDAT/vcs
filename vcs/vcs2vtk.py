@@ -349,22 +349,29 @@ def getBoundsList(axis, hasCellData, dualGrid):
         return None
 
 
-def setInfToValid(geoPoints, ghost=None):
+def setInfToValid(_geoPoints, ghost=None, validPoint=None):
     '''
-    Set infinity points to a point that already exists in the list.
-    We also hide infinity points in the ghost array.
+    Set infinity points to a point that already exists in the list or
+    to 'validPoint'.
+    Works if '_geoPoints' are vtkPoints or point VTK array
+    We also hide infinity points in the 'ghost' array.
     We return true if any points are infinity
     '''
+    if (_geoPoints.GetClassName() == "vtkPoints"):
+        geoPoints = _geoPoints.GetData()
+    else:
+        geoPoints = _geoPoints
     anyInfinity = False
-    validPoint = [0, 0, 0]
-    for i in range(geoPoints.GetNumberOfPoints()):
-        point = geoPoints.GetPoint(i)
-        if (not math.isinf(point[0]) and not math.isinf(point[1])):
-            validPoint[0] = point[0]
-            validPoint[1] = point[1]
-            break
-    for i in range(geoPoints.GetNumberOfPoints()):
-        point = geoPoints.GetPoint(i)
+    if (validPoint is None):
+        validPoint = [0, 0, 0]
+        for i in range(geoPoints.GetNumberOfTuples()):
+            point = geoPoints.GetTuple(i)
+            if (not math.isinf(point[0]) and not math.isinf(point[1])):
+                validPoint[0] = point[0]
+                validPoint[1] = point[1]
+                break
+    for i in range(geoPoints.GetNumberOfTuples()):
+        point = geoPoints.GetTuple(i)
         if (math.isinf(point[0]) or math.isinf(point[1])):
             anyInfinity = True
             newPoint = list(point)
@@ -372,7 +379,7 @@ def setInfToValid(geoPoints, ghost=None):
                 newPoint[0] = validPoint[0]
             if (math.isinf(point[1])):
                 newPoint[1] = validPoint[1]
-            geoPoints.SetPoint(i, newPoint)
+            geoPoints.SetTuple(i, newPoint)
             if (ghost):
                 ghost.SetValue(i, vtk.vtkDataSetAttributes.HIDDENPOINT)
     return anyInfinity
@@ -681,16 +688,69 @@ def genGrid(data1, data2, gm, grid=None, geo=None, genVectors=False,
         vg.SetPoints(pts)
         wrb = getWrappedBounds(wc, [xm, xM, ym, yM], wrap)
         geo, geopts = project(pts, projection, wrb)
-        # proj4 returns inf for points that are not visible. Set those to a valid point
-        # and hide them.
+        # proj4 returns inf for points that are not visible. Set those to a
+        # valid point and hide them.
         if (geo):
+            # project vectors
+            if (genVectors):
+                polarRadius = 6356752.3142
+                equatorialRadius = 6378137.0
+                # points are in lon lat, vectors are in meters / s so:
+                # 1. convert vectors in lon lat
+                vectors = vg.GetPointData().GetVectors()
+                ptsData = pts.GetData()
+                vectorsLonLat = vectors.NewInstance()
+                vectorsLonLat.SetNumberOfComponents(
+                    vectors.GetNumberOfComponents())
+                vectorsLonLat.SetNumberOfTuples(
+                    vectors.GetNumberOfTuples())
+                for i in range(ptsData.GetNumberOfTuples()):
+                    lonlat = ptsData.GetTuple(i)
+                    vector = vectors.GetTuple(i)
+                    # use Philippe de La Hire point construction to compute
+                    # see Wikipedia entry for ellipse
+                    t = math.atan(equatorialRadius / polarRadius *
+                                  math.tan(math.radians(lonlat[1])))
+                    # this is the radius of the circle perpendicular on
+                    # north axis at latitue lonlat[0]
+                    radiusLat = equatorialRadius * math.cos(t)
+                    vectorLonLat = [0.0, 0.0, 0.0]
+                    vectorLonLat[0] = \
+                        vector[0] * 360.0 / (math.pi * (radiusLat ** 2))
+                    # ellipse circumference Ramanujan approximation
+                    h = ((equatorialRadius - polarRadius) /
+                         (equatorialRadius + polarRadius)) ** 2
+                    polarCircumference = math.pi * \
+                        (equatorialRadius + polarRadius) * \
+                        (1 + (3 * h) / (10 + math.sqrt(4 - 3 * h)))
+                    # this could be more precise I think
+                    vectorLonLat[1] = vector[1] * 360 / polarCircumference
+                    vectorsLonLat.SetTuple(i, vectorLonLat)
+
+                # 2. add vectors to points to get new points
+                vectorsHeadLonLat = numpy_to_vtk_wrapper(
+                    numpy.add(VN.vtk_to_numpy(ptsData),
+                              VN.vtk_to_numpy(vectorsLonLat)))
+                # 3. project vector head
+                vectorsHeadPts = vtk.vtkPoints()
+                vectorsHeadPts.SetData(vectorsHeadLonLat)
+                _, geoVectorsHead = project(vectorsHeadPts, projection, wrb)
+                # 4. subtract geopoints from projected vector head
+                newVector = numpy_to_vtk_wrapper(
+                    numpy.subtract(VN.vtk_to_numpy(geoVectorsHead.GetData()),
+                                   VN.vtk_to_numpy(geopts.GetData())))
+
+                newVector.SetName("projected_vector")
+                setInfToValid(newVector, ghost=None, validPoint=[0, 0, 0])
+                vg.GetPointData().AddArray(newVector)
+                vg.GetPointData().SetActiveVectors("projected_vector")
             ghost = vg.AllocatePointGhostArray()
             if (setInfToValid(geopts, ghost)):
                 # if there are hidden points, we recompute the bounds
                 xm = ym = sys.float_info.max
                 xM = yM = - sys.float_info.max
                 for i in range(pts.GetNumberOfPoints()):
-                    if (ghost.GetValue(i) & vtk.vtkDataSetAttributes.HIDDENPOINT == 0):
+                    if (ghost.GetValue(i) and vtk.vtkDataSetAttributes.HIDDENPOINT == 0):
                         # point not hidden
                         p = pts.GetPoint(i)
                         if (p[0] < xm):
@@ -714,6 +774,7 @@ def genGrid(data1, data2, gm, grid=None, geo=None, genVectors=False,
     globalIds = numpy_to_vtk_wrapper(numpy.arange(0, vg.GetNumberOfCells()), deep=True)
     globalIds.SetName('GlobalIds')
     vg.GetCellData().SetGlobalIds(globalIds)
+    debugWriteGrid(vg, "vg")
 
     out = {"vtk_backend_grid": vg,
            "xm": xm,
@@ -882,7 +943,6 @@ def projectArray(w, projection, wc, geo=None):
         w.GetTypedTuple(i, tuple)
         geo.TransformPoint(tuple, tuple)
         w.SetTypedTuple(i, tuple)
-
 
 # Geo projection
 def project(pts, projection, wc, geo=None):
@@ -2038,7 +2098,7 @@ def getProjectedBoundsForWorldCoords(wc, proj, subdiv=50):
         pts.InsertNextPoint(xy[idx][0], xy[idx][1], 0.0)
 
     geoTransform, xformPts = project(pts, proj, wc)
-    setInfToValid(xformPts)
+    setInfToValid(xformPts, ghost=None)
     return xformPts.GetBounds()
 
 
