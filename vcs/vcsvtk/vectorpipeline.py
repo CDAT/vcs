@@ -224,7 +224,6 @@ class VectorPipeline(Pipeline2D):
         item.SetMappedColors(colorArray)
         area.GetDrawAreaItem().AddItem(item)
 
-
         # assume that self._data1.units has the proper vector units
         unitString = None
         if (hasattr(self._data1, 'units')):

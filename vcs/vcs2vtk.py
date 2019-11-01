@@ -945,6 +945,7 @@ def projectArray(w, projection, wc, geo=None):
         geo.TransformPoint(tuple, tuple)
         w.SetTypedTuple(i, tuple)
 
+
 # Geo projection
 def project(pts, projection, wc, geo=None):
     x1, x2, y1, y2 = wc
