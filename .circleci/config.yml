@@ -192,7 +192,7 @@ jobs:
       PY_VER: "py3"
       COVERAGE: "-c tests/coverage.json --coverage-from-egg"
       COVERAGE_PKGS: "coverage coveralls"
-      CUSTOM_CHANNELS: ""
+      CUSTOM_CHANNELS: "-c danlipsa"
     steps:
       - checkout
       - run: *setup_miniconda
