@@ -751,7 +751,7 @@ def genGrid(data1, data2, gm, grid=None, geo=None, genVectors=False,
                 xm = ym = sys.float_info.max
                 xM = yM = - sys.float_info.max
                 for i in range(pts.GetNumberOfPoints()):
-                    if (ghost.GetValue(i) and vtk.vtkDataSetAttributes.HIDDENPOINT == 0):
+                    if (ghost.GetValue(i) & vtk.vtkDataSetAttributes.HIDDENPOINT == 0):
                         # point not hidden
                         p = pts.GetPoint(i)
                         if (p[0] < xm):
