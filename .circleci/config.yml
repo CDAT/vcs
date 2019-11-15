@@ -167,7 +167,7 @@ jobs:
       WORKDIR: "workspace/test_linux_vcs_py2"
       OS: "linux-64"
       PY_VER: "py2"
-      CUSTOM_CHANNELS: ""
+      CUSTOM_CHANNELS: "-c danlipsa"
     steps:
       - checkout
       - run: *setup_miniconda
