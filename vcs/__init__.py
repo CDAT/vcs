@@ -102,7 +102,7 @@ next_canvas_id = 1
 import cdat_info  # noqa
 prefix = cdat_info.get_prefix()
 sample_data = cdat_info.get_sampledata_path()
-cdat_info.pingPCMDIdb("cdat", "vcs")
+
 from .utils import *  # noqa
 from . import colors  # noqa
 from . import Canvas  # noqa
