@@ -135,10 +135,6 @@ jobs:
          - store_artifacts:
              path: tests_png
              destination: tests_png
-         - persist_to_workspace:
-              root: .
-              paths:
-                 - macos_build/miniconda/conda-bld/osx-64/vcs*tar.bz2
 
    macos_vcs_py37:
       macos:
@@ -162,10 +158,6 @@ jobs:
          - store_artifacts:
              path: tests_png
              destination: tests_png
-         - persist_to_workspace:
-              root: .
-              paths:
-                 - macos_build/miniconda/conda-bld/osx-64/vcs*tar.bz2
 
    linux_vcs_py2:
       machine:
@@ -189,10 +181,6 @@ jobs:
          - store_artifacts:
              path: tests_png
              destination: tests_png
-         - persist_to_workspace:
-              root: .
-              paths:
-                 - linux_build/miniconda/conda-bld/linux-64/vcs*tar.bz2
 
    linux_vcs_py37:
       machine:
@@ -203,26 +191,24 @@ jobs:
          REPO_NAME: "vcs"
          ENV_NAME: "test_vcs"
          CONDA_PY_VER: "python>=3.7,<3.8"
-         COVERAGE: "-c /home/circleci/project/tests/coverage.json"
-         COVERAGE_PKGS: "coverage coveralls"
+         #COVERAGE: "-c /home/circleci/project/tests/coverage.json"
+         #COVERAGE_PKGS: "coverage coveralls"
       steps:
          - checkout
          - attach_workspace:
               at: .
+         - run: pwd
+         - run: ls -l
          - run: *setup_run_tests
          - run: *get_testdata
          - run: *run_tests
-         - run: *run_coveralls
+         #- run: *run_coveralls
          - store_artifacts:
               path: tests_html
               destination: tests_html
          - store_artifacts:
              path: tests_png
              destination: tests_png
-         - persist_to_workspace:
-              root: .
-              paths:
-                 - linux_build/miniconda/conda-bld/linux-64/vcs*tar.bz2
 
    upload:
       machine:
