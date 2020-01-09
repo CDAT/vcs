@@ -126,7 +126,6 @@ jobs:
          - checkout
          - attach_workspace:
               at: .
-         - run: *conda_build
          - run: *setup_run_tests
          - run: *get_testdata
          - run: *run_tests
@@ -154,7 +153,6 @@ jobs:
          - checkout
          - attach_workspace:
               at: .
-         - run: *conda_build
          - run: *setup_run_tests
          - run: *get_testdata
          - run: *run_tests
@@ -182,7 +180,6 @@ jobs:
          - checkout
          - attach_workspace:
               at: .
-         - run: *conda_build
          - run: *setup_run_tests
          - run: *get_testdata
          - run: *run_tests
@@ -212,7 +209,6 @@ jobs:
          - checkout
          - attach_workspace:
               at: .
-         - run: *conda_build
          - run: *setup_run_tests
          - run: *get_testdata
          - run: *run_tests
