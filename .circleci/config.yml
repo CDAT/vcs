@@ -191,8 +191,8 @@ jobs:
          REPO_NAME: "vcs"
          ENV_NAME: "test_vcs"
          CONDA_PY_VER: "python>=3.7,<3.8"
-         #COVERAGE: "-c /home/circleci/project/tests/coverage.json"
-         #COVERAGE_PKGS: "coverage coveralls"
+         COVERAGE: "-c tests/coverage.json --coverage-from-egg"
+         COVERAGE_PKGS: "coverage coveralls"
       steps:
          - checkout
          - attach_workspace:
@@ -202,7 +202,7 @@ jobs:
          - run: *setup_run_tests
          - run: *get_testdata
          - run: *run_tests
-         #- run: *run_coveralls
+         - run: *run_coveralls
          - store_artifacts:
               path: tests_html
               destination: tests_html
