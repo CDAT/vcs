@@ -32,8 +32,7 @@ aliases:
   - &setup_run_tests
     name: setup_run_tests
     environment:
-       #PKGS: "cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime nbformat numpy ghostscript vtk-cdat"
-       PKGS: "udunits2 testsrunner mesalib matplotlib image-compare cdtime nbformat ghostscript"
+       PKGS: "udunits2 testsrunner mesalib matplotlib image-compare cdtime nbformat"
        CHANNELS: "-c cdat/label/nightly -c conda-forge"
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
@@ -58,9 +57,9 @@ aliases:
   - &conda_upload
     name: conda_upload
     command: |
-       #if [[ $CIRCLE_BRANCH != "master" ]]; then
-       #   exit 0
-       #fi
+       if [[ $CIRCLE_BRANCH != "master" ]]; then
+          exit 0
+       fi
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
        UPLOAD_OPTIONS="-t $CONDA_UPLOAD_TOKEN upload -u $USER -l $LABEL"

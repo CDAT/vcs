@@ -74,11 +74,6 @@ class VectorPipeline(Pipeline2D):
         if self._gm.linecolor is not None:
             lcolor = self._gm.linecolor
 
-        arrow = vtk.vtkGlyphSource2D()
-        arrow.SetGlyphTypeToArrow()
-        arrow.SetOutputPointsPrecision(vtk.vtkAlgorithm.DOUBLE_PRECISION)
-        arrow.FilledOff()
-
         plotting_dataset_bounds = self.getPlottingBounds()
         x1, x2, y1, y2 = plotting_dataset_bounds
         vp = self._resultDict.get('ratio_autot_viewport',
@@ -120,12 +115,10 @@ class VectorPipeline(Pipeline2D):
 
         vectors = polydata.GetPointData().GetVectors()
 
-        if self._gm.scaletype == 'constant' or\
-           self._gm.scaletype == 'constantNNormalize' or\
-           self._gm.scaletype == 'constantNLinear':
-            scaleFactor = scale * self._gm.scale
-        else:
-            scaleFactor = 1.0
+        arrow = vtk.vtkGlyphSource2D()
+        arrow.SetGlyphTypeToArrow()
+        arrow.SetOutputPointsPrecision(vtk.vtkAlgorithm.DOUBLE_PRECISION)
+        arrow.FilledOff()
 
         glyphFilter = vtk.vtkGlyph2D()
         glyphFilter.SetInputArrayToProcess(1, 0, 0, 0, "vector")
@@ -138,6 +131,12 @@ class VectorPipeline(Pipeline2D):
 
         glyphFilter.SetScaleModeToScaleByVector()
 
+        if self._gm.scaletype == 'constant' or\
+           self._gm.scaletype == 'constantNNormalize' or\
+           self._gm.scaletype == 'constantNLinear':
+            scaleFactor = scale * self._gm.scale
+        else:
+            scaleFactor = 1.0
         maxNormInVp = None
         minNormInVp = None
         # Find the min and max vector magnitudes
@@ -181,6 +180,14 @@ class VectorPipeline(Pipeline2D):
         if (maxNormInVp is None):
             maxNormInVp = maxNorm * scaleFactor
             # minNormInVp is left None, as it is displayed only for linear scaling.
+        if self._vtkGeoTransform:
+            worldWidth = self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0]
+        else:
+            worldWidth = self._vtkDataSetBounds[1] - self._vtkDataSetBounds[0]
+        worldToViewportXScale = (vp[1] - vp[0]) / worldWidth
+        maxNormInVp *= worldToViewportXScale
+        if (minNormInVp):
+            minNormInVp *= worldToViewportXScale
 
         cmap = self.getColorMap()
         if isinstance(lcolor, (list, tuple)):
@@ -217,6 +224,15 @@ class VectorPipeline(Pipeline2D):
         item.SetMappedColors(colorArray)
         area.GetDrawAreaItem().AddItem(item)
 
+        # assume that self._data1.units has the proper vector units
+        unitString = None
+        if (hasattr(self._data1, 'units')):
+            unitString = self._data1.units
+
+        vcs.utils.drawVectorLegend(
+            self._context().canvas, self._template.legend, lcolor, lstyle, lwidth,
+            unitString, maxNormInVp, maxNorm, minNormInVp, minNorm, reference=self._gm.reference)
+
         kwargs = {
             'vtk_backend_grid': self._vtkDataSet,
             'dataset_bounds': self._vtkDataSetBounds,
@@ -234,24 +250,6 @@ class VectorPipeline(Pipeline2D):
         self._resultDict.update(self._context().renderTemplate(
             self._template, self._data1,
             self._gm, taxis, zaxis, **kwargs))
-
-        # assume that self._data1.units has the proper vector units
-        unitString = None
-        if (hasattr(self._data1, 'units')):
-            unitString = self._data1.units
-
-        if self._vtkGeoTransform:
-            worldWidth = self._vtkDataSetBoundsNoMask[1] - self._vtkDataSetBoundsNoMask[0]
-        else:
-            worldWidth = self._vtkDataSetBounds[1] - self._vtkDataSetBounds[0]
-
-        worldToViewportXScale = (vp[1] - vp[0]) / worldWidth
-        maxNormInVp *= worldToViewportXScale
-        if (minNormInVp):
-            minNormInVp *= worldToViewportXScale
-        vcs.utils.drawVectorLegend(
-            self._context().canvas, self._template.legend, lcolor, lstyle, lwidth,
-            unitString, maxNormInVp, maxNorm, minNormInVp, minNorm, reference=self._gm.reference)
 
         kwargs['xaxisconvert'] = self._gm.xaxisconvert
         kwargs['yaxisconvert'] = self._gm.yaxisconvert
