@@ -1,220 +1,248 @@
 version: 2
 
-checkout:
-  post:
-    - ./ci-support/checkout_merge_commit.sh
-
 aliases:
   - &setup_miniconda
     name: setup_miniconda
     command: |
-      mkdir -p workspace
-      git clone -b validateNightly git@github.com:CDAT/cdat workspace/cdat
-      python workspace/cdat/scripts/install_miniconda.py -w $WORKDIR -p 'py3'
+       mkdir -p workspace
+       git clone -b validateNightly git@github.com:CDAT/cdat workspace/cdat
+       # install_miniconda.py installs miniconda3 under $WORKDIR/miniconda
+       python workspace/cdat/scripts/install_miniconda.py -w $WORKDIR -p 'py3'
+
+  - &conda_rerender
+    name: conda_rerender
+    command: |
+       git clone https://github.com/CDAT/conda-recipes.git $WORKDIR/conda-recipes 
+       source $WORKDIR/miniconda/etc/profile.d/conda.sh
+       conda activate base
+       BUILD_SCRIPT="$WORKDIR/conda-recipes/build_tools/conda_build.py"
+       python $BUILD_SCRIPT -w $WORKDIR -l $LAST_STABLE -B 0 -p $PKG_NAME -b $CIRCLE_BRANCH --do_rerender
+
+  - &conda_build
+    name: conda_build
+    command: |
+       source $WORKDIR/miniconda/etc/profile.d/conda.sh
+       conda activate base
+       conda config --add channels conda-forge --force
+       conda config --add channels cdat/label/nightly --force
+       conda config --set channel_priority strict
+       BUILD_SCRIPT="$WORKDIR/conda-recipes/build_tools/conda_build.py"
+       python $BUILD_SCRIPT -w $WORKDIR -p $PKG_NAME --build_version $BUILD_VARIANT_VER --do_build
+
+  - &setup_run_tests
+    name: setup_run_tests
+    environment:
+       PKGS: "udunits2 testsrunner mesalib matplotlib image-compare cdtime nbformat"
+       CHANNELS: "-c cdat/label/nightly -c conda-forge"
+    command: |
+       source $WORKDIR/miniconda/etc/profile.d/conda.sh
+       conda activate base
+       conda create -y -n $ENV_NAME --use-local $CHANNELS "$CONDA_PY_VER" $PKG_NAME $PKGS $COVERAGE_PKGS
+       conda activate $ENV_NAME
+       conda list
 
   - &get_testdata
     name: get_testdata
     command: |
-      ls -l workspace
       git clone git://github.com/cdat/uvcdat-testdata
 
-  - &create_conda_env
-    name: create_conda_env
-    environment:
-       CHANNELS: "-c cdat/label/nightly -c conda-forge"
-       PKGS: "cdms2 cdat_info udunits2 testsrunner mesalib matplotlib image-compare genutil dv3d cdutil cdtime nbformat 'proj4<5' numpy ghostscript vtk-cdat 'libnetcdf=4.6.2'"
+  - &run_tests
+    name: run_tests
     command: |
-       export PATH=$WORKDIR/miniconda/bin:$PATH
-       conda config --set always_yes yes --set changeps1 no
-       #conda update -y -q conda
-       conda config --set anaconda_upload no
-       if [[ $PY_VER = "py2" ]]; then
-          conda create -q -n $PY_VER $CUSTOM_CHANNELS $CHANNELS $PKGS $TEMP_PKGS "python<3"
-       else
-          conda create -q -n $PY_VER $CUSTOM_CHANNELS $CHANNELS $PKGS $TEMP_PKGS "python=3.7" sphinxcontrib-websupport nbsphinx easydev $COVERAGE_PKGS
-       fi
-
-  - &setup_vcs
-    name: setup_vcs
-    command: |
-       export PATH=$WORKDIR/miniconda/bin:$PATH
-       source activate $PY_VER
-       python setup.py install
-
-  - &run_vcs_tests
-    name: run_vcs_tests
-    command: |
-       export PATH=$WORKDIR/miniconda/bin:$PATH
-       export CDAT_SETUP_PATH=${HOME}
-       source activate $PY_VER
-       # possibly turn off coverage
-       first=$(git cherry master -v | head -n1)
-       current=$(git log -n1 --pretty=oneline)
-       if [[ $first == $current || $current == *"do coverage"* || $CIRCLE_BRANCH == 'master'  ]]; then
-         echo "Running with coverage"
-         ACTUAL_COVERAGE=$COVERAGE
-       else
-         echo "Running w/o coverage"
-         ACTUAL_COVERAGE=""
-       fi
-       python run_tests.py -n 4 -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $ACTUAL_COVERAGE
-       RESULT=$?
-       echo "**** $PY_VER test result: "${RESULT}
-       if [[ $PY_VER = 'py3' ]]; then
-          cd docs
-          make doctest
-          DOC_RESULT=$?
-          echo "*** $PY_VER doc test result: "${DOC_RESULT}
-          RESULT=$(( $RESULT + $DOC_RESULT ))
-       fi
-       exit $RESULT
+       source $WORKDIR/miniconda/etc/profile.d/conda.sh
+       conda activate $ENV_NAME
+       python run_tests.py -H -v2 -n 2 $COVERAGE
+       conda deactivate
 
   - &conda_upload
     name: conda_upload
-    environment:
-       CHANNELS: "-c cdat/label/nightly -c conda-forge"
     command: |
-       if [[ $CIRCLE_BRANCH != 'master' ]]; then
+       if [[ $CIRCLE_BRANCH != "master" ]]; then
           exit 0
        fi
-       export PATH=${HOME}/project/$WORKDIR/miniconda/bin:$PATH
-       conda install conda-build anaconda-client
-       conda config --set anaconda_upload no
-       export CONDA_BLD_PATH=`pwd`/conda_build
-       git clone git://github.com/cdat/conda-recipes
-       cd conda-recipes
-       if [[ -d vcs ]]; then
-          rm -rf vcs
-       fi
-       ln -s ../recipe vcs
-       export PKG_NAME=vcs
-       export USER=cdat
-       export VERSION=8.2
-       export LABEL=nightly
-       python ./prep_for_build.py -l $VERSION
-       conda build $PKG_NAME $CHANNELS
-       anaconda -t $CONDA_UPLOAD_TOKEN upload -u $USER -l $LABEL $CONDA_BLD_PATH/noarch/$PKG_NAME-$VERSION.`date +%Y*`0.tar.bz2 --force
+       source $WORKDIR/miniconda/etc/profile.d/conda.sh
+       conda activate base
+       UPLOAD_OPTIONS="-t $CONDA_UPLOAD_TOKEN upload -u $USER -l $LABEL"
+       anaconda $UPLOAD_OPTIONS $WORKDIR/miniconda/conda-bld/noarch/$PKG_NAME-$VERSION.`date +%Y*`0.tar.bz2 --force
 
   - &run_coveralls
     name: run_coveralls
     command: |
-       export PATH=$WORKDIR/miniconda/bin:$PATH
-       source activate $PY_VER
-       # possibly turn off coverage
-       first=$(git cherry master -v | head -n1)
-       current=$(git log -n1 --pretty=oneline)
-       if [[ $first == $current || $current != *"no_coverage"*  ]]; then
-         coveralls
-       else
-         echo "Commit turned off coverage"
-       fi
-       source deactivate
+       source $WORKDIR/miniconda/etc/profile.d/conda.sh
+       conda activate $ENV_NAME
+       coveralls
+       conda deactivate
 
 jobs:
-  macos_vcs_py2:
-    macos:
-      xcode: "11.1.0"
-    resource_class: large
-    environment:
-      WORKDIR: "workspace/test_macos_vcs_py2"
-      OS: "osx-64"
-      PY_VER: "py2"
-      TEMP_PKGS: "'ffmpeg>4' 'libpng>1.6.34'"
-      CUSTOM_CHANNELS: ""
-    steps:
-      - checkout
-      - run: *setup_miniconda
-      - run: *get_testdata
-      - run: *create_conda_env
-      - run: *setup_vcs
-      - run: *run_vcs_tests
-      - store_artifacts:
-          path: tests_html
-          destination: tests_html
-      - store_artifacts:
-          path: tests_png
-          destination: tests_png
+   macos_setup:
+      macos:
+         xcode: "11.3.0"
+      environment:
+         WORKDIR: /Users/distiller/project/macos_build
+         PKG_NAME: "vcs"
+         REPO_NAME: "vcs"
+         LAST_STABLE: "8.2"
+         BUILD_VARIANT_VER: "noarch"
+      steps:
+         - checkout
+         - run: *setup_miniconda
+         - run: *conda_rerender
+         - run: *conda_build
+         - persist_to_workspace:
+              root: .
+              paths: 
+                 - macos_build
 
-  macos_vcs_py3:
-    macos:
-      xcode: "11.1.0"
-    environment:
-      WORKDIR: "workspace/test_macos_vcs_py3"
-      OS: "osx-64"
-      PY_VER: "py3"
-      TEMP_PKGS: "'ffmpeg>4' 'libpng>1.6.34'"
-      CUSTOM_CHANNELS: ""
-    steps:
-      - checkout
-      - run: *setup_miniconda
-      - run: *get_testdata
-      - run: *create_conda_env
-      - run: *setup_vcs
-      - run: *run_vcs_tests
-      - store_artifacts:
-          path: tests_html
-          destination: tests_html
-      - store_artifacts:
-          path: tests_png
-          destination: tests_png
+   linux_setup:
+      machine:
+         image: circleci/classic:latest
+      environment:
+         WORKDIR: /home/circleci/project/linux_build
+         PKG_NAME: "vcs"
+         REPO_NAME: "vcs"
+         LAST_STABLE: "8.2"
+         BUILD_VARIANT_VER: "noarch"
+      steps:
+         - checkout
+         - run: *setup_miniconda
+         - run: *conda_rerender
+         - run: *conda_build
+         - persist_to_workspace:
+              root: .
+              paths:
+                 - linux_build
 
-  linux_vcs_py2:
-    docker:
-      - image: circleci/python:latest
-    resource_class: large
-    environment:
-      WORKDIR: "workspace/test_linux_vcs_py2"
-      OS: "linux-64"
-      PY_VER: "py2"
-      CUSTOM_CHANNELS: "-c danlipsa"
-    steps:
-      - checkout
-      - run: *setup_miniconda
-      - run: *get_testdata
-      - run: *create_conda_env
-      - run: *setup_vcs
-      - run: *run_vcs_tests
-      - store_artifacts:
-          path: tests_html
-          destination: tests_html
-      - store_artifacts:
-          path: tests_png
-          destination: tests_png
+   macos_vcs_py2:
+      macos:
+         xcode: "11.3.0"
+      environment:
+         WORKDIR: /Users/distiller/project/macos_build
+         PKG_NAME: "vcs"
+         REPO_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python<3"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *get_testdata
+         - run: *run_tests
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
 
-  linux_vcs_py3:
-    docker:
-      - image: circleci/python:latest
-    resource_class: large
-    environment:
-      WORKDIR: "workspace/test_linux_vcs_py3"
-      OS: "linux-64"
-      PY_VER: "py3"
-      COVERAGE: "-c tests/coverage.json --coverage-from-egg"
-      COVERAGE_PKGS: "coverage coveralls"
-      CUSTOM_CHANNELS: "-c danlipsa"
-    steps:
-      - checkout
-      - run: *setup_miniconda
-      - run: *get_testdata
-      - run: *create_conda_env
-      - run: *setup_vcs
-      - run: *run_vcs_tests
-      - run: *run_coveralls
-      - run: *conda_upload
-      - store_artifacts:
-          path: tests_html
-          destination: tests_html
-      - store_artifacts:
-          path: tests_png
-          destination: tests_png
+   macos_vcs_py37:
+      macos:
+         xcode: "11.3.0"
+      environment:
+         WORKDIR: /Users/distiller/project/macos_build
+         PKG_NAME: "vcs"
+         REPO_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.7,<3.8"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *get_testdata
+         - run: *run_tests
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   linux_vcs_py2:
+      machine:
+         image: circleci/classic:latest
+      environment:
+         WORKDIR: /home/circleci/project/linux_build
+         PKG_NAME: "vcs"
+         REPO_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python<3"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *get_testdata
+         - run: *run_tests
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   linux_vcs_py37:
+      machine:
+         image: circleci/classic:latest
+      environment:
+         WORKDIR: /home/circleci/project/linux_build
+         PKG_NAME: "vcs"
+         REPO_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.7,<3.8"
+         #COVERAGE: "-c tests/coverage.json --coverage-from-egg"
+         #COVERAGE_PKGS: "coverage coveralls"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *get_testdata
+         - run: *run_tests
+         #- run: *run_coveralls
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   upload:
+      machine:
+         image: circleci/classic:latest
+      environment:
+         WORKDIR: /home/circleci/project/linux_build
+         PKG_NAME: "vcs"
+         VERSION: "8.2"
+         USER: "cdat"
+         LABEL: "nightly"
+      steps:
+         - attach_workspace:
+              at: .
+         - run: pwd
+         - run: *conda_upload
 
 workflows:
-  version: 2
-  vcs:
-    jobs:
-      #- macos_vcs_py2
-      - linux_vcs_py2
-      - linux_vcs_py3
-      - macos_vcs_py3:
-          requires:
-            - linux_vcs_py3
+   version: 2
+   vcs:
+      jobs:
+         - macos_setup
+         - linux_setup
+         - macos_vcs_py2:
+              requires:
+                 - macos_setup
+         - macos_vcs_py37:
+              requires:
+                 - macos_setup
+         - linux_vcs_py2:
+              requires:
+                 - linux_setup
+         - linux_vcs_py37:
+              requires:
+                 - linux_setup
+         - upload:
+              requires:
+                 - macos_vcs_py2
+                 - macos_vcs_py37
+                 - linux_vcs_py2
+                 - linux_vcs_py37

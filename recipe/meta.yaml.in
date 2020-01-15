@@ -10,26 +10,28 @@ build:
   number: @BUILD_NUMBER@
   noarch: python
   script: python setup.py install
-
  
 requirements:
   build:
     - python
     - setuptools
     - cdat_info
-    - pip
   run:
     - python
     - cdat_info
     - genutil
     - dv3d
-    - libcdms >=3.1.2
-    - vtk-cdat >=8.2.0.8.2
-    - cdms2 >=3.1.4
+    - libcdms
+    - vtk-cdat
+    - cdms2
     - cdutil
     - requests
-    - numpy
+    - {{ pin_compatible('numpy') }}
     - ghostscript
+
+test:
+  commands:
+    - python -c "import vcs"
 
 about:
     home:  http://github.com/cdat/vcs
