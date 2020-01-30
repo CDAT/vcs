@@ -74,6 +74,14 @@ def get_update_array_kw(disp, array, widgets, debug_target=None):
     return kw
 
 
+class IPythonDisplay(object):
+    def __init__(self, png):
+        self.png = png
+
+    def _repr_png_(self):
+        return self.png
+
+
 class Dp(vcs.bestMatch):
 
     """
@@ -306,10 +314,15 @@ class Dp(vcs.bestMatch):
         return widgets
 
     def _repr_png_(self):
-        st = None
+        SLIDERS_ENABLED = False
         debug = False
         if not HAVE_IPYWIDGETS:
             debug = False
+        tmp = tempfile.mktemp() + ".png"
+        self._parent.png(tmp)
+        f = open(tmp, "rb")
+        st = f.read()
+        f.close()
         if HAVE_IPY:
             sidecar_on = True
             if HAVE_SIDECAR:
@@ -329,9 +342,13 @@ class Dp(vcs.bestMatch):
                         layout={'border': '1px solid black'})
                 else:
                     self._parent._display_target_out = None
-                widgets = self.generate_sliders(debug)
-                vbox = ipywidgets.VBox(
-                    widgets + [self._parent._display_target_image])
+                if SLIDERS_ENABLED:
+                    widgets = self.generate_sliders(debug)
+                    self._parent._display_target_image.value = st
+                    vbox = ipywidgets.VBox(
+                        widgets + [self._parent._display_target_image])
+                else:
+                    vbox = IPythonDisplay(st)
                 if HAVE_SIDECAR and sidecar_on:
                     with self._parent._display_target:
                         IPython.display.clear_output()
@@ -341,18 +358,7 @@ class Dp(vcs.bestMatch):
                     IPython.display.display(vbox)
             else:
                 IPython.display.clear_output()
-            tmp = tempfile.mktemp() + ".png"
-            self._parent.png(tmp)
-            f = open(tmp, "rb")
-            st = f.read()
-            f.close()
-            self._parent._display_target_image.value = st
             return None
-        tmp = tempfile.mktemp() + ".png"
-        self._parent.png(tmp)
-        f = open(tmp, "rb")
-        st = f.read()
-        f.close()
         return st
 # TODO: html,json,jpeg,png,svg,latex
 
