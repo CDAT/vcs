@@ -33,7 +33,7 @@ aliases:
     name: setup_run_tests
     environment:
        PKGS: "udunits2 testsrunner mesalib matplotlib image-compare cdtime nbformat"
-       DOC_PKGS: "sphinxcontrib-websupport nbsphinx"
+       DOC_PKGS: "sphinxcontrib-websupport nbsphinx libtiff"
        CHANNELS: "-c cdat/label/nightly -c conda-forge"
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
@@ -57,6 +57,14 @@ aliases:
        RESULT=$?
        conda deactivate
        exit $RESULT
+
+  - &conda_env_export
+    name: conda_env_expprt
+    command: |
+       source $WORKDIR/miniconda/etc/profile.d/conda.sh
+       conda activate $ENV_NAME
+       conda env export > $WORKDIR/env.yml
+       cat $WORKDIR/env.yml
 
   - &conda_upload
     name: conda_upload
@@ -212,6 +220,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
          - run: *make_doc_test
