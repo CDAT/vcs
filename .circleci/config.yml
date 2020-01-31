@@ -33,11 +33,12 @@ aliases:
     name: setup_run_tests
     environment:
        PKGS: "udunits2 testsrunner mesalib matplotlib image-compare cdtime nbformat"
+       DOC_PKGS: "sphinxcontrib-websupport nbsphinx"
        CHANNELS: "-c cdat/label/nightly -c conda-forge"
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
-       conda create -y -n $ENV_NAME --use-local $CHANNELS "$CONDA_PY_VER" $PKG_NAME $PKGS $COVERAGE_PKGS
+       conda create -y -n $ENV_NAME --use-local $CHANNELS "$CONDA_PY_VER" $PKG_NAME $PKGS $DOC_PKGS $COVERAGE_PKGS
        conda activate $ENV_NAME
        conda list
 
@@ -51,8 +52,11 @@ aliases:
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate $ENV_NAME
-       python run_tests.py -H -v2 -n 2 $COVERAGE
+       #python run_tests.py -H -v2 -n 2 $COVERAGE
+       python run_tests.py -n 4 -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $COVERAGE
+       RESULT=$?
        conda deactivate
+       exit $RESULT
 
   - &conda_upload
     name: conda_upload
@@ -72,6 +76,17 @@ aliases:
        conda activate $ENV_NAME
        coveralls
        conda deactivate
+
+  - &make_doc_test
+    name: make_doc_test
+    command: |
+       source $WORKDIR/miniconda/etc/profile.d/conda.sh
+       conda activate $ENV_NAME
+       cd docs
+       make doctest
+       DOC_RESULT=$?
+       echo "*** $PY_VER doc test result: "${DOC_RESULT}
+       exit $DOC_RESULT
 
 jobs:
    macos_setup:
@@ -199,6 +214,7 @@ jobs:
          - run: *setup_run_tests
          - run: *get_testdata
          - run: *run_tests
+         - run: *make_doc_test
          #- run: *run_coveralls
          - store_artifacts:
               path: tests_html
