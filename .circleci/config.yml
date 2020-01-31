@@ -212,6 +212,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - run: conda env export
          - run: *get_testdata
          - run: *run_tests
          - run: *make_doc_test
