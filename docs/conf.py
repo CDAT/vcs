@@ -35,7 +35,7 @@ tmp_notebooks_dir = os.path.join(tmp_dir, "Jupyter-notebooks")
 os.system("git clone https://github.com/CDAT/Jupyter-notebooks.git {d}".format(d=tmp_dir))
 
 jupyter_htmls = glob.glob(os.path.join(tmp_notebooks_dir, "vcs", "*", "*html"))
-jupyter_html_dirs = glob.glob(os.path.join("Jupyter-notebooks", "vcs", "*"))
+jupyter_html_dirs = glob.glob(os.path.join(tmp_notebooks_dir, "vcs", "*"))
 
 notebook_htmls_dir = os.path.join("static")
 if not os.path.exists(notebook_htmls_dir):
@@ -67,7 +67,8 @@ html_theme = 'agogo'
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('..'))
+# sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath(os.path.join("..", "vcs")))
 
 
 # -- General configuration -----------------------------------------------------
