@@ -40,6 +40,7 @@ aliases:
        conda activate base
        conda create -y -n $ENV_NAME --use-local $CHANNELS "$CONDA_PY_VER" $PKG_NAME $PKGS $DOC_PKGS $COVERAGE_PKGS
        conda activate $ENV_NAME
+       conda update nb_conda nb_conda_kernels
        conda list
 
   - &get_testdata
