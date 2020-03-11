@@ -33,7 +33,7 @@ aliases:
     name: setup_run_tests
     environment:
        PKGS: "udunits2 testsrunner mesalib matplotlib image-compare cdtime nbformat"
-       DOC_PKGS: "sphinxcontrib-websupport nbsphinx libtiff"
+       DOC_PKGS: "sphinxcontrib-websupport nbsphinx libtiff jupyter_client"
        CHANNELS: "-c cdat/label/nightly -c conda-forge"
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
