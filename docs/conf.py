@@ -18,21 +18,16 @@ import subprocess
 import glob
 import shlex
 import shutil
-import tempfile
 
 # First we need to create the jupyter links from gms to Notebooks
 
 #
 # copy jupyter notebook htmls
 #
-#if not os.path.exists("Jupyter-notebooks"):
-#    os.system("git clone https://github.com/CDAT/Jupyter-notebooks.git")
+if not os.path.exists("Jupyter-notebooks"):
+    os.system("git clone https://github.com/CDAT/Jupyter-notebooks.git")
 
-tmp_dir = tempfile.mkdtemp()
-print("XXX tmp_dir: {d}".format(d=tmp_dir))
-
-tmp_notebooks_dir = os.path.join(tmp_dir, "Jupyter-notebooks")
-os.system("git clone https://github.com/CDAT/Jupyter-notebooks.git {d}".format(d=tmp_dir))
+tmp_notebooks_dir = os.path.join(os.getcwd(), "Jupyter-notebooks")
 
 jupyter_htmls = glob.glob(os.path.join(tmp_notebooks_dir, "vcs", "*", "*html"))
 jupyter_html_dirs = glob.glob(os.path.join(tmp_notebooks_dir, "vcs", "*"))
@@ -52,8 +47,6 @@ for j in jupyter_html_dirs:
         print("XXX copying from {j}".format(j=j))
         print("XXX dest_dir: {d}".format(d=dest_dir))
         shutil.copytree(j, dest_dir)
-
-shutil.rmtree(tmp_dir)
 
 #import sphinx_bootstrap_theme
 
