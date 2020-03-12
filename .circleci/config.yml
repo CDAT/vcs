@@ -6,7 +6,7 @@ aliases:
     command: |
        mkdir -p workspace
        git clone -b validateNightly git@github.com:CDAT/cdat workspace/cdat
-       # install_miniconda.py installs miniconda3 under $WORKDIR/miniconda
+       ### install_miniconda.py installs miniconda3 under $WORKDIR/miniconda
        python workspace/cdat/scripts/install_miniconda.py -w $WORKDIR -p 'py3'
 
   - &conda_rerender
