@@ -25,7 +25,7 @@ import shutil
 # copy jupyter notebook htmls
 #
 if not os.path.exists("Jupyter-notebooks"):
-    os.system("git clone https://github.com/CDAT/Jupyter-notebooks.git")
+    os.system("git clone -b fix_misc https://github.com/CDAT/Jupyter-notebooks.git")
 
 tmp_notebooks_dir = os.path.join(os.getcwd(), "Jupyter-notebooks")
 
@@ -36,10 +36,6 @@ notebook_htmls_dir = os.path.join("static")
 if not os.path.exists(notebook_htmls_dir):
     os.makedirs(notebook_htmls_dir)
 
-# TEMPORARY
-curr_dir = os.getcwd()
-print("XXX curr_dir: {d}".format(d=curr_dir))
-
 for j in jupyter_html_dirs:
     dir_name = os.path.basename(j)
     dest_dir = os.path.join(notebook_htmls_dir, dir_name)
@@ -47,6 +43,15 @@ for j in jupyter_html_dirs:
         print("XXX copying from {j}".format(j=j))
         print("XXX dest_dir: {d}".format(d=dest_dir))
         shutil.copytree(j, dest_dir)
+
+shutil.rmtree(tmp_notebooks_dir)
+# Jupyter directory contains old notebooks which (some of them) have been migrated 
+# cdat/Jupyter-notebooks repo, but not all, so for now, move this out of docs 
+# directory so that 'make doctest' does not try to parse the notebooks under it.
+shutil.move("Jupyter", os.path.join(os.getcwd(), ".."))
+
+# need to set timeout since parsing some of the notebooks took a long time.
+nbsphinx_timeout = 300
 
 #import sphinx_bootstrap_theme
 
