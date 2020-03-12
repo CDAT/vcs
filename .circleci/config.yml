@@ -17,6 +17,7 @@ aliases:
        conda activate base
        BUILD_SCRIPT="$WORKDIR/conda-recipes/build_tools/conda_build.py"
        python $BUILD_SCRIPT -w $WORKDIR -l $LAST_STABLE -B 0 -p $PKG_NAME -b $CIRCLE_BRANCH --do_rerender
+    no_output_timeout: 5m
 
   - &conda_build
     name: conda_build
@@ -38,7 +39,7 @@ aliases:
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
-       conda create -y -n $ENV_NAME --use-local $CHANNELS "$CONDA_PY_VER" $PKG_NAME $PKGS $DOC_PKGS $COVERAGE_PKGS
+       conda create -y -n $ENV_NAME --use-local $CHANNELS "$CONDA_PY_VER" $PKG_NAME $PKGS $DOC_PKGS $COVERAGE_PKGS $ADD_PKGS
        conda activate $ENV_NAME
        conda install -c conda-forge nb_conda nb_conda_kernels
        conda list
@@ -214,6 +215,7 @@ jobs:
          REPO_NAME: "vcs"
          ENV_NAME: "test_vcs"
          CONDA_PY_VER: "python>=3.7,<3.8"
+         ADD_PKGS: "vcsaddons"
          #COVERAGE: "-c tests/coverage.json --coverage-from-egg"
          #COVERAGE_PKGS: "coverage coveralls"
       steps:
