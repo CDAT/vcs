@@ -33,6 +33,7 @@ aliases:
        mv $WORKDIR/vcs/recipe/temp.meta.yaml.in $WORKDIR/vcs/recipe/meta.yaml
        cat $WORKDIR/vcs/recipe/meta.yaml
        cd $WORKDIR/vcs
+       echo "recipe_dir: recipe" > $WORKDIR/vcs/conda-forge.yml
        conda smithy rerender
 
   - &conda_build
@@ -127,7 +128,7 @@ jobs:
       steps:
          - checkout
          - run: *setup_miniconda
-         - run: *conda_rerender_macos
+         - run: *conda_rerender
          - run: *conda_build
          - persist_to_workspace:
               root: .
