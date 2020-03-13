@@ -137,7 +137,6 @@ jobs:
          - checkout
          - run: *setup_miniconda
          - run: *conda_rerender
-         - run: *conda_rerender_1
          - run: *conda_build
          - persist_to_workspace:
               root: .
