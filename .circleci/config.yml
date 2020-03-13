@@ -17,7 +17,19 @@ aliases:
        conda activate base
        BUILD_SCRIPT="$WORKDIR/conda-recipes/build_tools/conda_build.py"
        python $BUILD_SCRIPT -w $WORKDIR -l $LAST_STABLE -B 0 -p $PKG_NAME -b $CIRCLE_BRANCH --do_rerender
-    no_output_timeout: 30m
+
+  - &conda_rerender_macos
+    name: conda_rerender_macos
+    command: |
+       git clone -b install_requests https://github.com/CDAT/conda-recipes.git $WORKDIR/conda-recipes 
+       source $WORKDIR/miniconda/etc/profile.d/conda.sh
+       conda activate base
+       conda config --set always_yes yes
+       conda config --add channels conda-forge --force
+       conda config --set channel_priority strict
+       conda install -n base -c conda-forge conda-build anaconda-client conda-smithy conda-verify conda-forge-pinning conda-forge-build-setup conda-forge-ci-setup
+       conda config --set anaconda_upload no
+       cat /home/circleci/project/linux_build/vcs/recipe/meta.yaml
 
   - &conda_build
     name: conda_build
@@ -101,7 +113,7 @@ aliases:
 jobs:
    macos_setup:
       macos:
-         xcode: "11.3.0"
+         xcode: "11.3.1"
       environment:
          WORKDIR: /Users/distiller/project/macos_build
          PKG_NAME: "vcs"
@@ -139,7 +151,7 @@ jobs:
 
    macos_vcs_py2:
       macos:
-         xcode: "11.3.0"
+         xcode: "11.3.1"
       environment:
          WORKDIR: /Users/distiller/project/macos_build
          PKG_NAME: "vcs"
@@ -162,7 +174,7 @@ jobs:
 
    macos_vcs_py37:
       macos:
-         xcode: "11.3.0"
+         xcode: "11.3.1"
       environment:
          WORKDIR: /Users/distiller/project/macos_build
          PKG_NAME: "vcs"
