@@ -1,0 +1,42 @@
+package:
+    name: vcs
+    version: "8.2.2020.03.13.18.37.ga0bd8ad"
+
+source:
+    git_rev: fix_readthedocs
+    git_url: git://github.com/cdat/vcs.git
+
+build:
+  number: 0
+  noarch: python
+  script: python setup.py install
+ 
+requirements:
+  build:
+    - python
+    - setuptools
+    - cdat_info
+  run:
+    - python
+    - cdat_info
+    - genutil
+    - dv3d
+    - libcdms
+    - vtk-cdat
+    - cdms2
+    - cdutil
+    - requests
+    - {{ pin_compatible('numpy') }}
+    - ghostscript
+
+test:
+  commands:
+    - python -c "import vcs"
+
+about:
+    home:  http://github.com/cdat/vcs
+    summary: VCS Allows scientists to produce highly customized plots. Everything can be precisely and logically controlled. VCS is specialized toward Earth-science plots.
+    license: BSD
+    license_file: bsd-3-clause.txt
+
+

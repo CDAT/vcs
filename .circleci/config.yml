@@ -29,7 +29,10 @@ aliases:
        conda config --set channel_priority strict
        conda install -n base -c conda-forge conda-build anaconda-client conda-smithy conda-verify conda-forge-pinning conda-forge-build-setup conda-forge-ci-setup
        conda config --set anaconda_upload no
-       cat /home/circleci/project/linux_build/vcs/recipe/meta.yaml
+       mv $WORKDIR/vcs/recipe/temp.meta.yaml.in $WORKDIR/vcs/recipe/meta.yaml
+       cat $WORKDIR/vcs/recipe/meta.yaml
+       cd $WORKDIR/vcs
+       conda smithy rerender
 
   - &conda_build
     name: conda_build
@@ -123,7 +126,7 @@ jobs:
       steps:
          - checkout
          - run: *setup_miniconda
-         - run: *conda_rerender
+         - run: *conda_rerender_macos
          - run: *conda_build
          - persist_to_workspace:
               root: .
