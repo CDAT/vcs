@@ -19,14 +19,6 @@ aliases:
        BUILD_SCRIPT="$WORKDIR/conda-recipes/build_tools/conda_build.py"
        python $BUILD_SCRIPT -w $WORKDIR -l $LAST_STABLE -B 0 -p $PKG_NAME -b $CIRCLE_BRANCH --do_rerender
 
-  - &conda_rerender_1
-    name: conda_rerender_1
-    command: |
-       source $WORKDIR/miniconda/etc/profile.d/conda.sh
-       conda activate base
-       cd $WORKDIR/vcs
-       conda smithy rerender
-
   - &conda_rerender_macos
     name: conda_rerender_macos
     command: |
