@@ -12,15 +12,15 @@ aliases:
   - &conda_rerender
     name: conda_rerender
     command: |
-       git clone -b install_requests.1 https://github.com/CDAT/conda-recipes.git $WORKDIR/conda-recipes 
+       git clone -b install_requests.2 https://github.com/CDAT/conda-recipes.git $WORKDIR/conda-recipes 
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
        conda config --set anaconda_upload no
        BUILD_SCRIPT="$WORKDIR/conda-recipes/build_tools/conda_build.py"
        python $BUILD_SCRIPT -w $WORKDIR -l $LAST_STABLE -B 0 -p $PKG_NAME -b $CIRCLE_BRANCH --do_rerender
 
-  - &conda_rerender_macos
-    name: conda_rerender_macos
+  - &conda_rerender_macos_OLD
+    name: conda_rerender_macos_OLD
     command: |
        git clone -b install_requests https://github.com/CDAT/conda-recipes.git $WORKDIR/conda-recipes 
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
