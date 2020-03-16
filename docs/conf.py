@@ -49,6 +49,8 @@ shutil.rmtree(tmp_notebooks_dir)
 # need to set timeout since parsing some of the notebooks took a long time.
 nbsphinx_timeout = 300
 
+nbsphinx_kernel_name = 'python3'
+
 #import sphinx_bootstrap_theme
 
 """
