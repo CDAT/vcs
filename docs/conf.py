@@ -45,10 +45,6 @@ for j in jupyter_html_dirs:
         shutil.copytree(j, dest_dir)
 
 shutil.rmtree(tmp_notebooks_dir)
-# Jupyter directory contains old notebooks which (some of them) have been migrated 
-# cdat/Jupyter-notebooks repo, but not all, so for now, move this out of docs 
-# directory so that 'make doctest' does not try to parse the notebooks under it.
-shutil.rmtree(os.path.join(os.getcwd(), "Jupyter"))
 
 # need to set timeout since parsing some of the notebooks took a long time.
 nbsphinx_timeout = 300
