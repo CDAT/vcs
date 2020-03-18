@@ -16,8 +16,8 @@ dependencies:
   - bzip2=1.0.8=h516909a_2
   - ca-certificates=2019.11.28=hecc5488_0
   - cdat_info=8.2=py_7
-  - cdms2=3.1.4=py37h34d3450_8
   - cdp=1.6.0=py_0
+  - cdms2=3.1.4=py37h34d3450_8
   - cdtime=3.1.3=py37h1ac8016_0
   - cdutil=8.2=py_2
   - certifi=2019.11.28=py37hc8dfbb8_1
@@ -96,6 +96,7 @@ dependencies:
   - libdrs_f=3.1.2=h322d3c2_5
   - libedit=3.1.20170329=hf8c457e_1001
   - libffi=3.2.1=he1b5a44_1007
+  - libgcc=7.2.0=h69d50b8_2
   - libgcc-ng=9.2.0=h24d8f2e_2
   - libgfortran-ng=7.3.0=hdf63c60_5
   - libgomp=9.2.0=h24d8f2e_2
@@ -200,6 +201,7 @@ dependencies:
   - udunits2=2.2.27.6=h4e0c4b3_1001
   - urllib3=1.25.7=py37hc8dfbb8_1
   - vcs=8.2=py_2
+  - vcsaddons=8.2=py37h516909a_1
   - vtk-cdat=8.2.0.8.2=py37_mesalibhead77ed_0
   - wcwidth=0.1.8=py_0
   - webencodings=0.5.1=py_1
