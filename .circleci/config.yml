@@ -20,24 +20,6 @@ aliases:
        BUILD_SCRIPT="$WORKDIR/conda-recipes/build_tools/conda_build.py"
        python $BUILD_SCRIPT -w $WORKDIR -l $LAST_STABLE -B 0 -p $PKG_NAME -b $CIRCLE_BRANCH --do_rerender
 
-  - &conda_rerender_macos_OLD
-    name: conda_rerender_macos_OLD
-    command: |
-       git clone -b install_requests https://github.com/CDAT/conda-recipes.git $WORKDIR/conda-recipes 
-       source $WORKDIR/miniconda/etc/profile.d/conda.sh
-       conda activate base
-       conda config --set always_yes yes
-       conda config --add channels conda-forge --force
-       conda config --set channel_priority strict
-       conda install -n base -c conda-forge conda-build anaconda-client conda-smithy conda-verify conda-forge-pinning conda-forge-build-setup conda-forge-ci-setup
-       conda config --set anaconda_upload no
-       git clone -b fix_readthedocs https://github.com/CDAT/vcs.git $WORKDIR/vcs
-       mv $WORKDIR/vcs/recipe/temp.meta.yaml.in $WORKDIR/vcs/recipe/meta.yaml
-       cat $WORKDIR/vcs/recipe/meta.yaml
-       cd $WORKDIR/vcs
-       echo "recipe_dir: recipe" > $WORKDIR/vcs/conda-forge.yml
-       conda smithy rerender
-
   - &conda_build
     name: conda_build
     command: |
@@ -74,7 +56,6 @@ aliases:
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate $ENV_NAME
-       #python run_tests.py -H -v2 -n 2 $COVERAGE
        python run_tests.py -n 4 -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $COVERAGE
        RESULT=$?
        conda deactivate
@@ -275,22 +256,22 @@ workflows:
    vcs:
       jobs:
          - macos_setup
-         #- linux_setup
+         - linux_setup
          - macos_vcs_py2:
               requires:
                  - macos_setup
          - macos_vcs_py37:
               requires:
                  - macos_setup
-         #- linux_vcs_py2:
-         #     requires:
-         #        - linux_setup
-         #- linux_vcs_py37:
-         #     requires:
-         #        - linux_setup
-         #- upload:
-         #     requires:
-         #        - macos_vcs_py2
-         #        - macos_vcs_py37
-         #        - linux_vcs_py2
-         #        - linux_vcs_py37
+         - linux_vcs_py2:
+              requires:
+                 - linux_setup
+         - linux_vcs_py37:
+              requires:
+                 - linux_setup
+         - upload:
+              requires:
+                 - macos_vcs_py2
+                 - macos_vcs_py37
+                 - linux_vcs_py2
+                 - linux_vcs_py37
