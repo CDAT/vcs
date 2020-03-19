@@ -12,7 +12,6 @@ aliases:
   - &conda_rerender
     name: conda_rerender
     command: |
-       #git clone -b install_requests.2 https://github.com/CDAT/conda-recipes.git $WORKDIR/conda-recipes 
        git clone https://github.com/CDAT/conda-recipes.git $WORKDIR/conda-recipes 
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base

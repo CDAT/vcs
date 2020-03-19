@@ -40,8 +40,6 @@ for j in jupyter_html_dirs:
     dir_name = os.path.basename(j)
     dest_dir = os.path.join(notebook_htmls_dir, dir_name)
     if not os.path.exists(dest_dir):
-        print("XXX copying from {j}".format(j=j))
-        print("XXX dest_dir: {d}".format(d=dest_dir))
         shutil.copytree(j, dest_dir)
 
 shutil.rmtree(tmp_notebooks_dir)
