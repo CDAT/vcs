@@ -3420,12 +3420,10 @@ class Canvas(vcs.bestMatch):
                         if i not in axes_changed2:
                             axes_changed2[i] = ax
             try:
-                # Axis changes here
-                convertedok = False
-                #ax.toRelativeTime(
-                #    check_mthd.datawc_timeunits,
-                #    check_mthd.datawc_calendar)
-                #convertedok = True
+                check_mthd.datawc_calendar = None
+                ax.toRelativeTime(
+                    check_mthd.datawc_timeunits, check_mthd.datawc_calendar)
+                convertedok = True
             except Exception:
                 convertedok = False
             # and check_mthd.g_name not in ["G1d",]: #used to be Gsp
@@ -3559,6 +3557,7 @@ class Canvas(vcs.bestMatch):
                             axes_changed2[i] = ax
                         break
             try:
+                check_mthd.datawc_calendar = None
                 ax.toRelativeTime(
                     check_mthd.datawc_timeunits,
                     check_mthd.datawc_calendar)
