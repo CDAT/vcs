@@ -256,21 +256,21 @@ workflows:
       jobs:
          - macos_setup
          - linux_setup
-         - macos_vcs_py2:
-              requires:
-                 - macos_setup
+         #- macos_vcs_py2:
+         #     requires:
+         #        - macos_setup
          - macos_vcs_py37:
               requires:
                  - macos_setup
-         - linux_vcs_py2:
-              requires:
-                 - linux_setup
+         #- linux_vcs_py2:
+         #     requires:
+         #        - linux_setup
          - linux_vcs_py37:
               requires:
                  - linux_setup
          - upload:
               requires:
-                 - macos_vcs_py2
+                 #- macos_vcs_py2
                  - macos_vcs_py37
-                 - linux_vcs_py2
+                 #- linux_vcs_py2
                  - linux_vcs_py37
