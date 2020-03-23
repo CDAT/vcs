@@ -25,6 +25,7 @@ class NBTest(unittest.TestCase):
         script = "{p}/bin/generate_cdat_notebook.py".format(p=sys.prefix)
         #cmd = "generate_cdat_notebook.py -i test_vcs_generate_simple_plot.png -o test_vcs_generate_simple_plot"
         cmd = "{s} -i test_vcs_generate_simple_plot.png -o test_vcs_generate_simple_plot".format(s=script)
+        print("COMMAND: {c}".format(c=cmd))
         code, msg = run_command(cmd)
         self.assertEqual(code, 0)
         self.assertTrue(os.path.exists("test_vcs_generate_simple_plot.ipynb"))
