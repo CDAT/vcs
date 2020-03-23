@@ -33,7 +33,7 @@ aliases:
   - &setup_run_tests
     name: setup_run_tests
     environment:
-       PKGS: "udunits2 testsrunner mesalib matplotlib image-compare cdtime nbformat ipywidgets"
+       PKGS: "udunits2 testsrunner mesalib matplotlib image-compare cdtime nbformat ipywidgets cdat_info"
        DOC_PKGS: "sphinxcontrib-websupport nbsphinx libtiff jupyter_client jupyterlab"
        CHANNELS: "-c cdat/label/nightly -c conda-forge"
     command: |
