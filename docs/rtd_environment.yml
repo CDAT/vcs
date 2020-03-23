@@ -111,7 +111,7 @@ dependencies:
   - libstdcxx-ng=9.2.0=hdf63c60_2
   - libtiff=4.1.0=hc7e4089_5
   - libuuid=2.32.1=h14c3975_1000
-  - libwebp=1.1.0=h56121f0_2
+  - libwebp=1.1.0=h516909a_3
   - libwebp-base=1.1.0=2
   - libxcb=1.13=h14c3975_1002
   - libxkbcommon=0.10.0=he1b5a44_0
