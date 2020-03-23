@@ -2,6 +2,7 @@ import cdat_info
 import unittest
 import nbformat
 import os
+import sys
 import vcs
 from testsrunner import run_command
 
