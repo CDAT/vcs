@@ -59,19 +59,9 @@ API index
 
    API/vcs
 
-Jupyter Notebooks
------------------
+Tutorial - Jupyter Notebooks
+----------------------------
 .. toctree::
-  :maxdepth: 0
+   :maxdepth: 2
 
-  Jupyter/Basic_VCS_demo.ipynb
-  Jupyter/boxfill.ipynb
-  Jupyter/streamlines.ipynb
-  Jupyter/Taylor_Diagrams.ipynb
-  Jupyter/Animations.ipynb
-  Jupyter/Color_map_create_own.ipynb
-  Jupyter/Colormap_Tutorial.ipynb
-  Jupyter/Mathematical_Expressions_and_Symbols.ipynb
-  Jupyter/Shading_With_Patterns_in_VCS.ipynb
-  Jupyter/Logo_Control.ipynb
-  Jupyter/Masking_Data_Land-Sea_masks.ipynb
+   notebooks

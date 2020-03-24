@@ -15,6 +15,7 @@ aliases:
        git clone https://github.com/CDAT/conda-recipes.git $WORKDIR/conda-recipes 
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
+       conda config --set anaconda_upload no
        BUILD_SCRIPT="$WORKDIR/conda-recipes/build_tools/conda_build.py"
        python $BUILD_SCRIPT -w $WORKDIR -l $LAST_STABLE -B 0 -p $PKG_NAME -b $CIRCLE_BRANCH --do_rerender
 
@@ -32,14 +33,16 @@ aliases:
   - &setup_run_tests
     name: setup_run_tests
     environment:
-       PKGS: "udunits2 testsrunner mesalib matplotlib image-compare cdtime nbformat"
-       DOC_PKGS: "sphinxcontrib-websupport nbsphinx libtiff"
+       PKGS: "udunits2 testsrunner mesalib matplotlib image-compare cdtime nbformat ipywidgets cdat_info"
+       DOC_PKGS: "sphinxcontrib-websupport nbsphinx libtiff jupyter_client jupyterlab"
        CHANNELS: "-c cdat/label/nightly -c conda-forge"
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
-       conda create -y -n $ENV_NAME --use-local $CHANNELS "$CONDA_PY_VER" $PKG_NAME $PKGS $DOC_PKGS $COVERAGE_PKGS
+       conda create -y -n $ENV_NAME --use-local $CHANNELS "$CONDA_PY_VER" $PKG_NAME $PKGS $DOC_PKGS $COVERAGE_PKGS $ADD_PKGS
        conda activate $ENV_NAME
+       conda config --set always_yes yes
+       conda install -c conda-forge nb_conda nb_conda_kernels
        conda list
 
   - &get_testdata
@@ -52,7 +55,6 @@ aliases:
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate $ENV_NAME
-       #python run_tests.py -H -v2 -n 2 $COVERAGE
        python run_tests.py -n 4 -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $COVERAGE
        RESULT=$?
        conda deactivate
@@ -99,7 +101,7 @@ aliases:
 jobs:
    macos_setup:
       macos:
-         xcode: "11.3.0"
+         xcode: "11.3.1"
       environment:
          WORKDIR: /Users/distiller/project/macos_build
          PKG_NAME: "vcs"
@@ -137,7 +139,7 @@ jobs:
 
    macos_vcs_py2:
       macos:
-         xcode: "11.3.0"
+         xcode: "11.3.1"
       environment:
          WORKDIR: /Users/distiller/project/macos_build
          PKG_NAME: "vcs"
@@ -160,7 +162,7 @@ jobs:
 
    macos_vcs_py37:
       macos:
-         xcode: "11.3.0"
+         xcode: "11.3.1"
       environment:
          WORKDIR: /Users/distiller/project/macos_build
          PKG_NAME: "vcs"
@@ -213,6 +215,7 @@ jobs:
          REPO_NAME: "vcs"
          ENV_NAME: "test_vcs"
          CONDA_PY_VER: "python>=3.7,<3.8"
+         ADD_PKGS: "vcsaddons"
          #COVERAGE: "-c tests/coverage.json --coverage-from-egg"
          #COVERAGE_PKGS: "coverage coveralls"
       steps:
@@ -253,21 +256,21 @@ workflows:
       jobs:
          - macos_setup
          - linux_setup
-         - macos_vcs_py2:
-              requires:
-                 - macos_setup
+         #- macos_vcs_py2:
+         #     requires:
+         #        - macos_setup
          - macos_vcs_py37:
               requires:
                  - macos_setup
-         - linux_vcs_py2:
-              requires:
-                 - linux_setup
+         #- linux_vcs_py2:
+         #     requires:
+         #        - linux_setup
          - linux_vcs_py37:
               requires:
                  - linux_setup
          - upload:
               requires:
-                 - macos_vcs_py2
+                 #- macos_vcs_py2
                  - macos_vcs_py37
-                 - linux_vcs_py2
+                 #- linux_vcs_py2
                  - linux_vcs_py37

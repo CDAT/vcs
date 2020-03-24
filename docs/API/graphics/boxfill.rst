@@ -6,6 +6,3 @@ boxfill
 .. automodule:: vcs.boxfill
    :members:
 
-Jupyter Notebooks
-^^^^^^^^^^^^^^^^^
-.. include:: boxfill_notebooks.rst
