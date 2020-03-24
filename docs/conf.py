@@ -48,7 +48,6 @@ shutil.rmtree(tmp_notebooks_dir)
 nbsphinx_timeout = 300
 
 nbsphinx_kernel_name = 'python3'
-nbsphinx_allow_errors = True
 
 #import sphinx_bootstrap_theme
 
