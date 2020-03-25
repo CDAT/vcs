@@ -1214,7 +1214,7 @@ def checkProjParameters(self, name, value):
 
 def checkCalendar(self, name, value):
     checkName(self, name, value)
-    if value and not isinstance(value, (int, long)):
+    if not isinstance(value, (int, long)):
         checkedRaise(
             self,
             value,
