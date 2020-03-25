@@ -3426,9 +3426,7 @@ class Canvas(vcs.bestMatch):
                     convert_calendar = None
                 if not convert_calendar:
                     convert_calendar = check_mthd.datawc_calendar
-                if not hasattr(ax, 'units') or ax.units == '':
-                    convert_units = check_mthd.datawc_timeunits
-                ax.toRelativeTime(convert_units, convert_calendar)
+                ax.toRelativeTime(check_mthd.datawc_timeunits, convert_calendar)
                 convertedok = True
             except Exception:
                 convertedok = False
@@ -3569,9 +3567,7 @@ class Canvas(vcs.bestMatch):
                     convert_calendar = None
                 if not convert_calendar:
                     convert_calendar = check_mthd.datawc_calendar
-                if not hasattr(ax, 'units') or ax.units == '':
-                    convert_units = check_mthd.datawc_timeunits
-                ax.toRelativeTime(convert_units, convert_calendar)
+                ax.toRelativeTime(check_mthd.datawc_timeunits, convert_calendar)
                 convertedok = True
             except Exception:
                 convertedok = False
