@@ -3420,9 +3420,15 @@ class Canvas(vcs.bestMatch):
                         if i not in axes_changed2:
                             axes_changed2[i] = ax
             try:
-                check_mthd.datawc_calendar = None
-                ax.toRelativeTime(
-                    check_mthd.datawc_timeunits, check_mthd.datawc_calendar)
+                try:
+                    convert_calendar = ax.getCalendar()
+                except:
+                    convert_calendar = None
+                if not convert_calendar:
+                    convert_calendar = check_mthd.datawc_calendar
+                if not hasattr(ax, 'units') or ax.units == '':
+                    convert_units = check_mthd.datawc_timeunits
+                ax.toRelativeTime(convert_units, convert_calendar)
                 convertedok = True
             except Exception:
                 convertedok = False
@@ -3557,10 +3563,15 @@ class Canvas(vcs.bestMatch):
                             axes_changed2[i] = ax
                         break
             try:
-                check_mthd.datawc_calendar = None
-                ax.toRelativeTime(
-                    check_mthd.datawc_timeunits,
-                    check_mthd.datawc_calendar)
+                try:
+                    convert_calendar = ax.getCalendar()
+                except:
+                    convert_calendar = None
+                if not convert_calendar:
+                    convert_calendar = check_mthd.datawc_calendar
+                if not hasattr(ax, 'units') or ax.units == '':
+                    convert_units = check_mthd.datawc_timeunits
+                ax.toRelativeTime(convert_units, convert_calendar)
                 convertedok = True
             except Exception:
                 convertedok = False

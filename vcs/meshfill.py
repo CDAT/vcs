@@ -643,7 +643,7 @@ class Gfm(vcs.bestMatch):
             self._mesh = 0
             self._wrap = [0., 0.]
             self._datawc_timeunits = "days since 2000"
-            self._datawc_calendar = 135441
+            self._datawc_calendar = cdtime.DefaultCalendar
             self._colormap = None
         else:
             if isinstance(Gfm_name_src, Gfm):

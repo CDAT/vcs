@@ -690,7 +690,7 @@ class G1d(vcs.bestMatch):
             self._markercolor = (0.0, 0.0, 0.0, 100.0)
             self._markersize = 1
             self._datawc_timeunits = "days since 2000"
-            self._datawc_calendar = 135441
+            self._datawc_calendar = cdtime.DefaultCalendar
             self._colormap = None
         else:
             if isinstance(name_src, G1d):

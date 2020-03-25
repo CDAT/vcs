@@ -63,7 +63,7 @@ def matchVcsColor(r, g, b, colormap="default"):
 
 
 def checkedRaise(self, value, ex, err):
-    """raise an exception if vcs_doValitdation is on"""
+    """raise an exception if vcs_doValidation is on"""
     if vcs._doValidation:
         if err is not None:
             raise ex(err)
@@ -1214,7 +1214,7 @@ def checkProjParameters(self, name, value):
 
 def checkCalendar(self, name, value):
     checkName(self, name, value)
-    if not isinstance(value, (int, long)):
+    if value and not isinstance(value, (int, long)):
         checkedRaise(
             self,
             value,
