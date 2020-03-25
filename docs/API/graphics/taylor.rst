@@ -6,7 +6,3 @@ taylor
 .. automodule:: vcs.taylor
    :members:
 
-Jupyter Notebooks
-^^^^^^^^^^^^^^^^^
-
-.. include:: taylor_notebooks.rst

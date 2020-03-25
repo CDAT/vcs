@@ -2,6 +2,7 @@ import cdat_info
 import unittest
 import nbformat
 import os
+import sys
 import vcs
 from testsrunner import run_command
 
@@ -21,7 +22,8 @@ class NBTest(unittest.TestCase):
     def test_generate_notebook_from_png(self):
         run_command("python tests/share/vcs_generate_simple_plot.py")
         metadata = vcs.png_read_metadata("test_vcs_generate_simple_plot.png")
-        cmd = "generate_cdat_notebook.py -i test_vcs_generate_simple_plot.png -o test_vcs_generate_simple_plot"
+        script = "{p}/bin/generate_cdat_notebook.py".format(p=sys.prefix)
+        cmd = "python {s} -i test_vcs_generate_simple_plot.png -o test_vcs_generate_simple_plot".format(s=script)
         code, msg = run_command(cmd)
         self.assertEqual(code, 0)
         self.assertTrue(os.path.exists("test_vcs_generate_simple_plot.ipynb"))

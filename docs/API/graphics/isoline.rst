@@ -6,7 +6,3 @@ isoline
 .. automodule:: vcs.isoline
    :members:
 
-Jupyter Notebooks
-^^^^^^^^^^^^^^^^^
-
-.. include:: isoline_notebooks.rst

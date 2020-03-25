@@ -6,7 +6,3 @@ vector
 .. automodule:: vcs.vector
    :members:
 
-Jupyter Notebooks
-^^^^^^^^^^^^^^^^^
-
-.. include:: vector_notebooks.rst

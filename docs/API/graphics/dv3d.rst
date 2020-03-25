@@ -69,7 +69,3 @@ The 3d_vector graphics method provides the :term:`Vector` slice plot constituent
 .. automodule:: vcs.dv3d
    :members:
 
-Jupyter Notebooks
-^^^^^^^^^^^^^^^^^
-
-.. include:: dv3d_notebooks.rst

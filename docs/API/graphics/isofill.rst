@@ -6,7 +6,3 @@ isofill
 .. automodule:: vcs.isofill
    :members:
 
-Jupyter Notebooks
-^^^^^^^^^^^^^^^^^
-
-.. include:: isofill_notebooks.rst
