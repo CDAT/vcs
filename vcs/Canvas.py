@@ -3422,7 +3422,7 @@ class Canvas(vcs.bestMatch):
             try:
                 try:
                     convert_calendar = ax.getCalendar()
-                except:
+                except Exception:
                     convert_calendar = None
                 if not convert_calendar:
                     convert_calendar = check_mthd.datawc_calendar
