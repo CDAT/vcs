@@ -619,7 +619,7 @@ class Gfi(vcs.bestMatch):
             self._levels = ([1.0000000200408773e+20, 1.0000000200408773e+20],)
             self._legend = None
             self._datawc_timeunits = "days since 2000"
-            self._datawc_calendar = None
+            self._datawc_calendar = cdtime.DefaultCalendar
             self._colormap = None
         else:
             if isinstance(Gfi_name_src, Gfi):

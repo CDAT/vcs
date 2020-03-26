@@ -506,7 +506,7 @@ class Gfb(vcs.bestMatch):
             self._color_2 = 255
             self._boxfill_type = "linear"
             self._datawc_timeunits = 'days since 2000'
-            self._datawc_calendar = None
+            self._datawc_calendar = cdtime.DefaultCalendar
             self._legend = None
             self._colormap = None
         else:

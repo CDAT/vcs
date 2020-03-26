@@ -1214,13 +1214,13 @@ def checkProjParameters(self, name, value):
 
 def checkCalendar(self, name, value):
     checkName(self, name, value)
-    if value and not isinstance(value, (int, long)):
+    if not isinstance(value, (int, long)):
         checkedRaise(
             self,
             value,
             ValueError,
             'cdtime calendar value must be an integer')
-    if value and value not in [cdtime.Calendar360, cdtime.ClimCalendar,
+    if value not in [cdtime.Calendar360, cdtime.ClimCalendar,
                      cdtime.ClimLeapCalendar, cdtime.DefaultCalendar,
                      cdtime.GregorianCalendar, cdtime.JulianCalendar,
                      cdtime.MixedCalendar, cdtime.NoLeapCalendar,

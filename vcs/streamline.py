@@ -780,7 +780,7 @@ class Gs(vcs.bestMatch):
             self._linewidth = None
             self._reference = 1.e20
             self._datawc_timeunits = "days since 2000"
-            self._datawc_calendar = None
+            self._datawc_calendar = cdtime.DefaultCalendar
             self._colormap = None
             self._levels = ([1.0000000200408773e+20, 1.0000000200408773e+20],)
             self._ext_1 = False

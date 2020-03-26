@@ -3420,16 +3420,16 @@ class Canvas(vcs.bestMatch):
                         if i not in axes_changed2:
                             axes_changed2[i] = ax
             try:
-                if check_mthd.datawc_calendar is None:
-                    try:
-                        check_mthd.datawc_calendar = ax.getCalendar()
-                    except:
-                        check_mthd.datawc_calendar = cdtime.DefaultCalendar
-                ax.toRelativeTime(check_mthd.datawc_timeunits, check_mthd.datawc_calendar)
+                try:
+                    convert_calendar = ax.getCalendar()
+                except:
+                    convert_calendar = None
+                if not convert_calendar:
+                    convert_calendar = check_mthd.datawc_calendar
+                ax.toRelativeTime(check_mthd.datawc_timeunits, convert_calendar)
                 convertedok = True
             except Exception:
                 convertedok = False
-
             # and check_mthd.g_name not in ["G1d",]: #used to be Gsp
             if (check_mthd.xticlabels1 ==
                     '*' or check_mthd.xticlabels2 == '*') and convertedok:
@@ -3561,12 +3561,13 @@ class Canvas(vcs.bestMatch):
                             axes_changed2[i] = ax
                         break
             try:
-                if check_mthd.datawc_calendar is None:
-                    try:
-                        check_mthd.datawc_calendar = ax.getCalendar()
-                    except:
-                        check_mthd.datawc_calendar = cdtime.DefaultCalendar
-                ax.toRelativeTime(check_mthd.datawc_timeunits, check_mthd.datawc_calendar)
+                try:
+                    convert_calendar = ax.getCalendar()
+                except:
+                    convert_calendar = None
+                if not convert_calendar:
+                    convert_calendar = check_mthd.datawc_calendar
+                ax.toRelativeTime(check_mthd.datawc_timeunits, convert_calendar)
                 convertedok = True
             except Exception:
                 convertedok = False
