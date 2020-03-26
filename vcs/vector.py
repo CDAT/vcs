@@ -684,7 +684,7 @@ class Gv(vcs.bestMatch):
             self._type = "arrows"
             self._reference = 1.e20
             self._datawc_timeunits = "days since 2000"
-            self._datawc_calendar = cdtime.DefaultCalendar
+            self._datawc_calendar = None
             self._colormap = None
             self._scaletype = self.scaleoptions[4]
             self._scalerange = [0.1, 1.0]
