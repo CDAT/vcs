@@ -38,9 +38,9 @@ class TestVCSMeanValue(basevcstest.VCSBaseTest):
 
         # Graphics and plot steps
         template = vcs.createtemplate()
-        x = vcs.init(bg=True, geometry=(1200, 900))
+        self.x = vcs.init(bg=True, geometry=(1200, 900))
 
         # Plot image and check against reference
-        x.clear()
-        x.plot(datamskd_departures_ts_corrected, template)
+        self.x.clear()
+        self.x.plot(datamskd_departures_ts_corrected, template)
         self.checkImage("test_vcs_mean_value_correct.png")
