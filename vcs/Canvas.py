@@ -3426,7 +3426,8 @@ class Canvas(vcs.bestMatch):
                     convert_calendar = None
                 if not convert_calendar:
                     convert_calendar = check_mthd.datawc_calendar
-                ax.toRelativeTime(check_mthd.datawc_timeunits, convert_calendar)
+                ax.toRelativeTime(
+                    check_mthd.datawc_timeunits, convert_calendar)
                 convertedok = True
             except Exception:
                 convertedok = False
@@ -3567,7 +3568,8 @@ class Canvas(vcs.bestMatch):
                     convert_calendar = None
                 if not convert_calendar:
                     convert_calendar = check_mthd.datawc_calendar
-                ax.toRelativeTime(check_mthd.datawc_timeunits, convert_calendar)
+                ax.toRelativeTime(
+                    check_mthd.datawc_timeunits, convert_calendar)
                 convertedok = True
             except Exception:
                 convertedok = False
@@ -4944,7 +4946,8 @@ class Canvas(vcs.bestMatch):
             metadata["provenance"] = provenance
             args["metadata"] = metadata
         elif provenance is not False:
-            raise RuntimeError("provenance to vcs png must be boolean or dict, you passed: {}".format(provenance))
+            raise RuntimeError(
+                "provenance to vcs png must be boolean or dict, you passed: {}".format(provenance))
         return self.backend.png(
             file, W, H, units, draw_white_background, **args)
     png.__doc__ = png.__doc__ % (xmldocs.output_file,
