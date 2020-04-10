@@ -22,7 +22,7 @@ requirements:
     - genutil
     - dv3d
     - libcdms
-    - 'libnetcdf = 4.7.3'
+    - libnetcdf = 4.7.3
     - vtk-cdat
     - cdms2
     - cdutil
