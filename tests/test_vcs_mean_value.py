@@ -10,7 +10,6 @@ import requests
 
 class TestVCSMeanValue(basevcstest.VCSBaseTest):
     def test_MeanValue(self):
-        # Download data
         filename = 'tas_Amon_IPSL-CM5A-LR_1pctCO2_r1i1p1_185001-198912.nc'
         if not os.path.exists(filename):
             r = requests.get(
@@ -43,4 +42,4 @@ class TestVCSMeanValue(basevcstest.VCSBaseTest):
         # Plot image and check against reference
         self.x.clear()
         self.x.plot(datamskd_departures_ts_corrected, template)
-        self.checkImage("test_vcs_mean_value_correct.png")
+        self.checkImage("test_vcs_plot_mean_value.png")
