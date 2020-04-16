@@ -33,13 +33,19 @@ aliases:
   - &setup_run_tests
     name: setup_run_tests
     environment:
-       PKGS: "udunits2 testsrunner mesalib matplotlib image-compare cdtime nbformat ipywidgets cdat_info"
+       #PKGS: "udunits2 testsrunner mesalib matplotlib image-compare cdtime nbformat ipywidgets cdat_info"
+       PKGS: "udunits2 testsrunner matplotlib image-compare cdtime nbformat ipywidgets cdat_info"
        DOC_PKGS: "sphinxcontrib-websupport nbsphinx libtiff jupyter_client jupyterlab"
        CHANNELS: "-c cdat/label/nightly -c conda-forge"
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
-       conda create -y -n $ENV_NAME --use-local $CHANNELS "$CONDA_PY_VER" $PKG_NAME $PKGS $DOC_PKGS $COVERAGE_PKGS $ADD_PKGS
+       if [[ `uname` == "Linux" ]]; then
+          MESA="mesalib=18.3.1"
+       else
+          MESA="mesalib=17.3.9"
+       fi
+       conda create -y -n $ENV_NAME --use-local $CHANNELS "$CONDA_PY_VER" $PKG_NAME $MESA $PKGS $DOC_PKGS $COVERAGE_PKGS $ADD_PKGS
        conda activate $ENV_NAME
        conda config --set always_yes yes
        conda install -c conda-forge nb_conda nb_conda_kernels
