@@ -42,4 +42,4 @@ class TestVCSMeanValue(basevcstest.VCSBaseTest):
         # Plot image and check against reference
         self.x.clear()
         self.x.plot(datamskd_departures_ts_corrected, template)
-        self.checkImage("test_vcs_plot_mean_value.png")
+        self.checkImage("test_vcs_plot_mean_value")
