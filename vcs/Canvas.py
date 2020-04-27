@@ -2847,7 +2847,7 @@ class Canvas(vcs.bestMatch):
         # It adds one for bg and passes those on to Canvas.plot as its sixth
         # arguments.
 
-        # First of all let's remember which elets we have before comin in here
+        # First of all let's remember which elements we have before coming in here
         # so that anything added (temp objects) can be removed at clear
         # time
         original_elts = {}
@@ -3420,9 +3420,14 @@ class Canvas(vcs.bestMatch):
                         if i not in axes_changed2:
                             axes_changed2[i] = ax
             try:
+                try:
+                    convert_calendar = ax.getCalendar()
+                except Exception:
+                    convert_calendar = None
+                if not convert_calendar:
+                    convert_calendar = check_mthd.datawc_calendar
                 ax.toRelativeTime(
-                    check_mthd.datawc_timeunits,
-                    check_mthd.datawc_calendar)
+                    check_mthd.datawc_timeunits, convert_calendar)
                 convertedok = True
             except Exception:
                 convertedok = False
@@ -3557,9 +3562,14 @@ class Canvas(vcs.bestMatch):
                             axes_changed2[i] = ax
                         break
             try:
+                try:
+                    convert_calendar = ax.getCalendar()
+                except Exception:
+                    convert_calendar = None
+                if not convert_calendar:
+                    convert_calendar = check_mthd.datawc_calendar
                 ax.toRelativeTime(
-                    check_mthd.datawc_timeunits,
-                    check_mthd.datawc_calendar)
+                    check_mthd.datawc_timeunits, convert_calendar)
                 convertedok = True
             except Exception:
                 convertedok = False
@@ -4936,7 +4946,8 @@ class Canvas(vcs.bestMatch):
             metadata["provenance"] = provenance
             args["metadata"] = metadata
         elif provenance is not False:
-            raise RuntimeError("provenance to vcs png must be boolean or dict, you passed: {}".format(provenance))
+            raise RuntimeError(
+                "provenance to vcs png must be boolean or dict, you passed: {}".format(provenance))
         return self.backend.png(
             file, W, H, units, draw_white_background, **args)
     png.__doc__ = png.__doc__ % (xmldocs.output_file,

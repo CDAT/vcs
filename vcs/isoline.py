@@ -925,7 +925,7 @@ class Gi(vcs.bestMatch):
             self._textcolors = None
             self._level = [[0., 1.0000000200408773e+20], ]
             self._datawc_timeunits = "days since 2000"
-            self._datawc_calendar = 135441
+            self._datawc_calendar = cdtime.DefaultCalendar
             self._clockwise = [0, ]
             self._scale = [1., ]
             self._angle = [35.]

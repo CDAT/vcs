@@ -63,7 +63,7 @@ def matchVcsColor(r, g, b, colormap="default"):
 
 
 def checkedRaise(self, value, ex, err):
-    """raise an exception if vcs_doValitdation is on"""
+    """raise an exception if vcs_doValidation is on"""
     if vcs._doValidation:
         if err is not None:
             raise ex(err)
