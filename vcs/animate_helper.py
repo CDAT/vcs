@@ -946,11 +946,11 @@ class AnimationController(animate_obj_old):
         alen = None
         truncated = False
         vcs_ai = list(self.animate_info)
-        for I in vcs_ai:
+        for ai in vcs_ai:
             if alen is None:
-                alen = I[1][0].shape[self.create_params.axis]
+                alen = ai[1][0].shape[self.create_params.axis]
             else:
-                len_tmp = I[1][0].shape[self.create_params.axis]
+                len_tmp = ai[1][0].shape[self.create_params.axis]
                 if len_tmp != alen:
                     alen = numpy.minimum(alen, len_tmp)
                     truncated = True
@@ -963,29 +963,29 @@ class AnimationController(animate_obj_old):
         for i in range(alen):
             # y.clear()
             frameArgs = []
-            for I in vcs_ai:
-                d = I[0]
+            for ai in vcs_ai:
+                d = ai[0]
                 kw = {}
-                n = len(I[1][0].shape)
-                for j, id in enumerate(I[1][0].getAxisIds()):
+                n = len(ai[1][0].shape)
+                for j, id in enumerate(ai[1][0].getAxisIds()):
                     if j != self.create_params.axis and j < n - 2:
                         kw[id] = slice(0, 1)
                     elif j == self.create_params.axis:
                         kw[id] = slice(i, i + 1)
                     else:
                         break
-                args = [I[1][0](**kw), ]
-                if I[1][1] is not None:
+                args = [ai[1][0](**kw), ]
+                if ai[1][1] is not None:
                     kw = {}
-                    n = len(I[1][1].shape)
-                    for j, id in enumerate(I[1][1].getAxisIds()):
+                    n = len(ai[1][1].shape)
+                    for j, id in enumerate(ai[1][1].getAxisIds()):
                         if j != self.create_params.axis and j < n - 2:
                             kw[id] = slice(0, 1)
                         elif j == self.create_params.axis:
                             kw[id] = slice(i, i + 1)
                         else:
                             break
-                    args.append(I[1][1](**kw))
+                    args.append(ai[1][1](**kw))
                 args += [d.template, d.g_type, d.g_name]
                 frameArgs.append(args)
             all_args.append(frameArgs)

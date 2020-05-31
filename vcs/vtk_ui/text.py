@@ -270,18 +270,18 @@ class Label(Widget, DraggableMixin, ClickableMixin):
             return self.x - w
 
     @left.setter
-    def left(self, l):
+    def left(self, lf):
         halign = self.actor.GetTextProperty().GetJustificationAsString()
         if halign == "Left":
-            self.x = l
+            self.x = lf
 
         dpi = self.interactor.GetRenderWindow().GetDPI()
         w, h = text_dimensions(self.text, self.actor.GetTextProperty(), dpi)
         if halign == "Centered":
-            self.x = l + math.floor(w / 2.)
+            self.x = lf + math.floor(w / 2.)
 
         if halign == "Right":
-            self.x = l + w
+            self.x = lf + w
 
     @property
     def top(self):

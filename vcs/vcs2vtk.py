@@ -1927,11 +1927,11 @@ def prepGlyph(g, marker, screenGeom, index=0):
         # Lines first
         # scale_json_values = s / 25
         scale_json_values = finalScale * 5
-        for l in params["line"]:
-            line = genPoly(list(zip(*l)), pts, filled=False, scale=scale_json_values)
+        for ln in params["line"]:
+            line = genPoly(list(zip(*ln)), pts, filled=False, scale=scale_json_values)
             lines.InsertNextCell(line)
-        for l in params["poly"]:
-            line = genPoly(list(zip(*l)), pts, filled=True, scale=scale_json_values)
+        for ln in params["poly"]:
+            line = genPoly(list(zip(*ln)), pts, filled=True, scale=scale_json_values)
             polys.InsertNextCell(line)
         geo, pts = project(pts, marker.projection, marker.worldcoordinate)
         pd.SetPoints(pts)

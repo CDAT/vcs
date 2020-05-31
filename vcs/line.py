@@ -324,7 +324,7 @@ class Tl(vcs.bestMatch):
         ###########################################################
         #                                                         #
         if Tl_name in list(vcs.elements["line"].keys()):
-            raise ValueError("lineobject '%' already exists" % Tl_name)
+            raise ValueError("lineobject '{n}' already exists".format(n=Tl_name))
         self._name = Tl_name
         if isinstance(Tl_name_src, Tl):
             Tl_name_src = Tl_name_src.name

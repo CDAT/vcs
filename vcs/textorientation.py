@@ -250,8 +250,7 @@ class To(vcs.bestMatch):
         #                                                           #
         if To_name in list(vcs.elements["textorientation"].keys()):
             raise ValueError(
-                "textorientation object '%' already exists" %
-                To_name)
+                "textorientation object '{n}' already exists".format(n=To_name))
         self._name = To_name
         if isinstance(To_name_src, To):
             To_name_src = To_name_src.name

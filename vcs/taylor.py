@@ -1849,8 +1849,8 @@ class Gtd(vcs.bestMatch):
             levs[.97] = ''
             levs[.98] = ''
             ks = list(levs.keys())
-            for l in ks:
-                levs[-l] = ''
+            for lev in ks:
+                levs[-lev] = ''
         else:
             levs = self.cmtics1
 

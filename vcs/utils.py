@@ -658,23 +658,23 @@ def _scriptrun(script, canvas=None):
     f = open(script, 'r')
     # browse through the file to look for taylordiagram/python graphics methods
     processing = False  # found a taylor graphic method
-    for l in f:
-        if l[:6] == "color(" and canvas is not None:
-            canvas.setcolormap(l.strip()[6:-1])
-        elif l[:2] in ["P_", "L_", "C_"] or \
-                l[:3] in ["Tm_", "Gv_", "Gi_", "Tl_", "To_", "Tt_", "Tf_", ] or\
-                l[:4] in ['GXy_', 'GYx_', 'GXY_', 'GSp_',
-                          'Gtd_', 'Gfb_', "Gfm_", "Gfi_"] or \
-                l[:5] in ["Proj_", ]:
+    for ln in f:
+        if ln[:6] == "color(" and canvas is not None:
+            canvas.setcolormap(ln.strip()[6:-1])
+        elif ln[:2] in ["P_", "L_", "C_"] or \
+                ln[:3] in ["Tm_", "Gv_", "Gi_", "Tl_", "To_", "Tt_", "Tf_", ] or\
+                ln[:4] in ['GXy_', 'GYx_', 'GXY_', 'GSp_',
+                           'Gtd_', 'Gfb_', "Gfm_", "Gfi_"] or \
+                ln[:5] in ["Proj_", ]:
             # We found a graphic method
             processing = True
             opened = 0
             closed = 0
             s = ""
         if processing:
-            s += l.strip()
-            opened += l.count("(")
-            closed += l.count(")")
+            s += ln.strip()
+            opened += ln.count("(")
+            closed += ln.count(")")
             if closed == opened:
                 # ok we read the whole Graphic method
                 vcs.process_src_element(s)
@@ -976,9 +976,9 @@ def saveinitialfile():
         elif k == "list":
             D2 = {}
             D2["L"] = {}
-            for l in list(vcs.elements["list"].keys()):
-                if l not in Skip["list"]:
-                    D2["L"][l] = vcs.elements["list"][l]
+            for lk in list(vcs.elements["list"].keys()):
+                if lk not in Skip["list"]:
+                    D2["L"][lk] = vcs.elements["list"][lk]
             if len(list(D2["L"].keys())) != 0:
                 f = open(fnm + ".json", "w")
                 json.dump(D2, f)
@@ -1761,15 +1761,15 @@ def generate_time_labels(d1, d2, units, calendar=cdtime.DefaultCalendar):
         delta = d2 - d1
     if delta < .042:  # less than 1 hour
         levs = mkscale(d1, d2)
-        for l in levs:
-            dic[l] = str(cdtime.reltime(l, units).tocomp(calendar))
+        for lev in levs:
+            dic[lev] = str(cdtime.reltime(lev, units).tocomp(calendar))
     elif delta < 1:  # Less than a day put a label every hours
         d1 = d1r.torel('hours since 2000').value
         d2 = d2r.torel('hours since 2000').value
         d1, d2 = minmax(d1, d2)
         levs = mkscale(d1, d2)
-        for l in levs:
-            t = cdtime.reltime(l, 'hours since 2000').tocomp(calendar)
+        for lev in levs:
+            t = cdtime.reltime(lev, 'hours since 2000').tocomp(calendar)
             if t.minute > 30:
                 t = t.add(1, cdtime.Hour)
             t.minute = 0
@@ -1781,8 +1781,8 @@ def generate_time_labels(d1, d2, units, calendar=cdtime.DefaultCalendar):
         d2 = d2r.torel('days since 2000').value
         d1, d2 = minmax(d1, d2)
         levs = mkscale(d1, d2)
-        for l in levs:
-            t = cdtime.reltime(l, 'days since 2000').tocomp(calendar)
+        for lev in levs:
+            t = cdtime.reltime(lev, 'days since 2000').tocomp(calendar)
             if t.hour > 12:
                 t = t.add(1, cdtime.Day)
             t.hour = 0
@@ -1795,8 +1795,8 @@ def generate_time_labels(d1, d2, units, calendar=cdtime.DefaultCalendar):
         d2 = d2r.torel('months since 2000').value
         d1, d2 = minmax(d1, d2)
         levs = mkscale(d1, d2)
-        for l in levs:
-            t = cdtime.reltime(l, 'months since 2000').tocomp(calendar)
+        for lev in levs:
+            t = cdtime.reltime(lev, 'months since 2000').tocomp(calendar)
             if t.day > 15:
                 t = t.add(1, cdtime.Month)
             t.day = 1
@@ -1810,8 +1810,8 @@ def generate_time_labels(d1, d2, units, calendar=cdtime.DefaultCalendar):
         d2 = d2r.torel('years since 2000').value
         d1, d2 = minmax(d1, d2)
         levs = mkscale(d1, d2)
-        for l in levs:
-            t = cdtime.reltime(l, 'years since 2000').tocomp(calendar)
+        for lev in levs:
+            t = cdtime.reltime(lev, 'years since 2000').tocomp(calendar)
             if t.month > 6:
                 t = t.add(1, cdtime.Year)
             t.month = 1

@@ -5719,9 +5719,9 @@ class Canvas(vcs.bestMatch):
                 for root, dirs, subfiles in os.walk(path):
                     for file in subfiles:
                         dir_files.append(os.path.join(root, file))
-            for f in dir_files:
-                if f.lower()[-3:]in ['ttf', 'pfa', 'pfb']:
-                    files.append([f, ""])
+            for the_file in dir_files:
+                if the_file.lower()[-3:] in ['ttf', 'pfa', 'pfb']:
+                    files.append([the_file, ""])
         else:
             files = [[path, name], ]
 
