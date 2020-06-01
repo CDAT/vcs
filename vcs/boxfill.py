@@ -922,13 +922,13 @@ class Gfb(vcs.bestMatch):
 
         # Need to line up the levels and the labels, so we'll massage the label positions
         max_round = 0
-        for l in real_values:
+        for val in real_values:
             round_pos = 0
-            while numpy.round(l, round_pos) != l:
+            while numpy.round(val, round_pos) != val:
                 round_pos += 1
             max_round = max(max_round, round_pos)
 
-        round_values = [numpy.round(l, round_pos) for l in levels]
+        round_values = [numpy.round(level, round_pos) for level in levels]
         round_labels = vcs.mklabels(round_values, "list")
 
         return {lev: label for lev, label in zip(levels, round_labels)}

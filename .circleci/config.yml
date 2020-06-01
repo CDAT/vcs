@@ -33,9 +33,10 @@ aliases:
   - &setup_run_tests
     name: setup_run_tests
     environment:
-       #PKGS: "udunits2 testsrunner mesalib matplotlib image-compare cdtime nbformat ipywidgets cdat_info"
-       PKGS: "udunits2 testsrunner matplotlib image-compare cdtime nbformat ipywidgets cdat_info"
-       DOC_PKGS: "sphinxcontrib-websupport nbsphinx libtiff jupyter_client jupyterlab"
+       PKGS: "udunits2 testsrunner matplotlib image-compare nbformat ipywidgets"
+       # Note that vcsaddons should not be here, we have circular dependency,
+       # vcsaddons build depends on vcs, but some of the notebooks import vcsaddons
+       DOC_PKGS: "sphinxcontrib-websupport nbsphinx jupyter_client jupyterlab vcsaddons"
        CHANNELS: "-c cdat/label/nightly -c conda-forge"
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
@@ -45,7 +46,8 @@ aliases:
        else
           MESA="mesalib=17.3.9"
        fi
-       conda create -y -n $ENV_NAME --use-local $CHANNELS "$CONDA_PY_VER" $PKG_NAME $MESA $PKGS $DOC_PKGS $COVERAGE_PKGS $ADD_PKGS
+       echo "conda create -y -n $ENV_NAME --use-local $CHANNELS \"$CONDA_PY_VER\" $PKG_NAME $MESA $PKGS $DOC_PKGS $COVERAGE_PKGS \"$LIBNETCDF\""
+       conda create -y -n $ENV_NAME --use-local $CHANNELS "$CONDA_PY_VER" $PKG_NAME $MESA $PKGS $DOC_PKGS $COVERAGE_PKGS "$LIBNETCDF"
        conda activate $ENV_NAME
        conda config --set always_yes yes
        conda install -c conda-forge nb_conda nb_conda_kernels
@@ -103,11 +105,13 @@ aliases:
        DOC_RESULT=$?
        echo "*** $PY_VER doc test result: "${DOC_RESULT}
        exit $DOC_RESULT
+    no_output_timeout: 20m
+
 
 jobs:
    macos_setup:
       macos:
-         xcode: "11.3.1"
+         xcode: "11.4.0"
       environment:
          WORKDIR: /Users/distiller/project/macos_build
          PKG_NAME: "vcs"
@@ -143,15 +147,18 @@ jobs:
               paths:
                  - linux_build
 
-   macos_vcs_py2:
+   #
+   # run tests with libnetcdf nompi
+   #
+   macos_vcs_nompi_py36:
       macos:
-         xcode: "11.3.1"
+         xcode: "11.4.0"
       environment:
          WORKDIR: /Users/distiller/project/macos_build
          PKG_NAME: "vcs"
-         REPO_NAME: "vcs"
          ENV_NAME: "test_vcs"
-         CONDA_PY_VER: "python<3"
+         CONDA_PY_VER: "python>=3.6,<3.7"
+         LIBNETCDF: "libnetcdf=*=nompi_*"
       steps:
          - checkout
          - attach_workspace:
@@ -166,15 +173,15 @@ jobs:
              path: tests_png
              destination: tests_png
 
-   macos_vcs_py37:
+   macos_vcs_nompi_py37:
       macos:
-         xcode: "11.3.1"
+         xcode: "11.4.0"
       environment:
          WORKDIR: /Users/distiller/project/macos_build
          PKG_NAME: "vcs"
-         REPO_NAME: "vcs"
          ENV_NAME: "test_vcs"
          CONDA_PY_VER: "python>=3.7,<3.8"
+         LIBNETCDF: "libnetcdf=*=nompi_*"
       steps:
          - checkout
          - attach_workspace:
@@ -189,20 +196,44 @@ jobs:
              path: tests_png
              destination: tests_png
 
-   linux_vcs_py2:
+   macos_vcs_nompi_py38:
+      macos:
+         xcode: "11.4.0"
+      environment:
+         WORKDIR: /Users/distiller/project/macos_build
+         PKG_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.8,<3.9"
+         LIBNETCDF: "libnetcdf=*=nompi_*"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *get_testdata
+         - run: *run_tests
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   linux_vcs_nompi_py36:
       machine:
          image: circleci/classic:latest
       environment:
          WORKDIR: /home/circleci/project/linux_build
          PKG_NAME: "vcs"
-         REPO_NAME: "vcs"
          ENV_NAME: "test_vcs"
-         CONDA_PY_VER: "python<3"
+         CONDA_PY_VER: "python>=3.6,<3.7"
+         LIBNETCDF: "libnetcdf=*=nompi_*"
       steps:
          - checkout
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
          - store_artifacts:
@@ -212,18 +243,17 @@ jobs:
              path: tests_png
              destination: tests_png
 
-   linux_vcs_py37:
+   linux_vcs_nompi_py37:
       machine:
          image: circleci/classic:latest
       environment:
          WORKDIR: /home/circleci/project/linux_build
          PKG_NAME: "vcs"
-         REPO_NAME: "vcs"
          ENV_NAME: "test_vcs"
          CONDA_PY_VER: "python>=3.7,<3.8"
-         ADD_PKGS: "vcsaddons"
          #COVERAGE: "-c tests/coverage.json --coverage-from-egg"
          #COVERAGE_PKGS: "coverage coveralls"
+         LIBNETCDF: "libnetcdf=*=nompi_*"
       steps:
          - checkout
          - attach_workspace:
@@ -234,6 +264,326 @@ jobs:
          - run: *run_tests
          - run: *make_doc_test
          #- run: *run_coveralls
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   linux_vcs_nompi_py38:
+      machine:
+         image: circleci/classic:latest
+      environment:
+         WORKDIR: /home/circleci/project/linux_build
+         PKG_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.8,<3.9"
+         LIBNETCDF: "libnetcdf=*=nompi_*"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *conda_env_export
+         - run: *get_testdata
+         - run: *run_tests
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   #
+   # run tests with libnetcdf mpich
+   #
+   macos_vcs_mpich_py36:
+      macos:
+         xcode: "11.4.0"
+      environment:
+         WORKDIR: /Users/distiller/project/macos_build
+         PKG_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.6,<3.7"
+         LIBNETCDF: "libnetcdf=*=mpi_mpich_*"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *conda_env_export
+         - run: *get_testdata
+         - run: *run_tests
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   macos_vcs_mpich_py37:
+      macos:
+         xcode: "11.4.0"
+      environment:
+         WORKDIR: /Users/distiller/project/macos_build
+         PKG_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.7,<3.8"
+         LIBNETCDF: "libnetcdf=*=mpi_mpich_*"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *conda_env_export
+         - run: *get_testdata
+         - run: *run_tests
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   macos_vcs_mpich_py38:
+      macos:
+         xcode: "11.4.0"
+      environment:
+         WORKDIR: /Users/distiller/project/macos_build
+         PKG_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.8,<3.9"
+         LIBNETCDF: "libnetcdf=*=mpi_mpich_*"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *conda_env_export
+         - run: *get_testdata
+         - run: *run_tests
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   linux_vcs_mpich_py36:
+      machine:
+         image: circleci/classic:latest
+      environment:
+         WORKDIR: /home/circleci/project/linux_build
+         PKG_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.6,<3.7"
+         LIBNETCDF: "libnetcdf=*=mpi_mpich_*"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *conda_env_export
+         - run: *get_testdata
+         - run: *run_tests
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   linux_vcs_mpich_py37:
+      machine:
+         image: circleci/classic:latest
+      environment:
+         WORKDIR: /home/circleci/project/linux_build
+         PKG_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.7,<3.8"
+         LIBNETCDF: "libnetcdf=*=mpi_mpich_*"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *conda_env_export
+         - run: *get_testdata
+         - run: *run_tests
+         - run: *make_doc_test
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   linux_vcs_mpich_py38:
+      machine:
+         image: circleci/classic:latest
+      environment:
+         WORKDIR: /home/circleci/project/linux_build
+         PKG_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.8,<3.9"
+         LIBNETCDF: "libnetcdf=*=mpi_mpich_*"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *conda_env_export
+         - run: *get_testdata
+         - run: *run_tests
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   #
+   # run tests with libnetcdf openmpi
+   #
+   macos_vcs_openmpi_py36:
+      macos:
+         xcode: "11.4.0"
+      environment:
+         WORKDIR: /Users/distiller/project/macos_build
+         PKG_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.6,<3.7"
+         LIBNETCDF: "libnetcdf=*=mpi_openmpi_*"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *conda_env_export
+         - run: *get_testdata
+         - run: *run_tests
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   macos_vcs_openmpi_py37:
+      macos:
+         xcode: "11.4.0"
+      environment:
+         WORKDIR: /Users/distiller/project/macos_build
+         PKG_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.7,<3.8"
+         LIBNETCDF: "libnetcdf=*=mpi_openmpi_*"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *conda_env_export
+         - run: *get_testdata
+         - run: *run_tests
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   macos_vcs_openmpi_py38:
+      macos:
+         xcode: "11.4.0"
+      environment:
+         WORKDIR: /Users/distiller/project/macos_build
+         PKG_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.8,<3.9"
+         LIBNETCDF: "libnetcdf=*=mpi_openmpi_*"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *conda_env_export
+         - run: *get_testdata
+         - run: *run_tests
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   linux_vcs_openmpi_py36:
+      machine:
+         image: circleci/classic:latest
+      environment:
+         WORKDIR: /home/circleci/project/linux_build
+         PKG_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.6,<3.7"
+         LIBNETCDF: "libnetcdf=*=mpi_openmpi_*"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *conda_env_export
+         - run: *get_testdata
+         - run: *run_tests
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   linux_vcs_openmpi_py37:
+      machine:
+         image: circleci/classic:latest
+      environment:
+         WORKDIR: /home/circleci/project/linux_build
+         PKG_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.7,<3.8"
+         LIBNETCDF: "libnetcdf=*=mpi_openmpi_*"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *conda_env_export
+         - run: *get_testdata
+         - run: *run_tests
+         - run: *make_doc_test
+         - store_artifacts:
+              path: tests_html
+              destination: tests_html
+         - store_artifacts:
+             path: tests_png
+             destination: tests_png
+
+   linux_vcs_openmpi_py38:
+      machine:
+         image: circleci/classic:latest
+      environment:
+         WORKDIR: /home/circleci/project/linux_build
+         PKG_NAME: "vcs"
+         ENV_NAME: "test_vcs"
+         CONDA_PY_VER: "python>=3.8,<3.9"
+         LIBNETCDF: "libnetcdf=*=mpi_openmpi_*"
+      steps:
+         - checkout
+         - attach_workspace:
+              at: .
+         - run: *setup_run_tests
+         - run: *conda_env_export
+         - run: *get_testdata
+         - run: *run_tests
          - store_artifacts:
               path: tests_html
               destination: tests_html
@@ -253,7 +603,21 @@ jobs:
       steps:
          - attach_workspace:
               at: .
-         - run: pwd
+         - run: *conda_upload
+
+   upload_MACOS:
+      macos:
+         xcode: "11.4.0"
+      environment:
+         WORKDIR: /Users/distiller/project/macos_build
+         PKG_NAME: "vcs"
+         VERSION: "8.2"
+         USER: "cdat"
+         LABEL: "nightly"
+         #LABEL: "debug"
+      steps:
+         - attach_workspace:
+              at: .
          - run: *conda_upload
 
 workflows:
@@ -262,21 +626,82 @@ workflows:
       jobs:
          - macos_setup
          - linux_setup
-         #- macos_vcs_py2:
-         #     requires:
-         #        - macos_setup
-         - macos_vcs_py37:
+         - macos_vcs_nompi_py36:
               requires:
                  - macos_setup
-         #- linux_vcs_py2:
-         #     requires:
-         #        - linux_setup
-         - linux_vcs_py37:
+         - macos_vcs_nompi_py37:
+              requires:
+                 - macos_setup
+         - macos_vcs_nompi_py38:
+              requires:
+                 - macos_setup
+         - linux_vcs_nompi_py36:
               requires:
                  - linux_setup
+         - linux_vcs_nompi_py37:
+              requires:
+                 - linux_setup
+         - linux_vcs_nompi_py38:
+              requires:
+                 - linux_setup
+
+         #- macos_vcs_mpich_py36:
+         #     requires:
+         #        - macos_setup
+         #- macos_vcs_mpich_py37:
+         #     requires:
+         #        - macos_setup
+         #- macos_vcs_mpich_py38:
+         #     requires:
+         #        - macos_setup
+         #- linux_vcs_mpich_py36:
+         #     requires:
+         #        - linux_setup
+         #- linux_vcs_mpich_py37:
+         #     requires:
+         #        - linux_setup
+         #- linux_vcs_mpich_py38:
+         #     requires:
+         #        - linux_setup
+
+         - macos_vcs_openmpi_py36:
+              requires:
+                 - macos_setup
+         - macos_vcs_openmpi_py37:
+              requires:
+                 - macos_setup
+         - macos_vcs_openmpi_py38:
+              requires:
+                 - macos_setup
+         - linux_vcs_openmpi_py36:
+              requires:
+                 - linux_setup
+         - linux_vcs_openmpi_py37:
+              requires:
+                 - linux_setup
+         - linux_vcs_openmpi_py38:
+              requires:
+                 - linux_setup
+
          - upload:
               requires:
-                 #- macos_vcs_py2
-                 - macos_vcs_py37
-                 #- linux_vcs_py2
-                 - linux_vcs_py37
+                 - macos_vcs_nompi_py36
+                 - macos_vcs_nompi_py37
+                 - macos_vcs_nompi_py38
+                 - linux_vcs_nompi_py36
+                 - linux_vcs_nompi_py37
+                 - linux_vcs_nompi_py38
+
+                 #- macos_vcs_mpich_py36
+                 #- macos_vcs_mpich_py37
+                 #- macos_vcs_mpich_py38
+                 #- linux_vcs_mpich_py36
+                 #- linux_vcs_mpich_py37
+                 #- linux_vcs_mpich_py38
+
+                 - macos_vcs_openmpi_py36
+                 - macos_vcs_openmpi_py37
+                 - macos_vcs_openmpi_py38
+                 - linux_vcs_openmpi_py36
+                 - linux_vcs_openmpi_py37
+                 - linux_vcs_openmpi_py38

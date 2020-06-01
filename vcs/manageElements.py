@@ -825,7 +825,7 @@ def createline(name=None, source='default', ltype=None,
 createline.__doc__ = createline.__doc__ % xmldocs.create_docs['line']  # noqa
 
 
-def setLineAttributes(to, l):
+def setLineAttributes(to, the_line):
     """Set attributes linecolor, linewidth and linetype from line l on object to.
 
     :Example:
@@ -852,14 +852,14 @@ def setLineAttributes(to, l):
     """
     from . import queries
     line = None
-    if (queries.isline(l)):
-        line = l
-    elif l in vcs.elements["line"]:
-        line = vcs.elements["line"][l]
+    if (queries.isline(the_line)):
+        line = the_line
+    elif the_line in vcs.elements["line"]:
+        line = vcs.elements["line"][the_line]
     else:
         raise ValueError("Expecting a line object or a " +
                          "line name defined in vcs.elements, got type " +
-                         type(l).__name__)
+                         type(the_line).__name__)
     if queries.isisoline(to):
         to.linecolors = line.color
         to.linewidths = line.width
@@ -2011,7 +2011,7 @@ def addfont(path, name=""):
                 for file in subfiles:
                     dir_files.append(os.path.join(root, file))
         for f in dir_files:
-            if f.lower()[-3:]in ['ttf', 'pfa', 'pfb']:
+            if f.lower()[-3:] in ['ttf', 'pfa', 'pfb']:
                 files.append([f, ""])
     else:
         files = [[path, name], ]

@@ -118,8 +118,8 @@ def process_src(nm, code):
             fai = []
             fas = []
             badfa = True
-            for l in lines:
-                if l.find("(id=") > -1:
+            for ln in lines:
+                if ln.find("(id=") > -1:
                     sp = lines[i].split(",")
                     levs.append([float(sp[1][7:]), float(sp[2][7:])])
                     fa = sp[-1][3:]

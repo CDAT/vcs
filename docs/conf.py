@@ -25,7 +25,7 @@ import shutil
 # copy jupyter notebook htmls
 #
 if not os.path.exists("Jupyter-notebooks"):
-    os.system("git clone -b fix_misc https://github.com/CDAT/Jupyter-notebooks.git")
+    os.system("git clone https://github.com/CDAT/Jupyter-notebooks.git")
 
 tmp_notebooks_dir = os.path.join(os.getcwd(), "Jupyter-notebooks")
 
@@ -40,6 +40,11 @@ for j in jupyter_html_dirs:
     dir_name = os.path.basename(j)
     dest_dir = os.path.join(notebook_htmls_dir, dir_name)
     if not os.path.exists(dest_dir):
+        ###nb_dir = os.path.basename(j)
+        # skip notebooks for now, these notebooks import vcsaddons
+        # which may need to be rebuilt, but depends on vcs -- circular dependency
+        ###if nb_dir == 'Colormap_Tutorial' or nb_dir == 'VCS_Templates':
+        ###    continue
         shutil.copytree(j, dest_dir)
 
 shutil.rmtree(tmp_notebooks_dir)
