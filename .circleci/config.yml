@@ -689,12 +689,12 @@ workflows:
                  - linux_vcs_nompi_py37
                  - linux_vcs_nompi_py38
 
-                 - macos_vcs_mpich_py36
-                 - macos_vcs_mpich_py37
-                 - macos_vcs_mpich_py38
-                 - linux_vcs_mpich_py36
-                 - linux_vcs_mpich_py37
-                 - linux_vcs_mpich_py38
+                 #- macos_vcs_mpich_py36
+                 #- macos_vcs_mpich_py37
+                 #- macos_vcs_mpich_py38
+                 #- linux_vcs_mpich_py36
+                 #- linux_vcs_mpich_py37
+                 #- linux_vcs_mpich_py38
 
                  - macos_vcs_openmpi_py36
                  - macos_vcs_openmpi_py37
