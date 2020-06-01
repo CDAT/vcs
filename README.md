@@ -61,6 +61,8 @@ View the various [tutorials](https://cdat-vcs.readthedocs.io/en/latest/notebooks
 
 A Makefile is provided to assist in automating a few tasks.
 
+By default the makefile will search `/opt` and `${HOME}` for the conda executable. If the executable cannot be found in these paths it can be manually set with the `CONDA_PATH` [variable](#variables).
+
 Builds VCS conda package.
 ```bash
 make build
@@ -71,6 +73,7 @@ Builds VCS conda package and installs in `test_vcs` conda environment.
 make local-test-env
 ```
 
+#### Targets
 The following targets are available:
 
 - remove-test-env: Removes the `test_vcs` conda environment.
@@ -82,12 +85,14 @@ The following targets are available:
 - setup-build: Creates the `feedstock/` directory, copying and rending the conda recipe.
 - build: Renders conda recipe and builds VCS package.
 
+#### Variables
 Customizable variables:
 
 ```bash
 make build BUILD_BRANCH=rebuild_with_vtk
 ```
 
+- CONDA_PATH: Path to the conda executable.
 - VERSION: Sets the version for the conda package.
 - CONDA_CHANNELS: List of conda channels to use while building and installing.
 - TEST_PACKAGES: List of packages to install in test environment.

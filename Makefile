@@ -1,10 +1,14 @@
-.PHONY: list-packages clean-test-env test-env test build
+.PHONY: list-packages clean-test-env test-env test build debug-vars
 
 SHELL = /bin/bash
 
 VERSION = 8.2
 
-CONDA = $(patsubst %/bin/conda,%,$(shell find $(HOME)/*conda*/bin -type f -iname conda))
+ifeq ($(CONDA_PATH),)
+CONDA_PATH = $(shell find $(HOME)/*conda*/bin /opt/*conda*/bin -type f -iname conda 2>/dev/null)
+endif
+CONDA = $(patsubst %/bin/conda,%,$(CONDA_PATH))
+
 CONDA_CHANNELS = -c cdat/label/nightly -c conda-forge
 
 TEST_PACKAGES = vcs
@@ -13,6 +17,9 @@ TEST_DEPENDENCIES = udunits2 testsrunner matplotlib image-compare nbformat ipywi
 BUILD = 0
 BUILD_DEPENDENCIES = conda-forge-ci-setup=3 pip conda-build anaconda-client conda-smithy conda-verify conda-forge-pinning conda-forge-build-setup conda-forge-ci-setup
 BUILD_BRANCH = master
+
+debug-vars:
+	@$(foreach V,$(sort $(.VARIABLES)),$(if $(filter-out environment% default automatic,$(origin $V)),$(warning $V=$($V) ($(value $V)))))
 
 remove-test-env:
 	conda env remove -n test_vcs
