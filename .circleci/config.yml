@@ -400,8 +400,6 @@ jobs:
          PKG_NAME: "vcs"
          ENV_NAME: "test_vcs"
          CONDA_PY_VER: "python>=3.7,<3.8"
-         #COVERAGE: "-c tests/coverage.json --coverage-from-egg"
-         #COVERAGE_PKGS: "coverage coveralls"
          LIBNETCDF: "libnetcdf=*=mpi_mpich_*"
       steps:
          - checkout
@@ -412,7 +410,6 @@ jobs:
          - run: *get_testdata
          - run: *run_tests
          - run: *make_doc_test
-         #- run: *run_coveralls
          - store_artifacts:
               path: tests_html
               destination: tests_html
