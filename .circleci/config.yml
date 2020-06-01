@@ -34,7 +34,9 @@ aliases:
     name: setup_run_tests
     environment:
        PKGS: "udunits2 testsrunner matplotlib image-compare nbformat ipywidgets"
-       DOC_PKGS: "sphinxcontrib-websupport nbsphinx jupyter_client jupyterlab"
+       # Note that vcsaddons should not be here, we have circular dependency,
+       # vcsaddons build depends on vcs, but some of the notebooks import vcsaddons
+       DOC_PKGS: "sphinxcontrib-websupport nbsphinx jupyter_client jupyterlab vcsaddons"
        CHANNELS: "-c cdat/label/nightly -c conda-forge"
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
