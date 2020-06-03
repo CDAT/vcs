@@ -23,9 +23,7 @@ aliases:
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
 
-       make conda-build conda=$WORKDIR/miniconda/bin/conda workdir=$WORKDIR 
-
-       make conda-cp-output conda=$WORKDIR/miniconda/bin/conda workdir=$WORKDIR
+       make conda-build conda=$WORKDIR/miniconda/bin/conda workdir=$WORKDIR artifcat_dir=$PWD/artifacts copy_conda_package=1
 
   - &setup_run_tests
     name: setup_run_tests
@@ -41,7 +39,7 @@ aliases:
 
        make setup-tests conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME extra_pkgs="$CONDA_PY_VER $LIBNETCDF"
 
-       make conda-dump-env conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME conda_env_name=$CIRCLE_JOB
+       make conda-dump-env conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME artifcat_dir=$PWD/artifacts conda_env_name=$CIRCLE_JOB
 
   - &get_testdata
     name: get_testdata

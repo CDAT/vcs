@@ -29,6 +29,10 @@ conda_env_filename ?= spec-file
 conda_base = $(patsubst %/bin/conda,%,$(conda))
 conda_activate = $(conda_base)/bin/activate
 
+ifneq ($(copy_conda_package),)
+conda_build_extra = --copy_conda_package $(artifact_dir)/
+endif
+
 conda-info:
 	source $(conda_activate) $(conda_env); conda info
 
@@ -54,7 +58,7 @@ conda-rerender: setup-build
 conda-build:
 	python $(workdir)/$(build_script) -w $(workdir) -p $(pkg_name) --build_version noarch \
 		--do_build --conda_env $(conda_env) --extra_channels $(extra_channels) \
-		--conda_activate $(conda_activate)
+		--conda_activate $(conda_activate) $(conda_build_extra)
 
 conda-upload:
 	source $(conda_activate) $(conda_env); \
@@ -63,10 +67,6 @@ conda-upload:
 
 conda-dump-env:
 	source $(conda_activate) $(conda_env); conda list --explicit > $(artifact_dir)/$(conda_env_filename).txt
-
-conda-cp-output:
-	source $(conda_activate) $(conda_env); output=$$(conda build --output $(workdir)/vcs/); \
-		cp $${output} $(artifact_dir)/
 
 get-testdata:
 ifeq ($(wildcard uvcdat-testdata),)

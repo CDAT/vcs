@@ -71,7 +71,6 @@ Many tasks have been automated using a Makefile. See the [targets](#targets) and
 - conda-build: Builds conda packages.
 - conda-upload: Uploads conda package.
 - conda-dump-env: Dumps conda env using `conda list --explicit`.
-- conda-cp-output: Copies output file to current directory.
 - get-testdata: Clones uvcdat testdata.
 - run-tests: Runs tests.
 - run-doc-test: Runs doc tests.
@@ -84,6 +83,8 @@ Many tasks have been automated using a Makefile. See the [targets](#targets) and
 - branch: Branch to build from.
 - extra_channels: Extra conda channels to use while building.
 - conda: Path to the conda executable.
+- artifact_dir: Directory to store artifacts.
+- copy_conda_package: Will copy the output from `conda build`.
 
 ## VCS Model
 VCS Allows scientists to produce highly customized plots. Everything can be precisely and logically controlled, without any guessing game
