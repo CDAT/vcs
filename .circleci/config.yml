@@ -12,23 +12,20 @@ aliases:
   - &conda_rerender
     name: conda_rerender
     command: |
-       git clone https://github.com/CDAT/conda-recipes.git $WORKDIR/conda-recipes 
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
-       conda config --set anaconda_upload no
-       BUILD_SCRIPT="$WORKDIR/conda-recipes/build_tools/conda_build.py"
-       python $BUILD_SCRIPT -w $WORKDIR -l $LAST_STABLE -B 0 -p $PKG_NAME -b $CIRCLE_BRANCH --do_rerender
+
+       make conda-rerender workdir=$WORKDIR last_stable=$LAST_STABLE branch=$CIRCLE_BRANCH
 
   - &conda_build
     name: conda_build
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
-       conda config --add channels conda-forge --force
-       conda config --add channels cdat/label/nightly --force
-       conda config --set channel_priority strict
-       BUILD_SCRIPT="$WORKDIR/conda-recipes/build_tools/conda_build.py"
-       python $BUILD_SCRIPT -w $WORKDIR -p $PKG_NAME --build_version $BUILD_VARIANT_VER --do_build
+
+       make conda-build workdir=$WORKDIR 
+
+       make conda-cp-output 
 
   - &setup_run_tests
     name: setup_run_tests
@@ -41,40 +38,31 @@ aliases:
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
-       if [[ `uname` == "Linux" ]]; then
-          MESA="mesalib=18.3.1"
-       else
-          MESA="mesalib=17.3.9"
-       fi
-       echo "conda create -y -n $ENV_NAME --use-local $CHANNELS \"$CONDA_PY_VER\" $PKG_NAME $MESA $PKGS $DOC_PKGS $COVERAGE_PKGS \"$LIBNETCDF\""
-       conda create -y -n $ENV_NAME --use-local $CHANNELS "$CONDA_PY_VER" $PKG_NAME $MESA $PKGS $DOC_PKGS $COVERAGE_PKGS "$LIBNETCDF"
-       conda activate $ENV_NAME
-       conda config --set always_yes yes
-       conda install -c conda-forge nb_conda nb_conda_kernels
-       conda list
+
+       make setup-tests conda_env=$ENV_NAME extra_pkgs="$CONDA_PY_VER $LIBNETCDF"
+
+       make conda-dump-env conda_env=$ENV_NAME conda_env_name=$CIRCLE_JOB
 
   - &get_testdata
     name: get_testdata
     command: |
-      git clone git://github.com/cdat/uvcdat-testdata
+      make get-testdata
 
   - &run_tests
     name: run_tests
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
-       conda activate $ENV_NAME
-       python run_tests.py -n 4 -H -v2 --timeout=100000 --checkout-baseline --no-vtk-ui $COVERAGE
-       RESULT=$?
-       conda deactivate
-       exit $RESULT
+       conda activate base
+
+       make run-tests conda_env=$ENV_NAME
 
   - &conda_env_export
     name: conda_env_expprt
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
-       conda activate $ENV_NAME
-       conda env export > $WORKDIR/env.yml
-       cat $WORKDIR/env.yml
+       conda activate base
+
+       make conda-list conda_env=$ENV_NAME
 
   - &conda_upload
     name: conda_upload
@@ -84,27 +72,24 @@ aliases:
        fi
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
-       UPLOAD_OPTIONS="-t $CONDA_UPLOAD_TOKEN upload -u $USER -l $LABEL"
-       anaconda $UPLOAD_OPTIONS $WORKDIR/miniconda/conda-bld/noarch/$PKG_NAME-$VERSION.`date +%Y*`0.tar.bz2 --force
+
+       make conda-upload conda_env=$ENV_NAME conda_upload_token=$CONDA_UPLOAD_TOKEN user=$USER label=$LABEL
 
   - &run_coveralls
     name: run_coveralls
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
-       conda activate $ENV_NAME
-       coveralls
-       conda deactivate
+       conda activate base
+
+       make run-coveralls
 
   - &make_doc_test
     name: make_doc_test
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
-       conda activate $ENV_NAME
-       cd docs
-       make doctest
-       DOC_RESULT=$?
-       echo "*** $PY_VER doc test result: "${DOC_RESULT}
-       exit $DOC_RESULT
+       conda activate base
+
+       make run-doc-test conda_env=$ENV_NAME
     no_output_timeout: 20m
 
 
@@ -164,6 +149,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *get_testdata
          - run: *run_tests
          - store_artifacts:
@@ -187,6 +174,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *get_testdata
          - run: *run_tests
          - store_artifacts:
@@ -210,6 +199,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *get_testdata
          - run: *run_tests
          - store_artifacts:
@@ -233,6 +224,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
@@ -259,6 +252,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
@@ -285,6 +280,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
@@ -312,6 +309,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
@@ -336,6 +335,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
@@ -360,6 +361,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
@@ -384,6 +387,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
@@ -408,6 +413,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
@@ -433,6 +440,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
@@ -460,6 +469,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
@@ -484,6 +495,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
@@ -508,6 +521,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
@@ -532,6 +547,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
@@ -556,6 +573,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
@@ -581,6 +600,8 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
+         - store_artifcacts:
+              path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
          - run: *run_tests
@@ -621,6 +642,8 @@ jobs:
          - run: *conda_upload
 
 workflows:
+   # Might be work looking into matrix to simplify, if we can use version 2.1.
+   # https://circleci.com/docs/2.0/configuration-reference/#matrix-requires-version-21
    version: 2
    vcs:
       jobs:
