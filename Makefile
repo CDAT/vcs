@@ -69,7 +69,7 @@ else
 	cd uvcdat-testdata; git pull
 endif
 
-run-tests: setup-tests get-testdata
+run-tests:
 	source $(conda_activate) $(conda_env); python run_tests.py -n 4 -H -v2 --timeout=100000 \
 		--checkout-baseline --no-vtk-ui
 
