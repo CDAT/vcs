@@ -15,7 +15,7 @@ aliases:
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
 
-       make conda-rerender workdir=$WORKDIR last_stable=$LAST_STABLE branch=$CIRCLE_BRANCH
+       make conda-rerender conda=$WORKDIR/miniconda/bin/conda workdir=$WORKDIR last_stable=$LAST_STABLE branch=$CIRCLE_BRANCH
 
   - &conda_build
     name: conda_build
@@ -23,9 +23,9 @@ aliases:
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
 
-       make conda-build workdir=$WORKDIR 
+       make conda-build conda=$WORKDIR/miniconda/bin/conda workdir=$WORKDIR 
 
-       make conda-cp-output 
+       make conda-cp-output conda=$WORKDIR/miniconda/bin/conda
 
   - &setup_run_tests
     name: setup_run_tests
@@ -39,14 +39,14 @@ aliases:
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
 
-       make setup-tests conda_env=$ENV_NAME extra_pkgs="$CONDA_PY_VER $LIBNETCDF"
+       make setup-tests conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME extra_pkgs="$CONDA_PY_VER $LIBNETCDF"
 
-       make conda-dump-env conda_env=$ENV_NAME conda_env_name=$CIRCLE_JOB
+       make conda-dump-env conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME conda_env_name=$CIRCLE_JOB
 
   - &get_testdata
     name: get_testdata
     command: |
-      make get-testdata
+      make get-testdata conda=$WORKDIR/miniconda/bin/conda 
 
   - &run_tests
     name: run_tests
@@ -54,7 +54,7 @@ aliases:
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
 
-       make run-tests conda_env=$ENV_NAME
+       make run-tests conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME
 
   - &conda_env_export
     name: conda_env_expprt
@@ -62,7 +62,7 @@ aliases:
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
 
-       make conda-list conda_env=$ENV_NAME
+       make conda-list conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME
 
   - &conda_upload
     name: conda_upload
@@ -73,7 +73,7 @@ aliases:
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
 
-       make conda-upload conda_env=$ENV_NAME conda_upload_token=$CONDA_UPLOAD_TOKEN user=$USER label=$LABEL
+       make conda-upload conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME conda_upload_token=$CONDA_UPLOAD_TOKEN user=$USER label=$LABEL
 
   - &run_coveralls
     name: run_coveralls
@@ -81,7 +81,7 @@ aliases:
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
 
-       make run-coveralls
+       make run-coveralls conda=$WORKDIR/miniconda/bin/conda 
 
   - &make_doc_test
     name: make_doc_test
@@ -89,7 +89,7 @@ aliases:
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
 
-       make run-doc-test conda_env=$ENV_NAME
+       make run-doc-test conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME
     no_output_timeout: 20m
 
 
