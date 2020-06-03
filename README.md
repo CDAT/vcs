@@ -59,47 +59,31 @@ View the various [tutorials](https://cdat-vcs.readthedocs.io/en/latest/notebooks
 
 ## Developers
 
-A Makefile is provided to assist in automating a few tasks.
+Many tasks have been automated using a Makefile. See the [targets](#targets) and [variables](#variables) sections for details.
 
-By default the makefile will search `/opt` and `${HOME}` for the conda executable. If the executable cannot be found in these paths it can be manually set with the `CONDA_PATH` [variable](#variables).
+### Targets
 
-Builds VCS conda package.
-```bash
-make build
-```
+- conda-info: Activates conda environment and executes `conda info`.
+- conda-list: Activates conda environment and executes `conda list`.
+- setup-build: Uses conda-recipes to setup conda environment to build package.
+- setup-tests: Creates environment to run tests.
+- conda-rerender: Uses conda-recipes and rerenders conda recipe.
+- conda-build: Builds conda packages.
+- conda-upload: Uploads conda package.
+- conda-dump-env: Dumps conda env using `conda list --explicit`.
+- conda-cp-output: Copies output file to current directory.
+- get-testdata: Clones uvcdat testdata.
+- run-tests: Runs tests.
+- run-doc-test: Runs doc tests.
+- run-coveralls: Runs coveralls tests.
 
-Builds VCS conda package and installs in `test_vcs` conda environment.
-```bash
-make local-test-env
-```
+### Variables
 
-#### Targets
-The following targets are available:
-
-- remove-test-env: Removes the `test_vcs` conda environment.
-- release-test-env: Creates a `test_vcs` conda environment, with the latest release VCS and test dependencies.
-- local-test-env: Builds VCS package locally and installs in `test_vcs` conda environment with test dependencies.
-- test: Activates `test_vcs` and executes the test runner.
-- remove-build-env: Removes the `build_vcs` conda environment.
-- clean-build: Removes the temporary `feedstock/` directory.
-- setup-build: Creates the `feedstock/` directory, copying and rending the conda recipe.
-- build: Renders conda recipe and builds VCS package.
-
-#### Variables
-Customizable variables:
-
-```bash
-make build BUILD_BRANCH=rebuild_with_vtk
-```
-
-- CONDA_PATH: Path to the conda executable.
-- VERSION: Sets the version for the conda package.
-- CONDA_CHANNELS: List of conda channels to use while building and installing.
-- TEST_PACKAGES: List of packages to install in test environment.
-- TEST_DEPENDENCIES: List of packages required to run tests.
-- BUILD: The build number for the conda package.
-- BUILD_DEPENDENCIES: List of packages required to build.
-- BUILD_BRANCH: Name of the git branch to build from.
+- conda_env: Name of the conda environment to use.
+- last_stable: Package version.
+- branch: Branch to build from.
+- extra_channels: Extra conda channels to use while building.
+- conda: Path to the conda executable.
 
 ## VCS Model
 VCS Allows scientists to produce highly customized plots. Everything can be precisely and logically controlled, without any guessing game
