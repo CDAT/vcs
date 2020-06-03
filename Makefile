@@ -5,12 +5,11 @@
 SHELL = /bin/bash
 
 os = $(shell uname)
-conda_base = $(patsubst %/bin/conda,%,$(conda))
-conda_activate = $(conda_base)/bin/activate
 pkg_name = vcs
 build_script = conda-recipes/build_tools/conda_build.py
 
-test_pkgs = udunits2 testsrunner matplotlib image-compare nbformat ipywidgets nb_conda nb_conda_kernels coverage coveralls
+test_pkgs = udunits2 testsrunner matplotlib image-compare nbformat ipywidgets \
+						nb_conda nb_conda_kernels coverage coveralls
 docs_pkgs = sphinxcontrib-websupport nbsphinx jupyter_client jupyterlab vcsaddons 
 ifeq ($(os),Linux)
 pkgs = "mesalib=18.3.1"
@@ -26,6 +25,9 @@ extra_channels ?= cdat/label/nightly conda-forge
 conda ?= $(or $(CONDA_EXE),$(shell find /opt/*conda*/bin $(HOME)/*conda* -type f -iname conda))
 artifact_dir ?= $(PWD)/artifacts
 conda_env_filename ?= spec-file
+
+conda_base = $(patsubst %/bin/conda,%,$(conda))
+conda_activate = $(conda_base)/bin/activate
 
 conda-info:
 	source $(conda_activate) $(conda_env); conda info
@@ -46,11 +48,13 @@ setup-tests:
 
 conda-rerender: setup-build 
 	python $(workdir)/$(build_script) -w $(workdir) -l $(last_stable) -B 0 -p $(pkg_name) \
-		-b $(branch) --do_rerender --conda_env $(conda_env) --ignore_conda_missmatch
+		-b $(branch) --do_rerender --conda_env $(conda_env) --ignore_conda_missmatch \
+		--conda_activate $(conda_activate)
 
 conda-build:
 	python $(workdir)/$(build_script) -w $(workdir) -p $(pkg_name) --build_version noarch \
-		--do_build --conda_env $(conda_env) --extra_channels $(extra_channels)
+		--do_build --conda_env $(conda_env) --extra_channels $(extra_channels) \
+		--conda_activate $(conda_activate)
 
 conda-upload:
 	source $(conda_activate) $(conda_env); \
