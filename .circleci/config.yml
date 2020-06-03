@@ -25,7 +25,7 @@ aliases:
 
        make conda-build conda=$WORKDIR/miniconda/bin/conda workdir=$WORKDIR 
 
-       make conda-cp-output conda=$WORKDIR/miniconda/bin/conda
+       make conda-cp-output conda=$WORKDIR/miniconda/bin/conda workdir=$WORKDIR
 
   - &setup_run_tests
     name: setup_run_tests
