@@ -147,7 +147,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *get_testdata
          - run: *run_tests
@@ -172,7 +172,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *get_testdata
          - run: *run_tests
@@ -197,7 +197,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *get_testdata
          - run: *run_tests
@@ -222,7 +222,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
@@ -250,7 +250,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
@@ -278,7 +278,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
@@ -307,7 +307,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
@@ -333,7 +333,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
@@ -359,7 +359,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
@@ -385,7 +385,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
@@ -411,7 +411,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
@@ -438,7 +438,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
@@ -467,7 +467,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
@@ -493,7 +493,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
@@ -519,7 +519,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
@@ -545,7 +545,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
@@ -571,7 +571,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
@@ -598,7 +598,7 @@ jobs:
          - attach_workspace:
               at: .
          - run: *setup_run_tests
-         - store_artifcacts:
+         - store_artifacts:
               path: artifacts
          - run: *conda_env_export
          - run: *get_testdata
