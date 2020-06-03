@@ -4,17 +4,10 @@
 
 SHELL = /bin/bash
 
-conda_env ?= base
-last_stable ?= 8.2
-branch ?= $(shell git rev-parse --abbrev-ref HEAD)
-extra_channels ?= cdat/label/nightly conda-forge
-conda ?= $(or $(CONDA_EXE),$(shell find /opt/*conda*/bin $(HOME)/*conda* -type f -iname conda))
-
 os = $(shell uname)
 conda_base = $(patsubst %/bin/conda,%,$(conda))
 conda_activate = $(conda_base)/bin/activate
 pkg_name = vcs
-workdir = $(PWD)/workspace
 build_script = conda-recipes/build_tools/conda_build.py
 
 test_pkgs = udunits2 testsrunner matplotlib image-compare nbformat ipywidgets nb_conda nb_conda_kernels coverage coveralls
@@ -24,6 +17,15 @@ pkgs = "mesalib=18.3.1"
 else
 pkgs = "mesalib=17.3.9"
 endif
+
+conda_env ?= base
+workdir ?= $(PWD)/workspace
+last_stable ?= 8.2
+branch ?= $(shell git rev-parse --abbrev-ref HEAD)
+extra_channels ?= cdat/label/nightly conda-forge
+conda ?= $(or $(CONDA_EXE),$(shell find /opt/*conda*/bin $(HOME)/*conda* -type f -iname conda))
+artifact_dir ?= $(PWD)/artifacts
+conda_env_filename ?= spec-file
 
 conda-info:
 	source $(conda_activate) $(conda_env); conda info
@@ -40,7 +42,7 @@ endif
 
 setup-tests:
 	source $(conda_activate) base; conda create -y -n $(conda_env) --use-local $(foreach x,$(extra_channels),-c $(x)) \
-		$(pkg_name) $(test_pkgs) $(docs_pkgs) $(extra_pkgs) $(pkgs) $(extra_pkgs)
+		$(pkg_name) $(test_pkgs) $(docs_pkgs) $(pkgs) $(extra_pkgs)
 
 conda-rerender: setup-build 
 	python $(workdir)/$(build_script) -w $(workdir) -l $(last_stable) -B 0 -p $(pkg_name) \
@@ -56,11 +58,11 @@ conda-upload:
 		anaconda -t $(conda_upload_token) upload -u $(user) -l $(label) $${output} --force
 
 conda-dump-env:
-	source $(conda_activate) $(conda_env); conda list --explicit > spec-file.txt
+	source $(conda_activate) $(conda_env); conda list --explicit > $(artifact_dir)/$(conda_env_filename).txt
 
 conda-cp-output:
 	source $(conda_activate) $(conda_env); output=$$(conda build --output $(workdir)/vcs/); \
-		cp $${output} .
+		cp $${output} $(artifact_dir)/
 
 get-testdata:
 ifeq ($(wildcard uvcdat-testdata),)
