@@ -25,6 +25,8 @@ extra_channels ?= cdat/label/nightly conda-forge
 conda ?= $(or $(CONDA_EXE),$(shell find /opt/*conda*/bin $(HOME)/*conda* -type f -iname conda))
 artifact_dir ?= $(PWD)/artifacts
 conda_env_filename ?= spec-file
+# TODO change back to master
+conda_recipes_branch ?= build_tool_update
 
 conda_base = $(patsubst %/bin/conda,%,$(conda))
 conda_activate = $(conda_base)/bin/activate
@@ -41,7 +43,7 @@ conda-list:
 
 setup-build:
 ifeq ($(wildcard $(workdir)/conda-recipes),)
-	git clone -b build_tool_update https://github.com/CDAT/conda-recipes $(workdir)/conda-recipes
+	git clone -b $(conda_recipes_branch) https://github.com/CDAT/conda-recipes $(workdir)/conda-recipes
 else
 	cd $(workdir)/conda-recipes; git pull
 endif

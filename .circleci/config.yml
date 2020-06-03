@@ -106,6 +106,8 @@ jobs:
          - run: *setup_miniconda
          - run: *conda_rerender
          - run: *conda_build
+         - store_artifacts:
+              path: artifacts
          - persist_to_workspace:
               root: .
               paths: 
@@ -125,6 +127,8 @@ jobs:
          - run: *setup_miniconda
          - run: *conda_rerender
          - run: *conda_build
+         - store_artifacts:
+              path: artifacts
          - persist_to_workspace:
               root: .
               paths:
