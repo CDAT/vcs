@@ -4,7 +4,7 @@ package:
 
 source:
     git_rev: @UVCDAT_BRANCH@
-    git_url: git://github.com/cdat/vcs.git
+    git_url: https://github.com/cdat/vcs.git
 
 build:
   number: @BUILD_NUMBER@
