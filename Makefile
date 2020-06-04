@@ -77,7 +77,7 @@ conda-dump-env:
 
 get-testdata:
 ifeq ($(wildcard uvcdat-testdata),)
-	git clone git://github.com/CDAT/uvcdat-testdata
+	git clone https://github.com/CDAT/uvcdat-testdata
 else
 	cd uvcdat-testdata; git pull
 endif
