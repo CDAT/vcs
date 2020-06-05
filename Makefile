@@ -63,7 +63,7 @@ conda-build:
 
 	python $(workdir)/$(build_script) -w $(workdir) -p $(pkg_name) --build_version noarch \
 		--do_build --conda_env $(conda_env) --extra_channels $(extra_channels) \
-		--conda_activate $(conda_activate) $(conda_build_extra)
+		--conda_activate $(conda_activate) --local_repo $(PWD) $(conda_build_extra)
 
 conda-upload:
 	source $(conda_activate) $(conda_env); \
