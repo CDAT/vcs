@@ -65,13 +65,13 @@ aliases:
   - &conda_upload
     name: conda_upload
     command: |
-       if [[ $CIRCLE_BRANCH != "master" ]]; then
-          exit 0
-       fi
+       # if [[ $CIRCLE_BRANCH != "master" ]]; then
+        exit 0
+       # fi
 
        ls -la ${PWD}/artifacts
 
-       make conda-upload conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME conda_upload_token=$CONDA_UPLOAD_TOKEN user=$USER label=$LABEL
+       # make conda-upload conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME conda_upload_token=$CONDA_UPLOAD_TOKEN user=$USER label=$LABEL
 
   - &run_coveralls
     name: run_coveralls
