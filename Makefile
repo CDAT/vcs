@@ -64,8 +64,7 @@ conda-build:
 
 conda-upload:
 	source $(conda_activate) $(conda_env); \
-		output=$$(conda build --output $(workdir)/vcs); \
-		anaconda -t $(conda_upload_token) upload -u $(user) -l $(label) $${output} --force
+		anaconda -t $(conda_upload_token) upload -u $(user) -l $(label) --force $(artifact_dir)/*
 
 conda-dump-env:
 	mkdir -p $(artifact_dir)
