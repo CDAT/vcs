@@ -23,7 +23,7 @@ aliases:
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
 
-       make conda-build conda=$WORKDIR/miniconda/bin/conda workdir=$WORKDIR artifcat_dir=$PWD/artifacts copy_conda_package=1
+       make conda-build conda=$WORKDIR/miniconda/bin/conda workdir=$WORKDIR artifcat_dir=$PWD/artifacts
 
   - &setup_run_tests
     name: setup_run_tests
@@ -68,8 +68,8 @@ aliases:
        if [[ $CIRCLE_BRANCH != "master" ]]; then
           exit 0
        fi
-       source $WORKDIR/miniconda/etc/profile.d/conda.sh
-       conda activate base
+
+       ls -la ${PWD}/artifacts
 
        make conda-upload conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME conda_upload_token=$CONDA_UPLOAD_TOKEN user=$USER label=$LABEL
 
