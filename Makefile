@@ -65,7 +65,7 @@ conda-build:
 	mkdir -p $(artifact_dir)
 
 	python $(workdir)/$(build_script) -w $(workdir) -p $(pkg_name) --build_version noarch \
-		--do_build --conda_env $(conda_env) --extra_channels $(extra_channels) \                               
+		--do_build --conda_env $(conda_env) --extra_channels $(extra_channels) \
 		--conda_activate $(conda_activate) $(conda_build_extra)
 
 conda-upload:
