@@ -194,7 +194,7 @@ jobs:
          - run: *conda_upload
 
 workflows:
-   dv3d:
+   vcs:
       jobs:
          - build:
               matrix:
