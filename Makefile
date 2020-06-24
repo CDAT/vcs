@@ -9,7 +9,7 @@ pkg_name = vcs
 build_script = conda-recipes/build_tools/conda_build.py
 
 test_pkgs = udunits2 testsrunner matplotlib image-compare nbformat ipywidgets \
-						nb_conda nb_conda_kernels coverage coveralls
+	nb_conda nb_conda_kernels coverage coveralls
 docs_pkgs = sphinxcontrib-websupport nbsphinx jupyter_client jupyterlab vcsaddons 
 ifeq ($(os),Linux)
 pkgs = "mesalib=18.3.1"
@@ -25,11 +25,18 @@ extra_channels ?= cdat/label/nightly conda-forge
 conda ?= $(or $(CONDA_EXE),$(shell find /opt/*conda*/bin $(HOME)/*conda* -type f -iname conda))
 artifact_dir ?= $(PWD)/artifacts
 conda_env_filename ?= spec-file
+
 # TODO change back to master
 conda_recipes_branch ?= build_tool_update
 
 conda_base = $(patsubst %/bin/conda,%,$(conda))
 conda_activate = $(conda_base)/bin/activate
+
+conda_build_extra = --copy_conda_package $(artifact_dir)/
+
+ifndef $(local_repo)
+local_repo = $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
+endif
 
 conda-info:
 	source $(conda_activate) $(conda_env); conda info
@@ -55,16 +62,15 @@ conda-rerender: setup-build
 		--conda_activate $(conda_activate)
 
 conda-build:
-	mkdir -p $(artifact_dir)
+        mkdir -p $(artifact_dir)
 
-	python $(workdir)/$(build_script) -w $(workdir) -p $(pkg_name) --build_version noarch \
-		--do_build --conda_env $(conda_env) --extra_channels $(extra_channels) \
-		--conda_activate $(conda_activate) --local_repo $(PWD) --copy_conda_package $(artifact_dir)/ \
-		$(conda_build_extra)
+        python $(workdir)/$(build_script) -w $(workdir) -p $(pkg_name) --build_version noarch \                        
+                --do_build --conda_env $(conda_env) --extra_channels $(extra_channels) \                               
+                --conda_activate $(conda_activate) $(conda_build_extra)
 
 conda-upload:
-	source $(conda_activate) $(conda_env); \
-		anaconda -t $(conda_upload_token) upload -u $(user) -l $(label) --force $(artifact_dir)/*
+        source $(conda_activate) $(conda_env); \                                                                       
+                anaconda -t $(conda_upload_token) upload -u $(user) -l $(label) --force $(artifact_dir)/*.tar.bz2
 
 conda-dump-env:
 	mkdir -p $(artifact_dir)
