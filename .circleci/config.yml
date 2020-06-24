@@ -91,7 +91,6 @@ aliases:
        source $BASH_ENV
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
-       conda install -c conda-forge anaconda-client
        UPLOAD_OPTIONS="conda_upload_token=$CONDA_UPLOAD_TOKEN user=$USER label=$LABEL"
        make conda-upload $UPLOAD_OPTIONS conda=$WORKDIR/miniconda/bin/conda artifact_dir="$PWD/artifacts/*Linux*/"
 
