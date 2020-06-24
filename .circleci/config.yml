@@ -166,7 +166,7 @@ jobs:
          - run: *setup_run_tests
          - run: *get_testdata
          - run: *run_tests
-         - run: *make_doc_test
+         #- run: *make_doc_test
          - store_artifacts:
               path: tests_html
               destination: tests_html
