@@ -85,8 +85,10 @@ else
 endif
 
 run-tests:
+#	source $(conda_activate) $(conda_env); python run_tests.py -n 4 -H -v2 --timeout=100000 \
+#		--checkout-baseline --no-vtk-ui
 	source $(conda_activate) $(conda_env); python run_tests.py -n 4 -H -v2 --timeout=100000 \
-		--checkout-baseline --no-vtk-ui
+		--checkout-baseline --no-vtk-ui `pwd`/tests/test_vcs_vectors_scale.py
 
 run-doc-test:
 	source $(conda_activate) $(conda_env); cd docs; make doctest;
