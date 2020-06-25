@@ -69,7 +69,7 @@ conda-build:
 		--conda_activate $(conda_activate) $(conda_build_extra)
 
 conda-upload:
-	source $(conda_activate) $(conda_env); \                                                                       
+	source $(conda_activate) $(conda_env); \
 		anaconda -t $(conda_upload_token) upload -u $(user) -l $(label) --force $(artifact_dir)/*.tar.bz2
 
 conda-dump-env:
