@@ -1,5 +1,5 @@
 .PHONY: conda-info conda-list setup-build setup-tests conda-rerender \
-	conda-build conda-upload conda-dump-env conda-cp-output get_testdata \
+	conda-build conda-upload conda-dump-env get_testdata \
 	run-tests run-doc-tests run-coveralls
 
 SHELL = /bin/bash
@@ -8,6 +8,9 @@ os = $(shell uname)
 pkg_name = vcs
 build_script = conda-recipes/build_tools/conda_build.py
 
+#
+# packages to be installed in test environment
+#
 test_pkgs = udunits2 testsrunner matplotlib image-compare nbformat ipywidgets \
 	nb_conda nb_conda_kernels coverage coveralls
 docs_pkgs = sphinxcontrib-websupport nbsphinx jupyter_client jupyterlab vcsaddons 
@@ -17,9 +20,10 @@ else
 pkgs = "mesalib=17.3.9"
 endif
 
+last_stable ?= 8.2
+
 conda_env ?= base
 workdir ?= $(PWD)/workspace
-last_stable ?= 8.2
 branch ?= $(shell git rev-parse --abbrev-ref HEAD)
 extra_channels ?= cdat/label/nightly conda-forge
 conda ?= $(or $(CONDA_EXE),$(shell find /opt/*conda*/bin $(HOME)/*conda* -type f -iname conda))
@@ -85,10 +89,8 @@ else
 endif
 
 run-tests:
-#	source $(conda_activate) $(conda_env); python run_tests.py -n 4 -H -v2 --timeout=100000 \
-#		--checkout-baseline --no-vtk-ui
 	source $(conda_activate) $(conda_env); python run_tests.py -n 4 -H -v2 --timeout=100000 \
-		--checkout-baseline --no-vtk-ui `pwd`/tests/test_vcs_vectors_scale.py
+		--checkout-baseline --no-vtk-ui
 
 run-doc-test:
 	source $(conda_activate) $(conda_env); cd docs; make doctest;

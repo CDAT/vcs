@@ -107,8 +107,9 @@ aliases:
     command: |
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
-
-       make run-doc-test conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME
+       if [ `uname` == 'Linux' ] && [ $PY_VER == '3.7' ] && [ $LIBNETCDF == 'nompi' ]; then
+          make run-doc-test conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME
+       fi
     no_output_timeout: 20m
 
 executors:
@@ -165,13 +166,13 @@ jobs:
          - run: *setup_run_tests
          - run: *get_testdata
          - run: *run_tests
-         #- run: *make_doc_test
+         - run: *make_doc_test
          - store_artifacts:
               path: tests_html
               destination: tests_html
          - store_artifacts:
-             path: tests_png
-             destination: tests_png
+              path: tests_png
+              destination: tests_png
          - store_artifacts:
               path: spec_artifacts
               destination: spec_artifacts
