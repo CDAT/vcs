@@ -213,3 +213,6 @@ workflows:
          - upload:
               requires:
                  - test
+              filters:
+                 branches:
+                    only: master
