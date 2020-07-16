@@ -1,26 +1,5 @@
 version: 2.1
 
-parameters:
-   pkg_name:
-      type: string
-      default: "vcs"
-   repo_name:
-      type: string
-      default: "vcs"
-   last_stable:
-      type: string
-      default: "8.2"
-   user:
-      type: string
-      default: "cdat"
-   label:
-      type: string
-      default: "nightly"
-   env_name:
-      type: string
-      default: "test_vcs"
-
-
 aliases:
   - &setup_env
     name: setup_env
@@ -37,7 +16,6 @@ aliases:
     name: setup_miniconda
     command: |
        source $BASH_ENV
-       mkdir -p $WORKDIR
        git clone https://github.com/CDAT/cdat.git $WORKDIR/cdat
        # install_miniconda.py installs miniconda3 under $WORKDIR/miniconda
        python $WORKDIR/cdat/scripts/install_miniconda.py -w $WORKDIR -p 'py3'
@@ -48,7 +26,7 @@ aliases:
        source $BASH_ENV
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
-       make conda-rerender conda=$WORKDIR/miniconda/bin/conda workdir=$WORKDIR last_stable=$LAST_STABLE branch=$CIRCLE_BRANCH
+       make conda-rerender workdir=$WORKDIR branch=$CIRCLE_BRANCH
 
   - &conda_build
     name: conda_build
@@ -58,7 +36,7 @@ aliases:
        conda activate base
        os=`uname`
        artifacts_dir="artifacts/artifacts.${os}.noarch"
-       make conda-build conda=$WORKDIR/miniconda/bin/conda workdir=$WORKDIR artifact_dir=$PWD/$artifacts_dir
+       make conda-build workdir=$WORKDIR artifact_dir=$PWD/$artifacts_dir
 
   - &setup_run_tests
     name: setup_run_tests
@@ -68,8 +46,8 @@ aliases:
        conda activate base
        export CONDA_PY_VER="python=$PY_VER"
        export LIBNETCDF_VER="libnetcdf=*=${LIBNETCDF}_*"
-       make setup-tests conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME extra_pkgs="$CONDA_PY_VER $LIBNETCDF_VER $COVERAGE_PKGS"
-       make conda-dump-env conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME artifact_dir=$PWD/spec_artifacts conda_env_filename=$CIRCLE_JOB
+       make setup-tests workdir=$WORKDIR extra_pkgs="$CONDA_PY_VER $LIBNETCDF_VER $COVERAGE_PKGS"
+       make conda-dump-env workdir=$WORKDIR artifact_dir=$PWD/spec_artifacts conda_env_filename=$CIRCLE_JOB
 
   - &get_testdata
     name: get_testdata
@@ -81,8 +59,7 @@ aliases:
     command: |
        source $BASH_ENV
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
-       conda activate $ENV_NAME
-       make run-tests conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME
+       make run-tests workdir=$WORKDIR
 
   - &conda_upload
     name: conda_upload
@@ -90,17 +67,16 @@ aliases:
        source $BASH_ENV
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
-       UPLOAD_OPTIONS="conda_upload_token=$CONDA_UPLOAD_TOKEN user=$USER label=$LABEL"
-       make conda-upload $UPLOAD_OPTIONS conda=$WORKDIR/miniconda/bin/conda artifact_dir="$PWD/artifacts/*Linux*/"
+       UPLOAD_OPTIONS="conda_upload_token=$CONDA_UPLOAD_TOKEN"
+       make conda-upload workdir=$WORKDIR $UPLOAD_OPTIONS artifact_dir="$PWD/artifacts/*Linux*/"
 
   - &run_coveralls
     name: run_coveralls
     command: |
        source $BASH_ENV
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
-       conda activate $ENV_NAME
-       coveralls
-       conda deactivate
+       conda activate base
+       make run-coveralls workdir=$WORKDIR
 
   - &make_doc_test
     name: make_doc_test
@@ -108,7 +84,7 @@ aliases:
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
        if [ `uname` == 'Linux' ] && [ $PY_VER == '3.7' ] && [ $LIBNETCDF == 'nompi' ]; then
-          make run-doc-test conda=$WORKDIR/miniconda/bin/conda conda_env=$ENV_NAME
+          make run-doc-test workdir=$WORKDIR
        fi
     no_output_timeout: 20m
 
@@ -126,10 +102,6 @@ jobs:
          os:
             type: executor
       executor: << parameters.os >>
-      environment:
-         PKG_NAME: << pipeline.parameters.pkg_name >>
-         REPO_NAME: << pipeline.parameters.repo_name >>
-         LAST_STABLE: << pipeline.parameters.last_stable >>
       steps:
          - checkout
          - run: *setup_env
@@ -152,9 +124,6 @@ jobs:
             type: string
       executor: << parameters.os >>
       environment:
-         PKG_NAME: << pipeline.parameters.pkg_name >>
-         REPO_NAME: << pipeline.parameters.repo_name >>
-         ENV_NAME: << pipeline.parameters.env_name >>
          PY_VER: << parameters.py_ver >>
          LIBNETCDF: << parameters.libnetcdf >>
       steps:
@@ -180,11 +149,6 @@ jobs:
    upload:
       machine:
          image: circleci/classic:latest
-      environment:
-         PKG_NAME: << pipeline.parameters.pkg_name >>
-         VERSION: << pipeline.parameters.last_stable >>
-         USER: << pipeline.parameters.user >>
-         LABEL: << pipeline.parameters.label >>
       steps:
          - checkout
          - attach_workspace:
@@ -216,3 +180,4 @@ workflows:
               filters:
                  branches:
                     only: master
+
