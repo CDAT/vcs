@@ -5,9 +5,9 @@ aliases:
     name: setup_env
     command: |
        if [[ `uname` == "Darwin" ]]; then
-          echo 'export WORKDIR=/Users/distiller/workdir/macos' >> $BASH_ENV
+          echo 'export WORKDIR=/Users/distiller/project/workdir/macos' >> $BASH_ENV
        else
-          echo 'export WORKDIR=/home/circleci/workdir/linux' >> $BASH_ENV
+          echo 'export WORKDIR=/home/circleci/project/workdir/linux' >> $BASH_ENV
        fi
        source $BASH_ENV
        mkdir -p $WORKDIR
@@ -36,7 +36,7 @@ aliases:
        conda activate base
        os=`uname`
        artifacts_dir="artifacts/artifacts.${os}.noarch"
-       make conda-build workdir=$WORKDIR artifact_dir=$artifacts_dir
+       make conda-build workdir=$WORKDIR artifact_dir=$PWD/$artifacts_dir
 
   - &setup_run_tests
     name: setup_run_tests
@@ -68,7 +68,7 @@ aliases:
        source $WORKDIR/miniconda/etc/profile.d/conda.sh
        conda activate base
        UPLOAD_OPTIONS="conda_upload_token=$CONDA_UPLOAD_TOKEN"
-       make conda-upload workdir=$WORKDIR $UPLOAD_OPTIONS artifact_dir="artifacts/*Linux*/"
+       make conda-upload workdir=$WORKDIR $UPLOAD_OPTIONS artifact_dir="$PWD/artifacts/*Linux*/"
 
   - &run_coveralls
     name: run_coveralls
@@ -87,24 +87,6 @@ aliases:
           make run-doc-test workdir=$WORKDIR
        fi
     no_output_timeout: 20m
-
-  - &prep_persist_to_workspace
-    name: prep_to_persist
-    command: |
-       if [[ `uname` == "Darwin" ]]; then
-          mv /Users/distiller/workdir /Users/distiller/project/
-       else
-          mv /home/circleci/workdir /home/circleci/project/
-       fi
-
-  - &restore_from_workspace
-    name: restore_from_workspace
-    command: |
-       if [[ `uname` == "Darwin" ]]; then
-          mv /Users/distiller/project/workdir /Users/distiller/
-       else
-          mv /home/circleci/project/workdir /home/circleci/
-       fi
 
 executors:
    linux:
