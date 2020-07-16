@@ -108,7 +108,6 @@ jobs:
          - run: *setup_miniconda
          - run: *conda_rerender
          - run: *conda_build
-         - run: *prep_persist_to_workspace
          - persist_to_workspace:
               root: .
               paths: 
@@ -131,7 +130,6 @@ jobs:
          - checkout
          - attach_workspace:
               at: .
-         - run: *restore_from_workspace
          - run: echo "LIBNETCDF=$LIBNETCDF" >> $BASH_ENV
          - run: *setup_env
          - run: *setup_run_tests
@@ -155,7 +153,6 @@ jobs:
          - checkout
          - attach_workspace:
               at: .
-         - run: *restore_from_workspace
          - run: *setup_env
          - run: *conda_upload
 
