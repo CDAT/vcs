@@ -1,10 +1,10 @@
 package:
     name: vcs
-    version: "@VERSION@"
+    version: "8.2.1.rc1"
 
 source:
-    git_rev: @UVCDAT_BRANCH@
-    git_url: https://github.com/cdat/vcs.git
+  url: https://github.com/CDAT/vcs/archive/v8.2.1.rc1.tar.gz
+  sha256: 8718511a85e8634b8b9682a3e8e28a2b13078d167e0b10a9737ccc18d544a5d2
 
 build:
   number: @BUILD_NUMBER@
