@@ -31,7 +31,10 @@ conda_build_env ?= build-$(pkg_name)
 
 branch ?= $(shell git rev-parse --abbrev-ref HEAD)
 # extra_channels ?= cdat/label/nightly conda-forge
-extra_channels ?= conda-forge/label/cdat_dev conda-forge cdat/label/cdat_dev
+# we should not need cdat/label/nightly here when building a release
+# but some tests depends on vcsaddons and image-compare which have not been built for the release
+# -- circular dependency!! REVISIT
+extra_channels ?= conda-forge/label/cdat_dev conda-forge cdat/label/cdat_dev cdat/label/nightly
 conda ?= $(or $(CONDA_EXE),$(shell find /opt/*conda*/bin $(HOME)/*conda* -type f -iname conda))
 conda_env_filename ?= spec-file
 
