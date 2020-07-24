@@ -132,6 +132,7 @@ dependencies:
   - nb_conda_kernels=2.2.3=py38_0
   - nbconvert=5.6.1=py38h32f6830_1
   - nbformat=5.0.7=py_0
+  - nbsphinx=0.7.1=pyh9f0ad1d_0
   - ncurses=6.2=he1b5a44_1
   - netcdf-fortran=4.5.3=nompi_hfef6a68_100
   - nettle=3.4.1=h1bed415_1002
@@ -233,5 +234,3 @@ dependencies:
     - pyqtwebengine==5.12.1
     - regrid2==3.1.4
 prefix: /home/circleci/project/workdir/linux/miniconda/envs/cdat
-
-
