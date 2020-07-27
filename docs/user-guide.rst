@@ -6,7 +6,7 @@ Document Conventions
 
 This User Guide is written for end-users of vcs, rather than developers. If you
 have suggestions or questions about this documentation, feel free to contact us
-on `UV-CDAT <https://github.com/UV-CDAT/uvcdat>`_ `mailing list <uvcdat-users@lists.llnl.gov>`_.
+on `CDAT <https://github.com/CDAT/cdat>`_ `mailing list <cdat-support@llnl.gov>`_.
 
 vcs specific entities will be ``formatted like this``.
 
@@ -15,11 +15,12 @@ vcs specific entities will be ``formatted like this``.
 Installation
 ------------
 While there are many ways a user can install vcs, installation using conda is
-preferred for the end user. To install just vcs or uvcdat, make sure that anaconda
-or miniconda is installed and in path of your shell. Information on how to install conda
-can be found `here <https://www.continuum.io>`_. Very conda is available on the shell using
-the following command ::
+preferred for the end user. To install just vcs or cdat, make sure that anaconda
+or miniconda is installed. Information on how to install conda
+can be found `here <https://www.continuum.io>`_. Once conda is installed, for example under $HOME/conda, you can enable conda as follows:
 
+    source $HOME/conda/etc/profile.d/conda.sh
+    conda activate base
     conda --help
 
 To enable conda installation in a tight ssl certificate/security environment try ::
@@ -27,18 +28,22 @@ To enable conda installation in a tight ssl certificate/security environment try
     conda config --set ssl_verify False
 
 
-Install uvcdat which will install vcs as well using the following command ::
+Install cdat which will install vcs as well using the following command ::
 
-    conda install cdat -c conda-forge -c cdat
+    conda create -n cdat -c conda-forge -c cdat/label/<release> cdat
 
 To install only vcs, use the following command ::
 
-    conda install vcs -c conda-forge -c cdat
+    # MacOS - with libnetcdf nompi
+    conda create -n cdat -c conda-forge -c cdat/label/<release> vcs "libnetcdf=*=nompi_*" "mesalib=17.3.9"
+    # MacOS - with libnetcdf mpi_openmpi
+    conda create -n cdat -c conda-forge -c cdat/label/<release> vcs "libnetcdf=*=mpi_openmpi_*" "mesalib=17.3.9" 
 
-On headless servers or if you run into DISPLAY/OpenGL issues at runtime you
-might want to enable the mesalib version (this can be done after the fact)::
+    # Linux - with libnetcdf nompi
+    conda create -n cdat -c conda-forge -c cdat/label/<release> vcs "libnetcdf=*=nompi_*" "mesalib=18.3.1" 
+    # Linux - with libnetcdf mpi_openmpi
+    conda create -n cdat -c conda-forge -c cdat/label/<release> vcs "libnetcdf=*=mpi_openmpi_*" "mesalib=18.3.1"
 
-    conda install mesalib -c conda-forge -c cdat
 
 Concepts
 --------
