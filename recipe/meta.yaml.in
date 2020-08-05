@@ -1,13 +1,13 @@
 package:
     name: vcs
-    version: "@VERSION@"
+    version: "8.2.1"
 
 source:
-    git_rev: @UVCDAT_BRANCH@
-    git_url: https://github.com/cdat/vcs.git
+  url: https://github.com/CDAT/vcs/archive/v8.2.1.tar.gz
+  sha256: 9f647c940396cb40003b96484bfa48d2d0fce38cf49217e06054c4c9cc66b5ce 
 
 build:
-  number: @BUILD_NUMBER@
+  number: 0
   noarch: python
   script: python setup.py install
  
