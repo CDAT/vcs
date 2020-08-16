@@ -8,3 +8,4 @@ dist/
 dist/
 vcs.egg-info/
 *.swp
+uvcdat-testdata/
