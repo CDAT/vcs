@@ -24,7 +24,7 @@ else
 pkgs = "mesalib=17.3.9"
 endif
 
-last_stable ?= 8.2
+last_stable ?= 8.2.1
 
 conda_test_env ?= test-$(pkg_name)
 conda_build_env ?= build-$(pkg_name)

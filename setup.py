@@ -9,7 +9,7 @@ import os
 from subprocess import Popen, PIPE
 import cdat_info
 
-Version = "8.0"
+Version = "8.2.1"
 p = Popen(
     ("git",
      "describe",
